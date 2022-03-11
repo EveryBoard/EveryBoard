@@ -4,13 +4,17 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { assert, display } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -32,7 +36,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef)
+                public cdr: ChangeDetectorRef,
+                private readonly messageDisplayer: MessageDisplayer)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
@@ -45,9 +50,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
-        this.afterGameIncluderViewInit();
-        this.restartGame();
-        this.cdr.detectChanges();
+        setTimeout(() => {
+            this.afterGameIncluderViewInit();
+            this.restartGame();
+            this.cdr.detectChanges();
+        }, 1);
     }
     public updatePlayer(player: 0|1): void {
         this.players[player] = MGPOptional.of(this.playerSelection[player]);
@@ -75,8 +82,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
             // bot's turn
-            setTimeout(() => {
-                this.doAIMove(playingMinimax.get());
+            setTimeout(async() => {
+                await this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
         }
     }
@@ -95,7 +102,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 return this.players[playerIndex].equalsValue(a.name);
             }));
     }
-    public doAIMove(playingMinimax: AbstractMinimax): void {
+    public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
@@ -107,8 +114,10 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.updateBoard();
             this.cdr.detectChanges();
             this.proposeAIToPlay();
+            return MGPValidation.SUCCESS;
         } else {
-            throw new Error('AI choosed illegal move (' + aiMove.toString() + ')');
+            this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
+            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingMinimax.name, move: aiMove.toString() });
         }
     }
     public canTakeBack(): boolean {

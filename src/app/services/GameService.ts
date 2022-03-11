@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirstPlayer, Joiner, PartStatus } from '../domain/Joiner';
@@ -9,16 +8,18 @@ import { Request } from '../domain/Request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { Time } from '../domain/Time';
-import firebase from 'firebase/app';
 import { MGPOptional } from '../utils/MGPOptional';
+import { FieldValue, Unsubscribe } from '@angular/fire/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: string,
     playerOne: string,
     turn: number,
-    beginning?: firebase.firestore.FieldValue | Time,
+    beginning?: FieldValue | Time,
 }
 
 @Injectable({
@@ -30,13 +31,7 @@ export class GameService {
 
     private followedPartId: MGPOptional<string> = MGPOptional.empty();
 
-    /**
-     * The outer optional is for when we haven't followed any part yet.
-     * The inner optional is for when the part gets deleted
-     */
-    private followedPartObs: MGPOptional<Observable<MGPOptional<Part>>> = MGPOptional.empty();
-
-    private followedPartSub: Subscription;
+    private followedPartUnsubscribe: Unsubscribe;
 
     constructor(private readonly partDAO: PartDAO,
                 private readonly joinerService: JoinerService,
@@ -113,7 +108,7 @@ export class GameService {
             playerZero,
             playerOne,
             turn: 0,
-            beginning: firebase.firestore.FieldValue.serverTimestamp(),
+            beginning: serverTimestamp(),
             remainingMsForZero: joiner.totalPartDuration * 1000,
             remainingMsForOne: joiner.totalPartDuration * 1000,
         };
@@ -133,8 +128,7 @@ export class GameService {
             display(GameService.VERBOSE, '[start watching part ' + partId);
 
             this.followedPartId = MGPOptional.of(partId);
-            this.followedPartObs = MGPOptional.of(this.partDAO.getObsById(partId));
-            this.followedPartSub = this.followedPartObs.get().subscribe(callback);
+            this.followedPartUnsubscribe = this.partDAO.subscribeToChanges(partId, callback);
         } else {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
@@ -224,7 +218,7 @@ export class GameService {
     {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
         const requester: Player = Request.getPlayer(Utils.getNonNullable(part.data.request));
-        assert(requester !== observerRole, 'Illegal to accept your own request.');
+        assert(requester !== observerRole, 'Illegal to accept your own request');
 
         const request: Request = Request.takeBackAccepted(observerRole);
         let listMoves: JSONValueWithoutArray[] = part.data.listMoves.slice(0, part.data.listMoves.length - 1);
@@ -236,7 +230,7 @@ export class GameService {
             request,
             listMoves,
             turn: listMoves.length,
-            lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
             remainingMsForZero: Utils.getNonNullable(part.data.remainingMsForZero) - msToSubstract[0],
             remainingMsForOne: Utils.getNonNullable(part.data.remainingMsForOne) - msToSubstract[1],
         };
@@ -285,8 +279,7 @@ export class GameService {
         display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
 
         this.followedPartId = MGPOptional.empty();
-        this.followedPartSub.unsubscribe();
-        this.followedPartObs = MGPOptional.empty();
+        this.followedPartUnsubscribe();
     }
     public async updateDBBoard(partId: string,
                                user: Player,
@@ -310,7 +303,7 @@ export class GameService {
             listMoves,
             turn,
             request: null,
-            lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         };
         update = this.updateScore(update, scores);
         update = this.substractMs(update, part, msToSubstract);

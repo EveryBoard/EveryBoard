@@ -53,7 +53,7 @@ def load_stored_coverage():
     }
 
 def generate_in_file(data, path):
-    f = open(path, mode='w', encoding='utf8')
+    f = open(path, mode='w', encoding='utf8', newline='\n')
     for directory in dict(sorted(data.items(), key=sort_function)):
         if data[directory] > 0:
             # Only store if coverage is > 0

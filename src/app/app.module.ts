@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, ModuleWithProviders, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,10 +7,6 @@ import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import localeFr from '@angular/common/locales/fr';
-
-import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 import { PartDAO } from './dao/PartDAO';
 
@@ -75,10 +71,6 @@ import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
-import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { LocaleUtils } from './utils/LocaleUtils';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
@@ -89,9 +81,14 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-import { ThemeService } from './services/ThemeService';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
+
+import * as Firebase from '@angular/fire/app';
+import * as Firestore from '@angular/fire/firestore';
+import * as Database from '@angular/fire/database';
+import * as Auth from '@angular/fire/auth';
+import { ThemeService } from './services/ThemeService';
 
 registerLocaleData(localeFr);
 
@@ -115,6 +112,46 @@ export const routes: Route[] = [
     { path: '', component: WelcomeComponent },
     { path: '**', component: WelcomeComponent },
 ];
+
+export class FirebaseProviders {
+    public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
+        return Firebase.provideFirebaseApp(() => {
+            if (environment.useEmulators) {
+                environment.firebaseConfig.databaseURL = 'http://localhost:9000?ns=default';
+            }
+            return Firebase.initializeApp(environment.firebaseConfig);
+        });
+    }
+    public static firestore(): ModuleWithProviders<Firestore.FirestoreModule> {
+        return Firestore.provideFirestore(() => {
+            const firestore: Firestore.Firestore = Firestore.getFirestore();
+            const host: string = firestore.toJSON()['settings'].host;
+            if (environment.useEmulators && host !== 'localhost:8080') {
+                Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
+            }
+            return firestore;
+        });
+    }
+    public static database(): ModuleWithProviders<Database.DatabaseModule> {
+        return Database.provideDatabase(() => {
+            const database: Database.Database = Database.getDatabase();
+
+            if (environment.useEmulators && database['_instanceStarted'] === false) {
+                Database.connectDatabaseEmulator(database, 'localhost', 9000);
+            }
+            return database;
+        });
+    }
+    public static auth(): ModuleWithProviders<Auth.AuthModule> {
+        return Auth.provideAuth(() => {
+            const fireauth: Auth.Auth = Auth.getAuth();
+            if (environment.useEmulators && fireauth.config['emulator'] == null) {
+                Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
+            }
+            return fireauth;
+        });
+    }
+}
 
 @NgModule({
     declarations: [
@@ -173,28 +210,25 @@ export const routes: Route[] = [
         ToggleVisibilityDirective,
     ],
     imports: [
+        FirebaseProviders.app(),
+        FirebaseProviders.firestore(),
+        FirebaseProviders.auth(),
+        FirebaseProviders.database(),
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
-        AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFirestoreModule,
         BrowserAnimationsModule,
         FontAwesomeModule,
     ],
     providers: [
-        { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
-        { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
-        { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
-        { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
         AuthenticationService,
         GameService,
         JoinerService,
         UserService,
         ChatService,
         PartDAO,
-        AngularFireAuth,
         ThemeService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],

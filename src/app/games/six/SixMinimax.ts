@@ -7,10 +7,12 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { assert, display } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class SixNodeUnheritance extends NodeUnheritance {
 
@@ -72,8 +74,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     private getDeplacementFrom(state: SixState, starts: MGPSet<Coord>, landings: Coord[]): SixMove[] {
         const deplacements: SixMove[] = [];
-        for (let i: number = 0; i < starts.size(); i++) {
-            const start: Coord = starts.get(i);
+        for (const start of starts) {
             for (const landing of landings) {
                 const move: SixMove = SixMove.fromMovement(start, landing);
                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
@@ -81,9 +82,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                     const groupsAfterMove: MGPSet<MGPSet<Coord>> =
                         SixState.getGroups(piecesAfterDeplacement, move.start.get());
                     if (SixRules.isSplit(groupsAfterMove)) {
-                        for (let groupIndex: number = 0; groupIndex < groupsAfterMove.size(); groupIndex++) {
-                            const group: Coord = groupsAfterMove.get(0).get(0);
-                            const cut: SixMove = SixMove.fromCut(start, landing, group);
+                        for (const group of groupsAfterMove) {
+                            const subGroup: Coord = group.getAnyElement().get();
+                            const cut: SixMove = SixMove.fromCut(start, landing, subGroup);
                             deplacements.push(cut);
                         }
                     } else {
@@ -99,19 +100,18 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const allPieces: MGPMap<Player, MGPSet<Coord>> = state.pieces.reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerPieces: MGPSet<Coord> = allPieces.get(currentPlayer).get();
-        const firstPiece: Coord = playerPieces.get(0);
+        const firstPiece: Coord = playerPieces.getAnyElement().get();
 
         const safePieces: Coord[] = [];
-        for (let i: number = 0; i < playerPieces.size(); i++) {
-            const playerPiece: Coord = playerPieces.get(i);
+        for (const playerPiece of playerPieces) {
             if (this.isPieceBlockingAVictory(state, playerPiece) === false) {
                 safePieces.push(playerPiece);
             }
         }
         if (safePieces.length === 0) {
-            return new MGPSet<Coord>([firstPiece]);
+            return new CoordSet([firstPiece]);
         } else {
-            return new MGPSet<Coord>(safePieces);
+            return new CoordSet(safePieces);
         }
     }
     private isPieceBlockingAVictory(state: SixState, playerPiece: Coord): boolean {

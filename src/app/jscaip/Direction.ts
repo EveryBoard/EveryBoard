@@ -1,4 +1,5 @@
-import { assert, JSONValue } from 'src/app/utils/utils';
+import { JSONValue } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';

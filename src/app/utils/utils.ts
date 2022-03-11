@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import { FieldValue } from '@angular/fire/firestore';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not
 // supported, but arrays containing objects containing arrays are, which is what
@@ -17,7 +17,7 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
     return false;
 }
 
-export type FirebaseJSONPrimitive = JSONPrimitive | firebase.firestore.FieldValue;
+export type FirebaseJSONPrimitive = JSONPrimitive | FieldValue;
 export type FirebaseJSONValue =
     FirebaseJSONPrimitive |
     FirebaseJSONObject |
@@ -27,11 +27,6 @@ export type FirebaseJSONValueWithoutArray = FirebaseJSONPrimitive | FirebaseJSON
 export type FirebaseJSONObject = { [member: string]: FirebaseJSONValue };
 
 export class Utils {
-    // Returns any because in the future it may return a MGPValidation/MGPFallible in production
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static handleError(message: string): any {
-        throw new Error('Encountered error: ' + message);
-    }
     public static expectToBe<T>(value: T, expected: T, message?: string): void {
         if (value !== expected) {
             if (message !== undefined) {
@@ -64,11 +59,5 @@ export class Utils {
 export function display(verbose: boolean, message: unknown): void {
     if (verbose) {
         console.log(message);
-    }
-}
-
-export function assert(condition: boolean, message: string): void {
-    if (condition === false) {
-        Utils.handleError('Assertion failure: ' + message);
     }
 }

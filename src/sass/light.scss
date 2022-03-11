@@ -28,6 +28,11 @@ $primary: #ffc34d;
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./mystyles.scss";
 
+.button {
+    // Fix for the following bug: https://github.com/jgthms/bulma/issues/3471
+    justify-content: center;
+}
+
 .modal-card-head, .is-primary {
     background-color: $primary;
 }

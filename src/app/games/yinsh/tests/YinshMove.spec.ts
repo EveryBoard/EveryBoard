@@ -56,10 +56,11 @@ describe('YinshMove', () => {
     });
     describe('isInitialPlacement', () => {
         it('should return true for initial placements only', () => {
-            const move1: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
-            expect(move1.isInitialPlacement()).toBeTrue();
-            const move2: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(5, 3)), []);
-            expect(move2.isInitialPlacement()).toBeFalse();
+            const moveWithInitialPlacement: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
+            expect(moveWithInitialPlacement.isInitialPlacement()).toBeTrue();
+            const moveWithoutInitialPlacement: YinshMove =
+                new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(5, 3)), []);
+            expect(moveWithoutInitialPlacement.isInitialPlacement()).toBeFalse();
         });
     });
     describe('equals', () => {
@@ -69,21 +70,24 @@ describe('YinshMove', () => {
             expect(move.equals(move)).toBeTrue();
         });
         it('should consider the same move equal', () => {
-            expect(move.equals(new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []))).toBeTrue();
+            const sameMove: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
+            expect(move.equals(sameMove)).toBeTrue();
         });
         it('should consider moves with different start to be different', () => {
-            expect(move.equals(new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []))).toBeFalse();
+            const differentMove: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []);
+            expect(move.equals(differentMove)).toBeFalse();
         });
         it('should consider move with different end to be different', () => {
-            expect(move.equals(new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(6, 3)), []))).toBeFalse();
+            const differentMove: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(6, 3)), []);
+            expect(move.equals(differentMove)).toBeFalse();
         });
         it('should consider moves with different initial captures different', () => {
-            const move2: YinshMove = new YinshMove([capture], new Coord(2, 3), MGPOptional.empty(), []);
-            expect(move.equals(move2)).toBeFalse();
+            const differentMove: YinshMove = new YinshMove([capture], new Coord(2, 3), MGPOptional.empty(), []);
+            expect(move.equals(differentMove)).toBeFalse();
         });
-        it('should consider moves with different initial captures different', () => {
-            const move2: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), [capture]);
-            expect(move.equals(move2)).toBeFalse();
+        it('should consider moves with different final captures different', () => {
+            const differentMove: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), [capture]);
+            expect(move.equals(differentMove)).toBeFalse();
         });
     });
     describe('toString', () => {

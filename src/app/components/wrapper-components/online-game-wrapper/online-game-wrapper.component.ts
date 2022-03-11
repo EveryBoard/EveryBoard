@@ -16,7 +16,8 @@ import { Joiner } from 'src/app/domain/Joiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -163,10 +164,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.joiner = iJoiner;
 
         this.gameStarted = true;
-        setTimeout(async() => {
+        setTimeout(() => {
             // the small waiting is there to make sur that the chronos are charged by view
             this.afterGameIncluderViewInit();
-            await this.startPart();
+            this.startPart();
         }, 1);
     }
     protected startPart(): void {

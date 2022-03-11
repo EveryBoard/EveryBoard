@@ -32,7 +32,7 @@ export class SiamMove extends MoveCoord {
             const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove).get();
             return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
         }
-    }
+    };
     constructor(
         readonly x: number,
         readonly y: number,

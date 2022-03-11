@@ -6,7 +6,7 @@ import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
 

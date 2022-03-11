@@ -20,7 +20,7 @@ export class P4Move extends Move {
         public decodeNumber(encodedMove: number): P4Move {
             return P4Move.of(encodedMove);
         }
-    }
+    };
     public static of(n: number): P4Move {
         switch (n) {
             case 0: return P4Move.ZERO;

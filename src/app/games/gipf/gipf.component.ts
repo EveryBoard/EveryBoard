@@ -33,10 +33,10 @@ export class GipfComponent
     public captured: Coord[] = [];
     public moved: Coord[] = [];
 
-    private static PHASE_INITIAL_CAPTURE: number = 0;
-    private static PHASE_PLACEMENT_COORD: number = 1;
-    private static PHASE_PLACEMENT_DIRECTION: number = 2;
-    private static PHASE_FINAL_CAPTURE: number = 3;
+    private static readonly PHASE_INITIAL_CAPTURE: number = 0;
+    private static readonly PHASE_PLACEMENT_COORD: number = 1;
+    private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
+    private static readonly PHASE_FINAL_CAPTURE: number = 3;
     private movePhase: number = GipfComponent.PHASE_PLACEMENT_COORD;
 
     // This state contains the board that is actually displayed

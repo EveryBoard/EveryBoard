@@ -7,6 +7,7 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { FirebaseDocument } from '../FirebaseFirestoreDAO';
 
 type PartOS = ObservableSubject<MGPOptional<PartDocument>>
 
@@ -45,10 +46,10 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<Part> {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
     public async userHasActivePart(username: string): Promise<boolean> {
-        const partsAsPlayerZero: Part[] = await this.findWhere([
+        const partsAsPlayerZero: FirebaseDocument<Part>[] = await this.findWhere([
             ['playerZero', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const partsAsPlayerOne: Part[] = await this.findWhere([
+        const partsAsPlayerOne: FirebaseDocument<Part>[] = await this.findWhere([
             ['playerOne', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
         return partsAsPlayerZero.length > 0 || partsAsPlayerOne.length > 0;

@@ -7,7 +7,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
@@ -51,7 +51,7 @@ interface LastMoved {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> implements OnInit {
-    private static CENTER: Coord[] = [
+    private static readonly CENTER: Coord[] = [
         new Coord(40, 160),
         new Coord(100, 50),
         new Coord(255, 2),

@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
 import { ChatService } from '../../../services/ChatService';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { User, UserDocument } from 'src/app/domain/User';
@@ -14,6 +15,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -61,9 +64,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Input() partId: string;
     @Input() userName: string;
 
+    // notify that the game has started, a thing evaluated with the joiner doc game status
     @Output('gameStartNotification') gameStartNotification: EventEmitter<Joiner> = new EventEmitter<Joiner>();
     public gameStarted: boolean = false;
-    // notify that the game has started, a thing evaluated with the joiner doc game status
+
+    private gameExists: boolean = false;
 
     public viewInfo: PartCreationViewInfo = {
         userIsCreator: false,
@@ -75,7 +80,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         firstPlayerClasses: { 'CREATOR': [], 'RANDOM': ['is-selected', 'is-primary'], 'CHOSEN_PLAYER': [] },
         candidateClasses: {},
         candidates: [],
-    }
+    };
     public currentJoiner: Joiner | null = null;
 
     // Subscription
@@ -87,13 +92,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public allDocDeleted: boolean = false;
 
-    public constructor(public router: Router,
-                       public gameService: GameService,
-                       public joinerService: JoinerService,
-                       public chatService: ChatService,
-                       public userService: UserService,
-                       public formBuilder: FormBuilder,
-                       public messageDisplayer: MessageDisplayer)
+    public constructor(private readonly router: Router,
+                       private readonly gameService: GameService,
+                       private readonly joinerService: JoinerService,
+                       private readonly chatService: ChatService,
+                       private readonly userService: UserService,
+                       private readonly formBuilder: FormBuilder,
+                       private readonly messageDisplayer: MessageDisplayer)
     {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
@@ -102,11 +107,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.checkInputs();
         this.createForms();
-        const gameExists: boolean = await this.joinerService.joinGame(this.partId, this.userName);
-        if (gameExists === false) {
+        const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, this.userName);
+        if (joinResult.isFailure()) {
             // We will be redirected by the GameWrapper
             return;
         }
+        this.gameExists = true;
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
 
@@ -129,12 +135,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         });
     }
     private subscribeToJoinerDoc(): void {
-        this.joinerService
-            .observe(this.partId)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(async(joiner: MGPOptional<Joiner>) => {
-                await this.onCurrentJoinerUpdate(joiner);
-            });
+        this.joinerService.subscribeToChanges(this.partId,
+                                              async(joiner: MGPOptional<Joiner>) => {
+                                                  await this.onCurrentJoinerUpdate(joiner);
+                                              });
     }
     private getForm(name: string): AbstractControl {
         return Utils.getNonNullable(this.configFormGroup.get(name));
@@ -343,7 +347,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             for (const user of foundUsers) {
                 if (user.data.state === 'offline') {
                     await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                    Utils.handleError('OnlineGameWrapper: ' + user.data.username + ' is already offline!');
+                    await ErrorLoggerService.logError('PartCreationComponent', 'user is already offline', { username: user.data.username, userId: user.id });
                 }
             }
         };
@@ -358,7 +362,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                Utils.handleError('OnlineGameWrapper: ' + user.data.username + ' was deleted (' + user.id + ')');
+                await ErrorLoggerService.logError('PartCreationComponent', 'user was deleted', { username: user.data.username, userId: user.id });
             }
         };
         const callback: FirebaseCollectionObserver<User> =
@@ -411,6 +415,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
 
+        if (this.gameExists) {
+            this.joinerService.unsubscribe();
+        }
         for (const candidateName of this.candidateSubscription.listKeys()) {
             this.unsubscribeFrom(candidateName);
         }

@@ -1,6 +1,6 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class AwaleMove extends Move {
 
@@ -41,7 +41,7 @@ export class AwaleMove extends Move {
         public decodeNumber(encoded: number): AwaleMove {
             return AwaleMove.from(encoded);
         }
-    }
+    };
     public equals(o: AwaleMove): boolean {
         if (o === this) return true;
         return o.x === this.x;

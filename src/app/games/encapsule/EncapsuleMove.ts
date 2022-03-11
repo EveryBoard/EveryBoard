@@ -65,7 +65,7 @@ export class EncapsuleMove extends Move {
                 return EncapsuleMove.fromMove(startingCoord, landingCoord);
             }
         }
-    }
+    };
     private constructor(public readonly startingCoord: MGPOptional<Coord>,
                         public readonly landingCoord: Coord,
                         public readonly piece: MGPOptional<EncapsulePiece>) {

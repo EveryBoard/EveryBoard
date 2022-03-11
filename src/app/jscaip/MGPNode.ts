@@ -2,7 +2,8 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
-import { assert, display } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { NodeUnheritance } from './NodeUnheritance';
 import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
@@ -182,7 +183,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             this.possibleMoves.set(minimax.name, new MGPSet(moves));
             return moves;
         } else {
-            return currentMoves.get().getCopy();
+            return currentMoves.get().toList();
         }
     }
     private getOrCreateChild(move: M, minimax: Minimax<M, S, L, U>): MGPNode<R, M, S, L, U> {

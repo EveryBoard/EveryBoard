@@ -2,7 +2,8 @@ import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewCh
 import { ChatService } from '../../../services/ChatService';
 import { Message } from '../../../domain/Message';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
-import { assert, display } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';

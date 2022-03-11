@@ -17,6 +17,8 @@ import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
 describe('PartCreationComponent:', () => {
@@ -30,6 +32,8 @@ describe('PartCreationComponent:', () => {
     let joinerService: JoinerService;
     let gameService: GameService;
     let chatService: ChatService;
+
+    let destroyed: boolean;
 
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');
@@ -57,6 +61,7 @@ describe('PartCreationComponent:', () => {
     };
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
+        destroyed = false;
         const chatDAOMock: ChatDAO = TestBed.inject(ChatDAO);
         partDAOMock = TestBed.inject(PartDAO);
         joinerDAOMock = TestBed.inject(JoinerDAO);
@@ -71,6 +76,24 @@ describe('PartCreationComponent:', () => {
         await joueursDAOMock.set('opponent', OPPONENT);
         await partDAOMock.set('joinerId', PartMocks.INITIAL);
     }));
+    it('should unsubscribe from joiner service upon destruction', fakeAsync(async() => {
+        // Given a component that is loaded by anyone (here, the creator)
+        component.userName = 'creator';
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+        spyOn(joinerService, 'unsubscribe');
+        spyOn(component, 'cancelGameCreation'); // spied in order to avoid calling it
+
+        // When the component is destroyed
+        destroyed = true;
+        await component.ngOnDestroy();
+        tick(3000);
+        await testUtils.whenStable();
+
+        // Then the component unsubscribes from the joiner service
+        expect(joinerService.unsubscribe).toHaveBeenCalledWith();
+    }));
     describe('For creator', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component that is loaded by the creator
@@ -80,7 +103,7 @@ describe('PartCreationComponent:', () => {
         describe('Creator arrival on component', () => {
             it('should call joinGame and observe', fakeAsync(async() => {
                 spyOn(joinerService, 'joinGame').and.callThrough();
-                spyOn(joinerService, 'observe').and.callThrough();
+                spyOn(joinerService, 'subscribeToChanges').and.callThrough();
 
                 // When the component is loaded
                 testUtils.detectChanges();
@@ -88,21 +111,21 @@ describe('PartCreationComponent:', () => {
 
                 // Then joinGame and observe are called
                 expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
-                expect(joinerService.observe).toHaveBeenCalledTimes(1);
+                expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
             }));
             it('should not start observing joiner if part does not exist', fakeAsync(async() => {
                 // Given a part that does not exist
                 component.partId = 'does not exist';
                 spyOn(joinerDAOMock, 'read').and.resolveTo(MGPOptional.empty());
-                spyOn(joinerService, 'observe');
+                spyOn(joinerService, 'subscribeToChanges');
 
                 // When the component is loaded
                 testUtils.detectChanges();
                 await testUtils.whenStable();
 
                 // Then observe is not called
-                expect(joinerService.observe).not.toHaveBeenCalled();
+                expect(joinerService.subscribeToChanges).not.toHaveBeenCalled();
             }));
         });
         describe('Candidate arrival', () => {
@@ -188,8 +211,8 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementNotToExist('#candidate_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
-            it('should deselect candidate, remove it, and call handleError when a candidate is removed from db', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+            it('should deselect candidate, remove it, and call logError when a candidate is removed from db', fakeAsync(async() => {
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
                 // Given a part with a candidate that has been chosen
                 testUtils.detectChanges();
@@ -203,15 +226,15 @@ describe('PartCreationComponent:', () => {
                 testUtils.detectChanges();
                 tick(3000); // needs to be >2999
 
-                // Then handleError has been called as this is an unusual situation
-                expect(Utils.handleError).toHaveBeenCalledOnceWith('OnlineGameWrapper: firstCandidate was deleted (opponent)');
+                // Then logError has been called as this is an unusual situation
+                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', 'user was deleted', { username: 'firstCandidate', userId: 'opponent' });
                 // and the candidate has been deselected
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 // and the candidate has been removed from the lobby
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
             it('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 // Given a page that is loaded and there is no candidate yet
                 testUtils.detectChanges();
                 await testUtils.whenStable();
@@ -224,11 +247,11 @@ describe('PartCreationComponent:', () => {
 
                 // Then the candidate does not appear on the page
                 testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
-                // and handleError was called as this is an unexpected situation
-                expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
+                // and logError was called as this is an unexpected situation
+                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('PartCreationComponent', 'user is already offline', { username: 'firstCandidate', userId: 'opponent' });
             }));
             it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 // This could happen if we receive twice the same update to a user that needs to be removed
 
                 // Given a part creation with a candidate
@@ -249,7 +272,7 @@ describe('PartCreationComponent:', () => {
 
                 // Then it is not displayed among the candidates, and no error has been produced
                 testUtils.expectElementNotToExist('#candidate_firstCandidate');
-                expect(Utils.handleError).not.toHaveBeenCalled();
+                expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
             }));
             it('should see candidate reappear if candidates disconnects and reconnects', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
@@ -619,9 +642,11 @@ describe('PartCreationComponent:', () => {
         });
     });
     afterEach(fakeAsync(async() => {
-        testUtils.destroy();
-        await testUtils.whenStable();
-        tick();
+        if (destroyed === false) {
+            testUtils.destroy();
+            tick(3000);
+            await testUtils.whenStable();
+        }
     }));
 });
 

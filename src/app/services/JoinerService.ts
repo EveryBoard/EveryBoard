@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { assert, display } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
+import { Unsubscribe } from '@angular/fire/firestore';
+import { MGPValidation } from '../utils/MGPValidation';
 
 @Injectable({
     providedIn: 'root',
@@ -14,12 +16,19 @@ export class JoinerService {
 
     private observedJoinerId: string;
 
+    private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
+
     constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
-    public observe(joinerId: string): Observable<MGPOptional<Joiner>> {
+    public subscribeToChanges(joinerId: string, callback: (doc: MGPOptional<Joiner>) => void): void {
         this.observedJoinerId = joinerId;
-        return this.joinerDAO.getObsById(joinerId);
+        this.joinerUnsubscribe = MGPOptional.of(this.joinerDAO.subscribeToChanges(joinerId, callback));
+    }
+    public unsubscribe(): void {
+        assert(this.joinerUnsubscribe.isPresent(), 'JoinerService cannot unsubscribe if no joiner is observed');
+        this.joinerUnsubscribe.get()();
+        this.joinerUnsubscribe = MGPOptional.empty();
     }
     public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
@@ -36,22 +45,22 @@ export class JoinerService {
         };
         return this.set(joinerId, newJoiner);
     }
-    public async joinGame(partId: string, userName: string): Promise<boolean> {
+    public async joinGame(partId: string, userName: string): Promise<MGPValidation> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
-            return false;
+            return MGPValidation.failure('Game does not exist');
         }
         const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.includes(userName)) {
-            throw new Error('JoinerService.joinGame was called by a user already in the game');
+            return MGPValidation.failure('User already in the game');
         } else if (userName === joiner.get().creator) {
-            return true;
+            return MGPValidation.SUCCESS;
         } else {
             joinerList[joinerList.length] = userName;
             await this.joinerDAO.update(partId, { candidates: joinerList });
-            return true;
+            return MGPValidation.SUCCESS;
         }
     }
     public async cancelJoining(userName: string): Promise<void> {

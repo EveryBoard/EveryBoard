@@ -112,7 +112,7 @@ describe('EncapsuleRules', () => {
         expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(2, 2))).toBeTrue();
         expect(rules.node.getOwnValue(minimax).value).toBe(Number.MIN_SAFE_INTEGER);
     });
-    it('should allow simplest victory for player zero', () => {
+    it('should allow simplest victory for player one', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
         expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 0))).toBeTrue();
         expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(1, 0))).toBeTrue();

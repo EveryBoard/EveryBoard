@@ -3,6 +3,9 @@ import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { HexaLine } from '../HexaLine';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { JSONValue } from 'src/app/utils/utils';
 
 export class TestingHexagonalState extends HexagonalGameState<number> {
 
@@ -85,24 +88,36 @@ describe('HexagonalGameState', () => {
         it('should consider a board equal to itself', () => {
             expect(state.equals(state)).toBeTrue();
         });
+        it('should consider two boards equal when everything matches', () => {
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const sameBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            expect(board.equals(sameBoard)).toBeTrue();
+        });
         it('should distinguish different boards due to different contents', () => {
             const otherState: TestingHexagonalState = state.setAt(new Coord(4, 4), 73);
             expect(state.equals(otherState)).toBeFalse();
         });
         it('should distinguish different boards due to different width', () => {
-            const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const board2: TestingHexagonalState = TestingHexagonalState.empty(5, 3, [1], 0);
-            expect(board1.equals(board2)).toBeFalse();
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(5, 3, [1], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
-        it('should distinguish different boards due to different width', () => {
-            const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const board2: TestingHexagonalState = TestingHexagonalState.empty(3, 5, [1], 0);
-            expect(board1.equals(board2)).toBeFalse();
+        it('should distinguish different boards due to different height', () => {
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 5, [1], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
         it('should distinguish different boards due to different empty coords', () => {
-            const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const board2: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
-            expect(board1.equals(board2)).toBeFalse();
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
+            expect(board.equals(otherBoard)).toBeFalse();
+        });
+        it('should distinguish different boards due to different excluded cases', () => {
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [2], 0);
+            const yetAnotherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1, 2], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
+            expect(board.equals(yetAnotherBoard)).toBeFalse();
         });
     });
     describe('getPieceAt', () => {
@@ -153,25 +168,47 @@ describe('HexagonalGameState', () => {
     describe('getEntrance', () => {
         const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
         it('should return the correct entrance for lines with a constant q', () => {
-            const line1: HexaLine = HexaLine.constantQ(0);
-            expect(state.getEntranceOnLine(line1).equals(new Coord(0, 3))).toBeTrue();
+            const line: HexaLine = HexaLine.constantQ(0);
+            expect(state.getEntranceOnLine(line).equals(new Coord(0, 3))).toBeTrue();
 
-            const line2: HexaLine = HexaLine.constantQ(4);
-            expect(state.getEntranceOnLine(line2).equals(new Coord(4, 0))).toBeTrue();
+            const otherLine: HexaLine = HexaLine.constantQ(4);
+            expect(state.getEntranceOnLine(otherLine).equals(new Coord(4, 0))).toBeTrue();
         });
         it('should return the correct entrance for lines with a constant r', () => {
-            const line1: HexaLine = HexaLine.constantR(2);
-            expect(state.getEntranceOnLine(line1).equals(new Coord(1, 2))).toBeTrue();
+            const line: HexaLine = HexaLine.constantR(2);
+            expect(state.getEntranceOnLine(line).equals(new Coord(1, 2))).toBeTrue();
 
-            const line2: HexaLine = HexaLine.constantR(4);
-            expect(state.getEntranceOnLine(line2).equals(new Coord(0, 4))).toBeTrue();
+            const otherLine: HexaLine = HexaLine.constantR(4);
+            expect(state.getEntranceOnLine(otherLine).equals(new Coord(0, 4))).toBeTrue();
         });
         it('should return the correct entrance for lines with a constant s', () => {
-            const line1: HexaLine = HexaLine.constantS(4);
-            expect(state.getEntranceOnLine(line1).equals(new Coord(4, 0))).toBeTrue();
+            // Given a line
+            const line: HexaLine = HexaLine.constantS(4);
+            // When computing the entrance
+            const entrance: Coord = state.getEntranceOnLine(line);
+            // Then it should provide the expected entrance
+            expect(entrance.equals(new Coord(4, 0))).toBeTrue();
 
-            const line2: HexaLine = HexaLine.constantS(8);
-            expect(state.getEntranceOnLine(line2).equals(new Coord(6, 2))).toBeTrue();
+            // Given another line
+            const otherLine: HexaLine = HexaLine.constantS(8);
+            // When computing the entrance
+            const otherEntrance: Coord = state.getEntranceOnLine(otherLine);
+            // Then it should provide the expected entrance
+            expect(otherEntrance.equals(new Coord(6, 2))).toBeTrue();
+        });
+        it('should call logError and throw when unable to find an entrance', () => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            // Given an invalid hexagonal state, where no entrance can be found
+            const invalidState: TestingHexagonalState = TestingHexagonalState.empty(0, 0, [], 0);
+
+            // When looking for an entrance
+            // Then it calls logError and throws
+            const line: HexaLine = HexaLine.constantS(0);
+            const component: string = 'HexagonalGameState.findEntranceFrom';
+            const error: string = 'could not find a board entrance, board must be invalid';
+            const data: JSONValue = { start: '(-1, 1)', line: line.toString() };
+            expect(() => invalidState.getEntranceOnLine(line)).toThrowError(component + ': ' + error);
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith(component, error, data);
         });
     });
 });

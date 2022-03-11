@@ -2,7 +2,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export abstract class TutorialStep {
     public static fromMove(title: string,
@@ -52,7 +52,7 @@ export abstract class TutorialStep {
         return new TutorialStepInformational(title, instruction, state);
     }
 
-    public previousMove: MGPOptional<Move> = MGPOptional.empty()
+    public previousMove: MGPOptional<Move> = MGPOptional.empty();
     protected constructor(public title: string,
                           public instruction: string,
                           public state: GameState) {

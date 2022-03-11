@@ -2,8 +2,6 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 
-import firebase from 'firebase/app';
-
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { Joiner, PartStatus } from 'src/app/domain/Joiner';
@@ -34,6 +32,8 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { serverTimestamp } from 'firebase/firestore';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -149,7 +149,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 0,
             remainingMsForZero: 1800 * 1000,
             remainingMsForOne: 1800 * 1000,
-            beginning: firebase.firestore.FieldValue.serverTimestamp(),
+            beginning: serverTimestamp(),
         };
         await partDAO.updateAndBumpIndex('joinerId', observerRole, 0, update);
         componentTestUtils.detectChanges();
@@ -207,7 +207,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             request: null,
             remainingMsForOne,
             remainingMsForZero, // TODO: only send one of the two time updated, since that's what happens
-            lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         };
         return await receivePartDAOUpdate(update, lastIndex);
     }
@@ -357,7 +357,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 1,
             // remaining times not updated on first turn of the component
             request: null,
-            lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         };
         // TODO: should receive somewhere some kind of Timestamp written by DB
         expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', expectedUpdate );
@@ -454,7 +454,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 5,
                 // remainingTimes are not present on the first move of a current board
                 request: null,
-                lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastUpdateTime: serverTimestamp(),
                 winner: 'creator',
                 loser: 'firstCandidate',
                 result: MGPResult.VICTORY.value,
@@ -504,7 +504,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 16,
                 // TODO: investigate on why remainingTimes is not changed
                 request: null,
-                lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastUpdateTime: serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             });
             componentTestUtils.expectElementToExist('#hardDrawIndicator');
@@ -642,7 +642,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 3,
                     remainingMsForOne: 1799999,
                     request: null,
-                    lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -743,7 +743,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 0,
                     remainingMsForZero: 1799999,
                     remainingMsForOne: 1799999,
-                    lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -799,7 +799,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ONE),
                     remainingMsForZero,
                     remainingMsForOne: 1800 * 1000,
-                    lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 expect(wrapper.chronoZeroGlobal.changeDuration).toHaveBeenCalledWith(remainingMsForZero);
 
@@ -880,7 +880,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     remainingMsForOne: 1799998,
                     request: null,
-                    lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -947,7 +947,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     remainingMsForZero: 1799999,
                     request: null,
-                    lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -1890,6 +1890,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
+            spyOn(ErrorLoggerService, 'logError');
             await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
                                                      MGPOptional.of('observer@home'),
                                                      true));
@@ -1904,14 +1905,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ];
             for (const name of forbiddenFunctionNames) {
                 let failed: boolean = false;
-                const expectedError: string = 'Encountered error: Assertion failure: Non playing should not call ' + name;
+                const expectedError: string = 'Non playing should not call ' + name;
                 try {
                     await wrapper[name]();
                 } catch (error) {
+                    expect(error.message).toBe('Assertion failure: ' + expectedError);
                     failed = true;
-                    expect(error.message).toBe(expectedError);
                 }
                 expect(failed).toBeTrue();
+                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', expectedError);
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));

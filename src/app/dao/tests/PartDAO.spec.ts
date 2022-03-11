@@ -1,13 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
+import { Auth, signOut } from '@angular/fire/auth';
 import { Part, MGPResult } from 'src/app/domain/Part';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { PartDAO } from '../PartDAO';
-import firebase from 'firebase/app';
-import 'firebase/auth';
 
 describe('PartDAO', () => {
 
@@ -97,7 +96,7 @@ describe('PartDAO', () => {
 
         });
         afterEach(async() => {
-            await firebase.auth().signOut();
+            await signOut(TestBed.inject(Auth));
         });
     });
 });

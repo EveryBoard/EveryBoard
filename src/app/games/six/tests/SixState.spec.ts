@@ -5,6 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { SixMove } from '../SixMove';
 import { SixState } from '../SixState';
 
@@ -84,7 +85,7 @@ describe('SixState', () => {
             const beforeState: SixState = new SixState(beforePieces, 0);
 
             const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(0, 3));
-            const afterState: SixState = beforeState.applyLegalDeplacement(move, new MGPSet());
+            const afterState: SixState = beforeState.applyLegalDeplacement(move, new CoordSet());
 
             const expectedPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             expectedPieces.put(new Coord(0, 0), Player.ZERO);
@@ -108,9 +109,9 @@ describe('SixState', () => {
             const state: SixState = SixState.fromRepresentation(representation, 40);
             const groups: MGPSet<MGPSet<Coord>> = SixState.getGroups(state.pieces, new Coord(2, 2));
             const expectedGroups: MGPSet<MGPSet<Coord>> = new MGPSet([
-                new MGPSet([new Coord(2, 0), new Coord(2, 1)]),
-                new MGPSet([new Coord(3, 2), new Coord(4, 2)]),
-                new MGPSet([new Coord(0, 4), new Coord(1, 3)]),
+                new CoordSet([new Coord(2, 0), new Coord(2, 1)]),
+                new CoordSet([new Coord(3, 2), new Coord(4, 2)]),
+                new CoordSet([new Coord(0, 4), new Coord(1, 3)]),
             ]);
             expect(groups.equals(expectedGroups)).toBeTrue();
         });

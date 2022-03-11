@@ -3,7 +3,8 @@ import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 
@@ -40,7 +41,7 @@ export class ApagosMove extends Move {
             const move: ApagosMove = ApagosMove.ALL_MOVES[encodedMove];
             return move;
         }
-    }
+    };
     public static drop(coord: ApagosCoord, piece: Player): ApagosMove {
         const drop: ApagosMove = Utils.getNonNullable(
             ApagosMove.ALL_MOVES.find((move: ApagosMove) => {

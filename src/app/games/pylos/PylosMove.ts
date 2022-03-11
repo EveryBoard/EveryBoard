@@ -36,7 +36,7 @@ export class PylosMove extends Move {
 
             return new PylosMove(S, L, F, SC);
         }
-    }
+    };
     public static fromClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
         const capturesOptionals: {

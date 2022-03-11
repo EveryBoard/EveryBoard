@@ -22,7 +22,7 @@ export class ConspirateursState extends GameStateWithTable<Player> {
             new Coord(xOrY, ConspirateursState.HEIGHT-1),
             new Coord(0, xOrY),
             new Coord(ConspirateursState.WIDTH-1, xOrY),
-        ])).getCopy();
+        ])).toList();
 
     public static getInitialState(): ConspirateursState {
         const board: Player[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,

@@ -234,9 +234,8 @@ export class SixComponent
             SixState.getGroups(piecesAfterDeplacement, movement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
         this.cuttableGroups = [];
-        for (let i: number = 0; i < biggerGroups.size(); i++) {
-            const cuttableGroup: Coord[] = biggerGroups.get(i).getCopy();
-            this.cuttableGroups.push(cuttableGroup);
+        for (const cuttableGroup of biggerGroups) {
+            this.cuttableGroups.push(cuttableGroup.toList());
         }
     }
     public getSelectedPieceClass(): string {

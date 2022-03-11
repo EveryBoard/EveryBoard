@@ -6,11 +6,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
-import { AppModule } from '../../app.module';
+import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
@@ -28,26 +27,23 @@ import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { HumanDuration } from '../TimeUtils';
-import { Rules } from 'src/app/jscaip/Rules';
 import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AngularFireModule } from '@angular/fire';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
-import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
-import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { findMatchingRoute } from 'src/app/app.module.spec';
+import * as Firestore from '@angular/fire/firestore';
+import * as Auth from '@angular/fire/auth';
 
 @Component({})
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
-    private route: {[key: string]: string} = {}
+    private route: {[key: string]: string} = {};
     public snapshot: { paramMap: { get: (str: string) => string } };
     public constructor(compo?: string, id?: string) {
         this.snapshot = {
@@ -106,6 +102,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -167,24 +164,25 @@ export class SimpleComponentTestUtils<T> {
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 }
-type MyGameComponent = GameComponent<Rules<Move, GameState, unknown>, Move, GameState, unknown>;
 
-export class ComponentTestUtils<T extends MyGameComponent> {
+export class ComponentTestUtils<T extends AbstractGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
     public wrapper: GameWrapper;
     private debugElement: DebugElement;
-    private gameComponent: MyGameComponent;
+    private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static async forGame<T extends MyGameComponent>(game: string,
-                                                           wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
+    public static async forGame<T extends AbstractGameComponent>(
+        game: string,
+        wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
+        configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
-        const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
+        const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
@@ -193,8 +191,16 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends MyGameComponent>(game?: string): Promise<ComponentTestUtils<T>> {
+    public static async basic<T extends AbstractGameComponent>(game?: string, configureTestModule: boolean = true)
+    : Promise<ComponentTestUtils<T>>
+    {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
+        if (configureTestModule) {
+            await ComponentTestUtils.configureTestModule(activatedRouteStub);
+        }
+        return new ComponentTestUtils<T>(activatedRouteStub);
+    }
+    public static async configureTestModule(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -211,11 +217,12 @@ export class ComponentTestUtils<T extends MyGameComponent> {
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
+                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
-        return new ComponentTestUtils<T>(activatedRouteStub);
     }
-    private constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
+
+    public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
     public prepareFixture(wrapperKind: Type<GameWrapper>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
@@ -454,23 +461,22 @@ export class TestUtils {
 export async function setupEmulators(): Promise<unknown> {
     await TestBed.configureTestingModule({
         imports: [
-            AngularFirestoreModule,
             HttpClientModule,
-            AngularFireModule.initializeApp(environment.firebaseConfig),
+            FirebaseProviders.app(),
+            FirebaseProviders.firestore(),
+            FirebaseProviders.auth(),
+            FirebaseProviders.database(),
         ],
         providers: [
-            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
-            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
-            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
-            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
             AuthenticationService,
         ],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
+    TestBed.inject(Firestore.Firestore);
+    TestBed.inject(Auth.Auth);
     const http: HttpClient = TestBed.inject(HttpClient);
-    // Clear the firestore data before each test
+    // Clear the content of the firestore database in the emulator
     await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
-    // Clear the auth data before each test
+    // Clear the auth data in the emulator before each test
     await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
     return;
 }
