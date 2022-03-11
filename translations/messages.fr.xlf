@@ -506,6 +506,10 @@
         <source>You cannot clone a game. This feature might be implemented later.</source>
         <target>Clôner une partie n&apos;est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.</target>
       </trans-unit>
+      <trans-unit id="1793003129354061397" datatype="html">
+        <source>This game does not exist.</source>
+        <target>Ce jeu n'existe pas.</target>
+      </trans-unit>
       <trans-unit id="3568920234618711065" datatype="html">
         <source>The game has ended.</source>
         <target>La partie est terminée.</target>

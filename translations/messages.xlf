@@ -386,6 +386,9 @@
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
       </trans-unit>
+      <trans-unit id="1793003129354061397" datatype="html">
+        <source>This game does not exist.</source>
+      </trans-unit>
       <trans-unit id="3568920234618711065" datatype="html">
         <source>The game has ended.</source>
       </trans-unit>
