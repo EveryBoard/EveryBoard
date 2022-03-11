@@ -1,9 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Dictionary = { [key: string]: any };
+import { assert } from './assert';
+import { FirebaseJSONObject, FirebaseJSONValue } from './utils';
 
 export class ObjectDifference {
 
-    public static from(before: Dictionary | null, after: Dictionary | null): ObjectDifference {
+    public static from(before: FirebaseJSONObject | null, after: FirebaseJSONObject | null): ObjectDifference {
         const changes: ObjectDifference = new ObjectDifference({}, {}, {});
         if (before == null) {
             changes.added = { ...after };
@@ -19,71 +19,80 @@ export class ObjectDifference {
         const commonKeys: string[] = beforeKeys.filter((k: string) => afterKeys.includes(k));
         const addedKeys: string[] = afterKeys.filter((k: string) => beforeKeys.includes(k) === false);
         changes.addNewKeys(addedKeys, after);
-        changes.addCommonKey(commonKeys, after, before);
+        changes.addCommonKeys(commonKeys, after, before);
         changes.addRemovedKeys(removedKeys, before);
         return changes;
     }
-    public constructor(public added: Dictionary,
-                       public modified: Dictionary,
-                       public removed: Dictionary) {}
-    public addNewKeys(addedKeys: string[],
-                      after: Dictionary)
-    : void
-    {
+    public static differs(before: FirebaseJSONObject, after: FirebaseJSONObject): boolean {
+        const elementDiff: ObjectDifference = ObjectDifference.from(before, after);
+        const nbDiff: number = elementDiff.countChanges();
+        return nbDiff > 0;
+    }
+    public constructor(public added: Record<string, unknown>,
+                       public modified: Record<string, unknown>,
+                       public removed: Record<string, unknown>) {}
+    private addNewKeys(addedKeys: string[], after: FirebaseJSONObject): void {
         for (const addedKey of addedKeys) {
             if (after[addedKey] != null) {
                 this.added[addedKey] = after[addedKey];
             }
         }
     }
-    public addCommonKey(commonKeys: string[],
-                        after: Dictionary,
-                        before: Dictionary)
-    : void
-    {
+    private addCommonKeys(commonKeys: string[], after: FirebaseJSONObject, before: FirebaseJSONObject): void {
         for (const commonKey of commonKeys) {
-            if (after[commonKey] == null) {
-                if (before[commonKey] != null) {
-                    this.removed[commonKey] = before[commonKey];
-                }
-            } else if (before[commonKey] == null) {
-                if (after[commonKey] != null) {
-                    this.added[commonKey] = after[commonKey];
-                }
-            } else if (['function', 'symbol', 'bigint'].includes(typeof before[commonKey])) {
-                throw new Error('Not implemented yet');
-            } else if (typeof before[commonKey] === 'undefined') {
-                throw new Error('YOU RE NOT A REAL VALUE ' + commonKey);
-            } else if (['string', 'boolean', 'number'].includes(typeof before[commonKey])) {
-                if (before[commonKey] !== after[commonKey]) {
-                    this.modified[commonKey] = after[commonKey];
-                }
-            } else if (typeof before[commonKey]['length'] === 'number') { // LIST
-                if (typeof after[commonKey]['length'] === 'number') {
-                    if (before[commonKey].length === after[commonKey].length) {
-                        let equal: boolean = true;
-                        for (let i: number = 0; equal && i < before[commonKey]['length']; i++) {
-                            const elementDiff: ObjectDifference = ObjectDifference.from(before[commonKey][i],
-                                                                                        after[commonKey][i]);
-                            const nbDiff: number = elementDiff.countChanges();
-                            if (nbDiff > 0) {
+            this.addCommonKey(commonKey, before[commonKey], after[commonKey]);
+        }
+    }
+    private addCommonKey(commonKey: string, before: FirebaseJSONValue, after: FirebaseJSONValue): void {
+        if (after == null) {
+            if (before != null) {
+                this.removed[commonKey] = before;
+            }
+        } else if (before == null) {
+            // We know after != null at this point (otherwise we'd have taken the previous branch)
+            this.added[commonKey] = after;
+        } else if (['string', 'boolean', 'number'].includes(typeof before)) {
+            if (before !== after) {
+                this.modified[commonKey] = after;
+            }
+        } else if (Array.isArray(before)) {
+            if (Array.isArray(after)) {
+                if (before.length === after.length) {
+                    let equal: boolean = true;
+                    for (let i: number = 0; equal && i < before.length; i++) {
+                        if (typeof before[i] === typeof after[i] && typeof before[i] === 'object') {
+                            const beforeObject: FirebaseJSONObject = before[i] as FirebaseJSONObject;
+                            const afterObject: FirebaseJSONObject = after[i] as FirebaseJSONObject;
+                            if (ObjectDifference.differs(beforeObject, afterObject)) {
                                 equal = false;
-                                this.modified[commonKey] = after[commonKey];
+                                this.modified[commonKey] = after;
                             }
+                        } else if (before[i] !== after[i]) {
+                            equal = false;
+                            this.modified[commonKey] = after;
                         }
-                    } else {
-                        this.modified[commonKey] = after[commonKey];
                     }
                 } else {
-                    throw new Error('Thing should not change type');
+                    this.modified[commonKey] = after;
                 }
-            } else { // JSON
-                const newDiff: ObjectDifference = ObjectDifference.from(before[commonKey], after[commonKey]);
-                const nbChanges: number = newDiff.countChanges();
-                if (nbChanges > 0) {
-                    this.modified[commonKey] = newDiff;
-                }
+            } else {
+                throw new Error('Thing should not change type');
             }
+        } else { // JSON
+            assert(typeof before === 'object', `ObjectDifference: expected JSON, but got a ${typeof before} in ${commonKey}`);
+            assert(typeof after === 'object', `ObjectDifference: expected JSON, but got a ${typeof after} in ${commonKey}`);
+            const beforeObject: FirebaseJSONObject = before as FirebaseJSONObject;
+            const afterObject: FirebaseJSONObject = after as FirebaseJSONObject;
+            const newDiff: ObjectDifference = ObjectDifference.from(beforeObject, afterObject);
+            const nbChanges: number = newDiff.countChanges();
+            if (nbChanges > 0) {
+                this.modified[commonKey] = newDiff;
+            }
+        }
+    }
+    private addRemovedKeys(removedKeys: string[], before: FirebaseJSONObject): void {
+        for (const removedKey of removedKeys) {
+            this.removed[removedKey] = before[removedKey];
         }
     }
     public countChanges(): number {
@@ -91,11 +100,6 @@ export class ObjectDifference {
         const diffModified: number = Object.keys(this.modified).length;
         const diffAdd: number = Object.keys(this.added).length;
         return diffAdd + diffModified + diffRemoval;
-    }
-    public addRemovedKeys(removedKeys: string[], before: Dictionary): void {
-        for (const removedKey of removedKeys) {
-            this.removed[removedKey] = before[removedKey];
-        }
     }
     public isPresent(key: string): { state: 'added' | 'modified' | 'removed' | null, present: boolean } {
         if (this.added[key] != null) {
