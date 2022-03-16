@@ -224,7 +224,8 @@ describe('ChatComponent', () => {
             await testUtils.whenStable();
 
             // then the message is sent
-            expect(chatService.sendMessage).toHaveBeenCalledWith(AuthenticationServiceMock.CONNECTED.toMinimalUser(), 'hello', 2);
+            const user: MinimalUser = AuthenticationServiceMock.CONNECTED.toMinimalUser();
+            expect(chatService.sendMessage).toHaveBeenCalledWith(user, 'hello', 2);
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));

@@ -117,7 +117,7 @@ export async function createConnectedGoogleUser(createInDB: boolean, email: stri
     if (createInDB) {
         const user: User = { verified: true };
         if (username != null) {
-            user['username'] = username;
+            user.username = username;
         }
         await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, user);
     }
