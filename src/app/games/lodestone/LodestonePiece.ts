@@ -5,7 +5,7 @@ export type LodestoneDirection = 'push' | 'pull'
 export class LodestonePieceNone {
     public static UNREACHABLE: LodestonePieceNone = new LodestonePieceNone(true);
     public static EMPTY: LodestonePieceNone = new LodestonePieceNone(false);
-    private constructor(public readonly unreachable: boolean) {
+    private constructor(private readonly unreachable: boolean) {
     }
     public isLodestone(): this is LodestonePieceLodestone {
         return false;
@@ -15,6 +15,9 @@ export class LodestonePieceNone {
     }
     public isEmpty(): this is LodestonePieceNone {
         return true;
+    }
+    public isUnreachable(): boolean {
+        return this.unreachable;
     }
     public equals(other: LodestonePiece): boolean {
         return this === other;
@@ -40,7 +43,10 @@ export class LodestonePiecePlayer {
         return true;
     }
     public isEmpty(): this is LodestonePieceNone {
-        return true;
+        return false;
+    }
+    public isUnreachable(): boolean {
+        return false;
     }
     public equals(other: LodestonePiece): boolean {
         return this === other;
@@ -58,7 +64,10 @@ export class LodestonePieceLodestone {
         return false;
     }
     public isEmpty(): this is LodestonePieceNone {
-        return true;
+        return false;
+    }
+    public isUnreachable(): boolean {
+        return false;
     }
     public flip(): LodestonePieceLodestone {
         const reverseDirection: LodestoneDirection = this.direction === 'push' ? 'pull' : 'push';

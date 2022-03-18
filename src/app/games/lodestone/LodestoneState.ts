@@ -7,15 +7,25 @@ import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class LodestonePressurePlate {
+    public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
     public static EMPTY_5: LodestonePressurePlate = new LodestonePressurePlate(5, []);
     public static EMPTY_3: LodestonePressurePlate = new LodestonePressurePlate(3, []);
+
     public constructor(public readonly width: 3 | 5,
                        public readonly pieces: readonly LodestonePiecePlayer[]) {
+    }
+    public remainingSpaces(): number {
+        if (this.width === 5) {
+            return 3 + this.width - this.pieces.length;
+        } else {
+            return 3 - this.pieces.length;
+        }
     }
     public addCaptured(player: Player, howMany: number): MGPOptional<LodestonePressurePlate> {
         if (this.pieces.length + howMany >= this.width) {
             // The pressure plate is full, it therefore crumbles the floor.
             if (this.width === 5) {
+                // Put the rest of the pieces on the next pressure plate
                 return LodestonePressurePlate.EMPTY_3.addCaptured(player, howMany + this.pieces.length - 5);
             } else {
                 // This was the last plate level
@@ -32,20 +42,14 @@ export class LodestonePressurePlate {
     }
 }
 
-export type LodestonePressurePlates = {
-    top: MGPOptional<LodestonePressurePlate>,
-    bottom: MGPOptional<LodestonePressurePlate>,
-    left: MGPOptional<LodestonePressurePlate>
-    right: MGPOptional<LodestonePressurePlate>,
-}
+export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
+export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, MGPOptional<LodestonePressurePlate>>
 
-export type LodestoneInfos = [MGPOptional<Coord>, MGPOptional<Coord>]
+export type LodestoneLodestones = [MGPOptional<Coord>, MGPOptional<Coord>]
 
 export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
-    public static readonly WIDTH: number = 8;
-
-    public static readonly HEIGHT: number = 8;
+    public static readonly SIZE: number = 8;
 
     public static getInitialState(): LodestoneState {
         const _: LodestonePiece = LodestonePieceNone.EMPTY;
@@ -74,14 +78,24 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
     public constructor(board: Table<LodestonePiece>,
                        turn: number,
-                       public readonly lodestones: LodestoneInfos,
+                       public readonly lodestones: LodestoneLodestones,
                        public readonly pressurePlates: LodestonePressurePlates) {
         super(board, turn);
     }
+    public remainingSpaces(): number {
+        let total: number = 0;
+        for (const position of LodestonePressurePlate.POSITIONS) {
+            const pressurePlate: MGPOptional<LodestonePressurePlate> = this.pressurePlates[position];
+            if (pressurePlate.isPresent()) {
+                total += pressurePlate.get().remainingSpaces();
+            }
+        }
+        return total;
+    }
     public numberOfPieces(): [number, number] {
         const playerPieces: [number, number] = [0, 0];
-        for (let y: number = 0; y < LodestoneState.HEIGHT; y++) {
-            for (let x: number = 0; x < LodestoneState.WIDTH; x++) {
+        for (let y: number = 0; y < LodestoneState.SIZE; y++) {
+            for (let x: number = 0; x < LodestoneState.SIZE; x++) {
                 const piece: LodestonePiece = this.getPieceAtXY(x, y);
                 if (piece.isPlayerPiece()) {
                     playerPieces[piece.owner.value] += 1;

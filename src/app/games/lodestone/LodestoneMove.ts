@@ -12,6 +12,7 @@ export type LodestoneCaptures = {
 export class LodestoneMove extends MoveCoord {
     public constructor(coord: Coord,
                        public readonly direction: LodestoneDirection,
+                       public readonly diagonal: boolean,
                        public readonly captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 }) {
         super(coord.x, coord.y);
     }
