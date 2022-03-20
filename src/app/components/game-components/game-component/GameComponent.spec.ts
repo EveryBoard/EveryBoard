@@ -6,7 +6,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub, ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
@@ -19,8 +19,6 @@ import { JSONValue } from 'src/app/utils/utils';
 describe('GameComponent', () => {
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
-
-    const gameList: ReadonlyArray<string> = new PickGameComponent().gameNameList;
 
     beforeEach(fakeAsync(async() => {
         await ComponentTestUtils.configureTestModule(activatedRouteStub);
@@ -116,21 +114,21 @@ describe('GameComponent', () => {
             Yinsh: { onClick: [0, 0] },
         };
         const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
-        for (const gameName of gameList.concat('MinimaxTesting')) {
-            const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameName];
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
+            const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {
-                throw new Error('Please define ' + gameName + ' clickable method in here to test them.');
+                throw new Error('Please define ' + gameInfo.urlName + ' clickable method in here to test them.');
             }
-            activatedRouteStub.setRoute('compo', gameName);
+            activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
-                await ComponentTestUtils.forGame(gameName, LocalGameWrapperComponent, false);
+                await ComponentTestUtils.forGame(gameInfo.urlName, LocalGameWrapperComponent, false);
             const component: AbstractGameComponent = testUtils.getComponent();
             testUtils.wrapper.observerRole = 2;
             testUtils.detectChanges();
             tick(1);
             expect(component).toBeDefined();
             for (const methodName of Object.keys(game)) {
-                const context: string = `click method ${methodName} should be defined for game ${gameName}`;
+                const context: string = `click method ${methodName} should be defined for game ${gameInfo.name}`;
                 expect(component[methodName]).withContext(context).toBeDefined();
                 const clickResult: MGPValidation = await component[methodName](...game[methodName]);
                 expect(clickResult).toEqual(refusal);

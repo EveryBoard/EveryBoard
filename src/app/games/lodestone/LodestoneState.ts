@@ -83,7 +83,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         super(board, turn);
     }
     public remainingSpaces(): number {
-        let total: number = 0;
+        let total: number = 0;
         for (const position of LodestonePressurePlate.POSITIONS) {
             const pressurePlate: MGPOptional<LodestonePressurePlate> = this.pressurePlates[position];
             if (pressurePlate.isPresent()) {
@@ -104,11 +104,12 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         }
         return playerPieces;
     }
-    public nextLodestoneDirection(player: Player): MGPOptional<LodestoneDirection> {
-        if (this.lodestones[player.value].isAbsent()) {
+    public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {
+        const currentPlayer: Player = this.getCurrentPlayer();
+        if (this.lodestones[currentPlayer.value].isAbsent()) {
             return MGPOptional.empty();
         } else {
-            const piece: LodestonePiece = this.getPieceAt(this.lodestones[player.value].get());
+            const piece: LodestonePiece = this.getPieceAt(this.lodestones[currentPlayer.value].get());
             assert(piece.isLodestone(), 'Must have a lodestone at the specified position');
             const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
             const currentDirection: LodestoneDirection = lodestone.direction;

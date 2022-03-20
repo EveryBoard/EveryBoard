@@ -74,13 +74,11 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                 pressurePlate.get().addCaptured(opponent, captured);
             const plateInfo: [Coord, Coord, Direction] = LodestoneRules.PRESSURE_PLATES_POSITIONS[position];
             if (newPressurePlate.isAbsent()) {
-                console.log('second pressure plate crumbles')
                 // The second pressure plate has fallen, crumble both rows
                 this.removePressurePlate(board, plateInfo[0], plateInfo[2]);
                 this.removePressurePlate(board, plateInfo[1], plateInfo[2]);
             } else if (newPressurePlate.get().width < pressurePlate.get().width) {
                 // The first pressure plate has fallen
-                console.log('first pressure plate crumbles')
                 this.removePressurePlate(board, plateInfo[0], plateInfo[2]);
             }
             return newPressurePlate;
@@ -89,8 +87,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
     }
     private removePressurePlate(board: LodestonePiece[][], start: Coord, direction: Direction): void {
-        console.log('crumbling:')
-        console.log({start})
         for (let coord: Coord = start; // eslint-disable-next-line indent
              coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE); // eslint-disable-next-line indent
              coord = coord.getNext(direction)) {
@@ -179,7 +175,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         if (targetContent.isLodestone() && targetContent.owner !== player) {
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }
-        const nextLodestoneDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection(player);
+        const nextLodestoneDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection();
         const validLodestoneDirection: boolean =
             nextLodestoneDirection.isAbsent() || nextLodestoneDirection.equalsValue(move.direction);
         if (validLodestoneDirection === false) {
@@ -196,7 +192,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const numberOfCapturesInMove: number =
             move.captures.top + move.captures.bottom + move.captures.left + move.captures.right;
         const actualCaptures: number = Math.min(captures.length, state.remainingSpaces());
-        console.log({numberOfCapturesInMove, capturesLength: captures.length, actualCaptures})
         if (numberOfCapturesInMove !== actualCaptures) {
             return MGPFallible.failure(LodestoneFailure.MUST_PLACE_CAPTURES_ON_PRESSURE_PLATES());
         }
