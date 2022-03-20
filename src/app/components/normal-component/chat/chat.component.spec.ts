@@ -59,7 +59,7 @@ describe('ChatComponent', () => {
 
             // Then we should see the sender name and the message content
             const sender: DebugElement = testUtils.findElement('.chat-sender');
-            expect(sender.nativeElement.innerText).toEqual(MSG.sender.name + ' :');
+            expect(sender.nativeElement.innerText).toEqual(MSG.sender.name + ' : ');
             const message: DebugElement = testUtils.findElement('.chat-message');
             expect(message.nativeElement.innerText).toEqual(MSG.content);
         }));
