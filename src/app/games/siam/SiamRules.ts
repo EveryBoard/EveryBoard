@@ -170,7 +170,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const mountainsColumn: number[] = mountainsInfo.columns;
 
         const winner: PlayerOrNone = SiamRules.getWinner(state, move, mountainsInfo.nbMountain);
-        if (Player.isPlayer(winner)) {
+        if (winner.isPlayer()) {
             // 1. victories
             if (winner === Player.ZERO) {
                 return {
@@ -512,7 +512,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             SiamRules.getMountainsRowsAndColumns(node.gameState);
 
         const winner: PlayerOrNone = SiamRules.getWinner(node.gameState, node.move, mountainsInfo.nbMountain);
-        if (Player.isPlayer(winner)) {
+        if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);
         } else {
             return GameStatus.ONGOING;

@@ -190,7 +190,7 @@ export class SixState extends GameState implements ComparableObject {
     public switchPiece(coord: Coord): SixState {
         const newPieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
         const oldPiece: PlayerOrNone = this.getPieceAt(coord);
-        if (Player.isPlayer(oldPiece)) {
+        if (oldPiece.isPlayer()) {
             newPieces.replace(coord, oldPiece.getOpponent());
             return new SixState(newPieces, this.turn, this.offset);
         } else {

@@ -112,7 +112,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return false;
         }
         const supportedPieces: PylosCoord[] = capture.getHigherPieces()
-            .filter((p: PylosCoord) => Player.isPlayer(state.getPieceAt(p)) &&
+            .filter((p: PylosCoord) => state.getPieceAt(p).isPlayer() &&
                                        p.equals(move.firstCapture.get()) === false);
         if (supportedPieces.length > 0) {
             return false;
@@ -138,7 +138,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return PylosRules.applyLegalMove(move, state, status);
     }
     public isLegal(move: PylosMove, state: PylosState): MGPFallible<void> {
-        if (Player.isPlayer(state.getPieceAt(move.landingCoord))) {
+        if (state.getPieceAt(move.landingCoord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
 
@@ -154,7 +154,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             }
 
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
-                .filter((p: PylosCoord) => Player.isPlayer(state.getPieceAt(p)) ||
+                .filter((p: PylosCoord) => state.getPieceAt(p).isPlayer() ||
                                            p.equals(move.landingCoord));
             if (supportedPieces.length > 0) {
                 return MGPFallible.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());

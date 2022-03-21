@@ -87,7 +87,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
             }
         }
         const winner: PlayerOrNone = state.getPieceAt(ApagosCoord.THREE).getDominatingPlayer();
-        assert(Player.isPlayer(winner), 'winner can only be a player if the game is finished');
+        assert(winner.isPlayer(), 'winner can only be a player if the game is finished');
         return GameStatus.getVictory(winner as Player);
     }
 }

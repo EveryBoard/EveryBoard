@@ -97,7 +97,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         const highestAlignment: MGPOptional<Coord> = this.findHighestAlignment(node.gameState);
         if (highestAlignment.isPresent()) {
             const winningPiece: DiamPiece = node.gameState.getPieceAt(highestAlignment.get());
-            assert(Player.isPlayer(winningPiece.owner), 'highest alignment is owned by a player');
+            assert(winningPiece.owner.isPlayer(), 'highest alignment is owned by a player');
             return GameStatus.getVictory(winningPiece.owner as Player);
         } else {
             return GameStatus.ONGOING;

@@ -458,7 +458,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public isOpponentWaitingForTakeBackResponse(): boolean {
         const takeBackRequester: PlayerOrNone = this.getTakeBackRequester();
-        if (Player.isPlayer(takeBackRequester)) {
+        if (takeBackRequester.isPlayer()) {
             return this.isOpponent(takeBackRequester);
         } else {
             return false;

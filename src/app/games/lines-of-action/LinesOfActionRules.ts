@@ -27,7 +27,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: PlayerOrNone = state.getPieceAt(coord);
-                if (Player.isPlayer(piece)) {
+                if (piece.isPlayer()) {
                     for (const target of LinesOfActionRules.possibleTargets(state, coord)) {
                         const move: LinesOfActionMove = LinesOfActionMove.of(coord, target).get();
                         moves.push(move);
@@ -45,7 +45,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 if (groups[y][x] === -1) {
                     const content: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                    if (Player.isPlayer(content)) {
+                    if (content.isPlayer()) {
                         highestGroup += 1;
                         LinesOfActionRules.markGroupStartingAt(state, groups, new Coord(x, y), highestGroup);
                         numGroups[content.value] += 1;
@@ -109,7 +109,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {
         let count: number = 0;
         for (const coord of LinesOfActionRules.getLineCoords(pos, dir)) {
-            if (Player.isPlayer(state.getPieceAt(coord))) {
+            if (state.getPieceAt(coord).isPlayer()) {
                 count += 1;
             }
         }

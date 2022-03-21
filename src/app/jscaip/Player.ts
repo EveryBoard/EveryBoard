@@ -7,6 +7,9 @@ class PlayerNone implements ComparableObject {
     public value: number = 2;
     private constructor() {
     }
+    public isPlayer(): this is Player {
+        return false;
+    }
     public toString(): string {
         return 'PlayerNone';
     }
@@ -37,11 +40,11 @@ export class Player implements ComparableObject {
     public static fromTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
-    public static isPlayer(player: PlayerOrNone): player is Player {
-        return player instanceof Player;
-    }
     protected constructor(public readonly value: number) {}
 
+    public isPlayer(): this is Player {
+        return true;
+    }
     public toString(): string {
         return 'Player ' + this.value;
     }

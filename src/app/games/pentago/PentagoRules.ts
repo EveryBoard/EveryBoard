@@ -50,7 +50,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         return state.applyLegalMove(move);
     }
     public isLegal(move: PentagoMove, state: PentagoState): MGPFallible<void> {
-        if (Player.isPlayer(state.getPieceAt(move.coord))) {
+        if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const postDropState: PentagoState = state.applyLegalDrop(move);
@@ -73,7 +73,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
             const firstValue: PlayerOrNone = state.getPieceAt(maybeVictory[0]);
             const subVictory: Coord[] = [maybeVictory[0]];
-            if (Player.isPlayer(firstValue)) {
+            if (firstValue.isPlayer()) {
                 let testedCoord: Coord = maybeVictory[0].getNext(maybeVictory[1]);
                 let fourAligned: boolean = true;
                 for (let i: number = 0; i < 3 && fourAligned; i++) {

@@ -23,7 +23,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     public static getVictoriousCoords(state: P4State): Coord[] {
         const coords: Coord[] = [];
         for (let x: number = 0; x < 7; x++) {
-            for (let y: number = 5; y !== -1 && Player.isPlayer(state.board[y][x]); y--) {
+            for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
                 const caseScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (caseScore === Player.ZERO.getVictoryValue() ||
                     caseScore === Player.ONE.getVictoryValue())
@@ -40,7 +40,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
-            for (let y: number = 5; y !== -1 && Player.isPlayer(state.board[y][x]); y--) {
+            for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
                 const tmpScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
@@ -99,7 +99,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     private static getOpponent(board: Table<PlayerOrNone>, coord: Coord): Player {
         const c: PlayerOrNone = board[coord.y][coord.x];
-        assert(Player.isPlayer(c), 'getOpponent should not be called with PlayerOrNone.NONE');
+        assert(c.isPlayer(), 'getOpponent should not be called with PlayerOrNone.NONE');
         return (c === Player.ONE) ? Player.ZERO : Player.ONE;
     }
     public static getSquareScore(board: Table<PlayerOrNone>, coord: Coord): number {
@@ -179,7 +179,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public isLegal(move: P4Move, state: P4State): MGPFallible<void> {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
-        if (Player.isPlayer(state.getPieceAtXY(move.x, 0))) {
+        if (state.getPieceAtXY(move.x, 0).isPlayer()) {
             return MGPFallible.failure(P4Failure.COLUMN_IS_FULL());
         }
         return MGPFallible.success(undefined);
@@ -188,7 +188,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const state: P4State = node.gameState;
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
-            for (let y: number = 5; y >= 0 && Player.isPlayer(state.board[y][x]); y--) {
+            for (let y: number = 5; y >= 0 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
                 const tmpScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {

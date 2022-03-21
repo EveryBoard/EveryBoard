@@ -91,7 +91,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = state.getPieceAt(coord);
-                if (Player.isPlayer(player)) {
+                if (player.isPlayer()) {
                     const mod: number = player.getScoreModifier();
                     total += SCORE_BY_PIECE * mod;
                     wasPresent[player.value] = mod;

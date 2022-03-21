@@ -88,7 +88,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.lastMove = this.rules.node.move;
         if (this.lastMove.isPresent()) {
             const lastMove: LinesOfActionMove = this.lastMove.get();
-            if (Player.isPlayer(this.getPreviousState().getPieceAt(lastMove.end))) {
+            if (this.getPreviousState().getPieceAt(lastMove.end).isPlayer()) {
                 this.captured = MGPOptional.of(lastMove.end);
             } else {
                 this.captured = MGPOptional.empty();

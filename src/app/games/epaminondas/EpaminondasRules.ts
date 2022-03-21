@@ -71,7 +71,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             if (landingCoord.isNotInRange(14, 12)) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
-            if (Player.isPlayer(state.getPieceAt(landingCoord))) {
+            if (state.getPieceAt(landingCoord).isPlayer()) {
                 return MGPFallible.failure(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY());
             }
             landingIndex++;

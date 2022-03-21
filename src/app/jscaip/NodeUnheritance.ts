@@ -3,7 +3,7 @@ import { Player, PlayerOrNone } from './Player';
 export class NodeUnheritance {
 
     public static fromWinner(player: PlayerOrNone): NodeUnheritance {
-        if (Player.isPlayer(player)) {
+        if (player.isPlayer()) {
             return new NodeUnheritance(player.getVictoryValue());
         } else {
             return new NodeUnheritance(0);

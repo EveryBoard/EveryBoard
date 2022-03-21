@@ -52,7 +52,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.turn >= 40) {
             return MGPFallible.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
         }
-        if (Player.isPlayer(state.getPieceAt(move.coord))) {
+        if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (state.isCentralZone(move.coord) === false) {
@@ -68,7 +68,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.getPieceAt(move.coord) !== state.getCurrentPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (Player.isPlayer(state.getPieceAt(move.end))) {
+        if (state.getPieceAt(move.end).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         return MGPFallible.success(undefined);
@@ -86,7 +86,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             }
         }
         for (const landing of move.getLandingCoords()) {
-            if (Player.isPlayer(state.getPieceAt(landing))) {
+            if (state.getPieceAt(landing).isPlayer()) {
                 return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
             }
         }
@@ -131,7 +131,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         const protectedPawns: [number, number] = [0, 0];
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             const content: PlayerOrNone = state.getPieceAt(shelter);
-            if (Player.isPlayer(content)) {
+            if (content.isPlayer()) {
                 protectedPawns[content.value] += 1;
                 if (protectedPawns[content.value] === 20) {
                     return GameStatus.getVictory(content);

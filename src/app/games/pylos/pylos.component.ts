@@ -163,7 +163,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        const reallyOccupied: boolean = Player.isPlayer(this.rules.node.gameState.getPieceAt(coord));
+        const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord).isPlayer();
         const landingCoord: boolean = this.chosenLandingCoord.equalsValue(coord);
         return reallyOccupied || landingCoord;
     }

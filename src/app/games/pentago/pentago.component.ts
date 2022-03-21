@@ -128,7 +128,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (Player.isPlayer(this.board[y][x])) {
+        if (this.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);

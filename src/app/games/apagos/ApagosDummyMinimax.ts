@@ -21,7 +21,7 @@ export class ApagosDummyMinimax extends Minimax<ApagosMove, ApagosState> {
             return NodeUnheritance.fromWinner(gameStatus.winner);
         }
         const levelThreeDominant: PlayerOrNone = node.gameState.board[3].getDominatingPlayer();
-        if (Player.isPlayer(levelThreeDominant)) {
+        if (levelThreeDominant.isPlayer()) {
             return new NodeUnheritance(levelThreeDominant.getScoreModifier());
         } else {
             return new NodeUnheritance(0);

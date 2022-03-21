@@ -75,9 +75,9 @@ export class EncapsuleCase {
     }
     public toList(): EncapsulePiece[] {
         const l: EncapsulePiece[] = [];
-        if (Player.isPlayer(this.small)) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
-        if (Player.isPlayer(this.medium)) l.push(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium));
-        if (Player.isPlayer(this.big)) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
+        if (this.small.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
+        if (this.medium.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium));
+        if (this.big.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
         return l;
     }
     public toOrderedPieceNames(): string[] {

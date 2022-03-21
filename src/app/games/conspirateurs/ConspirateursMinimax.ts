@@ -95,7 +95,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = state.getPieceAt(coord);
-                if (Player.isPlayer(player)) {
+                if (player.isPlayer()) {
                     if (state.isShelter(coord)) {
                         score += player.getScoreModifier() * 20;
                         piecesInShelters.replace(player, piecesInShelters.get(player).get() + 1);

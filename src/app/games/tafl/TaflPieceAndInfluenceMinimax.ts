@@ -105,7 +105,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
     }
     private getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
         const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
-        assert(Player.isPlayer(owner), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
+        assert(owner.isPlayer(), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
         const threatenerPlayer: Player = (owner as Player).getOpponent();
         const threats: SandwichThreat[] = [];
         for (const dir of Orthogonal.ORTHOGONALS) {

@@ -175,7 +175,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 return MGPFallible.failure(RulesFailure.MUST_PASS());
             }
         }
-        if (Player.isPlayer(state.getPieceAt(move.coord))) {
+        if (state.getPieceAt(move.coord).isPlayer()) {
             display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy space');
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }

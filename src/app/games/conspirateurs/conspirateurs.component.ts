@@ -95,7 +95,7 @@ export class ConspirateursComponent
                     squareClasses: [],
                     shelterClasses: [],
                     pieceClasses: [this.getPlayerClass(piece)],
-                    hasPiece: Player.isPlayer(piece),
+                    hasPiece: piece.isPlayer(),
                     isShelter: false,
                     isOccupiedShelter: false,
                 };

@@ -61,7 +61,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
                 const content: PlayerOrNone = state.getPieceAtXY(x, y);
-                if (Player.isPlayer(content)) {
+                if (content.isPlayer()) {
                     const c: number = content.value;
                     sums[c].columns[x] = sums[c].columns[x] + 1;
                     sums[c].rows[y] = sums[c].rows[y] + 1;

@@ -19,7 +19,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                if (Player.isPlayer(owner)) {
+                if (owner.isPlayer()) {
                     score += owner.getScoreModifier();
                 }
             }
@@ -43,7 +43,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                if (Player.isPlayer(owner)) {
+                if (owner.isPlayer()) {
                     for (let dx: number = -1; dx <= 1; dx++) {
                         for (let dy: number = -1; dy <= 1; dy++) {
                             const coord: Coord = new Coord(x+dx, y+dy);
@@ -80,7 +80,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                if (Player.isPlayer(owner)) {
+                if (owner.isPlayer()) {
                     score += owner.getScoreModifier()*(Math.sqrt((x - 6.5)*(x - 6.5)));
                 }
             }
@@ -95,7 +95,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
             for (let x: number = 0; x < 14; x++) {
                 const firstCoord: Coord = new Coord(x, y);
                 const owner: PlayerOrNone = state.getPieceAt(firstCoord);
-                if (Player.isPlayer(owner)) {
+                if (owner.isPlayer()) {
                     for (const direction of Direction.DIRECTIONS) {
                         let movedPieces: number = 1;
                         let nextCoord: Coord = firstCoord.getNext(direction, 1);

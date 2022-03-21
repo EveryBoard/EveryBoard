@@ -56,7 +56,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = state.getPieceAt(coord);
-                if (Player.isPlayer(player)) {
+                if (player.isPlayer()) {
                     let avancement: number; // entre 0 et 11
                     let dirs: Direction[];
                     if (player === Player.ZERO) {
