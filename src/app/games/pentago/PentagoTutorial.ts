@@ -5,8 +5,8 @@ import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const X: Player = Player.ONE;
-const O: Player = Player.ZERO;
+const X: PlayerOrNone = Player.ONE;
+const O: PlayerOrNone = Player.ZERO;
 
 export class PentagoTutorial {
 

@@ -5,8 +5,8 @@ import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const X: Player = Player.ZERO;
-const O: Player = Player.ONE;
+const X: PlayerOrNone = Player.ZERO;
+const O: PlayerOrNone = Player.ONE;
 
 export class LinesOfActionTutorial {
 

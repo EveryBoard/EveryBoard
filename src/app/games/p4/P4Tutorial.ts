@@ -3,8 +3,8 @@ import { P4State } from 'src/app/games/p4/P4State';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
-const O: Player = Player.ZERO;
-const X: Player = Player.ONE;
+const O: PlayerOrNone = Player.ZERO;
+const X: PlayerOrNone = Player.ONE;
 const _: PlayerOrNone = PlayerOrNone.NONE;
 
 export class P4Tutorial {

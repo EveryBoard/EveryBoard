@@ -6,8 +6,8 @@ export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(): EpaminondasState {
         const _: PlayerOrNone = PlayerOrNone.NONE;
-        const X: Player = Player.ONE;
-        const O: Player = Player.ZERO;
+        const X: PlayerOrNone = Player.ONE;
+        const O: PlayerOrNone = Player.ZERO;
         const board: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],

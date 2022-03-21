@@ -13,8 +13,8 @@ describe('PentagoComponent', () => {
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<PentagoComponent>('Pentago');

@@ -21,8 +21,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 describe('LocalGameWrapperComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<P4Component>;
-    const O: Player = Player.ZERO;
-    const X: Player = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(fakeAsync(async() => {

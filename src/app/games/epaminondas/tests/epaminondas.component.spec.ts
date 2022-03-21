@@ -16,8 +16,8 @@ describe('EpaminondasComponent', () => {
     let componentTestUtils: ComponentTestUtils<EpaminondasComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     function expectClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);

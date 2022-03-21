@@ -14,8 +14,8 @@ describe('PylosComponent', () => {
     let componentTestUtils: ComponentTestUtils<PylosComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: Player = Player.ZERO;
-    const X: Player = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<PylosComponent>('Pylos');

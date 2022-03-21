@@ -9,8 +9,8 @@ import { Table } from 'src/app/utils/ArrayUtils';
 describe('ReversiMinimax', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     let rules: ReversiRules;
     let minimax: ReversiMinimax;

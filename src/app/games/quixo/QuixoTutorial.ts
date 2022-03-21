@@ -5,8 +5,8 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const O: Player = Player.ZERO;
-const X: Player = Player.ONE;
+const O: PlayerOrNone = Player.ZERO;
+const X: PlayerOrNone = Player.ONE;
 
 export class QuixoTutorial {
 

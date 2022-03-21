@@ -15,8 +15,8 @@ describe('LinesOfActionRules', () => {
 
     let rules: LinesOfActionRules;
     let minimax: LinesOfActionMinimax;
-    const X: Player = Player.ZERO;
-    const O: Player = Player.ONE;
+    const X: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(() => {

@@ -18,8 +18,8 @@ describe('PylosRules:', () => {
     let minimaxes: PylosMinimax[];
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: Player = Player.ZERO;
-    const X: Player = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
 
     beforeEach(() => {
         rules = new PylosRules(PylosState);

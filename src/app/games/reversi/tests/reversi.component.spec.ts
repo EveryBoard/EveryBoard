@@ -12,8 +12,8 @@ describe('ReversiComponent', () => {
     let componentTestUtils: ComponentTestUtils<ReversiComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');

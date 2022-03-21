@@ -8,8 +8,8 @@ export class LinesOfActionState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(): LinesOfActionState {
         const _: PlayerOrNone = PlayerOrNone.NONE;
-        const X: Player = Player.ZERO;
-        const O: Player = Player.ONE;
+        const X: PlayerOrNone = Player.ZERO;
+        const O: PlayerOrNone = Player.ONE;
         const board: PlayerOrNone[][] = [
             [_, X, X, X, X, X, X, _],
             [O, _, _, _, _, _, _, O],
