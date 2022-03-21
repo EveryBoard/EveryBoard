@@ -4,7 +4,7 @@ import { display } from 'src/app/utils/utils';
 import { Message, MessageDocument } from '../domain/Message';
 import { Chat } from '../domain/Chat';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
-import { Firestore, Unsubscribe } from 'firebase/firestore';
+import { Firestore, Unsubscribe } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',
