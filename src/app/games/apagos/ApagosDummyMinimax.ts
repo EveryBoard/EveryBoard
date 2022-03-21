@@ -1,6 +1,6 @@
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ApagosMove } from './ApagosMove';
 import { ApagosNode, ApagosRules } from './ApagosRules';

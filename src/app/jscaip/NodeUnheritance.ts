@@ -1,4 +1,4 @@
-import { Player, PlayerOrNone } from './Player';
+import { PlayerOrNone } from './Player';
 
 export class NodeUnheritance {
 
