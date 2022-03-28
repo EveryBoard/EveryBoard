@@ -6,13 +6,13 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LodestoneFailure } from './LodestoneFailure';
-import { LodestoneMove } from './LodestoneMove';
-import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
-import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
-import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from './LodestoneState';
+import { LodestoneFailure } from '../LodestoneFailure';
+import { LodestoneMove } from '../LodestoneMove';
+import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
+import { LodestoneInfos, LodestoneNode, LodestoneRules } from '../LodestoneRules';
+import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-fdescribe('LodestoneRules', () => {
+describe('LodestoneRules', () => {
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
     const A: LodestonePiece = LodestonePiecePlayer.ZERO;

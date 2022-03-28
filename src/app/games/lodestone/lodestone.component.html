@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-100 -100 1000 1100"
+     viewBox="-100 -100 1000 1150"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of viewInfo.boardInfo; index as y">
         <g *ngFor="let square of line; index as x"
@@ -24,20 +24,54 @@
              />
         </g>
     </g>
-    <g *ngFor="let direction of viewInfo.availableLodestones; index as y">
-        <circle id="lodestone_{{ direction }}_orthogonal"
+    <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
+       attr.transform="translate({{ (x + (viewInfo.availableLodestones.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
+       onClck="selectLodestone(lodestone.direction, lodestone.diagonal)">
+        <circle id="lodestone_{{ lodestone.direction }}_orthogonal"
                 class="base"
-                [ngClass]="viewInfo.currentPlayerClass"
+                [ngClass]="lodestone.pieceClass"
                 [attr.r]="PIECE_RADIUS"
-                [attr.cx]="STROKE_WIDTH + SPACE_SIZE / 2 + SPACE_SIZE * y"
-                [attr.cy]="9 * SPACE_SIZE + SPACE_SIZE / 2"
+                attr.cx="0"
+                attr.cy="0"
                 />
-        <circle id="lodestone_{{ direction }}_diagonal"
-                class="base"
-                [ngClass]="viewInfo.currentPlayerClass"
-                [attr.r]="PIECE_RADIUS"
-                [attr.cx]="STROKE_WIDTH + SPACE_SIZE / 2 + SPACE_SIZE * y + SPACE_SIZE"
-                [attr.cy]="9 * SPACE_SIZE + SPACE_SIZE / 2"
+        <circle class="base small-stroke"
+                [ngClass]="lodestone.movingClass"
+                [attr.r]="PIECE_RADIUS / 4"
+                attr.cx="0"
+                attr.cy="0"
                 />
+        <g attr.transform="rotate({{ lodestone.diagonal ? 45 : 0 }})">
+            <g *ngFor="let i of [0, 1, 2, 3]">
+                <polygon *ngIf="lodestone.direction === 'pull'"
+                         class="base small-stroke"
+                         [ngClass]="lodestone.movingClass"
+                         attr.points="{{PIECE_RADIUS * 0.8}},0 {{PIECE_RADIUS * 0.5}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.5}},{{- PIECE_RADIUS * 0.2}}"
+                         attr.transform="rotate({{ i * 90 }})" />
+                <polygon *ngIf="lodestone.direction === 'push'"
+                         class="base small-stroke"
+                         [ngClass]="lodestone.movingClass"
+                         attr.points="{{PIECE_RADIUS * 0.5}},0 {{PIECE_RADIUS * 0.8}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.8}},{{- PIECE_RADIUS * 0.2}}"
+                         attr.transform="rotate({{ i * 90 }})" />
+            </g>
+        </g>
+    </g>
+    <g *ngFor="let plate of viewInfo.pressurePlates; index as plateIndex">
+        <g *ngFor="let square of plate.coords">
+            <rect id="plate_{{ plateIndex }}_{{ square.coord.x }}_{{ square.coord.y }}"
+                  class="base"
+                  [attr.x]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
+                  [attr.y]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <circle *ngIf="square.hasPiece"
+                    id="platepiece_{{ plateIndex }}_{{ square.coord.x }}_{{ square.coord.y }}"
+                    class="base"
+                    [ngClass]="square.pieceClass"
+                    [attr.r]="PIECE_RADIUS"
+                    [attr.cx]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                    [attr.cy]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+            />
+        </g>
     </g>
 </svg>

@@ -12,7 +12,7 @@ export class LodestonePressurePlate {
     public static EMPTY_3: LodestonePressurePlate = new LodestonePressurePlate(3, []);
 
     public constructor(public readonly width: 3 | 5,
-                       public readonly pieces: readonly LodestonePiecePlayer[]) {
+                       private readonly pieces: readonly LodestonePiecePlayer[]) {
     }
     public remainingSpaces(): number {
         if (this.width === 5) {
@@ -38,6 +38,13 @@ export class LodestonePressurePlate {
                 newPieces.push(LodestonePiecePlayer.of(player));
             }
             return MGPOptional.of(new LodestonePressurePlate(this.width, newPieces));
+        }
+    }
+    public getPieceAt(index: number): LodestonePiece {
+        if (index < this.pieces.length) {
+            return this.pieces[index];
+        } else {
+            return LodestonePieceNone.EMPTY;
         }
     }
 }

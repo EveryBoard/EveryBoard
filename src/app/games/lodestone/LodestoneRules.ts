@@ -20,7 +20,7 @@ export type LodestoneInfos = {
 }
 
 export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, LodestoneInfos> {
-    private static readonly PRESSURE_PLATES_POSITIONS
+    public static readonly PRESSURE_PLATES_POSITIONS
     : Record<LodestonePressurePlatePosition, [Coord, Coord, Direction]> = {
         top: [new Coord(0, 0), new Coord(0, 1), Direction.RIGHT],
         bottom: [new Coord(0, LodestoneState.SIZE), new Coord(0, LodestoneState.SIZE-1), Direction.RIGHT],
