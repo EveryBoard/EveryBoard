@@ -55,7 +55,8 @@ export class LodestonePiecePlayer {
 
 export class LodestonePieceLodestone {
     public constructor(public readonly owner: Player,
-                       public readonly direction: LodestoneDirection) {
+                       public readonly direction: LodestoneDirection,
+                       public readonly diagonal: boolean) {
     }
     public isLodestone(): this is LodestonePieceLodestone {
         return true;
@@ -69,15 +70,12 @@ export class LodestonePieceLodestone {
     public isUnreachable(): boolean {
         return false;
     }
-    public flip(): LodestonePieceLodestone {
-        const reverseDirection: LodestoneDirection = this.direction === 'push' ? 'pull' : 'push';
-        return new LodestonePieceLodestone(this.owner, reverseDirection);
-    }
     public equals(other: LodestonePiece): boolean {
         if (this === other) return true;
         if (other.isLodestone()) {
             if (this.owner !== other.owner) return false;
             if (this.direction !== other.direction) return false;
+            if (this.diagonal !== other.diagonal) return false;
             return true;
         } else {
             return false;

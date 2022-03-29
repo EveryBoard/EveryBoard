@@ -9,4 +9,7 @@ export class LodestoneFailure {
     public static TARGET_IS_CRUMBLED: Localized = () => $localize`You must place your lodestone on a non-crumbled square!`;
 
     public static TOO_MANY_CAPTURES_ON_SAME_PRESSURE_PLATE: Localized = () => $localize`You placed too many captures on the same pressure plate, which has not enough space left.`
+
+    public static MUST_PLACE_CAPTURES: Localized = () => $localize`You must place your captures on the pressure plates, on the side of the board`;
+
 }

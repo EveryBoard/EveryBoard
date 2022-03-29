@@ -7,6 +7,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone } from './LodestonePiece';
@@ -45,7 +46,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(infos.board);
         const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
         lodestones[currentPlayer.value] = MGPOptional.of(move.coord);
-        board[move.coord.y][move.coord.x] = new LodestonePieceLodestone(currentPlayer, move.direction);
+        board[move.coord.y][move.coord.x] = new LodestonePieceLodestone(currentPlayer, move.direction, move.diagonal);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         this.updatePressurePlates(board, pressurePlates, opponent, move.captures);
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
@@ -93,7 +94,46 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
         }
     }
-    private applyPull(lodestone: Coord, diagonal: boolean, state: LodestoneState): [LodestonePiece[][], Coord[]] {
+    public isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
+        const validityBeforeCaptures: MGPValidation = this.isLegalWithoutCaptures(state, move.coord, move.direction);
+        if (validityBeforeCaptures.isFailure()) {
+            return MGPFallible.failure(validityBeforeCaptures.getReason());
+        }
+
+        const [board, captures]: [LodestonePiece[][], Coord[]] =
+            this.applyMoveWithoutPlacingCaptures(state, move.coord, move.direction, move.diagonal);
+        const numberOfCapturesInMove: number =
+            move.captures.top + move.captures.bottom + move.captures.left + move.captures.right;
+        const actualCaptures: number = Math.min(captures.length, state.remainingSpaces());
+        if (numberOfCapturesInMove !== actualCaptures) {
+            return MGPFallible.failure(LodestoneFailure.MUST_PLACE_CAPTURES_ON_PRESSURE_PLATES());
+        }
+        for (const position of LodestonePressurePlate.POSITIONS) {
+            const pressurePlate: MGPOptional<LodestonePressurePlate> = state.pressurePlates[position];
+            if (pressurePlate.isPresent() && pressurePlate.get().remainingSpaces() < move.captures[position]) {
+                return MGPFallible.failure(LodestoneFailure.TOO_MANY_CAPTURES_ON_SAME_PRESSURE_PLATE());
+            }
+        }
+
+        return MGPFallible.success({ board, captures });
+    }
+    public applyMoveWithoutPlacingCaptures(
+        state: LodestoneState,
+        coord: Coord,
+        direction: LodestoneDirection,
+        diagonal: boolean,
+    ): [LodestonePiece[][], Coord[]] {
+        let board: LodestonePiece[][];
+        let captures: Coord[];
+        if (direction === 'pull') {
+            [board, captures] = this.applyPull(state, coord, diagonal);
+        } else {
+            [board, captures] = this.applyPush(state, coord, diagonal);
+        }
+        board[coord.y][coord.x] = new LodestonePieceLodestone(state.getCurrentPlayer(), direction, diagonal);
+        return [board, captures];
+    }
+    private applyPull(state: LodestoneState, lodestone: Coord, diagonal: boolean): [LodestonePiece[][], Coord[]] {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
@@ -126,7 +166,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return [board, captures];
     }
-    private applyPush(lodestone: Coord, diagonal: boolean, state: LodestoneState): [LodestonePiece[][], Coord[]] {
+    private applyPush(state: LodestoneState, lodestone: Coord, diagonal: boolean): [LodestonePiece[][], Coord[]] {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
@@ -163,46 +203,25 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return [board, captures];
     }
-    public isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
-        const targetContent: LodestonePiece = state.getPieceAt(move.coord);
+    public isLegalWithoutCaptures(state: LodestoneState, coord: Coord, direction: LodestoneDirection): MGPValidation {
+        const targetContent: LodestonePiece = state.getPieceAt(coord);
         if (targetContent.isUnreachable()) {
-            return MGPFallible.failure(LodestoneFailure.TARGET_IS_CRUMBLED());
+            return MGPValidation.failure(LodestoneFailure.TARGET_IS_CRUMBLED());
         }
         if (targetContent.isPlayerPiece()) {
-            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }
         const player: Player = state.getCurrentPlayer();
         if (targetContent.isLodestone() && targetContent.owner !== player) {
-            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }
         const nextLodestoneDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection();
         const validLodestoneDirection: boolean =
-            nextLodestoneDirection.isAbsent() || nextLodestoneDirection.equalsValue(move.direction);
+            nextLodestoneDirection.isAbsent() || nextLodestoneDirection.equalsValue(direction);
         if (validLodestoneDirection === false) {
-            return MGPFallible.failure(LodestoneFailure.MUST_FLIP_LODESTONE());
+            return MGPValidation.failure(LodestoneFailure.MUST_FLIP_LODESTONE());
         }
-
-        let board: LodestonePiece[][];
-        let captures: Coord[];
-        if (move.direction === 'pull') {
-            [board, captures] = this.applyPull(move.coord, move.diagonal, state);
-        } else {
-            [board, captures] = this.applyPush(move.coord, move.diagonal, state);
-        }
-        const numberOfCapturesInMove: number =
-            move.captures.top + move.captures.bottom + move.captures.left + move.captures.right;
-        const actualCaptures: number = Math.min(captures.length, state.remainingSpaces());
-        if (numberOfCapturesInMove !== actualCaptures) {
-            return MGPFallible.failure(LodestoneFailure.MUST_PLACE_CAPTURES_ON_PRESSURE_PLATES());
-        }
-        for (const position of LodestonePressurePlate.POSITIONS) {
-            const pressurePlate: MGPOptional<LodestonePressurePlate> = state.pressurePlates[position];
-            if (pressurePlate.isPresent() && pressurePlate.get().remainingSpaces() < move.captures[position]) {
-                return MGPFallible.failure(LodestoneFailure.TOO_MANY_CAPTURES_ON_SAME_PRESSURE_PLATE());
-            }
-        }
-
-        return MGPFallible.success({ board, captures });
+        return MGPValidation.SUCCESS;
     }
     public getGameStatus(node: LodestoneNode): GameStatus {
         const state: LodestoneState = node.gameState;

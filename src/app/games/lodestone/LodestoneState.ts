@@ -47,6 +47,9 @@ export class LodestonePressurePlate {
             return LodestonePieceNone.EMPTY;
         }
     }
+    public numberOfPiecesPresent(): number {
+        return this.pieces.length;
+    }
 }
 
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';

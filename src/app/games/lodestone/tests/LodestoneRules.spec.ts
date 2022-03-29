@@ -67,7 +67,7 @@ describe('LodestoneRules', () => {
     });
     it('should forbid placing a lodestone on a square occupied by the lodestone of the opponent', () => {
         // Given a state with the opponent lodestone
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'push', true);
         const board: Table<LodestonePiece> = [
             [X, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -91,7 +91,7 @@ describe('LodestoneRules', () => {
     });
     it('should allow placing a lodestone on the square where it already was', () => {
         // Given a state with our lodestone
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', true);
         const board: Table<LodestonePiece> = [
             [X, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -110,7 +110,7 @@ describe('LodestoneRules', () => {
         // When placing our lodestone on its previous sqaure
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'pull', false);
         // Then the move should be illegal
-        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull');
+        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', true);
         const expectedBoard: Table<LodestonePiece> = [
             [Y, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -141,7 +141,7 @@ describe('LodestoneRules', () => {
     });
     it('should forbid choosing the wrong side of the lodestone when it was already on the board (push)', () => {
         // Given a state where the lodestone is on the board
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', true);
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -165,7 +165,7 @@ describe('LodestoneRules', () => {
     });
     it('should forbid choosing the wrong side of the lodestone when it was already on the board (pull)', () => {
         // Given a state where the lodestone is on the board
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', true);
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -186,15 +186,14 @@ describe('LodestoneRules', () => {
         // Then the move should be illegal
         const reason: string = LodestoneFailure.MUST_FLIP_LODESTONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
-})
+    });
     it('should pull the player pieces when making a pull move, capturing opponent pieces on the way', () => {
         // Given any state
         const state: LodestoneState = LodestoneState.getInitialState();
         // When placing a lodestone to pull
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'pull', false, { top: 4, bottom: 0, left: 0, right: 0 });
         // Then the move should be legal and player pieces should be pulled
-        const P: LodestonePiece = new LodestonePieceLodestone(Player.ZERO,
-                                                              'pull');
+        const P: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', false);
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, A, B, _, B, _, _],
             [_, A, B, A, A, A, B, _],
@@ -233,7 +232,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push the B
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'pull', true);
         // Then the move is legal, and B is pushed, but not A
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', true);
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -273,7 +272,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to pull the two As
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'pull', false);
         // Then the move is legal, and no player pieces have moved
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', false);
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -304,7 +303,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push the B
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false);
         // Then the move is legal, and B is pushed, but not A
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -335,7 +334,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push the B
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'push', true);
         // Then the move is legal, and B is pushed, but not A
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', true);
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -366,7 +365,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push and capture B
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move is legal, and B is pushed and captured, but not A
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -386,7 +385,7 @@ describe('LodestoneRules', () => {
     });
     it('should block when arriving on one of the player pieces or on a lodestone (push)', () => {
         // Given a state with an opponent piece next to a player piece or a lodestone
-        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'push');
+        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'push', true);
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -402,7 +401,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push Bs
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false);
         // Then the move should be legal, but no B moves
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -464,7 +463,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push B
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false, { top: 0, bottom: 1, left: 0, right: 0 });
         // Then the move should be valid and B falls
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
@@ -505,7 +504,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push the B and putting this capture on the top pressure plate
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
@@ -546,7 +545,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push the B and putting this capture on the top pressure plate
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles a second time
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
@@ -587,7 +586,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to capture all Bs
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'pull', false, { top: 5, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles *twice*
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', false);
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
@@ -651,7 +650,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push one of the B
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, but only one piece is captured
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
@@ -693,7 +692,7 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push B
         const move: LodestoneMove = new LodestoneMove(new Coord(3, 3), 'push', false);
         // Then the move should be valid and no piece is actually considered captured
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push');
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', false);
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
