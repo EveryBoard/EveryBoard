@@ -72,6 +72,7 @@ module.exports = {
                 'error',
                 { 'ignoreDeclarationMerge': true },
             ],
+            'dot-notation': ['warn'],
             'max-len': ['error', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
             'require-jsdoc': ['error', { 'require': {
                 'FunctionDeclaration': false,
