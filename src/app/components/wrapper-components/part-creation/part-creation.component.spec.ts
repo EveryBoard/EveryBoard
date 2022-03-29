@@ -220,7 +220,7 @@ describe('PartCreationComponent:', () => {
                 tick(3000); // needs to be >2999
 
                 // Then logError has been called as this is an unusual situation
-                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', 'user was deleted', { username: 'firstCandidate', userId: 'opponent' });
+                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', 'user was deleted', { name: 'firstCandidate', id: 'opponent' });
                 // and the candidate has been deselected
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 // and the candidate has been removed from the lobby
@@ -241,7 +241,7 @@ describe('PartCreationComponent:', () => {
                 // Then the candidate does not appear on the page
                 testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
                 // and logError was called as this is an unexpected situation
-                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('PartCreationComponent', 'user is already offline', { username: 'firstCandidate', userId: 'opponent' });
+                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('PartCreationComponent', 'user is already offline', { name: 'firstCandidate', id: 'opponent' });
             }));
             it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

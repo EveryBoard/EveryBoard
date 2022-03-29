@@ -39,6 +39,7 @@ import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.p
 import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
 import { FirebaseTimePipe } from 'src/app/pipes-and-directives/firebase-time.pipe';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -107,7 +108,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.fixture = TestBed.createComponent(componentType);
         testUtils.component = testUtils.fixture.componentInstance;

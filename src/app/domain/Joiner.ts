@@ -7,6 +7,13 @@ export type MinimalUser = {
     name: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace MinimalUser {
+    export function from(id: string, name: string): MinimalUser {
+        return { id, name };
+    }
+}
+
 export interface Joiner extends JSONObject {
     readonly creator: MinimalUser;
     readonly candidates: Array<string>;

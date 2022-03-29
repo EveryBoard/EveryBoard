@@ -17,6 +17,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('LocalGameWrapperComponent', () => {
 
@@ -27,7 +28,7 @@ describe('LocalGameWrapperComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         TestBed.inject(ErrorLoggerService);
     }));
     it('should create', () => {

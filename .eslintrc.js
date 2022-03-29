@@ -95,7 +95,7 @@ module.exports = {
                 },
             ],
             'object-curly-spacing': ['error', 'always'],
-            'no-redeclare': ['error'],
+            'no-redeclare': ['off'], // subsumed by typescript-eslint's rule
             'camelcase': ['error'],
             'no-case-declarations': ['off'],
             'padded-blocks': ['off'],

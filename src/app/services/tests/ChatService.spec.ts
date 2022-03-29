@@ -74,7 +74,7 @@ describe('ChatService', () => {
             // When trying to observe it again
             // Then an error is thrown
             const errorMessage: string = 'Already observing same chat';
-            expect(() => service.startObserving('id', callback)).toThrowError('ChatService: ' + errorMessage);
+            expect(() => service.startObserving('id', callback)).toThrowError('ChatService: ' + errorMessage + ' (extra data: {"chatId":"id"})');
             // And it logged the error
             const errorData: JSONValue = { chatId: 'id' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ChatService', errorMessage, errorData);
@@ -89,7 +89,7 @@ describe('ChatService', () => {
             // When trying to observe another chat
             // Then an error is thrown
             const errorMessage: string = 'Already observing another chat';
-            expect(() => service.startObserving('id2', callback)).toThrowError('ChatService: ' + errorMessage);
+            expect(() => service.startObserving('id2', callback)).toThrowError('ChatService: ' + errorMessage + ' (extra data: {"chatId":"id2","followedChatId":"id"})');
             // And it logged the error
             const errorData: JSONValue = { chatId: 'id2', followedChatId: 'id' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ChatService', errorMessage, errorData);

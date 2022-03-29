@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FirstPlayer, IFirstPlayer, Joiner, IPartType, PartStatus, PartType } from '../../../domain/Joiner';
+import { FirstPlayer, IFirstPlayer, Joiner, IPartType, PartStatus, PartType, MinimalUser } from '../../../domain/Joiner';
 import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
@@ -346,8 +346,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const onDocumentCreated: (foundUser: UserDocument[]) => void = async(foundUsers: UserDocument[]) => {
             for (const user of foundUsers) {
                 if (user.data.state === 'offline') {
-                    await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                    ErrorLoggerService.logError('PartCreationComponent', 'user is already offline', { username: user.data.username, userId: user.id });
+                    const username: string = Utils.getNonNullable(user.data.username);
+                    await this.removeUserFromLobby(username);
+                    ErrorLoggerService.logError('PartCreationComponent', 'user is already offline',
+                                                MinimalUser.from(user.id, username));
                 }
             }
         };
@@ -361,8 +363,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = async(deletedUsers: UserDocument[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
-                await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                ErrorLoggerService.logError('PartCreationComponent', 'user was deleted', { username: user.data.username, userId: user.id });
+                const username: string = Utils.getNonNullable(user.data.username);
+                await this.removeUserFromLobby(username);
+                ErrorLoggerService.logError('PartCreationComponent', 'user was deleted',
+                                            MinimalUser.from(user.id, username));
             }
         };
         const callback: FirebaseCollectionObserver<User> =

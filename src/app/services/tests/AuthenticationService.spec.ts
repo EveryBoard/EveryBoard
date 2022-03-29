@@ -19,16 +19,6 @@ import { User } from 'src/app/domain/User';
 
 @Injectable()
 export class AuthenticationServiceMock {
-    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jeanjaja123',
-                                                                MGPOptional.of('jean@jaja.europe'),
-                                                                MGPOptional.of('Jean Jaja'),
-                                                                false);
-
-    public static CONNECTED: AuthUser = new AuthUser('jeanjaja13jajaj',
-                                                     MGPOptional.of('jean@jaja.europe'),
-                                                     MGPOptional.of('Jean Jaja'),
-                                                     true);
-
     public static setUser(user: AuthUser, notifyObservers: boolean = true, userId: string = 'userId'): void {
         (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock)
             .setUser(userId, user, notifyObservers);
