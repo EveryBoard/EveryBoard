@@ -9,7 +9,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { serverTimestamp } from 'firebase/firestore';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { MinimalUser } from '../domain/Joiner';
+import { MinimalUser } from '../domain/MinimalUser';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;

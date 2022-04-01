@@ -14,8 +14,8 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { JoinerDAO } from '../JoinerDAO';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
-import { MinimalUser } from 'src/app/domain/Joiner';
 import { FirebaseError } from 'firebase/app';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 async function expectFirebasePermissionDenied<T>(promise: Promise<T>): Promise<void> {
     await promise.then(() => {

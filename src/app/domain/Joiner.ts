@@ -1,18 +1,7 @@
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { JSONObject } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
-
-export type MinimalUser = {
-    id: string;
-    name: string;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export namespace MinimalUser {
-    export function from(id: string, name: string): MinimalUser {
-        return { id, name };
-    }
-}
+import { MinimalUser } from './MinimalUser';
 
 export interface Joiner extends JSONObject {
     readonly creator: MinimalUser;

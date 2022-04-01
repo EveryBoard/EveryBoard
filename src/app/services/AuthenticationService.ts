@@ -12,7 +12,7 @@ import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
-import { MinimalUser } from '../domain/Joiner';
+import { MinimalUser } from '../domain/MinimalUser';
 
 // This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
 export class Auth {

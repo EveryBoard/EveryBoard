@@ -1,6 +1,6 @@
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { FirebaseJSONObject } from '../utils/utils';
-import { MinimalUser } from './Joiner';
+import { MinimalUser } from './MinimalUser';
 import { FirebaseTime } from './Time';
 
 // A chat message

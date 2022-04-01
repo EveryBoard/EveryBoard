@@ -8,8 +8,8 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Message } from 'src/app/domain/Message';
 import { serverTimestamp } from 'firebase/firestore';
-import { MinimalUser } from 'src/app/domain/Joiner';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('ChatComponent', () => {
 

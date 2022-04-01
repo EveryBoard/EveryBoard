@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FirstPlayer, IFirstPlayer, Joiner, IPartType, PartStatus, PartType, MinimalUser } from '../../../domain/Joiner';
+import { FirstPlayer, IFirstPlayer, Joiner, IPartType, PartStatus, PartType } from '../../../domain/Joiner';
 import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
@@ -349,7 +349,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                     const username: string = Utils.getNonNullable(user.data.username);
                     await this.removeUserFromLobby(username);
                     ErrorLoggerService.logError('PartCreationComponent', 'user is already offline',
-                                                MinimalUser.from(user.id, username));
+                                                { id: user.id, username });
                 }
             }
         };
@@ -366,7 +366,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 const username: string = Utils.getNonNullable(user.data.username);
                 await this.removeUserFromLobby(username);
                 ErrorLoggerService.logError('PartCreationComponent', 'user was deleted',
-                                            MinimalUser.from(user.id, username));
+                                            { id: user.id, username });
             }
         };
         const callback: FirebaseCollectionObserver<User> =

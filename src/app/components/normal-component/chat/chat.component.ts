@@ -6,7 +6,7 @@ import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { MinimalUser } from 'src/app/domain/Joiner';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 @Component({
     selector: 'app-chat',

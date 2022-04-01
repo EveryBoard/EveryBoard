@@ -1,6 +1,6 @@
 import { AuthUser } from '../services/AuthenticationService';
 import { MGPOptional } from '../utils/MGPOptional';
-import { MinimalUser } from './Joiner';
+import { MinimalUser } from './MinimalUser';
 import { User } from './User';
 
 export class UserMocks {

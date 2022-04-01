@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
-import { FirstPlayer, Joiner, MinimalUser, PartStatus } from '../domain/Joiner';
+import { FirstPlayer, Joiner, PartStatus } from '../domain/Joiner';
 import { JoinerService } from './JoinerService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/Request';
@@ -14,6 +14,7 @@ import { Time } from '../domain/Time';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FieldValue, Unsubscribe } from '@angular/fire/firestore';
 import { serverTimestamp } from 'firebase/firestore';
+import { MinimalUser } from '../domain/MinimalUser';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: string,

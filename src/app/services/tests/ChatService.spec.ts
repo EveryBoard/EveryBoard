@@ -11,7 +11,7 @@ import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { MinimalUser } from 'src/app/domain/Joiner';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('ChatService', () => {
 
