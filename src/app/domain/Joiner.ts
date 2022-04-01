@@ -1,9 +1,10 @@
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { JSONObject } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
+import { MinimalUser } from './MinimalUser';
 
 export interface Joiner extends JSONObject {
-    readonly creator: string;
+    readonly creator: MinimalUser;
     readonly candidates: Array<string>;
     readonly chosenPlayer: string | null;
     readonly partStatus: IPartStatus;
