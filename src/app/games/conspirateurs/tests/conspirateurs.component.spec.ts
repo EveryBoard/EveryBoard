@@ -11,8 +11,8 @@ import { ConspirateursState } from '../ConspirateursState';
 
 describe('ConspirateursComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const A: Player = Player.ZERO;
-    const B: Player = Player.ONE;
+    const A: PlayerOrNone = Player.ZERO;
+    const B: PlayerOrNone = Player.ONE;
 
     let testUtils: ComponentTestUtils<ConspirateursComponent>;
 

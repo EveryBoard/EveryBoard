@@ -6,8 +6,8 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursState } from './ConspirateursState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const A: Player = Player.ZERO;
-const B: Player = Player.ONE;
+const A: PlayerOrNone = Player.ZERO;
+const B: PlayerOrNone = Player.ONE;
 
 export class ConspirateursTutorial {
 

@@ -8,8 +8,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ConspirateursMinimax', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const A: Player = Player.ZERO;
-    const B: Player = Player.ONE;
+    const A: PlayerOrNone = Player.ZERO;
+    const B: PlayerOrNone = Player.ONE;
 
     let rules: ConspirateursRules;
     let minimax: ConspirateursMinimax;
