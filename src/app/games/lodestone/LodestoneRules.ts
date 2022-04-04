@@ -4,7 +4,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -63,11 +63,11 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                 this.updatePressurePlate(board, position, pressurePlates[position], opponent, captures[position]);
         }
     }
-    private updatePressurePlate(board: LodestonePiece[][],
-                                position: LodestonePressurePlatePosition,
-                                pressurePlate: MGPOptional<LodestonePressurePlate>,
-                                opponent: Player,
-                                captured: number)
+    public updatePressurePlate(board: LodestonePiece[][],
+                               position: LodestonePressurePlatePosition,
+                               pressurePlate: MGPOptional<LodestonePressurePlate>,
+                               opponent: Player,
+                               captured: number)
     : MGPOptional<LodestonePressurePlate>
     {
         if (pressurePlate.isPresent()) {

@@ -5,7 +5,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -69,9 +69,8 @@ export class LodestoneComponent
         pressurePlates: [],
     };
 
-    private constructedBoard: Table<LodestonePiece>;
+    private displayedState: LodestoneState;
     private capturesToPlace: number = 0;
-    private placingCaptures: boolean = false;
     public selectedCoord: MGPOptional<Coord> = MGPOptional.empty(); // TODO: private + add to viewInfo?
     private selectedLodestone: MGPOptional<[LodestoneDirection, boolean]> = MGPOptional.empty();
     private captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
@@ -84,7 +83,7 @@ export class LodestoneComponent
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
-        this.constructedBoard = this.rules.node.gameState.board;
+        this.displayedState = this.rules.node.gameState;
     }
     public ngOnInit(): void {
         this.updateBoard();
@@ -95,7 +94,7 @@ export class LodestoneComponent
             return this.cancelMove(clickValidity.getReason());
         }
 
-        if (this.placingCaptures) {
+        if (this.capturesToPlace > 0) {
             return this.cancelMove(LodestoneFailure.MUST_PLACE_CAPTURES());
         }
 
@@ -119,7 +118,7 @@ export class LodestoneComponent
             return this.cancelMove(clickValidity.getReason());
         }
 
-        if (this.placingCaptures) {
+        if (this.capturesToPlace > 0) {
             return this.cancelMove(LodestoneFailure.MUST_PLACE_CAPTURES());
         }
 
@@ -143,7 +142,7 @@ export class LodestoneComponent
             const [board, captures]: [LodestonePiece[][], Coord[]] =
                 LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
             this.capturesToPlace = Math.min(captures.length, state.remainingSpaces());
-            this.constructedBoard = board;
+            this.displayedState = this.displayedState.withBoard(board);
             return this.applyMoveIfNoRemainingCapture();
         } else {
             return this.cancelMove(validity.getReason());
@@ -157,26 +156,33 @@ export class LodestoneComponent
         if (this.capturesToPlace === 0) {
             const move: LodestoneMove = new LodestoneMove(coord, direction, diagonal, this.captures);
             return this.chooseMove(move, this.getState());
+        } else {
+            this.updateViewInfo();
         }
         return MGPValidation.SUCCESS;
     }
     public async selectPressurePlate(position: LodestonePressurePlatePosition): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#pressurePlate_' + position);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         assert(this.capturesToPlace > 0, 'there should be remaining captures to place');
+        const opponent: Player = this.getCurrentPlayer().getOpponent();
+        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(this.displayedState.board);
+        const pressurePlate: MGPOptional<LodestonePressurePlate> =
+            LodestoneRules.get().updatePressurePlate(board,
+                                                     position,
+                                                     this.displayedState.pressurePlates[position],
+                                                     opponent,
+                                                     1);
+        this.displayedState = this.displayedState.withBoardAndPressurePlate(board, position, pressurePlate);
         this.capturesToPlace--;
         this.captures[position]++;
-        if (this.pressurePlateIsFull(position)) {
-            this.crumble(position);
-        }
-        this.updateViewInfo();
-        return MGPValidation.SUCCESS;
-    }
-    private pressurePlateIsFull(position: LodestonePressurePlatePosition): boolean {
-        return false; // TODO
-    }
-    private crumble(position: LodestonePressurePlatePosition): void {
-        // TODO
+        return this.applyMoveIfNoRemainingCapture();
     }
     public updateBoard(): void {
+        this.displayedState = this.rules.node.gameState;
         this.updateViewInfo();
         const lastMove: MGPOptional<LodestoneMove> = this.rules.node.move;
         if (lastMove.isPresent()) {
@@ -198,7 +204,7 @@ export class LodestoneComponent
             this.viewInfo.boardInfo.push([]);
             for (let x: number = 0; x < LodestoneState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: LodestonePiece = this.constructedBoard[coord.y][coord.x];
+                const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
                 const squareInfo: SquareInfo = {
                     coord,
                     squareClasses: [],
@@ -274,7 +280,6 @@ export class LodestoneComponent
         'right': [new Coord(8, 0.5), new Coord(7, 1.5), Direction.DOWN],
     };
     private showPressurePlates(state: LodestoneState): void {
-        const opponent: Player = this.getCurrentPlayer().getOpponent();
         this.viewInfo.pressurePlates = [];
         for (const pressurePlate of LodestonePressurePlate.POSITIONS) {
             const plateCoordInfos: PressurePlateCoordInfo[] = [];
@@ -287,13 +292,11 @@ export class LodestoneComponent
                 for (let i: number = 0; i < size; i++) {
                     coord = coord.getNext(dir);
                     const content: LodestonePiece = plate.get().getPieceAt(i);
-                    let pieceClass: string;
+                    let pieceClass: string = '';
+                    console.log({i})
                     if (content.isPlayerPiece()) {
+                        console.log('is player piece')
                         pieceClass = this.getPlayerClass(content.owner);
-                    } else if (i < plate.get().numberOfPiecesPresent() + this.captures[pressurePlate]) {
-                        pieceClass = this.getPlayerClass(opponent);
-                    } else {
-                        pieceClass = '';
                     }
                     plateCoordInfos.push({
                         coord,

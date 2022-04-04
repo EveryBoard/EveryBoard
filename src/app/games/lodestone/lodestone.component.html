@@ -23,6 +23,7 @@
                         [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
                 />
                 <g *ngIf="square.lodestone"
+                   class="lodestone"
                    attr.transform="translate({{ x * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ y * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})">
                     <circle class="base"
                             [ngClass]="square.lodestone.pieceClasses"
@@ -86,6 +87,7 @@
         </g>
     </g>
     <g *ngFor="let plate of viewInfo.pressurePlates"
+       id="pressurePlate_{{ plate.position }}"
        (click)="selectPressurePlate(plate.position)">
         <g *ngFor="let square of plate.coords">
             <rect id="plate_{{ plate.position }}_{{ square.coord.x }}_{{ square.coord.y }}"

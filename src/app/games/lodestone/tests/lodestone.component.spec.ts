@@ -51,6 +51,15 @@ fdescribe('LodestoneComponent', () => {
         // Then it should be selected
         testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
     }));
+    fit('should show intermediary state before placing captures', fakeAsync(async() => {
+        // Given the initial state
+        // When The player places the lodestone, but the move is not finished yet
+        await testUtils.expectClickSuccess('#square_3_3');
+        await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
+        // Then the lodestone should be shown on the board, and the moved pieces too
+        testUtils.expectElementToExist('#square_3_3 > .lodestone');
+        testUtils.expectElementNotToExist('#square_3_0 > circle');
+    }));
     it('should put captures on the selected pressure plate', fakeAsync(async() => {
         // Given an intermediary state where a lodestone has been placed, resulting in 2 captures
         await testUtils.expectClickSuccess('#square_3_3');
