@@ -195,8 +195,8 @@ export class LodestoneComponent
         this.viewInfo.currentPlayerClass = this.getPlayerClass(currentPlayer);
         this.viewInfo.opponentClass = this.getPlayerClass(currentPlayer.getOpponent());
         this.showBoard();
-        this.showAvailableLodestones(state);
-        this.showPressurePlates(state);
+        this.showAvailableLodestones();
+        this.showPressurePlates();
     }
     private showBoard(): void {
         this.viewInfo.boardInfo = [];
@@ -233,9 +233,9 @@ export class LodestoneComponent
             }
         }
     }
-    private showAvailableLodestones(state: LodestoneState): void {
-        const player: Player = state.getCurrentPlayer();
-        const nextDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection();
+    private showAvailableLodestones(): void {
+        const player: Player = this.displayedState.getCurrentPlayer();
+        const nextDirection: MGPOptional<LodestoneDirection> = this.displayedState.nextLodestoneDirection();
         if (nextDirection.isPresent()) {
             this.viewInfo.availableLodestones = [
                 this.nextLodestone(player, nextDirection.get(), true),
@@ -279,11 +279,11 @@ export class LodestoneComponent
         'left': [new Coord(-1, 0.5), new Coord(0, 1.5), Direction.DOWN],
         'right': [new Coord(8, 0.5), new Coord(7, 1.5), Direction.DOWN],
     };
-    private showPressurePlates(state: LodestoneState): void {
+    private showPressurePlates(): void {
         this.viewInfo.pressurePlates = [];
         for (const pressurePlate of LodestonePressurePlate.POSITIONS) {
             const plateCoordInfos: PressurePlateCoordInfo[] = [];
-            const plate: MGPOptional<LodestonePressurePlate> = state.pressurePlates[pressurePlate];
+            const plate: MGPOptional<LodestonePressurePlate> = this.displayedState.pressurePlates[pressurePlate];
             if (plate.isPresent()) {
                 const [start5, start3, dir]: [Coord, Coord, Direction] =
                     LodestoneComponent.PRESSURE_PLATES_POSITIONS[pressurePlate];
