@@ -182,12 +182,19 @@ export class LodestoneComponent
         return this.applyMoveIfNoRemainingCapture();
     }
     public updateBoard(): void {
-        this.displayedState = this.rules.node.gameState;
+        this.cancelMoveAttempt();
         this.updateViewInfo();
         const lastMove: MGPOptional<LodestoneMove> = this.rules.node.move;
         if (lastMove.isPresent()) {
             this.showLastMove();
         }
+    }
+    public cancelMoveAttempt(): void {
+        this.displayedState = this.rules.node.gameState;
+        this.selectedCoord = MGPOptional.empty();
+        this.selectedLodestone = MGPOptional.empty();
+        this.capturesToPlace = 0;
+        this.captures = { top: 0, bottom: 0, left: 0, right: 0 };
     }
     private updateViewInfo(): void {
         const state: LodestoneState = this.getState();
@@ -293,9 +300,7 @@ export class LodestoneComponent
                     coord = coord.getNext(dir);
                     const content: LodestonePiece = plate.get().getPieceAt(i);
                     let pieceClass: string = '';
-                    console.log({i})
                     if (content.isPlayerPiece()) {
-                        console.log('is player piece')
                         pieceClass = this.getPlayerClass(content.owner);
                     }
                     plateCoordInfos.push({

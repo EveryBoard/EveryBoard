@@ -51,6 +51,16 @@ fdescribe('LodestoneComponent', () => {
         // Then it should be selected
         testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
     }));
+    fit('should deselect lodestone and square after move has been made', fakeAsync(async() => {
+        // Given a state
+        await testUtils.expectClickSuccess('#square_0_0');
+        // When performing a move
+        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false);
+        await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
+        // Then the selected lodestone and square should not be highlighted
+        testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
+        testUtils.expectElementNotToExist('#selection_0_0');
+    }));
     it('should show intermediary state before placing captures', fakeAsync(async() => {
         // Given the initial state
         // When The player places the lodestone, but the move is not finished yet
@@ -60,17 +70,17 @@ fdescribe('LodestoneComponent', () => {
         testUtils.expectElementToExist('#square_3_3 > .lodestone');
         testUtils.expectElementNotToExist('#square_3_0 > circle');
     }));
-    fit('should put captures on the selected pressure plate', fakeAsync(async() => {
+    it('should put captures on the selected pressure plate', fakeAsync(async() => {
         // Given an intermediary state where a lodestone has been placed, resulting in 2 captures
         await testUtils.expectClickSuccess('#square_3_3');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // When the the player clicks on the plates where the captures will go
         await testUtils.expectClickSuccess('#pressurePlate_top');
-        testUtils.expectElementToExist('plate_top_0_0');
+        testUtils.expectElementToExist('#platePiece_top_0');
         // Then the move should be performed, and the captures should be shown
-//        const move: LodestoneMove = new LodestoneMove(new Coord(3, 3), 'push', false, { top: 2, bottom: 0, left: 0, right: 0 });
-//        await testUtils.expectMoveSuccess('#pressurePlate_top', move);
-//        testUtils.expectElementToExist('plate_top_1_0');
+        const move: LodestoneMove = new LodestoneMove(new Coord(3, 3), 'push', false, { top: 2, bottom: 0, left: 0, right: 0 });
+        await testUtils.expectMoveSuccess('#pressurePlate_top', move);
+        testUtils.expectElementToExist('#platePiece_top_1');
     }));
     it('should crumble a pressure plate when full', fakeAsync(async() => {
     }));
