@@ -4,7 +4,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -46,7 +46,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(infos.board);
         const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
         lodestones[currentPlayer.value] = MGPOptional.of(move.coord);
-        board[move.coord.y][move.coord.x] = new LodestonePieceLodestone(currentPlayer, move.direction, move.diagonal);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         this.updatePressurePlates(board, pressurePlates, opponent, move.captures);
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
@@ -130,6 +129,11 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         } else {
             [board, captures] = this.applyPush(state, coord, diagonal);
         }
+        const previousLodestonePosition: MGPOptional<Coord> = state.lodestones[state.getCurrentPlayer().value];
+        if (previousLodestonePosition.isPresent()) {
+            const previousCoord: Coord = previousLodestonePosition.get();
+            board[previousCoord.y][previousCoord.x] = LodestonePieceNone.EMPTY;
+        }
         board[coord.y][coord.x] = new LodestonePieceLodestone(state.getCurrentPlayer(), direction, diagonal);
         return [board, captures];
     }
@@ -204,6 +208,19 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         return [board, captures];
     }
     public isLegalWithoutCaptures(state: LodestoneState, coord: Coord, direction: LodestoneDirection): MGPValidation {
+        const targetValidity: MGPValidation = this.isTargetLegal(state, coord);
+        if (targetValidity.isFailure()) {
+            return targetValidity;
+        }
+        const nextLodestoneDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection();
+        const validLodestoneDirection: boolean =
+            nextLodestoneDirection.isAbsent() || nextLodestoneDirection.equalsValue(direction);
+        if (validLodestoneDirection === false) {
+            return MGPValidation.failure(LodestoneFailure.MUST_FLIP_LODESTONE());
+        }
+        return MGPValidation.SUCCESS;
+    }
+    public isTargetLegal(state: LodestoneState, coord: Coord): MGPValidation {
         const targetContent: LodestonePiece = state.getPieceAt(coord);
         if (targetContent.isUnreachable()) {
             return MGPValidation.failure(LodestoneFailure.TARGET_IS_CRUMBLED());
@@ -214,12 +231,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const player: Player = state.getCurrentPlayer();
         if (targetContent.isLodestone() && targetContent.owner !== player) {
             return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-        }
-        const nextLodestoneDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection();
-        const validLodestoneDirection: boolean =
-            nextLodestoneDirection.isAbsent() || nextLodestoneDirection.equalsValue(direction);
-        if (validLodestoneDirection === false) {
-            return MGPValidation.failure(LodestoneFailure.MUST_FLIP_LODESTONE());
         }
         return MGPValidation.SUCCESS;
     }

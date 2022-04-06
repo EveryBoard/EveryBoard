@@ -11,7 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
-import { LodestoneDirection, LodestonePiece } from './LodestonePiece';
+import { LodestoneDirection, LodestonePiece, LodestonePieceNone } from './LodestonePiece';
 import { LodestoneInfos, LodestoneRules } from './LodestoneRules';
 import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestoneState } from './LodestoneState';
 
@@ -98,10 +98,9 @@ export class LodestoneComponent
             return this.cancelMove(LodestoneFailure.MUST_PLACE_CAPTURES());
         }
 
-        const state: LodestoneState = this.getState();
-        const piece: LodestonePiece = state.getPieceAt(coord);
-        if (piece.isEmpty() === false || piece.isUnreachable()) {
-            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+        const targetValidity: MGPValidation = LodestoneRules.get().isTargetLegal(this.getState(), coord);
+        if (targetValidity.isFailure()) {
+            return this.cancelMove(targetValidity.getReason());
         }
         if (this.selectedLodestone.isPresent()) {
             this.selectedCoord = MGPOptional.of(coord);
@@ -167,7 +166,10 @@ export class LodestoneComponent
             return this.cancelMove(clickValidity.getReason());
         }
 
-        assert(this.capturesToPlace > 0, 'there should be remaining captures to place');
+        if (this.capturesToPlace === 0) {
+            return this.cancelMove(LodestoneFailure.NO_CAPTURES_TO_PLACE_YET());
+        }
+
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(this.displayedState.board);
         const pressurePlate: MGPOptional<LodestonePressurePlate> =
@@ -190,7 +192,14 @@ export class LodestoneComponent
         }
     }
     public cancelMoveAttempt(): void {
-        this.displayedState = this.rules.node.gameState;
+        this.displayedState = this.getState();
+        const playerLodestone: MGPOptional<Coord> = this.displayedState.lodestones[this.getCurrentPlayer().value];
+        if (playerLodestone.isPresent()) {
+            // Hide the lodestone so that it is clearer that the player can make its next move here
+            const board: LodestonePiece[][] = ArrayUtils.copyBiArray(this.displayedState.board);
+            board[playerLodestone.get().y][playerLodestone.get().x] = LodestonePieceNone.EMPTY;
+            this.displayedState = this.displayedState.withBoard(board);
+        }
         this.selectedCoord = MGPOptional.empty();
         this.selectedLodestone = MGPOptional.empty();
         this.capturesToPlace = 0;
@@ -241,8 +250,11 @@ export class LodestoneComponent
         }
     }
     private showAvailableLodestones(): void {
-        const player: Player = this.displayedState.getCurrentPlayer();
-        const nextDirection: MGPOptional<LodestoneDirection> = this.displayedState.nextLodestoneDirection();
+        // Here, we rely on the state after the move, as the lodestones don't change during a move
+        // Moreover, since we remove the lodestone from the board (for displaying purposes),
+        // we break an assumption of nextLodestoneDirection
+        const player: Player = this.getState().getCurrentPlayer();
+        const nextDirection: MGPOptional<LodestoneDirection> = this.getState().nextLodestoneDirection();
         if (nextDirection.isPresent()) {
             this.viewInfo.availableLodestones = [
                 this.nextLodestone(player, nextDirection.get(), true),

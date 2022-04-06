@@ -27,7 +27,6 @@ describe('LodestoneRules', () => {
 
     const noLodestone: LodestoneLodestones = [MGPOptional.empty(), MGPOptional.empty()];
 
-
     let rules: LodestoneRules;
     let minimaxes: Minimax<LodestoneMove, LodestoneState, LodestoneInfos>[];
 
@@ -38,16 +37,6 @@ describe('LodestoneRules', () => {
         ];
     });
 
-    it('should initially have 24 pieces for each player', () => {
-        // TODO: move this to LodestoneState.spec.ts
-        // Given the initial state
-        const state: LodestoneState = LodestoneState.getInitialState();
-        // When computing the number of pieces for each player
-        const pieces: [number, number] = state.numberOfPieces();
-        // Then we should have 24 for each player
-        expect(pieces[0]).toBe(24);
-        expect(pieces[1]).toBe(24);
-    });
     it('should allow placing a lodestone on an empty square', () => {
         // Given any state
         const state: LodestoneState = LodestoneState.getInitialState();
@@ -110,7 +99,7 @@ describe('LodestoneRules', () => {
         // When placing our lodestone on its previous sqaure
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'pull', false);
         // Then the move should be illegal
-        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', true);
+        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', false);
         const expectedBoard: Table<LodestonePiece> = [
             [Y, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -123,6 +112,46 @@ describe('LodestoneRules', () => {
         ];
         const expectedLodestones: LodestoneLodestones = [
             MGPOptional.of(new Coord(0, 0)),
+            MGPOptional.empty(),
+        ];
+        const expectedState: LodestoneState =
+            new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    fit('should remove the lodestone from its previous square', () => {
+        // Given a state with our lodestone
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', true);
+        const board: Table<LodestonePiece> = [
+            [X, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const lodestones: LodestoneLodestones = [
+            MGPOptional.of(new Coord(0, 0)),
+            MGPOptional.empty(),
+        ];
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
+        // When placing our lodestone on a different square
+        const move: LodestoneMove = new LodestoneMove(new Coord(1, 0), 'pull', false);
+        // Then the move should be illegal
+        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', false);
+        const expectedBoard: Table<LodestonePiece> = [
+            [_, Y, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const expectedLodestones: LodestoneLodestones = [
+            MGPOptional.of(new Coord(1, 0)),
             MGPOptional.empty(),
         ];
         const expectedState: LodestoneState =

@@ -90,7 +90,8 @@
        id="pressurePlate_{{ plate.position }}"
        (click)="selectPressurePlate(plate.position)">
         <g *ngFor="let square of plate.coords; index as i">
-            <rect class="base"
+            <rect id="plateSquare_{{ plate.position }}_{{ i }}"
+                  class="base"
                   [attr.x]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
                   [attr.y]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
                   [attr.width]="SPACE_SIZE"

@@ -12,4 +12,6 @@ export class LodestoneFailure {
 
     public static MUST_PLACE_CAPTURES: Localized = () => $localize`You must place your captures on the pressure plates, on the side of the board`;
 
+    public static NO_CAPTURES_TO_PLACE_YET: Localized = () => $localize`You cannot place any capture now, you must first place your lodestone on the board!`;
+
 }
