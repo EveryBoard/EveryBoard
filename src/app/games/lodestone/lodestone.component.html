@@ -55,6 +55,16 @@
             </g>
         </g>
     </g>
+    <g *ngFor="let capture of viewInfo.capturesToPlace; index as x"
+       attr.transform="translate({{ (x + (viewInfo.capturesToPlace.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
+       id="capture_{{ x }}">
+        <circle class="base"
+                [ngClass]="capture.pieceClasses"
+                [attr.r]="PIECE_RADIUS"
+                attr.cx="0"
+                attr.cy="0"
+                />
+    </g>
     <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
        attr.transform="translate({{ (x + (viewInfo.availableLodestones.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
        (click)="selectLodestone(lodestone.direction, lodestone.diagonal)"

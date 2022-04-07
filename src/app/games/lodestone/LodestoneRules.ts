@@ -24,9 +24,9 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     public static readonly PRESSURE_PLATES_POSITIONS
     : Record<LodestonePressurePlatePosition, [Coord, Coord, Direction]> = {
         top: [new Coord(0, 0), new Coord(0, 1), Direction.RIGHT],
-        bottom: [new Coord(0, LodestoneState.SIZE), new Coord(0, LodestoneState.SIZE-1), Direction.RIGHT],
+        bottom: [new Coord(0, LodestoneState.SIZE-1), new Coord(0, LodestoneState.SIZE-2), Direction.RIGHT],
         left: [new Coord(0, 0), new Coord(1, 0), Direction.DOWN],
-        right: [new Coord(LodestoneState.SIZE, 0), new Coord(LodestoneState.SIZE-1, 0), Direction.DOWN],
+        right: [new Coord(LodestoneState.SIZE-1, 0), new Coord(LodestoneState.SIZE-2, 0), Direction.DOWN],
     };
 
     private static singleton: MGPOptional<LodestoneRules> = MGPOptional.empty();
