@@ -92,10 +92,9 @@ fdescribe('LodestoneComponent', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false);
         await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
         // Then the square part of the move should be shown as 'moved'
-
-        testUtils.expectElementToHaveClass('#square_0_0', 'moved');
-        testUtils.expectElementToHaveClass('#square_5_0', 'moved');
-        testUtils.expectElementToHaveClass('#square_6_0', 'moved');
+        testUtils.expectElementToExist('#square_0_0 > .moved');
+        testUtils.expectElementToExist('#square_5_0 > .moved');
+        testUtils.expectElementToExist('#square_6_0 > .moved');
     }));
     it('should show intermediary state before placing captures', fakeAsync(async() => {
         // Given the initial state
@@ -146,7 +145,7 @@ fdescribe('LodestoneComponent', () => {
         await testUtils.expectClickSuccess('#square_0_0');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // Then removed squares should not be shown, and the new pressure plate should be shown
-        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false, { top: 4, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         await testUtils.expectMoveSuccess('#pressurePlate_top', move);
         testUtils.expectElementNotToExist('#square_0_0');
         testUtils.expectElementToExist('#plateSquare_top_0');
@@ -180,10 +179,10 @@ fdescribe('LodestoneComponent', () => {
         await testUtils.expectClickSuccess('#square_0_0');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // Then removed squares should not be shown, and this pressure plate should not be shown anymore
-        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false, { top: 4, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         await testUtils.expectMoveSuccess('#pressurePlate_top', move);
-        testUtils.expectElementNotToExist('#square_0_1');
-        testUtils.expectElementNotToExist('#pressurePlate_top');
+        testUtils.expectElementNotToExist('#square_0_1 > rect');
+        testUtils.expectElementNotToExist('#pressurePlate_top_0');
     }));
     it('should crumble a pressure plate also in the middle of placing capture', fakeAsync(async() => {
     }));

@@ -118,7 +118,7 @@ describe('LodestoneRules', () => {
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    fit('should remove the lodestone from its previous square', () => {
+    it('should remove the lodestone from its previous square', () => {
         // Given a state with our lodestone
         const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'push', true);
         const board: Table<LodestonePiece> = [
