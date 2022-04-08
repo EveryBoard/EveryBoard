@@ -13,6 +13,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 @Component({
     selector: 'app-encapsule',
@@ -132,15 +133,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return false;
     }
     public getPieceClasses(piece: EncapsulePiece): string[] {
-        return this.getPieceStrokeClasses(piece);
+        return [this.getPieceStrokeClass(piece)];
     }
-    public getPieceStrokeClasses(piece: EncapsulePiece): string[] {
+    private getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: PlayerOrNone = piece.getPlayer();
-        if (player.isPlayer()) {
-            return ['player' + player.value + '-stroke'];
-        } else {
-            return [];
-        }
+        assert(player.isPlayer(), 'EncapsuleComponent.getPieceStrokeClass should only be called with actual pieces!');
+        return 'player' + player.value + '-stroke';
     }
     public getPieceRadius(piece: EncapsulePiece): number {
         switch (piece.getSize()) {
