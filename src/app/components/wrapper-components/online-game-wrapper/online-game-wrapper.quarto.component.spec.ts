@@ -34,6 +34,7 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -58,13 +59,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let userDAO: UserDAO;
     let chatDAO: ChatDAO;
 
-    const USER_CREATOR: AuthUser = new AuthUser(MGPOptional.of('cre@tor'), MGPOptional.of('creator'), true);
+    const USER_CREATOR: AuthUser = UserMocks.CREATOR_AUTH_USER;
     const PLAYER_CREATOR: User = {
         username: 'creator',
         state: 'online',
         verified: true,
     };
-    const USER_OPPONENT: AuthUser = new AuthUser(MGPOptional.of('firstCandidate@mgp.team'), MGPOptional.of('firstCandidate'), true);
+    const USER_OPPONENT: AuthUser = UserMocks.OPPONENT_AUTH_USER;
     const PLAYER_OPPONENT: User = {
         username: 'firstCandidate',
         last_changed: {
@@ -83,6 +84,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         state: 'online',
         verified: true,
     };
+    const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
+                                                 MGPOptional.ofNullable(OBSERVER.username),
+                                                 MGPOptional.of('observer@home'),
+                                                 true);
     const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
 
     const BASE_TAKE_BACK_REQUEST: Partial<Part> = {
@@ -1891,9 +1896,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
             spyOn(ErrorLoggerService, 'logError');
-            await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
-                                                     MGPOptional.of('observer@home'),
-                                                     true));
+            await prepareStartedGameFor(USER_OBSERVER);
             spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [
@@ -1919,9 +1922,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
             // Given a part that the two player agreed to draw
-            await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
-                                                     MGPOptional.of('observer@home'),
-                                                     true));
+            await prepareStartedGameFor(USER_OBSERVER);
             spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
             await receiveRequest(Request.drawProposed(Player.ONE), 1);
             await receivePartDAOUpdate({

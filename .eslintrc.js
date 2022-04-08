@@ -72,6 +72,7 @@ module.exports = {
                 'error',
                 { 'ignoreDeclarationMerge': true },
             ],
+            'dot-notation': ['warn'],
             'max-len': ['error', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
             'require-jsdoc': ['error', { 'require': {
                 'FunctionDeclaration': false,
@@ -95,7 +96,7 @@ module.exports = {
                 },
             ],
             'object-curly-spacing': ['error', 'always'],
-            'no-redeclare': ['error'],
+            'no-redeclare': ['off'], // subsumed by typescript-eslint's rule
             'camelcase': ['error'],
             'no-case-declarations': ['off'],
             'padded-blocks': ['off'],

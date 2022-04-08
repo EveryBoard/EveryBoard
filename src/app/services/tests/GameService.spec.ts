@@ -136,7 +136,7 @@ describe('GameService', () => {
             const joiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: { name: 'creator', id: 'creatorId' },
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -149,7 +149,7 @@ describe('GameService', () => {
             const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(joiner.creator);
+            expect(startConfig.playerZero).toBe(joiner.creator.name);
             expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenPlayer));
         }));
         it('should put chosen player first when math.random() is over 0.5', fakeAsync(async() => {
@@ -157,7 +157,7 @@ describe('GameService', () => {
             const joiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: { name: 'creator', id: 'creatorId' },
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -171,7 +171,7 @@ describe('GameService', () => {
 
             // then we should have a creator starting the game
             expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenPlayer));
-            expect(startConfig.playerOne).toBe(joiner.creator);
+            expect(startConfig.playerOne).toBe(joiner.creator.name);
         }));
     });
     describe('rematch', () => {
@@ -210,7 +210,7 @@ describe('GameService', () => {
             const lastGameJoiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: { name: 'creator', id: 'creatorId' },
                 firstPlayer: 'CREATOR',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -254,7 +254,7 @@ describe('GameService', () => {
             const lastGameJoiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: { name: 'creator', id: 'creatorId' },
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
