@@ -179,7 +179,7 @@ fdescribe('LodestoneComponent', () => {
         await testUtils.expectClickSuccess('#square_0_1');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // Then removed squares should not be shown, and this pressure plate should not be shown anymore
-        const move: LodestoneMove = new LodestoneMove(new Coord(0, 1), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(new Coord(0, 1), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         await testUtils.expectMoveSuccess('#pressurePlate_top', move);
         testUtils.expectElementNotToExist('#square_0_1 > rect');
         testUtils.expectElementNotToExist('#pressurePlate_top_0');
@@ -218,6 +218,38 @@ fdescribe('LodestoneComponent', () => {
         testUtils.expectElementNotToExist('#plateSquare_top_3');
     }));
     it('should reallow selecting any lodestone face if a lodestone falls from the board', fakeAsync(async() => {
+        // Given a state where a pressure plate will soon crumble, taking a lodestone with it
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'pull', false);
+        const board: Table<LodestonePiece> = [
+            [X, _, _, _, _, _, _, B],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const lodestones: LodestoneLodestones = [
+            MGPOptional.of(new Coord(0, 0)),
+            MGPOptional.empty(),
+        ];
+        const pressurePlates: LodestonePressurePlates = {
+            ...allPressurePlates,
+            top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
+        };
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
+        testUtils.setupState(state);
+        // When performing a move that crumbles the pressure plate, taking the lodestone with it
+        await testUtils.expectClickSuccess('#square_1_0');
+        await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
+        const move: LodestoneMove = new LodestoneMove(new Coord(1, 0), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
+        await testUtils.expectMoveSuccess('#pressurePlate_top', move);
+        // Then on the next turn, the player should be able to select any lodestone position
+        testUtils.expectElementToExist('#lodestone_push_orthogonal');
+        testUtils.expectElementToExist('#lodestone_push_diagonal');
+        testUtils.expectElementToExist('#lodestone_pull_orthogonal');
+        testUtils.expectElementToExist('#lodestone_pull_diagonal');
     }));
     it('should cancel move if clicking on board when placing captures', fakeAsync(async() => {
         // Given an intermediary state where a lodestone has been placed, resulting in 2 captures
