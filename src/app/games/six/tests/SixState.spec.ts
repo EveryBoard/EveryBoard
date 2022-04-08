@@ -2,6 +2,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -128,8 +130,11 @@ describe('SixState', () => {
             ];
             const state: SixState = SixState.fromRepresentation(representation, 40);
             // When trying to switch an empty coord
-            // Then it should throw
-            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('Cannot switch piece if there is no piece!');
+            // Then it should throw and call logError
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            const errorMessage: string = 'Cannot switch piece if there is no piece!';
+            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError(errorMessage);
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('SixState', errorMessage);
         });
     });
 });

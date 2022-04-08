@@ -13,6 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 export class SixState extends GameState implements ComparableObject {
 
@@ -194,6 +195,7 @@ export class SixState extends GameState implements ComparableObject {
             newPieces.replace(coord, oldPiece.getOpponent());
             return new SixState(newPieces, this.turn, this.offset);
         } else {
+            ErrorLoggerService.logError('SixState', 'Cannot switch piece if there is no piece!');
             throw new Error('Cannot switch piece if there is no piece!');
         }
     }

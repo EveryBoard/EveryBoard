@@ -132,11 +132,15 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return false;
     }
     public getPieceClasses(piece: EncapsulePiece): string[] {
-        return [this.getPieceStrokeClass(piece)];
+        return this.getPieceStrokeClasses(piece);
     }
-    public getPieceStrokeClass(piece: EncapsulePiece): string {
+    public getPieceStrokeClasses(piece: EncapsulePiece): string[] {
         const player: PlayerOrNone = piece.getPlayer();
-        return 'player' + player.value + '-stroke';
+        if (player.isPlayer()) {
+            return ['player' + player.value + '-stroke'];
+        } else {
+            return [];
+        }
     }
     public getPieceRadius(piece: EncapsulePiece): number {
         switch (piece.getSize()) {

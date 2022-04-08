@@ -35,8 +35,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                                                    ApagosMove,
                                                    ApagosState>
 {
-    public Player: typeof Player = Player;
-    public NONE: PlayerOrNone = PlayerOrNone.NONE;
+    public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
 
     public board: readonly ApagosSquare[];
 
