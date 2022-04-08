@@ -131,12 +131,15 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
             return MGPOptional.empty();
         } else {
             const piece: LodestonePiece = this.getPieceAt(this.lodestones[currentPlayer.value].get());
-            assert(piece.isLodestone(), 'Must have a lodestone at the specified position');
-            const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
-            const currentDirection: LodestoneDirection = lodestone.direction;
-            switch (currentDirection) {
-                case 'push': return MGPOptional.of('pull');
-                case 'pull': return MGPOptional.of('push');
+            if (piece.isLodestone()) {
+                const currentDirection: LodestoneDirection = piece.direction;
+                switch (currentDirection) {
+                    case 'push': return MGPOptional.of('pull');
+                    case 'pull': return MGPOptional.of('push');
+                }
+            } else {
+                // This means that the lodestone fell of the board, next time it can be placed in any direction
+                return MGPOptional.empty();
             }
         }
     }

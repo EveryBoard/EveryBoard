@@ -102,6 +102,7 @@
         <g *ngFor="let square of plate.coords; index as i">
             <rect id="plateSquare_{{ plate.position }}_{{ i }}"
                   class="base"
+                  [ngClass]="square.squareClasses"
                   [attr.x]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
                   [attr.y]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
                   [attr.width]="SPACE_SIZE"

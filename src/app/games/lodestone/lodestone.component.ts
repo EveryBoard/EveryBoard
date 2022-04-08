@@ -8,6 +8,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Utils } from 'src/app/utils/utils';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestonePiece, LodestonePieceNone } from './LodestonePiece';
@@ -122,9 +123,7 @@ export class LodestoneComponent
             return this.cancelMove(clickValidity.getReason());
         }
 
-        if (this.capturesToPlace > 0) {
-            return this.cancelMove(LodestoneFailure.MUST_PLACE_CAPTURES());
-        }
+        assert(this.capturesToPlace === 0, 'should not be able to click on a lodestone when captures need to be placed');
 
         if (this.selectedCoord.isPresent()) {
             this.selectedLodestone = MGPOptional.of([direction, diagonal]);
@@ -149,10 +148,10 @@ export class LodestoneComponent
             if (this.capturesToPlace === 0) {
                 return this.applyMove();
             } else {
-                const previousDisplayedState: LodestoneState = this.displayedState;
                 this.displayedState = this.displayedState.withBoard(board);
                 this.updateViewInfo();
-                this.showStateDifference(previousDisplayedState, this.displayedState);
+                const lastState: LodestoneState = this.getState();
+                this.showStateDifference(lastState, this.displayedState);
                 return MGPValidation.SUCCESS;
             }
         } else {
@@ -179,12 +178,9 @@ export class LodestoneComponent
 
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(this.displayedState.board);
+        const previousPressurePlate: MGPOptional<LodestonePressurePlate> = this.displayedState.pressurePlates[position];
         const pressurePlate: MGPOptional<LodestonePressurePlate> =
-            LodestoneRules.get().updatePressurePlate(board,
-                                                     position,
-                                                     this.displayedState.pressurePlates[position],
-                                                     opponent,
-                                                     1);
+            LodestoneRules.get().updatePressurePlate(board, position, previousPressurePlate, opponent, 1);
         this.displayedState = this.displayedState.withBoardAndPressurePlate(board, position, pressurePlate);
         this.capturesToPlace--;
         this.captures[position]++;
@@ -192,12 +188,14 @@ export class LodestoneComponent
             return this.applyMove();
         } else {
             this.updateViewInfo();
+            const lastState: LodestoneState = this.getState();
+            this.showStateDifference(lastState, this.displayedState);
+            this.showPressurePlateDifference(previousPressurePlate, pressurePlate, position);
         }
         return MGPValidation.SUCCESS;
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
-        this.updateViewInfo();
         const lastMove: MGPOptional<LodestoneMove> = this.rules.node.move;
         if (lastMove.isPresent()) {
             this.showLastMove();
@@ -216,6 +214,7 @@ export class LodestoneComponent
         this.selectedLodestone = MGPOptional.empty();
         this.capturesToPlace = 0;
         this.captures = { top: 0, bottom: 0, left: 0, right: 0 };
+        this.updateViewInfo();
     }
     private updateViewInfo(): void {
         const state: LodestoneState = this.getState();
@@ -354,10 +353,42 @@ export class LodestoneComponent
         }
     }
     private showLastMove(): void {
-        const lastMove: LodestoneMove = this.rules.node.move.get();
         const lastState: LodestoneState = this.rules.node.mother.get().gameState;
         const currentState: LodestoneState = this.getState();
         this.showStateDifference(lastState, currentState);
+        for (const position of LodestonePressurePlate.POSITIONS) {
+            const lastPressurePlate: MGPOptional<LodestonePressurePlate> = lastState.pressurePlates[position];
+            const currentPressurePlate: MGPOptional<LodestonePressurePlate> = currentState.pressurePlates[position];
+            this.showPressurePlateDifference(lastPressurePlate, currentPressurePlate, position);
+        }
+    }
+    private showPressurePlateDifference(oldPlate: MGPOptional<LodestonePressurePlate>,
+                                        newPlate: MGPOptional<LodestonePressurePlate>,
+                                        position: LodestonePressurePlatePosition)
+    : void
+    {
+        if (oldPlate.isPresent() && newPlate.isPresent()) {
+            const actualOldPlate: LodestonePressurePlate = oldPlate.get();
+            const actualNewPlate: LodestonePressurePlate = newPlate.get();
+            const plateInfo: PressurePlateInfo =
+                Utils.getNonNullable(this.viewInfo.pressurePlates.find((infos: PressurePlateInfo) =>
+                    infos.position === position));
+            if (actualOldPlate.width === actualNewPlate.width) {
+                // Only show the different squares
+                for (let i: number = 0; i < actualNewPlate.width; i++) {
+                    const oldPiece: LodestonePiece = actualOldPlate.getPieceAt(i);
+                    const newPiece: LodestonePiece = actualNewPlate.getPieceAt(i);
+                    if (oldPiece.equals(newPiece) === false) {
+                        plateInfo.coords[i].squareClasses.push('moved');
+                    }
+                }
+            } else {
+                // Pressure plate has crumbled, show all squares as moved
+                for (const info of plateInfo.coords) {
+                    info.squareClasses.push('moved');
+                }
+            }
+        }
     }
     private showStateDifference(state: LodestoneState, newState: LodestoneState): void {
         for (let y: number = 0; y < LodestoneState.SIZE; y++) {

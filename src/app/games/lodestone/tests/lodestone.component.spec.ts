@@ -156,8 +156,8 @@ fdescribe('LodestoneComponent', () => {
     it('should crumble a pressure plate when full (second time)', fakeAsync(async() => {
         // Given a state where a pressure plate will soon crumble
         const board: Table<LodestonePiece> = [
+            [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, B],
-            [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -176,16 +176,55 @@ fdescribe('LodestoneComponent', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
         testUtils.setupState(state);
         // When filling the pressure plate
-        await testUtils.expectClickSuccess('#square_0_0');
+        await testUtils.expectClickSuccess('#square_0_1');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // Then removed squares should not be shown, and this pressure plate should not be shown anymore
-        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(new Coord(0, 1), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
         await testUtils.expectMoveSuccess('#pressurePlate_top', move);
         testUtils.expectElementNotToExist('#square_0_1 > rect');
         testUtils.expectElementNotToExist('#pressurePlate_top_0');
     }));
     it('should crumble a pressure plate also in the middle of placing capture', fakeAsync(async() => {
+        // Given a state where a pressure plate will soon crumble
+        const board: Table<LodestonePiece> = [
+            [B, _, _, _, _, _, _, B],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const lodestones: LodestoneLodestones = [
+            MGPOptional.empty(),
+            MGPOptional.empty(),
+        ];
+        const pressurePlates: LodestonePressurePlates = {
+            ...allPressurePlates,
+            top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
+        };
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
+        testUtils.setupState(state);
+        // When filling the pressure plate in the middle of a move
+        await testUtils.expectClickSuccess('#square_1_0');
+        await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
+        await testUtils.expectClickSuccess('#pressurePlate_top');
+        // Then removed squares should not be shown, and the new pressure plate should be shown
+        testUtils.expectElementNotToExist('#square_0_0');
+        testUtils.expectElementToExist('#plateSquare_top_0');
+        testUtils.expectElementToExist('#plateSquare_top_1');
+        testUtils.expectElementToExist('#plateSquare_top_2');
+        testUtils.expectElementNotToExist('#plateSquare_top_3');
     }));
-    it('should reallow selecting any lodestone face if a lodestone is not on the board', fakeAsync(async() => {
+    it('should reallow selecting any lodestone face if a lodestone falls from the board', fakeAsync(async() => {
+    }));
+    it('should cancel move if clicking on board when placing captures', fakeAsync(async() => {
+        // Given an intermediary state where a lodestone has been placed, resulting in 2 captures
+        await testUtils.expectClickSuccess('#square_3_3');
+        await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
+        // When clicking on the board
+        // Then the move should be cancelled
+        await testUtils.expectClickFailure('#square_0_0', LodestoneFailure.MUST_PLACE_CAPTURES());
     }));
 });
