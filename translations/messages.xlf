@@ -110,9 +110,6 @@
       <trans-unit id="6595008830732269870" datatype="html">
         <source>Not found</source>
       </trans-unit>
-      <trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ message }}"/></source>
-      </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
       </trans-unit>
@@ -2401,6 +2398,30 @@
       <trans-unit id="1153768241274180865" datatype="html">
         <source>You must choose different starting and ending coordinates.</source>
       </trans-unit>
+      <trans-unit id="682801679843744749" datatype="html">
+        <source><x id="PH" equiv-text="hours"/> hours</source>
+      </trans-unit>
+      <trans-unit id="5250062810079582285" datatype="html">
+        <source>1 hour</source>
+      </trans-unit>
+      <trans-unit id="5664431632313592621" datatype="html">
+        <source><x id="PH" equiv-text="minutes"/> minutes</source>
+      </trans-unit>
+      <trans-unit id="5764931367607989415" datatype="html">
+        <source>1 minute</source>
+      </trans-unit>
+      <trans-unit id="580867446647473930" datatype="html">
+        <source><x id="PH" equiv-text="seconds"/> seconds</source>
+      </trans-unit>
+      <trans-unit id="4999829279268672917" datatype="html">
+        <source>1 second</source>
+      </trans-unit>
+      <trans-unit id="621011316051372308" datatype="html">
+        <source>0 seconds</source>
+      </trans-unit>
+      <trans-unit id="5033601776243148314" datatype="html">
+        <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
+      </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>
       </trans-unit>
@@ -2436,30 +2457,6 @@
       </trans-unit>
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
-      </trans-unit>
-      <trans-unit id="682801679843744749" datatype="html">
-        <source><x id="PH" equiv-text="hours"/> hours</source>
-      </trans-unit>
-      <trans-unit id="5250062810079582285" datatype="html">
-        <source>1 hour</source>
-      </trans-unit>
-      <trans-unit id="5664431632313592621" datatype="html">
-        <source><x id="PH" equiv-text="minutes"/> minutes</source>
-      </trans-unit>
-      <trans-unit id="5764931367607989415" datatype="html">
-        <source>1 minute</source>
-      </trans-unit>
-      <trans-unit id="580867446647473930" datatype="html">
-        <source><x id="PH" equiv-text="seconds"/> seconds</source>
-      </trans-unit>
-      <trans-unit id="4999829279268672917" datatype="html">
-        <source>1 second</source>
-      </trans-unit>
-      <trans-unit id="621011316051372308" datatype="html">
-        <source>0 seconds</source>
-      </trans-unit>
-      <trans-unit id="5033601776243148314" datatype="html">
-        <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
       </trans-unit>
     </body>
   </file>

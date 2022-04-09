@@ -526,7 +526,6 @@ export function expectValidRouting(router: Router,
         }
     } else {
         if (skipLocationChange) {
-            console.log({path})
             expect(router.navigate).toHaveBeenCalledOnceWith(path, { skipLocationChange: true });
         } else {
             expect(router.navigate).toHaveBeenCalledOnceWith(path);
