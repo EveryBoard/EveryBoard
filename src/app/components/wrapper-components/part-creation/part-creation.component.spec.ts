@@ -20,6 +20,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('PartCreationComponent:', () => {
 
@@ -49,16 +50,8 @@ describe('PartCreationComponent:', () => {
         await component.selectOpponent('firstCandidate');
         testUtils.detectChanges();
     }
-    const CREATOR: User = {
-        username: 'creator',
-        state: 'online',
-        verified: true,
-    };
-    const OPPONENT: User = {
-        username: 'firstCandidate',
-        state: 'online',
-        verified: true,
-    };
+    const CREATOR: User = UserMocks.CREATOR;
+    const OPPONENT: User = UserMocks.OPPONENT;
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
         destroyed = false;
@@ -227,7 +220,7 @@ describe('PartCreationComponent:', () => {
                 tick(3000); // needs to be >2999
 
                 // Then logError has been called as this is an unusual situation
-                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', 'user was deleted', { username: 'firstCandidate', userId: 'opponent' });
+                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', 'user was deleted', { username: 'firstCandidate', id: 'opponent' });
                 // and the candidate has been deselected
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 // and the candidate has been removed from the lobby
@@ -248,7 +241,7 @@ describe('PartCreationComponent:', () => {
                 // Then the candidate does not appear on the page
                 testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
                 // and logError was called as this is an unexpected situation
-                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('PartCreationComponent', 'user is already offline', { username: 'firstCandidate', userId: 'opponent' });
+                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('PartCreationComponent', 'user is already offline', { username: 'firstCandidate', id: 'opponent' });
             }));
             it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

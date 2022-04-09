@@ -10,6 +10,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 export class OnlineGameCreationMessages {
     public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;
@@ -43,7 +44,8 @@ export class OnlineGameCreationComponent implements OnInit {
             return false;
         }
         if (await this.canCreateOnlineGame(username)) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(username, game);
+            const creator: MinimalUser = user.toMinimalUser();
+            const gameId: string = await this.gameService.createPartJoinerAndChat(creator, game);
             // create Part and Joiner
             await this.router.navigate(['/play', game, gameId]);
             return true;

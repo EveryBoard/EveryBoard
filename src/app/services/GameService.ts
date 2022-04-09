@@ -14,6 +14,7 @@ import { Time } from '../domain/Time';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FieldValue, Unsubscribe } from '@angular/fire/firestore';
 import { serverTimestamp } from 'firebase/firestore';
+import { MinimalUser } from '../domain/MinimalUser';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: string,
@@ -72,11 +73,11 @@ export class GameService {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(creatorName: string, typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
+    public async createPartJoinerAndChat(creator: MinimalUser, typeGame: string): Promise<string> {
+        display(GameService.VERBOSE, `GameService.createGame(${creator.id}, ${typeGame})`);
 
-        const gameId: string = await this.createUnstartedPart(creatorName, typeGame);
-        await this.joinerService.createInitialJoiner(creatorName, gameId);
+        const gameId: string = await this.createUnstartedPart(creator.name, typeGame);
+        await this.joinerService.createInitialJoiner(creator, gameId);
         await this.createChat(gameId);
         return gameId;
     }
@@ -98,11 +99,11 @@ export class GameService {
         let playerZero: string;
         let playerOne: string;
         if (whoStarts === FirstPlayer.CREATOR) {
-            playerZero = joiner.creator;
+            playerZero = joiner.creator.name;
             playerOne = Utils.getNonNullable(joiner.chosenPlayer);
         } else {
             playerZero = Utils.getNonNullable(joiner.chosenPlayer);
-            playerOne = joiner.creator;
+            playerOne = joiner.creator.name;
         }
         return {
             playerZero,
@@ -183,7 +184,7 @@ export class GameService {
 
         const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
         let firstPlayer: FirstPlayer;
-        if (part.playerZero === iJoiner.creator) {
+        if (part.playerZero === iJoiner.creator.name) {
             firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
         } else {
             firstPlayer = FirstPlayer.CREATOR;

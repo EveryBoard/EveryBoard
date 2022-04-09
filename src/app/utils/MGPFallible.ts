@@ -36,7 +36,7 @@ export abstract class MGPFallible<T> {
 
 class MGPFallibleSuccess<T> extends MGPFallible<T> {
 
-    private __nominal: void; // For strict typing
+    private readonly __nominal: void; // For strict typing
 
     public constructor(private readonly value: T) {
         super();
@@ -66,7 +66,7 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
 
 class MGPFallibleFailure<T> extends MGPFallible<T> {
 
-    private __nominal: void; // For strict typing
+    private readonly __nominal: void; // For strict typing
 
     public constructor(private readonly reason: string) {
         super();

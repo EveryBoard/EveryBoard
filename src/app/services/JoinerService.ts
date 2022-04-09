@@ -7,6 +7,7 @@ import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
+import { MinimalUser } from '../domain/MinimalUser';
 
 @Injectable({
     providedIn: 'root',
@@ -30,8 +31,8 @@ export class JoinerService {
         this.joinerUnsubscribe.get()();
         this.joinerUnsubscribe = MGPOptional.empty();
     }
-    public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
+    public async createInitialJoiner(creator: MinimalUser, joinerId: string): Promise<void> {
+        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator.id + ', ' + joinerId + ')');
 
         const newJoiner: Joiner = {
             candidates: [],
@@ -41,7 +42,7 @@ export class JoinerService {
             partStatus: PartStatus.PART_CREATED.value,
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
-            creator: creatorName,
+            creator,
         };
         return this.set(joinerId, newJoiner);
     }
@@ -55,7 +56,7 @@ export class JoinerService {
         const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.includes(userName)) {
             return MGPValidation.failure('User already in the game');
-        } else if (userName === joiner.get().creator) {
+        } else if (userName === joiner.get().creator.name) {
             return MGPValidation.SUCCESS;
         } else {
             joinerList[joinerList.length] = userName;

@@ -17,6 +17,7 @@ import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
     await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
@@ -28,7 +29,7 @@ describe('OnlineGameWrapper for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game');
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -43,7 +44,6 @@ describe('OnlineGameWrapper for non-existing game', () => {
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], NotFoundComponent, { skipLocationChange: true });
     }));
 });
-
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
@@ -63,7 +63,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     beforeEach(async() => {
         componentTestUtils = await ComponentTestUtils.basic('P4');
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
     });
