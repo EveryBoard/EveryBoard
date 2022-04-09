@@ -31,7 +31,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['lobby', LobbyComponent],
     ['settings', SettingsComponent],
     ['register', RegisterComponent],
-    ['notFound', NotFoundComponent],
+    ['notFound/errorMessage', NotFoundComponent],
     ['nextGameLoading', NextGameLoadingComponent],
     ['verify-account', VerifyAccountComponent],
     ['play', OnlineGameSelectionComponent],

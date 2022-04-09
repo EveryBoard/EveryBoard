@@ -499,7 +499,7 @@ function getComponentClassName(component: Type<any>): string {
 export function expectValidRouting(router: Router,
                                    path: string[],
                                    component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                   otherRoutes: boolean = false)
+                                   options?: { otherRoutes?: boolean, skipLocationChange?: boolean})
 : void
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
@@ -512,17 +512,29 @@ export function expectValidRouting(router: Router,
     const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
+    const otherRoutes: boolean = options != null && options.otherRoutes != null && options.otherRoutes;
+    const skipLocationChange: boolean =
+        options != null && options.skipLocationChange != null && options.skipLocationChange;
     if (otherRoutes) {
-        expect(router.navigate).toHaveBeenCalledWith(path);
+        if (skipLocationChange) {
+            expect(router.navigate).toHaveBeenCalledWith(path, { skipLocationChange: true });
+        } else {
+            expect(router.navigate).toHaveBeenCalledWith(path);
+        }
     } else {
-        expect(router.navigate).toHaveBeenCalledOnceWith(path);
+        if (skipLocationChange) {
+            console.log({path})
+            expect(router.navigate).toHaveBeenCalledOnceWith(path, { skipLocationChange: true });
+        } else {
+            expect(router.navigate).toHaveBeenCalledOnceWith(path);
+        }
     }
 }
 
 /**
  * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
  */
-export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<any>): void {
+export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>): void {
     expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
 
     expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();

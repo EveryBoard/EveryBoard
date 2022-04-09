@@ -22,6 +22,8 @@ export class GameWrapperMessages {
     public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
 
     public static readonly NO_MATCHING_GAME: Localized = () => $localize`This game does not exist.`;
+
+    public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
 }
 
 @Component({ template: '' })
@@ -67,11 +69,10 @@ export abstract class GameWrapper {
     private async createGameComponent(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
 
-        const compoString: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-        const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(compoString);
+        const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
         if (component.isAbsent()) {
-            this.messageDisplayer.criticalMessage(GameWrapperMessages.NO_MATCHING_GAME());
-            await this.router.navigate(['/']);
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], { skipLocationChange: true });
             return false;
         }
         assert(this.gameIncluder != null, 'GameIncluder should be present');

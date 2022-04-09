@@ -16,7 +16,6 @@ import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameWrapperMessages } from '../GameWrapper';
 
 async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
@@ -26,15 +25,13 @@ async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promi
 }
 
 describe('OnlineGameWrapper for non-existing game', () => {
-    it('should redirect to /', fakeAsync(async() => {
+    it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game');
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
 
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG, { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
         testUtils.detectChanges();
@@ -42,9 +39,8 @@ describe('OnlineGameWrapper for non-existing game', () => {
         // When loading the component
         tick(1);
 
-        // Then it goes back to / and displays a message
-        expect(router.navigate).toHaveBeenCalledWith(['/']);
-        expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith(GameWrapperMessages.NO_MATCHING_GAME());
+        // Then it goes to /notFound with the expected error message
+        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], NotFoundComponent, { skipLocationChange: true });
     }));
 });
 
@@ -203,13 +199,13 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             flush();
         }));
     });
-    it('should redirect to index page if part does not exist', fakeAsync(async() => {
+    it('should redirect to /notFound if part does not exist', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
         await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
         componentTestUtils.detectChanges();
         tick();
 
-        expectValidRouting(router, ['/notFound'], NotFoundComponent);
+        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
 });

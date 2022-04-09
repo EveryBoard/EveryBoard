@@ -98,7 +98,7 @@ export const routes: Route[] = [
     { path: 'settings', component: SettingsComponent },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
-    { path: 'notFound', component: NotFoundComponent },
+    { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 

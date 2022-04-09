@@ -67,26 +67,23 @@ import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshT
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameWrapperMessages } from '../GameWrapper';
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 
-describe('TutorialGameWrapper for non-existing game', () => {
-    it('should redirect to /', fakeAsync(async() => {
+describe('TutorialGameWrapperComponent for non-existing game', () => {
+    it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
         testUtils.prepareFixture(TutorialGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
 
         // When loading the wrapper
         testUtils.detectChanges();
         tick(3000);
 
-        // Then it goes back to / and displays a message
-        expect(router.navigate).toHaveBeenCalledWith(['/']);
-        expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith(GameWrapperMessages.NO_MATCHING_GAME());
+        // Then it goes to /notFound with the expected error message
+        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], NotFoundComponent, { skipLocationChange: true });
     }));
 });
 

@@ -1,23 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { NotFoundComponent } from './not-found.component';
 
 describe('NotFoundComponent', () => {
-    let component: NotFoundComponent;
-    let fixture: ComponentFixture<NotFoundComponent>;
+    let testUtils: SimpleComponentTestUtils<NotFoundComponent>;
+
+    const MESSAGE: string = 'Displayed message';
 
     beforeEach(async() => {
-        await TestBed.configureTestingModule({
-            declarations: [
-                NotFoundComponent,
-            ],
-        }).compileComponents();
-        fixture = TestBed.createComponent(NotFoundComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+        const routeStub: ActivatedRouteStub = new ActivatedRouteStub();
+        routeStub.setRoute('message', MESSAGE);
+        testUtils = await SimpleComponentTestUtils.create(NotFoundComponent, routeStub);
     });
     it('should create', () => {
-        expect(component).toBeTruthy();
+        expect(testUtils.getComponent()).toBeTruthy();
+    });
+    it('should display the message provided as argument', () => {
+        testUtils.detectChanges();
+        const messageElement: DebugElement = testUtils.findElement('.message-body');
+        expect(messageElement.nativeElement.innerText).toEqual(MESSAGE);
     });
 });

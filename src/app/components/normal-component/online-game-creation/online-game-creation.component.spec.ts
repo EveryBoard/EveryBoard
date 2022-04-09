@@ -5,9 +5,28 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LobbyComponent } from '../lobby/lobby.component';
+import { NotFoundComponent } from '../not-found/not-found.component';
 import { OnlineGameCreationComponent, OnlineGameCreationMessages } from './online-game-creation.component';
+
+describe('OnlineGameCreationComponent for non-existing game', () => {
+    it('should redirect to /notFound', fakeAsync(async() => {
+        // Given a creation of a game that does not exist
+        const testUtils: SimpleComponentTestUtils<OnlineGameCreationComponent> = await SimpleComponentTestUtils.create(OnlineGameCreationComponent, new ActivatedRouteStub('invalid-game'));
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When loading the wrapper
+        testUtils.detectChanges();
+        tick(3000);
+
+        // Then it goes to /notFound with the expected error message
+        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], NotFoundComponent, { skipLocationChange: true });
+
+    }));
+});
 
 describe('OnlineGameCreationComponent', () => {
 

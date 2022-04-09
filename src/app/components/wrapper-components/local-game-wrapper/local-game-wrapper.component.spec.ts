@@ -4,7 +4,7 @@ import { P4State } from 'src/app/games/p4/P4State';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { DebugElement } from '@angular/core';
@@ -21,25 +21,23 @@ import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
-    it('should redirect to /', fakeAsync(async() => {
+    it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(LocalGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
 
         // When loading the wrapper
         testUtils.detectChanges();
         tick(3000);
 
-        // Then it goes back to / and displays a message
-        expect(router.navigate).toHaveBeenCalledWith(['/']);
-        expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith(GameWrapperMessages.NO_MATCHING_GAME());
+        // Then it goes to /notFound with the expected error message
+        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], NotFoundComponent, { skipLocationChange: true });
     }));
 });
 

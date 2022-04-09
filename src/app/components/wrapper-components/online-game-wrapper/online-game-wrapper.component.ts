@@ -10,7 +10,7 @@ import { CountDownComponent } from '../../normal-component/count-down/count-down
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { User, UserDocument } from '../../../domain/User';
 import { Request } from '../../../domain/Request';
-import { GameWrapper } from '../GameWrapper';
+import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { Joiner } from 'src/app/domain/Joiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
@@ -136,9 +136,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             await this.gameService.getPartValidity(this.currentPartId, gameType);
         if (partValidity.isFailure()) {
             // note, option if WRONG_GAME_TYPE to redirect to another page
-            const page: string = '/notFound';
             this.routerEventsSub.unsubscribe();
-            await this.router.navigate([page]);
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_PART()], { skipLocationChange: true } );
         }
     }
     private setCurrentPartIdOrRedirect(): Promise<void> {
