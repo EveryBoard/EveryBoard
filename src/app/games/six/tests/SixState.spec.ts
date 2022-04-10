@@ -133,8 +133,8 @@ describe('SixState', () => {
             // Then it should throw and call logError
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorMessage: string = 'Cannot switch piece if there is no piece!';
-            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError(errorMessage);
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('SixState', errorMessage);
+            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('SixState: ' + errorMessage + ' (extra data: {"coord":"(0, 0)"})');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('SixState', errorMessage, { coord: '(0, 0)' });
         });
     });
 });

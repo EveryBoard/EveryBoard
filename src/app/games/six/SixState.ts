@@ -195,8 +195,7 @@ export class SixState extends GameState implements ComparableObject {
             newPieces.replace(coord, oldPiece.getOpponent());
             return new SixState(newPieces, this.turn, this.offset);
         } else {
-            ErrorLoggerService.logError('SixState', 'Cannot switch piece if there is no piece!');
-            throw new Error('Cannot switch piece if there is no piece!');
+            ErrorLoggerService.logErrorAndFail('SixState', 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
         }
     }
     public equals(o: SixState): boolean {
