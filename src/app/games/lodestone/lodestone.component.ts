@@ -65,6 +65,7 @@ export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos>
     implements OnInit
 {
+    // TODO: scores
     public PIECE_RADIUS: number;
     public viewInfo: ViewInfo = {
         availableLodestones: [],
