@@ -42,12 +42,17 @@ export class LodestoneMove extends MoveCoord {
         super(coord.x, coord.y);
     }
     public toString(): string {
-        return `LodestoneMove(${this.coord.toString()}, ${this.direction})`;
+        return `LodestoneMove(${this.coord.toString()}, ${this.direction}, ${this.diagonal}, { top: ${this.captures.top}, bottom: ${this.captures.bottom}, left: ${this.captures.left}, right: ${this.captures.right} })`;
     }
     public equals(other: LodestoneMove): boolean {
         if (this === other) return true;
         if (this.coord.equals(other.coord) === false) return false;
+        if (this.diagonal !== other.diagonal) return false;
         if (this.direction !== other.direction) return false;
+        if (this.captures.top !== other.captures.top) return false;
+        if (this.captures.bottom !== other.captures.bottom) return false;
+        if (this.captures.left !== other.captures.left) return false;
+        if (this.captures.right !== other.captures.right) return false;
         return true;
     }
 }

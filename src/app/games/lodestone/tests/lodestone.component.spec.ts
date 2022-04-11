@@ -217,6 +217,30 @@ fdescribe('LodestoneComponent', () => {
         testUtils.expectElementToExist('#plateSquare_top_2');
         testUtils.expectElementNotToExist('#plateSquare_top_3');
     }));
+    it('should display only the available lodestones when a lodestone is already on the board', fakeAsync(async() => {
+        // Given a state with the player lodestone on the board
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', false);
+        const board: Table<LodestonePiece> = [
+            [X, _, _, _, _, _, _, B],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const lodestones: LodestoneLodestones = [
+            MGPOptional.of(new Coord(0, 0)),
+            MGPOptional.empty(),
+        ];
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
+        // When displaying the state
+        testUtils.setupState(state);
+        // Then it should only show the available lodestones
+        testUtils.expectElementToExist('#lodestone_push_orthogonal');
+        testUtils.expectElementToExist('#lodestone_push_diagonal');
+    }));
     it('should reallow selecting any lodestone face if a lodestone falls from the board', fakeAsync(async() => {
         // Given a state where a pressure plate will soon crumble, taking a lodestone with it
         const X: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'pull', false);
@@ -279,6 +303,6 @@ fdescribe('LodestoneComponent', () => {
         // When displaying the state
         testUtils.setupState(state);
         // Then the score should be the number of pieces captured
-        expect(testUtils.getComponent().scores).toEqual(MGPOptional.of([20, 22]));
+        expect(testUtils.getComponent().scores).toEqual(MGPOptional.of([22, 20]));
     });
 });

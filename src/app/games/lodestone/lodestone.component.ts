@@ -9,11 +9,13 @@ import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
+import { LodestoneDummyMinimax } from './LodestoneDummyMinimax';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestonePiece, LodestonePieceNone } from './LodestonePiece';
 import { LodestoneInfos, LodestoneRules } from './LodestoneRules';
 import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestoneState } from './LodestoneState';
+import { LodestoneTutorial } from './LodestoneTutorial';
 
 interface LodestoneInfo {
     direction: LodestoneDirection,
@@ -84,8 +86,9 @@ export class LodestoneComponent
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = LodestoneRules.get();
+        this.tutorial = new LodestoneTutorial().tutorial;
         this.availableMinimaxes = [
-            // TODO
+            new LodestoneDummyMinimax(this.rules, 'LodestoneDummyMinimax'),
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;

@@ -5,6 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { LodestoneCaptures } from './LodestoneMove';
 
 export class LodestonePressurePlate {
     public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
@@ -101,14 +102,18 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         return new LodestoneState(board, this.turn, this.lodestones, pressurePlates);
     }
     public remainingSpaces(): number {
-        let total: number = 0;
+        const remaining: LodestoneCaptures = this.remainingSpacesDetailed();
+        return remaining.top + remaining.bottom + remaining.left + remaining.right;
+    }
+    public remainingSpacesDetailed(): LodestoneCaptures {
+        const remaining: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
         for (const position of LodestonePressurePlate.POSITIONS) {
             const pressurePlate: MGPOptional<LodestonePressurePlate> = this.pressurePlates[position];
             if (pressurePlate.isPresent()) {
-                total += pressurePlate.get().remainingSpaces();
+                remaining[position] = pressurePlate.get().remainingSpaces();
             }
         }
-        return total;
+        return remaining;
     }
     public numberOfPieces(): [number, number] {
         const playerPieces: [number, number] = [0, 0];
@@ -124,7 +129,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     }
     public getScores(): [number, number] {
         const remainingPieces: [number, number] = this.numberOfPieces();
-        return [24 - remainingPieces[0], 24 - remainingPieces[1]];
+        return [24 - remainingPieces[1], 24 - remainingPieces[0]];
     }
     public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {
         const currentPlayer: Player = this.getCurrentPlayer();
