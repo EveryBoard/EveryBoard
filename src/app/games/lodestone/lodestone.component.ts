@@ -65,7 +65,6 @@ export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos>
     implements OnInit
 {
-    // TODO: scores
     public PIECE_RADIUS: number;
     public viewInfo: ViewInfo = {
         availableLodestones: [],
@@ -91,6 +90,7 @@ export class LodestoneComponent
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.displayedState = this.rules.node.gameState;
+        this.scores = MGPOptional.of([0, 0]);
     }
     public ngOnInit(): void {
         this.updateBoard();
@@ -142,21 +142,18 @@ export class LodestoneComponent
         const [direction, diagonal]: [LodestoneDirection, boolean] = this.selectedLodestone.get();
         const state: LodestoneState = this.getState();
         const validity: MGPValidation = LodestoneRules.get().isLegalWithoutCaptures(state, coord, direction);
-        if (validity.isSuccess()) {
-            const [board, captures]: [LodestonePiece[][], Coord[]] =
-                LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
-            this.capturesToPlace = Math.min(captures.length, state.remainingSpaces());
-            if (this.capturesToPlace === 0) {
-                return this.applyMove();
-            } else {
-                this.displayedState = this.displayedState.withBoard(board);
-                this.updateViewInfo();
-                const lastState: LodestoneState = this.getState();
-                this.showStateDifference(lastState, this.displayedState);
-                return MGPValidation.SUCCESS;
-            }
+        assert(validity.isSuccess(), 'Lodestone component should only allow creation of legal moves');
+        const [board, captures]: [LodestonePiece[][], Coord[]] =
+            LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
+        this.capturesToPlace = Math.min(captures.length, state.remainingSpaces());
+        if (this.capturesToPlace === 0) {
+            return this.applyMove();
         } else {
-            return this.cancelMove(validity.getReason());
+            this.displayedState = this.displayedState.withBoard(board);
+            this.updateViewInfo();
+            const lastState: LodestoneState = this.getState();
+            this.showStateDifference(lastState, this.displayedState);
+            return MGPValidation.SUCCESS;
         }
     }
     private async applyMove(): Promise<MGPValidation> {
@@ -201,6 +198,7 @@ export class LodestoneComponent
         if (lastMove.isPresent()) {
             this.showLastMove();
         }
+        this.scores = MGPOptional.of(this.getState().getScores());
     }
     public cancelMoveAttempt(): void {
         this.displayedState = this.getState();

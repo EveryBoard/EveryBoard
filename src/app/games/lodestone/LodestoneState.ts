@@ -122,6 +122,10 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         }
         return playerPieces;
     }
+    public getScores(): [number, number] {
+        const remainingPieces: [number, number] = this.numberOfPieces();
+        return [24 - remainingPieces[0], 24 - remainingPieces[1]];
+    }
     public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {
         const currentPlayer: Player = this.getCurrentPlayer();
         if (this.lodestones[currentPlayer.value].isAbsent()) {

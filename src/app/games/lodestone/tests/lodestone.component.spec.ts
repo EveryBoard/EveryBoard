@@ -46,8 +46,8 @@ fdescribe('LodestoneComponent', () => {
         // When clicking on a on an empty square and then on a lodestone
         await testUtils.expectClickSuccess('#square_0_0');
         // Then the move should succeed (in case this is a move without capture)
-        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false);
-        await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
+        const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'pull', true);
+        await testUtils.expectMoveSuccess('#lodestone_pull_diagonal', move);
     }));
     it('should forbid placing a lodestone on an occupied square', fakeAsync(async() => {
         // Given the initial state
@@ -231,8 +231,8 @@ fdescribe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const lodestones: LodestoneLodestones = [
-            MGPOptional.of(new Coord(0, 0)),
             MGPOptional.empty(),
+            MGPOptional.of(new Coord(0, 0)),
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
@@ -259,4 +259,26 @@ fdescribe('LodestoneComponent', () => {
         // Then the move should be cancelled
         await testUtils.expectClickFailure('#square_0_0', LodestoneFailure.MUST_PLACE_CAPTURES());
     }));
+    it('should display score as number of captured pieces', () => {
+        // Given a state
+        const board: Table<LodestonePiece> = [
+            [A, A, A, A, _, _, _, _],
+            [B, B, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const lodestones: LodestoneLodestones = [
+            MGPOptional.empty(),
+            MGPOptional.empty(),
+        ];
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
+        // When displaying the state
+        testUtils.setupState(state);
+        // Then the score should be the number of pieces captured
+        expect(testUtils.getComponent().scores).toEqual(MGPOptional.of([20, 22]));
+    });
 });
