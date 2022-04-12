@@ -15,7 +15,7 @@ export class ErrorLoggerService {
     public static setSingletonInstance(service: ErrorLoggerService) {
         ErrorLoggerService.singleton = MGPOptional.of(service);
     }
-    public static logErrorAndFail(component: string, message: string, data?: JSONValue): MGPValidation {
+    public static logErrorAndFail(component: string, message: string, data?: JSONValue): never {
         ErrorLoggerService.logError(component, message, data);
         throw new Error(`${component}: ${message} (extra data: ${JSON.stringify(data)})`);
     }

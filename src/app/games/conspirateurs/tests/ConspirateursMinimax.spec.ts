@@ -2,14 +2,14 @@
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursRules, ConspirateursNode } from '../ConspirateursRules';
 import { ConspirateursMinimax } from '../ConspirateursMinimax';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ConspirateursMinimax', () => {
-    const _: Player = Player.NONE;
-    const A: Player = Player.ZERO;
-    const B: Player = Player.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const A: PlayerOrNone = Player.ZERO;
+    const B: PlayerOrNone = Player.ONE;
 
     let rules: ConspirateursRules;
     let minimax: ConspirateursMinimax;

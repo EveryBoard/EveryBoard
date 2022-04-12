@@ -2,7 +2,7 @@
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { JSONValue } from 'src/app/utils/utils';
 import { Encoder, NumberEncoder } from '../Encoder';
-import { Player } from '../Player';
+import { Player, PlayerOrNone } from '../Player';
 
 export class EncoderTestUtils {
     public static expectToBeCorrect<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
@@ -65,7 +65,7 @@ describe('NumberEncoder', () => {
                 return this.field1 === t.field1 && this.field2 === t.field2 && this.field3 === t.field3;
             }
         }
-        const encoder: NumberEncoder<T> = NumberEncoder.tuple<T, [boolean, number, Player]>(
+        const encoder: NumberEncoder<T> = NumberEncoder.tuple<T, [boolean, number, PlayerOrNone]>(
             [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
             (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
             (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]));

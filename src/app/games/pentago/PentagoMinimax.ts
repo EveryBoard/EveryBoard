@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode, PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
@@ -46,7 +46,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
         for (let y: number = 0; y < 6; y++) {
             for (let x: number = 0; x < 6; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (state.getPieceAt(coord) === Player.NONE) {
+                if (state.getPieceAt(coord) === PlayerOrNone.NONE) {
                     legalDrops.push(coord);
                 }
             }

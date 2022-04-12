@@ -2,19 +2,19 @@ import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleCase, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
-const s: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.NONE, Player.NONE);
-const m: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
-const b: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ZERO);
-const S: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
-const B: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ONE);
+const _: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+const s: EncapsuleCase = new EncapsuleCase(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
+const m: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+const b: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
+const S: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+const B: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ONE);
 
-const Sm: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE);
-const sm: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ZERO, Player.NONE);
+const Sm: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
+const sm: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ZERO, PlayerOrNone.NONE);
 
 export class EncapsuleTutorial {
 

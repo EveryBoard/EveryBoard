@@ -1,7 +1,6 @@
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { assert } from 'src/app/utils/assert';
 
 export class ApagosSquare {
 
@@ -9,30 +8,29 @@ export class ApagosSquare {
         if (nbZero + nbOne > nbTotal) {
             return MGPFallible.failure('invalid starting space');
         }
-        const containing: MGPMap<Player, number> = new MGPMap();
+        const containing: MGPMap<PlayerOrNone, number> = new MGPMap();
         containing.set(Player.ZERO, nbZero);
         containing.set(Player.ONE, nbOne);
-        containing.set(Player.NONE, nbTotal);
+        containing.set(PlayerOrNone.NONE, nbTotal);
         containing.makeImmutable();
         const validSquare: ApagosSquare = new ApagosSquare(containing);
         return MGPFallible.success(validSquare);
     }
-    private constructor(private readonly containing: MGPMap<Player, number>)
+    private constructor(private readonly containing: MGPMap<PlayerOrNone, number>)
     { }
     public isFull(): boolean {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);
-        const nbTotal: number = this.count(Player.NONE);
+        const nbTotal: number = this.count(PlayerOrNone.NONE);
         return (nbZero + nbOne) >= nbTotal;
     }
-    public count(player: Player): number {
+    public count(player: PlayerOrNone): number {
         return this.containing.get(player).get();
     }
     public addPiece(piece: Player): ApagosSquare {
-        assert(piece !== Player.NONE, 'should not call ApagosSquare.addPiece with Player.NONE');
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
-        const nbTotal: number = this.count(Player.NONE);
+        const nbTotal: number = this.count(PlayerOrNone.NONE);
         if (piece === Player.ZERO) {
             nbZero++;
         } else {
@@ -41,10 +39,9 @@ export class ApagosSquare {
         return ApagosSquare.from(nbZero, nbOne, nbTotal).get();
     }
     public substractPiece(piece: Player): ApagosSquare {
-        assert(piece !== Player.NONE, 'should not call ApagosSquare.addPiece with Player.NONE');
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
-        const nbTotal: number = this.count(Player.NONE);
+        const nbTotal: number = this.count(PlayerOrNone.NONE);
         if (piece === Player.ZERO) {
             nbZero--;
         } else {
@@ -52,12 +49,12 @@ export class ApagosSquare {
         }
         return ApagosSquare.from(nbZero, nbOne, nbTotal).get();
     }
-    public getDominatingPlayer(): Player {
+    public getDominatingPlayer(): PlayerOrNone {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);
         if (nbZero > nbOne) return Player.ZERO;
         else if (nbOne > nbZero) return Player.ONE;
-        return Player.NONE;
+        return PlayerOrNone.NONE;
     }
     public equals(other: ApagosSquare): boolean {
         return this.containing.equals(other.containing);

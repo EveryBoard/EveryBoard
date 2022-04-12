@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -63,7 +63,7 @@ export class SixRules extends Rules<SixMove,
         for (const piece of state.pieces.listKeys()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighboor: Coord = piece.getNext(dir, 1);
-                if (state.getPieceAt(neighboor) === Player.NONE) {
+                if (state.getPieceAt(neighboor) === PlayerOrNone.NONE) {
                     neighboors.add(neighboor);
                 }
             }
@@ -81,10 +81,12 @@ export class SixRules extends Rules<SixMove,
             return MGPFallible.failure(SixFailure.CAN_NO_LONGER_DROP());
         }
         switch (state.getPieceAt(move.start.get())) {
-            case Player.NONE:
+            case PlayerOrNone.NONE:
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             case state.getCurrentOpponent():
                 return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            default:
+                // Current player, this is OK
         }
         const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
@@ -247,7 +249,7 @@ export class SixRules extends Rules<SixMove,
         const victory: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         while (victory.length < 6) {
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return [];
             }
@@ -265,7 +267,7 @@ export class SixRules extends Rules<SixMove,
         const victory: Coord[] = [lastDrop];
         let twoDirectionCovered: boolean = false;
         while (victory.length < 6) {
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece === LAST_PLAYER) {
                 victory.push(testCoord);
             } else {
@@ -290,7 +292,7 @@ export class SixRules extends Rules<SixMove,
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (victory.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return [];
             }
@@ -313,7 +315,7 @@ export class SixRules extends Rules<SixMove,
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (victory.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return [];
             }

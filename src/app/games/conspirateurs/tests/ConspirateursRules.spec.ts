@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { ConspirateursFailure } from '../ConspirateursFailure';
@@ -11,9 +11,9 @@ import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursMinimax } from '../ConspirateursMinimax';
 
 describe('ConspirateursRules', () => {
-    const _: Player = Player.NONE;
-    const A: Player = Player.ZERO;
-    const B: Player = Player.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const A: PlayerOrNone = Player.ZERO;
+    const B: PlayerOrNone = Player.ONE;
 
     let rules: ConspirateursRules;
 
