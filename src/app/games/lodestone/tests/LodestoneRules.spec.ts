@@ -6,6 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { LodestoneDummyMinimax } from '../LodestoneDummyMinimax';
 import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
@@ -33,7 +34,7 @@ fdescribe('LodestoneRules', () => {
     beforeEach(() => {
         rules = LodestoneRules.get();
         minimaxes = [
-            // TODO
+            new LodestoneDummyMinimax(rules, 'LodestoneDummyMinimax'),
         ];
     });
 
