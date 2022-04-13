@@ -31,7 +31,8 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         } else {
             const combinations: MGPSet<LodestoneCaptures> = new MGPSet();
             const available: LodestoneCaptures = state.remainingSpacesDetailed();
-            for (const subCombination of this.captureCombinations(state, numberOfCaptures-1)) {
+            const subCombinations: MGPSet<LodestoneCaptures> = this.captureCombinations(state, numberOfCaptures-1);
+            for (const subCombination of subCombinations) {
                 if (subCombination.top + 1 <= available.top) {
                     combinations.add({ ...subCombination, top: subCombination.top + 1 });
                 }
@@ -45,6 +46,10 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
                     combinations.add({ ...subCombination, right: subCombination.right + 1 });
                 }
             }
+            if (combinations.size() === 0) {
+                // It was not possible to place all captures, so we keep the sub combinations
+                return subCombinations;
+            }
             return combinations;
         }
     }
@@ -55,6 +60,9 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
                 const coord: Coord = new Coord(x, y);
                 const piece: LodestonePiece = state.getPieceAt(coord);
                 if (piece.isEmpty() && piece.isUnreachable() === false) {
+                    moves = moves.concat(f(coord));
+                } else if (piece.isLodestone() && piece.owner === state.getCurrentPlayer()) {
+                    // A player can also put a lodestone on its previous location
                     moves = moves.concat(f(coord));
                 }
             }
@@ -77,7 +85,16 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
     }
     public getBoardValue(node: LodestoneNode): NodeUnheritance {
         const scores: [number, number] = node.gameState.getScores();
-        return new NodeUnheritance(scores[0] * Player.ZERO.getScoreModifier() +
-            scores[1] * Player.ONE.getScoreModifier());
+        let score: number;
+        if (scores[0] === 24 && scores[1] === 24) {
+            score = 0;
+        } else if (scores[0] === 24) {
+            score = Player.ZERO.getVictoryValue();
+        } else if (scores[1] === 24) {
+            score = Player.ONE.getVictoryValue();
+        } else {
+            score = scores[0] * Player.ZERO.getScoreModifier() + scores[1] * Player.ONE.getScoreModifier();
+        }
+        return new NodeUnheritance(score);
     }
 }

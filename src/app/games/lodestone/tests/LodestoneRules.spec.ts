@@ -13,7 +13,7 @@ import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneP
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-fdescribe('LodestoneRules', () => {
+describe('LodestoneRules', () => {
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
     const A: LodestonePiece = LodestonePiecePlayer.ZERO;

@@ -144,6 +144,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
                     case 'pull': return MGPOptional.of('push');
                 }
             } else {
+                assert(piece.isUnreachable(), 'Lodestone must have fallen from the board, so its location should be unreachable now');
                 // This means that the lodestone fell of the board, next time it can be placed in any direction
                 return MGPOptional.empty();
             }

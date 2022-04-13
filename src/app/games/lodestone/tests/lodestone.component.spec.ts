@@ -12,7 +12,7 @@ import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-fdescribe('LodestoneComponent', () => {
+describe('LodestoneComponent', () => {
     let testUtils: ComponentTestUtils<LodestoneComponent>;
 
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;

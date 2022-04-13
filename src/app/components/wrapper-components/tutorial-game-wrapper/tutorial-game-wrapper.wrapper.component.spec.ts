@@ -67,6 +67,9 @@ import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshT
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
+import { LodestoneMove } from 'src/app/games/lodestone/LodestoneMove';
+import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
+import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -1001,12 +1004,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
     describe('Tutorials', () => {
-        it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        fit('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
+            const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
@@ -1078,6 +1082,21 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[5],
+                    new LodestoneMove(new Coord(0, 0), 'push', false),
+                    MGPValidation.failure(`You have not captured any of the opponent's pieces, try again!`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[6],
+                    new LodestoneMove(new Coord(0, 0), 'push', false),
+                    MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble!`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[7],
+                    new LodestoneMove(new Coord(0, 1), 'push', false),
+                    MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble a second time!`),
                 ], [
                     new PentagoRules(PentagoState),
                     pentagoTutorial[2],

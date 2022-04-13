@@ -1,6 +1,6 @@
 import { LodestoneState } from '../LodestoneState';
 
-fdescribe('LodestoneState', () => {
+describe('LodestoneState', () => {
     describe('initial state', () => {
         it('should initially have 24 pieces for each player', () => {
             // Given the initial state

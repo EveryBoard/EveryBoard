@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { LodestoneMove } from '../LodestoneMove';
 
-fdescribe('LodestoneMove', () => {
+describe('LodestoneMove', () => {
     it('should redefine equality', () => {
         const someMove: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', true);
         const moveWithDifferentCoord: LodestoneMove = new LodestoneMove(new Coord(1, 0), 'push', true);

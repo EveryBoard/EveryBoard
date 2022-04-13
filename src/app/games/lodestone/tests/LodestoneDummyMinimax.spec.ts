@@ -1,11 +1,21 @@
 /* eslint-disable max-lines-per-function */
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneDummyMinimax } from '../LodestoneDummyMinimax';
+import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
-import { LodestoneState } from '../LodestoneState';
+import { LodestoneLodestones, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-fdescribe('LodestoneDummyMinimax', () => {
+describe('LodestoneDummyMinimax', () => {
     let rules: LodestoneRules;
     let minimax: LodestoneDummyMinimax;
+
+    const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
+    const _: LodestonePiece = LodestonePieceNone.EMPTY;
+    const A: LodestonePiece = LodestonePiecePlayer.ZERO;
+    const B: LodestonePiece = LodestonePiecePlayer.ONE;
 
     beforeEach(() => {
         rules = LodestoneRules.get();
@@ -20,5 +30,33 @@ fdescribe('LodestoneDummyMinimax', () => {
         // For each position, we have to count the possible captures and how they can be placed
         // The total amounts to 618
         expect(minimax.getListMoves(node).length).toBe(618);
+    });
+    it('should propose 8 moves on a specific minimal board', () => {
+        // Given a state with 4 empty spaces and no remaining pressure plate
+        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', true);
+        const Y: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'push', true);
+        const board: Table<LodestonePiece> = [
+            [N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N],
+            [N, N, B, A, Y, _, N, N],
+            [N, N, A, B, A, _, N, N],
+            [N, N, B, B, A, X, N, N],
+            [N, N, A, A, B, _, N, N],
+            [N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N],
+        ];
+        const lodestones: LodestoneLodestones =
+            [MGPOptional.of(new Coord(5, 4)), MGPOptional.of(new Coord(4, 2))];
+        const pressurePlates: LodestonePressurePlates = {
+            top: MGPOptional.empty(),
+            bottom: MGPOptional.empty(),
+            left: MGPOptional.empty(),
+            right: MGPOptional.empty(),
+        };
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
+
+        const node: LodestoneNode = new LodestoneNode(state);
+        // Then there should be 4*2 possible moves
+        expect(minimax.getListMoves(node).length).toBe(8);
     });
 });
