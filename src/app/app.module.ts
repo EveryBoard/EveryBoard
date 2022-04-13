@@ -40,7 +40,6 @@ import { OnlineGameSelectionComponent }
     from './components/normal-component/online-game-selection/online-game-selection.component';
 import { TutorialGameCreationComponent }
     from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
-import { HumanDuration } from './utils/TimeUtils';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
@@ -78,9 +77,7 @@ import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
-import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
@@ -90,6 +87,10 @@ import * as Firestore from '@angular/fire/firestore';
 import * as Database from '@angular/fire/database';
 import * as Auth from '@angular/fire/auth';
 import { ThemeService } from './services/ThemeService';
+import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
+import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
+import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
+import { FirebaseTimePipe } from './pipes-and-directives/firebase-time.pipe';
 
 registerLocaleData(localeFr);
 
@@ -207,7 +208,8 @@ export class FirebaseProviders {
         TablutComponent,
         YinshComponent,
 
-        HumanDuration,
+        HumanDurationPipe,
+        FirebaseTimePipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
     ],

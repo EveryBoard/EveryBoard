@@ -1,6 +1,6 @@
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { KamisadoColor } from './KamisadoColor';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 type KamisadoPieceList = {
     ORANGE: KamisadoPiece,
@@ -14,9 +14,9 @@ type KamisadoPieceList = {
 };
 
 export class KamisadoPiece implements ComparableObject {
-    private constructor(public readonly player: Player, public readonly color: KamisadoColor) {
+    private constructor(public readonly player: PlayerOrNone, public readonly color: KamisadoColor) {
     }
-    public static readonly NONE: KamisadoPiece = new KamisadoPiece(Player.NONE, KamisadoColor.ANY);
+    public static readonly NONE: KamisadoPiece = new KamisadoPiece(PlayerOrNone.NONE, KamisadoColor.ANY);
 
     public static of(player: Player, value: number): KamisadoPiece {
         return new KamisadoPiece(player, KamisadoColor.of(value));
@@ -41,7 +41,7 @@ export class KamisadoPiece implements ComparableObject {
         return piece.player === this.player && piece.color === this.color;
     }
     public isEmpty(): boolean {
-        return this.player.equals(Player.NONE);
+        return this.player.equals(PlayerOrNone.NONE);
     }
     public belongsTo(player: Player): boolean {
         return this.player === player;

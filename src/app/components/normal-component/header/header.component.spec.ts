@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,12 +16,12 @@ describe('HeaderComponent', () => {
     }));
 
     it('should create', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     }));
     it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         testUtils.detectChanges();
         spyOn(testUtils.getComponent().authenticationService, 'disconnect');
         await testUtils.clickElement('#logout');
@@ -33,7 +34,7 @@ describe('HeaderComponent', () => {
     }));
     it('should show user email if the user has not set its username yet', fakeAsync(async() => {
         const email: string = 'jean@jaja.us';
-        AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of(email), MGPOptional.empty(), false));
+        AuthenticationServiceMock.setUser(new AuthUser('id', MGPOptional.of(email), MGPOptional.empty(), false));
         testUtils.detectChanges();
         expect(testUtils.getComponent().username).toEqual(email);
     }));

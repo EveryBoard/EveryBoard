@@ -15,6 +15,7 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
@@ -40,7 +41,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     }
     beforeEach(async() => {
         componentTestUtils = await ComponentTestUtils.basic('P4');
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
     });

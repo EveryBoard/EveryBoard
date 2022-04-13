@@ -10,10 +10,6 @@
         <source>Be polite</source>
         <target>Soyez courtois</target>
       </trans-unit>
-      <trans-unit id="7206938270697807461" datatype="html">
-        <source>Only connected users can see the chat.</source>
-        <target>Seulement les utilisateurs connectés peuvent voir le chat.</target>
-      </trans-unit>
       <trans-unit id="8447591012079458095" datatype="html">
         <source>Hide chat</source>
         <target>Réduire le chat</target>

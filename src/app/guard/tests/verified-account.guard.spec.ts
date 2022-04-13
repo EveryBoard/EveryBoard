@@ -7,6 +7,7 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { VerifiedAccountGuard } from '../verified-account.guard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('VerifiedAccountGuard', () => {
     let guard: VerifiedAccountGuard;
@@ -39,20 +40,20 @@ describe('VerifiedAccountGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/login'));
     }));
     it('should move unverified user to verify-account page and refuse them', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED_UNVERIFIED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED_UNVERIFIED);
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should move users without username to verify-account page and refuse them', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), false));
+        AuthenticationServiceMock.setUser(new AuthUser('jeanjaja', MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), false));
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should accept verified user', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         await expectAsync(guard.canActivate()).toBeResolvedTo(true);
     }));
     it('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
         // Given a guard that has executed
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         await guard.canActivate();
         spyOn(guard['userSub'], 'unsubscribe');
 

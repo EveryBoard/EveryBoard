@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoState } from '../KamisadoState';
@@ -444,10 +443,6 @@ describe('KamisadoRules:', () => {
             // Then it should be victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
-    });
-    it('should not have allowed directions for other players than 0 and 1', () => {
-        expect(() => KamisadoRules.playerDirections(Player.NONE)).toThrowError();
-        expect(() => KamisadoRules.directionAllowedForPlayer(Direction.UP, Player.NONE)).toThrowError();
     });
     it('should not allow creating invalid color', () => {
         expect(() => KamisadoColor.of(15)).toThrowError();

@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { FirstPlayer, Joiner, PartStatus, PartType } from './Joiner';
+import { UserMocks } from './UserMocks.spec';
 
 export class JoinerMocks {
     public static readonly INITIAL: Joiner = {
         candidates: [],
-        creator: 'creator',
+        creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenPlayer: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
@@ -15,7 +16,7 @@ export class JoinerMocks {
 
     public static readonly WITH_FIRST_CANDIDATE: Joiner = {
         candidates: ['firstCandidate'],
-        creator: 'creator',
+        creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenPlayer: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
@@ -26,7 +27,7 @@ export class JoinerMocks {
 
     public static readonly WITH_SECOND_CANDIDATE: Joiner = {
         candidates: ['firstCandidate', 'secondCandidate'],
-        creator: 'creator',
+        creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenPlayer: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
@@ -37,7 +38,7 @@ export class JoinerMocks {
 
     public static readonly WITH_CHOSEN_PLAYER: Joiner = {
         candidates: ['firstCandidate'],
-        creator: 'creator',
+        creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenPlayer: 'firstCandidate',
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
@@ -48,7 +49,7 @@ export class JoinerMocks {
 
     public static readonly WITH_PROPOSED_CONFIG: Joiner = {
         candidates: ['firstCandidate'],
-        creator: 'creator',
+        creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenPlayer: 'firstCandidate',
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
@@ -59,7 +60,7 @@ export class JoinerMocks {
 
     public static readonly WITH_ACCEPTED_CONFIG: Joiner = {
         candidates: ['firstCandidate'],
-        creator: 'creator',
+        creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenPlayer: 'firstCandidate',
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
@@ -16,9 +16,9 @@ describe('QuixoRules:', () => {
 
     let rules: QuixoRules;
     let minimaxes: Minimax<QuixoMove, QuixoState>[];
-    const _: Player = Player.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     beforeEach(() => {
         rules = new QuixoRules(QuixoState);
@@ -27,7 +27,7 @@ describe('QuixoRules:', () => {
         ];
     });
     it('Should forbid player to start a move with opponents piece', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, X],
@@ -39,14 +39,14 @@ describe('QuixoRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
     it('Should always put moved piece to currentPlayer symbol', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const expectedBoard: Table<Player> = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, O],
@@ -59,14 +59,14 @@ describe('QuixoRules:', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Should declare winner player zero when he create a line of his symbol', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, O],
             [_, _, _, _, O],
             [_, _, _, _, _],
             [_, _, _, _, O],
             [_, _, _, _, O],
         ];
-        const expectedBoard: Table<Player> = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, O],
             [_, _, _, _, O],
             [_, _, _, _, O],
@@ -81,14 +81,14 @@ describe('QuixoRules:', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Should declare winner player one when he create a line of his symbol', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, X],
             [_, _, _, _, X],
             [_, _, _, _, _],
             [_, _, _, _, X],
             [_, _, _, _, X],
         ];
-        const expectedBoard: Table<Player> = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, X],
             [_, _, _, _, X],
             [_, _, _, _, X],
@@ -103,14 +103,14 @@ describe('QuixoRules:', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Should declare looser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [X, _, _, _, O],
             [X, _, _, _, O],
             [_, X, _, _, _],
             [X, _, _, _, O],
             [X, _, _, _, O],
         ];
-        const expectedBoard: Table<Player> = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [X, _, _, _, O],
             [X, _, _, _, O],
             [X, _, _, _, O],
@@ -125,14 +125,14 @@ describe('QuixoRules:', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Should declare looser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [O, _, _, _, X],
             [O, _, _, _, X],
             [_, O, _, _, _],
             [O, _, _, _, X],
             [O, _, _, _, X],
         ];
-        const expectedBoard: Table<Player> = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [O, _, _, _, X],
             [O, _, _, _, X],
             [O, _, _, _, X],
@@ -148,7 +148,7 @@ describe('QuixoRules:', () => {
     });
     describe('getVictoriousCoords', () => {
         it('should return victorious column', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [O, _, _, _, X],
                 [O, _, _, _, X],
                 [O, _, _, _, _],
@@ -160,7 +160,7 @@ describe('QuixoRules:', () => {
                 .toEqual([new Coord(0, 0), new Coord(0, 1), new Coord(0, 2), new Coord(0, 3), new Coord(0, 4)]);
         });
         it('should return victorious row', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [O, O, O, O, O],
                 [_, _, _, _, X],
                 [_, _, _, _, _],
@@ -172,7 +172,7 @@ describe('QuixoRules:', () => {
                 .toEqual([new Coord(0, 0), new Coord(1, 0), new Coord(2, 0), new Coord(3, 0), new Coord(4, 0)]);
         });
         it('should return victorious first diagonal', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _],
                 [_, O, _, _, _],
                 [_, _, O, _, _],
@@ -184,7 +184,7 @@ describe('QuixoRules:', () => {
                 .toEqual([new Coord(0, 0), new Coord(1, 1), new Coord(2, 2), new Coord(3, 3), new Coord(4, 4)]);
         });
         it('should return victorious second diagonal', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, _, _, O],
                 [_, _, _, O, _],
                 [_, _, O, _, _],

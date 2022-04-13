@@ -1,8 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiamFailure } from './DiamFailure';
@@ -95,7 +97,8 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         const highestAlignment: MGPOptional<Coord> = this.findHighestAlignment(node.gameState);
         if (highestAlignment.isPresent()) {
             const winningPiece: DiamPiece = node.gameState.getPieceAt(highestAlignment.get());
-            return GameStatus.getVictory(winningPiece.owner);
+            assert(winningPiece.owner.isPlayer(), 'highest alignment is owned by a player');
+            return GameStatus.getVictory(winningPiece.owner as Player);
         } else {
             return GameStatus.ONGOING;
         }

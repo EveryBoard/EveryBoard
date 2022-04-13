@@ -1,5 +1,5 @@
 import { Coord } from '../../jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
@@ -18,9 +18,9 @@ export abstract class TaflState extends GameStateWithTable<TaflPawn> {
         return new Coord(center, center);
     }
     public getRelativeOwner(player: Player, coord: Coord): RelativePlayer {
-        const owner: Player = this.getAbsoluteOwner(coord);
+        const owner: PlayerOrNone = this.getAbsoluteOwner(coord);
         let relativeOwner: RelativePlayer;
-        if (owner === Player.NONE) {
+        if (owner === PlayerOrNone.NONE) {
             relativeOwner = RelativePlayer.NONE;
         } else if (player === owner) {
             relativeOwner = RelativePlayer.PLAYER;
@@ -29,7 +29,7 @@ export abstract class TaflState extends GameStateWithTable<TaflPawn> {
         }
         return relativeOwner;
     }
-    public getAbsoluteOwner(coord: Coord): Player {
+    public getAbsoluteOwner(coord: Coord): PlayerOrNone {
         const pawn: TaflPawn = this.getPieceAt(coord);
         return pawn.getOwner();
     }
