@@ -30,7 +30,7 @@ export class LodestoneTutorial {
         ),
         TutorialStep.forClick(
             $localize`Selecting a lodestone`,
-            $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>push</i> side with which it will push the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>pull</i> side with which it will pull your pieces (indicated by the indward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that pushes your pieces diagonally.`,
+            $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>push</i> side with which it will push the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>pull</i> side with which it will pull your pieces (indicated by the inward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that pushes your pieces diagonally.`,
             LodestoneState.getInitialState(),
             ['#lodestone_push_diagonal'],
             `Congratulations!`,
@@ -53,7 +53,7 @@ export class LodestoneTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Capturing`,
-            $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a pushing lodestone, by pushing your opponent's pieces out of the board, or</li><li>with a pulling lodestone, by pulling your pieces over your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on the pressure plate of your chosing for each capture.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
+            $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a pushing lodestone, by pushing your opponent's pieces out of the board, or</li><li>with a pulling lodestone, by pulling your pieces over your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on the pressure plate of your choice for each capture.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
             LodestoneState.getInitialState(),
             new LodestoneMove(new Coord(3, 3), 'push', false, { top: 2, bottom: 0, left: 0, right: 0 }),
             (_: LodestoneMove, state: LodestoneState) => {
@@ -135,7 +135,7 @@ export class LodestoneTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Making the lodestone fall`,
-            $localize`If, at any point during the game, your lodestone is situated on a square that crumbles with a pressure plate, you will be allowed to select any lodestone face on your next turn.<br/><br/>In this board, playing Dark, you can place your lodestone and make a pressure plate crumble so that your lodestone falls too, allowing to choose more freely its side on your next turn. Do it!`,
+            $localize`If, at any point during the game, your lodestone is situated on a square that crumbles with a pressure plate, you will be allowed to select any lodestone side on your next turn.<br/><br/>In this board, playing Dark, you can place your lodestone and make a pressure plate crumble so that your lodestone falls too, allowing to choose more freely its side on your next turn. Do it!`,
             new LodestoneState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, B, _, _],
@@ -173,7 +173,7 @@ export class LodestoneTutorial {
             }),
             [new LodestoneMove(new Coord(4, 2), 'pull', false, { top: 0, bottom: 0, left: 3, right: 0 })],
             $localize`Congratulations, you won!`,
-            $localize`This is not the winning move. Try again`,
+            $localize`This is not the winning move. Try again.`,
         ),
     ]
 }

@@ -18,12 +18,8 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
                 const captures: Coord[] =
                     LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal)[1];
                 const numberOfCaptures: number = captures.length;
-                if (numberOfCaptures > 4) {
-                    console.log({coord, direction, diagonal})
-                }
                 for (const captures of this.captureCombinations(state, numberOfCaptures)) {
                     moves.push(new LodestoneMove(coord, direction, diagonal, captures));
-                    break;
                 }
             }
             return moves;
@@ -49,7 +45,6 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
                     combinations.add({ ...subCombination, right: subCombination.right + 1 });
                 }
             }
-            console.log({numberOfCaptures, size: combinations.size()})
             return combinations;
         }
     }
