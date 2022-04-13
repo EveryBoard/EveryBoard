@@ -54,9 +54,35 @@ export class LodestonePiecePlayer {
 }
 
 export class LodestonePieceLodestone {
-    public constructor(public readonly owner: Player,
-                       public readonly direction: LodestoneDirection,
-                       public readonly diagonal: boolean) {
+    public static LODESTONES: Record<0 | 1, Record<LodestoneDirection, Record<'diagonal' | 'orthogonal', LodestonePieceLodestone>>> = {
+        0: {
+            'push': {
+                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'push', true),
+                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'push', false),
+            },
+            'pull': {
+                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'pull', true),
+                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'pull', false),
+            },
+        },
+        1: {
+            'push': {
+                'diagonal': new LodestonePieceLodestone(Player.ONE, 'push', true),
+                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'push', false),
+            },
+            'pull': {
+                'diagonal': new LodestonePieceLodestone(Player.ONE, 'pull', true),
+                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'pull', false),
+            },
+        },
+    };
+
+    private constructor(public readonly owner: Player,
+                        public readonly direction: LodestoneDirection,
+                        public readonly diagonal: boolean) {
+    }
+    public static of(player: Player, direction: LodestoneDirection, diagonal: boolean): LodestonePieceLodestone {
+        return LodestonePieceLodestone.LODESTONES[player.value][direction][diagonal ? 'diagonal' : 'orthogonal'];
     }
     public isLodestone(): this is LodestonePieceLodestone {
         return true;
@@ -71,15 +97,7 @@ export class LodestonePieceLodestone {
         return false;
     }
     public equals(other: LodestonePiece): boolean {
-        if (this === other) return true;
-        if (other.isLodestone()) {
-            if (this.owner !== other.owner) return false;
-            if (this.direction !== other.direction) return false;
-            if (this.diagonal !== other.diagonal) return false;
-            return true;
-        } else {
-            return false;
-        }
+        return this === other;
     }
 }
 

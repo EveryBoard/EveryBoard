@@ -134,7 +134,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             const previousCoord: Coord = previousLodestonePosition.get();
             board[previousCoord.y][previousCoord.x] = LodestonePieceNone.EMPTY;
         }
-        board[coord.y][coord.x] = new LodestonePieceLodestone(state.getCurrentPlayer(), direction, diagonal);
+        board[coord.y][coord.x] = LodestonePieceLodestone.of(state.getCurrentPlayer(), direction, diagonal);
         return [board, captures];
     }
     private applyPull(state: LodestoneState, lodestone: Coord, diagonal: boolean): [LodestonePiece[][], Coord[]] {

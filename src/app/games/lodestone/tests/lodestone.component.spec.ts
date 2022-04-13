@@ -219,7 +219,7 @@ describe('LodestoneComponent', () => {
     }));
     it('should display only the available lodestones when a lodestone is already on the board', fakeAsync(async() => {
         // Given a state with the player lodestone on the board
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ZERO, 'pull', false);
+        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', false);
         const board: Table<LodestonePiece> = [
             [X, _, _, _, _, _, _, B],
             [_, _, _, _, _, _, _, _],
@@ -243,7 +243,7 @@ describe('LodestoneComponent', () => {
     }));
     it('should reallow selecting any lodestone face if a lodestone falls from the board', fakeAsync(async() => {
         // Given a state where a pressure plate will soon crumble, taking a lodestone with it
-        const X: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'pull', false);
+        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, 'pull', false);
         const board: Table<LodestonePiece> = [
             [X, _, _, _, _, _, _, B],
             [_, _, _, _, _, _, _, _],

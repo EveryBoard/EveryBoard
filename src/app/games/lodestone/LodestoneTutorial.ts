@@ -11,7 +11,7 @@ const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
 const _: LodestonePiece = LodestonePieceNone.EMPTY;
 const A: LodestonePiece = LodestonePiecePlayer.ZERO;
 const B: LodestonePiece = LodestonePiecePlayer.ONE;
-const X: LodestonePiece = new LodestonePieceLodestone(Player.ONE, 'push', false);
+const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, 'push', false);
 
 const allPressurePlates: LodestonePressurePlates = {
     top: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
@@ -105,7 +105,7 @@ export class LodestoneTutorial {
                 ...allPressurePlates,
                 top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ONE, 2),
             }),
-            new LodestoneMove(new Coord(4, 1), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 }),
+            new LodestoneMove(new Coord(3, 5), 'pull', true, { top: 1, bottom: 0, left: 0, right: 0 }),
             (_: LodestoneMove, state: LodestoneState) => {
                 if (state.pressurePlates.top.isPresent()) {
                     return MGPValidation.failure($localize`You must capture and place your capture on the top pressure plate to make it crumble a second time!`);
