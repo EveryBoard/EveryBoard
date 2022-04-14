@@ -201,6 +201,8 @@ export class AuthenticationService implements OnDestroy {
                 return $localize`There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.`;
             case 'auth/popup-closed-by-user':
                 return $localize`You closed the authentication popup without finalizing your log in.`;
+            case 'auth/popup-blocked':
+                return $localize`The authentication popup was blocked. Try again after disabling popup blocking.`
             default:
                 ErrorLoggerService.logError('AuthenticationService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
