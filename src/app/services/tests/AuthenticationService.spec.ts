@@ -416,7 +416,7 @@ describe('AuthenticationService', () => {
         });
     });
     describe('mapFirebaseError', () => {
-        it('calls logError when encountering an unsupported error', async() => {
+        it('should call logError when encountering an unsupported error', async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // given an unsupported error
@@ -433,6 +433,7 @@ describe('AuthenticationService', () => {
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
+                'auth/popup-blocked',
             ];
 
             for (const code of errorCodes) {
