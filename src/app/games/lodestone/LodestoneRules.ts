@@ -52,11 +52,11 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
 
     }
-    private updatePressurePlates(board: LodestonePiece[][],
-                                 pressurePlates: LodestonePressurePlates,
-                                 lodestones: LodestoneLodestones,
-                                 opponent: Player,
-                                 captures: LodestoneCaptures)
+    public updatePressurePlates(board: LodestonePiece[][],
+                                pressurePlates: LodestonePressurePlates,
+                                lodestones: LodestoneLodestones,
+                                opponent: Player,
+                                captures: LodestoneCaptures)
     : void
     {
         for (const position of LodestonePressurePlate.POSITIONS) {
@@ -68,12 +68,12 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                                                                 captures[position]);
         }
     }
-    public updatePressurePlate(board: LodestonePiece[][],
-                               position: LodestonePressurePlatePosition,
-                               pressurePlate: MGPOptional<LodestonePressurePlate>,
-                               lodestones: LodestoneLodestones,
-                               opponent: Player,
-                               captured: number)
+    private updatePressurePlate(board: LodestonePiece[][],
+                                position: LodestonePressurePlatePosition,
+                                pressurePlate: MGPOptional<LodestonePressurePlate>,
+                                lodestones: LodestoneLodestones,
+                                opponent: Player,
+                                captured: number)
     : MGPOptional<LodestonePressurePlate>
     {
         if (pressurePlate.isPresent()) {

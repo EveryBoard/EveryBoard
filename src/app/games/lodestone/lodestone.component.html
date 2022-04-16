@@ -97,11 +97,11 @@
         </g>
     </g>
     <g *ngFor="let plate of viewInfo.pressurePlates"
-       id="pressurePlate_{{ plate.position }}"
-       (click)="selectPressurePlate(plate.position)">
+       id="pressurePlate_{{ plate.position }}">
         <g *ngFor="let square of plate.coords; index as i">
             <rect id="plateSquare_{{ plate.position }}_{{ i }}"
                   class="base"
+                  (click)="(square.temporary) ? deselectPressurePlate(plate.position) : selectPressurePlate(plate.position)"
                   [ngClass]="square.squareClasses"
                   [attr.x]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
                   [attr.y]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
@@ -112,8 +112,9 @@
             />
             <circle *ngIf="square.hasPiece"
                     id="platePiece_{{ plate.position }}_{{ i }}"
+                    (click)="(square.temporary) ? deselectPressurePlate(plate.position) : selectPressurePlate(plate.position)"
                     class="base"
-                    [ngClass]="square.pieceClass"
+                    [ngClass]="square.pieceClasses"
                     [attr.r]="PIECE_RADIUS"
                     [attr.cx]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
                     [attr.cy]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
