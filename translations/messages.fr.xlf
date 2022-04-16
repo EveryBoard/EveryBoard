@@ -2457,11 +2457,11 @@
       </trans-unit>
       <trans-unit id="3538909383339704235" datatype="html">
         <source>Making the lodestone fall</source>
-        <target>Faire tomber une pierre de pression</target>
+        <target>Faire tomber une pierre magnétique</target>
       </trans-unit>
       <trans-unit id="2420281248578493085" datatype="html">
         <source>If, at any point during the game, your lodestone is situated on a square that crumbles with a pressure plate, you will be allowed to select any lodestone side on your next turn.&lt;br/&gt;&lt;br/&gt;In this board, playing Dark, you can place your lodestone and make a pressure plate crumble so that your lodestone falls too, allowing to choose more freely its side on your next turn. Do it!</source>
-        <target>À tout moment durant le jeu, si votre pierre de pression se trouve sur une case qui s'effondre avec une plaque de pression, vous pourrez sélectionner n'importe quelle face de votre plaque de pression lors de votre prochain tour.&lt;br/&gt;&lt;br/&gt;Sur ce plateau, en jouant Foncé, vous pouvez placer votre pierre magnétique et faire s'effondre une plaque de pression de façon à ce que votre pierre magnétique tombe également. Cela vous permettra de choisir plus librement le côté de votre pierre magnétique lors de votre prochain tour. Faites-le !</target>
+        <target>À tout moment durant le jeu, si votre pierre magnétique se trouve sur une case qui s'effondre avec une plaque de pression, vous pourrez sélectionner n'importe quelle face de votre pierre magnétique lors de votre prochain tour.&lt;br/&gt;&lt;br/&gt;Sur ce plateau, en jouant Foncé, vous pouvez placer votre pierre magnétique et faire s'effondre une plaque de pression de façon à ce que votre pierre magnétique tombe également. Cela vous permettra de choisir plus librement le côté de votre pierre magnétique lors de votre prochain tour. Faites-le !</target>
       </trans-unit>
       <trans-unit id="387688094870283606" datatype="html">
         <source>Congratulations! At your next turn, you will be allowed to place your lodestone on any side.</source>

@@ -700,6 +700,48 @@ describe('LodestoneRules', () => {
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+    it('should crumble the floor under a lodestone when needed', () => {
+        // Given a state with an opponent piece next to a floor that will soon crumble
+        const Y: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, 'push', false);
+        const board: Table<LodestonePiece> = [
+            [_, _, _, _, B, _, Y, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, A, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const pressurePlates: LodestonePressurePlates = {
+            ...allPressurePlates,
+            top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ZERO, 4),
+        };
+        const lodestones: LodestoneLodestones = [MGPOptional.empty(), MGPOptional.of(new Coord(6, 0))];
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
+        // When placing a lodestone to push one of the B
+        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
+        // Then the move should be valid, but only one piece is captured
+        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', false);
+        const expectedBoard: Table<LodestonePiece> = [
+            [N, N, N, N, N, N, N, N],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, A, _, _, _],
+            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const expectedLodestones: LodestoneLodestones = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
+        const expectedPressurePlates: LodestonePressurePlates = {
+            ...pressurePlates,
+            top: MGPOptional.of(LodestonePressurePlate.EMPTY_3),
+        };
+        const expectedState: LodestoneState =
+            new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
     it('should not consider pieces fallen when there is no more pressure plate as capture', () => {
         // Given a fully crumbled state with an opponent piece that will soon fall
         const board: Table<LodestonePiece> = [

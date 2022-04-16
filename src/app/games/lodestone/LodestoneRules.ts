@@ -47,24 +47,30 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
         lodestones[currentPlayer.value] = MGPOptional.of(move.coord);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
-        this.updatePressurePlates(board, pressurePlates, opponent, move.captures);
+        this.updatePressurePlates(board, pressurePlates, lodestones, opponent, move.captures);
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
 
     }
     private updatePressurePlates(board: LodestonePiece[][],
                                  pressurePlates: LodestonePressurePlates,
+                                 lodestones: LodestoneLodestones,
                                  opponent: Player,
                                  captures: LodestoneCaptures)
     : void
     {
         for (const position of LodestonePressurePlate.POSITIONS) {
-            pressurePlates[position] =
-                this.updatePressurePlate(board, position, pressurePlates[position], opponent, captures[position]);
+            pressurePlates[position] = this.updatePressurePlate(board,
+                                                                position,
+                                                                pressurePlates[position],
+                                                                lodestones,
+                                                                opponent,
+                                                                captures[position]);
         }
     }
     public updatePressurePlate(board: LodestonePiece[][],
                                position: LodestonePressurePlatePosition,
                                pressurePlate: MGPOptional<LodestonePressurePlate>,
+                               lodestones: LodestoneLodestones,
                                opponent: Player,
                                captured: number)
     : MGPOptional<LodestonePressurePlate>
@@ -75,21 +81,29 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             const plateInfo: [Coord, Coord, Direction] = LodestoneRules.PRESSURE_PLATES_POSITIONS[position];
             if (newPressurePlate.isAbsent()) {
                 // The second pressure plate has fallen, crumble both rows
-                this.removePressurePlate(board, plateInfo[0], plateInfo[2]);
-                this.removePressurePlate(board, plateInfo[1], plateInfo[2]);
+                this.removePressurePlate(board, plateInfo[0], plateInfo[2], lodestones);
+                this.removePressurePlate(board, plateInfo[1], plateInfo[2], lodestones);
             } else if (newPressurePlate.get().width < pressurePlate.get().width) {
                 // The first pressure plate has fallen
-                this.removePressurePlate(board, plateInfo[0], plateInfo[2]);
+                this.removePressurePlate(board, plateInfo[0], plateInfo[2], lodestones);
             }
             return newPressurePlate;
         } else {
             return pressurePlate;
         }
     }
-    private removePressurePlate(board: LodestonePiece[][], start: Coord, direction: Direction): void {
+    private removePressurePlate(board: LodestonePiece[][],
+                                start: Coord,
+                                direction: Direction,
+                                lodestones: LodestoneLodestones): void {
         for (let coord: Coord = start; // eslint-disable-next-line indent
              coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE); // eslint-disable-next-line indent
              coord = coord.getNext(direction)) {
+            for (let player: number = 0; player < 2; player++) {
+                if (lodestones[player].equalsValue(coord)) {
+                    lodestones[player] = MGPOptional.empty();
+                }
+            }
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
         }
     }

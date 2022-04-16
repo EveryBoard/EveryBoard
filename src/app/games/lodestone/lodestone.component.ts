@@ -14,12 +14,13 @@ import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestonePiece, LodestonePieceNone } from './LodestonePiece';
 import { LodestoneInfos, LodestoneRules } from './LodestoneRules';
-import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestoneState } from './LodestoneState';
+import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlatePosition, LodestoneState } from './LodestoneState';
 import { LodestoneTutorial } from './LodestoneTutorial';
 
 interface LodestoneInfo {
     direction: LodestoneDirection,
     pieceClasses: string[],
+    selectedClass: string,
     movingClass: string,
     diagonal: boolean,
 }
@@ -180,9 +181,10 @@ export class LodestoneComponent
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(this.displayedState.board);
         const previousPressurePlate: MGPOptional<LodestonePressurePlate> = this.displayedState.pressurePlates[position];
+        const lodestones: LodestoneLodestones = [this.displayedState.lodestones[0], this.displayedState.lodestones[1]];
         const pressurePlate: MGPOptional<LodestonePressurePlate> =
-            LodestoneRules.get().updatePressurePlate(board, position, previousPressurePlate, opponent, 1);
-        this.displayedState = this.displayedState.withBoardAndPressurePlate(board, position, pressurePlate);
+            LodestoneRules.get().updatePressurePlate(board, position, previousPressurePlate, lodestones, opponent, 1);
+        this.displayedState = this.displayedState.withBoardAndPressurePlate(board, lodestones, position, pressurePlate);
         this.capturesToPlace--;
         this.captures[position]++;
         if (this.capturesToPlace === 0) {
@@ -249,6 +251,7 @@ export class LodestoneComponent
                     squareInfo.lodestone = {
                         direction: piece.direction,
                         pieceClasses: [this.getPlayerClass(piece.owner)],
+                        selectedClass: '',
                         movingClass: '',
                         diagonal: piece.diagonal,
                     };
@@ -280,10 +283,10 @@ export class LodestoneComponent
                 ];
             } else {
                 this.viewInfo.availableLodestones = [
-                    this.nextLodestone(player, 'push', true),
                     this.nextLodestone(player, 'push', false),
-                    this.nextLodestone(player, 'pull', true),
+                    this.nextLodestone(player, 'push', true),
                     this.nextLodestone(player, 'pull', false),
+                    this.nextLodestone(player, 'pull', true),
                 ];
             }
         }
@@ -302,6 +305,7 @@ export class LodestoneComponent
             direction,
             pieceClasses: [this.getPlayerClass(player)],
             movingClass: '',
+            selectedClass: '',
             diagonal: false,
         };
         if (direction === 'push') {
@@ -312,7 +316,7 @@ export class LodestoneComponent
         if (this.selectedLodestone.isPresent() &&
             this.selectedLodestone.get()[0] === direction &&
             this.selectedLodestone.get()[1] === diagonal) {
-            info.pieceClasses.push('selected');
+            info.selectedClass = 'selected';
         }
         if (diagonal) {
             info.diagonal = true;

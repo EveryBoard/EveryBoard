@@ -157,6 +157,9 @@
 .text-center {
     text-anchor: middle;
 }
+.black-fill {
+    fill: black;
+}
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
 }

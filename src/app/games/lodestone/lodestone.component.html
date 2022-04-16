@@ -69,14 +69,14 @@
        attr.transform="translate({{ (x + (viewInfo.availableLodestones.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 10 + 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
        (click)="selectLodestone(lodestone.direction, lodestone.diagonal)"
        id="lodestone_{{ lodestone.direction }}_{{ lodestone.diagonal ? 'diagonal' : 'orthogonal' }}">
-        <circle class="base outside"
-                [ngClass]="lodestone.pieceClasses"
+        <circle class="base black-fill outside"
+                [ngClass]="lodestone.selectedClass"
                 [attr.r]="PIECE_RADIUS"
                 attr.cx="0"
                 attr.cy="0"
                 />
-        <circle class="base small-stroke"
-                [ngClass]="lodestone.movingClass"
+        <circle class="base no-stroke"
+                [ngClass]="lodestone.pieceClasses"
                 [attr.r]="PIECE_RADIUS / 4"
                 attr.cx="0"
                 attr.cy="0"
@@ -84,14 +84,14 @@
         <g attr.transform="rotate({{ lodestone.diagonal ? 45 : 0 }})">
             <g *ngFor="let i of [0, 1, 2, 3]">
                 <polygon *ngIf="lodestone.direction === 'push'"
-                         class="base small-stroke"
+                         class="base no-stroke"
                          [ngClass]="lodestone.movingClass"
-                         attr.points="{{PIECE_RADIUS * 0.8}},0 {{PIECE_RADIUS * 0.5}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.5}},{{- PIECE_RADIUS * 0.2}}"
+                         attr.points="{{PIECE_RADIUS * 0.8}},0 {{PIECE_RADIUS * 0.3}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.3}},{{- PIECE_RADIUS * 0.2}}"
                          attr.transform="rotate({{ i * 90 }})" />
                 <polygon *ngIf="lodestone.direction === 'pull'"
-                         class="base small-stroke"
+                         class="base no-stroke"
                          [ngClass]="lodestone.movingClass"
-                         attr.points="{{PIECE_RADIUS * 0.5}},0 {{PIECE_RADIUS * 0.8}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.8}},{{- PIECE_RADIUS * 0.2}}"
+                         attr.points="{{PIECE_RADIUS * 0.3}},0 {{PIECE_RADIUS * 0.8}},{{PIECE_RADIUS * 0.3}} {{PIECE_RADIUS * 0.8}},{{- PIECE_RADIUS * 0.3}}"
                          attr.transform="rotate({{ i * 90 }})" />
             </g>
         </g>
@@ -107,6 +107,8 @@
                   [attr.y]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
+                  rx="20"
+                  ry="20"
             />
             <circle *ngIf="square.hasPiece"
                     id="platePiece_{{ plate.position }}_{{ i }}"
