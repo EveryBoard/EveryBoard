@@ -25,29 +25,29 @@
                 <g *ngIf="square.lodestone"
                    class="lodestone"
                    attr.transform="translate({{ x * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ y * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})">
-                    <circle class="base"
-                            [ngClass]="square.lodestone.pieceClasses"
+                    <circle class="base black-fill outside"
+                            [ngClass]="square.lodestone.selectedClass"
                             [attr.r]="PIECE_RADIUS"
                             attr.cx="0"
                             attr.cy="0"
-                            />
-                    <circle class="base small-stroke"
-                            [ngClass]="square.lodestone.movingClass"
+                    />
+                    <circle class="base no-stroke"
+                            [ngClass]="square.lodestone.pieceClasses"
                             [attr.r]="PIECE_RADIUS / 4"
                             attr.cx="0"
                             attr.cy="0"
-                            />
+                    />
                     <g attr.transform="rotate({{ square.lodestone.diagonal ? 45 : 0 }})">
                         <g *ngFor="let i of [0, 1, 2, 3]">
                             <polygon *ngIf="square.lodestone.direction === 'push'"
-                                     class="base small-stroke"
+                                     class="base no-stroke"
                                      [ngClass]="square.lodestone.movingClass"
-                                     attr.points="{{PIECE_RADIUS * 0.8}},0 {{PIECE_RADIUS * 0.5}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.5}},{{- PIECE_RADIUS * 0.2}}"
+                                     attr.points="{{PIECE_RADIUS * 0.8}},0 {{PIECE_RADIUS * 0.3}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.3}},{{- PIECE_RADIUS * 0.2}}"
                                      attr.transform="rotate({{ i * 90 }})" />
                             <polygon *ngIf="square.lodestone.direction === 'pull'"
-                                     class="base small-stroke"
+                                     class="base no-stroke"
                                      [ngClass]="square.lodestone.movingClass"
-                                     attr.points="{{PIECE_RADIUS * 0.5}},0 {{PIECE_RADIUS * 0.8}},{{PIECE_RADIUS * 0.2}} {{PIECE_RADIUS * 0.8}},{{- PIECE_RADIUS * 0.2}}"
+                                     attr.points="{{PIECE_RADIUS * 0.3}},0 {{PIECE_RADIUS * 0.8}},{{PIECE_RADIUS * 0.3}} {{PIECE_RADIUS * 0.8}},{{- PIECE_RADIUS * 0.3}}"
                                      attr.transform="rotate({{ i * 90 }})" />
                         </g>
                     </g>
