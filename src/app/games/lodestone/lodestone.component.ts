@@ -49,6 +49,7 @@ interface ViewInfo {
     pressurePlates: PressurePlateInfo[],
     currentPlayerClass: string,
     opponentClass: string,
+    selected: MGPOptional<Coord>,
 }
 
 interface SquareInfo {
@@ -77,13 +78,14 @@ export class LodestoneComponent
         currentPlayerClass: '',
         opponentClass: '',
         pressurePlates: [],
+        selected: MGPOptional.empty(),
     };
 
     private displayedState: LodestoneState;
     private stateBeforePlacingCaptures: MGPOptional<LodestoneState> = MGPOptional.empty();
     private lastInfos: MGPOptional<LodestoneInfos> = MGPOptional.empty();
     private capturesToPlace: number = 0;
-    public selectedCoord: MGPOptional<Coord> = MGPOptional.empty(); // TODO: private + add to viewInfo?
+    private selectedCoord: MGPOptional<Coord> = MGPOptional.empty();
     private selectedLodestone: MGPOptional<[LodestoneDirection, boolean]> = MGPOptional.empty();
     private captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
 
@@ -189,7 +191,7 @@ export class LodestoneComponent
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
-        this.displayedState = this.displayedState.withBoardAndPressurePlates(board, lodestones, pressurePlates); // TODO: not really necessary to use displayedState.withBli here (and below)
+        this.displayedState = new LodestoneState(board, state.turn, lodestones, pressurePlates);
 
         if (this.capturesToPlace === 0) {
             return this.applyMove();
@@ -214,7 +216,7 @@ export class LodestoneComponent
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
-        this.displayedState = this.displayedState.withBoardAndPressurePlates(board, lodestones, pressurePlates);
+        this.displayedState = new LodestoneState(board, state.turn, lodestones, pressurePlates);
 
         this.updateViewInfo();
         this.showPressurePlateDifferences(this.getState(), this.displayedState, true);
@@ -292,6 +294,12 @@ export class LodestoneComponent
                 }
                 this.viewInfo.boardInfo[y].push(squareInfo);
             }
+        }
+        if (this.selectedCoord.isPresent() &&
+            this.displayedState.getPieceAt(this.selectedCoord.get()).isUnreachable() === false) {
+            this.viewInfo.selected = this.selectedCoord;
+        } else {
+            this.viewInfo.selected = MGPOptional.empty();
         }
     }
     private showAvailableLodestones(): void {

@@ -121,11 +121,11 @@
             />
         </g>
     </g>
-    <rect *ngIf="selectedCoord.isPresent()"
-          id="selection_{{ selectedCoord.get().x }}_{{ selectedCoord.get().y }}"
+    <rect *ngIf="viewInfo.selected.isPresent()"
+          id="selection_{{ viewInfo.selected.get().x }}_{{ viewInfo.selected.get().y }}"
           class="base no-fill selected"
-          [attr.x]="(SPACE_SIZE * selectedCoord.get().x) + STROKE_WIDTH"
-          [attr.y]="(SPACE_SIZE * selectedCoord.get().y) + STROKE_WIDTH"
+          [attr.x]="(SPACE_SIZE * viewInfo.selected.get().x) + STROKE_WIDTH"
+          [attr.y]="(SPACE_SIZE * viewInfo.selected.get().y) + STROKE_WIDTH"
           [attr.width]="SPACE_SIZE"
           [attr.height]="SPACE_SIZE" />
 </svg>

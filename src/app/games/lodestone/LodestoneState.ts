@@ -93,12 +93,6 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     public withBoard(board: Table<LodestonePiece>): LodestoneState {
         return new LodestoneState(board, this.turn, this.lodestones, this.pressurePlates);
     }
-    public withBoardAndPressurePlates(board: Table<LodestonePiece>,
-                                      lodestones: LodestoneLodestones,
-                                      pressurePlates: LodestonePressurePlates)
-    : LodestoneState {
-        return new LodestoneState(board, this.turn, lodestones, pressurePlates);
-    }
     public remainingSpaces(): number {
         const remaining: LodestoneCaptures = this.remainingSpacesDetailed();
         return remaining.top + remaining.bottom + remaining.left + remaining.right;
