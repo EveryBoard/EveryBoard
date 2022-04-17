@@ -8,7 +8,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
+import { TutorialStep, TutorialStepClick, TutorialStepMove } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';

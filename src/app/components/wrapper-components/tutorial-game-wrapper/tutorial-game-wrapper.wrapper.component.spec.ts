@@ -855,6 +855,32 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // And then solution button should be shown too
             componentTestUtils.expectElementToExist('#showSolutionButton');
         }));
+        it('should show solution when asking for it', fakeAsync(async() => {
+            // Given a TutorialStep for clicks, for which the user clicked wrongly
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'Click on (0, 0) or (3, 3)',
+                    QuartoState.getInitialState(),
+                    ['#chooseCoord_0_0'],
+                    'Bravo !',
+                    'Perdu.',
+                ),
+            ];
+            wrapper.startTutorial(tutorial);
+            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+
+            // When clicking on 'see solution'
+            await componentTestUtils.clickElement('#showSolutionButton');
+            componentTestUtils.detectChanges();
+
+            // Then the actual click is performed and the solution message is shown
+            componentTestUtils.expectElementToExist('#highlight');
+            const expectedMessage: string = 'Bravo !';
+            const currentMessage: string =
+                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            expect(currentMessage).toBe(expectedMessage);
+        }));
     });
     describe('Informational TutorialStep', () => {
         it('Should forbid clicking on the board', fakeAsync(async() => {

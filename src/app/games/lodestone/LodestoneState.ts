@@ -1,4 +1,4 @@
-import { LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from 'src/app/games/lodestone/LodestonePiece';
+import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from 'src/app/games/lodestone/LodestonePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
@@ -129,16 +129,12 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
             return MGPOptional.empty();
         } else {
             const piece: LodestonePiece = this.getPieceAt(this.lodestones[currentPlayer.value].get());
-            if (piece.isLodestone()) {
-                const currentDirection: LodestoneDirection = piece.direction;
-                switch (currentDirection) {
-                    case 'push': return MGPOptional.of('pull');
-                    case 'pull': return MGPOptional.of('push');
-                }
-            } else {
-                assert(piece.isUnreachable(), 'Lodestone must have fallen from the board, so its location should be unreachable now');
-                // This means that the lodestone fell of the board, next time it can be placed in any direction
-                return MGPOptional.empty();
+            assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)');
+            const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
+            const currentDirection: LodestoneDirection = lodestone.direction;
+            switch (currentDirection) {
+                case 'push': return MGPOptional.of('pull');
+                case 'pull': return MGPOptional.of('push');
             }
         }
     }

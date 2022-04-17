@@ -79,7 +79,8 @@ describe('GameComponent', () => {
             Lodestone: {
                 selectCoord: [new Coord(0, 0)],
                 selectLodestone: ['push', false],
-                selectPressurePlate: ['top'],
+                selectPressurePlate: ['top', 1],
+                deselectPressurePlate: ['top', 1],
             },
             MinimaxTesting: {
                 chooseRight: [],

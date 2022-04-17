@@ -109,15 +109,25 @@ describe('LodestoneComponent', () => {
         // Given an intermediary state where a lodestone has been placed, resulting in 2 captures
         await testUtils.expectClickSuccess('#square_3_3');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
+        testUtils.expectElementNotToExist('#platePiece_top_0');
         // When the the player clicks on the plates where the captures will go
         await testUtils.expectClickSuccess('#plateSquare_top_0');
-        testUtils.expectElementToExist('#platePiece_top_0');
         // Then the move should be performed, and the captures should be shown
         const move: LodestoneMove = new LodestoneMove(new Coord(3, 3), 'push', false, { top: 2, bottom: 0, left: 0, right: 0 });
         await testUtils.expectMoveSuccess('#plateSquare_top_1', move);
         testUtils.expectElementToExist('#platePiece_top_1');
         testUtils.expectElementToHaveClass('#plateSquare_top_0', 'moved');
         testUtils.expectElementToHaveClass('#plateSquare_top_1', 'moved');
+    }));
+    it('should remove a temporary capture from pressure plate when it is clicked again', fakeAsync(async() => {
+        // Given an intermediary plate where a capture has been placed on a pressure plate
+        await testUtils.expectClickSuccess('#square_3_3');
+        await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
+        await testUtils.expectClickSuccess('#plateSquare_top_0');
+        // When the player clicks on the piece that has been placed on the pressure plate
+        await testUtils.expectClickSuccess('#plateSquare_top_0');
+        // Then it should be deselected
+        testUtils.expectElementNotToExist('#platePiece_top_0');
     }));
     it('should crumble a pressure plate when full (first time)', fakeAsync(async() => {
         // Given a state where a pressure plate will soon crumble
