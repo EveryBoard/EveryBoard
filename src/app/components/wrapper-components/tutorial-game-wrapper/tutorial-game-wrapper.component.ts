@@ -8,7 +8,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { TutorialStep, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
+import { TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -143,6 +143,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
             this.gameComponent.updateBoard();
+            this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
             } else {
@@ -200,14 +201,22 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public async showSolution(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.showSolution()');
         const step: TutorialStep = this.steps[this.stepIndex];
-        assert(step.hasSolution(), 'showSolution called on a step with no solution, this should not be reachable');
-        const solutionStep: TutorialStepWithSolution = step as TutorialStepWithSolution;
-        const awaitedMove: Move = solutionStep.getSolution();
-        this.showStep(this.stepIndex);
-        this.gameComponent.rules.choose(awaitedMove);
-        this.gameComponent.updateBoard();
+        if (step.hasSolution()) {
+            const awaitedMove: Move = step.getSolution();
+            this.showStep(this.stepIndex);
+            this.gameComponent.rules.choose(awaitedMove);
+            this.gameComponent.updateBoard();
+            this.currentMessage = step.getSuccessMessage();
+        } else {
+            assert(step.isClick(), 'Step should be click');
+            const clickStep: TutorialStepClick = step as TutorialStepClick;
+            const awaitedClick: string = clickStep.acceptedClicks[0];
+            this.showStep(this.stepIndex);
+            const element: HTMLElement = window.document.querySelector(awaitedClick) as HTMLElement;
+            element.dispatchEvent(new Event('click'));
+            this.currentMessage = clickStep.getSuccessMessage();
+        }
         this.moveAttemptMade = true;
-        this.currentMessage = solutionStep.getSuccessMessage();
         this.cdr.detectChanges();
     }
     public async playLocally(): Promise<void> {
