@@ -59,7 +59,7 @@ describe('LodestoneComponent', () => {
         // Given the initial state
         // When clicking on a pressure plate
         // Then the move should fail
-        await testUtils.expectClickFailure('#pressurePlate_top', LodestoneFailure.NO_CAPTURES_TO_PLACE_YET());
+        await testUtils.expectClickFailure('#plateSquare_top_0', LodestoneFailure.NO_CAPTURES_TO_PLACE_YET());
     }));
     it('should highlight the selected square', fakeAsync(async() => {
         // Given the initial state
@@ -110,11 +110,11 @@ describe('LodestoneComponent', () => {
         await testUtils.expectClickSuccess('#square_3_3');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // When the the player clicks on the plates where the captures will go
-        await testUtils.expectClickSuccess('#pressurePlate_top');
+        await testUtils.expectClickSuccess('#plateSquare_top_0');
         testUtils.expectElementToExist('#platePiece_top_0');
         // Then the move should be performed, and the captures should be shown
         const move: LodestoneMove = new LodestoneMove(new Coord(3, 3), 'push', false, { top: 2, bottom: 0, left: 0, right: 0 });
-        await testUtils.expectMoveSuccess('#pressurePlate_top', move);
+        await testUtils.expectMoveSuccess('#plateSquare_top_1', move);
         testUtils.expectElementToExist('#platePiece_top_1');
         testUtils.expectElementToHaveClass('#plateSquare_top_0', 'moved');
         testUtils.expectElementToHaveClass('#plateSquare_top_1', 'moved');
@@ -146,7 +146,7 @@ describe('LodestoneComponent', () => {
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // Then removed squares should not be shown, and the new pressure plate should be shown
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
-        await testUtils.expectMoveSuccess('#pressurePlate_top', move);
+        await testUtils.expectMoveSuccess('#plateSquare_top_4', move);
         testUtils.expectElementNotToExist('#square_0_0');
         testUtils.expectElementToExist('#plateSquare_top_0');
         testUtils.expectElementToExist('#plateSquare_top_1');
@@ -180,7 +180,7 @@ describe('LodestoneComponent', () => {
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // Then removed squares should not be shown, and this pressure plate should not be shown anymore
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 1), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
-        await testUtils.expectMoveSuccess('#pressurePlate_top', move);
+        await testUtils.expectMoveSuccess('#plateSquare_top_2', move);
         testUtils.expectElementNotToExist('#square_0_1 > rect');
         testUtils.expectElementNotToExist('#pressurePlate_top_0');
     }));
@@ -209,7 +209,7 @@ describe('LodestoneComponent', () => {
         // When filling the pressure plate in the middle of a move
         await testUtils.expectClickSuccess('#square_1_0');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
-        await testUtils.expectClickSuccess('#pressurePlate_top');
+        await testUtils.expectClickSuccess('#plateSquare_top_4');
         // Then removed squares should not be shown, and the new pressure plate should be shown
         testUtils.expectElementNotToExist('#square_0_0');
         testUtils.expectElementToExist('#plateSquare_top_0');
@@ -268,7 +268,7 @@ describe('LodestoneComponent', () => {
         await testUtils.expectClickSuccess('#square_1_0');
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         const move: LodestoneMove = new LodestoneMove(new Coord(1, 0), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
-        await testUtils.expectMoveSuccess('#pressurePlate_top', move);
+        await testUtils.expectMoveSuccess('#plateSquare_top_0', move);
         // Then on the next turn, the player should be able to select any lodestone position
         testUtils.expectElementToExist('#lodestone_push_orthogonal');
         testUtils.expectElementToExist('#lodestone_push_diagonal');

@@ -15,8 +15,9 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         return this.flatMapEmptyCoords(state, (coord: Coord): LodestoneMove[] => {
             const moves: LodestoneMove[] = [];
             for (const [direction, diagonal] of this.nextDirectionAndDiagonal(state)) {
-                const captures: Coord[] =
-                    LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal)[1];
+                const infos: LodestoneInfos =
+                    LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
+                const captures: Coord[] = infos.captures;
                 const numberOfCaptures: number = captures.length;
                 for (const captures of this.captureCombinations(state, numberOfCaptures)) {
                     moves.push(new LodestoneMove(coord, direction, diagonal, captures));

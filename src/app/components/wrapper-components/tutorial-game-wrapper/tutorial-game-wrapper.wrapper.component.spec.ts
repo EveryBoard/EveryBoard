@@ -775,7 +775,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
-    describe('TutorialStep awaiting a click (deprecated)', () => {
+    describe('TutorialStep awaiting a click', () => {
         it('Should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
@@ -822,7 +822,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('When unwanted click, and no move done, restart should not be needed', fakeAsync(async() => {
+        it('When unwanted click, and no move done, show restart with possibility of seeing solution', fakeAsync(async() => {
             // Given a TutorialStep with possible invalid clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -844,7 +844,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When doing invalid click
             await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
 
-            // expect to see cancelMove reason as message
+            // Then the failure reason should be shown
             const expectedMessage: string = 'Perdu.';
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -852,8 +852,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
-            // expect click to be still possible
-            expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+            // And then solution button should be shown too
+            componentTestUtils.expectElementToExist('#showSolutionButton');
         }));
     });
     describe('Informational TutorialStep', () => {

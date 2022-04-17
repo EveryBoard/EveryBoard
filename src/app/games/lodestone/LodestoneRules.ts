@@ -149,6 +149,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             result.board[previousCoord.y][previousCoord.x] = LodestonePieceNone.EMPTY;
         }
         result.board[coord.y][coord.x] = LodestonePieceLodestone.of(state.getCurrentPlayer(), direction, diagonal);
+        result.moved.push(coord);
         return result;
     }
     private applyPull(state: LodestoneState, lodestone: Coord, diagonal: boolean): LodestoneInfos {
