@@ -1690,8 +1690,8 @@
       <trans-unit id="8506636863437595095" datatype="html">
         <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
       </trans-unit>
-      <trans-unit id="5250341568579320205" datatype="html">
-        <source>Lodestone is played on a 8x8 board. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
+      <trans-unit id="3233989185853354365" datatype="html">
+        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
       </trans-unit>
       <trans-unit id="2109934310949694886" datatype="html">
         <source>Selecting a lodestone</source>

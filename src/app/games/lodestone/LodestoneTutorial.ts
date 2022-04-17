@@ -25,7 +25,7 @@ export class LodestoneTutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Board and aim of the game`,
-            $localize`Lodestone is played on a 8x8 board. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent's pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.`,
+            $localize`Lodestone is played on a 8x8 board, which contains so-called <i>pressure plates</i> along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent's pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.`,
             LodestoneState.getInitialState(),
         ),
         TutorialStep.forClick(
@@ -80,7 +80,7 @@ export class LodestoneTutorial {
                 ...allPressurePlates,
                 top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
             }),
-            new LodestoneMove(new Coord(4, 1), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 }),
+            new LodestoneMove(new Coord(6, 2), 'push', true, { top: 1, bottom: 0, left: 0, right: 0 }),
             (_: LodestoneMove, state: LodestoneState) => {
                 if (state.pressurePlates.top.get().width === 5) {
                     return MGPValidation.failure($localize`You must capture and place your capture on the top pressure plate to make it crumble!`);
