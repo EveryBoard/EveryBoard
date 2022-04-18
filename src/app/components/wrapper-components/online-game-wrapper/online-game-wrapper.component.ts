@@ -75,7 +75,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPart: PartDocument;
     public currentPartId: string;
     public gameStarted: boolean = false;
-    private observingGameService: boolean = false;
     public opponent: User | null = null;
     public playerName: string | null = null;
     public currentPlayer: string;
@@ -167,7 +166,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         await this.setCurrentPartIdOrRedirect();
     }
     public async startGame(iJoiner: Joiner): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.startGameg');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGameg');
 
         assert(this.gameStarted === false, 'Should not start already started game');
         this.joiner = iJoiner;
@@ -186,7 +185,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
         // TODO: don't start count down for Observer.
-        this.observingGameService = true;
         this.gameService.startObserving(this.currentPartId, async(part: MGPOptional<Part>) => {
             assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
             await this.onCurrentPartUpdate(part.get());
@@ -853,9 +851,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (this.opponentSubscription.isPresent()) {
                 this.opponentSubscription.get()();
             }
-            if (this.observingGameService) {
-                this.gameService.stopObserving();
-            }
+            this.gameService.stopObserving();
         }
     }
 }
