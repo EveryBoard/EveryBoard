@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-not-found',
@@ -9,6 +8,6 @@ import { Utils } from 'src/app/utils/utils';
 export class NotFoundComponent {
     public message: string;
     constructor(readonly route: ActivatedRoute) {
-        this.message = Utils.getNonNullable(route.snapshot.paramMap.get('message'));
+        this.message = route.snapshot.paramMap.get('message') ?? $localize`This page does not exist.`;
     }
 }

@@ -42,7 +42,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['tutorial', TutorialGameCreationComponent],
     ['tutorial/P4', TutorialGameWrapperComponent],
     ['', WelcomeComponent],
-    ['unknown-url', WelcomeComponent],
+    ['unknown-url', NotFoundComponent],
 ];
 
 export function findMatchingRoute(url: string): MGPOptional<Route> {

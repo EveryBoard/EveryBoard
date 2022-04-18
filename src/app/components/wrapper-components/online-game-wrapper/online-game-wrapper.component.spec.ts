@@ -34,14 +34,14 @@ describe('OnlineGameWrapper for non-existing game', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
 
-        await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG, { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
+        await prepareComponent(JoinerMocks.INITIAL, { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
         testUtils.detectChanges();
 
         // When loading the component
         tick(1);
 
         // Then it goes to /notFound with the expected error message
-        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], NotFoundComponent, { skipLocationChange: true });
+        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
     }));
 });
 

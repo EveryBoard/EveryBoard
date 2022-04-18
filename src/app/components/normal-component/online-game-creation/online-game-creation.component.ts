@@ -40,7 +40,7 @@ export class OnlineGameCreationComponent implements OnInit {
         assert(user.isConnected(), 'User must be connected and have a username to reach this page');
         const username: string = user.username.get();
         if (this.gameExists(game) === false) {
-            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME()], { skipLocationChange: true });
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
         if (await this.canCreateOnlineGame(username)) {

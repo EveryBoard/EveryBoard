@@ -84,9 +84,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public currentJoiner: Joiner | null = null;
 
     // Subscription
-    private candidateSubscription: MGPMap<string, () => void> = new MGPMap();
+    private readonly candidateSubscription: MGPMap<string, () => void> = new MGPMap();
     private creatorSubscription: (() => void) | null = null;
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
 
     public configFormGroup: FormGroup;
 

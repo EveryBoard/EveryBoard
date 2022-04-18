@@ -27,6 +27,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 export class UpdateType {
 
@@ -110,7 +111,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
     }
-    private extractGameTypeFromURL(): string {
+    private extractGameNameFromURL(): string {
         // url is ["play", "game-name", "part-id"]
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
@@ -130,19 +131,25 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private isOpponent(player: Player): boolean {
         return this.observerRole !== player.value;
     }
-    private async redirectIfPartIsInvalid(): Promise<void> {
-        const gameType: string = this.extractGameTypeFromURL();
-        const partValidity: MGPValidation =
-            await this.gameService.getPartValidity(this.currentPartId, gameType);
-        if (partValidity.isFailure()) {
-            // note, option if WRONG_GAME_TYPE to redirect to another page
+    private async redirectIfPartOrGameIsInvalid(): Promise<void> {
+        const gameName: string = this.extractGameNameFromURL();
+        const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameName);
+        if (gameExists === false) {
             this.routerEventsSub.unsubscribe();
-            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_PART()], { skipLocationChange: true } );
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true } );
+        } else {
+            const partValidity: MGPValidation =
+                await this.gameService.getPartValidity(this.currentPartId, gameName);
+            if (partValidity.isFailure()) {
+                // note, option if WRONG_GAME_TYPE to redirect to another page
+                this.routerEventsSub.unsubscribe();
+                await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_PART()], { skipLocationChange: true } );
+            }
         }
     }
     private setCurrentPartIdOrRedirect(): Promise<void> {
         this.currentPartId = this.extractPartIdFromURL();
-        return this.redirectIfPartIsInvalid();
+        return this.redirectIfPartOrGameIsInvalid();
     }
     public async ngOnInit(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
@@ -160,7 +167,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         await this.setCurrentPartIdOrRedirect();
     }
     public async startGame(iJoiner: Joiner): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.startGameg');
 
         assert(this.gameStarted === false, 'Should not start already started game');
         this.joiner = iJoiner;
@@ -171,9 +178,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             // the small waiting is there to make sur that the chronos are charged by view
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
-            if (createdSuccessfully) {
-                this.startPart();
-            }
+            assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected')
+            this.startPart();
         }, 1);
     }
     protected startPart(): void {

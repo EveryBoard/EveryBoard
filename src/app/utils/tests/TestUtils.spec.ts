@@ -51,11 +51,9 @@ export class ActivatedRouteStub {
         this.snapshot = {
             paramMap: {
                 get: (str: string) => {
-                    const value: string = this.route[str];
-                    if (value == null) {
-                        throw new Error('ActivatedRouteStub: invalid route for ' + str + ', call setRoute before using!');
-                    }
-                    return value;
+                    // Returns null in case the route does not exist.
+                    // This is the same behaviour than ActivatedRoute
+                    return this.route[str];
                 },
             },
         };
@@ -334,7 +332,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state ?? this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();

@@ -111,7 +111,7 @@ export const routes: Route[] = [
     { path: 'tutorial', component: TutorialGameCreationComponent },
     { path: 'tutorial/:compo', component: TutorialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
-    { path: '**', component: WelcomeComponent },
+    { path: '**', component: NotFoundComponent },
 ];
 
 export class FirebaseProviders {
