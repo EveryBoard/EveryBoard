@@ -36,6 +36,7 @@ describe('ErrorLoggerService', () => {
     }));
     it('should throw instead of logging the error when not initialized', () => {
         // Given a non-initialized error logger service
+        // eslint-disable-next-line dot-notation
         ErrorLoggerService['singleton'] = MGPOptional.empty();
         // When logging an error
         // Then it throws instead

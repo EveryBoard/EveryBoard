@@ -220,6 +220,7 @@ describe('LocalGameWrapperComponent', () => {
             await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
             expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(1);
 
+            // eslint-disable-next-line dot-notation
             tick(componentTestUtils.wrapper['botTimeOut']);
             expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(2);
 

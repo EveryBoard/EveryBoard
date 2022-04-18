@@ -178,7 +178,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             // the small waiting is there to make sur that the chronos are charged by view
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
-            assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected')
+            assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             this.startPart();
         }, 1);
     }
@@ -251,7 +251,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.DUPLICATE;
         }
         if (update.data.request) {
-            const lastMoveTimeIsRemoved: boolean = diff.removed['lastUpdateTime'] != null;
+            const lastMoveTimeIsRemoved: boolean = diff.removed.lastUpdateTime != null;
             if (update.data.request.code === 'TakeBackAccepted' && lastMoveTimeIsRemoved) {
                 return UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME;
             } else {
@@ -266,7 +266,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                     return UpdateType.MOVE;
                 }
             } else {
-                if (diff.modified['lastUpdateTime'] == null) {
+                if (diff.modified.lastUpdateTime == null) {
                     return UpdateType.MOVE_WITHOUT_TIME;
                 } else {
                     return UpdateType.MOVE;
@@ -277,8 +277,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.PRE_START_DOC;
         }
         if (update.data.result !== MGPResult.UNACHIEVED.value) {
-            const turnModified: boolean = diff.modified['turn'] != null;
-            const lastUpdateTimeMissing: boolean = diff.modified['lastUpdateTime'] == null;
+            const turnModified: boolean = diff.modified.turn != null;
+            const lastUpdateTimeMissing: boolean = diff.modified.lastUpdateTime == null;
             if (turnModified && lastUpdateTimeMissing) {
                 return UpdateType.END_GAME_WITHOUT_TIME;
             } else {
@@ -290,14 +290,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return UpdateType.STARTING_DOC;
     }
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
-        if (diff.modified['listMoves'] != null && diff.modified['turn'] != null) {
+        if (diff.modified.listMoves != null && diff.modified.turn != null) {
             const modifOnListMovesTurnAndLastUpdateFields: number = 3;
             const lastUpdateTimeModified: number = diff.isPresent('lastUpdateTime').present ? 1 : 0;
             const scoreZeroUpdated: number = diff.isPresent('scorePlayerZero').present ? 1 : 0;
             const scoreOneUpdated: number = diff.isPresent('scorePlayerOne').present ? 1 : 0;
             const remainingMsForZeroUpdated: number = diff.isPresent('remainingMsForZero').present ? 1 : 0;
             const remainingMsForOneUpdated: number = diff.isPresent('remainingMsForOne').present ? 1 : 0;
-            const requestRemoved: number = diff.removed['request'] == null ? 0 : 1;
+            const requestRemoved: number = diff.removed.request == null ? 0 : 1;
             const nbValidMoveDiffs: number = lastUpdateTimeModified +
                                              scoreZeroUpdated +
                                              scoreOneUpdated +
@@ -460,6 +460,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         } else if (this.currentPart.data.request &&
                    this.currentPart.data.request.code === 'TakeBackRefused' &&
+                   // eslint-disable-next-line dot-notation
                    this.currentPart.data.request.data['player'] === this.getPlayer().getOpponent().value)
         {
             return false;
@@ -551,11 +552,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 break;
             case 'AddTurnTime':
                 const addedTurnTime: number = 30 * 1000;
+                // eslint-disable-next-line dot-notation
                 const localPlayer: Player = Player.of(request.data['player']);
                 this.addTurnTimeTo(localPlayer, addedTurnTime);
                 break;
             case 'AddGlobalTime':
                 const addedGlobalTime: number = 5 * 60 * 1000;
+                // eslint-disable-next-line dot-notation
                 const globalPlayer: Player = Player.of(request.data['player']);
                 this.addGlobalTimeTo(globalPlayer, addedGlobalTime);
                 break;

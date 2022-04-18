@@ -205,10 +205,12 @@ describe('FirebaseFirestoreDAO', () => {
     describe('subCollectionDAO', () => {
         it('should provide the subcollection with the fully correct path', async() => {
             // Given a dao with a certain path
+            // eslint-disable-next-line dot-notation
             const path: string = dao['collection'].path;
             // When calling subCollectionDAO
             const subDAO: IFirebaseFirestoreDAO<FirebaseJSONObject> = dao.subCollectionDAO('foo', 'sub');
             // Then it should have the right path
+            // eslint-disable-next-line dot-notation
             const subDAOPath: string = subDAO['collection'].path;
             expect(subDAOPath).toEqual(path + '/foo/sub');
         });

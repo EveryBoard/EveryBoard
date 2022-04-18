@@ -126,6 +126,7 @@ export class FirebaseProviders {
     public static firestore(): ModuleWithProviders<Firestore.FirestoreModule> {
         return Firestore.provideFirestore(() => {
             const firestore: Firestore.Firestore = Firestore.getFirestore();
+            // eslint-disable-next-line dot-notation
             const host: string = firestore.toJSON()['settings'].host;
             if (environment.useEmulators && host !== 'localhost:8080') {
                 Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
@@ -137,6 +138,7 @@ export class FirebaseProviders {
         return Database.provideDatabase(() => {
             const database: Database.Database = Database.getDatabase();
 
+            // eslint-disable-next-line dot-notation
             if (environment.useEmulators && database['_instanceStarted'] === false) {
                 Database.connectDatabaseEmulator(database, 'localhost', 9000);
             }
@@ -146,6 +148,7 @@ export class FirebaseProviders {
     public static auth(): ModuleWithProviders<Auth.AuthModule> {
         return Auth.provideAuth(() => {
             const fireauth: Auth.Auth = Auth.getAuth();
+            // eslint-disable-next-line dot-notation
             if (environment.useEmulators && fireauth.config['emulator'] == null) {
                 Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
             }

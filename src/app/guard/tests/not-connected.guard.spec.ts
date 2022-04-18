@@ -50,12 +50,14 @@ describe('NotConnectedGuard', () => {
         // Given a guard that has executed
         AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
         await guard.canActivate();
+        // eslint-disable-next-line dot-notation
         spyOn(guard['userSub'], 'unsubscribe');
 
         // When destroying the guard
         guard.ngOnDestroy();
 
         // Then unsubscribe is called
+        // eslint-disable-next-line dot-notation
         expect(guard['userSub'].unsubscribe).toHaveBeenCalledWith();
     }));
 });

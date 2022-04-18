@@ -391,7 +391,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         componentTestUtils.expectElementNotToExist('#passButton');
 
         wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent['pass'] = async() => {
+        wrapper.gameComponent.pass = async() => {
             return MGPValidation.SUCCESS;
         };
         componentTestUtils.detectChanges();
