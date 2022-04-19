@@ -52,7 +52,6 @@ describe('ErrorLoggerService', () => {
 
         // When logging it
         ErrorLoggerService.logError(component, message);
-        tick(1000);
 
         // Then a message has been shown to the user
         expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(`An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.`);
