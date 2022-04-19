@@ -37,13 +37,13 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
                 if (subCombination.top + 1 <= available.top) {
                     combinations.add({ ...subCombination, top: subCombination.top + 1 });
                 }
-                if (subCombination.bottom + 1 < available.bottom) {
+                if (subCombination.bottom + 1 <= available.bottom) {
                     combinations.add({ ...subCombination, bottom: subCombination.bottom + 1 });
                 }
-                if (subCombination.left + 1 < available.left) {
+                if (subCombination.left + 1 <= available.left) {
                     combinations.add({ ...subCombination, left: subCombination.left + 1 });
                 }
-                if (subCombination.right + 1 < available.right) {
+                if (subCombination.right + 1 <= available.right) {
                     combinations.add({ ...subCombination, right: subCombination.right + 1 });
                 }
             }

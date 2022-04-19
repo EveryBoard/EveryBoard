@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneDummyMinimax } from '../LodestoneDummyMinimax';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
-import { LodestoneLodestones, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneDummyMinimax', () => {
     let rules: LodestoneRules;
@@ -25,6 +25,7 @@ describe('LodestoneDummyMinimax', () => {
         // Given the initial state
         const node: LodestoneNode = new LodestoneNode(LodestoneState.getInitialState());
 
+        // When computing all possible moves
         // Then there should be 618 possible moves
         // For each empty coord, each lodestone can be placed in 4 different position
         // For each position, we have to count the possible captures and how they can be placed
@@ -56,7 +57,38 @@ describe('LodestoneDummyMinimax', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
         const node: LodestoneNode = new LodestoneNode(state);
+        // When computing all possible moves
         // Then there should be 4*2 possible moves
         expect(minimax.getListMoves(node).length).toBe(8);
+    });
+    it('should not propose illegal moves when there is only one spot left in pressure plates', () => {
+        // Given a state with one remaining spot per pressure plate
+        const board: Table<LodestonePiece> = [
+            [N, N, N, N, N, N, N, N],
+            [N, _, _, A, _, _, _, N],
+            [N, _, B, _, _, _, _, N],
+            [N, _, A, _, _, _, _, N],
+            [N, _, B, _, _, _, _, N],
+            [N, _, A, _, _, _, _, N],
+            [N, _, _, _, _, _, _, N],
+            [N, N, N, N, N, N, N, N],
+        ];
+        const lodestones: LodestoneLodestones =
+            [MGPOptional.empty(), MGPOptional.empty()];
+        const pressurePlates: LodestonePressurePlates = {
+            top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
+            bottom: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
+            left: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
+            right: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
+        };
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
+
+        const node: LodestoneNode = new LodestoneNode(state);
+        // When computing all possible moves
+        for (const move of minimax.getListMoves(node)) {
+            // Then all moves should be legal
+            expect(LodestoneRules.get().isLegal(move, state).isSuccess()).toBeTrue();
+        }
+
     });
 });
