@@ -110,6 +110,9 @@
       <trans-unit id="6595008830732269870" datatype="html">
         <source>Not found</source>
       </trans-unit>
+      <trans-unit id="4204327513039663989" datatype="html">
+        <source>This page does not exist.</source>
+      </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
       </trans-unit>
@@ -380,8 +383,8 @@
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
       </trans-unit>
-      <trans-unit id="1793003129354061397" datatype="html">
-        <source>This game does not exist.</source>
+      <trans-unit id="443650994975920138" datatype="html">
+        <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
       </trans-unit>
       <trans-unit id="777716481777788338" datatype="html">
         <source>The game you tried to join does not exist.</source>

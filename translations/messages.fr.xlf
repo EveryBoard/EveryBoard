@@ -110,6 +110,10 @@
         <source>Not found</source>
         <target>Page introuvable</target>
       </trans-unit>
+      <trans-unit id="4204327513039663989" datatype="html">
+        <source>This page does not exist.</source>
+        <target>Cette page n'existe pas.</target>
+      </trans-unit>
       <trans-unit id="7017932994058745268" datatype="html">
         <source>Creating online game, please wait, it should not take long.</source>
         <target>Création d'une partie en ligne. Veuillez attendre, cela ne devrait pas prendre longtemps.</target>
@@ -498,9 +502,9 @@
         <source>You cannot clone a game. This feature might be implemented later.</source>
         <target>Clôner une partie n&apos;est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.</target>
       </trans-unit>
-      <trans-unit id="1793003129354061397" datatype="html">
-        <source>This game does not exist.</source>
-        <target>Ce jeu n'existe pas.</target>
+      <trans-unit id="443650994975920138" datatype="html">
+        <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
+        <target>Ce jeu (<x id="PH" equiv-text="gameName"/>) n'existe pas.</target>
       </trans-unit>
       <trans-unit id="777716481777788338" datatype="html">
         <source>The game you tried to join does not exist.</source>
