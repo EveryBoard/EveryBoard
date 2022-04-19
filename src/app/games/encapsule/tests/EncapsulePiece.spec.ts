@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsulePiece, Size } from '../EncapsulePiece';
 
 describe('EncapsulePiece', () => {
@@ -19,7 +19,7 @@ describe('EncapsulePiece', () => {
         });
         it('should return the none piece if player or size is none', () => {
             expect(EncapsulePiece.ofSizeAndPlayer(Size.NONE, Player.ONE)).toBe(EncapsulePiece.NONE);
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.NONE)).toBe(EncapsulePiece.NONE);
+            expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.NONE)).toBe(EncapsulePiece.NONE);
         });
     });
     describe('getPlayer', () => {
@@ -36,7 +36,6 @@ describe('EncapsulePiece', () => {
         it('should identify that a piece belong to its owner only', () => {
             expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.ZERO)).toBeTrue();
             expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.ONE)).toBeFalse();
-            expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.NONE)).toBeFalse();
         });
     });
 });

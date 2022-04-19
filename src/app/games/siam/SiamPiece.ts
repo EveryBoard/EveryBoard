@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -44,10 +44,8 @@ export class SiamPiece {
     public belongTo(player: Player): boolean {
         if (player === Player.ZERO) {
             return (1 <= this.value && this.value <= 4);
-        } else if (player === Player.ONE) {
-            return (5 <= this.value && this.value <= 8);
         } else {
-            return false;
+            return (5 <= this.value && this.value <= 8);
         }
     }
     public isEmptyOrMountain(): boolean {
@@ -56,10 +54,10 @@ export class SiamPiece {
     public isPiece(): boolean {
         return !this.isEmptyOrMountain();
     }
-    public getOwner(): Player {
+    public getOwner(): PlayerOrNone {
         if (1 <= this.value && this.value <= 4) return Player.ZERO;
         if (5 <= this.value && this.value <= 8) return Player.ONE;
-        return Player.NONE;
+        return PlayerOrNone.NONE;
     }
     public getOptionalDirection(): MGPOptional<Orthogonal> {
         switch (this.value) {
@@ -79,7 +77,6 @@ export class SiamPiece {
         }
     }
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
-        if (player === Player.NONE) throw new Error('Player None does not have any pieces.');
         if (player === Player.ZERO) {
             if (orientation === Orthogonal.UP) return SiamPiece.WHITE_UP;
             if (orientation === Orthogonal.RIGHT) return SiamPiece.WHITE_RIGHT;

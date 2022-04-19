@@ -3,7 +3,7 @@ import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../Revers
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -11,9 +11,9 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('ReversiRules', () => {
 
-    const _: Player = Player.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     let rules: ReversiRules;
     let minimaxes: Minimax<ReversiMove, ReversiState, ReversiLegalityInformation>[];
@@ -50,7 +50,7 @@ describe('ReversiRules', () => {
         expect(moveLegality).toBeFalse();
     });
     it('Should allow player to pass when no other moves are possible', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -66,7 +66,7 @@ describe('ReversiRules', () => {
     });
     describe('Endgames', () => {
         it('Should consider the player with the more point the winner at the end', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [O, X, X, X, X, X, X, O],
                 [O, X, X, O, O, X, X, O],
                 [O, X, O, X, X, X, X, O],
@@ -76,7 +76,7 @@ describe('ReversiRules', () => {
                 [O, O, O, O, O, O, O, O],
                 [_, O, O, O, O, O, X, O],
             ];
-            const expectedBoard: Table<Player> = [
+            const expectedBoard: Table<PlayerOrNone> = [
                 [O, X, X, X, X, X, X, O],
                 [O, X, X, O, O, X, X, O],
                 [O, X, O, X, X, X, X, O],
@@ -94,7 +94,7 @@ describe('ReversiRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [X, O, O, O, O, O, O, X],
                 [X, O, O, X, X, O, O, X],
                 [X, O, X, O, O, O, O, X],
@@ -104,7 +104,7 @@ describe('ReversiRules', () => {
                 [X, X, X, X, X, X, X, X],
                 [_, X, X, X, X, X, O, X],
             ];
-            const expectedBoard: Table<Player> = [
+            const expectedBoard: Table<PlayerOrNone> = [
                 [X, O, O, O, O, O, O, X],
                 [X, O, O, X, X, O, O, X],
                 [X, O, X, O, O, O, O, X],
@@ -122,7 +122,7 @@ describe('ReversiRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('Should recognize draws', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [O, O, O, O, X, X, X, X],
                 [X, O, O, O, X, X, X, X],
                 [X, O, O, O, X, X, X, X],
@@ -132,7 +132,7 @@ describe('ReversiRules', () => {
                 [X, O, O, O, X, X, X, X],
                 [_, O, O, O, X, X, X, X],
             ];
-            const expectedBoard: Table<Player> = [
+            const expectedBoard: Table<PlayerOrNone> = [
                 [O, O, O, O, X, X, X, X],
                 [O, O, O, O, X, X, X, X],
                 [O, O, O, O, X, X, X, X],

@@ -54,20 +54,16 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     public static playerDirections(player: Player): Array<Direction> {
         if (player === Player.ONE) {
             return [Direction.DOWN, Direction.DOWN_LEFT, Direction.DOWN_RIGHT];
-        } else if (player === Player.ZERO) {
-            return [Direction.UP, Direction.UP_LEFT, Direction.UP_RIGHT];
         } else {
-            throw new Error('Invalid player');
+            return [Direction.UP, Direction.UP_LEFT, Direction.UP_RIGHT];
         }
     }
     // Check if a direction is allowed for a given player
     public static directionAllowedForPlayer(dir: Direction, player: Player): boolean {
         if (player === Player.ZERO) {
             return dir.y < 0;
-        } else if (player === Player.ONE) {
-            return dir.y > 0;
         } else {
-            throw new Error('Invalid player');
+            return dir.y > 0;
         }
     }
     // Returns the list of moves of a player

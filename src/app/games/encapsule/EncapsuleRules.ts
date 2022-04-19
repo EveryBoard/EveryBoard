@@ -2,7 +2,7 @@ import { GameStatus, Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EncapsuleState, EncapsuleCase } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsuleMove } from './EncapsuleMove';
@@ -30,26 +30,25 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
     ];
     public static isVictory(state: EncapsuleState): MGPOptional<Player> {
         const board: EncapsuleCase[][] = state.getCopiedBoard();
-        let victory: MGPOptional<Player> = MGPOptional.empty();
-        let i: number = 0;
-        let line: Coord[];
-        while (victory.isAbsent() && i<8) {
-            line = EncapsuleRules.LINES[i++];
+        for (const line of EncapsuleRules.LINES) {
             const cases: EncapsuleCase[] = [board[line[0].y][line[0].x],
                 board[line[1].y][line[1].x],
                 board[line[2].y][line[2].x]];
-            victory = EncapsuleRules.isVictoriousLine(cases);
+            const victory: MGPOptional<Player> = EncapsuleRules.isVictoriousLine(cases);
+            if (victory.isPresent()) {
+                return victory;
+            }
         }
-        return victory;
+        return MGPOptional.empty();
     }
     public static isVictoriousLine(cases: EncapsuleCase[]): MGPOptional<Player> {
         const pieces: EncapsulePiece[] = cases.map((c: EncapsuleCase) => c.getBiggest());
-        const owner: Player[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
-        if (owner[0] === Player.NONE) {
+        const owner: PlayerOrNone[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
+        if (owner[0] === PlayerOrNone.NONE) {
             return MGPOptional.empty();
         } else {
             if ((owner[0] === owner[1]) && (owner[1] === owner[2])) {
-                return MGPOptional.of(owner[0]);
+                return MGPOptional.of(owner[0] as Player);
             } else {
                 return MGPOptional.empty();
             }

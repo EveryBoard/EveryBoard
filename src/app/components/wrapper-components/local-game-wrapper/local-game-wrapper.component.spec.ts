@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
@@ -45,9 +45,9 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 describe('LocalGameWrapperComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<P4Component>;
-    const O: Player = Player.ZERO;
-    const X: Player = Player.ONE;
-    const _: Player = Player.NONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
@@ -86,7 +86,7 @@ describe('LocalGameWrapperComponent', () => {
         expect(componentTestUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
     }));
     it('should show draw', fakeAsync(async() => {
-        const board: Player[][] = [
+        const board: PlayerOrNone[][] = [
             [O, O, O, _, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
@@ -117,7 +117,7 @@ describe('LocalGameWrapperComponent', () => {
             await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
         }));
         it('should allow to restart game at the end', fakeAsync(async() => {
-            const board: Player[][] = [
+            const board: PlayerOrNone[][] = [
                 [O, O, O, _, O, O, O],
                 [X, X, X, O, X, X, X],
                 [O, O, O, X, O, O, O],

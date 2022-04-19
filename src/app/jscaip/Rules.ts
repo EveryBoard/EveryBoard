@@ -3,7 +3,7 @@ import { Move } from './Move';
 import { Type } from '@angular/core';
 import { display } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { Player } from './Player';
+import { Player, PlayerOrNone } from './Player';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
@@ -15,12 +15,11 @@ export class GameStatus {
 
     public static readonly ONE_WON: GameStatus = new GameStatus(true, Player.ONE);
 
-    public static readonly DRAW: GameStatus = new GameStatus(true, Player.NONE);
+    public static readonly DRAW: GameStatus = new GameStatus(true, PlayerOrNone.NONE);
 
-    public static readonly ONGOING: GameStatus = new GameStatus(false, Player.NONE);
+    public static readonly ONGOING: GameStatus = new GameStatus(false, PlayerOrNone.NONE);
 
     public static getVictory(nonNonePlayer: Player): GameStatus {
-        assert(nonNonePlayer !== Player.NONE, 'getVictory called with Player.NONE');
         if (nonNonePlayer === Player.ZERO) {
             return GameStatus.ZERO_WON;
         } else {
@@ -28,17 +27,16 @@ export class GameStatus {
         }
     }
     public static getDefeat(nonNonePlayer: Player): GameStatus {
-        assert(nonNonePlayer !== Player.NONE, 'getVictory called with Player.NONE');
         if (nonNonePlayer === Player.ZERO) {
             return GameStatus.ONE_WON;
         } else {
             return GameStatus.ZERO_WON;
         }
     }
-    private constructor(public readonly isEndGame: boolean, public readonly winner: Player) {
+    private constructor(public readonly isEndGame: boolean, public readonly winner: PlayerOrNone) {
     }
     public toBoardValue(): number {
-        if (this.winner !== Player.NONE) {
+        if (this.winner.isPlayer()) {
             return this.winner.getVictoryValue();
         } else {
             return 0;

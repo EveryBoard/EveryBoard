@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -13,17 +13,17 @@ export class GoPiece implements ComparableObject {
 
     public static WHITE: GoPiece = new GoPiece(Player.ONE, 'alive');
 
-    public static EMPTY: GoPiece = new GoPiece(Player.NONE, 'empty');
+    public static EMPTY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'empty');
 
     public static DEAD_BLACK: GoPiece = new GoPiece(Player.ZERO, 'dead');
 
     public static DEAD_WHITE: GoPiece = new GoPiece(Player.ONE, 'dead');
 
-    public static BLACK_TERRITORY: GoPiece = new GoPiece(Player.NONE, 'territory');
+    public static BLACK_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
 
-    public static WHITE_TERRITORY: GoPiece = new GoPiece(Player.NONE, 'territory');
+    public static WHITE_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
 
-    private constructor(readonly player: Player, readonly type: PieceType) {}
+    private constructor(readonly player: PlayerOrNone, readonly type: PieceType) {}
 
     public equals(o: GoPiece): boolean {
         return o === this;
@@ -48,13 +48,11 @@ export class GoPiece implements ComparableObject {
         }
     }
     public static pieceBelongTo(piece: GoPiece, owner: Player): boolean {
-        assert(owner !== Player.NONE, 'Owner must be Player.ZERO or Player.ONE, got Player.NONE.');
         return owner === piece.player && piece.type !== 'territory';
     }
     public static ofPlayer(player: Player): GoPiece {
         if (player === Player.ZERO) return GoPiece.BLACK;
-        else if (player === Player.ONE) return GoPiece.WHITE;
-        else throw new Error('GoPiece.ofPlayer should only be called with Player.ZERO and Player.ONE.');
+        else return GoPiece.WHITE;
     }
     public isOccupied(): boolean {
         return [GoPiece.BLACK, GoPiece.WHITE, GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);
@@ -68,7 +66,7 @@ export class GoPiece implements ComparableObject {
     public isTerritory(): boolean {
         return [GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY].includes(this);
     }
-    public getOwner(): Player {
+    public getOwner(): PlayerOrNone {
         return this.player;
     }
     public nonTerritory(): GoPiece {

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
@@ -15,7 +15,7 @@ describe('SixMinimax', () => {
 
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
-    const _: number = Player.NONE.value;
+    const _: number = PlayerOrNone.NONE.value;
 
     beforeEach(() => {
         rules = new SixRules(SixState);

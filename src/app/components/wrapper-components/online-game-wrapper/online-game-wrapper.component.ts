@@ -14,7 +14,7 @@ import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { Joiner } from 'src/app/domain/Joiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -127,7 +127,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
     }
-    private isOpponent(player: Player): boolean {
+    private isOpponent(player: PlayerOrNone): boolean {
         return this.observerRole !== player.value;
     }
     private async redirectIfPartOrGameIsInvalid(): Promise<void> {
@@ -462,29 +462,29 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                    this.currentPart.data.request.data['player'] === this.getPlayer().getOpponent().value)
         {
             return false;
-        } else if (this.getTakeBackRequester() === Player.NONE) {
+        } else if (this.getTakeBackRequester() === PlayerOrNone.NONE) {
             return true;
         } else {
             return false;
         }
     }
     public isOpponentWaitingForTakeBackResponse(): boolean {
-        const takeBackRequester: Player = this.getTakeBackRequester();
-        if (takeBackRequester === Player.NONE) {
-            return false;
-        } else {
+        const takeBackRequester: PlayerOrNone = this.getTakeBackRequester();
+        if (takeBackRequester.isPlayer()) {
             return this.isOpponent(takeBackRequester);
+        } else {
+            return false;
         }
     }
-    private getTakeBackRequester(): Player {
+    private getTakeBackRequester(): PlayerOrNone {
         if (this.currentPart == null) {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
         const request: Request | null | undefined = this.currentPart.data.request;
         if (request && request.code === 'TakeBackAsked') {
             return Request.getPlayer(request);
         } else {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
     }
     public canProposeDraw(): boolean {
@@ -500,26 +500,26 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         } else if (this.isOpponentWaitingForDrawResponse()) {
             return false;
-        } else if (this.getDrawRequester() === Player.NONE) {
+        } else if (this.getDrawRequester() === PlayerOrNone.NONE) {
             return true;
         } else {
             return false;
         }
     }
     public isOpponentWaitingForDrawResponse(): boolean {
-        const drawRequester: Player = this.getDrawRequester();
-        if (drawRequester === Player.NONE) return false;
+        const drawRequester: PlayerOrNone = this.getDrawRequester();
+        if (drawRequester === PlayerOrNone.NONE) return false;
         return this.isOpponent(drawRequester);
     }
-    private getDrawRequester(): Player {
+    private getDrawRequester(): PlayerOrNone {
         if (this.currentPart == null) {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
         const request: Request | null | undefined = this.currentPart.data.request;
         if (request && request.code === 'DrawProposed') {
             return Request.getPlayer(request);
         } else {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
     }
     protected async onRequest(request: Request, oldPart: PartDocument): Promise<void> {
@@ -594,7 +594,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.observerRole = Player.ONE.value;
             opponentName = this.players[0];
         } else {
-            this.observerRole = Player.NONE.value;
+            this.observerRole = PlayerOrNone.NONE.value;
         }
         if (opponentName.isPresent()) {
             const onDocumentCreated: (foundUser: UserDocument[]) => void = (foundUser: UserDocument[]) => {
