@@ -1,38 +1,74 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MartianChessMoveFailure {
 
     public static readonly START_COORD_OUT_OF_RANGE: string = 'Start coord cannot be out of range';
 
     public static readonly END_COORD_OUT_OF_RANGE: string = 'End coord cannot be out of range';
+
+    public static readonly PAWN_MUST_MOVE_ONE_DIAGONAL_STEP: () => string = () => $localize`Pawns must move one diagonal step`;
+
+    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEP: () => string = () => $localize`Drones must move two orthogonal steps`;
 }
 
 export class MartianChessMove extends MoveCoordToCoord {
 
-    public static from(start: Coord, end: Coord): MGPFallible<MartianChessMove> {
+    public static encoder: NumberEncoder<MartianChessMove> = NumberEncoder.tuple(
+        [Coord.numberEncoder(4, 8), Coord.numberEncoder(4, 8), NumberEncoder.booleanEncoder],
+        (move: MartianChessMove): [Coord, Coord, boolean] => [move.coord, move.end, move.calledTheClock],
+        (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
+    ); // TODO FOR REVIEW: une fois qu'on a des examples, j'avoue ça défonce du ponichon !
+    public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
         if (start.isNotInRange(4, 8)) {
             return MGPFallible.failure(MartianChessMoveFailure.START_COORD_OUT_OF_RANGE);
         }
         if (end.isNotInRange(4, 8)) {
             return MGPFallible.failure(MartianChessMoveFailure.END_COORD_OUT_OF_RANGE);
         }
+        if (end.equals(start)) {
+            return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
+        }
         const dir: MGPFallible<Direction> = Direction.factory.fromDelta(end.x - start.x, end.y - start.y);
         if (dir.isFailure()) {
             return MGPFallible.failure(dir.getReason());
         }
-        return MGPFallible.success(new MartianChessMove(start, end));
+        return MGPFallible.success(new MartianChessMove(start, end, calledTheClock));
     }
-    private constructor(start: Coord, end: Coord) {
+    private constructor(start: Coord, end: Coord, public readonly calledTheClock: boolean) {
         super(start, end);
     }
     public toString(): string {
-        throw new Error('Method not implemented.');
+        const ending: string = this.calledTheClock ? ', CALL_THE_CLOCK' : '';
+        return 'MartianChessMove((' + this.coord.x + ', ' + this.coord.y + ') -> (' +
+                                      this.end.x + ', ' + this.end.y + ')' +
+                                      ending + ')';
     }
-    public equals(o: this): boolean {
-        throw new Error('Method not implemented.');
+    public equals(o: MartianChessMove): boolean {
+        if (this.coord.equals(o.coord) === false) return false;
+        if (this.end.equals(o.end) === false) return false;
+        return this.calledTheClock === o.calledTheClock;
+    }
+    public isValidForPawn(): boolean {
+        const dx: number = this.coord.x - this.end.x;
+        const dy: number = this.coord.y - this.end.y;
+        const direction: MGPFallible<Direction> = Direction.factory.fromDelta(dx, dy);
+        return direction.get().isDiagonal();
+    }
+    public isInvalidForDrone(): boolean {
+        const distance: number = this.coord.getOrthogonalDistance(this.end);
+        return distance !== 2;
+    }
+    public isUndoneBy(moveOpt: MGPOptional<MartianChessMove>): boolean {
+        if (moveOpt.isAbsent()) {
+            return false;
+        }
+        const move: MartianChessMove = moveOpt.get();
+        return move.end.equals(this.coord) && move.coord.equals(this.end);
     }
 }

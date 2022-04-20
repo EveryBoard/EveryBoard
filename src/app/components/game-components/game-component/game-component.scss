@@ -13,6 +13,9 @@
     stroke: var(--base-stroke);
     stroke-width: 3;
 }
+.base-stroke {
+    fill: var(--base-stroke);
+}
 .text {
     fill: var(--base-stroke);
 }
@@ -142,17 +145,15 @@
 .text-big {
     font: 50px sans-serif;
 }
+.text-125 {
+    font: 125px sans-serif;
+    dominant-baseline: central;
+}
 .text-bold {
     font-weight: bold;
 }
-.text-big-vcenter {
-    dy: 17;
-}
 .text-medium {
     font: 35px sans-serif;
-}
-.text-small {
-    font: 20 sans-serif;
 }
 .text-center {
     text-anchor: middle;

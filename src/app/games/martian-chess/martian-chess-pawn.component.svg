@@ -1,0 +1,33 @@
+<!-- Shape -->
+<svg:polygon *ngIf="style.shape === 'Polygone'"
+             class="base"
+             [attr.points]="MartianChessPawnComponent.TRIANGLE"
+             [ngClass]="pieceClasses"
+             stroke-linecap="round" />
+<svg:polygon *ngIf="style.shape === 'Star'"
+             class="base"
+             [attr.points]="MartianChessPawnComponent.FOUR_POINTED_STAR_DIAGONAL"
+             [ngClass]="pieceClasses"
+             stroke-linecap="round" />
+<svg:circle *ngIf="style.shape === 'Circle'"
+            class="base"
+            [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
+            [attr.cy]="0.5 * MartianChessComponent.SPACE_SIZE"
+            [attr.r]="(0.5 * MartianChessComponent.SPACE_SIZE) - MartianChessComponent.STROKE_WIDTH"
+            [ngClass]="pieceClasses" />
+<!-- Points -->
+<svg:circle *ngIf="style.points === 'Concentric Circles'"
+            class="base no-fill mid-stroke"
+            [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
+            [attr.cy]="(0.5 * MartianChessComponent.SPACE_SIZE) + getConcreteTriangleYOffset()"
+            [attr.r]="MartianChessComponent.getRadius(1)" />
+<svg:circle *ngIf="style.points === 'Dots'"
+            class="base mid-stroke"
+            [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
+            [attr.cy]="0.5 * MartianChessComponent.SPACE_SIZE"
+            [attr.r]="(0.2 / 3) * MartianChessComponent.SPACE_SIZE" />
+<svg:circle *ngIf="style.points === 'Horizontal Points'"
+            class="base-stroke"
+            [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
+            [attr.cy]="0.5 * MartianChessComponent.SPACE_SIZE"
+            [attr.r]="horizontalDotsRadius" />

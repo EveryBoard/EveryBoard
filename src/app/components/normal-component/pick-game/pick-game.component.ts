@@ -13,6 +13,7 @@ import { GipfComponent } from 'src/app/games/gipf/gipf.component';
 import { GoComponent } from 'src/app/games/go/go.component';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
+import { MartianChessComponent } from 'src/app/games/martian-chess/martian-chess.component';
 import { MinimaxTestingComponent } from 'src/app/games/minimax-testing/minimax-testing.component';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
@@ -57,6 +58,8 @@ class GameDescription {
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
     public static readonly LINES_OF_ACTION: Localized = () => $localize`Regroup your pieces to win. But your possible moves will often change!`;
+
+    public static readonly MARTIAN_CHESS: Localized = () => $localize`Win points by capturing pieces, but piece ownership is position related!`;
 
     public static readonly P4: Localized = () => $localize`The classical 4 in a row game!`;
 
@@ -115,6 +118,7 @@ export class GameInfo {
         new GameInfo($localize`Diam`, 'Diam', DiamComponent, new Date('2021-11-30'), GameDescription.DIAM()), // 4 months after Yinsh *Quentin
         new GameInfo($localize`Brandhub`, 'Brandhub', BrandhubComponent, new Date('2021-12-07'), GameDescription.BRANDHUB()), // 33 days after Apagos
         new GameInfo($localize`Conspirateurs`, 'Conspirateurs', ConspirateursComponent, new Date('2021-12-30'), GameDescription.CONSPIRATEURS()), // 30 days after Diam *Quentin
+        new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new Date('2022-12-31'), GameDescription.MARTIAN_CHESS()), // TODOTODO
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

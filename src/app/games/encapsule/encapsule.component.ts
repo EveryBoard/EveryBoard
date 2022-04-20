@@ -141,12 +141,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getPieceRadius(piece: EncapsulePiece): number {
         switch (piece.getSize()) {
             case Size.BIG:
-                return 40;
+                return (this.SPACE_SIZE / 2) - (1 * this.STROKE_WIDTH);
             case Size.MEDIUM:
-                return 30;
+                return (this.SPACE_SIZE / 2) - (2 * this.STROKE_WIDTH) - 3;
             default:
                 Utils.expectToBe(piece.getSize(), Size.SMALL);
-                return 20;
+                return (this.SPACE_SIZE / 2) - (3 * this.STROKE_WIDTH) - 6;
         }
     }
     public getHighlightedCases(): Coord[] {

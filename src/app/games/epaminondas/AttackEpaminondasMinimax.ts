@@ -8,12 +8,14 @@ import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasNode } from './EpaminondasRules';
 
 export class AttackEpaminondasMinimax extends EpaminondasMinimax {
+
     private readonly DOMINANCE_FACTOR: number = 20;
     private readonly DEFENSE_FACTOR: number = 5;
     private readonly TERRITORY_FACTOR: number = 2;
     private readonly OFFENSE_FACTOR: number = 10;
     private readonly CENTER_FACTOR: number = 5;
     private readonly MOBILITY_FACTOR: number = 0.12;
+
     public getDominance(state: EpaminondasState): number {
         let score: number = 0;
         for (let y: number = 0; y < 12; y++) {
@@ -126,7 +128,6 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
             biggestZero * Player.ZERO.getScoreModifier() +
             biggestOne * Player.ONE.getScoreModifier()) * this.MOBILITY_FACTOR;
     }
-
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
         const state: EpaminondasState = node.gameState;
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);

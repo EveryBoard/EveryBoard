@@ -14,6 +14,13 @@ export abstract class GameStateWithTable<P> extends GameState {
             throw new Error('Accessing coord not on board ' + coord + '.');
         }
     }
+    public getPieceAtOrNull(coord: Coord): P | null {
+        if (this.isOnBoard(coord)) {
+            return this.board[coord.y][coord.x];
+        } else {
+            return null;
+        }
+    }
     public isOnBoard(coord: Coord): boolean {
         return coord.isInRange(this.board[0].length, this.board.length);
     }

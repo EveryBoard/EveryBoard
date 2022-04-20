@@ -49,7 +49,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                 return data;
             },
         };
-        this.collection = collection(firestore, this.collectionName).withConverter<T>(genericConverter);
+        this.collection = collection(this.firestore, this.collectionName).withConverter<T>(genericConverter);
     }
     public async create(newElement: T): Promise<string> {
         const docRef: DocumentReference = await addDoc(this.collection, { ...newElement });

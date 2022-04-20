@@ -115,6 +115,7 @@ export class DirectionEncoder extends Encoder<Direction> {
 }
 
 export class Direction extends BaseDirection {
+
     public static readonly UP: Direction = new Direction(0, -1);
     public static readonly UP_RIGHT: Direction = new Direction(1, -1);
     public static readonly RIGHT: Direction = new Direction(1, 0);
@@ -145,6 +146,9 @@ export class Direction extends BaseDirection {
     }
     public isDiagonal(): boolean {
         return (this.x !== 0) && (this.y !== 0);
+    }
+    public isVertical(): boolean {
+        return (this.x === 0) || (this.y === 0);
     }
     public getOpposite(): Direction {
         const opposite: MGPFallible<Direction> = Direction.factory.of(-this.x, -this.y);
