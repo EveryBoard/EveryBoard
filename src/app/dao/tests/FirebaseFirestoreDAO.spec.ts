@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import { FirebaseDocument, FirebaseFirestoreDAO, IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { FirebaseDocument, FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
