@@ -107,7 +107,7 @@ describe('ErrorLoggerService', () => {
         const message: string = 'my new error message';
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
-        tick(1000);
+        tick(3000);
         const errors: FirebaseDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
