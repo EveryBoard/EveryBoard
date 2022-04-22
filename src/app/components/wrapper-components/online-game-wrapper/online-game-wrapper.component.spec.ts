@@ -2,7 +2,7 @@
 import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
+import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { Joiner } from 'src/app/domain/Joiner';
@@ -16,8 +16,8 @@ import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameWrapperMessages } from '../GameWrapper';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { GameWrapperMessages } from '../GameWrapper';
 
 async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
     await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
@@ -41,7 +41,8 @@ describe('OnlineGameWrapper for non-existing game', () => {
         tick(1);
 
         // Then it goes to /notFound with the expected error message
-        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
+        const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
+        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 });
 
@@ -206,6 +207,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         componentTestUtils.detectChanges();
         tick();
 
-        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
+        expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
 });
+

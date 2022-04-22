@@ -24,7 +24,8 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
         tick(3000);
 
         // Then it goes to /notFound with the expected error message
-        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
+        const route: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
+        expectValidRouting(router, route, NotFoundComponent, { skipLocationChange: true });
 
     }));
 });

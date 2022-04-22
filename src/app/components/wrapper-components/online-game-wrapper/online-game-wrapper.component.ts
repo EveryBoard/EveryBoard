@@ -28,6 +28,12 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { Localized } from 'src/app/utils/LocaleUtils';
+
+export class OnlineGameWrapperMessages {
+
+    public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
+}
 
 export class UpdateType {
 
@@ -131,19 +137,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return this.observerRole !== player.value;
     }
     private async redirectIfPartOrGameIsInvalid(): Promise<void> {
-        const gameName: string = this.extractGameNameFromURL();
-        const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameName);
-        if (gameExists === false) {
-            this.routerEventsSub.unsubscribe();
-            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true } );
-        } else {
+        const gameURL: string = this.extractGameNameFromURL();
+        const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
+        if (gameExists) {
             const partValidity: MGPValidation =
-                await this.gameService.getPartValidity(this.currentPartId, gameName);
+                await this.gameService.getPartValidity(this.currentPartId, gameURL);
             if (partValidity.isFailure()) {
                 // note, option if WRONG_GAME_TYPE to redirect to another page
                 this.routerEventsSub.unsubscribe();
-                await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_PART()], { skipLocationChange: true } );
+                await this.router.navigate(['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], { skipLocationChange: true } );
             }
+        } else {
+            this.routerEventsSub.unsubscribe();
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameURL)], { skipLocationChange: true } );
         }
     }
     private setCurrentPartIdOrRedirect(): Promise<void> {
@@ -166,7 +172,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         await this.setCurrentPartIdOrRedirect();
     }
     public async startGame(iJoiner: Joiner): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGameg');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         assert(this.gameStarted === false, 'Should not start already started game');
         this.joiner = iJoiner;

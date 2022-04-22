@@ -17,7 +17,7 @@ describe('ObjectDifference', () => {
                 insideChange: 0,
             },
         };
-        const modified: Record<string, unknown> = {
+        const modified: Record<string, ObjectDifference> = {
             changed: new ObjectDifference({}, { insideChange: 0 }, {}),
         };
         const expectedDiff: ObjectDifference = new ObjectDifference({}, modified, {});

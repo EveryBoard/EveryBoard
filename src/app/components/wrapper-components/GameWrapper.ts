@@ -25,7 +25,6 @@ export class GameWrapperMessages {
         return $localize`This game (${gameName}) does not exist.`;
     }
 
-    public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
 }
 
 @Component({ template: '' })

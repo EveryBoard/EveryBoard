@@ -1,5 +1,5 @@
 import { assert } from './assert';
-import { FirebaseJSONObject, FirebaseJSONValue } from './utils';
+import { FirebaseJSONObject, FirebaseJSONValue, FirebaseJSONValueWithoutArray } from './utils';
 
 export class ObjectDifference {
 
@@ -28,9 +28,9 @@ export class ObjectDifference {
         const nbDiff: number = elementDiff.countChanges();
         return nbDiff > 0;
     }
-    public constructor(public added: Record<string, unknown>,
-                       public modified: Record<string, unknown>,
-                       public removed: Record<string, unknown>) {}
+    public constructor(public added: Record<string, FirebaseJSONValue>,
+                       public modified: Record<string, FirebaseJSONValue | ObjectDifference>,
+                       public removed: Record<string, FirebaseJSONValue>) {}
     private addNewKeys(addedKeys: string[], after: FirebaseJSONObject): void {
         for (const addedKey of addedKeys) {
             if (after[addedKey] != null) {
@@ -58,20 +58,7 @@ export class ObjectDifference {
         } else if (Array.isArray(before)) {
             if (Array.isArray(after)) {
                 if (before.length === after.length) {
-                    let equal: boolean = true;
-                    for (let i: number = 0; equal && i < before.length; i++) {
-                        if (typeof before[i] === typeof after[i] && typeof before[i] === 'object') {
-                            const beforeObject: FirebaseJSONObject = before[i] as FirebaseJSONObject;
-                            const afterObject: FirebaseJSONObject = after[i] as FirebaseJSONObject;
-                            if (ObjectDifference.differs(beforeObject, afterObject)) {
-                                equal = false;
-                                this.modified[commonKey] = after;
-                            }
-                        } else if (before[i] !== after[i]) {
-                            equal = false;
-                            this.modified[commonKey] = after;
-                        }
-                    }
+                    this.addCommonKeyList(commonKey, before, after);
                 } else {
                     this.modified[commonKey] = after;
                 }
@@ -87,6 +74,26 @@ export class ObjectDifference {
             const nbChanges: number = newDiff.countChanges();
             if (nbChanges > 0) {
                 this.modified[commonKey] = newDiff;
+            }
+        }
+    }
+    private addCommonKeyList(commonKey: string,
+                             before: FirebaseJSONValueWithoutArray[],
+                             after: FirebaseJSONValueWithoutArray[])
+    : void
+    {
+        let equal: boolean = true;
+        for (let i: number = 0; equal && i < before.length; i++) {
+            if (typeof before[i] === typeof after[i] && typeof before[i] === 'object') {
+                const beforeObject: FirebaseJSONObject = before[i] as FirebaseJSONObject;
+                const afterObject: FirebaseJSONObject = after[i] as FirebaseJSONObject;
+                if (ObjectDifference.differs(beforeObject, afterObject)) {
+                    equal = false;
+                    this.modified[commonKey] = after;
+                }
+            } else if (before[i] !== after[i]) {
+                equal = false;
+                this.modified[commonKey] = after;
             }
         }
     }

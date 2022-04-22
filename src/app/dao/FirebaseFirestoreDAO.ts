@@ -42,7 +42,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
 
     public static VERBOSE: boolean = false;
 
-    private readonly collection: Firestore.CollectionReference<T>;
+    public readonly collection: Firestore.CollectionReference<T>;
 
     private readonly subDAOs: Record<string, IFirebaseFirestoreDAO<FirebaseJSONObject>> = {};
 
