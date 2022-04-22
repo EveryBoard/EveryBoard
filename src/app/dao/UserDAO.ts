@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
-import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
+import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
+import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { User } from '../domain/User';
 import { Firestore } from '@angular/fire/firestore';
@@ -8,7 +8,7 @@ import { Firestore } from '@angular/fire/firestore';
 @Injectable({
     providedIn: 'root',
 })
-export class UserDAO extends FirebaseFirestoreDAO<User> {
+export class UserDAO extends FirestoreDAO<User> {
     public static VERBOSE: boolean = false;
 
     public static COLLECTION_NAME: string = 'joueurs';
@@ -18,7 +18,7 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
         display(UserDAO.VERBOSE, 'JoueursDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
-        const usersWithSameUsername: FirebaseDocument<User>[] = await this.findWhere([['username', '==', username]]);
+        const usersWithSameUsername: FirestoreDocument<User>[] = await this.findWhere([['username', '==', username]]);
         return usersWithSameUsername.length === 0;
     }
     public async setUsername(uid: string, username: string): Promise<void> {
@@ -27,10 +27,10 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
     public async markVerified(uid: string): Promise<void> {
         await this.update(uid, { verified: true });
     }
-    public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
+    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
         return this.observingWhere([['username', '==', username], ['verified', '==', true]], callback);
     }
-    public observeActiveUsers(callback: FirebaseCollectionObserver<User>): () => void {
+    public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
 }

@@ -1,4 +1,4 @@
-export type FirebaseConfig = {
+export type FirestoreConfig = {
     apiKey: string,
     authDomain: string,
     databaseURL: string,
@@ -11,6 +11,6 @@ export type Environment = {
     production: boolean,
     test: boolean,
     root: string
-    firebaseConfig: FirebaseConfig,
+    firebaseConfig: FirestoreConfig,
     useEmulators: boolean,
 }

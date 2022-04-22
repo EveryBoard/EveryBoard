@@ -38,7 +38,7 @@ import * as Auth from '@angular/fire/auth';
 import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
-import { FirebaseTimePipe } from 'src/app/pipes-and-directives/firebase-time.pipe';
+import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 @Component({})
@@ -88,7 +88,7 @@ export class SimpleComponentTestUtils<T> {
             ],
             declarations: [
                 componentType,
-                FirebaseTimePipe,
+                FirestoreTimePipe,
                 HumanDurationPipe,
                 AutofocusDirective,
                 ToggleVisibilityDirective,

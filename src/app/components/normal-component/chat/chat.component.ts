@@ -5,7 +5,7 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 @Component({
@@ -56,7 +56,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
                 return [doc.data];
             }));
         };
-        const callback: FirebaseCollectionObserver<Message> = new FirebaseCollectionObserver(
+        const callback: FirestoreCollectionObserver<Message> = new FirestoreCollectionObserver(
             updateMessages,
             updateMessages,
             () => {

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { User } from 'src/app/domain/User';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
@@ -20,7 +20,7 @@ describe('UserDAO', () => {
     });
     describe('observeUserByUsername', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
+            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },
@@ -36,7 +36,7 @@ describe('UserDAO', () => {
     });
     describe('observeActiveUsers', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
+            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },

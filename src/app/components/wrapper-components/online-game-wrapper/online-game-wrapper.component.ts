@@ -11,7 +11,7 @@ import { PartCreationComponent } from '../part-creation/part-creation.component'
 import { User, UserDocument } from '../../../domain/User';
 import { Request } from '../../../domain/Request';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
-import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { Joiner } from 'src/app/domain/Joiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -613,10 +613,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             };
-            const callback: FirebaseCollectionObserver<User> =
-                new FirebaseCollectionObserver(onDocumentCreated,
-                                               onDocumentModified,
-                                               onDocumentDeleted);
+            const callback: FirestoreCollectionObserver<User> =
+                new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
             this.opponentSubscription =
                 MGPOptional.of(this.userService.observeUserByUsername(opponentName.get(), callback));
         }

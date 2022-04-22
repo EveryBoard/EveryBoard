@@ -8,4 +8,4 @@ export interface Time extends JSONObject {
     nanoseconds: number;
 }
 
-export type FirebaseTime = Firestore.FieldValue | Time | null;
+export type FirestoreTime = Firestore.FieldValue | Time | null;

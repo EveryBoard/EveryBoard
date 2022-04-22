@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FirebaseDocument } from 'src/app/dao/FirebaseFirestoreDAO';
+import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils';
@@ -94,7 +94,7 @@ describe('ErrorLoggerService', () => {
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
         tick(1000);
-        const errors: FirebaseDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
+        const errors: FirestoreDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
 

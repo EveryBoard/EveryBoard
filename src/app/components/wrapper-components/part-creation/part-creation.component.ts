@@ -10,7 +10,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { User, UserDocument } from 'src/app/domain/User';
-import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -325,7 +325,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const callback: (modifiedUsers: UserDocument[]) => void = async(modifiedUsers: UserDocument[]) => {
             await this.destroyDocIfCreatorOffline(modifiedUsers);
         };
-        const observer: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver(callback, callback, callback);
+        const observer: FirestoreCollectionObserver<User> =
+            new FirestoreCollectionObserver(callback, callback, callback);
         this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator.name, observer);
     }
     private async destroyDocIfCreatorOffline(modifiedUsers: UserDocument[]): Promise<void> {
@@ -369,8 +370,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                             { id: user.id, username });
             }
         };
-        const callback: FirebaseCollectionObserver<User> =
-            new FirebaseCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
+        const callback: FirestoreCollectionObserver<User> =
+            new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
                 const subscription: () => void = this.userService.observeUserByUsername(candidateName, callback);

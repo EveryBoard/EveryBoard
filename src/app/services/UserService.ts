@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
 import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
-import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +22,7 @@ export class UserService {
     public unSubFromActiveUsersObs(): void {
         this.activeUsersService.stopObserving();
     }
-    public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
+    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
         // the callback will be called on the foundUser
         return this.joueursDAO.observeUserByUsername(username, callback);
     }

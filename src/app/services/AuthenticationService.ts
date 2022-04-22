@@ -14,7 +14,7 @@ import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 
-// This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
+// This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
     public static createUserWithEmailAndPassword(auth: FireAuth.Auth, email: string, password: string)
     : Promise<FireAuth.UserCredential>

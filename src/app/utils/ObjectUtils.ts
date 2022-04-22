@@ -1,9 +1,9 @@
 import { assert } from './assert';
-import { FirebaseJSONObject, FirebaseJSONValue, FirebaseJSONValueWithoutArray } from './utils';
+import { FirestoreJSONObject, FirestoreJSONValue, FirestoreJSONValueWithoutArray } from './utils';
 
 export class ObjectDifference {
 
-    public static from(before: FirebaseJSONObject | null, after: FirebaseJSONObject | null): ObjectDifference {
+    public static from(before: FirestoreJSONObject | null, after: FirestoreJSONObject | null): ObjectDifference {
         const changes: ObjectDifference = new ObjectDifference({}, {}, {});
         if (before == null) {
             changes.added = { ...after };
@@ -23,27 +23,27 @@ export class ObjectDifference {
         changes.addRemovedKeys(removedKeys, before);
         return changes;
     }
-    public static differs(before: FirebaseJSONObject, after: FirebaseJSONObject): boolean {
+    public static differs(before: FirestoreJSONObject, after: FirestoreJSONObject): boolean {
         const elementDiff: ObjectDifference = ObjectDifference.from(before, after);
         const nbDiff: number = elementDiff.countChanges();
         return nbDiff > 0;
     }
-    public constructor(public added: Record<string, FirebaseJSONValue>,
-                       public modified: Record<string, FirebaseJSONValue | ObjectDifference>,
-                       public removed: Record<string, FirebaseJSONValue>) {}
-    private addNewKeys(addedKeys: string[], after: FirebaseJSONObject): void {
+    public constructor(public added: Record<string, FirestoreJSONValue>,
+                       public modified: Record<string, FirestoreJSONValue | ObjectDifference>,
+                       public removed: Record<string, FirestoreJSONValue>) {}
+    private addNewKeys(addedKeys: string[], after: FirestoreJSONObject): void {
         for (const addedKey of addedKeys) {
             if (after[addedKey] != null) {
                 this.added[addedKey] = after[addedKey];
             }
         }
     }
-    private addCommonKeys(commonKeys: string[], after: FirebaseJSONObject, before: FirebaseJSONObject): void {
+    private addCommonKeys(commonKeys: string[], after: FirestoreJSONObject, before: FirestoreJSONObject): void {
         for (const commonKey of commonKeys) {
             this.addCommonKey(commonKey, before[commonKey], after[commonKey]);
         }
     }
-    private addCommonKey(commonKey: string, before: FirebaseJSONValue, after: FirebaseJSONValue): void {
+    private addCommonKey(commonKey: string, before: FirestoreJSONValue, after: FirestoreJSONValue): void {
         if (after == null) {
             if (before != null) {
                 this.removed[commonKey] = before;
@@ -68,8 +68,8 @@ export class ObjectDifference {
         } else { // JSON
             assert(typeof before === 'object', `ObjectDifference: expected JSON, but got a ${typeof before} in ${commonKey}`);
             assert(typeof after === 'object', `ObjectDifference: expected JSON, but got a ${typeof after} in ${commonKey}`);
-            const beforeObject: FirebaseJSONObject = before as FirebaseJSONObject;
-            const afterObject: FirebaseJSONObject = after as FirebaseJSONObject;
+            const beforeObject: FirestoreJSONObject = before as FirestoreJSONObject;
+            const afterObject: FirestoreJSONObject = after as FirestoreJSONObject;
             const newDiff: ObjectDifference = ObjectDifference.from(beforeObject, afterObject);
             const nbChanges: number = newDiff.countChanges();
             if (nbChanges > 0) {
@@ -78,15 +78,15 @@ export class ObjectDifference {
         }
     }
     private addCommonKeyList(commonKey: string,
-                             before: FirebaseJSONValueWithoutArray[],
-                             after: FirebaseJSONValueWithoutArray[])
+                             before: FirestoreJSONValueWithoutArray[],
+                             after: FirestoreJSONValueWithoutArray[])
     : void
     {
         let equal: boolean = true;
         for (let i: number = 0; equal && i < before.length; i++) {
             if (typeof before[i] === typeof after[i] && typeof before[i] === 'object') {
-                const beforeObject: FirebaseJSONObject = before[i] as FirebaseJSONObject;
-                const afterObject: FirebaseJSONObject = after[i] as FirebaseJSONObject;
+                const beforeObject: FirestoreJSONObject = before[i] as FirestoreJSONObject;
+                const afterObject: FirestoreJSONObject = after[i] as FirestoreJSONObject;
                 if (ObjectDifference.differs(beforeObject, afterObject)) {
                     equal = false;
                     this.modified[commonKey] = after;
@@ -97,7 +97,7 @@ export class ObjectDifference {
             }
         }
     }
-    private addRemovedKeys(removedKeys: string[], before: FirebaseJSONObject): void {
+    private addRemovedKeys(removedKeys: string[], before: FirestoreJSONObject): void {
         for (const removedKey of removedKeys) {
             this.removed[removedKey] = before[removedKey];
         }

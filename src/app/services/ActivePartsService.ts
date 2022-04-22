@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { Part, PartDocument } from '../domain/Part';
-import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 
@@ -55,10 +55,8 @@ export class ActivePartsService {
             }
             this.activePartsBS.next(result);
         };
-        const partObserver: FirebaseCollectionObserver<Part> =
-            new FirebaseCollectionObserver(onDocumentCreated,
-                                           onDocumentModified,
-                                           onDocumentDeleted);
+        const partObserver: FirestoreCollectionObserver<Part> =
+            new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         this.unsubscribe = MGPOptional.of(this.partDAO.observeActiveParts(partObserver));
     }
     public stopObserving(): void {

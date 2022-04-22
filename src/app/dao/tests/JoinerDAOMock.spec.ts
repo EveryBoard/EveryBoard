@@ -3,7 +3,7 @@ import { Joiner, JoinerDocument } from 'src/app/domain/Joiner';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { display } from 'src/app/utils/utils';
-import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
+import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -11,7 +11,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
 
 type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
-export class JoinerDAOMock extends FirebaseFirestoreDAOMock<Joiner> {
+export class JoinerDAOMock extends FirestoreDAOMock<Joiner> {
 
     public static VERBOSE: boolean = false;
 

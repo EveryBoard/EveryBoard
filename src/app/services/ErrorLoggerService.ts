@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorDAO, MGPError } from '../dao/ErrorDAO';
-import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPValidation } from '../utils/MGPValidation';
 import { JSONValue } from '../utils/utils';
@@ -37,7 +37,7 @@ export class ErrorLoggerService {
     }
     public async logError(component: string, message: string, data?: JSONValue): Promise<void> {
         const route: string = this.router.url;
-        const previousErrors: FirebaseDocument<MGPError>[] =
+        const previousErrors: FirestoreDocument<MGPError>[] =
             await this.errorDAO.findErrors(component, route, message, data);
         if (previousErrors.length === 0) {
             const error: MGPError = {

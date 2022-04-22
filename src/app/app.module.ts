@@ -89,7 +89,7 @@ import { ThemeService } from './services/ThemeService';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
-import { FirebaseTimePipe } from './pipes-and-directives/firebase-time.pipe';
+import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 
 registerLocaleData(localeFr);
 
@@ -210,7 +210,7 @@ export class FirebaseProviders {
         YinshComponent,
 
         HumanDurationPipe,
-        FirebaseTimePipe,
+        FirestoreTimePipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
     ],
