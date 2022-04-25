@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { ChatDAO } from '../ChatDAO';
 import * as FireAuth from '@angular/fire/auth';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -14,15 +14,7 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { JoinerDAO } from '../JoinerDAO';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
-import { FirebaseError } from 'firebase/app';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-
-async function expectFirebasePermissionDenied<T>(promise: Promise<T>): Promise<void> {
-    await promise.then(() => {
-        throw new Error('Expected a promise to be rejected but it was resolved');
-    },
-                       (actualValue: FirebaseError) => expect(actualValue.code).toBe('permission-denied'));
-}
 
 describe('ChatDAO', () => {
 

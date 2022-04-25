@@ -105,11 +105,12 @@ export async function createConnectedGoogleUser(createInDB: boolean, email: stri
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
     if (createInDB) {
-        const user: User = { verified: true };
+        await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
         if (username != null) {
-            user.username = username;
+            // This needs to happen in multiple updates to match the security rules
+            await TestBed.inject(UserDAO).update(credential.user.uid, { username });
+            await TestBed.inject(UserDAO).update(credential.user.uid, { verified: true });
         }
-        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, user);
     }
     return credential.user;
 }

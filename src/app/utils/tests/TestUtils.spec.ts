@@ -40,6 +40,7 @@ import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.direc
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
 import { FirebaseTimePipe } from 'src/app/pipes-and-directives/firebase-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { FirebaseError } from 'firebase/app';
 
 @Component({})
 export class BlankComponent {}
@@ -536,3 +537,16 @@ export function expectValidRoutingLink(element: DebugElement, fullPath: string, 
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
 }
+
+
+/**
+ * Checks that a promise resulted in a firestore 'permission-denied' error.
+ * Useful to test that permissions on firestore work as expected.
+ */
+export async function expectFirebasePermissionDenied<T>(promise: Promise<T>): Promise<void> {
+    await promise.then(() => {
+        throw new Error('Expected a promise to be rejected but it was resolved');
+    },
+                       (actualValue: FirebaseError) => expect(actualValue.code).toBe('permission-denied'));
+}
+
