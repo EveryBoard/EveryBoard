@@ -38,7 +38,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
 
     public style: MartianChessFace = {
         shape: 'Circle',
-        points: 'Dots',
+        points: 'Horizontal Points',
     };
     public readonly pieces: typeof MartianChessPiece = MartianChessPiece;
 
@@ -57,6 +57,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         { name: 'Star', style: { shape: 'Star', points: 'Dots' } },
         { name: 'Polygone', style: { shape: 'Polygone', points: 'Concentric Circles' } },
         { name: 'Simple', style: { shape: 'Circle', points: 'Horizontal Points' } },
+        { name: 'Circely', style: { shape: 'Circle', points: 'Concentric Circles' } },
     ];
     public clockNeedlesPoints: string;
 
@@ -64,11 +65,11 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const coords: Coord[] = MartianChessComponent.getRegularPolygonCoords(nbSide, yOffset);
         return MartianChessComponent.mapCoordsToString(coords);
     }
-    public static getNPointedStar(nbSide: number, degreeOffset: number = -90): string {
+    public static getNPointedStar(nbSide: number, degreeOffset: number): string {
         const coords: Coord[] = this.getNPointedStarCoords(nbSide, degreeOffset);
         return MartianChessComponent.mapCoordsToString(coords);
     }
-    private static getNPointedStarCoords(nbSide: number, degreeOffset: number = - 90): Coord[] {
+    private static getNPointedStarCoords(nbSide: number, degreeOffset: number): Coord[] {
         const points: Coord[] = [];
         const cx: number = 0.5 * MartianChessComponent.SPACE_SIZE;
         const cy: number = 0.5 * MartianChessComponent.SPACE_SIZE;
@@ -178,9 +179,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                     this.rules.node.mother.get().gameState.getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
                 if (wasOccupied) {
-                    const currentOpponent: Player = this.rules.node.gameState.getCurrentOpponent();
-                    const rangeY: [number, number] = this.rules.node.gameState.getPlayerTerritory(currentOpponent);
-                    const landingHome: boolean = rangeY[0] <= y && y <= rangeY[1];
+                    const landingHome: boolean = this.rules.node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
                         classes.push('highlighted');
                     }
@@ -207,9 +206,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         } else {
-            const currentPlayer: Player = this.getState().getCurrentPlayer();
-            const currentTerritory: [number, number] = this.getState().getPlayerTerritory(currentPlayer);
-            if (currentTerritory[0] <= clickedCoord.y && clickedCoord.y <= currentTerritory[1]) {
+            const isInPlayerTerritory: boolean = this.getState().isInPlayerTerritory(clickedCoord);
+            if (isInPlayerTerritory) {
                 this.selectedPiece = MGPOptional.of(clickedCoord);
                 return MGPValidation.SUCCESS;
             } else {
@@ -275,9 +273,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                 if (wasEmpty) {
                     classes.push('moved');
                 } else {
-                    const currentOpponent: Player = node.gameState.getCurrentOpponent();
-                    const rangeY: [number, number] = node.gameState.getPlayerTerritory(currentOpponent);
-                    const landingHome: boolean = rangeY[0] <= y && y <= rangeY[1];
+                    const landingHome: boolean = node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
                         classes.push('moved');
                     } else {
@@ -293,5 +289,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public chooseStyle(n: number): void {
         this.style = this.listOfStyles[n].style;
+        this.displayModePannel = false;
     }
 }

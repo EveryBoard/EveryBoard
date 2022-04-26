@@ -10,19 +10,19 @@ const A: MartianChessPiece = MartianChessPiece.PAWN;
 const B: MartianChessPiece = MartianChessPiece.DRONE;
 const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
-const NOT_A_FIELD_PROMOTION: string = $localize`This is not a field promotion!`;
+export const NOT_A_FIELD_PROMOTION: () => string = () => $localize`This is not a field promotion!`;
 
 export class MartianChessTutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a red line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.`,
+            $localize`The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.`,
             MartianChessState.getInitialState(),
         ),
         TutorialStep.informational(
             $localize`The pieces`,
-            $localize`The dark pieces belong to the first player, the light ones to the second one. There is 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 points.</li><li>The Drones: represented as pentagons with 2 concentric circles.</li><li>The Pawns: represented as triangles with one circle.</li></ul>`,
+            $localize`The dark pieces belong to the first player, the light ones to the second one. There is 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 points.</li><li>The Drones: represented as circles with 2 points.</li><li>The Pawns: represented as circles with one point.</li></ul>`,
             MartianChessState.getInitialState(),
         ),
         TutorialStep.fromPredicate(
@@ -111,7 +111,7 @@ export class MartianChessTutorial {
                 MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get(),
             ],
             $localize`Congratulations!`,
-            NOT_A_FIELD_PROMOTION,
+            NOT_A_FIELD_PROMOTION(),
         ),
         TutorialStep.fromPredicate(
             $localize`Field Promotion (2/2)`,
@@ -132,7 +132,7 @@ export class MartianChessTutorial {
                 if (landed === MartianChessPiece.QUEEN) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure(NOT_A_FIELD_PROMOTION);
+                    return MGPValidation.failure(NOT_A_FIELD_PROMOTION());
                 }
             },
             $localize`Congratulations!`,

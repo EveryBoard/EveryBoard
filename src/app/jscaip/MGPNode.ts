@@ -138,6 +138,38 @@ export class MGPNode<R extends Rules<M, S, L>,
         if (this.childs.isAbsent()) {
             this.childs = MGPOptional.of([]);
         }
+        const bestChilds: MGPNode<R, M, S, L, U>[] = this.getBestChilds(possibleMoves,
+                                                                        depth,
+                                                                        alpha,
+                                                                        beta,
+                                                                        minimax,
+                                                                        random,
+                                                                        prune);
+        const bestChild: MGPNode<R, M, S, L, U> = this.getBestChildAmongst(bestChilds, random);
+        const bestChildHopedValue: number = bestChild.hopedValue.get(minimax.toString()).get();
+        this.hopedValue.put(minimax.toString(), bestChildHopedValue);
+        return bestChild;
+    }
+    private getPossibleMoves(minimax: Minimax<M, S, L, U>): M[] {
+        const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
+        if (currentMoves.isAbsent()) {
+            const moves: M[] = minimax.getListMoves(this);
+            this.possibleMoves.set(minimax.name, new MGPSet(moves));
+            return moves;
+        } else {
+            return currentMoves.get().toList();
+        }
+    }
+    private getBestChilds(possibleMoves: M[],
+                          depth: number,
+                          alpha: number,
+                          beta: number,
+                          minimax: Minimax<M, S, L, U>,
+                          random: boolean,
+                          prune: boolean)
+    : MGPNode<R, M, S, L, U>[]
+    {
+
         let bestChilds: MGPNode<R, M, S, L, U>[] = [];
         const currentPlayer: Player = this.gameState.getCurrentPlayer();
         let extremumExpected: number =
@@ -165,25 +197,15 @@ export class MGPNode<R extends Rules<M, S, L>,
                 alpha = Math.max(extremumExpected, alpha);
             }
         }
-        let bestChild: MGPNode<R, M, S, L, U>;
+        console.table(bestChilds.map((n: MGPNode<R, M, S, L, U>) => n.getOwnValue(minimax) + ' : ' + n.move.toString()))
+        return bestChilds;
+    }
+    private getBestChildAmongst(bestChilds: MGPNode<R, M, S, L, U>[], random: boolean): MGPNode<R, M, S, L, U> {
         if (random) {
             const randomIndex: number = Math.floor(Math.random() * bestChilds.length);
-            bestChild = bestChilds[randomIndex];
+            return bestChilds[randomIndex];
         } else {
-            bestChild = bestChilds[0];
-        }
-        const bestChildHopedValue: number = bestChild.hopedValue.get(minimax.toString()).get();
-        this.hopedValue.put(minimax.toString(), bestChildHopedValue);
-        return bestChild;
-    }
-    private getPossibleMoves(minimax: Minimax<M, S, L, U>): M[] {
-        const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
-        if (currentMoves.isAbsent()) {
-            const moves: M[] = minimax.getListMoves(this);
-            this.possibleMoves.set(minimax.name, new MGPSet(moves));
-            return moves;
-        } else {
-            return currentMoves.get().toList();
+            return bestChilds[0];
         }
     }
     private getOrCreateChild(move: M, minimax: Minimax<M, S, L, U>): MGPNode<R, M, S, L, U> {

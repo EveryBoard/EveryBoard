@@ -18,7 +18,7 @@ export class RulesFailure {
 
     public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: Localized = () => $localize`You have selected an empty space, you must select one of your own pieces.`;
 
-    public static readonly MOVE_CANNOT_BE_STATIC: Localized = () => $localize`You must choose different starting and ending coordinates.`; // TODOTODO reformulate cause.. well, its confusant
+    public static readonly MOVE_CANNOT_BE_STATIC: Localized = () => $localize`You must choose different starting and ending coordinates.`;
 
     public static readonly SOMETHING_IN_THE_WAY: Localized = () => $localize`Something is in the way.`;
 }

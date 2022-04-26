@@ -10,7 +10,7 @@ import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessPiece, MartianChessState } from '../MartianChessState';
 
-describe('MartianChessDummyMinimax', () => {
+fdescribe('MartianChessDummyMinimax', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -126,8 +126,6 @@ describe('MartianChessDummyMinimax', () => {
         // Then the reverse last move should not be in it
         const reverse: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.isUndoneBy(optLast));
         expect(reverse.length).toBe(0);
-        console.log(moves)
-        console.log(reverse)
     });
     it('should count all queen move', () => {
         // Given a state with a queen
@@ -147,8 +145,8 @@ describe('MartianChessDummyMinimax', () => {
         // When asking the list of moves
         const moves: MartianChessMove[] = minimax.getListMoves(node);
 
-        // Then the 12 moves should be included, but only once (not with clock called)
-        expect(moves.length).toBe(12);
+        // Then the 13 moves should be included, but only once (not with clock called)
+        expect(moves.length).toBe(13);
     });
     it('should simply prefer higher score', () => {
         const weakState: MartianChessState = MartianChessState.getInitialState();

@@ -1237,14 +1237,14 @@
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
       </trans-unit>
-      <trans-unit id="3178510370526343235" datatype="html">
-        <source>The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a red line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.</source>
+      <trans-unit id="8829851561226315844" datatype="html">
+        <source>The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.</source>
       </trans-unit>
       <trans-unit id="8633649754808970040" datatype="html">
         <source>The pieces</source>
       </trans-unit>
-      <trans-unit id="5860842586490335448" datatype="html">
-        <source>The dark pieces belong to the first player, the light ones to the second one. There is 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 points.&lt;/li&gt;&lt;li&gt;The Drones: represented as pentagons with 2 concentric circles.&lt;/li&gt;&lt;li&gt;The Pawns: represented as triangles with one circle.&lt;/li&gt;&lt;/ul&gt;</source>
+      <trans-unit id="7789634278464863772" datatype="html">
+        <source>The dark pieces belong to the first player, the light ones to the second one. There is 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 points.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 points.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one point.&lt;/li&gt;&lt;/ul&gt;</source>
       </trans-unit>
       <trans-unit id="2033063585111632444" datatype="html">
         <source>Moving pawns</source>

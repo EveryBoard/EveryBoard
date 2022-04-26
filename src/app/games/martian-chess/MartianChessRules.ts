@@ -91,18 +91,12 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         assert(doubleClockCall === false, 'Dont do that you poopydozer');
     }
     private isMoveCapture(move: MartianChessMove, state: MartianChessState): boolean {
-        const currentOpponent: Player = state.getCurrentOpponent();
-        const opponentsTerritory: [number, number] = state.getPlayerTerritory(currentOpponent);
-        const moveEndInOpponentTerritory: boolean = opponentsTerritory[0] <= move.end.y &&
-                                                    move.end.y <= opponentsTerritory[1];
+        const moveEndInOpponentTerritory: boolean = state.isInOpponentTerritory(move.end);
         const moveEndOnPiece: boolean = state.getPieceAt(move.end) !== MartianChessPiece.EMPTY;
         return moveEndInOpponentTerritory && moveEndOnPiece;
     }
     private isMoveFieldPromotion(move: MartianChessMove, state: MartianChessState): boolean {
-        const currentPlayer: Player = state.getCurrentPlayer();
-        const playersTerritory: [number, number] = state.getPlayerTerritory(currentPlayer);
-        const moveEndInPlayerTerritory: boolean = playersTerritory[0] <= move.end.y &&
-                                                  move.end.y <= playersTerritory[1];
+        const moveEndInPlayerTerritory: boolean = state.isInPlayerTerritory(move.end);
         const moveEndOnPiece: boolean = state.getPieceAt(move.end) !== MartianChessPiece.EMPTY;
         return moveEndInPlayerTerritory && moveEndOnPiece;
     }
@@ -126,10 +120,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         }
     }
     private isLegalMove(move: MartianChessMove, state: MartianChessState): MGPFallible<void> {
-        const currentPlayer: Player = state.getCurrentPlayer();
-        const playersTerritory: [number, number] = state.getPlayerTerritory(currentPlayer);
-        const moveStartInPlayerTerritory: boolean = playersTerritory[0] <= move.coord.y &&
-                                                    move.coord.y <= playersTerritory[1];
+        const moveStartInPlayerTerritory: boolean = state.isInPlayerTerritory(move.coord);
         if (moveStartInPlayerTerritory === false) {
             return MGPFallible.failure(MartianChessRulesFailure.MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY());
         }

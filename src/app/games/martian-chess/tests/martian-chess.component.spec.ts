@@ -10,7 +10,7 @@ import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessRulesFailure } from '../MartianChessRules';
 import { MartianChessPiece, MartianChessState } from '../MartianChessState';
 
-describe('MartianChessComponent', () => {
+fdescribe('MartianChessComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<MartianChessComponent>;
 
@@ -232,7 +232,7 @@ describe('MartianChessComponent', () => {
                 // When clicking on the shape named like the style
                 await componentTestUtils.clickElement('#' + styleAndName.name);
 
-                // Then the mode dot should have been chosen
+                // Then the mode should have been chosen
                 const currentStyle: MartianChessFace = componentTestUtils.getComponent().style;
                 expect(currentStyle).toBe(styleAndName.style);
             }

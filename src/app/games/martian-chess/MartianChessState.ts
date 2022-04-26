@@ -1,3 +1,4 @@
+import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -117,5 +118,15 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
             }
         }
         return true;
+    }
+    public isInOpponentTerritory(coord: Coord): boolean {
+        const opponent: Player = this.getCurrentOpponent();
+        const opponentTerritoryRange: [number, number] = this.getPlayerTerritory(opponent);
+        return opponentTerritoryRange[0] <= coord.y && coord.y <= opponentTerritoryRange[1];
+    }
+    public isInPlayerTerritory(coord: Coord): boolean {
+        const player: Player = this.getCurrentPlayer();
+        const opponentTerritoryRange: [number, number] = this.getPlayerTerritory(player);
+        return opponentTerritoryRange[0] <= coord.y && coord.y <= opponentTerritoryRange[1];
     }
 }

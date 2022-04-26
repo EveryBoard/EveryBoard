@@ -146,11 +146,8 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
         if (element.attributes.class != null && element.attributes.class !== '') {
-            console.log('ON FOU QUOI LA', element)
             const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
             expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
-        } else {
-            console.log('ça devrais avoir pété là')
         }
     }
     public expectElementNotToExist(elementName: string): void {

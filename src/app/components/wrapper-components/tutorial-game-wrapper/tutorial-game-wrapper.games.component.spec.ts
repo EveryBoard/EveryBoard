@@ -68,12 +68,12 @@ import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
-import { MartianChessTutorial } from 'src/app/games/martian-chess/MartianChessTutorial';
+import { MartianChessTutorial, NOT_A_FIELD_PROMOTION } from 'src/app/games/martian-chess/MartianChessTutorial';
 import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
 import { MartianChessState } from 'src/app/games/martian-chess/MartianChessState';
 import { MartianChessMove } from 'src/app/games/martian-chess/MartianChessMove';
 
-describe('TutorialGameWrapperComponent (games)', () => {
+fdescribe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Game should load correctly', () => {
         for (const game of GameInfo.ALL_GAMES()) {
@@ -179,7 +179,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     new MartianChessRules(MartianChessState),
                     martianChessTutorial[7],
                     MartianChessMove.from(new Coord(1, 7), new Coord(0, 6)).get(),
-                    MGPValidation.failure(`This is not a field promotion.`),
+                    MGPValidation.failure(NOT_A_FIELD_PROMOTION()),
                 ], [
                     new MartianChessRules(MartianChessState),
                     martianChessTutorial[8],

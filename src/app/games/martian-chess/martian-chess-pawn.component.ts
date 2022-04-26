@@ -9,6 +9,7 @@ import { MartianChessComponent, MartianChessFace } from './martian-chess.compone
 })
 export class MartianChessPawnComponent {
 
+    @Input() mainShapeId: string;
     @Input() pieceClasses: string[];
     @Input() style: MartianChessFace;
 
@@ -25,7 +26,6 @@ export class MartianChessPawnComponent {
 
     public static getTriangle(): string {
         // The aim of the incoming calculation is to make the shape vertically centered inside the square
-        console.log('created triangle with ' + MartianChessPawnComponent.TRIANGLE_Y_OFFSET);
         return MartianChessComponent.getRegularPolygon(3, MartianChessPawnComponent.TRIANGLE_Y_OFFSET);
     }
     private static yOffsetForVerticalCentering() {

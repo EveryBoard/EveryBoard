@@ -1,15 +1,18 @@
 <!-- Shape -->
 <svg:polygon *ngIf="style.shape === 'Polygone'"
+             [id]="mainShapeId"
              class="base"
              [attr.points]="MartianChessQueenComponent.HEPTAGONE"
              [ngClass]="pieceClasses"
              stroke-linecap="round" />
 <svg:polygon *ngIf="style.shape === 'Star'"
+             [id]="mainShapeId"
              class="base"
              [attr.points]="MartianChessQueenComponent.EIGHT_POINTED_STAR"
              [ngClass]="pieceClasses"
              stroke-linecap="round" />
 <svg:circle *ngIf="style.shape === 'Circle'"
+             [id]="mainShapeId"
             class="base"
             [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
             [attr.cy]="0.5 * MartianChessComponent.SPACE_SIZE"
