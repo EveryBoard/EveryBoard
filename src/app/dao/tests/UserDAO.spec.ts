@@ -84,15 +84,16 @@ describe('UserDAO', () => {
             expect(otherUserRead.isPresent()).toBeTrue();
             expect(otherUserRead.get().username).toBe('other-user');
         });
-        it('should forbid disconnected user to read any user', async() => {
+        it('should allow disconnected user to read any user', async() => {
             // Given an existing user and a disconnected visitor
             const other: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'other-user');
             await signOut();
 
             // When trying to read a user
-            const userRead: Promise<MGPOptional<User>> = dao.read(other.uid);
-            // Then it should fail
-            await expectFirebasePermissionDenied(userRead);
+            const userRead: MGPOptional<User> = await dao.read(other.uid);
+            // Then it should succeed
+            expect(userRead.isPresent()).toBeTrue();
+            expect(userRead.get().username).toBe('other-user');
         });
         it('should authorize to create its own user when it does not exist', async() => {
             // Given an authenticated visitor without the corresponding user in DB

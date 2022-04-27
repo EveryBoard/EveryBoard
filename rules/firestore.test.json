@@ -59,8 +59,9 @@ service cloud.firestore {
             // Moreover, the username cannot be changed once set
             // And the verified field can only be changed to true if the user has a username and has its email verified
             allow update: if isOwner(userId) && doesNotModifyUsernameIfSet() && onlyModifiesVerifiedIfVerified();
-            // Anybody verified can read the fields of a user
-            allow read: if userIsVerified()
+            // Anybody can read the fields of a user.
+            // This is because before user creation, we need to check if the username is free.
+            allow read: if true;
         }
         function isOwner(userId) {
             return request != null &&

@@ -12,20 +12,20 @@ service cloud.firestore {
             allow read: if true;
         }
         match /chats/lobby {
-            allow create: if userVerified();
+            allow create: if userIsVerified();
         }
         match /chats/{chatId} {
-            allow create, delete: if userVerified() && partExistsAndOwnedByCurrentUser(chatId);
+            allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(chatId);
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
             return joiner != null && joiner.creator.id == request.auth.uid;
         }
         match /chats/{chatId}/messages/{messageId} {
-            allow create: if userVerified() && isValidMessage(request.resource.data);
-            allow delete: if userVerified() && isMessageAuthor(resource.data);
-            allow update: if userVerified() && isMessageAuthor(resource.data) && isValidMessage(request.resource.data);
-            allow read: if userVerified();
+            allow create: if userIsVerified() && isValidMessage(request.resource.data);
+            allow delete: if userIsVerified() && isMessageAuthor(resource.data);
+            allow update: if userIsVerified() && isMessageAuthor(resource.data) && isValidMessage(request.resource.data);
+            allow read: if userIsVerified();
         }
         function isValidMessage(message) {
             return hasField(message, 'content') &&
@@ -35,6 +35,7 @@ service cloud.firestore {
                    hasField(message, 'postedTime');
         }
         function hasField(data, field) {
+            // TODO: replace by 'in' (field in data)
             return data[field] != null;
         }
         function isMessageAuthor(message) {
@@ -45,40 +46,44 @@ service cloud.firestore {
         }
         // joueurs will be renamed to users
         match /joueurs/{userId} {
-            // Anybody can create a user
-            allow create: if true;
-            // Only a user can update its own fields
-            allow update: if isOwner(userId);
-            // Anybody can read the fields of a user
+            // Only an authenticated account can create its own user, and they cannot directly be verified
+            allow create: if isOwner(userId) && request.resource.data.verified == false
+            // Only the user can change its fields
+            // Moreover, the username cannot be changed once set
+            // And the verified field can only be changed to true if the user has a username and has its email verified
+            allow update: if isOwner(userId) && doesNotModifyUsernameIfSet() && onlyModifiesVerifiedIfVerified();
+            // Anybody can read the fields of a user.
+            // This is because before user creation, we need to check if the username is free.
             allow read: if true;
-        }
-        match /users/{userId} {
-            // Anybody can create a user
-            allow create: if true;
-            // Only a user can update its own fields
-            allow update: if isOwner(userId);
-            // Anybody can read the fields of a user
-            allow read: if true;
-        }
-        match /parties/{id} {
-            allow write, read: if userVerified();
-        }
-        match /joiners/{id} {
-            allow write, read: if userVerified();
-        }
-        function userVerified() {
-            return isAuthentified() &&
-                   request.auth.uid != null &&
-                   request.auth.token.email_verified == true;
-        }
-        function isAuthentified() {
-            return request != null &&
-                   request.auth != null;
         }
         function isOwner(userId) {
             return request != null &&
                 request.auth != null &&
                 request.auth.uid == userId;
+        }
+        function doesNotModifyUsernameIfSet() {
+            let usernameNotYetSet = ('username' in resource.data) == false;
+            let usernameBeingSet = ('username' in request.resource.data);
+            // It sometimes happens that firebase sends the username as part as updates, even though it is not actually updated. Hence, we accept usernames as part of updates, only if it doesn't change.
+            let doesNotChange = 'username' in resource.data && 'username' in request.resource.data && resource.data['username'] == request.resource.data['username'];
+            return usernameNotYetSet || usernameBeingSet == false || doesNotChange;
+        }
+        function onlyModifiesVerifiedIfVerified() {
+            return hasField(request.resource.data, 'verified') == false ||
+                   request.resource.data.verified == false ||
+                   (userIsVerified() && resource.data.username != null);
+        }
+        match /parties/{id} {
+            allow write, read: if userIsVerified();
+        }
+        match /joiners/{id} {
+            allow write, read: if userIsVerified();
+        }
+        function userIsVerified() {
+            return request != null &&
+                   request.auth != null &&
+                   request.auth.uid != null &&
+                   request.auth.token.email_verified == true;
         }
     }
 }

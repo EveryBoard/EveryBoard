@@ -176,6 +176,8 @@ export class AuthenticationService implements OnDestroy {
         try {
             const userCredential: FireAuth.UserCredential =
                 await Auth.createUserWithEmailAndPassword(this.auth, email, password);
+            // Directly logs in
+            await Auth.signInWithEmailAndPassword(this.auth, email, password);
             const user: FireAuth.User = Utils.getNonNullable(userCredential.user);
             await this.createUser(user.uid, username);
             return MGPFallible.success(user);

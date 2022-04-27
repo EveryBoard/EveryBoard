@@ -345,7 +345,7 @@ describe('AuthenticationService', () => {
     describe('google login', () => {
         it('should delegate to signInPopup and create the user if it does not exist', async() => {
             // given a non-existing google user
-            spyOn(service, 'createUser').and.callThrough();
+            spyOn(service, 'createUser').and.resolveTo();
             const user: FireAuth.User = await createGoogleUser(false);
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
 
