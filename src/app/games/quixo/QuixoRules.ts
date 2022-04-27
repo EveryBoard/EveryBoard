@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
@@ -60,8 +60,9 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         };
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
-                const c: number = state.getPieceAtXY(x, y).value;
-                if (c !== Player.NONE.value) {
+                const content: PlayerOrNone = state.getPieceAtXY(x, y);
+                if (content.isPlayer()) {
+                    const c: number = content.value;
                     sums[c].columns[x] = sums[c].columns[x] + 1;
                     sums[c].rows[y] = sums[c].rows[y] + 1;
                     if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;

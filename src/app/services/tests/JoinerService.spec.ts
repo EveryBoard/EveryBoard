@@ -7,6 +7,7 @@ import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('JoinerService', () => {
 
@@ -49,7 +50,7 @@ describe('JoinerService', () => {
         // Given a JoinerService
         spyOn(dao, 'set');
         // When creating the initial joiner
-        await service.createInitialJoiner('creator', 'id');
+        await service.createInitialJoiner(UserMocks.CREATOR_MINIMAL_USER, 'id');
         // Then it should delegate to the DAO and create the initial joiner
         expect(dao.set).toHaveBeenCalledWith('id', JoinerMocks.INITIAL);
     }));
@@ -73,7 +74,7 @@ describe('JoinerService', () => {
             expect(dao.update).not.toHaveBeenCalled();
 
             // When joining it
-            await service.joinGame('joinerId', JoinerMocks.INITIAL.creator);
+            await service.joinGame('joinerId', JoinerMocks.INITIAL.creator.name);
 
             // Then it should not update the joiner, and the joiner is still the initial one
             expect(dao.update).not.toHaveBeenCalled();

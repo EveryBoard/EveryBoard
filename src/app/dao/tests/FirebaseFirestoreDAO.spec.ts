@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import { FirebaseDocument, FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { FirebaseDocument, FirebaseFirestoreDAO, IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Firestore } from '@angular/fire/firestore';
+import * as Firestore from '@angular/fire/firestore';
 
 interface Foo extends FirebaseJSONObject {
     value: string,
@@ -17,7 +17,7 @@ interface Foo extends FirebaseJSONObject {
     providedIn: 'root',
 })
 class FooDAO extends FirebaseFirestoreDAO<Foo> {
-    constructor(firestore: Firestore) {
+    constructor(firestore: Firestore.Firestore) {
         super('foo', firestore);
     }
 }
@@ -200,6 +200,17 @@ describe('FirebaseFirestoreDAO', () => {
             // Then it should return the matching documents only
             expect(docs.length).toBe(1);
             expect(docs[0].data).toEqual({ value: 'foo', otherValue: 1 });
+        });
+    });
+    describe('subCollectionDAO', () => {
+        it('should provide the subcollection with the fully correct path', async() => {
+            // Given a dao with a certain path
+            const path: string = dao['collection'].path;
+            // When calling subCollectionDAO
+            const subDAO: IFirebaseFirestoreDAO<FirebaseJSONObject> = dao.subCollectionDAO('foo', 'sub');
+            // Then it should have the right path
+            const subDAOPath: string = subDAO['collection'].path;
+            expect(subDAOPath).toEqual(path + '/foo/sub');
         });
     });
 });

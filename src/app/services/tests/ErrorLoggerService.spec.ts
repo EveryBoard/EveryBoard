@@ -10,6 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorDAO, MGPError } from 'src/app/dao/ErrorDAO';
 import { ErrorDAOMock } from 'src/app/dao/tests/ErrorDAOMock.spec';
+import { MessageDisplayer } from '../MessageDisplayer';
 
 describe('ErrorLoggerService', () => {
 
@@ -41,6 +42,20 @@ describe('ErrorLoggerService', () => {
         // Then it throws instead
         expect(() => ErrorLoggerService.logError('component', 'error')).toThrowError('component: error (extra data: undefined)');
     });
+    it('should display a message to let the user know something unusual happened', fakeAsync(async() => {
+        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+        spyOn(messageDisplayer, 'criticalMessage').and.resolveTo();
+
+        // Given an error
+        const component: string = 'Some component';
+        const message: string = 'Some error';
+
+        // When logging it
+        ErrorLoggerService.logError(component, message);
+
+        // Then a message has been shown to the user
+        expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(`An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.`);
+    }));
     it('should add new error to the DB', fakeAsync(async() => {
         // Given an error in a component which has not already been encountered
         const component: string = 'Some component';
@@ -50,7 +65,7 @@ describe('ErrorLoggerService', () => {
 
         // When logging it
         ErrorLoggerService.logError(component, message, data);
-        tick(1000);
+        tick(3000);
 
         // Then the error is stored in the DAO with all expected fields
         const expectedError: MGPError = {
@@ -72,7 +87,7 @@ describe('ErrorLoggerService', () => {
 
         // When logging it
         ErrorLoggerService.logError(component, message);
-        tick(1000);
+        tick(3000);
 
         // Then the error is stored in the DAO with all expected fields
         const expectedError: MGPError = {
@@ -92,14 +107,14 @@ describe('ErrorLoggerService', () => {
         const message: string = 'my new error message';
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
-        tick(1000);
+        tick(3000);
         const errors: FirebaseDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
 
         // When logging it a second time
         ErrorLoggerService.logError(component, message, data);
-        tick(1000);
+        tick(3000);
 
         // Then the error is updated in the DAO with all expected fields
         const update: Partial<MGPError> = {

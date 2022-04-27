@@ -15,30 +15,26 @@ import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
+import { User } from 'src/app/domain/User';
 
 @Injectable()
 export class AuthenticationServiceMock {
-    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser(MGPOptional.of('jean@jaja.europe'),
-                                                                MGPOptional.of('Jean Jaja'),
-                                                                false);
-
-    public static CONNECTED: AuthUser = new AuthUser(MGPOptional.of('jean@jaja.europe'),
-                                                     MGPOptional.of('Jean Jaja'),
-                                                     true);
-
-    public static setUser(user: AuthUser, notifyObservers: boolean = true): void {
-        (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock).setUser(user, notifyObservers);
+    public static setUser(user: AuthUser, notifyObservers: boolean = true, userId: string = 'userId'): void {
+        (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock)
+            .setUser(userId, user, notifyObservers);
     }
 
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
+    public uid: MGPOptional<string> = MGPOptional.empty();
 
     private readonly userRS: ReplaySubject<AuthUser>;
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
-    public setUser(user: AuthUser, notifyObservers: boolean = true): void {
+    public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {
         this.user = MGPOptional.of(user);
+        this.uid = MGPOptional.of(userId);
         // In some very specific cases, changing the status of a user in firebase does not notify the observers.
         // This is the case if a user becomes verified.
         if (notifyObservers) {
@@ -99,17 +95,21 @@ async function setupAuthTestModule(): Promise<unknown> {
  * When using it, don't forget to sign out the user when the test is done, using:
  * await firebase.auth().signOut();
  */
-export async function createConnectedGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
+export async function createConnectedGoogleUser(createInDB: boolean, email: string = 'foo@bar.com', username?: string): Promise<FireAuth.User> {
     TestBed.inject(AuthenticationService);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
-    const token: string = '{"sub": "abc123", "email": "foo@example.com", "email_verified": true}';
+    const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
     if (createInDB) {
-        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { verified: true });
+        const user: User = { verified: true };
+        if (username != null) {
+            user.username = username;
+        }
+        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, user);
     }
     return credential.user;
 }
@@ -416,7 +416,7 @@ describe('AuthenticationService', () => {
         });
     });
     describe('mapFirebaseError', () => {
-        it('calls logError when encountering an unsupported error', async() => {
+        it('should call logError when encountering an unsupported error', async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // given an unsupported error
@@ -433,6 +433,7 @@ describe('AuthenticationService', () => {
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
+                'auth/popup-blocked',
             ];
 
             for (const code of errorCodes) {

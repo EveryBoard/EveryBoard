@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoMinimax } from '../QuixoMinimax';
@@ -11,9 +11,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 describe('QuixoMinimax:', () => {
 
     let minimax: QuixoMinimax;
-    const _: Player = Player.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     beforeEach(() => {
         const rules: QuixoRules = new QuixoRules(QuixoState);
@@ -21,7 +21,7 @@ describe('QuixoMinimax:', () => {
     });
 
     it('Should calcule board value according to longest line differences', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [X, _, _, _, O],
             [X, _, _, _, O],
             [_, _, _, _, _],

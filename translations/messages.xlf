@@ -2092,9 +2092,6 @@
       <trans-unit id="2187377168518132372" datatype="html">
         <source>Be polite</source>
       </trans-unit>
-      <trans-unit id="7206938270697807461" datatype="html">
-        <source>Only connected users can see the chat.</source>
-      </trans-unit>
       <trans-unit id="5112659486997490676" datatype="html">
         <source>no new message</source>
       </trans-unit>
@@ -2560,6 +2557,9 @@
       <trans-unit id="8414332856711181199" datatype="html">
         <source>You closed the authentication popup without finalizing your log in.</source>
       </trans-unit>
+      <trans-unit id="6900649527685820563" datatype="html">
+        <source>The authentication popup was blocked. Try again after disabling popup blocking.</source>
+      </trans-unit>
       <trans-unit id="4550935601489856530" datatype="html">
         <source>Your username may not be empty.</source>
       </trans-unit>
@@ -2571,6 +2571,9 @@
       </trans-unit>
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
+      </trans-unit>
+      <trans-unit id="5968000276977717351" datatype="html">
+        <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
       </trans-unit>
     </body>
   </file>

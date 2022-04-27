@@ -1,7 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -11,7 +13,7 @@ import { SixState } from '../SixState';
 
 describe('SixState', () => {
 
-    const _: number = Player.NONE.value;
+    const _: number = PlayerOrNone.NONE.value;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
 
@@ -114,6 +116,25 @@ describe('SixState', () => {
                 new CoordSet([new Coord(0, 4), new Coord(1, 3)]),
             ]);
             expect(groups.equals(expectedGroups)).toBeTrue();
+        });
+    });
+    describe('switchPiece', () => {
+        it('should throw when trying to switch a piece that does not exist', () => {
+            // Given a state with some pieces
+            const representation: NumberTable = [
+                [_, _, X, _, _],
+                [_, _, X, _, _],
+                [_, _, _, X, X],
+                [_, O, _, _, _],
+                [O, _, _, _, _],
+            ];
+            const state: SixState = SixState.fromRepresentation(representation, 40);
+            // When trying to switch an empty coord
+            // Then it should throw and call logError
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            const errorMessage: string = 'Cannot switch piece if there is no piece!';
+            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('SixState: ' + errorMessage + ' (extra data: {"coord":"(0, 0)"})');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('SixState', errorMessage, { coord: '(0, 0)' });
         });
     });
 });

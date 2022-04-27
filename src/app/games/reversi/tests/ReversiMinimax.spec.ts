@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
@@ -8,9 +8,9 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('ReversiMinimax', () => {
 
-    const _: Player = Player.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     let rules: ReversiRules;
     let minimax: ReversiMinimax;
@@ -28,7 +28,7 @@ describe('ReversiMinimax', () => {
         expect(rules.isLegal(bestMove, rules.node.gameState).isSuccess()).toBeTrue();
     });
     it('should prioritize taking control of the corners', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, X, O, _, _, _, _, _],
             [_, _, X, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -44,7 +44,7 @@ describe('ReversiMinimax', () => {
         expect(bestMove.equals(new ReversiMove(0, 0))).toBeTrue();
     });
     it('Should propose passing move when no other moves are possible', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -62,7 +62,7 @@ describe('ReversiMinimax', () => {
     });
     describe('getBoardValue', () => {
         it('Should get 16 points for corner', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -78,7 +78,7 @@ describe('ReversiMinimax', () => {
             expect(boardValue).toBe(16);
         });
         it('Should get 4 points for edges', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -94,7 +94,7 @@ describe('ReversiMinimax', () => {
             expect(boardValue).toBe(4);
         });
         it('Should get 1 points for normal square', () => {
-            const board: Table<Player> = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],

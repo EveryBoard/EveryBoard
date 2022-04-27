@@ -1,13 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Chat } from '../domain/Chat';
 import { ChatDAO } from '../dao/ChatDAO';
 import { Message } from '../domain/Message';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
-import { ArrayUtils } from '../utils/ArrayUtils';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
+import { ErrorLoggerService } from './ErrorLoggerService';
+import { serverTimestamp } from 'firebase/firestore';
+import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { MinimalUser } from '../domain/MinimalUser';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
@@ -27,18 +29,20 @@ export class ChatService implements OnDestroy {
     constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
-    public startObserving(chatId: string, callback: (chat: MGPOptional<Chat>) => void): void {
+    public startObserving(chatId: string, callback: FirebaseCollectionObserver<Message>): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
         if (this.followedChatId.isAbsent()) {
             display(ChatService.VERBOSE, '[start watching chat ' + chatId);
 
             this.followedChatId = MGPOptional.of(chatId);
-            this.followedChatUnsubscribe = this.chatDAO.subscribeToChanges(chatId, callback);
+            this.followedChatUnsubscribe = this.chatDAO.subscribeToMessages(chatId, callback);
         } else if (this.followedChatId.equalsValue(chatId)) {
-            throw new Error(`WTF :: Already observing chat '${chatId}'`);
+            ErrorLoggerService.logErrorAndFail('ChatService', 'Already observing same chat', { chatId });
         } else {
-            throw new Error(`Cannot ask to watch '${chatId}' while watching '${this.followedChatId.get()}'`);
+            ErrorLoggerService.logErrorAndFail('ChatService',
+                                               'Already observing another chat',
+                                               { chatId, followedChatId: this.followedChatId.get() });
         }
     }
     public stopObserving(): void {
@@ -58,32 +62,27 @@ export class ChatService implements OnDestroy {
         return this.chatDAO.delete(chatId);
     }
     public async createNewChat(id: string): Promise<void> {
-        return this.chatDAO.set(id, {
-            messages: [],
-        });
+        return this.chatDAO.set(id, {});
     }
-    public async sendMessage(userName: string, content: string, currentTurn?: number)
+    public async sendMessage(sender: MinimalUser, content: string, currentTurn?: number)
     : Promise<MGPValidation> {
         if (this.followedChatId.isAbsent()) {
             return MGPValidation.failure('Cannot send message if not observing chat');
         }
         const chatId: string = this.followedChatId.get();
-        if (this.userCanSendMessage(userName, chatId) === false) {
+        if (this.userCanSendMessage(sender.name, chatId) === false) {
             return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE());
         }
         if (this.isForbiddenMessage(content)) {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
-        const chat: Chat = (await this.chatDAO.read(chatId)).get();
-        const messages: Message[] = ArrayUtils.copyImmutableArray(chat.messages);
         const newMessage: Message = {
             content,
-            sender: userName,
-            postedTime: Date.now(),
+            sender,
+            postedTime: serverTimestamp(),
             currentTurn,
         };
-        messages.push(newMessage);
-        await this.chatDAO.update(chatId, { messages });
+        await this.chatDAO.addMessage(chatId, newMessage);
         return MGPValidation.SUCCESS;
     }
     private userCanSendMessage(userName: string, _chatId: string): boolean {

@@ -1,7 +1,7 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
@@ -112,7 +112,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return false;
         }
         const supportedPieces: PylosCoord[] = capture.getHigherPieces()
-            .filter((p: PylosCoord) => state.getPieceAt(p) !== Player.NONE &&
+            .filter((p: PylosCoord) => state.getPieceAt(p).isPlayer() &&
                                        p.equals(move.firstCapture.get()) === false);
         if (supportedPieces.length > 0) {
             return false;
@@ -138,7 +138,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return PylosRules.applyLegalMove(move, state, status);
     }
     public isLegal(move: PylosMove, state: PylosState): MGPFallible<void> {
-        if (state.getPieceAt(move.landingCoord) !== Player.NONE) {
+        if (state.getPieceAt(move.landingCoord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
 
@@ -146,15 +146,15 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
 
         if (move.startingCoord.isPresent()) {
             const startingCoord: PylosCoord = move.startingCoord.get();
-            const startingPiece: Player = state.getPieceAt(startingCoord);
+            const startingPiece: PlayerOrNone = state.getPieceAt(startingCoord);
             if (startingPiece === OPPONENT) {
                 return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
-            } else if (startingPiece === Player.NONE) {
+            } else if (startingPiece === PlayerOrNone.NONE) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
 
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
-                .filter((p: PylosCoord) => state.getPieceAt(p) !== Player.NONE ||
+                .filter((p: PylosCoord) => state.getPieceAt(p).isPlayer() ||
                                            p.equals(move.landingCoord));
             if (supportedPieces.length > 0) {
                 return MGPFallible.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());

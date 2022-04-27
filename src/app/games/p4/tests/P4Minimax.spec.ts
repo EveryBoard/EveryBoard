@@ -3,24 +3,25 @@ import { P4Minimax } from '../P4Minimax';
 import { P4Move } from '../P4Move';
 import { P4State } from '../P4State';
 import { P4Node, P4Rules } from '../P4Rules';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('P4Minimax', () => {
 
     let minimax: P4Minimax;
     let rules: P4Rules;
-    const O: Player = Player.ZERO;
-    const X: Player = Player.ONE;
-    const _: Player = Player.NONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(() => {
         rules = new P4Rules(P4State);
         minimax = new P4Minimax(rules, 'P4Minimax');
     });
     it('Should know when a column is full or not', () => {
-        const board: Player[][] = [
+        const board: Table<PlayerOrNone> = [
             [X, _, _, _, _, _, _],
             [O, _, _, _, _, _, _],
             [X, _, _, _, _, _, _],
@@ -33,7 +34,7 @@ describe('P4Minimax', () => {
         expect(minimax.getListMoves(node).length).toBe(6);
     });
     it('should assign greater score to center column', () => {
-        const weakBoard: Player[][] = [
+        const weakBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -42,7 +43,7 @@ describe('P4Minimax', () => {
             [_, _, _, _, _, _, O],
         ];
         const weakState: P4State = new P4State(weakBoard, 0);
-        const strongBoard: Player[][] = [
+        const strongBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],

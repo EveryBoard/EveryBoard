@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
@@ -13,9 +13,9 @@ describe('AttackEpaminondasMinimax:', () => {
 
     let rules: EpaminondasRules;
     let minimax: AttackEpaminondasMinimax;
-    const _: Player = Player.NONE;
-    const X: Player = Player.ONE;
-    const O: Player = Player.ZERO;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = Player.ZERO;
 
     beforeEach(() => {
         rules = new EpaminondasRules(EpaminondasState);
@@ -25,7 +25,7 @@ describe('AttackEpaminondasMinimax:', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(114);
     });
     it('Should consider possible capture the best move', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
             [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
             [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
@@ -46,7 +46,7 @@ describe('AttackEpaminondasMinimax:', () => {
         expect(bestMove).toEqual(expectedMove);
     });
     it('Should go forward', () => {
-        const greaterBoard: Table<Player> = [
+        const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -61,7 +61,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
         const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 1);
-        const lesserBoard: Table<Player> = [
+        const lesserBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
