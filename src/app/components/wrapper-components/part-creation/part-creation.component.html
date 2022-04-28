@@ -123,12 +123,12 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let candidate of viewInfo.candidates"
-                                            (click)="selectOpponent(candidate)"
+                                            id="presenceOf_{{ candidate }}"
                                             [ngClass]="viewInfo.candidateClasses[candidate]"
-                                            id="presenceOf_{{ candidate }}">
-                                            <td class="td"
-                                                [id]="viewInfo.chosenOpponent === candidate ? ('selected_' + candidate) : ('candidate_' + candidate)"
-                                                >{{ candidate }}</td>
+                                            (click)="selectOpponent(candidate)" >
+                                            <td [id]="viewInfo.chosenOpponent === candidate ? ('selected_' + candidate) : ('candidate_' + candidate)"
+                                                class="td"
+                                            >{{ candidate }}</td>
                                             <td class="td">
                                                 <button *ngIf="viewInfo.chosenOpponent !== candidate"
                                                         class="button is-primary"

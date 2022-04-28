@@ -269,6 +269,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const user: MinimalUser | undefined = candidates.find((c: MinimalUser) => c.name === username);
         return Utils.getNonNullable(user);
     }
+    private getUserFromId(userId: string): MinimalUser {
+        const candidates: MinimalUser[] = Utils.getNonNullable(this.currentJoiner?.candidates);
+        const user: MinimalUser | undefined = candidates.find((c: MinimalUser) => c.id === userId);
+        return Utils.getNonNullable(user);
+    }
     public async changeConfig(): Promise<void> {
         return this.joinerService.reviewConfig();
     }
@@ -439,7 +444,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         assert(index !== -1, 'PartCreationComponent: attempting to remove a user not in the lobby');
         const candidates: MinimalUser[] = joiner.candidates.filter((m: MinimalUser) => m.id !== userId);
         // The chosen player has been removed, the user will have to review the config
-        this.messageDisplayer.infoMessage($localize`${userId} left the game, please pick another opponent.`);
+        const user: MinimalUser = this.getUserFromId(userId);
+        this.messageDisplayer.infoMessage($localize`${user.name} left the game, please pick another opponent.`);
         if (joiner.chosenPlayer?.id === userId) {
             return this.joinerService.reviewConfigAndRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
