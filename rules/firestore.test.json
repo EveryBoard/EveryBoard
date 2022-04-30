@@ -42,8 +42,7 @@ service cloud.firestore {
                    hasField(message, 'postedTime');
         }
         function hasField(data, field) {
-            // TODO: replace by 'in' (field in data)
-            return data[field] != null;
+            return field in data && data[field] != null;
         }
         function isMessageAuthor(message) {
             return request.auth.uid == message.sender.id
@@ -69,10 +68,10 @@ service cloud.firestore {
                 request.auth.uid == userId;
         }
         function doesNotModifyUsernameIfSet() {
-            let usernameNotYetSet = ('username' in resource.data) == false;
-            let usernameBeingSet = ('username' in request.resource.data);
+            let usernameNotYetSet = hasField(resource.data, 'username') == false;
+            let usernameBeingSet = hasField(request.resource.data, 'username');
             // It sometimes happens that firebase sends the username as part as updates, even though it is not actually updated. Hence, we accept usernames as part of updates, only if it doesn't change.
-            let doesNotChange = 'username' in resource.data && 'username' in request.resource.data && resource.data['username'] == request.resource.data['username'];
+            let doesNotChange = hasField(resource.data, 'username') && hasField(request.resource.data, 'username') && resource.data['username'] == request.resource.data['username'];
             return usernameNotYetSet || usernameBeingSet == false || doesNotChange;
         }
         function onlyModifiesVerifiedIfVerified() {
