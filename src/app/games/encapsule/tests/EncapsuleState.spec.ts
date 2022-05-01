@@ -74,7 +74,7 @@ describe('EncapsuleCase', () => {
     describe('tryToSupperposePiece', () => {
         it('should forbid supperposing the empty piece', () => {
             const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
-            expect(() => c.tryToSuperposePiece(EncapsulePiece.NONE)).toThrow();
+            expect(() => c.tryToSuperposePiece(EncapsulePiece.EMPTY)).toThrow();
         });
         it('should forbid superposing a smaller piece', () => {
             const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
@@ -109,7 +109,7 @@ describe('EncapsuleCase', () => {
     describe('put', () => {
         it('should forbid putting a none piece', () => {
             const c: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-            expect(() => c.put(EncapsulePiece.NONE)).toThrow();
+            expect(() => c.put(EncapsulePiece.EMPTY)).toThrow();
         });
         it('should put on top of smaller pieces', () => {
             const c: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);

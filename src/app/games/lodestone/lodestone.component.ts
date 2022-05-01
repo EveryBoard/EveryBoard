@@ -14,7 +14,7 @@ import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestonePiece, LodestonePieceNone } from './LodestonePiece';
 import { LodestoneInfos, LodestoneRules } from './LodestoneRules';
-import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
+import { LodestoneLodestonesPositions, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneTutorial } from './LodestoneTutorial';
 
 interface LodestoneInfo {
@@ -71,6 +71,8 @@ export class LodestoneComponent
     implements OnInit
 {
     public PIECE_RADIUS: number;
+    public TRIANGLE_OUT: string;
+    public TRIANGLE_IN: string;
     public viewInfo: ViewInfo = {
         availableLodestones: [],
         capturesToPlace: [],
@@ -98,6 +100,8 @@ export class LodestoneComponent
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
+        this.TRIANGLE_OUT = `${this.PIECE_RADIUS * 0.8},0 ${this.PIECE_RADIUS * 0.3},${this.PIECE_RADIUS * 0.2} ${this.PIECE_RADIUS * 0.3},${- this.PIECE_RADIUS * 0.2}`;
+        this.TRIANGLE_IN = `${this.PIECE_RADIUS * 0.3},0 ${this.PIECE_RADIUS * 0.8},${this.PIECE_RADIUS * 0.3} ${this.PIECE_RADIUS * 0.8},${- this.PIECE_RADIUS * 0.3}`;
         this.displayedState = this.rules.node.gameState;
         this.scores = MGPOptional.of([0, 0]);
     }
@@ -189,7 +193,7 @@ export class LodestoneComponent
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
-        const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
+        const lodestones: LodestoneLodestonesPositions = [state.lodestones[0], state.lodestones[1]];
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
         this.displayedState = new LodestoneState(board, state.turn, lodestones, pressurePlates);
 
@@ -216,7 +220,7 @@ export class LodestoneComponent
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
-        const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
+        const lodestones: LodestoneLodestonesPositions = [state.lodestones[0], state.lodestones[1]];
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
         this.displayedState = new LodestoneState(board, state.turn, lodestones, pressurePlates);
 

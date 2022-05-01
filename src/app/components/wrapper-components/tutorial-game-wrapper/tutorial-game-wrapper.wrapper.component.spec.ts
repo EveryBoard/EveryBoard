@@ -324,7 +324,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
         it('Should allow to skip step', fakeAsync(async() => {
-            // Given a TutorialStep with one clic
+            // Given a TutorialStep with one click
             wrapper.steps = [
                 TutorialStep.forClick(
                     'title',
@@ -658,10 +658,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     [new QuartoMove(3, 3, QuartoPiece.BBBB)],
                     'Bravo !',
@@ -712,10 +712,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], stepInitialTurn, QuartoPiece.ABBA),
                     [awaitedMove],
                     'Bravo !',
@@ -822,17 +822,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('When unwanted click, and no move done, show restart with possibility of seeing solution', fakeAsync(async() => {
+        it('When unwanted click, and no move done, show restart button with possibility of seeing solution', fakeAsync(async() => {
             // Given a TutorialStep with possible invalid clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     ['#chooseCoord_3_3'],
                     'Bravo !',
@@ -860,7 +860,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
-                    'Click on (0, 0) or (3, 3)',
+                    'Click on (0, 0)',
                     QuartoState.getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Bravo !',
@@ -868,7 +868,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1'); // click at the wrong place!
 
             // When clicking on 'see solution'
             await componentTestUtils.clickElement('#showSolutionButton');

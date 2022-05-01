@@ -17,17 +17,17 @@ export class EncapsulePiece implements ComparableObject {
     public static readonly MEDIUM_WHITE: EncapsulePiece = new EncapsulePiece(3);
     public static readonly BIG_BLACK: EncapsulePiece = new EncapsulePiece(4);
     public static readonly BIG_WHITE: EncapsulePiece = new EncapsulePiece(5);
-    public static readonly NONE: EncapsulePiece = new EncapsulePiece(6);
+    public static readonly EMPTY: EncapsulePiece = new EncapsulePiece(6);
 
     public static of(value: number): EncapsulePiece {
         switch (value) {
-            case 0: return this.SMALL_BLACK;
-            case 1: return this.SMALL_WHITE;
-            case 2: return this.MEDIUM_BLACK;
-            case 3: return this.MEDIUM_WHITE;
-            case 4: return this.BIG_BLACK;
-            case 5: return this.BIG_WHITE;
-            case 6: return this.NONE;
+            case 0: return EncapsulePiece.SMALL_BLACK;
+            case 1: return EncapsulePiece.SMALL_WHITE;
+            case 2: return EncapsulePiece.MEDIUM_BLACK;
+            case 3: return EncapsulePiece.MEDIUM_WHITE;
+            case 4: return EncapsulePiece.BIG_BLACK;
+            case 5: return EncapsulePiece.BIG_WHITE;
+            case 6: return EncapsulePiece.EMPTY;
             default: throw new Error('Invalid value ' + value + ' for EncapsulePiece');
         }
     }
@@ -38,7 +38,7 @@ export class EncapsulePiece implements ComparableObject {
         if (player === Player.ONE && size === Size.BIG) return EncapsulePiece.BIG_WHITE;
         if (player === Player.ONE && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_WHITE;
         if (player === Player.ONE && size === Size.SMALL) return EncapsulePiece.SMALL_WHITE;
-        return EncapsulePiece.NONE;
+        return EncapsulePiece.EMPTY;
     }
 
     private constructor(public readonly value: number) {
@@ -69,7 +69,7 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.SMALL_WHITE:
                 return Size.SMALL;
             default:
-                Utils.expectToBe(this, EncapsulePiece.NONE);
+                Utils.expectToBe(this, EncapsulePiece.EMPTY);
                 return Size.NONE;
         }
     }
@@ -88,7 +88,7 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.SMALL_BLACK: return 'SMALL_BLACK';
             case EncapsulePiece.SMALL_WHITE: return 'SMALL_WHITE';
             default:
-                Utils.expectToBe(this, EncapsulePiece.NONE);
+                Utils.expectToBe(this, EncapsulePiece.EMPTY);
                 return 'NONE';
         }
     }

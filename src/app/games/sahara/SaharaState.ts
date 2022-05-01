@@ -8,7 +8,7 @@ export class SaharaState extends TriangularGameState<FourStatePiece> {
     public static WIDTH: number = 11;
 
     public static getInitialState(): SaharaState {
-        const N: FourStatePiece = FourStatePiece.NONE;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
         const _: FourStatePiece = FourStatePiece.EMPTY;

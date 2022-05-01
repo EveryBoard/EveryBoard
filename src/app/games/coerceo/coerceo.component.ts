@@ -29,7 +29,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
-    public NONE: FourStatePiece = FourStatePiece.NONE;
+    public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
@@ -135,7 +135,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     private wasRemoved(x: number, y: number): boolean {
         const caseContent: FourStatePiece = this.board[y][x];
         const mother: MGPOptional<CoerceoNode> = this.rules.node.mother;
-        if (caseContent === FourStatePiece.NONE && mother.isPresent()) {
+        if (caseContent === FourStatePiece.UNREACHABLE && mother.isPresent()) {
             const previousContent: FourStatePiece = mother.get().gameState.getPieceAtXY(x, y);
             return previousContent === FourStatePiece.EMPTY ||
                    previousContent.is(mother.get().gameState.getCurrentPlayer());

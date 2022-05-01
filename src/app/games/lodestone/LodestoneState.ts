@@ -17,7 +17,7 @@ export class LodestonePressurePlate {
     }
     public remainingSpaces(): number {
         if (this.width === 5) {
-            return 3 + this.width - this.pieces.length;
+            return 8 - this.pieces.length;
         } else {
             return 3 - this.pieces.length;
         }
@@ -53,7 +53,7 @@ export class LodestonePressurePlate {
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
 export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, MGPOptional<LodestonePressurePlate>>
 
-export type LodestoneLodestones = [MGPOptional<Coord>, MGPOptional<Coord>]
+export type LodestoneLodestonesPositions = [MGPOptional<Coord>, MGPOptional<Coord>]
 
 export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
@@ -61,17 +61,17 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
     public static getInitialState(): LodestoneState {
         const _: LodestonePiece = LodestonePieceNone.EMPTY;
-        const A: LodestonePiece = LodestonePiecePlayer.ZERO;
-        const B: LodestonePiece = LodestonePiecePlayer.ONE;
+        const O: LodestonePiece = LodestonePiecePlayer.ZERO;
+        const X: LodestonePiece = LodestonePiecePlayer.ONE;
         const board: Table<LodestonePiece> = [
-            [_, _, A, B, A, B, _, _],
-            [_, A, B, A, B, A, B, _],
-            [A, B, A, B, A, B, A, B],
-            [B, A, B, _, _, A, B, A],
-            [A, B, A, _, _, B, A, B],
-            [B, A, B, A, B, A, B, A],
-            [_, B, A, B, A, B, A, _],
-            [_, _, B, A, B, A, _, _],
+            [_, _, O, X, O, X, _, _],
+            [_, O, X, O, X, O, X, _],
+            [O, X, O, X, O, X, O, X],
+            [X, O, X, _, _, O, X, O],
+            [O, X, O, _, _, X, O, X],
+            [X, O, X, O, X, O, X, O],
+            [_, X, O, X, O, X, O, _],
+            [_, _, X, O, X, O, _, _],
         ];
         return new LodestoneState(board,
                                   0,
@@ -86,7 +86,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
     public constructor(board: Table<LodestonePiece>,
                        turn: number,
-                       public readonly lodestones: LodestoneLodestones,
+                       public readonly lodestones: LodestoneLodestonesPositions,
                        public readonly pressurePlates: LodestonePressurePlates) {
         super(board, turn);
     }
@@ -94,10 +94,10 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         return new LodestoneState(board, this.turn, this.lodestones, this.pressurePlates);
     }
     public remainingSpaces(): number {
-        const remaining: LodestoneCaptures = this.remainingSpacesDetailed();
+        const remaining: LodestoneCaptures = this.remainingSpacesDetails();
         return remaining.top + remaining.bottom + remaining.left + remaining.right;
     }
-    public remainingSpacesDetailed(): LodestoneCaptures {
+    public remainingSpacesDetails(): LodestoneCaptures {
         const remaining: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
         for (const position of LodestonePressurePlate.POSITIONS) {
             const pressurePlate: MGPOptional<LodestonePressurePlate> = this.pressurePlates[position];

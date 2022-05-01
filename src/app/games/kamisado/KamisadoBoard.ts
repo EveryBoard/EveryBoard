@@ -25,7 +25,7 @@ export class KamisadoBoard {
         return KamisadoBoard.COLORS[y][x];
     }
     public static getInitialBoard(): Table<KamisadoPiece> {
-        const _: KamisadoPiece = KamisadoPiece.NONE;
+        const _: KamisadoPiece = KamisadoPiece.EMPTY;
         return [
             [1, 2, 3, 4, 5, 6, 7, 8].map((value: number) => KamisadoPiece.of(Player.ONE, value)),
             [_, _, _, _, _, _, _, _],
@@ -38,7 +38,7 @@ export class KamisadoBoard {
         ];
     }
     public static isEmptyAt(board: Table<KamisadoPiece>, coord: Coord): boolean {
-        return board[coord.y][coord.x].equals(KamisadoPiece.NONE);
+        return board[coord.y][coord.x].equals(KamisadoPiece.EMPTY);
     }
     public static allPieceCoords(board: Table<KamisadoPiece>): Coord[] {
         const l: Coord[] = [];

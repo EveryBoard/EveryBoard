@@ -18,8 +18,8 @@ describe('EncapsulePiece', () => {
             expect(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ONE)).toBe(EncapsulePiece.MEDIUM_WHITE);
         });
         it('should return the none piece if player or size is none', () => {
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.NONE, Player.ONE)).toBe(EncapsulePiece.NONE);
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.NONE)).toBe(EncapsulePiece.NONE);
+            expect(EncapsulePiece.ofSizeAndPlayer(Size.NONE, Player.ONE)).toBe(EncapsulePiece.EMPTY);
+            expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.NONE)).toBe(EncapsulePiece.EMPTY);
         });
     });
     describe('getPlayer', () => {

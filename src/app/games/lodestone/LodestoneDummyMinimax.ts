@@ -14,13 +14,15 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         const state: LodestoneState = node.gameState;
         return this.flatMapEmptyCoords(state, (coord: Coord): LodestoneMove[] => {
             const moves: LodestoneMove[] = [];
-            for (const [direction, diagonal] of this.nextDirectionAndDiagonal(state)) {
-                const infos: LodestoneInfos =
-                    LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
-                const captures: Coord[] = infos.captures;
-                const numberOfCaptures: number = captures.length;
-                for (const captures of this.captureCombinations(state, numberOfCaptures)) {
-                    moves.push(new LodestoneMove(coord, direction, diagonal, captures));
+            for (const direction of this.nextDirection(state)) {
+                for (const diagonal of [true, false]) {
+                    const infos: LodestoneInfos =
+                        LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
+                    const captures: Coord[] = infos.captures;
+                    const numberOfCaptures: number = captures.length;
+                    for (const captures of this.captureCombinations(state, numberOfCaptures)) {
+                        moves.push(new LodestoneMove(coord, direction, diagonal, captures));
+                    }
                 }
             }
             return moves;
@@ -31,7 +33,7 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
             return new MGPSet([{ top: 0, bottom: 0, left: 0, right: 0 }]);
         } else {
             const combinations: MGPSet<LodestoneCaptures> = new MGPSet();
-            const available: LodestoneCaptures = state.remainingSpacesDetailed();
+            const available: LodestoneCaptures = state.remainingSpacesDetails();
             const subCombinations: MGPSet<LodestoneCaptures> = this.captureCombinations(state, numberOfCaptures-1);
             for (const subCombination of subCombinations) {
                 if (subCombination.top + 1 <= available.top) {
@@ -70,19 +72,13 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         }
         return moves;
     }
-    private nextDirectionAndDiagonal(state: LodestoneState): [LodestoneDirection, boolean][] {
+    private nextDirection(state: LodestoneState): LodestoneDirection[] {
         const nextDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection();
-        const nextDirectionAndDiagonal: [LodestoneDirection, boolean][] = [];
         if (nextDirection.isPresent()) {
-            nextDirectionAndDiagonal.push([nextDirection.get(), true]);
-            nextDirectionAndDiagonal.push([nextDirection.get(), false]);
+            return [nextDirection.get()];
         } else {
-            nextDirectionAndDiagonal.push(['push', true]);
-            nextDirectionAndDiagonal.push(['push', false]);
-            nextDirectionAndDiagonal.push(['pull', true]);
-            nextDirectionAndDiagonal.push(['pull', false]);
+            return ['push', 'pull'];
         }
-        return nextDirectionAndDiagonal;
     }
     public getBoardValue(node: LodestoneNode): NodeUnheritance {
         const scores: [number, number] = node.gameState.getScores();

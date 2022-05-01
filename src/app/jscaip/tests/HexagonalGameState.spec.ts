@@ -9,7 +9,7 @@ import { JSONValue } from 'src/app/utils/utils';
 
 export class TestingHexagonalState extends HexagonalGameState<number> {
 
-    public static readonly NONE: number = -1;
+    public static readonly UNREACHABLE: number = -1;
 
     public static empty(width: number,
                         height: number,
@@ -21,8 +21,8 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
         let y: number = 0;
         for (const excluded of excludedCases) {
             for (let i: number = 0; i < excluded; i++) {
-                newBoard[y][i] = TestingHexagonalState.NONE;
-                newBoard[height - (y + 1)][width - (i + 1)] = TestingHexagonalState.NONE;
+                newBoard[y][i] = TestingHexagonalState.UNREACHABLE;
+                newBoard[height - (y + 1)][width - (i + 1)] = TestingHexagonalState.UNREACHABLE;
             }
             y++;
         }
@@ -67,7 +67,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }
-        return this.board[coord.y][coord.x] !== TestingHexagonalState.NONE;
+        return this.board[coord.y][coord.x] !== TestingHexagonalState.UNREACHABLE;
     }
     public numCompare(x: number, y: number): boolean {
         return x === y;

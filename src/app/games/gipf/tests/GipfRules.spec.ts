@@ -17,7 +17,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 describe('GipfRules:', () => {
 
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const A: FourStatePiece = FourStatePiece.ZERO;
     const B: FourStatePiece = FourStatePiece.ONE;

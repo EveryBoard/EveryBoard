@@ -53,8 +53,12 @@ export class LodestonePiecePlayer {
     }
 }
 
+type LodestoneStaticMapping = Record<0 | 1,
+                                     Record<LodestoneDirection,
+                                            Record<'diagonal' | 'orthogonal',
+                                                   LodestonePieceLodestone>>>;
 export class LodestonePieceLodestone {
-    public static LODESTONES: Record<0 | 1, Record<LodestoneDirection, Record<'diagonal' | 'orthogonal', LodestonePieceLodestone>>> = {
+    public static LODESTONES: LodestoneStaticMapping = {
         0: {
             'push': {
                 'diagonal': new LodestonePieceLodestone(Player.ZERO, 'push', true),

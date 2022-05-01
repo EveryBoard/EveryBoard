@@ -27,7 +27,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoState,
                                                                 KamisadoPiece>
 {
-    public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
+    public UNOCCUPIED: KamisadoPiece = KamisadoPiece.EMPTY;
     public lastMove: MGPOptional<KamisadoMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;

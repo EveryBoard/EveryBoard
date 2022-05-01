@@ -8,7 +8,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert } from 'src/app/utils/assert';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
-const NN: DvonnPieceStack = DvonnPieceStack.NONE;
+const NN: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const SO: DvonnPieceStack = DvonnPieceStack.SOURCE;
 const O1: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
 const X1: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;

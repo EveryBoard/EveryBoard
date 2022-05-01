@@ -16,7 +16,7 @@ type KamisadoPieceList = {
 export class KamisadoPiece implements ComparableObject {
     private constructor(public readonly player: PlayerOrNone, public readonly color: KamisadoColor) {
     }
-    public static readonly NONE: KamisadoPiece = new KamisadoPiece(PlayerOrNone.NONE, KamisadoColor.ANY);
+    public static readonly EMPTY: KamisadoPiece = new KamisadoPiece(PlayerOrNone.NONE, KamisadoColor.ANY);
 
     public static of(player: Player, value: number): KamisadoPiece {
         return new KamisadoPiece(player, KamisadoColor.of(value));

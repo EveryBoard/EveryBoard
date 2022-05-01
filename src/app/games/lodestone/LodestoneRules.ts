@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone } from './LodestonePiece';
-import { LodestoneState, LodestoneLodestones, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
+import { LodestoneState, LodestoneLodestonesPositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
 
 export class LodestoneNode extends MGPNode<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos> { }
 
@@ -45,16 +45,15 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(infos.board);
-        const lodestones: LodestoneLodestones = [state.lodestones[0], state.lodestones[1]];
+        const lodestones: LodestoneLodestonesPositions = [state.lodestones[0], state.lodestones[1]];
         lodestones[currentPlayer.value] = MGPOptional.of(move.coord);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         this.updatePressurePlates(board, pressurePlates, lodestones, opponent, move.captures);
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
-
     }
     public updatePressurePlates(board: LodestonePiece[][],
                                 pressurePlates: LodestonePressurePlates,
-                                lodestones: LodestoneLodestones,
+                                lodestones: LodestoneLodestonesPositions,
                                 opponent: Player,
                                 captures: LodestoneCaptures)
     : void
@@ -71,7 +70,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     private updatePressurePlate(board: LodestonePiece[][],
                                 position: LodestonePressurePlatePosition,
                                 pressurePlate: MGPOptional<LodestonePressurePlate>,
-                                lodestones: LodestoneLodestones,
+                                lodestones: LodestoneLodestonesPositions,
                                 opponent: Player,
                                 captured: number)
     : MGPOptional<LodestonePressurePlate>
@@ -96,7 +95,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     private removePressurePlate(board: LodestonePiece[][],
                                 start: Coord,
                                 direction: Direction,
-                                lodestones: LodestoneLodestones): void {
+                                lodestones: LodestoneLodestonesPositions): void {
         for (let coord: Coord = start; // eslint-disable-next-line indent
              coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE); // eslint-disable-next-line indent
              coord = coord.getNext(direction)) {
@@ -131,11 +130,10 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
 
         return MGPFallible.success(infos);
     }
-    public applyMoveWithoutPlacingCaptures(
-        state: LodestoneState,
-        coord: Coord,
-        direction: LodestoneDirection,
-        diagonal: boolean,
+    public applyMoveWithoutPlacingCaptures(state: LodestoneState,
+                                           coord: Coord,
+                                           direction: LodestoneDirection,
+                                           diagonal: boolean,
     ): LodestoneInfos {
         let result: LodestoneInfos;
         if (direction === 'pull') {

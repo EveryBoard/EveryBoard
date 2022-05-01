@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneDummyMinimax } from '../LodestoneDummyMinimax';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
-import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestoneLodestonesPositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneDummyMinimax', () => {
     let rules: LodestoneRules;
@@ -46,7 +46,7 @@ describe('LodestoneDummyMinimax', () => {
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
         ];
-        const lodestones: LodestoneLodestones =
+        const lodestones: LodestoneLodestonesPositions =
             [MGPOptional.of(new Coord(5, 4)), MGPOptional.of(new Coord(4, 2))];
         const pressurePlates: LodestonePressurePlates = {
             top: MGPOptional.empty(),
@@ -73,7 +73,7 @@ describe('LodestoneDummyMinimax', () => {
             [N, _, _, _, _, _, _, N],
             [N, N, N, N, N, N, N, N],
         ];
-        const lodestones: LodestoneLodestones =
+        const lodestones: LodestoneLodestonesPositions =
             [MGPOptional.empty(), MGPOptional.empty()];
         const pressurePlates: LodestonePressurePlates = {
             top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),

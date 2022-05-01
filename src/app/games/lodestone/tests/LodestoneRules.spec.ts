@@ -11,7 +11,7 @@ import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from '../LodestoneRules';
-import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestoneLodestonesPositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneRules', () => {
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
@@ -26,7 +26,7 @@ describe('LodestoneRules', () => {
         right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
     };
 
-    const noLodestone: LodestoneLodestones = [MGPOptional.empty(), MGPOptional.empty()];
+    const noLodestone: LodestoneLodestonesPositions = [MGPOptional.empty(), MGPOptional.empty()];
 
     let rules: LodestoneRules;
     let minimaxes: Minimax<LodestoneMove, LodestoneState, LodestoneInfos>[];
@@ -68,7 +68,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.empty(),
             MGPOptional.of(new Coord(0, 0)),
         ];
@@ -92,7 +92,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.of(new Coord(0, 0)),
             MGPOptional.empty(),
         ];
@@ -111,7 +111,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones = [
+        const expectedLodestones: LodestoneLodestonesPositions = [
             MGPOptional.of(new Coord(0, 0)),
             MGPOptional.empty(),
         ];
@@ -132,7 +132,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.of(new Coord(0, 0)),
             MGPOptional.empty(),
         ];
@@ -151,7 +151,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones = [
+        const expectedLodestones: LodestoneLodestonesPositions = [
             MGPOptional.of(new Coord(1, 0)),
             MGPOptional.empty(),
         ];
@@ -182,7 +182,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.of(new Coord(4, 4)),
             MGPOptional.empty(),
         ];
@@ -206,7 +206,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.of(new Coord(4, 4)),
             MGPOptional.empty(),
         ];
@@ -273,7 +273,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [MGPOptional.of(new Coord(5, 4)), MGPOptional.empty()];
+        const lodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(5, 4)), MGPOptional.empty()];
         const expectedState: LodestoneState = new LodestoneState(expectedBoard, 1, lodestones, allPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -313,7 +313,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, B, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
+        const lodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedState: LodestoneState = new LodestoneState(expectedBoard, 1, lodestones, allPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -344,7 +344,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, B, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
+        const lodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedState: LodestoneState = new LodestoneState(expectedBoard, 1, lodestones, allPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -375,7 +375,7 @@ describe('LodestoneRules', () => {
             [_, _, _, B, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [MGPOptional.of(new Coord(5, 4)), MGPOptional.empty()];
+        const lodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(5, 4)), MGPOptional.empty()];
         const expectedState: LodestoneState = new LodestoneState(expectedBoard, 1, lodestones, allPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -409,7 +409,7 @@ describe('LodestoneRules', () => {
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
             top: MGPOptional.of(new LodestonePressurePlate(5, [LodestonePiecePlayer.ONE])) };
-        const lodestones: LodestoneLodestones = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
+        const lodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedState: LodestoneState = new LodestoneState(expectedBoard, 1, lodestones, pressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -426,7 +426,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [MGPOptional.empty(), MGPOptional.of(new Coord(6, 4))];
+        const lodestones: LodestoneLodestonesPositions = [MGPOptional.empty(), MGPOptional.of(new Coord(6, 4))];
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
         // When placing a lodestone to push Bs
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false);
@@ -442,7 +442,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones =
+        const expectedLodestones: LodestoneLodestonesPositions =
             [MGPOptional.of(new Coord(4, 4)), MGPOptional.of(new Coord(6, 4))];
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
@@ -504,7 +504,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones =
+        const expectedLodestones: LodestoneLodestonesPositions =
             [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
@@ -545,7 +545,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones =
+        const expectedLodestones: LodestoneLodestonesPositions =
             [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
@@ -586,7 +586,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones =
+        const expectedLodestones: LodestoneLodestonesPositions =
             [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
@@ -627,7 +627,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones =
+        const expectedLodestones: LodestoneLodestonesPositions =
             [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
@@ -691,7 +691,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
+        const expectedLodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
             top: MGPOptional.of(LodestonePressurePlate.EMPTY_3),
@@ -717,7 +717,7 @@ describe('LodestoneRules', () => {
             ...allPressurePlates,
             top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ZERO, 4),
         };
-        const lodestones: LodestoneLodestones = [MGPOptional.empty(), MGPOptional.of(new Coord(6, 0))];
+        const lodestones: LodestoneLodestonesPositions = [MGPOptional.empty(), MGPOptional.of(new Coord(6, 0))];
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
         // When placing a lodestone to push one of the B
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', false, { top: 1, bottom: 0, left: 0, right: 0 });
@@ -733,7 +733,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedLodestones: LodestoneLodestones = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
+        const expectedLodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(4, 4)), MGPOptional.empty()];
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
             top: MGPOptional.of(LodestonePressurePlate.EMPTY_3),
@@ -775,7 +775,7 @@ describe('LodestoneRules', () => {
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
         ];
-        const expectedLodestones: LodestoneLodestones = [MGPOptional.of(new Coord(3, 3)), MGPOptional.empty()];
+        const expectedLodestones: LodestoneLodestonesPositions = [MGPOptional.of(new Coord(3, 3)), MGPOptional.empty()];
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, noPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);

@@ -10,7 +10,7 @@ import { LodestoneComponent } from '../lodestone.component';
 import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
-import { LodestoneLodestones, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestoneLodestonesPositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneComponent', () => {
     let testUtils: ComponentTestUtils<LodestoneComponent>;
@@ -141,7 +141,7 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.empty(),
             MGPOptional.empty(),
         ];
@@ -175,7 +175,7 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.empty(),
             MGPOptional.empty(),
         ];
@@ -206,7 +206,7 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.empty(),
             MGPOptional.empty(),
         ];
@@ -240,7 +240,7 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.of(new Coord(0, 0)),
             MGPOptional.empty(),
         ];
@@ -264,7 +264,7 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.empty(),
             MGPOptional.of(new Coord(0, 0)),
         ];
@@ -305,7 +305,7 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestones = [
+        const lodestones: LodestoneLodestonesPositions = [
             MGPOptional.empty(),
             MGPOptional.empty(),
         ];

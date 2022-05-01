@@ -17,7 +17,7 @@ describe('CoerceoRules', () => {
     let minimax: CoerceoMinimax;
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
 

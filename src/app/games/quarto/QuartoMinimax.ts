@@ -36,11 +36,11 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
 
         for (let y: number = 0; y < 4; y++) {
             for (let x: number = 0; x < 4; x++) {
-                if (board[y][x] === QuartoPiece.NONE) {
+                if (board[y][x] === QuartoPiece.EMPTY) {
                     nextBoard = state.getCopiedBoard();
                     nextBoard[y][x] = inHand; // the piece we have in hand is put in (x, y)
                     if (state.turn === 15) {
-                        const move: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
+                        const move: QuartoMove = new QuartoMove(x, y, QuartoPiece.EMPTY);
                         listMoves.push(move);
                         return listMoves;
                     }

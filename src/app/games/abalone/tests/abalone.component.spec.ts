@@ -14,7 +14,7 @@ import { AbaloneMove } from '../AbaloneMove';
 describe('AbaloneComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let componentTestUtils: ComponentTestUtils<AbaloneComponent>;
