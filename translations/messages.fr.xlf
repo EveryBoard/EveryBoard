@@ -3627,6 +3627,10 @@
         <source>You closed the authentication popup without finalizing your log in.</source>
         <target>Vous avez fermé la fenêtre d'authentification sans finaliser votre connexion.</target>
       </trans-unit>
+      <trans-unit id="6900649527685820563" datatype="html">
+        <source>The authentication popup was blocked. Try again after disabling popup blocking.</source>
+        <target>La fenêtre d'authentification a été bloquée. Essayez à nouveau après avoir désactivé votre bloqueur de popup.</target>
+      </trans-unit>
       <trans-unit id="4550935601489856530" datatype="html">
         <source>Your username may not be empty.</source>
         <target>Votre nom d'utilisateur ne peut pas être vide.</target>
@@ -3642,6 +3646,10 @@
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
         <target>Ce message est interdit.</target>
+      </trans-unit>
+      <trans-unit id="5968000276977717351" datatype="html">
+        <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
+        <target>Une erreur inattendue est arrivée. Nous l'avons notée et essayerons de la réparer au plus vite.</target>
       </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
