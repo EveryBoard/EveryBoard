@@ -1,8 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     [attr.viewBox]="(-STROKE_WIDTH / 2) + ' ' + (-STROKE_WIDTH / 2) + ' ' + (5 * SPACE_SIZE) + ' ' + ((8 * SPACE_SIZE) + (3 * STROKE_WIDTH))"
+     [attr.viewBox]="(-STROKE_WIDTH / 2) + ' ' + (-STROKE_WIDTH / 2) + ' ' + (6 * SPACE_SIZE) + ' ' + ((8 * SPACE_SIZE) + (3 * STROKE_WIDTH))"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of board; index as y">
+    <g *ngFor="let line of board; index as y"
+       [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
         <g *ngFor="let piece of line; index as x"
            id="{{ 'click_' + x + '_' + y }}"
            (click)="onClick(x, y)"
@@ -37,7 +38,7 @@
     </g>
     <g id="clockOrCountDownView"
        (click)="onClockClick()"
-       [attr.transform]="'translate(' + (4 * SPACE_SIZE) + ', 0)'">
+       [attr.transform]="'translate(' + (5 * SPACE_SIZE) + ', 0)'">
         <rect x="0" y="0"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
@@ -49,7 +50,7 @@
                 [ngClass]="getClockCircleClasses()" />
         <text *ngIf="countDown.isPresent()"
               id="countDownText"
-              class="text-125 text-center"
+              class="text-75 text-center"
               [ngClass]="'player' + getCurrentPlayer().value"
               [attr.x]="0.5 * SPACE_SIZE"
               [attr.y]="0.5 * SPACE_SIZE"
@@ -61,8 +62,8 @@
                   stroke-linecap="round" />
     </g>
     <line id="canal"
-          [attr.x1]="0"              [attr.y1]="(4 * SPACE_SIZE) + 8"
-          [attr.x2]="4 * SPACE_SIZE" [attr.y2]="(4 * SPACE_SIZE) + 8"
+          [attr.x1]="SPACE_SIZE"     [attr.y1]="(5 * SPACE_SIZE) + 8"
+          [attr.x2]="5 * SPACE_SIZE" [attr.y2]="(5 * SPACE_SIZE) + 8"
           [ngClass]="'player' + getCurrentPlayer().value"
           [attr.stroke-width]="2 * STROKE_WIDTH" />
     <!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
@@ -95,6 +96,39 @@
                    [pieceClasses]="getPieceClasses(0, 0)"
                    [style]="proposedStyle.style" />
             </ng-container>
+        </g>
+    </g>
+    <g id="captures">
+        <g *ngFor="let player of [0, 1]">
+            <g id="{{ 'capture_of_player' + player }}"
+               [attr.transform]="'scale(0.5, 0.5) translate(0, ' + ((SPACE_SIZE / 2) + (player * ((10 * SPACE_SIZE) + (4 * STROKE_WIDTH)))) + ')'">
+                <g *ngFor="let value of state.getCapturesOf(player); index as piece">
+                    <g *ngIf="value > 0"
+                        [attr.transform]="'translate(0, ' + (2 * piece * SPACE_SIZE) + ')'">
+                        <text *ngIf="value > 1"
+                               class="text-75 text-center"
+                               [ngClass]="'player' + (player === 0 ? 1 : 0)"
+                               [attr.x]="SPACE_SIZE / 2"
+                               [attr.y]="SPACE_SIZE / 2"
+                        >{{ value + ' x ' }}</text>
+                        <g id="{{ 'piece_' + piece + '_player_' + player }}"
+                           [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
+                            <g *ngIf="piece === 0"
+                               app-martian-chess-pawn
+                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
+                               [style]="style" />
+                            <g *ngIf="piece === 1"
+                               app-martian-chess-drone
+                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
+                               [style]="style" />
+                            <g *ngIf="piece === 2"
+                               app-martian-chess-queen
+                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
+                               [style]="style" />
+                        </g>
+                    </g>
+                </g>
+            </g>
         </g>
     </g>
 </svg>

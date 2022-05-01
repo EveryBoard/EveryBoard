@@ -40,7 +40,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 0)).get()).toBe(Direction.RIGHT);
             });
             it('should not construct when the move does not correspond to a valid direction', () => {
-                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPFallible.failure('Invalid delta for direction: 5, 3'));
+                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPFallible.failure('None linear move are not allowed: 5, 3'));
             });
         });
         describe('fromString', () => {

@@ -55,10 +55,9 @@ export class MartianChessMove extends MoveCoordToCoord {
         return this.calledTheClock === o.calledTheClock;
     }
     public isValidForPawn(): boolean {
-        const dx: number = this.coord.x - this.end.x;
-        const dy: number = this.coord.y - this.end.y;
-        const direction: MGPFallible<Direction> = Direction.factory.fromDelta(dx, dy);
-        return direction.get().isDiagonal();
+        const dx: number = Math.abs(this.coord.x - this.end.x);
+        const dy: number = Math.abs(this.coord.y - this.end.y);
+        return (dx === 1) && (dy === 1);
     }
     public isInvalidForDrone(): boolean {
         const distance: number = this.coord.getOrthogonalDistance(this.end);

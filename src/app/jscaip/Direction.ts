@@ -69,8 +69,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
-        return MGPFallible.failure(`Invalid delta for direction: ${dx}, ${dy}`); // TODO FOR REVIEW: should I changed this into
-        // $localisable`Non orthogonal direction are not allowed` ?
+        return MGPFallible.failure($localize`None linear move are not allowed: ${dx}, ${dy}`);
     }
     public fromMove(start: Coord, end: Coord): MGPFallible<T> {
         return this.fromDelta(end.x - start.x, end.y - start.y);

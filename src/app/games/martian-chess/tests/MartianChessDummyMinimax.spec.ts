@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
-import { MartianChessPiece, MartianChessState } from '../MartianChessState';
+import { MartianChessCapture, MartianChessPiece, MartianChessState } from '../MartianChessState';
 
 fdescribe('MartianChessDummyMinimax', () => {
 
@@ -152,8 +152,9 @@ fdescribe('MartianChessDummyMinimax', () => {
         const weakState: MartianChessState = MartianChessState.getInitialState();
         const empty: MGPOptional<MartianChessMove> = MGPOptional.empty();
         const strongBoard: Table<MartianChessPiece> = weakState.getCopiedBoard();
-        const captured: MGPMap<Player, number> = weakState.captured.getCopy();
-        captured.replace(Player.ZERO, 1);
+        const captured: MGPMap<Player, MartianChessCapture> = weakState.captured.getCopy();
+        const capturedPawn: MartianChessCapture = MartianChessCapture.from([MartianChessPiece.PAWN]);
+        captured.replace(Player.ZERO, capturedPawn);
         const strongState: MartianChessState = new MartianChessState(strongBoard,
                                                                      0,
                                                                      MGPOptional.empty(),

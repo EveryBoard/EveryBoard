@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
@@ -9,9 +9,9 @@ describe('LinesOfActionMinimax', () => {
     let rules: LinesOfActionRules;
     let minimax: LinesOfActionMinimax;
 
-    const X: Player = Player.ZERO;
-    const O: Player = Player.ONE;
-    const _: Player = Player.NONE;
+    const X: PlayerOrNone = PlayerOrNone.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(() => {
         rules = new LinesOfActionRules(LinesOfActionState);
@@ -23,7 +23,7 @@ describe('LinesOfActionMinimax', () => {
         expect(minimax.getListMoves(node).length).toBe(6 * 3 * 2);
     });
     it('should have 0 moves on a victory state', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [O, _, _, _, X, _, _, O],
             [_, _, X, X, O, _, _, _],

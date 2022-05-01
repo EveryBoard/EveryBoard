@@ -61,7 +61,7 @@ fdescribe('MartianChessComponent', () => {
 
         // When cliking on a invalid second coord
         // Then the move should have been illegal
-        const reason: string = 'Invalid delta for direction: 1, 2';
+        const reason: string = 'None linear move are not allowed: 1, 2';
         await componentTestUtils.expectClickFailure('#click_3_4', reason);
     }));
     it('should attempt the move when doing the second click (illegal)', fakeAsync(async() => {

@@ -186,6 +186,11 @@ fdescribe('TutorialGameWrapperComponent (games)', () => {
                     MartianChessMove.from(new Coord(1, 2), new Coord(0, 3)).get(),
                     MGPValidation.failure(`You did not call the clock!`),
                 ], [
+                    new MartianChessRules(MartianChessState),
+                    martianChessTutorial[11],
+                    MartianChessMove.from(new Coord(2, 4), new Coord(1, 5)).get(),
+                    MGPValidation.failure(`Your piece is still in you territory!`),
+                ], [
                     new PentagoRules(PentagoState),
                     pentagoTutorial[2],
                     PentagoMove.withRotation(0, 0, 0, true),

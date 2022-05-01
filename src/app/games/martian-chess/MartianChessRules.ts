@@ -9,7 +9,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
-import { MartianChessPiece, MartianChessState } from './MartianChessState';
+import { MartianChessCapture, MartianChessPiece, MartianChessState } from './MartianChessState';
 
 export class MartianChessRulesFailure {
 
@@ -22,7 +22,7 @@ export class MartianChessRulesFailure {
 
 export class MartianChessMoveResult {
 
-    score: MGPMap<Player, number>;
+    score: MGPMap<Player, MartianChessCapture>;
 
     landingPiece: MartianChessPiece;
 }
@@ -43,7 +43,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         newBoard[move.coord.y][move.coord.x] = MartianChessPiece.EMPTY;
         const landingPiece: MartianChessPiece = info.landingPiece;
         newBoard[move.end.y][move.end.x] = landingPiece;
-        const captured: MGPMap<Player, number> = info.score;
+        const captured: MGPMap<Player, MartianChessCapture> = info.score;
         let countDown: MGPOptional<number> = state.countDown;
         if (countDown.isPresent()) {
             const isCapture: boolean = this.isMoveCapture(move, state);
@@ -72,12 +72,12 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
             return this.isLegalFieldPromotion(move, state);
         }
         const landingPiece: MartianChessPiece = state.getPieceAt(move.coord);
-        const score: MGPMap<Player, number> = state.captured.getCopy();
+        const score: MGPMap<Player, MartianChessCapture> = state.captured.getCopy();
         if (this.isMoveCapture(move, state)) {
             const currentPlayer: Player = state.getCurrentPlayer();
-            let playerScore: number = score.get(currentPlayer).get();
-            const capturedValue: number = state.getPieceAt(move.end).getValue();
-            playerScore += capturedValue;
+            let playerScore: MartianChessCapture = score.get(currentPlayer).get();
+            const capturedPiece: MartianChessPiece = state.getPieceAt(move.end);
+            playerScore = playerScore.add(capturedPiece);
             score.replace(currentPlayer, playerScore);
             score.makeImmutable();
         }

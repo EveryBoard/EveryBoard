@@ -34,11 +34,46 @@ export class MartianChessPiece {
                 return MartianChessPiece.QUEEN;
         }
     }
-
     private constructor(private readonly value: number) {}
 
     public getValue(): number {
         return this.value;
+    }
+    public equals(other: MartianChessPiece): boolean {
+        return this.getValue() === other.getValue();
+    }
+}
+export class MartianChessCapture {
+
+    public static from(pieces: MartianChessPiece[]): MartianChessCapture {
+        const map: MGPMap<MartianChessPiece, number> = new MGPMap<MartianChessPiece, number>();
+        for (const piece of pieces) {
+            MartianChessCapture.addToMap(map, piece);
+        }
+        return new MartianChessCapture(map);
+    }
+    public static addToMap(map: MGPMap<MartianChessPiece, number>, piece: MartianChessPiece): void {
+        const oldValue: MGPOptional<number> = map.get(piece);
+        if (oldValue.isPresent()) {
+            map.replace(piece, oldValue.get() + 1);
+        } else {
+            map.set(piece, 1);
+        }
+    }
+    constructor(public readonly captures: MGPMap<MartianChessPiece, number>) {
+        captures.makeImmutable();
+    }
+    public toValue(): number {
+        let sum: number = 0;
+        this.captures.forEach((item: {key: MartianChessPiece, value: number}) => {
+            sum += item.key.getValue() * item.value;
+        });
+        return sum;
+    }
+    public add(piece: MartianChessPiece): MartianChessCapture {
+        const newMap: MGPMap<MartianChessPiece, number> = this.captures.getCopy();
+        MartianChessCapture.addToMap(newMap, piece);
+        return new MartianChessCapture(newMap);
     }
 }
 export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
@@ -60,19 +95,19 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         ];
         return new MartianChessState(board, 0, MGPOptional.empty());
     }
-    public readonly captured: MGPMap<Player, number>;
+    public readonly captured: MGPMap<Player, MartianChessCapture>;
 
     public constructor(board: Table<MartianChessPiece>,
                        turn: number,
                        public readonly lastMove: MGPOptional<MartianChessMove> = MGPOptional.empty(),
                        public readonly countDown: MGPOptional<number> = MGPOptional.empty(),
-                       captured?: MGPMap<Player, number>)
+                       captured?: MGPMap<Player, MartianChessCapture>)
     {
         super(board, turn);
         if (captured == null) {
             captured = new MGPMap();
-            captured.set(Player.ZERO, 0);
-            captured.set(Player.ONE, 0);
+            captured.set(Player.ZERO, MartianChessCapture.from([]));
+            captured.set(Player.ONE, MartianChessCapture.from([]));
         }
         captured.makeImmutable();
         this.captured = captured;
@@ -97,7 +132,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         return false;
     }
     public getScoreOf(player: Player): number {
-        return this.captured.get(player).get();
+        return this.captured.get(player).get().toValue();
     }
     public getEmptyTerritory(): MGPOptional<Player> {
         if (this.isTerritoryEmpty(Player.ZERO)) {
@@ -128,5 +163,13 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         const player: Player = this.getCurrentPlayer();
         const opponentTerritoryRange: [number, number] = this.getPlayerTerritory(player);
         return opponentTerritoryRange[0] <= coord.y && coord.y <= opponentTerritoryRange[1];
+    }
+    public getCapturesOf(player: number): [number, number, number] {
+        const capture: MartianChessCapture = this.captured.get(Player.fromTurn(player)).get();
+        return [
+            capture.captures.get(MartianChessPiece.PAWN).getOrElse(0),
+            capture.captures.get(MartianChessPiece.DRONE).getOrElse(0),
+            capture.captures.get(MartianChessPiece.QUEEN).getOrElse(0),
+        ];
     }
 }

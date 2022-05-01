@@ -20,7 +20,7 @@ fdescribe('MartianChessMove', () => {
     });
     it('should be illegal to make a non linar move', () => {
         const move: MGPFallible<MartianChessMove> = MartianChessMove.from(new Coord(0, 0), new Coord(1, 2));
-        const expectedResult: string = 'Invalid delta for direction: 1, 2';
+        const expectedResult: string = 'None linear move are not allowed: 1, 2';
         expect(move.getReasonOr('')).toBe(expectedResult);
     });
     it('should be illegal to make a static move', () => {

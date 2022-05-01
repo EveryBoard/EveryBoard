@@ -12,7 +12,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules, MartianChessRulesFailure } from '../MartianChessRules';
-import { MartianChessPiece, MartianChessState } from '../MartianChessState';
+import { MartianChessCapture, MartianChessPiece, MartianChessState } from '../MartianChessState';
 
 fdescribe('MartianChessRules', () => {
 
@@ -20,6 +20,9 @@ fdescribe('MartianChessRules', () => {
     const A: MartianChessPiece = MartianChessPiece.PAWN;
     const B: MartianChessPiece = MartianChessPiece.DRONE;
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
+
+    const capturedPawn: MartianChessCapture = MartianChessCapture.from([A]);
+    const noCapture: MartianChessCapture = MartianChessCapture.from([]);
 
     let rules: MartianChessRules;
 
@@ -178,6 +181,17 @@ fdescribe('MartianChessRules', () => {
         const reason: string = MartianChessRulesFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+    it('should be illegal to move a pawn like a bishop for further than one step', () => {
+        // Given the initial board
+        const state: MartianChessState = MartianChessState.getInitialState();
+
+        // When moving diagonally of two step one pawn
+        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(0, 4)).get();
+
+        // Then the move should be illegal
+        const reason: string = MartianChessMoveFailure.PAWN_MUST_MOVE_ONE_DIAGONAL_STEP();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
     it('should be legal to move a pawn on one of the 4 diagonal neighboor', () => {
         // Given the initial board
         const state: MartianChessState = MartianChessState.getInitialState();
@@ -251,14 +265,14 @@ fdescribe('MartianChessRules', () => {
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('should add score when capturing', () => {
+    it('should add score when capturing first time', () => {
         // Given a board where a capture can be done
         const board: Table<MartianChessPiece> = [
             [A, _, _, _],
             [_, _, _, _],
             [_, _, _, _],
             [_, A, _, _],
-            [_, _, B, _],
+            [_, _, A, _],
             [_, _, _, _],
             [_, _, _, _],
             [_, _, _, A],
@@ -279,9 +293,54 @@ fdescribe('MartianChessRules', () => {
             [_, _, _, _],
             [_, _, _, A],
         ];
-        const captured: MGPMap<Player, number> = new MGPMap<Player, number>();
-        captured.set(Player.ZERO, 2);
-        captured.set(Player.ONE, 0);
+        const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+        captured.set(Player.ZERO, capturedPawn);
+        captured.set(Player.ONE, noCapture);
+        const expectedState: MartianChessState = new MartianChessState(expectedBoard,
+                                                                       1,
+                                                                       MGPOptional.of(move),
+                                                                       MGPOptional.empty(),
+                                                                       captured);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('should add score when capturing again', () => {
+        // Given a board where a capture can be done again
+        const board: Table<MartianChessPiece> = [
+            [A, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, A, _, _],
+            [_, _, A, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, A],
+        ];
+        const capturedBefore: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+        capturedBefore.set(Player.ZERO, capturedPawn);
+        capturedBefore.set(Player.ONE, noCapture);
+        const state: MartianChessState = new MartianChessState(board,
+                                                               0,
+                                                               MGPOptional.empty(),
+                                                               MGPOptional.empty(),
+                                                               capturedBefore);
+        // When doing this capture
+        const move: MartianChessMove = MartianChessMove.from(new Coord(1, 3), new Coord(2, 4)).get();
+
+        // Then the captured piece should have been added
+        const expectedBoard: Table<MartianChessPiece> = [
+            [A, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, A, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, A],
+        ];
+        const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+        const capturedPawns: MartianChessCapture = MartianChessCapture.from([A, A]);
+        captured.set(Player.ZERO, capturedPawns);
+        captured.set(Player.ONE, noCapture);
         const expectedState: MartianChessState = new MartianChessState(expectedBoard,
                                                                        1,
                                                                        MGPOptional.of(move),
@@ -453,41 +512,38 @@ fdescribe('MartianChessRules', () => {
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory', () => {
                 // Given a boad with only one piece in the current player territory
                 const board: Table<MartianChessPiece> = [
-                    [C, C, B, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
                     [_, C, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [C, _, B, _],
                 ];
-                const state: MartianChessState = new MartianChessState(board, 1);
+                const state: MartianChessState = new MartianChessState(board, 2);
 
                 // When moving the last piece out of your territory
-                const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(1, 0)).get();
+                const move: MartianChessMove = MartianChessMove.from(new Coord(1, 0), new Coord(1, 7)).get();
 
                 // Then the move should be legal and a queen captured
                 const expectedBoard: Table<MartianChessPiece> = [
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
                     [C, C, B, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
                 ];
-                const captured: MGPMap<Player, number> = state.captured.getCopy();
-                captured.replace(Player.ONE, 3);
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard,
-                                                                               2,
+                                                                               3,
                                                                                MGPOptional.of(move),
-                                                                               MGPOptional.empty(),
-                                                                               captured);
+                                                                               MGPOptional.empty());
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('should declare winner last player when one player put its last piece in the opponent territory and score are equal', () => {
                 // Given a boad with only one piece in the current player territory
@@ -636,8 +692,8 @@ fdescribe('MartianChessRules', () => {
                     [_, _, _, _],
                     [_, _, _, _],
                 ];
-                const captured: MGPMap<Player, number> = state.captured.getCopy();
-                captured.replace(Player.ZERO, 1);
+                const captured: MGPMap<Player, MartianChessCapture> = state.captured.getCopy();
+                captured.replace(Player.ZERO, capturedPawn);
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard,
                                                                                1,
                                                                                MGPOptional.of(move),
@@ -645,12 +701,12 @@ fdescribe('MartianChessRules', () => {
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             });
-            it('should end the game when 7 moves passed since clock called, and declare biggest score winner', () => {
+            it('should end the game when 7 moves passed since clock called, and declare biggest score winner (zero)', () => {
                 // Given a board with clock about to "timeout"
                 const initialState: MartianChessState = MartianChessState.getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
-                const captured: MGPMap<Player, number> = initialState.captured.getCopy();
-                captured.replace(Player.ZERO, 1);
+                const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
+                captured.replace(Player.ZERO, capturedPawn);
                 const state: MartianChessState = new MartianChessState(board,
                                                                        0,
                                                                        MGPOptional.empty(),
@@ -679,6 +735,41 @@ fdescribe('MartianChessRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            });
+            it('should end the game when 7 moves passed since clock called, and declare biggest score winner (one)', () => {
+                // Given a board with clock about to "timeout"
+                const initialState: MartianChessState = MartianChessState.getInitialState();
+                const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
+                const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
+                captured.replace(Player.ONE, capturedPawn);
+                const state: MartianChessState = new MartianChessState(board,
+                                                                       0,
+                                                                       MGPOptional.empty(),
+                                                                       MGPOptional.of(1),
+                                                                       captured);
+
+                // When doing the last move
+                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
+
+                // Then the count down should reach zero and the game ended; Zero winning 1-0
+                const expectedBoard: Table<MartianChessPiece> = [
+                    [C, C, B, _],
+                    [C, B, A, _],
+                    [B, A, _, _],
+                    [_, _, _, A],
+                    [_, _, _, _],
+                    [_, A, A, B],
+                    [_, A, B, C],
+                    [_, B, C, C],
+                ];
+                const expectedState: MartianChessState = new MartianChessState(expectedBoard,
+                                                                               1,
+                                                                               MGPOptional.of(move),
+                                                                               MGPOptional.of(0),
+                                                                               captured);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                const node: MartianChessNode = new MartianChessNode(expectedState);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
             it('should end the game when 7 moves passed since clock called, and declare draw if score are equal', () => {
                 // Given a board with clock about to "timeout"

@@ -42,6 +42,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     };
     public readonly pieces: typeof MartianChessPiece = MartianChessPiece;
 
+    public state: MartianChessState;
+
     public readonly configViewTranslation: string;
     public readonly configCogTransformation: string;
 
@@ -131,7 +133,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public getConfigViewTranslation(): string {
         const padding: number = 0;
-        const xTranslate: number = (4 * this.SPACE_SIZE) + padding;
+        const xTranslate: number = (5 * this.SPACE_SIZE) + padding;
         const yTranslate: number = (7 * this.SPACE_SIZE) + padding + (2 * this.STROKE_WIDTH);
         const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
         return translate;
@@ -152,11 +154,11 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return up + ', ' + center + ', ' + right;
     }
     public updateBoard(): void {
-        const state: MartianChessState = this.rules.node.gameState;
-        this.board = state.board;
-        const scoreZero: number = state.getScoreOf(Player.ZERO);
-        const scoreOne: number = state.getScoreOf(Player.ONE);
-        this.countDown = state.countDown;
+        this.state = this.rules.node.gameState;
+        this.board = this.state.board;
+        const scoreZero: number = this.state.getScoreOf(Player.ZERO);
+        const scoreOne: number = this.state.getScoreOf(Player.ONE);
+        this.countDown = this.state.countDown;
         this.scores = MGPOptional.of([scoreZero, scoreOne]);
     }
     public getPieceLocation(x: number, y: number): string {
@@ -201,14 +203,14 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             return this.firstClick(clickedCoord);
         }
     }
-    private async firstClick(clickedCoord: Coord): Promise<MGPValidation> {
-        if (this.getState().getPieceAt(clickedCoord) === MartianChessPiece.EMPTY) {
+    private async firstClick(startCoord: Coord): Promise<MGPValidation> {
+        if (this.getState().getPieceAt(startCoord) === MartianChessPiece.EMPTY) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         } else {
-            const isInPlayerTerritory: boolean = this.getState().isInPlayerTerritory(clickedCoord);
+            const isInPlayerTerritory: boolean = this.getState().isInPlayerTerritory(startCoord);
             if (isInPlayerTerritory) {
-                this.selectedPiece = MGPOptional.of(clickedCoord);
+                this.selectedPiece = MGPOptional.of(startCoord);
                 return MGPValidation.SUCCESS;
             } else {
                 this.cancelMoveAttempt();
@@ -216,14 +218,14 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             }
         }
     }
-    private async secondClick(clickedCoord: Coord):Promise<MGPValidation> {
-        const selectedPiece: Coord = this.selectedPiece.get();
-        if (selectedPiece.equals(clickedCoord)) {
+    private async secondClick(endCoord: Coord):Promise<MGPValidation> {
+        const startCoord: Coord = this.selectedPiece.get();
+        if (startCoord.equals(endCoord)) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         } else {
             const move: MGPFallible<MartianChessMove> =
-                MartianChessMove.from(selectedPiece, clickedCoord, this.callTheClock);
+                MartianChessMove.from(startCoord, endCoord, this.callTheClock);
             if (move.isSuccess()) {
                 const state: MartianChessState = this.rules.node.gameState;
                 return this.chooseMove(move.get(), state);

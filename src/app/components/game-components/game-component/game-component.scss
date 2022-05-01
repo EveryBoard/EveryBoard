@@ -145,8 +145,14 @@
 .text-big {
     font: 50px sans-serif;
 }
-.text-125 {
-    font: 125px sans-serif;
+.text-75 { // TODOTODO: rename the poop out of it
+    font: 3.7rem sans-serif;
+    stroke-width: 0.37rem;
+    dominant-baseline: central;
+}
+.text-25 {
+    font: 1.8rem sans-serif;
+    stroke-width: 0.18rem;
     dominant-baseline: central;
 }
 .text-bold {

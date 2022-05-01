@@ -15,7 +15,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 describe('LinesOfActionRules', () => {
 
     let rules: LinesOfActionRules;
-    let minimax: LinesOfActionMinimax;
+    let minimaxes: Minimax<LinesOfActionMove, LinesOfActionState>[];
     const X: PlayerOrNone = Player.ZERO;
     const O: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;

@@ -75,6 +75,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         this.checkImmutability('replace');
         const oldValue: MGPOptional<V> = this.get(key);
         if (oldValue.isAbsent()) {
+            console.log('No Value to replace for key', key, '!')
             throw new Error('No Value to replace for key '+ key.toString() + '!');
         } else {
             this.put(key, newValue);
