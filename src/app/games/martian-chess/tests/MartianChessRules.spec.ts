@@ -12,9 +12,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules, MartianChessRulesFailure } from '../MartianChessRules';
-import { MartianChessCapture, MartianChessPiece, MartianChessState } from '../MartianChessState';
+import { MartianChessCapture, MartianChessState } from '../MartianChessState';
+import { MartianChessPiece } from '../MartianChessPiece';
 
-fdescribe('MartianChessRules', () => {
+describe('MartianChessRules', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -115,7 +116,7 @@ fdescribe('MartianChessRules', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(2, 4)).get();
 
         // Then the move should be illegal
-        const reason: string = MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEP();
+        const reason: string = MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be illegal to jump over another piece with a queen (aligned move)', () => {
@@ -601,7 +602,7 @@ fdescribe('MartianChessRules', () => {
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard,
                                                                                1,
                                                                                MGPOptional.of(move),
-                                                                               MGPOptional.of(7));
+                                                                               MartianChessRules.STARTING_COUNT_DOWN);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             });
             it('should be "asked to dev" not to call it again on a clock-started state', () => {
@@ -610,7 +611,7 @@ fdescribe('MartianChessRules', () => {
                 const state: MartianChessState = new MartianChessState(board,
                                                                        0,
                                                                        MGPOptional.empty(),
-                                                                       MGPOptional.of(7));
+                                                                       MartianChessRules.STARTING_COUNT_DOWN);
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
                 // When calling the clock once more
@@ -629,7 +630,7 @@ fdescribe('MartianChessRules', () => {
                 ];
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
                 const component: string = 'Assertion failure';
-                const error: string = 'Dont do that you poopydozer';
+                const error: string = 'Should not call the clock twice';
                 expect(() => RulesUtils.expectMoveSuccess(rules, state, move, expectedState)).toThrowError(component + ': ' + error);
                 expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith(component, error);
             });
@@ -639,7 +640,7 @@ fdescribe('MartianChessRules', () => {
                 const state: MartianChessState = new MartianChessState(board,
                                                                        0,
                                                                        MGPOptional.empty(),
-                                                                       MGPOptional.of(7));
+                                                                       MartianChessRules.STARTING_COUNT_DOWN);
 
                 // When doing a move
                 const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
@@ -697,7 +698,7 @@ fdescribe('MartianChessRules', () => {
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard,
                                                                                1,
                                                                                MGPOptional.of(move),
-                                                                               MGPOptional.of(7),
+                                                                               MartianChessRules.STARTING_COUNT_DOWN,
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             });

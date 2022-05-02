@@ -1225,14 +1225,14 @@
       <trans-unit id="3465749033229113029" datatype="html">
         <source>Drones must move two orthogonal steps</source>
       </trans-unit>
-      <trans-unit id="7267826015592863229" datatype="html">
-        <source>Choose a piece from your territory to move it</source>
+      <trans-unit id="9029311278017369367" datatype="html">
+        <source>You must pick a piece from your side of the board in order to move it</source>
       </trans-unit>
-      <trans-unit id="2200409715536430893" datatype="html">
-        <source>This move is not a valid promotion nor a valid capture</source>
+      <trans-unit id="718669789440146602" datatype="html">
+        <source>This is not a valid promotion nor a valid capture</source>
       </trans-unit>
-      <trans-unit id="7520122170266776321" datatype="html">
-        <source>You cannot do a move that is the reversed of the last one</source>
+      <trans-unit id="6727655377292062560" datatype="html">
+        <source>You cannot perform a move that is the reverse of the previous one</source>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
@@ -2026,6 +2026,9 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
       </trans-unit>
+      <trans-unit id="959404061737779252" datatype="html">
+        <source>Non linear move are not allowed: <x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/></source>
+      </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>
       </trans-unit>
@@ -2053,8 +2056,8 @@
       <trans-unit id="1153768241274180865" datatype="html">
         <source>You must choose different starting and ending coordinates.</source>
       </trans-unit>
-      <trans-unit id="5525790446318724698" datatype="html">
-        <source>Something is in the way.</source>
+      <trans-unit id="8967052565751964880" datatype="html">
+        <source>There is a piece between the piece you choose and its landing space.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

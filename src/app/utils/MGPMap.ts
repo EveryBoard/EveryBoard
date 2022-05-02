@@ -4,10 +4,10 @@ import { MGPSet } from './MGPSet';
 import { assert } from './assert';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
-    private map: {key: K, value: V}[] = [];
 
-    private isImmutable: boolean = false;
-
+    public constructor(private map: {key: K, value: V}[] = [],
+                       private isImmutable: boolean = false)
+    { }
     public makeImmutable(): void {
         this.isImmutable = true;
     }
@@ -75,7 +75,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         this.checkImmutability('replace');
         const oldValue: MGPOptional<V> = this.get(key);
         if (oldValue.isAbsent()) {
-            console.log('No Value to replace for key', key, '!')
+            console.log('No Value to replace for key', key, '!');
             throw new Error('No Value to replace for key '+ key.toString() + '!');
         } else {
             this.put(key, newValue);

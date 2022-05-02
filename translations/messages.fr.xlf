@@ -2359,16 +2359,16 @@
         <source>Drones must move two orthogonal steps</source>
         <target>Les drônes doivent se déplacer de deux cases horizontalement et/ou verticalement</target>
       </trans-unit>
-      <trans-unit id="7267826015592863229" datatype="html">
-        <source>Choose a piece from your territory to move it</source>
+      <trans-unit id="9029311278017369367" datatype="html">
+        <source>You must pick a piece from your side of the board in order to move it</source>
         <target>Choisissez une pièce de votre propre territoire pour la déplacer</target>
       </trans-unit>
-      <trans-unit id="2200409715536430893" datatype="html">
-        <source>This move is not a valid promotion nor a valid capture</source>
+      <trans-unit id="718669789440146602" datatype="html">
+        <source>This is not a valid promotion nor a valid capture</source>
         <target>Ce mouvement n'est ni une promotion valide ni une capture valide</target>
       </trans-unit>
-      <trans-unit id="7520122170266776321" datatype="html">
-        <source>You cannot do a move that is the reversed of the last one</source>
+      <trans-unit id="6727655377292062560" datatype="html">
+        <source>You cannot perform a move that is the reverse of the previous one</source>
         <target>Vous ne pouvez pas faire le mouvement inverse au dernier coup</target>
       </trans-unit>
       <trans-unit id="8829851561226315844" datatype="html">
@@ -3309,9 +3309,9 @@
         <source>Soldiers cannot sit on the throne.</source>
         <target>Les soldats n&apos;ont pas le droit de se poser sur le trône.</target>
       </trans-unit>
-      <trans-unit id="5525790446318724698" datatype="html">
-        <source>Something is in the way.</source>
-        <target>Le chemin est obstrué.</target>
+      <trans-unit id="8967052565751964880" datatype="html">
+        <source>There is a piece between the piece you choose and its landing space.</source>
+        <target>Il y a une pièce entre la pièce que vous avez choisie et sa case d'atterissage.</target>
       </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
@@ -3574,6 +3574,10 @@
         ou même d'effectuer plusieurs captures !
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
         Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="959404061737779252" datatype="html">
+        <source>Non linear move are not allowed: <x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/></source>
+        <target>Les mouvements non linéaire ne sont pas authorisés: <x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/></target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

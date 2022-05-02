@@ -9,15 +9,16 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
-import { MartianChessCapture, MartianChessPiece, MartianChessState } from './MartianChessState';
+import { MartianChessCapture, MartianChessState } from './MartianChessState';
+import { MartianChessPiece } from './MartianChessPiece';
 
 export class MartianChessRulesFailure {
 
-    public static readonly MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY: () => string = () => $localize`Choose a piece from your territory to move it`;
+    public static readonly MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY: () => string = () => $localize`You must pick a piece from your side of the board in order to move it`;
 
-    public static readonly CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT: () => string = () => $localize`This move is not a valid promotion nor a valid capture`;
+    public static readonly CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT: () => string = () => $localize`This is not a valid promotion nor a valid capture`;
 
-    public static readonly CANNOT_UNDO_LAST_MOVE: () => string = () => $localize`You cannot do a move that is the reversed of the last one`;
+    public static readonly CANNOT_UNDO_LAST_MOVE: () => string = () => $localize`You cannot perform a move that is the reverse of the previous one`;
 }
 
 export class MartianChessMoveResult {
@@ -34,6 +35,8 @@ export class MartianChessNode extends MGPNode<Rules<MartianChessMove, MartianChe
 
 export class MartianChessRules extends Rules<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
+    public static readonly STARTING_COUNT_DOWN: MGPOptional<number> = MGPOptional.of(7);
+
     public applyLegalMove(move: MartianChessMove,
                           state: MartianChessState,
                           info: MartianChessMoveResult)
@@ -46,16 +49,16 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         const captured: MGPMap<Player, MartianChessCapture> = info.score;
         let countDown: MGPOptional<number> = state.countDown;
         if (countDown.isPresent()) {
-            const isCapture: boolean = this.isMoveCapture(move, state);
+            const isCapture: boolean = this.isCapture(move, state);
             if (isCapture) {
-                countDown = MGPOptional.of(7);
+                countDown = MartianChessRules.STARTING_COUNT_DOWN;
             } else {
                 const previousRemainingTurn: number = state.countDown.get();
                 countDown = MGPOptional.of(previousRemainingTurn - 1);
             }
         }
         if (move.calledTheClock) {
-            countDown = MGPOptional.of(7);
+            countDown = MartianChessRules.STARTING_COUNT_DOWN;
         }
         return new MartianChessState(newBoard, state.turn + 1, MGPOptional.of(move), countDown, captured);
     }
@@ -68,37 +71,37 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         if (move.isUndoneBy(state.lastMove)) {
             return MGPFallible.failure(MartianChessRulesFailure.CANNOT_UNDO_LAST_MOVE());
         }
-        if (this.isMoveFieldPromotion(move, state)) {
+        if (this.isFieldPromotion(move, state)) {
             return this.isLegalFieldPromotion(move, state);
         }
         const landingPiece: MartianChessPiece = state.getPieceAt(move.coord);
-        const score: MGPMap<Player, MartianChessCapture> = state.captured.getCopy();
-        if (this.isMoveCapture(move, state)) {
+        const captured: MGPMap<Player, MartianChessCapture> = state.captured.getCopy();
+        if (this.isCapture(move, state)) {
             const currentPlayer: Player = state.getCurrentPlayer();
-            let playerScore: MartianChessCapture = score.get(currentPlayer).get();
+            let playerScore: MartianChessCapture = captured.get(currentPlayer).get();
             const capturedPiece: MartianChessPiece = state.getPieceAt(move.end);
             playerScore = playerScore.add(capturedPiece);
-            score.replace(currentPlayer, playerScore);
-            score.makeImmutable();
+            captured.replace(currentPlayer, playerScore);
+            captured.makeImmutable();
         }
-        const moveResult: MartianChessMoveResult = { landingPiece, score };
+        const moveResult: MartianChessMoveResult = { landingPiece, score: captured };
         return MGPFallible.success(moveResult);
     }
     private assertNonDoubleClockCall(move: MartianChessMove, state: MartianChessState) {
         const clockHadAlreadyBeenCalled: boolean = state.countDown.isPresent();
         const clockCalledThisTurn: boolean = move.calledTheClock;
         const doubleClockCall: boolean = clockHadAlreadyBeenCalled && clockCalledThisTurn;
-        assert(doubleClockCall === false, 'Dont do that you poopydozer');
+        assert(doubleClockCall === false, 'Should not call the clock twice');
     }
-    private isMoveCapture(move: MartianChessMove, state: MartianChessState): boolean {
-        const moveEndInOpponentTerritory: boolean = state.isInOpponentTerritory(move.end);
-        const moveEndOnPiece: boolean = state.getPieceAt(move.end) !== MartianChessPiece.EMPTY;
-        return moveEndInOpponentTerritory && moveEndOnPiece;
+    private isCapture(move: MartianChessMove, state: MartianChessState): boolean {
+        const moveEndsInOpponentTerritory: boolean = state.isInOpponentTerritory(move.end);
+        const moveEndsOnPiece: boolean = state.getPieceAt(move.end) !== MartianChessPiece.EMPTY;
+        return moveEndsInOpponentTerritory && moveEndsOnPiece;
     }
-    private isMoveFieldPromotion(move: MartianChessMove, state: MartianChessState): boolean {
-        const moveEndInPlayerTerritory: boolean = state.isInPlayerTerritory(move.end);
-        const moveEndOnPiece: boolean = state.getPieceAt(move.end) !== MartianChessPiece.EMPTY;
-        return moveEndInPlayerTerritory && moveEndOnPiece;
+    private isFieldPromotion(move: MartianChessMove, state: MartianChessState): boolean {
+        const moveEndsInPlayerTerritory: boolean = state.isInPlayerTerritory(move.end);
+        const moveEndsOnPiece: boolean = state.getPieceAt(move.end) !== MartianChessPiece.EMPTY;
+        return moveEndsInPlayerTerritory && moveEndsOnPiece;
     }
     private isLegalFieldPromotion(move: MartianChessMove,
                                   state: MartianChessState)
@@ -134,15 +137,16 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
                 return MGPFallible.failure(MartianChessMoveFailure.PAWN_MUST_MOVE_ONE_DIAGONAL_STEP());
             }
         } else if (movedPiece === MartianChessPiece.DRONE) {
-            if (move.isInvalidForDrone()) {
-                return MGPFallible.failure(MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEP());
-            }
-            const direction: Direction = move.coord.getDirectionToward(move.end).get();
-            if (direction.isDiagonal()) {
-                const isDiagonalLegalForDrone: boolean = this.isDiagonalLegalForDrone(state, direction, move.coord);
-                if (isDiagonalLegalForDrone === false) {
-                    return MGPFallible.failure(RulesFailure.SOMETHING_IN_THE_WAY());
+            if (move.isValidForDrone()) {
+                const direction: Direction = move.coord.getDirectionToward(move.end).get();
+                if (direction.isDiagonal()) {
+                    const isDiagonalLegalForDrone: boolean = this.isDiagonalLegalForDrone(state, direction, move.coord);
+                    if (isDiagonalLegalForDrone === false) {
+                        return MGPFallible.failure(RulesFailure.SOMETHING_IN_THE_WAY());
+                    }
                 }
+            } else {
+                return MGPFallible.failure(MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS());
             }
         }
         const direction: Direction = move.coord.getDirectionToward(move.end).get();
@@ -158,11 +162,11 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
     public isDiagonalLegalForDrone(state: MartianChessState, diagonal: Direction, startingCoord: Coord): boolean {
         const verticalVector: Vector = new Vector(0, diagonal.y);
         const verticalStep: Coord = startingCoord.getNext(verticalVector);
-        const verticalCoordIsStepable: boolean = state.getPieceAt(verticalStep) === MartianChessPiece.EMPTY;
+        const verticalNeighboorIsEmpty: boolean = state.getPieceAt(verticalStep) === MartianChessPiece.EMPTY;
         const horizontalVector: Vector = new Vector(diagonal.x, 0);
         const horizontalStep: Coord = startingCoord.getNext(horizontalVector);
-        const horizontalCoordIsStepable: boolean = state.getPieceAt(horizontalStep) === MartianChessPiece.EMPTY;
-        return verticalCoordIsStepable || horizontalCoordIsStepable;
+        const horizontalNeighboorIsEmpty: boolean = state.getPieceAt(horizontalStep) === MartianChessPiece.EMPTY;
+        return verticalNeighboorIsEmpty || horizontalNeighboorIsEmpty;
     }
     public getCreatedPiece(move: MartianChessMove, state: MartianChessState): MGPOptional<MartianChessPiece> {
         const startPiece: MartianChessPiece = state.getPieceAt(move.coord);
@@ -171,7 +175,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
     }
     public getGameStatus(node: MartianChessNode): GameStatus {
         const state: MartianChessState = node.gameState;
-        if (state.countDown.getOrElse(42) === 0) {
+        if (state.countDown.equalsValue(0)) {
             return this.getGameStatusScoreVictoryOr(state, GameStatus.DRAW);
         }
         const emptyTerritory: MGPOptional<Player> = state.getEmptyTerritory();

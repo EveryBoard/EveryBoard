@@ -2,47 +2,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
+import { MGPSet } from 'src/app/utils/MGPSet';
 import { MartianChessMove } from './MartianChessMove';
+import { MartianChessPiece } from './MartianChessPiece';
 
-export class MartianChessPiece {
-
-    public static EMPTY: MartianChessPiece = new MartianChessPiece(0);
-    public static PAWN: MartianChessPiece = new MartianChessPiece(1);
-    public static DRONE: MartianChessPiece = new MartianChessPiece(2);
-    public static QUEEN: MartianChessPiece = new MartianChessPiece(3);
-
-    public static tryMerge(left: MartianChessPiece, right: MartianChessPiece): MGPOptional<MartianChessPiece> {
-        const firstValue: number = left.value;
-        const secondValue: number = right.value;
-        assert(firstValue !== 0 && secondValue !== 0, 'tryMerge cannot be called with empty pieces');
-        const totalValue: number = firstValue + secondValue;
-        if (totalValue === 2 || totalValue === 3) {
-            return MGPOptional.of(MartianChessPiece.from(totalValue));
-        } else {
-            return MGPOptional.empty();
-        }
-    }
-    private static from(value: number): MartianChessPiece {
-        switch (value) {
-            case MartianChessPiece.DRONE.value: return MartianChessPiece.DRONE;
-            default:
-                Utils.expectToBe(value, MartianChessPiece.QUEEN.value);
-                return MartianChessPiece.QUEEN;
-        }
-    }
-    private constructor(private readonly value: number) {}
-
-    public getValue(): number {
-        return this.value;
-    }
-    public equals(other: MartianChessPiece): boolean {
-        return this.getValue() === other.getValue();
-    }
-}
 export class MartianChessCapture {
 
     public static from(pieces: MartianChessPiece[]): MartianChessCapture {
@@ -78,6 +43,10 @@ export class MartianChessCapture {
 }
 export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
 
+    public static readonly PLAYER_ZERO_TERRITORY: MGPSet<number> = new MGPSet([0, 1, 2, 3]);
+
+    public static readonly PLAYER_ONE_TERRITORY: MGPSet<number> = new MGPSet([4, 5, 6, 7]);
+
     public static getInitialState(): MartianChessState {
         const _: MartianChessPiece = MartianChessPiece.EMPTY;
         const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -112,17 +81,17 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         captured.makeImmutable();
         this.captured = captured;
     }
-    public getPlayerTerritory(player: Player): [number, number] {
+    public getPlayerTerritory(player: Player): MGPSet<number> {
         if (player === Player.ZERO) {
-            return [0, 3];
+            return MartianChessState.PLAYER_ZERO_TERRITORY;
         } else {
-            return [4, 7];
+            return MartianChessState.PLAYER_ONE_TERRITORY;
         }
     }
     public isTherePieceOnPlayerSide(piece: MartianChessPiece): boolean {
         const currentPlayer: Player = this.getCurrentPlayer();
-        const yRange: [number, number] = this.getPlayerTerritory(currentPlayer);
-        for (let y: number = yRange[0]; y <= yRange[1]; y++) {
+        const playerTerritory: MGPSet<number> = this.getPlayerTerritory(currentPlayer);
+        for (const y of playerTerritory) {
             for (let x: number = 0; x < 4; x++) {
                 if (this.getPieceAtXY(x, y) === piece) {
                     return true;
@@ -144,8 +113,8 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         }
     }
     public isTerritoryEmpty(player: Player): boolean {
-        const yRange: [number, number] = this.getPlayerTerritory(player);
-        for (let y: number = yRange[0]; y <= yRange[1]; y++) {
+        const playerTerritory: MGPSet<number> = this.getPlayerTerritory(player);
+        for (const y of playerTerritory) {
             for (let x: number = 0; x < 4; x++) {
                 if (this.getPieceAtXY(x, y) !== MartianChessPiece.EMPTY) {
                     return false;
@@ -156,13 +125,13 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
     }
     public isInOpponentTerritory(coord: Coord): boolean {
         const opponent: Player = this.getCurrentOpponent();
-        const opponentTerritoryRange: [number, number] = this.getPlayerTerritory(opponent);
-        return opponentTerritoryRange[0] <= coord.y && coord.y <= opponentTerritoryRange[1];
+        const opponentTerritory: MGPSet<number> = this.getPlayerTerritory(opponent);
+        return opponentTerritory.contains(coord.y);
     }
     public isInPlayerTerritory(coord: Coord): boolean {
         const player: Player = this.getCurrentPlayer();
-        const opponentTerritoryRange: [number, number] = this.getPlayerTerritory(player);
-        return opponentTerritoryRange[0] <= coord.y && coord.y <= opponentTerritoryRange[1];
+        const playerTerritory: MGPSet<number> = this.getPlayerTerritory(player);
+        return playerTerritory.contains(coord.y);
     }
     public getCapturesOf(player: number): [number, number, number] {
         const capture: MartianChessCapture = this.captured.get(Player.fromTurn(player)).get();

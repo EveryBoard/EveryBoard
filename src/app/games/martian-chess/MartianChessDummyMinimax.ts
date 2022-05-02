@@ -7,7 +7,9 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
-import { MartianChessPiece, MartianChessState } from './MartianChessState';
+import { MartianChessState } from './MartianChessState';
+import { MartianChessPiece } from './MartianChessPiece';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
@@ -17,20 +19,20 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     public getListMoves(node: MartianChessNode): MartianChessMove[] {
         const state: MartianChessState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
-        const yRange: [number, number] = state.getPlayerTerritory(currentPlayer);
-        const moves: MartianChessMove[] = [];
-        for (let y: number = yRange[0]; y <= yRange[1]; y++) {
+        const playerTerritory: MGPSet<number> = state.getPlayerTerritory(currentPlayer);
+        let moves: MartianChessMove[] = [];
+        for (const y of playerTerritory) {
             for (let x: number = 0; x < 4; x++) {
                 const piece: MartianChessPiece = state.getPieceAtXY(x, y);
                 switch (piece) {
                     case MartianChessPiece.PAWN:
-                        moves.push(...this.getMoveForPawn(x, y, state));
+                        moves = moves.concat(this.getMovesForPawnAt(state, x, y));
                         break;
                     case MartianChessPiece.DRONE:
-                        moves.push(...this.getMoveForDrone(x, y, state));
+                        moves = moves.concat(this.getMovesForDroneAt(state, x, y));
                         break;
                     case MartianChessPiece.QUEEN:
-                        moves.push(...this.getMoveForQueen(x, y, state));
+                        moves = moves.concat(this.getMovesForQueenAt(state, x, y));
                         break;
                     default:
                         break;
@@ -39,7 +41,7 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
         }
         return moves;
     }
-    public getMoveForPawn(x: number, y: number, state: MartianChessState): MartianChessMove[] {
+    public getMovesForPawnAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const coord: Coord = new Coord(x, y);
         const landingCoords: Coord[] = [];
         for (const dir of Direction.DIRECTIONS.filter((d: Direction) => d.isDiagonal())) {
@@ -86,10 +88,10 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     private add(moves: MartianChessMove[],
                 move: MartianChessMove,
                 canCallTheClock: boolean,
-                optLast: MGPOptional<MartianChessMove> = MGPOptional.empty())
+                last: MGPOptional<MartianChessMove> = MGPOptional.empty())
     : void
     {
-        const isCancellingLastMove: boolean = move.isUndoneBy(optLast);
+        const isCancellingLastMove: boolean = move.isUndoneBy(last);
         if (isCancellingLastMove === false) {
             moves.push(move);
             if (canCallTheClock) {
@@ -98,40 +100,36 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
             }
         }
     }
-    public getMoveForDrone(x: number, y: number, state: MartianChessState): MartianChessMove[] {
+    public getMovesForDroneAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const coord: Coord = new Coord(x, y);
-        const diagonalLandingCoords: Coord[] = this.getValidDiagonalCoordForDrone(coord, state);
-        const verticalLandingCoords: Coord[] = this.getValidVerticalCoordForDrone(coord, state);
-        const landingCoords: Coord[] = diagonalLandingCoords.concat(verticalLandingCoords);
+        const landingCoords: Coord[] = this.getValidLandingCoordForDrone(coord, state);
         return this.addMoves(state, coord, landingCoords);
     }
-    private getValidDiagonalCoordForDrone(startingCoord: Coord, state: MartianChessState) {
-        const diagonalLandingCoords: Coord[] = [];
-        for (const dir of Direction.DIRECTIONS.filter((d: Direction) => d.isDiagonal())) {
-            const landingCoord: Coord = startingCoord.getNext(dir);
-            if (landingCoord.isInRange(4, 8)) {
-                const diagonalIsLegalForDrone: boolean = this.ruler.isDiagonalLegalForDrone(state, dir, startingCoord);
-                if (diagonalIsLegalForDrone) {
-                    diagonalLandingCoords.push(landingCoord);
+    private getValidLandingCoordForDrone(startingCoord: Coord, state: MartianChessState): Coord[] {
+        const landingCoords: Coord[] = [];
+        for (const dir of Direction.DIRECTIONS) {
+            if (dir.isDiagonal()) {
+                const landingCoord: Coord = startingCoord.getNext(dir);
+                if (landingCoord.isInRange(4, 8)) {
+                    const diagonalIsLegalForDrone: boolean =
+                        this.ruler.isDiagonalLegalForDrone(state, dir, startingCoord);
+                    if (diagonalIsLegalForDrone) {
+                        landingCoords.push(landingCoord);
+                    }
+                }
+            } else {
+                const landingCoord: Coord = startingCoord.getNext(dir, 2);
+                if (landingCoord.isInRange(4, 8)) {
+                    const intermediaryStep: Coord = startingCoord.getNext(dir, 1);
+                    if (state.getPieceAt(intermediaryStep) === MartianChessPiece.EMPTY) {
+                        landingCoords.push(landingCoord);
+                    }
                 }
             }
         }
-        return diagonalLandingCoords;
+        return landingCoords;
     }
-    private getValidVerticalCoordForDrone(coord: Coord, state: MartianChessState) {
-        const verticalLandingCoords: Coord[] = [];
-        for (const dir of Direction.DIRECTIONS.filter((d: Direction) => d.isVertical())) {
-            const landingCoord: Coord = coord.getNext(dir, 2);
-            if (landingCoord.isInRange(4, 8)) {
-                const intermediaryStep: Coord = coord.getNext(dir, 1);
-                if (state.getPieceAt(intermediaryStep) === MartianChessPiece.EMPTY) {
-                    verticalLandingCoords.push(landingCoord);
-                }
-            }
-        }
-        return verticalLandingCoords;
-    }
-    public getMoveForQueen(x: number, y: number, state: MartianChessState): MartianChessMove[] {
+    public getMovesForQueenAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const startingCoord: Coord = new Coord(x, y);
         const landingCoords: Coord[] = this.getLandingCoordForQueen(startingCoord, state);
         return this.addMoves(state, startingCoord, landingCoords);
@@ -141,16 +139,16 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
         for (const dir of Direction.DIRECTIONS) {
             let dist: number = 1;
             let landingCoord: Coord = startingCoord.getNext(dir, dist);
-            let landingContent: MartianChessPiece | null = state.getPieceAtOrNull(landingCoord);
-            let possible: boolean = landingContent === MartianChessPiece.EMPTY;
+            let landingContent: MGPOptional<MartianChessPiece> = state.tryToGetPieceAt(landingCoord);
+            let possible: boolean = landingContent.equalsValue(MartianChessPiece.EMPTY);
             while (possible) {
                 landingCoords.push(landingCoord);
                 dist++;
                 landingCoord = startingCoord.getNext(dir, dist);
-                landingContent = state.getPieceAtOrNull(landingCoord);
-                possible = landingContent === MartianChessPiece.EMPTY;
+                landingContent = state.tryToGetPieceAt(landingCoord);
+                possible = landingContent.equalsValue(MartianChessPiece.EMPTY);
             }
-            if (landingContent != null && state.isInOpponentTerritory(landingCoord)) {
+            if (landingContent.isPresent() && state.isInOpponentTerritory(landingCoord)) {
                 landingCoords.push(landingCoord);
             }
         }

@@ -1,5 +1,5 @@
 <!-- Shape -->
-<svg:polygon *ngIf="style.shape === 'Polygone'"
+<svg:polygon *ngIf="style.shape === 'Polygon'"
              [id]="mainShapeId"
              class="base"
              [attr.points]="MartianChessPawnComponent.TRIANGLE"

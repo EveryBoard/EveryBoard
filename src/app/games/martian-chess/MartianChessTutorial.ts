@@ -3,7 +3,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MartianChessMove } from './MartianChessMove';
-import { MartianChessPiece, MartianChessState } from './MartianChessState';
+import { MartianChessState } from './MartianChessState';
+import { MartianChessPiece } from './MartianChessPiece';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
 const A: MartianChessPiece = MartianChessPiece.PAWN;

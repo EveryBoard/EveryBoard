@@ -1,6 +1,6 @@
 <!-- Represented inside a SPACE_SIZE x SPACE_SIZE square -->
 <!-- Shapes -->
-<svg:polygon *ngIf="style.shape === 'Polygone'"
+<svg:polygon *ngIf="style.shape === 'Polygon'"
              [id]="mainShapeId"
              class="base"
              [attr.points]="MartianChessDroneComponent.PENTAGON"

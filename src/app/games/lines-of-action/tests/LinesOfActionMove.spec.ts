@@ -19,7 +19,7 @@ describe('LinesOfActionMove', () => {
         expect(LinesOfActionMove.of(new Coord(7, 7), new Coord(9, 9))).toEqual(MGPFallible.failure('end coord is not in range'));
     });
     it('should not create a move with an invalid direction', () => {
-        expect(LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPFallible.failure('None linear move are not allowed: 1, 2'));
+        expect(LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPFallible.failure('Non linear move are not allowed: 1, 2'));
     });
     describe('toString', () => {
         it('should be defined', () => {

@@ -9,14 +9,15 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MartianChessDummyMinimax } from './MartianChessDummyMinimax';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
-import { MartianChessPiece, MartianChessState } from './MartianChessState';
+import { MartianChessState } from './MartianChessState';
+import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessTutorial } from './MartianChessTutorial';
 
 export type MartianChessFace = {
     readonly shape: MartianChessShape,
     readonly points: MartianChessPoint,
 };
-export type MartianChessShape = 'Star' | 'Polygone' | 'Circle';
+export type MartianChessShape = 'Star' | 'Polygon' | 'Circle';
 export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Points';
 
 @Component({
@@ -53,11 +54,11 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
 
     public callTheClock: boolean = false;
 
-    public displayModePannel: boolean = false;
+    public displayModePanel: boolean = false;
 
     public listOfStyles: { name: string, style: MartianChessFace }[] = [
         { name: 'Star', style: { shape: 'Star', points: 'Dots' } },
-        { name: 'Polygone', style: { shape: 'Polygone', points: 'Concentric Circles' } },
+        { name: 'Polygon', style: { shape: 'Polygon', points: 'Concentric Circles' } },
         { name: 'Simple', style: { shape: 'Circle', points: 'Horizontal Points' } },
         { name: 'Circely', style: { shape: 'Circle', points: 'Concentric Circles' } },
     ];
@@ -191,7 +192,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        this.displayModePannel = false;
+        this.displayModePanel = false;
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -287,10 +288,10 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
     public onModeCogClick(): void {
-        this.displayModePannel = !this.displayModePannel;
+        this.displayModePanel = !this.displayModePanel;
     }
     public chooseStyle(n: number): void {
         this.style = this.listOfStyles[n].style;
-        this.displayModePannel = false;
+        this.displayModePanel = false;
     }
 }

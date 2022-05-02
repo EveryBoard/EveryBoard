@@ -133,8 +133,8 @@ export class MGPNode<R extends Rules<M, S, L>,
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-EndGame(' + MGPNode.ruler.getGameStatus(this).winner.toString() + ') : ' + this.myToString() + ' at depth ' + depth);
             return this; // rules - leaf or calculation - leaf
         }
-        const possibleMoves: M[] = this.getPossibleMoves(minimax);
-        assert(possibleMoves.length > 0, 'Minimax ' + minimax.name + ' should give move, received none!');
+        const possibleMoves: MGPSet<M> = this.getPossibleMoves(minimax);
+        assert(possibleMoves.size() > 0, 'Minimax ' + minimax.name + ' should give move, received none!');
         if (this.childs.isAbsent()) {
             this.childs = MGPOptional.of([]);
         }
@@ -150,17 +150,17 @@ export class MGPNode<R extends Rules<M, S, L>,
         this.hopedValue.put(minimax.toString(), bestChildHopedValue);
         return bestChild;
     }
-    private getPossibleMoves(minimax: Minimax<M, S, L, U>): M[] {
+    private getPossibleMoves(minimax: Minimax<M, S, L, U>): MGPSet<M> {
         const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
         if (currentMoves.isAbsent()) {
             const moves: M[] = minimax.getListMoves(this);
             this.possibleMoves.set(minimax.name, new MGPSet(moves));
-            return moves;
+            return new MGPSet(moves);
         } else {
-            return currentMoves.get().toList();
+            return currentMoves.get();
         }
     }
-    private getBestChilds(possibleMoves: M[],
+    private getBestChilds(possibleMoves: MGPSet<M>,
                           depth: number,
                           alpha: number,
                           beta: number,
@@ -197,7 +197,6 @@ export class MGPNode<R extends Rules<M, S, L>,
                 alpha = Math.max(extremumExpected, alpha);
             }
         }
-        console.table(bestChilds.map((n: MGPNode<R, M, S, L, U>) => n.getOwnValue(minimax) + ' : ' + n.move.toString()))
         return bestChilds;
     }
     private getBestChildAmongst(bestChilds: MGPNode<R, M, S, L, U>[], random: boolean): MGPNode<R, M, S, L, U> {
@@ -213,7 +212,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
             const moveString: string = move.toString();
-            const message: string = 'The minimax has accepted an illegal move (' + moveString + '), this should not happen.';
+            const message: string = 'The minimax "' + minimax.name + '" has proposed an illegal move (' + moveString + '), this should not happen.';
             assert(legality.isSuccess(), message);
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, legality.get());
             child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));

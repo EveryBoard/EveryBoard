@@ -39,7 +39,7 @@ export class MartianChessPawnComponent {
         return halfFreeRoom;
     }
     public getConcreteTriangleYOffset(): number {
-        if (this.style.shape === 'Polygone') {
+        if (this.style.shape === 'Polygon') {
             return MartianChessPawnComponent.TRIANGLE_Y_OFFSET;
         } else {
             return 0;

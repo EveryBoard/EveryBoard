@@ -73,7 +73,7 @@ import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules
 import { MartianChessState } from 'src/app/games/martian-chess/MartianChessState';
 import { MartianChessMove } from 'src/app/games/martian-chess/MartianChessMove';
 
-fdescribe('TutorialGameWrapperComponent (games)', () => {
+describe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Game should load correctly', () => {
         for (const game of GameInfo.ALL_GAMES()) {

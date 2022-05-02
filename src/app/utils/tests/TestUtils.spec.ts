@@ -149,7 +149,7 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
         if (element.attributes.class != null && element.attributes.class !== '') {
-            const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
+            const elementClasses: string[] = element.attributes.class.split(' ').sort();
             expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
         }
     }
@@ -427,13 +427,13 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        if (element.attributes.class != null) {
-            const classAttribute: string = Utils.getNonNullable(element.attributes.class);
+        if (element.attributes.class == null) {
+            expect(false).withContext(elementName + ' should have class atrribute').toBeTrue();
+        } else {
+            const classAttribute: string = element.attributes.class;
             expect(classAttribute).withContext(elementName + ' should have a class attribute').toBeTruthy();
             const elementClasses: string[] = Utils.getNonNullable(classAttribute).split(' ').sort();
             expect(elementClasses).withContext(elementName + ' should contain ' + cssClass).toContain(cssClass);
-        } else {
-            expect(false).withContext(elementName + ' should have class atrribute').toBeTrue();
         }
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
@@ -441,9 +441,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         if (element.attributes.class == null) {
             throw new Error(`${elementName} should have a class attribute`);
+        } else {
+            const elementClasses: string[] = element.attributes.class.split(' ').sort();
+            expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
         }
-        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
-        expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();

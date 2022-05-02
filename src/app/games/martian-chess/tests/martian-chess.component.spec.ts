@@ -8,9 +8,10 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessRulesFailure } from '../MartianChessRules';
-import { MartianChessPiece, MartianChessState } from '../MartianChessState';
+import { MartianChessState } from '../MartianChessState';
+import { MartianChessPiece } from '../MartianChessPiece';
 
-fdescribe('MartianChessComponent', () => {
+describe('MartianChessComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<MartianChessComponent>;
 
@@ -61,7 +62,7 @@ fdescribe('MartianChessComponent', () => {
 
         // When cliking on a invalid second coord
         // Then the move should have been illegal
-        const reason: string = 'None linear move are not allowed: 1, 2';
+        const reason: string = 'Non linear move are not allowed: 1, 2';
         await componentTestUtils.expectClickFailure('#click_3_4', reason);
     }));
     it('should attempt the move when doing the second click (illegal)', fakeAsync(async() => {
@@ -206,27 +207,27 @@ fdescribe('MartianChessComponent', () => {
         }));
     });
     describe('Visual Modes', () => {
-        it('should unfold "Mode Pannel" when clicking on the cog', fakeAsync(async() => {
+        it('should unfold "Mode Panel" when clicking on the cog', fakeAsync(async() => {
             // Given the initial board
             // When clicking on the cog
             await componentTestUtils.clickElement('#modeCog');
 
-            // Then the modePannel should be displayed
-            componentTestUtils.expectElementToExist('#modePannel');
+            // Then the modePanel should be displayed
+            componentTestUtils.expectElementToExist('#modePanel');
         }));
-        it('should fold "Mode Pannel" when clicking again on the cog', fakeAsync(async() => {
+        it('should fold "Mode Panel" when clicking again on the cog', fakeAsync(async() => {
             // Given the initial board with a clicked cog
             await componentTestUtils.clickElement('#modeCog');
 
             // When clicking on the cog again
             await componentTestUtils.clickElement('#modeCog');
 
-            // Then the modePannel should not be displayed
-            componentTestUtils.expectElementNotToExist('#modePannel');
+            // Then the modePanel should not be displayed
+            componentTestUtils.expectElementNotToExist('#modePanel');
         }));
         it('should test all view mode', fakeAsync(async() => {
             for (const styleAndName of componentTestUtils.getComponent().listOfStyles) {
-                // Given a board in the initial mode with pannel mode displayed
+                // Given a board in the initial mode with panel mode displayed
                 await componentTestUtils.clickElement('#modeCog');
 
                 // When clicking on the shape named like the style

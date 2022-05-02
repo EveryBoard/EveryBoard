@@ -14,7 +14,7 @@ export class MartianChessMoveFailure {
 
     public static readonly PAWN_MUST_MOVE_ONE_DIAGONAL_STEP: () => string = () => $localize`Pawns must move one diagonal step`;
 
-    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEP: () => string = () => $localize`Drones must move two orthogonal steps`;
+    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS: () => string = () => $localize`Drones must move two orthogonal steps`;
 }
 
 export class MartianChessMove extends MoveCoordToCoord {
@@ -23,7 +23,7 @@ export class MartianChessMove extends MoveCoordToCoord {
         [Coord.numberEncoder(4, 8), Coord.numberEncoder(4, 8), NumberEncoder.booleanEncoder],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.coord, move.end, move.calledTheClock],
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
-    ); // TODO FOR REVIEW: une fois qu'on a des examples, j'avoue ça défonce du ponichon !
+    );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
         if (start.isNotInRange(4, 8)) {
             return MGPFallible.failure(MartianChessMoveFailure.START_COORD_OUT_OF_RANGE);
@@ -59,9 +59,9 @@ export class MartianChessMove extends MoveCoordToCoord {
         const dy: number = Math.abs(this.coord.y - this.end.y);
         return (dx === 1) && (dy === 1);
     }
-    public isInvalidForDrone(): boolean {
+    public isValidForDrone(): boolean {
         const distance: number = this.coord.getOrthogonalDistance(this.end);
-        return distance !== 2;
+        return distance === 2;
     }
     public isUndoneBy(moveOpt: MGPOptional<MartianChessMove>): boolean {
         if (moveOpt.isAbsent()) {

@@ -8,9 +8,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
-import { MartianChessCapture, MartianChessPiece, MartianChessState } from '../MartianChessState';
+import { MartianChessCapture, MartianChessState } from '../MartianChessState';
+import { MartianChessPiece } from '../MartianChessPiece';
 
-fdescribe('MartianChessDummyMinimax', () => {
+describe('MartianChessDummyMinimax', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
