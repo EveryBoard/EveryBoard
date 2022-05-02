@@ -83,13 +83,30 @@ service cloud.firestore {
             allow write, read: if userIsVerified();
         }
         match /joiners/{id} {
-            allow write, read: if userIsVerified();
+            // Anybody can create a joiner as long as they are themselves creator
+            // TODO AND if the corresponding part exists
+            allow create: if userIsVerified() && userIsCreator(request.resource.data);
+            // Anybody can add or remove themselves to the candidate list, leaving the other candidates untouched.
+            // Moreover, a chosenPlayer can remove itself
+            allow update: if userIsVerified() && validChangeForNonCreator();
+            // Only creator can change other fields
+            allow update: if userIsVerified() && userIsCreator(resource.data);
+            // Anybody can read
+            allow read: if userIsVerified();
         }
         function userIsVerified() {
             return request != null &&
                    request.auth != null &&
                    request.auth.uid != null &&
                    request.auth.token.email_verified == true;
+        }
+        function userIsCreator(joiner) {
+            return joiner.creator != null &&
+                   joiner.creator.id == request.auth.uid &&
+                   joiner.creator.name == usernameOf(request.auth.uid);
+        }
+        function validChangeForNonCreator() {
+            return true;
         }
     }
 }
