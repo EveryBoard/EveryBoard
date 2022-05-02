@@ -28,18 +28,18 @@
                             [attr.r]="PIECE_RADIUS" />
                     <circle class="base no-stroke"
                             [ngClass]="square.lodestone.pieceClasses"
-                            [attr.r]="PIECE_RADIUS" />
+                            [attr.r]="PIECE_RADIUS / 4" />
                     <g attr.transform="rotate({{ square.lodestone.diagonal ? 45 : 0 }})">
                         <g *ngFor="let i of [0, 1, 2, 3]">
                             <polygon *ngIf="square.lodestone.direction === 'push'"
                                      class="base no-stroke"
                                      [ngClass]="square.lodestone.movingClass"
-                                     attr.points="TRIANGLE_OUT"
+                                     [attr.points]="TRIANGLE_OUT"
                                      attr.transform="rotate({{ i * 90 }})" />
                             <polygon *ngIf="square.lodestone.direction === 'pull'"
                                      class="base no-stroke"
                                      [ngClass]="square.lodestone.movingClass"
-                                     attr.points="TRIANGLE_IN"
+                                     [attr.points]="TRIANGLE_IN"
                                      attr.transform="rotate({{ i * 90 }})" />
                         </g>
                     </g>
@@ -69,12 +69,12 @@
                 <polygon *ngIf="lodestone.direction === 'push'"
                          class="base no-stroke"
                          [ngClass]="lodestone.movingClass"
-                         attr.points="TRIANGLE_OUT"
+                         [attr.points]="TRIANGLE_OUT"
                          attr.transform="rotate({{ i * 90 }})" />
                 <polygon *ngIf="lodestone.direction === 'pull'"
                          class="base no-stroke"
                          [ngClass]="lodestone.movingClass"
-                         attr.points="TRIANGLE_IN"
+                         [attr.points]="TRIANGLE_IN"
                          attr.transform="rotate({{ i * 90 }})" />
             </g>
         </g>
