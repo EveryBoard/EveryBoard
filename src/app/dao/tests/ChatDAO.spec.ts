@@ -60,7 +60,7 @@ describe('ChatDAO', () => {
         let otherMessageId: string;
         beforeEach(async() => {
             // Given a user
-            const other: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'other-user');
+            const other: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'other-user');
             // and a chat (here the lobby, but this could be any chat)
             await chatDAO.set('lobby', {});
             // with a message from another user
@@ -76,7 +76,7 @@ describe('ChatDAO', () => {
             otherMessageId = await chatDAO.addMessage('lobby', message);
             await signOut();
             // and a message from the current user, who is able to add messages
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
             myUser = {
                 name: 'user',
                 id: user.uid,
@@ -151,7 +151,7 @@ describe('ChatDAO', () => {
     describe('on the lobby chat', () => {
         it('should allow a verified user to create the lobby chat', async() => {
             // Given a verified user
-            await createConnectedGoogleUser(true);
+            await createConnectedGoogleUser('foo@bar.com');
             // When creating the 'lobby' chat
             const chatCreation: Promise<void> = chatDAO.set('lobby', {});
             // Then it succeeds
@@ -168,7 +168,7 @@ describe('ChatDAO', () => {
         });
         it('should allow a verified user to post a message on the lobby chat', async() => {
             // Given a verified user
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'myself');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'myself');
             const myUser: MinimalUser = {
                 name: 'myself',
                 id: user.uid,
@@ -206,7 +206,7 @@ describe('ChatDAO', () => {
     describe('on a part chat', () => {
         it('should allow a part owner to create the corresponding chat', async() => {
             // Given a verified user who is a part owner
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'creator');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId, 'creator');
             // When creating the corresponding chat
@@ -216,7 +216,7 @@ describe('ChatDAO', () => {
         });
         it('should allow a part owner to delete the corresponding chat', async() => {
             // Given a verified user who is a part owner, and a chat
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'creator');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId, 'creator');
             await chatDAO.set(partId, {});
@@ -227,7 +227,7 @@ describe('ChatDAO', () => {
         });
         it('should forbid creating a chat if there is no corresponding part', async() => {
             // Given a verified user and no corresponding part
-            await createConnectedGoogleUser(true);
+            await createConnectedGoogleUser('foo@bar.com');
             // When creating a part chat
             const result: Promise<void> = chatDAO.set('unexisting-part-id', {});
             // Then it should fail
@@ -235,10 +235,10 @@ describe('ChatDAO', () => {
         });
         it('should forbid a non-part owner to create the corresponding chat', async() => {
             // Given a part and verified user who is not a part owner
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'creator');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
             const partId: string = await createPartAndJoiner(user.uid, 'creator');
             await signOut();
-            await createConnectedGoogleUser(true, 'bar@bar.com', 'username');
+            await createConnectedGoogleUser('bar@bar.com', 'username');
             // When creating a part chat
             const result: Promise<void> = chatDAO.set(partId, {});
             // Then it should fail
@@ -246,12 +246,12 @@ describe('ChatDAO', () => {
         });
         it('should forbid a non-part owner to delete the corresponding chat', async() => {
             // Given a part, a chat, and a non-part owner user
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'creator');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId, 'creator');
             await chatDAO.set(partId, {});
             await signOut();
-            await createConnectedGoogleUser(true, 'bar@bar.com');
+            await createConnectedGoogleUser('bar@bar.com');
             // When deleting the chat
             const result: Promise<void> = chatDAO.delete(partId);
             // Then it should fail

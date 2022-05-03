@@ -15,7 +15,6 @@ import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { User } from 'src/app/domain/User';
 
 @Injectable()
 export class AuthenticationServiceMock {
@@ -95,7 +94,7 @@ async function setupAuthTestModule(): Promise<unknown> {
  * When using it, don't forget to sign out the user when the test is done, using:
  * await firebase.auth().signOut();
  */
-export async function createConnectedGoogleUser(createInDB: boolean, email: string = 'foo@bar.com', username?: string): Promise<FireAuth.User> {
+export async function createConnectedGoogleUser(email: string, username?: string): Promise<FireAuth.User> {
     TestBed.inject(AuthenticationService);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
@@ -104,20 +103,42 @@ export async function createConnectedGoogleUser(createInDB: boolean, email: stri
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    if (createInDB) {
-        await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
-        if (username != null) {
-            // This needs to happen in multiple updates to match the security rules
-            await TestBed.inject(UserDAO).update(credential.user.uid, { username });
-            await TestBed.inject(UserDAO).update(credential.user.uid, { verified: true });
-        }
+    await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
+    if (username != null) {
+        // This needs to happen in multiple updates to match the security rules
+        await TestBed.inject(UserDAO).update(credential.user.uid, { username });
+        await TestBed.inject(UserDAO).update(credential.user.uid, { verified: true });
     }
     return credential.user;
 }
 
-async function createGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
-    const user: FireAuth.User = await createConnectedGoogleUser(createInDB);
-    await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
+export async function reconnectUser(email: string): Promise<void> {
+    const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
+    await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+                                        FireAuth.GoogleAuthProvider.credential(token));
+}
+
+export async function createUnverifiedUser(email: string, username?: string): Promise<FireAuth.User> {
+    const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": false}';
+    const credential: FireAuth.UserCredential =
+        await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+                                            FireAuth.GoogleAuthProvider.credential(token));
+    await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
+    if (username != null) {
+        // This needs to happen in multiple updates to match the security rules
+        await TestBed.inject(UserDAO).update(credential.user.uid, { username });
+        await TestBed.inject(UserDAO).update(credential.user.uid, { verified: true });
+    }
+    return credential.user;
+}
+
+export function signOut(): Promise<void> {
+    return TestBed.inject(FireAuth.Auth).signOut();
+}
+
+async function createDisconnectedGoogleUser(email: string): Promise<FireAuth.User> {
+    const user: FireAuth.User = await createConnectedGoogleUser(email);
+    await signOut();
     return user;
 }
 
@@ -258,7 +279,7 @@ describe('AuthenticationService', () => {
         });
         it('should fail if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
-            await createConnectedGoogleUser(true);
+            await createConnectedGoogleUser('foo@bar.com');
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // when the email verification is requested
@@ -346,7 +367,11 @@ describe('AuthenticationService', () => {
         it('should delegate to signInPopup and create the user if it does not exist', async() => {
             // given a non-existing google user
             spyOn(service, 'createUser').and.resolveTo();
-            const user: FireAuth.User = await createGoogleUser(false);
+            const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
+            const credential: FireAuth.UserCredential =
+                await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+                                                    FireAuth.GoogleAuthProvider.credential(token));
+            const user: FireAuth.User = credential.user;
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
 
             // when the user registers and connects with google
@@ -361,9 +386,9 @@ describe('AuthenticationService', () => {
             expect(service.createUser).toHaveBeenCalledWith(user.uid);
         });
         it('should not create the user if it already exists', async() => {
-            // given a google user
+            // given a disconnected google user
             spyOn(service, 'createUser');
-            const user: FireAuth.User = await createGoogleUser(true);
+            const user: FireAuth.User = await createDisconnectedGoogleUser('foo@bar.com');
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
 
             // when the user connects with google
@@ -471,7 +496,7 @@ describe('AuthenticationService', () => {
     describe('setUsername', () => {
         beforeEach(async() => {
             // given a registered and logged in user
-            await createConnectedGoogleUser(true);
+            await createConnectedGoogleUser('foo@bar.com');
         });
         it('should update the username', async() => {
             // when the username is set
@@ -516,7 +541,7 @@ describe('AuthenticationService', () => {
     describe('setPicture', () => {
         it('should update the picture', async() => {
             // given a registered and logged in user
-            await createConnectedGoogleUser(true);
+            await createConnectedGoogleUser('foo@bar.com');
 
             // when the picture is set
             const photoURL: string = 'http://my.pic/foo.png';
@@ -529,7 +554,7 @@ describe('AuthenticationService', () => {
         it('should not throw upon failure', async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // given a registered and logged in user
-            await createConnectedGoogleUser(true);
+            await createConnectedGoogleUser('foo@bar.com');
 
             // when the picture is set but fails
             const error: FirebaseError = new FirebaseError('unknown/error', 'Error');

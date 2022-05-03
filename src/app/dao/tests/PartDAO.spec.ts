@@ -73,7 +73,7 @@ describe('PartDAO', () => {
         const username: string = 'jeanjaja';
         beforeEach(async() => {
             // These tests need a logged in user to create documents
-            await createConnectedGoogleUser(true);
+            await createConnectedGoogleUser('foo@bar.com');
         });
         it('should return true when user has an active part as player zero', async() => {
             // Given a part where user is player zero
@@ -106,7 +106,7 @@ describe('PartDAO', () => {
     });
     it('should allow a verified user to create a part', async() => {
         // Given a verified user
-        await createConnectedGoogleUser(true, 'foo@bar.com', 'creator');
+        await createConnectedGoogleUser('foo@bar.com', 'creator');
         // When creating a part
         const result: Promise<string> = partDAO.create(PartMocks.INITIAL);
         // Then it should succeed

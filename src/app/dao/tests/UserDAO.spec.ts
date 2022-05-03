@@ -58,7 +58,7 @@ describe('UserDAO', () => {
     describe('setUsername', () => {
         it('should change the username of a user', async() => {
             // given a google user
-            const user: FireAuth.User = await createConnectedGoogleUser(true);
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com');
             const uid: string = user.uid;
 
             // when its username is set
@@ -74,9 +74,9 @@ describe('UserDAO', () => {
     describe('security', () => {
         it('should authorize connected user to read any other user', async() => {
             // Given an existing user and a logged in user
-            const other: FireAuth.User = await createConnectedGoogleUser(true, 'bar@bar.com', 'other-user');
+            const other: FireAuth.User = await createConnectedGoogleUser('bar@bar.com', 'other-user');
             await signOut();
-            await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
+            await createConnectedGoogleUser('foo@bar.com', 'user');
 
             // When trying to read another user
             const otherUserRead: MGPOptional<User> = await dao.read(other.uid);
@@ -86,7 +86,7 @@ describe('UserDAO', () => {
         });
         it('should allow disconnected user to read any user', async() => {
             // Given an existing user and a disconnected visitor
-            const other: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'other-user');
+            const other: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'other-user');
             await signOut();
 
             // When trying to read a user
@@ -108,7 +108,7 @@ describe('UserDAO', () => {
         });
         it('should forbid to create a user with a different id than our own', async() => {
             // Given an existing, logged in user
-            await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
+            await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set another user in the DB
             const result: Promise<void> = dao.set('some-other-uid', { verified: false });
             // Then it should fail
@@ -116,7 +116,7 @@ describe('UserDAO', () => {
         });
         it('should authorize updating its username when not set', async() => {
             // Given an existing, logged in user, without username
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com');
             // When trying to set the username
             const result: Promise<void> = dao.setUsername(user.uid, 'user');
             // Then it should succeed
@@ -124,7 +124,7 @@ describe('UserDAO', () => {
         });
         it('should forbid updating its username if it is already set', async() => {
             // Given an existing, logged in user, with a username
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set the username
             const result: Promise<void> = dao.setUsername(user.uid, 'user!');
             // Then it should succeed
@@ -171,9 +171,9 @@ describe('UserDAO', () => {
         });
         it('should forbid to update the fields another user', async() => {
             // Given an existing user and a logged in user
-            const other: FireAuth.User = await createConnectedGoogleUser(true, 'bar@bar.com', 'other-user');
+            const other: FireAuth.User = await createConnectedGoogleUser('bar@bar.com', 'other-user');
             await signOut();
-            await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
+            await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to change a field of another user
             const result: Promise<void> = dao.update(other.uid, { username: 'jean? jaja!' });
             // Then it should fail
@@ -181,7 +181,7 @@ describe('UserDAO', () => {
         });
         it('should forbid to delete its own user', async() => {
             // Given a logged in user
-            const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
+            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to delete it
             const result: Promise<void> = dao.delete(user.uid);
             // Then it should fail
@@ -189,9 +189,9 @@ describe('UserDAO', () => {
         });
         it('should forbid to delete another user', async() => {
             // Given an existing user and a logged in user
-            const other: FireAuth.User = await createConnectedGoogleUser(true, 'bar@bar.com', 'other-user');
+            const other: FireAuth.User = await createConnectedGoogleUser('bar@bar.com', 'other-user');
             await signOut();
-            await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
+            await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to delete the other user
             const result: Promise<void> = dao.delete(other.uid);
             // Then it should fail
