@@ -82,16 +82,27 @@ service cloud.firestore {
         match /parties/{id} {
             allow write, read: if userIsVerified();
         }
-        match /joiners/{id} {
-            // Anybody can create a joiner as long as they are themselves creator
-            // TODO AND if the corresponding part exists
-            allow create: if userIsVerified() && userIsCreator(request.resource.data);
-            // Anybody can add or remove themselves to the candidate list, leaving the other candidates untouched.
-            // Moreover, a chosenPlayer can remove itself
-            allow update: if userIsVerified() && validChangeForNonCreator();
-            // Only creator can change other fields
-            allow update: if userIsVerified() && userIsCreator(resource.data);
-            // Anybody can read
+        match /joiners/{partId} {
+            // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
+            allow create: if userIsVerified() && userIsCreator(request.resource.data) && exists(/databases/$(database)/documents/parties/$(partId));
+            // The creator can change all fields except:
+            //   - changing partStatus to STARTED (3)
+            //   - changing candidates
+            allow update: if userIsVerified() &&
+                             userIsCreator(resource.data) &&
+                             request.resource.data.partStatus != 3 && preservesField('candidates');
+            // Anybody else than the creator can add or remove themselves to the candidate list, leaving the other candidates untouched.
+            // Moreover, a chosenPlayer can remove itself (in case they leave the joiner)
+            // Finally, the chosenPlayer can change the config from PROPOSED to STARTED
+            // No other field can be touched
+            allow update: if userIsVerified() &&
+                             !userIsCreator(resource.data) &&
+                             preservesField('creator') && preservesField('firstPlayer') && preservesField('partType') && preservesField('maximalMoveDuration') && preservesField('totalPartDuration') &&
+                             (preservesField('candidates') || addsOneSelfToCandidates()) &&
+                             (preservesField('partStatus') || changePartStatusAsChosenPlayer()) &&
+                             (preservesField('chosenPlayer') || removesOneSelfFromChosenPlayer());
+
+            // Any verified user can read a joiner
             allow read: if userIsVerified();
         }
         function userIsVerified() {
@@ -105,8 +116,30 @@ service cloud.firestore {
                    joiner.creator.id == request.auth.uid &&
                    joiner.creator.name == usernameOf(request.auth.uid);
         }
-        function validChangeForNonCreator() {
-            return true;
+        function preservesField(field) {
+            return !(field in request.resource.data) || (request.resource.data[field] == resource.data[field]);
+        }
+        function addsOneSelfToCandidates() {
+            // TODO: there's not a lot we can ensure here. Check firebase doc to see if we can do more
+            let oldLength = resource.data.candidates.length;
+            let newLength = request.resource.data.candidates.length;
+            let uid = request.auth.uid;
+            return newLength == oldLength + 1 &&
+                   request.resource.data.candidates[newLength-1].id == uid &&
+                   request.resource.data.candidates[newLength-1].name == get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
+        }
+        function changePartStatusAsChosenPlayer() {
+            let uid = request.auth.uid;
+            let username = get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
+            return resource.data.chosenPlayer == username &&
+                   resource.data.partStatus == 2 && // CONFIG_PROPOSED
+                   request.resource.data.partStatus == 3; // PART_STARTED
+        }
+        function removesOneSelfFromChosenPlayer() {
+            let uid = request.auth.uid;
+            let username = get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
+            return resource.data.chosenPlayer == username &&
+                   request.resource.data.chosenPlayer == null;
         }
     }
 }
