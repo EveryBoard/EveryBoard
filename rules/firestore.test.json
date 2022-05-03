@@ -80,7 +80,24 @@ service cloud.firestore {
                    (userIsVerified() && resource.data.username != null);
         }
         match /parties/{id} {
-            allow write, read: if userIsVerified();
+            // Anybody can create a part
+            allow create: if userIsVerified();
+            // A number of fields are readonly:
+            // - typeGame
+            // - playerZero/playerOne once the part has started
+            // - beginning once the part has started
+            // the part is considered to be started as soon as beginning is set
+            // For any other fields, both players can modify them
+            // TODO: for moves, only add a move
+            allow update: if userIsVerified() &&
+                             preservesField('typeGame') &&
+                             (preservesField('playerZero') || resource.data.beginning == null) &&
+                             (preservesField('playerOne') || resource.data.beginning == null) &&
+                             (preservesField('beginning') || resource.data.beginning == null) &&
+                             (resource.data.playerZero == usernameOf(request.auth.uid) ||
+                              resource.data.playerOne == usernameOf(request.auth.uid));
+            // All verified user can read parts (needed for the lobby)
+            allow read: if userIsVerified();
         }
         match /joiners/{partId} {
             // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
