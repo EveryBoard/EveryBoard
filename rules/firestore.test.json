@@ -114,19 +114,24 @@ service cloud.firestore {
         function userIsCreator(joiner) {
             return joiner.creator != null &&
                    joiner.creator.id == request.auth.uid &&
-                   joiner.creator.name == usernameOf(request.auth.uid);
+                   debug(joiner.creator.name) == debug(usernameOf(request.auth.uid));
+        }
+        function isCurrentUser(user) {
+            let uid = request.auth.uid;
+            let username = get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
+            return user.id == uid && user.name == username;
         }
         function preservesField(field) {
             return !(field in request.resource.data) || (request.resource.data[field] == resource.data[field]);
         }
         function addsOneSelfToCandidates() {
             // TODO: there's not a lot we can ensure here. Check firebase doc to see if we can do more
-            let oldLength = resource.data.candidates.length;
-            let newLength = request.resource.data.candidates.length;
-            let uid = request.auth.uid;
-            return newLength == oldLength + 1 &&
-                   request.resource.data.candidates[newLength-1].id == uid &&
-                   request.resource.data.candidates[newLength-1].name == get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
+            // TODO: may need to look at doc here, we can't seem to compute the length!
+            return true;
+//            let oldLength = debug(len(resource.data.candidates));
+//            let newLength = debug(request.resource.data.candidates.size);
+//            return debug(newLength) == debug(oldLength) + 1 &&
+//                   isCurrentUser(debug(request.resource.data.candidates)[newLength-1]);
         }
         function changePartStatusAsChosenPlayer() {
             let uid = request.auth.uid;
