@@ -333,7 +333,6 @@ describe('PartCreationComponent', () => {
 
                 // Then the data sent should be what creator saw
                 expect(joinerDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-                    JoinerMocks.
                     partStatus: PartStatus.CONFIG_PROPOSED.value,
                     partType: PartType.CUSTOM.value,
                     maximalMoveDuration: 100,
@@ -526,7 +525,6 @@ describe('PartCreationComponent', () => {
                 // then observedPart should be emptied
                 expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-                // SO THE DESTRUCTION DON'T THROW ??? TODOTODO: check that it don't actually throw at user's place
                 void partDAO.set('joinerId', PartMocks.INITIAL);
                 void joinerDAO.set('joinerId', JoinerMocks.INITIAL);
                 void chatDAO.set('joinerId', { messages: [], status: 'dummy status' });
@@ -578,7 +576,6 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
-                // TODOTODO test also updateObservedPart itself
                 expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

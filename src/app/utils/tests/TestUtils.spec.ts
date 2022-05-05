@@ -149,7 +149,6 @@ export class SimpleComponentTestUtils<T> {
         expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToExist(elementName: string): void {
-        // this.detectChanges(); // TODOTODO FOR REVIEW: does that look good
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should not exist').toBeNull();
     }

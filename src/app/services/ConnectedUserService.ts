@@ -310,11 +310,10 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.reload();
     }
     public updateObservedPart(observedPart: string): Promise<void> {
-        // TODOTODO: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
         assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
         return this.userDAO.update(this.user.get().id, { observedPart });
     }
-    public removeObservedPart(): Promise<void> { // TODOTODO: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
+    public removeObservedPart(): Promise<void> {
         assert(this.user.isPresent(), 'Should not call removeObservedPart when not connected');
         return this.userDAO.update(this.user.get().id, { observedPart: null });
     }
