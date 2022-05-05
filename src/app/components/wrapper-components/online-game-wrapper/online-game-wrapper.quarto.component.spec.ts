@@ -89,18 +89,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         chatDAO = TestBed.inject(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL);
-        await userDAO.set(UserMocks.OPPONENT_AUTH_USER.userId, UserMocks.OPPONENT);
-        await userDAO.set(UserMocks.CREATOR_AUTH_USER.userId, UserMocks.CREATOR);
-        await userDAO.set(USER_OBSERVER.userId, OBSERVER);
+        await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
+        await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
+        await userDAO.set(USER_OBSERVER.id, OBSERVER);
         await chatDAO.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
         await prepareMockDBContent(JoinerMocks.INITIAL);
         ConnectedUserServiceMock.setUser(user);
-        if (user.userId === UserMocks.CREATOR_AUTH_USER.userId) {
+        if (user.id === UserMocks.CREATOR_AUTH_USER.id) {
             observerRole = Player.ZERO;
-        } else if (user.userId === UserMocks.OPPONENT_AUTH_USER.userId) {
+        } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
             observerRole = Player.ONE;
         } else {
             observerRole = Player.NONE;
@@ -1314,7 +1314,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 expectGameToBeOver();
             }));
         });
-        describe('oppoent', () => {
+        describe('opponent', () => {
             it('should allow to add global time to opponent (as Player.ONE)', fakeAsync(async() => {
                 // Given an onlineGameComponent on opponent's turn
                 await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
@@ -1344,7 +1344,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
             expect(wrapper.getPlayerNameClass(1)).toEqual('has-text-black');
-            await userDAO.update(UserMocks.OPPONENT_AUTH_USER.userId, { state: 'offline' });
+            await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline' });
             componentTestUtils.detectChanges();
             tick();
             expect(wrapper.getPlayerNameClass(1)).toBe('has-text-grey-light');

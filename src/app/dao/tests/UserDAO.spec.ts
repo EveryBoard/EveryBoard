@@ -31,7 +31,6 @@ describe('UserDAO', () => {
             dao.observeUserByUsername('jeanjaja', callback);
             const parameters: FirebaseCondition[] = [
                 ['username', '==', 'jeanjaja'],
-                ['verified', '==', true],
             ];
             expect(dao.observingWhere).toHaveBeenCalledWith(parameters, callback);
         });
@@ -74,10 +73,10 @@ describe('UserDAO', () => {
             spyOn(dao, 'update');
 
             // When calling updatePresenceToken
-            await dao.updatePresenceToken('joser');
+            await dao.updatePresenceToken('joserId');
 
             // Then update should be called
-            expect(dao.update).toHaveBeenCalledOnceWith('joser', { last_changed: serverTimestamp() });
+            expect(dao.update).toHaveBeenCalledOnceWith('joserId', { last_changed: serverTimestamp() });
         });
     });
 });

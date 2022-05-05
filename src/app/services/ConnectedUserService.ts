@@ -57,7 +57,7 @@ export class AuthUser {
      * - the username of the user, which may be null if the user hasn't chosen a username yet
      * - a boolean indicating whether the user is verified
      */
-    constructor(public userId: string,
+    constructor(public id: string,
                 public email: MGPOptional<string>,
                 public username: MGPOptional<string>,
                 public verified: boolean) {
@@ -67,7 +67,7 @@ export class AuthUser {
     }
     public toMinimalUser(): MinimalUser {
         return {
-            id: this.userId,
+            id: this.id,
             name: this.username.get(),
         };
     }
@@ -76,7 +76,7 @@ export class AuthUser {
 @Injectable({
     providedIn: 'root',
 })
-export class ConnectedUserService implements OnDestroy { // TODOTODO rename
+export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
@@ -88,12 +88,6 @@ export class ConnectedUserService implements OnDestroy { // TODOTODO rename
      * (This is because the guard can't activate if there is no user, so if the guard was activated, there is a user)
      */
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
-
-    /**
-     * The id of the current user, if there is one.
-     * Similar to user, components depending on AccountGuard can assume it is define.
-     */
-    public uid: MGPOptional<string> = MGPOptional.empty();
 
     private userUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
@@ -118,10 +112,8 @@ export class ConnectedUserService implements OnDestroy { // TODOTODO rename
                     }
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
-                    this.uid = MGPOptional.empty();
                 } else { // new user logged in
-                    assert(this.uid.isAbsent(), 'AuthenticationService received a double update for an user, this is unexpected');
-                    this.uid = MGPOptional.of(user.uid);
+                    assert(this.user.isAbsent(), 'AuthenticationService received a double update for an user, this is unexpected');
                     await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
                     const unsub: Unsubscribe = this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                         if (doc.isPresent()) {
@@ -318,17 +310,17 @@ export class ConnectedUserService implements OnDestroy { // TODOTODO rename
         await currentUser.reload();
     }
     public updateObservedPart(observedPart: string): Promise<void> {
-        // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
-        assert(this.uid.isPresent(), 'Should not call updateObservedPart when not connected');
-        return this.userDAO.update(this.uid.get(), { observedPart });
+        // TODOTODO: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
+        assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
+        return this.userDAO.update(this.user.get().id, { observedPart });
     }
-    public removeObservedPart(): Promise<void> { // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
-        assert(this.uid.isPresent(), 'Should not call removeObservedPart when not connected');
-        return this.userDAO.update(this.uid.get(), { observedPart: null });
+    public removeObservedPart(): Promise<void> { // TODOTODO: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
+        assert(this.user.isPresent(), 'Should not call removeObservedPart when not connected');
+        return this.userDAO.update(this.user.get().id, { observedPart: null });
     }
     public sendPresenceToken(): Promise<void> {
-        assert(this.uid.isPresent(), 'Should not call sendPresenceToken when not connected');
-        return this.userDAO.updatePresenceToken(this.uid.get());
+        assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
+        return this.userDAO.updatePresenceToken(this.user.get().id);
     }
     public ngOnDestroy(): void {
         if (this.userUnsubscribe.isPresent()) {

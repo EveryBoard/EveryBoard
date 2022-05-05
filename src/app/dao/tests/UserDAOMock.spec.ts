@@ -30,10 +30,9 @@ export class UserDAOMock extends FirebaseFirestoreDAOMock<User> {
     public observeActiveUsers(callback: FirebaseCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
-    public updatePresenceToken(username: string): Promise<void> {
-        return this.update(username, {
+    public updatePresenceToken(userId: string): Promise<void> {
+        return this.update(userId, {
             last_changed: serverTimestamp(),
-            // TODO FOR REVIEW: should we mock the real way, by sending that update without timestamp, then with it ?
         });
     }
 }

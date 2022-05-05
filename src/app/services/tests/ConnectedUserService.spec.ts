@@ -48,7 +48,6 @@ export class ConnectedUserServiceMock {
     }
     public setUser(user: AuthUser, notifyObservers: boolean = true): void {
         this.user = MGPOptional.of(user);
-        this.uid = MGPOptional.of(user.userId);
         // In some very specific cases, changing the status of a user in firebase does not notify the observers.
         // This is the case if a user becomes verified.
         if (notifyObservers) {
@@ -610,7 +609,7 @@ describe('AuthenticationService', () => {
         });
         it('should delegate to userDAO', async() => {
             // Given a service observing an user
-            service.uid = MGPOptional.of(UserMocks.CREATOR_MINIMAL_USER.id);
+            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to update observedPart
             const userDAO: UserDAO = TestBed.inject(UserDAO);
@@ -637,7 +636,7 @@ describe('AuthenticationService', () => {
         });
         it('should delegate removal to userDAO', async() => {
             // Given a service observing an user
-            service.uid = MGPOptional.of(UserMocks.CREATOR_MINIMAL_USER.id);
+            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to update observedPart
             const userDAO: UserDAO = TestBed.inject(UserDAO);
@@ -663,7 +662,7 @@ describe('AuthenticationService', () => {
         });
         it('should delegate presence token sending to userDAO', async() => {
             // Given a service observing an user
-            service.uid = MGPOptional.of(UserMocks.CREATOR_MINIMAL_USER.id);
+            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to send presence token
             const userDAO: UserDAO = TestBed.inject(UserDAO);

@@ -19,7 +19,7 @@ export class JoinerService {
 
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
-    public static readonly USER_ALREADY_IN_GAME: () => string = () => $localize`User already in the game`;
+    public static readonly USER_ALREADY_IN_GAME: () => string = () => $localize`You cannot join this game because you are already in another one.`;
     public static readonly GAME_DOES_NOT_EXIST: () => string = () => $localize`Game does not exist`;
 
     constructor(private readonly joinerDAO: JoinerDAO) {
@@ -39,7 +39,7 @@ export class JoinerService {
 
         const newJoiner: Joiner = {
             candidates: [],
-            chosenPlayer: null,
+            chosenOpponent: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
@@ -82,18 +82,18 @@ export class JoinerService {
             const joiner: Joiner = joinerOpt.get();
             const candidates: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.findIndex((u: MinimalUser) => u.id === user.id);
-            let chosenPlayer: MinimalUser | null = joiner.chosenPlayer;
+            let chosenOpponent: MinimalUser | null = joiner.chosenOpponent;
             let partStatus: number = joiner.partStatus;
             candidates.splice(indexLeaver, 1); // remove player from candidates list
-            if (chosenPlayer?.id === user.id) {
-                // if the chosenPlayer leave, we're back to initial part creation
-                chosenPlayer = null;
+            if (chosenOpponent?.id === user.id) {
+                // if the ChosenOpponent left, we're back to initial part creation
+                chosenOpponent = null;
                 partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver === -1) {
-                throw new Error('someone that was not candidate nor chosenPlayer just left the chat: ' + user.name);
+                throw new Error('someone that was not candidate nor ChosenOpponent just left the chat: ' + user.name);
             }
             const update: Partial<Joiner> = {
-                chosenPlayer,
+                chosenOpponent: chosenOpponent,
                 partStatus,
                 candidates,
             };
@@ -112,7 +112,7 @@ export class JoinerService {
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
         return this.joinerDAO.delete(this.observedJoinerId);
     }
-    public async proposeConfig(chosenPlayer: MinimalUser,
+    public async proposeConfig(chosenOpponent: MinimalUser,
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
@@ -126,19 +126,19 @@ export class JoinerService {
 
         return this.joinerDAO.update(this.observedJoinerId, {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
-            chosenPlayer,
+            chosenOpponent: chosenOpponent,
             partType: partType.value,
             maximalMoveDuration,
             totalPartDuration,
             firstPlayer: firstPlayer.value,
         });
     }
-    public setChosenPlayer(chosenPlayer: MinimalUser): Promise<void> {
-        display(JoinerService.VERBOSE, `JoinerService.setChosenPlayer(${chosenPlayer.name})`);
+    public setChosenOpponent(chosenOpponent: MinimalUser): Promise<void> {
+        display(JoinerService.VERBOSE, `JoinerService.setChosenOpponent(${chosenOpponent.name})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
         return this.joinerDAO.update(this.observedJoinerId, {
-            chosenPlayer,
+            chosenOpponent: chosenOpponent,
         });
     }
     public async reviewConfig(): Promise<void> {
@@ -149,14 +149,14 @@ export class JoinerService {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
-    public async reviewConfigAndRemoveChosenPlayerAndUpdateCandidates(candidates: MinimalUser[]): Promise<void> {
+    public async reviewConfigAndRemoveChosenOpponentAndUpdateCandidates(candidates: MinimalUser[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
         return this.joinerDAO.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
             candidates,
-            chosenPlayer: null,
+            chosenOpponent: null,
         });
     }
     public acceptConfig(): Promise<void> {

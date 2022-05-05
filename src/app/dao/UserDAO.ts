@@ -30,14 +30,13 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
         await this.update(uid, { verified: true });
     }
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
-        // TODO FOR REVIEW: n'est ce pas une sécurité de trop ça ?
-        return this.observingWhere([['username', '==', username], ['verified', '==', true]], callback);
+        return this.observingWhere([['username', '==', username]], callback);
     }
     public observeActiveUsers(callback: FirebaseCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
-    public updatePresenceToken(username: string): Promise<void> {
-        return this.update(username, {
+    public updatePresenceToken(userId: string): Promise<void> {
+        return this.update(userId, {
             last_changed: serverTimestamp(),
         });
     }

@@ -15,15 +15,15 @@ describe('HeaderComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(HeaderComponent);
         const userDAO: UserDAO = TestBed.inject(UserDAO);
-        await userDAO.set(UserMocks.CREATOR_AUTH_USER.userId, UserMocks.CREATOR);
+        await userDAO.set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
     }));
     it('should create', fakeAsync(() => {
-        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     }));
     it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
-        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         testUtils.detectChanges();
         spyOn(testUtils.getComponent().connectedUserService, 'disconnect');
         void testUtils.clickElement('#logout');

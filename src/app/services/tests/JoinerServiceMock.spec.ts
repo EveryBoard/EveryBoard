@@ -30,7 +30,7 @@ export class JoinerServiceMock {
             resolve({
                 candidates: [{ id: '24854rf', name: 'uniqueCandidate' }],
                 creator: { id: 'doc-creator', name: 'creator' },
-                chosenPlayer: { id: 'uniqueCandidate-doc-id', name: 'uniqueCandidate' },
+                chosenOpponent: { id: 'uniqueCandidate-doc-id', name: 'uniqueCandidate' },
                 firstPlayer: FirstPlayer.CREATOR.value,
                 partType: PartType.STANDARD.value,
                 partStatus: PartStatus.PART_STARTED.value,
@@ -40,8 +40,8 @@ export class JoinerServiceMock {
             });
         });
     }
-    public async setChosenPlayer(username: string): Promise<void> {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.setChosenPlayer');
+    public async setChosenOpponent(username: string): Promise<void> {
+        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.setChosenOpponent');
         return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK

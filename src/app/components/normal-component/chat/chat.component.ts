@@ -72,7 +72,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         return user.username.isPresent() && user.username.get() !== '';
     }
     public loadChatContent(): void {
-        display(ChatComponent.VERBOSE, `User '${this.username.getOrElse('empty')}' logged, loading chat content`);
+        display(ChatComponent.VERBOSE, `User '${this.username}' logged, loading chat content`);
 
         this.chatService.startObserving(this.chatId, (chat: MGPOptional<Chat>) => {
             assert(chat.isPresent(), 'ChatComponent observed a chat being deleted, this should not happen');

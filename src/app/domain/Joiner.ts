@@ -10,7 +10,7 @@ export type MinimalUser = {
 export interface Joiner extends JSONObject {
     readonly creator: MinimalUser;
     readonly candidates: Array<MinimalUser>;
-    readonly chosenPlayer: MinimalUser | null;
+    readonly chosenOpponent: MinimalUser | null;
     readonly partStatus: IPartStatus;
 
     readonly firstPlayer: IFirstPlayer;
@@ -73,11 +73,11 @@ export class PartType {
 export type IPartStatus = number;
 export class PartStatus {
     private constructor(public value: IPartStatus) {}
-    // part created, no chosenPlayer => waiting for acceptable candidate
+    // part created, no ChosenOpponent => waiting for acceptable candidate
     public static PART_CREATED: PartStatus = new PartStatus(0);
-    // part created, chosenPlayer selected, config proposed by the creator => waiting the joiner to accept them
+    // part created, ChosenOpponent selected, config proposed by the creator => waiting the joiner to accept them
     public static CONFIG_PROPOSED: PartStatus = new PartStatus(2);
-    // part created, chosenPlayer selected, config proposed by the created, accepted by the joiner => part started
+    // part created, ChosenOpponent selected, config proposed by the created, accepted by the joiner => part started
     public static PART_STARTED: PartStatus = new PartStatus(3);
 
     public static PART_FINISHED: PartStatus = new PartStatus(4);

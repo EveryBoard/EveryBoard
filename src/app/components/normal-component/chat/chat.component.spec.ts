@@ -255,7 +255,7 @@ describe('ChatComponent', () => {
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
         }));
         it('should not loadChatContent when user is online, then updated but still online', fakeAsync(() => {
-            // Given a chat component, hence subscribed to the current user
+            // Given a chat component
             const userDAO: UserDAO = TestBed.inject(UserDAO);
             void userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
             tick();
@@ -267,7 +267,7 @@ describe('ChatComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             tick();
 
-            // Then loadChatContent should not have been called again
+            // Then loadChatContent should not have been called
             expect(component.loadChatContent).not.toHaveBeenCalled();
         }));
         afterEach(fakeAsync(async() => {

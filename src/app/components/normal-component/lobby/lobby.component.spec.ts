@@ -80,7 +80,7 @@ describe('LobbyComponent', () => {
             ...UserMocks.CREATOR,
             last_changed: { seconds: timeStampInSecond, nanoseconds: 0 },
         };
-        void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.userId, userWithLastChange);
+        void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.id, userWithLastChange);
         tick();
         void testUtils.clickElement('#tab-chat');
         tick();
@@ -88,7 +88,7 @@ describe('LobbyComponent', () => {
         // When rendering it
         testUtils.detectChanges();
 
-        // Then the date should be written in format HH:mm:ss
+        // Then the date should be written in format HH:mm:ss (with 1h added due to Locale?)
         const element: DebugElement = testUtils.findElement('#' + UserMocks.CREATOR_MINIMAL_USER.name);
         const time: string = element.nativeElement.innerText;
         expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': 12:34:56');

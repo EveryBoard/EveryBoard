@@ -41,16 +41,22 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         await TestBed.inject(PartDAO).set('joinerId', initialPart);
         await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
         const userDAO: UserDAO = TestBed.inject(UserDAO);
-        await userDAO.set(UserMocks.CREATOR_AUTH_USER.userId, UserMocks.CREATOR);
-        await userDAO.set(UserMocks.OPPONENT_AUTH_USER.userId, UserMocks.OPPONENT);
+        await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
+        await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
         return Promise.resolve();
+    }
+    function finishTest(): void {
+        testUtils.detectChanges();
+        tick();
+        void joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);
+        testUtils.detectChanges();
+        tick(JoinerMocks.INITIAL.maximalMoveDuration * 1000);
     }
     describe('for creator', () => {
         beforeEach(async() => {
             testUtils = await ComponentTestUtils.basic('P4');
-            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
 
-            // Normally, the header does that
             testUtils.prepareFixture(OnlineGameWrapperComponent);
             wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         });
@@ -65,7 +71,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(joinerService.joinGame).not.toHaveBeenCalled();
             expect(joinerService.subscribeToChanges).not.toHaveBeenCalled();
 
-            // When ngOnInit start and finish
+            // When ngOnInit runs to completion
             testUtils.detectChanges();
             tick();
 
@@ -75,9 +81,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
 
             // finish the game to have no timeout still running
-            void joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);
-            testUtils.detectChanges();
-            tick(JoinerMocks.INITIAL.maximalMoveDuration * 1000);
+            finishTest();
         }));
         it('Initialization on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
@@ -111,11 +115,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
 
             // finish the game to have no timeout still running
-            testUtils.detectChanges();
-            tick();
-            void joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);
-            testUtils.detectChanges();
-            tick(JoinerMocks.INITIAL.maximalMoveDuration * 1000);
+            finishTest();
         }));
         it('Some ids are needed before initialisation', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL, PartMocks.INITIAL);
@@ -129,11 +129,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(chatId).withContext('chat id should be present at start').toBeTruthy();
 
             // finish the game to have no timeout still running
-            testUtils.detectChanges();
-            tick();
-            void joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);
-            testUtils.detectChanges();
-            tick(JoinerMocks.INITIAL.maximalMoveDuration * 1000);
+            finishTest();
         }));
         it('Initialization should make appear PartCreationComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL, PartMocks.INITIAL);
@@ -147,9 +143,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
 
             // finish the game to have no timeout still running
-            void joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);
-            testUtils.detectChanges();
-            tick(JoinerMocks.INITIAL.maximalMoveDuration * 1000);
+            finishTest();
         }));
         it('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
@@ -186,12 +180,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(1000);
         }));
     });
-    describe('for chosenPlayer', () => {
+    describe('for ChosenOpponent', () => {
         beforeEach(async() => {
             testUtils = await ComponentTestUtils.basic('P4');
-            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER); // Normally, the header does that
 
-            // Normally, the header does that
             testUtils.prepareFixture(OnlineGameWrapperComponent);
             wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         });

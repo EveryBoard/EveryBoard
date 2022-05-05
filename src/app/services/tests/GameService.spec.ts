@@ -138,7 +138,7 @@ describe('GameService', () => {
             // given a joiner config asking random start
             const joiner: Joiner = {
                 candidates: CANDIDATES,
-                chosenPlayer: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -153,13 +153,13 @@ describe('GameService', () => {
 
             // then we should have a creator starting the game
             expect(startConfig.playerZero).toBe(joiner.creator.name);
-            expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenPlayer).name);
+            expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
         }));
-        it('should put chosen player first when math.random() is over 0.5', fakeAsync(async() => {
+        it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
             const joiner: Joiner = {
                 candidates: CANDIDATES,
-                chosenPlayer: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -173,7 +173,7 @@ describe('GameService', () => {
             const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenPlayer).name);
+            expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
             expect(startConfig.playerOne).toBe(joiner.creator.name);
         }));
     });
@@ -212,7 +212,7 @@ describe('GameService', () => {
             });
             const lastGameJoiner: Joiner = {
                 candidates: CANDIDATES,
-                chosenPlayer: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'CREATOR',
                 maximalMoveDuration: 10,
@@ -256,7 +256,7 @@ describe('GameService', () => {
             });
             const lastGameJoiner: Joiner = {
                 candidates: CANDIDATES,
-                chosenPlayer: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,

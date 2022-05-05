@@ -99,9 +99,9 @@ export class GameService {
         let playerOne: string;
         if (whoStarts === FirstPlayer.CREATOR) {
             playerZero = joiner.creator.name;
-            playerOne = Utils.getNonNullable(joiner.chosenPlayer).name;
+            playerOne = Utils.getNonNullable(joiner.chosenOpponent).name;
         } else {
-            playerZero = Utils.getNonNullable(joiner.chosenPlayer).name;
+            playerZero = Utils.getNonNullable(joiner.chosenOpponent).name;
             playerOne = joiner.creator.name;
         }
         return {

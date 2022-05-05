@@ -7,18 +7,19 @@ import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 
+/**
+  * The aim of this service is to:
+  *     A. subscribe to other users to see if they are online in thoses contexts:
+  *         1. The candidates when you are creator in PartCreation
+  *         2. The creator when you are candidate in PartCreation
+  *         3. Your opponent when you are playing
+  *     B. subscribe to yourself in the header for multitab purpose
+  */
 @Injectable({
     providedIn: 'root',
 })
 export class UserService {
-    /**
-     * The aim of this component is to:
-     *     A. subscribe to other users to see if they are online in thoses contexts:
-     *         1. The candidates when you are creator in PartCreation
-     *         2. The creator when you are candidate in PartCreation
-     *         3. Your opponent when you are playing
-     *     B. subscribe to yourself in the header for multitab purpose
-     */
+
     constructor(private readonly activeUsersService: ActiveUsersService,
                 private readonly userDAO: UserDAO) {
     }

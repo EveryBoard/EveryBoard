@@ -3512,8 +3512,8 @@
         <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
       <trans-unit id="3483065707216817758" datatype="html">
-        <source>User already in the game</source>
-        <target>Vous êtes déjà dans la partie</target>
+        <source>You cannot join this game because you are already in another one.</source>
+        <target>Vous ne pouvez pas joindre cette partie car vous êtes déjà dans une autre.</target>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
