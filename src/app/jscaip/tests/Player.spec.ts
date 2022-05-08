@@ -10,6 +10,5 @@ describe('Player', () => {
     it('should define opponent of each player', () => {
         expect(Player.ONE.getOpponent()).toBe(Player.ZERO);
         expect(Player.ZERO.getOpponent()).toBe(Player.ONE);
-        expect(Player.NONE.getOpponent()).toBe(Player.NONE);
     });
 });

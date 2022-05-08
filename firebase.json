@@ -8,7 +8,7 @@
     ]
   },
   "firestore": {
-      "rules": "rules/firestore.json"
+      "rules": "rules/firestore.test.json"
   },
   "database": {
       "rules": "rules/database.json"

@@ -1,11 +1,11 @@
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiState } from 'src/app/games/reversi/ReversiState';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: Player = Player.NONE;
-const O: Player = Player.ZERO;
-const X: Player = Player.ONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = Player.ZERO;
+const X: PlayerOrNone = Player.ONE;
 
 export class ReversiTutorial {
     public tutorial: TutorialStep[] = [

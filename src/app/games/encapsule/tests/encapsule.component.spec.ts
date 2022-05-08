@@ -4,7 +4,7 @@ import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleCase, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
@@ -16,7 +16,7 @@ describe('EncapsuleComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<EncapsuleComponent>;
 
-    const _: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+    const _: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
     const emptyBoard: EncapsuleCase[][] = [
         [_, _, _],
         [_, _, _],
@@ -41,7 +41,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_0', EncapsuleFailure.INVALID_PIECE_SELECTED());
     }));
     it('should allow dropping a piece on a smaller one', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
+        const x: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, _, _],
@@ -54,7 +54,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('should forbid dropping a piece on a bigger one', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ONE, Player.NONE);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, _, _],
@@ -77,7 +77,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectClickFailure('#piece_1_SMALL_WHITE', EncapsuleFailure.NOT_DROPPABLE());
     }));
     it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, _, _],
@@ -91,7 +91,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_0_2', move);
     }));
     it('should forbid moving from a space that the player is not controlling', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ONE, Player.NONE);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, _, _],
@@ -102,8 +102,8 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.INVALID_PIECE_SELECTED());
     }));
     it('should allow moving a piece on top of a smaller one', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
-        const X: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ZERO);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+        const X: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, X, _],
@@ -117,8 +117,8 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('should forbid moving a piece on top of a bigger one', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
-        const X: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ZERO);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+        const X: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, X, _],
@@ -132,8 +132,8 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveFailure('#click_1_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
     }));
     it('should detect victory', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
-        const X: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ZERO);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+        const X: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, X, _],
@@ -155,7 +155,7 @@ describe('EncapsuleComponent', () => {
         expect(minimax.getBoardValue(node).value).toBe(Number.MIN_SAFE_INTEGER);
     }));
     it('should forbid selecting the same coord for destination and origin', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, _, _],
@@ -168,7 +168,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.SAME_DEST_AS_ORIGIN());
     }));
     it('should forbid selecting a remaining piece is a move is being constructed', fakeAsync(async() => {
-        const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
+        const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],
             [x, _, _],

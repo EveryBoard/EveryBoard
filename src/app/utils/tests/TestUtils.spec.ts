@@ -26,10 +26,7 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { HumanDuration } from '../TimeUtils';
 import { Utils } from '../utils';
-import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
-import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MGPOptional } from '../MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -38,6 +35,11 @@ import { AbstractGameComponent } from 'src/app/components/game-components/game-c
 import { findMatchingRoute } from 'src/app/app.module.spec';
 import * as Firestore from '@angular/fire/firestore';
 import * as Auth from '@angular/fire/auth';
+import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
+import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
+import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
+import { FirebaseTimePipe } from 'src/app/pipes-and-directives/firebase-time.pipe';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -88,7 +90,8 @@ export class SimpleComponentTestUtils<T> {
             ],
             declarations: [
                 componentType,
-                HumanDuration,
+                FirebaseTimePipe,
+                HumanDurationPipe,
                 AutofocusDirective,
                 ToggleVisibilityDirective,
             ],
@@ -105,7 +108,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
-        ConnectedUserServiceMock.setUser(ConnectedUserServiceMock.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.fixture = TestBed.createComponent(componentType);
         testUtils.component = testUtils.fixture.componentInstance;

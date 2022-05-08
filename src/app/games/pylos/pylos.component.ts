@@ -5,7 +5,7 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
 import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -63,7 +63,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public isDrawable(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (this.state.getPieceAt(coord) === Player.NONE) {
+        if (this.state.getPieceAt(coord) === PlayerOrNone.NONE) {
             return this.state.isLandable(coord);
         } else {
             return true;
@@ -75,7 +75,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: Player = this.state.getPieceAt(clickedCoord);
+        const clickedPiece: PlayerOrNone = this.state.getPieceAt(clickedCoord);
         const pieceBelongToOpponent: boolean = clickedPiece === this.state.getCurrentOpponent();
         if (pieceBelongToOpponent) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
@@ -163,7 +163,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord) !== Player.NONE;
+        const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord).isPlayer();
         const landingCoord: boolean = this.chosenLandingCoord.equalsValue(coord);
         return reallyOccupied || landingCoord;
     }

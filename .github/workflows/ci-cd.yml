@@ -186,6 +186,7 @@ jobs:
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
+            npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
           fi
         env:

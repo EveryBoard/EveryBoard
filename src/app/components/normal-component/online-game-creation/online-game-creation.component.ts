@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { MinimalUser } from 'src/app/domain/Joiner';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 export class OnlineGameCreationMessages {
     public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;

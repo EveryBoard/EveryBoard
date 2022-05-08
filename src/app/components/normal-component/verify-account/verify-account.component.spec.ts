@@ -98,6 +98,7 @@ describe('VerifyAccountComponent', () => {
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
         }));
         it('should not finalize verification if the user did not verify its email', fakeAsync(async() => {
+            spyOn(window, 'open').and.returnValue(null);
             // when the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
 
@@ -109,6 +110,7 @@ describe('VerifyAccountComponent', () => {
         it('should finalize verification after the user has verified its email and clicked on the button', fakeAsync(async() => {
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo(true);
+            spyOn(window, 'open').and.returnValue(null);
 
             // ... and given a user that verified its email
             ConnectedUserServiceMock.setUser(new AuthUser('5d8t6d', MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true), false);
@@ -116,7 +118,7 @@ describe('VerifyAccountComponent', () => {
             // when the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
 
-            // then a failure message is shown
+            // then no failure message is shown and user is redirected to the lobby
             testUtils.expectElementNotToExist('#errorMessage');
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));

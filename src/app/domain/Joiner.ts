@@ -1,11 +1,7 @@
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { JSONObject } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
-
-export type MinimalUser = {
-    id: string;
-    name: string;
-}
+import { MinimalUser } from './MinimalUser';
 
 export interface Joiner extends JSONObject {
     readonly creator: MinimalUser;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirstPlayer, Joiner, MinimalUser, PartStatus, PartType } from '../domain/Joiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -7,6 +7,7 @@ import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
+import { MinimalUser } from '../domain/MinimalUser';
 
 @Injectable({
     providedIn: 'root',
@@ -35,7 +36,7 @@ export class JoinerService {
         this.joinerUnsubscribe = MGPOptional.empty();
     }
     public async createInitialJoiner(creator: MinimalUser, joinerId: string): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator + ', ' + joinerId + ')');
+        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator.id + ', ' + joinerId + ')');
 
         const newJoiner: Joiner = {
             candidates: [],

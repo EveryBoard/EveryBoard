@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FirstPlayer, IFirstPlayer, Joiner, IPartType, PartStatus, PartType, MinimalUser, IPartStatus } from '../../../domain/Joiner';
+import { FirstPlayer, IFirstPlayer, Joiner, IPartType, PartStatus, PartType, IPartStatus } from '../../../domain/Joiner';
 import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
@@ -17,6 +17,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -291,15 +292,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.connectedUserService.removeObservedPart();
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
-        await this.gameService.deletePart(this.partId);
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: game deleted');
+        await this.chatService.deleteChat(this.partId);
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat deleted');
 
         await this.joinerService.deleteJoiner();
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: game and joiner deleted');
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat and joiner deleted');
 
-        await this.chatService.deleteChat(this.partId);
-        display(PartCreationComponent.VERBOSE,
-                'PartCreationComponent.cancelGameCreation: game and joiner and chat deleted');
+        await this.gameService.deletePart(this.partId);
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat, joiner, and part deleted');
+
         return;
     }
     private onCurrentJoinerUpdate(joiner: MGPOptional<Joiner>) {

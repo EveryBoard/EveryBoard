@@ -10,7 +10,6 @@ import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -72,7 +71,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
-            if (gameStatus.winner !== Player.NONE) {
+            if (gameStatus.winner.isPlayer()) {
                 this.winner = MGPOptional.of($localize`Player ${gameStatus.winner.value + 1}`);
             }
         }

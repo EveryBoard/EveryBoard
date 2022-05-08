@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -12,6 +12,7 @@ import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { assert } from 'src/app/utils/assert';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
@@ -74,7 +75,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 const coord: Coord = new Coord(x, y);
                 const piece: TaflPawn = state.getPieceAt(coord);
                 if (piece !== EMPTY) {
-                    const owner: Player = state.getAbsoluteOwner(coord);
+                    const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
                     if (owner === Player.ZERO) {
                         zeroPieces.push(coord);
                     } else {
@@ -102,8 +103,10 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         }
         return threatMap;
     }
-    public getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
-        const threatenerPlayer: Player = state.getAbsoluteOwner(coord).getOpponent();
+    private getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
+        const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
+        assert(owner.isPlayer(), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
+        const threatenerPlayer: Player = (owner as Player).getOpponent();
         const threats: SandwichThreat[] = [];
         for (const dir of Orthogonal.ORTHOGONALS) {
             const directThreat: Coord = coord.getPrevious(dir, 1);
@@ -115,7 +118,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                     }
                     let futureCapturer: Coord = coord.getNext(dir, 1);
                     while (futureCapturer.isInRange(this.width, this.width) &&
-                           state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
+                        state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
                     {
                         futureCapturer = futureCapturer.getNext(captureDirection);
                     }

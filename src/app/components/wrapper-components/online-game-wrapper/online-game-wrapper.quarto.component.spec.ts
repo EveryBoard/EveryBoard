@@ -18,7 +18,7 @@ import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Request } from 'src/app/domain/Request';
 import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { User } from 'src/app/domain/User';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
@@ -80,7 +80,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         turn: 0,
         lastUpdateTime: FAKE_MOMENT,
     };
-    let observerRole: Player;
+    let observerRole: PlayerOrNone;
 
     async function prepareMockDBContent(initialJoiner: Joiner): Promise<void> {
         partDAO = TestBed.inject(PartDAO);
@@ -103,7 +103,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
             observerRole = Player.ONE;
         } else {
-            observerRole = Player.NONE;
+            observerRole = PlayerOrNone.NONE;
         }
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
@@ -144,7 +144,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             remainingMsForOne: 1800 * 1000,
             beginning: serverTimestamp(),
         };
-        await partDAO.updateAndBumpIndex('joinerId', observerRole, 0, update);
+        const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
+        await partDAO.updateAndBumpIndex('joinerId', observerRoleAsPlayer, 0, update);
         componentTestUtils.detectChanges();
         return Promise.resolve();
     }
@@ -174,8 +175,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await receivePartDAOUpdate({ request }, lastIndex);
     }
     async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number): Promise<void> {
-        const user: Player = observerRole;
-        await partDAO.updateAndBumpIndex('joinerId', user, lastIndex, update);
+        const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
+        await partDAO.updateAndBumpIndex('joinerId', observerRoleAsPlayer, lastIndex, update);
         componentTestUtils.detectChanges();
         tick(1);
     }
@@ -205,9 +206,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return await receivePartDAOUpdate(update, lastIndex);
     }
     async function prepareBoard(moves: QuartoMove[], player: Player = Player.ZERO): Promise<void> {
-        let authUser: AuthUser = UserMocks.CREATOR_AUTH_USER;
+        let authUser: AuthUser;
         if (player === Player.ONE) {
             authUser = UserMocks.OPPONENT_AUTH_USER;
+        } else {
+            authUser = UserMocks.CREATOR_AUTH_USER;
         }
         await prepareStartedGameFor(authUser);
         tick(1);

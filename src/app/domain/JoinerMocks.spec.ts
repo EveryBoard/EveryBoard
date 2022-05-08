@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { FirstPlayer, Joiner, PartStatus, PartType } from './Joiner';
 import { UserMocks } from './UserMocks.spec';
+
 export class JoinerMocks {
 
     public static readonly INITIAL: Joiner = {

@@ -13,7 +13,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { Part } from 'src/app/domain/Part';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { FirstPlayer, Joiner, MinimalUser, PartStatus, PartType } from 'src/app/domain/Joiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
@@ -25,6 +25,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirebaseTime } from 'src/app/domain/Time';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('PartCreationComponent', () => {
 
@@ -262,7 +263,7 @@ describe('PartCreationComponent', () => {
                 await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline' });
                 mockCandidateArrival();
 
-                // Then the candidate should not appear on the page
+                // Then the candidate should still appear on the page
                 expectElementToExist('#presenceOf_firstCandidate');
                 // and logError should not have been called
                 expect(ErrorLoggerService.logError).not.toHaveBeenCalled();

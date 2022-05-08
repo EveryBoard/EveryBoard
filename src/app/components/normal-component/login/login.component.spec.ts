@@ -6,8 +6,8 @@ import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/test
 import { Router } from '@angular/router';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Observable, ReplaySubject } from 'rxjs';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { LobbyComponent } from '../lobby/lobby.component';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('LoginComponent', () => {
     let testUtils: SimpleComponentTestUtils<LoginComponent>;
@@ -41,7 +41,7 @@ describe('LoginComponent', () => {
             spyOn(router, 'navigate').and.callFake(async() => true);
 
             // given an existing user
-            const user: AuthUser = ConnectedUserServiceMock.CONNECTED;
+            const user: AuthUser = UserMocks.CONNECTED_AUTH_USER;
 
             // when the user gets connected
             userRS.next(user);

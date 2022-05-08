@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
@@ -8,13 +8,13 @@ import { EncapsuleCase, EncapsuleState } from '../EncapsuleState';
 
 describe('EncapsuleState', () => {
 
-    const _: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+    const _: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 
     const emptyBoard: EncapsuleCase[][] = ArrayUtils.createTable(3, 3, _);
 
     describe('getPieceAt', () => {
         it('should return the expected space', () => {
-            const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
+            const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             const board: EncapsuleCase[][] = [
                 [_, _, _],
                 [someCase, _, _],
@@ -43,11 +43,11 @@ describe('EncapsuleCase', () => {
 
     describe('isEmpty', () => {
         it('should consider the empty space empty', () => {
-            const empty: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+            const empty: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(empty.isEmpty()).toBeTrue();
         });
         it('should consider other cases non empty', () => {
-            const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
+            const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(someCase.isEmpty()).toBeFalse();
         });
     });
@@ -61,7 +61,7 @@ describe('EncapsuleCase', () => {
             expect(list[2]).toBe(EncapsulePiece.BIG_BLACK);
         });
         it('should not include empty pieces in the list', () => {
-            const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
+            const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(someCase.toList().length).toBe(1);
         });
     });
@@ -73,15 +73,15 @@ describe('EncapsuleCase', () => {
     });
     describe('tryToSupperposePiece', () => {
         it('should forbid supperposing the empty piece', () => {
-            const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, Player.NONE);
+            const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             expect(() => c.tryToSuperposePiece(EncapsulePiece.NONE)).toThrow();
         });
         it('should forbid superposing a smaller piece', () => {
-            const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, Player.NONE);
+            const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             expect(c.tryToSuperposePiece(EncapsulePiece.MEDIUM_BLACK).isPresent()).toBeFalse();
         });
         it('should allow superposing a bigger piece', () => {
-            const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, Player.NONE);
+            const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             const expected: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, Player.ZERO);
 
             const superposed: MGPOptional<EncapsuleCase> = c.tryToSuperposePiece(EncapsulePiece.BIG_BLACK);
@@ -92,7 +92,7 @@ describe('EncapsuleCase', () => {
     });
     describe('removeBiggest', () => {
         it('should forbid to remove a piece from the empty space', () => {
-            const c: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+            const c: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(() => c.removeBiggest()).toThrow();
         });
         it('should remove the biggest piece of the space', () => {
@@ -100,7 +100,7 @@ describe('EncapsuleCase', () => {
 
             const result: {removedCase: EncapsuleCase, removedPiece: EncapsulePiece} = c.removeBiggest();
 
-            const expectedCase: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, Player.NONE);
+            const expectedCase: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             const expectedPiece: EncapsulePiece = EncapsulePiece.BIG_BLACK;
             expect(result.removedCase.encode()).toBe(expectedCase.encode());
             expect(result.removedPiece).toBe(expectedPiece);
@@ -108,15 +108,15 @@ describe('EncapsuleCase', () => {
     });
     describe('put', () => {
         it('should forbid putting a none piece', () => {
-            const c: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+            const c: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(() => c.put(EncapsulePiece.NONE)).toThrow();
         });
         it('should put on top of smaller pieces', () => {
-            const c: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
+            const c: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 
             const newCase: EncapsuleCase = c.put(EncapsulePiece.MEDIUM_BLACK);
 
-            const expectedCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE);
+            const expectedCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
             expect(newCase.encode()).toBe(expectedCase.encode());
         });
     });

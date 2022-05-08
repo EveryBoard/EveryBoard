@@ -12,7 +12,7 @@ import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
-import { MinimalUser } from '../domain/Joiner';
+import { MinimalUser } from '../domain/MinimalUser';
 
 // This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -53,6 +53,7 @@ export class AuthUser {
     /**
      * Constructs an AuthUser.
      * Requires:
+     * - the id of the user
      * - the email of the user, which may be null to represent that no user is connected
      * - the username of the user, which may be null if the user hasn't chosen a username yet
      * - a boolean indicating whether the user is verified
@@ -99,7 +100,7 @@ export class ConnectedUserService implements OnDestroy {
                 private readonly auth: FireAuth.Auth,
                 private readonly connectivityDAO: ConnectivityDAO)
     {
-        display(ConnectedUserService.VERBOSE, 'AuthenticationService constructor');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
@@ -113,28 +114,28 @@ export class ConnectedUserService implements OnDestroy {
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
-                    assert(this.user.isAbsent(), 'AuthenticationService received a double update for an user, this is unexpected');
+                    assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
                     await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
-                    const unsub: Unsubscribe = this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
-                        if (doc.isPresent()) {
-                            const username: string | undefined = doc.get().username;
-                            display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
-                            const userHasFinalizedVerification: boolean =
-                              this.emailVerified(user) === true && username != null;
-                            if (userHasFinalizedVerification === true && doc.get().verified === false) {
-                                // The user has finalized verification but isn't yet marked as so in the DB.
-                                // So we mark it, and we'll get notified when the user is marked.
-                                return this.userDAO.markVerified(user.uid);
+                    this.userUnsubscribe = MGPOptional.of(
+                        this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
+                            if (doc.isPresent()) {
+                                const username: string | undefined = doc.get().username;
+                                display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                                const userHasFinalizedVerification: boolean =
+                                    this.emailVerified(user) === true && username != null;
+                                if (userHasFinalizedVerification === true && doc.get().verified === false) {
+                                    // The user has finalized verification but isn't yet marked as so in the DB.
+                                    // So we mark it, and we'll get notified when the user is marked.
+                                    return this.userDAO.markVerified(user.uid);
+                                }
+                                const authUser: AuthUser = new AuthUser(user.uid,
+                                                                        MGPOptional.ofNullable(user.email),
+                                                                        MGPOptional.ofNullable(username),
+                                                                        userHasFinalizedVerification);
+                                this.user = MGPOptional.of(authUser);
+                                this.userRS.next(authUser);
                             }
-                            const authUser: AuthUser = new AuthUser(user.uid,
-                                                                    MGPOptional.ofNullable(user.email),
-                                                                    MGPOptional.ofNullable(username),
-                                                                    userHasFinalizedVerification);
-                            this.user = MGPOptional.of(authUser);
-                            this.userRS.next(authUser);
-                        }
-                    });
-                    this.userUnsubscribe = MGPOptional.of(unsub);
+                        }));
                 }
             });
     }
@@ -155,7 +156,7 @@ export class ConnectedUserService implements OnDestroy {
      * Returns the firebase user upon success, or a failure otherwise.
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
-        display(ConnectedUserService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doRegister(' + email + ')');
         if (await this.userDAO.usernameIsAvailable(username)) {
             return this.registerAfterUsernameCheck(username, email, password);
         } else {
@@ -193,18 +194,20 @@ export class ConnectedUserService implements OnDestroy {
                 return $localize`There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.`;
             case 'auth/popup-closed-by-user':
                 return $localize`You closed the authentication popup without finalizing your log in.`;
+            case 'auth/popup-blocked':
+                return $localize`The authentication popup was blocked. Try again after disabling popup blocking.`;
             default:
-                ErrorLoggerService.logError('AuthenticationService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
+                ErrorLoggerService.logError('ConnectedUserService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
         }
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
-        display(ConnectedUserService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.sendEmailVerification()');
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return ErrorLoggerService.logError('AuthenticationService', 'Verified users should not ask email verification after being verified');
+                return ErrorLoggerService.logError('ConnectedUserService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await Auth.sendEmailVerification(user.get());
@@ -214,7 +217,7 @@ export class ConnectedUserService implements OnDestroy {
             }
         } else {
             // This should not be reachable from a component
-            return ErrorLoggerService.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
+            return ErrorLoggerService.logError('ConnectedUserService', 'Unlogged users cannot request for email verification');
         }
     }
     /**
@@ -222,7 +225,7 @@ export class ConnectedUserService implements OnDestroy {
      * either success, or failure with a specific error.
      */
     public async doEmailLogin(email: string, password: string): Promise<MGPValidation> {
-        display(ConnectedUserService.VERBOSE, 'AuthenticationService.doEmailLogin(' + email + ')');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doEmailLogin(' + email + ')');
         try {
             // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
             await Auth.signInWithEmailAndPassword(this.auth, email, password);

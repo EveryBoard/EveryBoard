@@ -39,7 +39,7 @@ describe('HeaderComponent', () => {
     }));
     it('should show user email if the user has not set its username yet', fakeAsync(async() => {
         const email: string = 'jean@jaja.us';
-        ConnectedUserServiceMock.setUser(new AuthUser('123', MGPOptional.of(email), MGPOptional.empty(), false));
+        ConnectedUserServiceMock.setUser(new AuthUser('id', MGPOptional.of(email), MGPOptional.empty(), false));
         testUtils.detectChanges();
         expect(testUtils.getComponent().username).toEqual(email);
     }));

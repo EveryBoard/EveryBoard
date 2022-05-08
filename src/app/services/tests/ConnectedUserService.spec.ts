@@ -1,53 +1,43 @@
 /* eslint-disable max-lines-per-function */
-import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
+import { Database, ref, remove } from '@angular/fire/database';
+import { FirebaseError } from '@angular/fire/app';
+import * as FireAuth from '@angular/fire/auth';
+import { serverTimestamp } from 'firebase/firestore';
+
+import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Database, ref, remove } from '@angular/fire/database';
-import { FirebaseError } from '@angular/fire/app';
-import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { Part } from 'src/app/domain/Part';
+import { User } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { serverTimestamp } from 'firebase/firestore';
+import { Part } from 'src/app/domain/Part';
 
 @Injectable()
 export class ConnectedUserServiceMock {
-
-    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jeanjaja123',
-                                                                MGPOptional.of('jean@jaja.europe'),
-                                                                MGPOptional.of('Jean Jaja'),
-                                                                false);
-
-    public static CONNECTED: AuthUser = new AuthUser('jeanjaja13jajaj',
-                                                     MGPOptional.of('jean@jaja.europe'),
-                                                     MGPOptional.of('Jean Jaja'),
-                                                     true);
-
-    public uid: MGPOptional<string> = MGPOptional.empty();
-
-    public static setUser(user: AuthUser, notifyObservers: boolean = true): void {
-        const authService: ConnectedUserServiceMock =
-            TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock;
-        authService.setUser(user, notifyObservers);
+    public static setUser(user: AuthUser, notifyObservers: boolean = true, userId: string = 'userId'): void {
+        (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
+            .setUser(userId, user, notifyObservers);
     }
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
+    public uid: MGPOptional<string> = MGPOptional.empty();
 
     private readonly userRS: ReplaySubject<AuthUser>;
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
-    public setUser(user: AuthUser, notifyObservers: boolean = true): void {
+    public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {
         this.user = MGPOptional.of(user);
+        this.uid = MGPOptional.of(userId);
         // In some very specific cases, changing the status of a user in firebase does not notify the observers.
         // This is the case if a user becomes verified.
         if (notifyObservers) {
@@ -87,7 +77,7 @@ export class ConnectedUserServiceMock {
         if (this.user.isPresent()) {
             this.userRS.next(this.user.get());
         } else {
-            throw new Error('AuthenticationServiceMock: cannot reload user without setting a user first');
+            throw new Error('ConnectedUserServiceMock: cannot reload user without setting a user first');
         }
     }
     public async sendPasswordResetEmail(): Promise<MGPValidation> {
@@ -117,17 +107,21 @@ async function setupAuthTestModule(): Promise<unknown> {
  * When using it, don't forget to sign out the user when the test is done, using:
  * await firebase.auth().signOut();
  */
-export async function createConnectedGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
+export async function createConnectedGoogleUser(createInDB: boolean, email: string = 'foo@bar.com', username?: string): Promise<FireAuth.User> {
     TestBed.inject(ConnectedUserService);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
-    const token: string = '{"sub": "abc123", "email": "foo@example.com", "email_verified": true}';
+    const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
     if (createInDB) {
-        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { verified: true });
+        const user: User = { verified: true };
+        if (username != null) {
+            user.username = username;
+        }
+        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, user);
     }
     return credential.user;
 }
@@ -138,7 +132,7 @@ async function createGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
     return user;
 }
 
-describe('AuthenticationService', () => {
+describe('ConnectedUserService', () => {
     let auth: FireAuth.Auth;
     let service: ConnectedUserService;
 
@@ -270,8 +264,8 @@ describe('AuthenticationService', () => {
 
             // then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe('AuthenticationService: Unlogged users cannot request for email verification');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Unlogged users cannot request for email verification');
+            expect(result.getReason()).toBe('ConnectedUserService: Unlogged users cannot request for email verification');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unlogged users cannot request for email verification');
         });
         it('should fail if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
@@ -283,8 +277,8 @@ describe('AuthenticationService', () => {
 
             // then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe('AuthenticationService: Verified users should not ask email verification after being verified');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Verified users should not ask email verification after being verified');
+            expect(result.getReason()).toBe('ConnectedUserService: Verified users should not ask email verification after being verified');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Verified users should not ask email verification after being verified');
         });
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // given a user that just registered and hence is not verified
@@ -434,7 +428,7 @@ describe('AuthenticationService', () => {
         });
     });
     describe('mapFirebaseError', () => {
-        it('calls logError when encountering an unsupported error', async() => {
+        it('should call logError when encountering an unsupported error', async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // given an unsupported error
@@ -444,13 +438,14 @@ describe('AuthenticationService', () => {
             service.mapFirebaseError(error);
 
             // then logError is called
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
         });
         it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
+                'auth/popup-blocked',
             ];
 
             for (const code of errorCodes) {
@@ -509,7 +504,7 @@ describe('AuthenticationService', () => {
             // then it fails
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
+            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
         it('should reject empty usernames', async() => {
             // when the username is set to an empty username
@@ -556,7 +551,7 @@ describe('AuthenticationService', () => {
             // then it fails and logs the error
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
+            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
     });
     describe('sendPasswordResetEmail', () => {

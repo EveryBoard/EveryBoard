@@ -4,7 +4,7 @@ import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
@@ -14,7 +14,7 @@ describe('SixComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<SixComponent>;
 
-    const _: number = Player.NONE.value;
+    const _: number = PlayerOrNone.NONE.value;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
 

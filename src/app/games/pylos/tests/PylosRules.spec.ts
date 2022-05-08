@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
@@ -17,9 +17,9 @@ describe('PylosRules:', () => {
     let minimax: PylosMinimax;
     let minimaxes: PylosMinimax[];
 
-    const _: Player = Player.NONE;
-    const O: Player = Player.ZERO;
-    const X: Player = Player.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
 
     beforeEach(() => {
         rules = new PylosRules(PylosState);
@@ -27,7 +27,7 @@ describe('PylosRules:', () => {
         minimaxes = [minimax];
     });
     it(`should forbid move who'se landing coord is not empty`, () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [O, _, _, _],
                 [_, _, _, _],
@@ -50,7 +50,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     });
     it('should forbid move starting by an empty piece', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [_, _, _, _],
                 [_, _, _, _],
@@ -73,7 +73,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     });
     it('should forbid move starting by an opponent piece', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [X, _, _, _],
                 [_, _, _, _],
@@ -96,7 +96,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
     it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [_, _, _, _],
                 [_, _, _, _],
@@ -119,7 +119,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, PylosFailure.CANNOT_LAND());
     });
     it('should forbid move who capture without having formed a squared', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [O, _, _, _],
                 [_, _, _, _],
@@ -143,7 +143,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, PylosFailure.CANNOT_CAPTURE());
     });
     it('should forbid move who capture non-player piece or supporting-piece', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [_, O, O, _],
                 [O, O, X, _],
@@ -171,7 +171,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, otherMove, PylosFailure.INVALID_SECOND_CAPTURE());
     });
     it('should allow legal capture to include landing piece', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [_, O, _, _],
                 [O, O, _, _],
@@ -195,7 +195,7 @@ describe('PylosRules:', () => {
         expect(status.isSuccess()).toBeTrue();
     });
     it('should forbid piece to climb over itself', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [X, O, _, _],
                 [O, O, _, _],
@@ -218,7 +218,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
     });
     it('should forbid piece to climb when supporting', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [X, O, _, _],
                 [O, O, _, _],
@@ -241,7 +241,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
     });
     it('should allow legal capture to include piece supporting previously captured stone', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [X, O, X, O],
                 [O, X, O, X],
@@ -267,7 +267,7 @@ describe('PylosRules:', () => {
         expect(status.isSuccess()).toBeTrue();
     });
     it('should declare looser Player.ZERO when he put his 15th ball', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [X, O, X, O],
                 [O, O, O, O],
@@ -287,7 +287,7 @@ describe('PylosRules:', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
-        const expectedBoard: Player[][][] = [
+        const expectedBoard: PlayerOrNone[][][] = [
             [
                 [X, O, X, O],
                 [O, O, O, O],
@@ -311,7 +311,7 @@ describe('PylosRules:', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should declare looser Player.ONE when he put his 15th ball', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [O, X, O, X],
                 [X, X, X, X],
@@ -331,7 +331,7 @@ describe('PylosRules:', () => {
 
         const state: PylosState = new PylosState(board, 1);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
-        const expectedBoard: Player[][][] = [
+        const expectedBoard: PlayerOrNone[][][] = [
             [
                 [O, X, O, X],
                 [X, X, X, X],

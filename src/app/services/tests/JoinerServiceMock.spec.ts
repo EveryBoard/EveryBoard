@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { FirstPlayer, Joiner, JoinerDocument, PartStatus, PartType } from 'src/app/domain/Joiner';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
 export class JoinerServiceMock {
@@ -9,7 +8,7 @@ export class JoinerServiceMock {
 
     public static emittedsJoiner: JoinerDocument[];
 
-    public constructor(private readonly joinerDAO: JoinerDAO) {
+    public constructor() {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.constructor');
     }
     public joinGame(): Promise<void> {

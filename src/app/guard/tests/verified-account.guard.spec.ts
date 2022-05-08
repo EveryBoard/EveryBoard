@@ -7,6 +7,7 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { VerifiedAccountGuard } from '../verified-account.guard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('VerifiedAccountGuard', () => {
     let guard: VerifiedAccountGuard;
@@ -39,7 +40,7 @@ describe('VerifiedAccountGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/login'));
     }));
     it('should move unverified user to verify-account page and refuse them', fakeAsync(async() => {
-        ConnectedUserServiceMock.setUser(ConnectedUserServiceMock.CONNECTED_UNVERIFIED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_UNVERIFIED);
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should move users without username to verify-account page and refuse them', fakeAsync(async() => {
@@ -48,12 +49,12 @@ describe('VerifiedAccountGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should accept verified user', fakeAsync(async() => {
-        ConnectedUserServiceMock.setUser(ConnectedUserServiceMock.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await expectAsync(guard.canActivate()).toBeResolvedTo(true);
     }));
     it('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
         // Given a guard that has executed
-        ConnectedUserServiceMock.setUser(ConnectedUserServiceMock.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await guard.canActivate();
         spyOn(guard['userSub'], 'unsubscribe');
 
