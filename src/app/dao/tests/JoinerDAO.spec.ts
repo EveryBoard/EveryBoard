@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { JoinerDAO } from '../JoinerDAO';
 import * as FireAuth from '@angular/fire/auth';
-import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
+import { createConnectedGoogleUser, createUnverifiedUser, reconnectUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { PartDAO } from '../PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -83,12 +83,8 @@ describe('JoinerDAO', () => {
 
         await signOut();
         // and a non-verified user
-        const token: string = '{"sub": "bar@bar.com", "email": "bar@bar.com", "email_verified": false}';
-        const credential: FireAuth.UserCredential =
-            await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
-                                                FireAuth.GoogleAuthProvider.credential(token));
-        await userDAO.set(credential.user.uid, { verified: false, username: 'user' });
-        const nonVerifiedUser: MinimalUser = { id: credential.user.uid, name: 'user' };
+        const user: FireAuth.User = await createUnverifiedUser('bar@bar.com', 'user');
+        const nonVerifiedUser: MinimalUser = { id: user.uid, name: 'user' };
         // When the user tries to create the joiner
         const result: Promise<void> = joinerDAO.set(partId, { ...JoinerMocks.INITIAL, nonVerifiedUser });
         // Then it should fail
@@ -216,9 +212,7 @@ describe('JoinerDAO', () => {
         await signOut();
 
         // The creator then selects candidates as chosenPlayer
-        const creatorToken: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
-        await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
-                                            FireAuth.GoogleAuthProvider.credential(creatorToken));
+        await reconnectUser('foo@bar.com');
         const update: Partial<Joiner> = { chosenPlayer: 'candidate', partStatus: PartStatus.CONFIG_PROPOSED.value };
         await expectAsync(joinerDAO.update(partId, update)).toBeResolvedTo();
         await signOut();
@@ -249,10 +243,7 @@ describe('JoinerDAO', () => {
         await signOut();
 
         // The creator then selects candidates as chosenPlayer
-        // TODO: use reconnect user
-        const creatorToken: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
-        await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
-                                            FireAuth.GoogleAuthProvider.credential(creatorToken));
+        await reconnectUser('foo@bar.com');
         await expectAsync(joinerDAO.update(partId, { chosenPlayer: 'candidate' })).toBeResolvedTo();
         await signOut();
 
@@ -318,3 +309,4 @@ describe('JoinerDAO', () => {
         await expectFirebasePermissionDenied(result);
     });
 });
+
