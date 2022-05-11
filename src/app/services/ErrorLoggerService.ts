@@ -6,6 +6,7 @@ import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPValidation } from '../utils/MGPValidation';
 import { JSONValue } from '../utils/utils';
+import { MessageDisplayer } from './MessageDisplayer';
 
 @Injectable({
     providedIn: 'root',
@@ -32,10 +33,12 @@ export class ErrorLoggerService {
         return MGPValidation.failure(component + ': ' + message);
     }
     public constructor(private readonly errorDAO: ErrorDAO,
-                       private readonly router: Router) {
+                       private readonly router: Router,
+                       private readonly messageDisplayer: MessageDisplayer) {
         ErrorLoggerService.setSingletonInstance(this);
     }
     public async logError(component: string, message: string, data?: JSONValue): Promise<void> {
+        this.messageDisplayer.criticalMessage($localize`An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.`);
         const route: string = this.router.url;
         const previousErrors: FirestoreDocument<MGPError>[] =
             await this.errorDAO.findErrors(component, route, message, data);
