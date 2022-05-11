@@ -145,11 +145,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (partValidity.isFailure()) {
                 // note, option if WRONG_GAME_TYPE to redirect to another page
                 this.routerEventsSub.unsubscribe();
-                await this.router.navigate(['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], { skipLocationChange: true } );
+                const message: string = OnlineGameWrapperMessages.NO_MATCHING_PART();
+                await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
             }
         } else {
             this.routerEventsSub.unsubscribe();
-            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameURL)], { skipLocationChange: true } );
+            const message: string = GameWrapperMessages.NO_MATCHING_GAME(gameURL);
+            await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
         }
     }
     private setCurrentPartIdOrRedirect(): Promise<void> {
