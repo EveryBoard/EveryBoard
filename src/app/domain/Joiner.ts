@@ -3,9 +3,9 @@ import { JSONObject } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MinimalUser } from './MinimalUser';
 
+// On top of these fields, a joiner has a subcollection of candidates, which are MinimalUsers
 export interface Joiner extends JSONObject {
     readonly creator: MinimalUser;
-    readonly candidates: Array<string>;
     readonly chosenPlayer: string | null;
     readonly partStatus: IPartStatus;
 

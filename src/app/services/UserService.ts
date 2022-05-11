@@ -11,19 +11,22 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 export class UserService {
 
     constructor(private readonly activeUsersService: ActiveUsersService,
-                private readonly joueursDAO: UserDAO) {
+                private readonly userDAO: UserDAO) {
     }
 
     public getActiveUsersObs(): Observable<UserDocument[]> {
-        // TODO: unsubscriptions from other user services
         this.activeUsersService.startObserving();
         return this.activeUsersService.activeUsersObs;
     }
     public unSubFromActiveUsersObs(): void {
         this.activeUsersService.stopObserving();
     }
+    public observeUser(id: string, callback: FirebaseCollectionObserver<User>): () => void {
+        // the callback will be called on the foundUser
+        return this.userDAO.observeUser(id, callback);
+    }
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
         // the callback will be called on the foundUser
-        return this.joueursDAO.observeUserByUsername(username, callback);
+        return this.userDAO.observeUserByUsername(username, callback);
     }
 }

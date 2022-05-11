@@ -82,6 +82,8 @@ service cloud.firestore {
         match /parties/{id} {
             // Anybody can create a part
             allow create: if userIsVerified();
+            // TODO: who can delete a part?
+            allow delete: if userIsVerified();
             // A number of fields are readonly:
             // - typeGame
             // - playerZero/playerOne once the part has started
@@ -102,24 +104,27 @@ service cloud.firestore {
         match /joiners/{partId} {
             // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
             allow create: if userIsVerified() && userIsCreator(request.resource.data) && exists(/databases/$(database)/documents/parties/$(partId));
-            // The creator can change all fields except:
-            //   - changing partStatus to STARTED (3)
-            //   - changing candidates
+            // The creator can delete a joiner
+            allow delete: if userIsVerified() && userIsCreator(resource.data);
+            // Anybody else can delete a joiner only if the creator is offline
+            allow delete: if UserIsVerified() && creatorIsOffline(resource.data);
+            // The creator can change all fields except changing partStatus to STARTED (3)
             allow update: if userIsVerified() &&
                              userIsCreator(resource.data) &&
-                             request.resource.data.partStatus != 3 && preservesField('candidates');
-            // Anybody else than the creator can add or remove themselves to the candidate list, leaving the other candidates untouched.
-            // Moreover, a chosenPlayer can remove itself (in case they leave the joiner)
-            // Finally, the chosenPlayer can change the config from PROPOSED to STARTED
-            // No other field can be touched
+                             request.resource.data.partStatus != 3;
+            // For anybody else:
+            //   - a chosenPlayer can remove itself
+            //   - the chosen player can change the config fro from PROPOSED to STARTED
             allow update: if userIsVerified() &&
-                             !userIsCreator(resource.data) &&
                              preservesField('creator') && preservesField('firstPlayer') && preservesField('partType') && preservesField('maximalMoveDuration') && preservesField('totalPartDuration') &&
-                             (preservesField('candidates') || addsOneSelfToCandidates()) &&
                              (preservesField('partStatus') || changePartStatusAsChosenPlayer()) &&
                              (preservesField('chosenPlayer') || removesOneSelfFromChosenPlayer());
 
             // Any verified user can read a joiner
+            allow read: if userIsVerified();
+        }
+        match /joiners/{partId}/candidates/{userId} {
+            allow write: if userIsVerified() && userId == request.auth.uid;
             allow read: if userIsVerified();
         }
         function userIsVerified() {
@@ -133,6 +138,9 @@ service cloud.firestore {
                    joiner.creator.id == request.auth.uid &&
                    debug(joiner.creator.name) == debug(usernameOf(request.auth.uid));
         }
+        function creatorIsOffline(joiner) {
+            return true; // TODO
+        }
         function isCurrentUser(user) {
             let uid = request.auth.uid;
             let username = get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
@@ -140,15 +148,6 @@ service cloud.firestore {
         }
         function preservesField(field) {
             return !(field in request.resource.data) || (request.resource.data[field] == resource.data[field]);
-        }
-        function addsOneSelfToCandidates() {
-            // TODO: there's not a lot we can ensure here. Check firebase doc to see if we can do more
-            // TODO: may need to look at doc here, we can't seem to compute the length!
-            return true;
-//            let oldLength = debug(len(resource.data.candidates));
-//            let newLength = debug(request.resource.data.candidates.size);
-//            return debug(newLength) == debug(oldLength) + 1 &&
-//                   isCurrentUser(debug(request.resource.data.candidates)[newLength-1]);
         }
         function changePartStatusAsChosenPlayer() {
             let uid = request.auth.uid;

@@ -18,7 +18,7 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     update(id: string, update: Firestore.UpdateData<T>): Promise<void>;
 
-    delete(messageId: string): Promise<void>;
+    delete(id: string): Promise<void>;
 
     set(id: string, element: T): Promise<void>;
 
@@ -38,6 +38,7 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
     subCollectionDAO<T extends FirebaseJSONObject>(id: string, name: string): IFirebaseFirestoreDAO<T>;
 }
 
+// TODO: catch all errors and log them in DB !
 export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
 
     public static VERBOSE: boolean = false;

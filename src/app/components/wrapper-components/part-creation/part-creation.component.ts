@@ -17,6 +17,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -82,11 +84,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         candidates: [],
     };
     public currentJoiner: Joiner | null = null;
+    public candidates: MinimalUser[] = [];
 
     // Subscription
-    private candidateSubscription: MGPMap<string, () => void> = new MGPMap();
+    private readonly candidateSubscription: MGPMap<MinimalUser, () => void> = new MGPMap();
     private creatorSubscription: (() => void) | null = null;
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
 
     public configFormGroup: FormGroup;
 
@@ -98,7 +101,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        private readonly chatService: ChatService,
                        private readonly userService: UserService,
                        private readonly formBuilder: FormBuilder,
-                       private readonly messageDisplayer: MessageDisplayer)
+                       private readonly messageDisplayer: MessageDisplayer,
+                       private readonly connectedUserService: AuthenticationService)
     {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
@@ -107,7 +111,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.checkInputs();
         this.createForms();
-        const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, this.userName);
+        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+        const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, user);
         if (joinResult.isFailure()) {
             // We will be redirected by the GameWrapper
             return;
@@ -120,7 +125,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return;
     }
     private checkInputs() {
-        assert(this.userName != null && this.userName !== '',
+        assert(this.connectedUserService.user.get().username.get() !== '',
                'PartCreationComponent should not be created with an empty userName');
         assert(this.partId != null && this.partId !== '',
                'PartCreationComponent should not be created with an empty partId');
@@ -139,6 +144,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                               async(joiner: MGPOptional<Joiner>) => {
                                                   await this.onCurrentJoinerUpdate(joiner);
                                               });
+        this.joinerService.subscribeToCandidates(this.partId,
+                                                 async(candidates: MinimalUser[]) => {
+                                                     await this.onCandidatesUpdate(candidates);
+                                                 });
     }
     private getForm(name: string): AbstractControl {
         return Utils.getNonNullable(this.configFormGroup.get(name));
@@ -190,14 +199,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.viewInfo.showCustomTime = this.getForm('partType').value === 'CUSTOM';
 
         this.viewInfo.creator = joiner.creator.name;
-        this.viewInfo.candidates = joiner.candidates;
+        this.viewInfo.candidates = this.candidates.map((candidate: MinimalUser) => candidate.name);
         if (this.userName === joiner.creator.name) {
             this.setDataForCreator(joiner);
         } else {
             this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
             this.viewInfo.totalPartDuration = joiner.totalPartDuration;
             this.viewInfo.partType = joiner.partType;
-            this.viewInfo.chosenOpponent = joiner.chosenPlayer || undefined;
+            this.viewInfo.chosenOpponent = joiner.chosenPlayer ?? undefined;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
         }
         switch (joiner.partType) {
@@ -213,15 +222,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private setDataForCreator(joiner: Joiner): void {
-        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration || joiner.maximalMoveDuration;
-        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
+        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? joiner.maximalMoveDuration;
+        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration ?? joiner.totalPartDuration;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
         if (opponent) {
-            if (joiner.candidates.indexOf(opponent) === -1) {
+            if (this.candidates.some((user: MinimalUser) => user.name === opponent)) {
                 opponent = ''; // chosenOppoent left
             }
         } else {
-            opponent = joiner.chosenPlayer || '';
+            opponent = joiner.chosenPlayer ?? '';
         }
         this.getForm('chosenOpponent').setValue(opponent);
     }
@@ -290,6 +299,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
+    private onCandidatesUpdate(candidates: MinimalUser[]): void {
+        this.candidates = candidates;
+        this.observeNeededPlayers();
+        this.updateViewInfo();
+    }
     private async onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
@@ -297,7 +311,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private isGameStarted(): boolean {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
-        return joiner != null && joiner.partStatus === PartStatus.PART_STARTED.value;
+        return joiner.partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted() {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
@@ -326,7 +340,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.destroyDocIfCreatorOffline(modifiedUsers);
         };
         const observer: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver(callback, callback, callback);
-        this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator.name, observer);
+        this.creatorSubscription = this.userService.observeUser(joiner.creator.id, observer);
     }
     private async destroyDocIfCreatorOffline(modifiedUsers: UserDocument[]): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
@@ -344,66 +358,57 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
         const onDocumentCreated: (foundUser: UserDocument[]) => void = async(foundUsers: UserDocument[]) => {
-            for (const user of foundUsers) {
-                if (user.data.state === 'offline') {
-                    const username: string = Utils.getNonNullable(user.data.username);
-                    await this.removeUserFromLobby(username);
-                    ErrorLoggerService.logError('PartCreationComponent', 'user is already offline',
-                                                { id: user.id, username });
+            for (const userDoc of foundUsers) {
+                if (userDoc.data.state === 'offline') {
+                    const user: MinimalUser = { id: userDoc.id, name: Utils.getNonNullable(userDoc.data.username) };
+                    await this.removeUserFromLobby(user);
+                    ErrorLoggerService.logError('PartCreationComponent', 'user is already offline', user);
                 }
             }
         };
         const onDocumentModified: (modifiedUsers: UserDocument[]) => void = async(modifiedUsers: UserDocument[]) => {
-            for (const user of modifiedUsers) {
-                if (user.data.state === 'offline') {
-                    await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
+            for (const userDoc of modifiedUsers) {
+                if (userDoc.data.state === 'offline') {
+                    const user: MinimalUser = { id: userDoc.id, name: Utils.getNonNullable(userDoc.data.username) };
+                    await this.removeUserFromLobby(user);
                 }
             }
         };
         const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = async(deletedUsers: UserDocument[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
-            for (const user of deletedUsers) {
-                const username: string = Utils.getNonNullable(user.data.username);
-                await this.removeUserFromLobby(username);
-                ErrorLoggerService.logError('PartCreationComponent', 'user was deleted',
-                                            { id: user.id, username });
+            for (const userDoc of deletedUsers) {
+                const user: MinimalUser = { id: userDoc.id, name: Utils.getNonNullable(userDoc.data.username) };
+                ErrorLoggerService.logError('PartCreationComponent', 'user was deleted', user);
             }
         };
         const callback: FirebaseCollectionObserver<User> =
             new FirebaseCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        for (const candidateName of joiner.candidates) {
-            if (this.candidateSubscription.get(candidateName).isAbsent()) {
-                const subscription: () => void = this.userService.observeUserByUsername(candidateName, callback);
-                this.candidateSubscription.set(candidateName, subscription);
+        for (const candidate of this.candidates) {
+            if (this.candidateSubscription.get(candidate).isAbsent()) {
+                const subscription: () => void = this.userService.observeUser(candidate.id, callback);
+                this.candidateSubscription.set(candidate, subscription);
             }
         }
         for (const oldCandidate of this.candidateSubscription.listKeys()) {
             // Unsubscribe old candidates
-            if (oldCandidate !== joiner.chosenPlayer) {
-                if (joiner.candidates.includes(oldCandidate) === false) {
+            if (oldCandidate.name !== joiner.chosenPlayer) {
+                if (this.candidates.includes(oldCandidate) === false) {
                     this.unsubscribeFrom(oldCandidate);
                 }
             }
         }
     }
-    private removeUserFromLobby(username: string): Promise<void> {
+    private async removeUserFromLobby(user: MinimalUser): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
-        const index: number = joiner.candidates.indexOf(username);
-        // The user must be in the lobby, otherwise we would have unsubscribed from its updates
-        assert(index !== -1, 'PartCreationComponent: attempting to remove a user not in the lobby');
-        const beforeUser: string[] = joiner.candidates.slice(0, index);
-        const afterUser: string[] = joiner.candidates.slice(index + 1);
-        const candidates: string[] = beforeUser.concat(afterUser);
-        if (username === joiner.chosenPlayer) {
+        if (user.name === joiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${username} left the game, please pick another opponent.`);
-            return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
-        } else {
-            return this.joinerService.updateCandidates(candidates);
+            this.messageDisplayer.infoMessage($localize`${user.name} left the game, please pick another opponent.`);
+            await this.joinerService.reviewConfigAndRemoveChosenPlayer();
         }
+        return this.joinerService.removeCandidate(user);
     }
-    private unsubscribeFrom(username: string): void {
-        const subscription: () => void = this.candidateSubscription.delete(username);
+    private unsubscribeFrom(user: MinimalUser): void {
+        const subscription: () => void = this.candidateSubscription.delete(user);
         subscription();
     }
     public acceptConfig(): Promise<void> {
@@ -437,7 +442,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             } else if (this.allDocDeleted === false) {
                 display(PartCreationComponent.VERBOSE,
                         'PartCreationComponent.ngOnDestroy: you(joiner) about to cancel game joining');
-                await this.joinerService.cancelJoining(this.userName);
+                const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+                await this.joinerService.cancelJoining(user);
             }
         }
         return;
