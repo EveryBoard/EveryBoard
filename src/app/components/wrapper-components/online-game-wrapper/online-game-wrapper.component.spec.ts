@@ -45,10 +45,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
         return Promise.resolve();
     }
-    function finishTest(): void {
+    async function finishTest(): Promise<void> {
         testUtils.detectChanges();
         tick();
-        void joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);
+        await joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);
         testUtils.detectChanges();
         tick(JoinerMocks.INITIAL.maximalMoveDuration * 1000);
     }
@@ -81,7 +81,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
 
             // finish the game to have no timeout still running
-            finishTest();
+            await finishTest();
         }));
         it('Initialization on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
@@ -115,7 +115,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
 
             // finish the game to have no timeout still running
-            finishTest();
+            await finishTest();
         }));
         it('Some ids are needed before initialisation', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL, PartMocks.INITIAL);
@@ -129,7 +129,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(chatId).withContext('chat id should be present at start').toBeTruthy();
 
             // finish the game to have no timeout still running
-            finishTest();
+            await finishTest();
         }));
         it('Initialization should make appear PartCreationComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL, PartMocks.INITIAL);
@@ -143,7 +143,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
 
             // finish the game to have no timeout still running
-            finishTest();
+            await finishTest();
         }));
         it('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);

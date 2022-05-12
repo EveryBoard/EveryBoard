@@ -36,9 +36,9 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                connectedUserService: ConnectedUserService,
                 public router: Router,
-                public cdr: ChangeDetectorRef)
+                public cdr: ChangeDetectorRef,
+                protected connectedUserService: ConnectedUserService)
     {
         super(componentFactoryResolver, actRoute, connectedUserService);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');

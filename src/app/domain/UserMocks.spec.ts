@@ -31,6 +31,7 @@ export class UserMocks {
         username: UserMocks.CREATOR_AUTH_USER.username.get(),
         state: 'online',
         verified: true,
+        last_changed: { seconds: 123, nanoseconds: 456000000 },
     };
     public static readonly CONNECTED: User = {
         username: UserMocks.CONNECTED_AUTH_USER.username.get(),
@@ -41,6 +42,7 @@ export class UserMocks {
         username: UserMocks.OPPONENT_AUTH_USER.username.get(),
         state: 'online',
         verified: true,
+        last_changed: { seconds: 124, nanoseconds: 456000000 },
     };
     public static readonly CREATOR_MINIMAL_USER: MinimalUser = UserMocks.CREATOR_AUTH_USER.toMinimalUser();
 

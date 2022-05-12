@@ -119,7 +119,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await joinerDAO.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
-        // TODO: replace by real actor action (chooseCandidate)
+        // TODO: replace by a click on the component to really simulate it "end2end"
         componentTestUtils.detectChanges();
         if (observerRole === Player.ZERO) { // Creator
             await wrapper.partCreation.proposeConfig();

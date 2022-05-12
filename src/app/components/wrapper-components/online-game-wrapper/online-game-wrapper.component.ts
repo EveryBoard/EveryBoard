@@ -96,9 +96,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
+                protected connectedUserService: ConnectedUserService,
                 private readonly router: Router,
                 private readonly userService: UserService,
-                connectedUserService: ConnectedUserService,
                 private readonly gameService: GameService)
     {
         super(componentFactoryResolver, actRoute, connectedUserService);

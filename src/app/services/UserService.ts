@@ -6,6 +6,7 @@ import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
+import { FirebaseTime } from '../domain/Time';
 
 /**
   * The aim of this service is to:
@@ -37,5 +38,22 @@ export class UserService {
     }
     public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
         return this.userDAO.subscribeToChanges(userId, callback);
+    }
+    public async getUserLastChanged(id: string): Promise<MGPOptional<FirebaseTime>> {
+        const user: MGPOptional<User> = await this.userDAO.read(id);
+        if (user.isAbsent()) {
+            console.log('no user to lastChange !')
+            return MGPOptional.empty();
+        } else {
+            // TODO FOR REVIEW: rendre ça "jamais nul en db" ?
+            const lastChanged: FirebaseTime | undefined = user.get().last_changed;
+            if (lastChanged == null) {
+                console.log('last changed was nul!')
+                return MGPOptional.empty();
+            } else {
+                console.log('last changed was', lastChanged)
+                return MGPOptional.of(lastChanged);
+            }
+        }
     }
 }
