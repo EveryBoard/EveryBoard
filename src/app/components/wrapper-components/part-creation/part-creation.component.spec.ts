@@ -27,7 +27,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirebaseTime, Time } from 'src/app/domain/Time';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
-fdescribe('PartCreationComponent', () => {
+describe('PartCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;

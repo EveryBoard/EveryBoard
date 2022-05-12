@@ -2000,7 +2000,7 @@
         <source>Be polite</source>
       </trans-unit>
       <trans-unit id="7206938270697807461" datatype="html">
-        <source>Only connected users can see the chat.</source>
+        <source>You cannot join this game because you are already in another one.</source>
       </trans-unit>
       <trans-unit id="5112659486997490676" datatype="html">
         <source>no new message</source>
