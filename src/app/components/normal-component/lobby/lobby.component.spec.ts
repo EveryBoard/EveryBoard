@@ -91,6 +91,6 @@ describe('LobbyComponent', () => {
         // Then the date should be written in format HH:mm:ss (with 1h added due to Locale?)
         const element: DebugElement = testUtils.findElement('#' + UserMocks.CREATOR_MINIMAL_USER.name);
         const time: string = element.nativeElement.innerText;
-        expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': 12:34:56');
+        expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': 11:34:56');
     }));
 });
