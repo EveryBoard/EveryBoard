@@ -60,7 +60,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * they need common data so that the parent calculates/retrieves the data then share it
      * with the part creation component
      */
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static TOKEN_INTERVAL: number = 5 * 1000;
 
@@ -94,7 +94,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private allUserInterval: MGPOptional<number> = MGPOptional.empty();
     private ownTokenInterval: MGPOptional<number> = MGPOptional.empty();
     private lastToken: Time
-    private selfSubscription: () => void; // TODOTODO unsubscribe
+    private selfSubscription: () => void = () => {};
 
     public configFormGroup: FormGroup;
 
@@ -391,7 +391,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const lastChanged: Time = lastChangedOpt.get() as Time;
         const diff: number = getMillisecondsDifference(lastChanged, currentTime);
-        console.log('USER DIFF of ', diff)
         return diff > PartCreationComponent.TOKEN_TIMEOUT;
     }
     public async startSendingPresenceTokens(): Promise<void> {
@@ -403,11 +402,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }, PartCreationComponent.TOKEN_INTERVAL));
         const userId: string = this.connectedUserService.user.get().id;
         this.selfSubscription = this.userService.observeUser(userId, (userOpt: MGPOptional<User>) => {
-            assert(userOpt.isPresent(), 'connected user should fucking exist');
+            assert(userOpt.isPresent(), 'connected user should exist');
             const user: User = userOpt.get();
             if (user.last_changed != null) {
                 this.lastToken = user.last_changed as Time;
-                console.log('lastToken is now', this.lastToken);
             }
         });
     }
@@ -419,6 +417,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         if (this.allUserInterval.isPresent()) {
             window.clearInterval(this.allUserInterval.get());
         }
+        this.selfSubscription();
     }
     private async removeCandidateFromLobby(userId: string): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);

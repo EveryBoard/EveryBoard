@@ -53,7 +53,7 @@ export class GameService {
     }
     private createUnstartedPart(creator: MinimalUser, typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
-                'GameService.createPart(' + creator + ', ' + typeGame + ')');
+                'GameService.createPart(' + creator.name + ', ' + typeGame + ')');
 
         const newPart: Part = {
             lastUpdate: {

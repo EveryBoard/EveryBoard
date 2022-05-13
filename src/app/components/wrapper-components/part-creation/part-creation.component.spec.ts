@@ -105,7 +105,7 @@ describe('PartCreationComponent', () => {
     describe('For creator', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component that is loaded by the creator
-            // meaning that before clicking it, user was subscribed to himself
+            // meaning that before clicking it, user was subscribed to themself
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
             await joinerDAO.set('joinerId', JoinerMocks.INITIAL);
         }));
@@ -160,9 +160,9 @@ describe('PartCreationComponent', () => {
 
                 // When the candidate user's document changes
                 // eslint-disable-next-line camelcase
-                const last_changed: FirebaseTime = { seconds: 42, nanoseconds: 3141592 };
+                const last_changed: FirebaseTime = { seconds: 500, nanoseconds: 0 };
                 await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { last_changed });
-                tick();
+                tick(PartCreationComponent.TOKEN_INTERVAL);
 
                 // Then it is in the list of candidates
                 expectElementToExist('#candidate_firstCandidate');
@@ -661,31 +661,11 @@ describe('PartCreationComponent', () => {
                 expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
                 expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
-                console.log('we will stopSendingPresenceTokensAndObservingUsersIfNeeded')
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 flush();
             }));
         });
-        describe('Leaving', () => {
-            it('should remove yourself when leaving the room and empty user.observedPart', fakeAsync(async() => {
-                // Given a partCreation where user is candidate
-                awaitComponentInitialisation();
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
-
-                // When leaving the page (tested here by calling ngOnDestroy)
-                const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
-                spyOn(authService, 'removeObservedPart').and.callThrough();
-                spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
-                spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
-                await component.ngOnDestroy();
-                destroyed = true;
-
-                // Then joinerService.cancelJoining should have been called
-                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER);
-                expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
-            }));
-        });
-        describe('Hoping to get chosen', () => {
+        describe('Not chosen yet', () => {
             it('should reroute to server when game is cancelled', fakeAsync(async() => {
                 const router: Router = TestBed.inject(Router);
                 spyOn(router, 'navigate');
@@ -733,7 +713,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
-        describe('As the Chosen opponent', () => {
+        describe('Chosen opponent', () => {
             it('each 5 second a presence token should be sent', fakeAsync(async() => {
                 // Given a partCreation were you are already chosen as candidate
                 awaitComponentInitialisation();
@@ -799,18 +779,37 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should not stop sending token when no longer chosen opponent', fakeAsync(async() => {
-                // Given a component where user is chosen opponent
+                // Given a component where user is chosen opponent amongst two candidate
                 awaitComponentInitialisation();
                 await receiveJoinerUpdate(JoinerMocks.WITH_TWO_CANDIDATES);
                 await receiveJoinerUpdate(JoinerMocks.WITH_CHOSEN_OPPONENT);
 
-                // When an update notify user that he is no longer chosen opponent
+                // When an update notifies user that the chosen user changed
                 spyOn(component, 'stopSendingPresenceTokensAndObservingUsersIfNeeded').and.callThrough();
                 await receiveJoinerUpdate(JoinerMocks.WITH_ANOTHER_CHOSEN_OPPONENT);
 
-                // Then stopSendingPresenceTokensAndObservingCreatorIfNeeded should have been called
+                // Then stopSendingPresenceTokensAndObservingCreatorIfNeeded should not have been called
                 expect(component.stopSendingPresenceTokensAndObservingUsersIfNeeded).not.toHaveBeenCalled();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+        });
+        describe('Leaving', () => {
+            it('should remove yourself when leaving the room and empty user.observedPart', fakeAsync(async() => {
+                // Given a partCreation where user is candidate
+                awaitComponentInitialisation();
+                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
+
+                // When leaving the page (tested here by calling ngOnDestroy)
+                const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+                spyOn(authService, 'removeObservedPart').and.callThrough();
+                spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
+                spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
+                await component.ngOnDestroy();
+                destroyed = true;
+
+                // Then joinerService.cancelJoining should have been called
+                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER);
+                expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
             }));
         });
     });

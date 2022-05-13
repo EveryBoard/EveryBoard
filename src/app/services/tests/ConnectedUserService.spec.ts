@@ -48,27 +48,27 @@ export class ConnectedUserServiceMock {
         return this.userRS.asObservable();
     }
     public async disconnect(): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.disconnect not implement');
+        throw new Error('ConnectedUserServiceMock.disconnect not implemented');
     }
     public async doRegister(_username: string, _email: string, _password: string)
     : Promise<MGPFallible<FireAuth.User>>
     {
-        throw new Error('ConnectedUserServiceMock.doRegister not implement');
+        throw new Error('ConnectedUserServiceMock.doRegister not implemented');
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.sendEmailVerification not implement');
+        throw new Error('ConnectedUserServiceMock.sendEmailVerification not implemented');
     }
     public async doEmailLogin(): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.doEmailLogin not implement');
+        throw new Error('ConnectedUserServiceMock.doEmailLogin not implemented');
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.doGoogleLogin not implement');
+        throw new Error('ConnectedUserServiceMock.doGoogleLogin not implemented');
     }
     public async setUsername(_username: string): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.setUsername not implement');
+        throw new Error('ConnectedUserServiceMock.setUsername not implemented');
     }
     public async setPicture(_url: string): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.setPicture not implement');
+        throw new Error('ConnectedUserServiceMock.setPicture not implemented');
     }
     public async reloadUser(): Promise<void> {
         if (this.user.isPresent()) {
@@ -78,7 +78,7 @@ export class ConnectedUserServiceMock {
         }
     }
     public async sendPasswordResetEmail(): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.sendPasswordResetEmail not implement');
+        throw new Error('ConnectedUserServiceMock.sendPasswordResetEmail not implemented');
     }
     public async updateObservedPart(observedPart: string): Promise<void> {
         return;

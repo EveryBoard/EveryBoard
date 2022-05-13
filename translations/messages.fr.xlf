@@ -762,10 +762,6 @@
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> a proposé une configuration à <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</target>
       </trans-unit>
-      <trans-unit id="2083084444969223318" datatype="html">
-        <source>failed joining because :</source>
-        <target>Échoué car :</target>
-      </trans-unit>
       <trans-unit id="5068486659312004369" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is configuring the game.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> est en train de configurer la partie.</target>
@@ -3511,9 +3507,9 @@
         <source>This username is already in use, please select a different one.</source>
         <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
-      <trans-unit id="7206938270697807461" datatype="html">
+      <trans-unit id="4938355530757756821" datatype="html">
         <source>You cannot join this game because you are already in another one.</source>
-        <target>Vous ne pouvez pas joindre cette partie car vous êtes déjà dans une autre.</target>
+        <target>Vous ne pouvez pas rejoindre cette partie car vous êtes déjà dans une autre.</target>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

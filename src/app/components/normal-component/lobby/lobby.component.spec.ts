@@ -1,19 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { DebugElement } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
+
 import { LobbyComponent } from './lobby.component';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Router } from '@angular/router';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { BehaviorSubject } from 'rxjs';
 import { PartDocument } from 'src/app/domain/Part';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
-import { DebugElement } from '@angular/core';
 
 describe('LobbyComponent', () => {
 
@@ -91,6 +93,7 @@ describe('LobbyComponent', () => {
         // Then the date should be written in format HH:mm:ss (with 1h added due to Locale?)
         const element: DebugElement = testUtils.findElement('#' + UserMocks.CREATOR_MINIMAL_USER.name);
         const time: string = element.nativeElement.innerText;
-        expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': 11:34:56');
+        const timeAsString: string = formatDate(timeStampInSecond * 1000, 'HH:mm:ss', 'en-US');
+        expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': ' + timeAsString);
     }));
 });

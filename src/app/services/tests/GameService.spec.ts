@@ -102,7 +102,7 @@ describe('GameService', () => {
         await service.deletePart('partId');
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     }));
-    it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
+    it('should forbid to accept a take back that the players proposed themselves', fakeAsync(async() => {
         spyOn(ErrorLoggerService, 'logError');
         const error: string = 'Illegal to accept your own request';
         for (const player of [Player.ZERO, Player.ONE]) {
