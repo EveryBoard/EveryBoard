@@ -46,7 +46,7 @@ export class UserService {
             return MGPOptional.empty();
         } else {
             const lastChanged: FirebaseTime | undefined = user.get().last_changed;
-            assert(lastChanged != null, 'should not receive a last_changed equal to null')
+            assert(lastChanged != null, 'should not receive a last_changed equal to null');
             return MGPOptional.of(lastChanged as FirebaseTime);
         }
     }
