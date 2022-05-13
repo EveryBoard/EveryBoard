@@ -24,10 +24,10 @@ export class JoinerMocks {
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-    public static readonly WITH_SECOND_CANDIDATE: Joiner = {
+    public static readonly WITH_TWO_CANDIDATES: Joiner = {
         candidates: [
             UserMocks.OPPONENT_MINIMAL_USER,
-            { id: 'secondCandidate-user-doc-id', name: 'secondCandidate' },
+            UserMocks.OTHER_OPPONENT_MINIMAL_USER,
         ],
         creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenOpponent: null,
@@ -41,6 +41,16 @@ export class JoinerMocks {
         candidates: [UserMocks.OPPONENT_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+        firstPlayer: FirstPlayer.RANDOM.value,
+        partType: PartType.STANDARD.value,
+        partStatus: PartStatus.PART_CREATED.value,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
+    };
+    public static readonly WITH_ANOTHER_CHOSEN_OPPONENT: Joiner = {
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER, UserMocks.OTHER_OPPONENT_MINIMAL_USER],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,

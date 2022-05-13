@@ -176,35 +176,60 @@ describe('PartCreationComponent', () => {
                 await mockCandidateArrival();
                 chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
+                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
-                // When the candidate leaves
+                // When the chosenOpponent leaves
                 await receiveJoinerUpdate({
                     partStatus: PartStatus.PART_CREATED.value,
                     chosenOpponent: null,
                     candidates: [],
                 });
+                tick(3000);
 
-                // Then it is not selected anymore
+                // Then it is not selected anymore, joiner went back to start and a toast to warn creator has appeared
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
+                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+            it('should deselect non chosen candidate when they leaves', fakeAsync(async() => {
+                // Given a page that has loaded, and a candidate joined
+                awaitComponentInitialisation();
+                await mockCandidateArrival();
+                expectElementToExist('#presenceOf_' + UserMocks.OPPONENT.username);
+                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+
+                // When the candidate leaves
+                await receiveJoinerUpdate({
+                    candidates: [],
+                });
+
+                // Then it is not selected anymore, joiner is back to start, and no toast appeared
+                expectElementNotToExist('#presenceOf_' + UserMocks.OPPONENT.username);
+                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                expect(component.messageDisplayer.infoMessage).not.toHaveBeenCalled();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
-        describe('Candidate stop sending token', () => {
+        describe('Candidate/chosenOpponent stop sending token', () => {
             it('should go back to start when ChosenOpponent token is too old', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 awaitComponentInitialisation();
                 await mockCandidateArrival({ seconds: 123, nanoseconds: 456000000 });
                 chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
+                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
                 // When the candidate token become too old
-                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id); // Creator update is last presence
+                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id); // Creator update his last presence
                 // but chosenOpponent don't
                 tick(PartCreationComponent.TOKEN_TIMEOUT); // two token time pass and reactive the timeout
 
-                // Then it is still selected
+                // Then there is no longer opponent nor chosen opponent in the room
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
+                const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
+                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -213,15 +238,17 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialisation();
                 await mockCandidateArrival({ seconds: 123, nanoseconds: 456000000 });
                 expectElementToExist('#candidate_firstCandidate');
+                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
                 // When the candidate stop sending token
-                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id); // Creator update is last presence
+                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id); // Creator update his last presence
                 // but candidate don't
                 tick(PartCreationComponent.TOKEN_TIMEOUT); // two token time pass and reactive the timeout
 
-                // Then the candidate should have disappeared and the joiner have been updated
+                // Then the candidate should have disappeared and the joiner have been updated and no toast appeared
                 expectElementNotToExist('#candidate_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                expect(component.messageDisplayer.infoMessage).not.toHaveBeenCalled();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
@@ -774,11 +801,12 @@ describe('PartCreationComponent', () => {
             it('should not stop sending token when no longer chosen opponent', fakeAsync(async() => {
                 // Given a component where user is chosen opponent
                 awaitComponentInitialisation();
+                await receiveJoinerUpdate(JoinerMocks.WITH_TWO_CANDIDATES);
                 await receiveJoinerUpdate(JoinerMocks.WITH_CHOSEN_OPPONENT);
 
                 // When an update notify user that he is no longer chosen opponent
                 spyOn(component, 'stopSendingPresenceTokensAndObservingUsersIfNeeded').and.callThrough();
-                await receiveJoinerUpdate(JoinerMocks.WITH_FIRST_CANDIDATE);
+                await receiveJoinerUpdate(JoinerMocks.WITH_ANOTHER_CHOSEN_OPPONENT);
 
                 // Then stopSendingPresenceTokensAndObservingCreatorIfNeeded should have been called
                 expect(component.stopSendingPresenceTokensAndObservingUsersIfNeeded).not.toHaveBeenCalled();

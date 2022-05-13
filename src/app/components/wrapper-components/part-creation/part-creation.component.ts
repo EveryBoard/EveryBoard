@@ -94,7 +94,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private allUserInterval: MGPOptional<number> = MGPOptional.empty();
     private ownTokenInterval: MGPOptional<number> = MGPOptional.empty();
     private lastToken: Time
-    private selfSubscription: () => void;
+    private selfSubscription: () => void; // TODOTODO unsubscribe
 
     public configFormGroup: FormGroup;
 
@@ -312,6 +312,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
         } else {
+            if (this.chosenOpponentJustLeft(joiner)) {
+                const currentJoiner: Joiner = Utils.getNonNullable(this.currentJoiner);
+                const userName: string = Utils.getNonNullable(currentJoiner.chosenOpponent).name;
+                this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
+            }
             this.currentJoiner = joiner.get();
             if (this.allUserInterval.isAbsent()) { // Only do it once
                 await this.observeNeededPlayers();
@@ -322,6 +327,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.onGameStarted();
             }
         }
+    }
+    private chosenOpponentJustLeft(newJoiner: MGPOptional<Joiner>): boolean {
+        if (this.currentJoiner == null) return false;
+        if (newJoiner.isAbsent()) return false;
+        const currentJoiner: Joiner = this.currentJoiner;
+        const thereWasAChosenOpponent: boolean = currentJoiner.chosenOpponent != null;
+        const thereIsNoLongerChosenOpponent: boolean = newJoiner.get().chosenOpponent == null;
+        return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
     }
     private async onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
@@ -413,16 +426,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             window.clearInterval(this.allUserInterval.get());
         }
     }
-    private removeCandidateFromLobby(userId: string): Promise<void> {
+    private async removeCandidateFromLobby(userId: string): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         const index: number = joiner.candidates.findIndex((minimalUser: MinimalUser) => minimalUser.id === userId);
         // The user must be in the lobby, otherwise we would have unsubscribed from its updates
         assert(index !== -1, 'PartCreationComponent: attempting to remove a user not in the lobby');
         const candidates: MinimalUser[] = joiner.candidates.filter((m: MinimalUser) => m.id !== userId);
-        // The ChosenOpponent has been removed, the user will have to review the config
-        const user: MinimalUser = this.getUserFromId(userId);
-        this.messageDisplayer.infoMessage($localize`${user.name} left the game, please pick another opponent.`);
         if (joiner.chosenOpponent?.id === userId) {
+            // The ChosenOpponent has been removed, the user will have to review the config
             return this.joinerService.reviewConfigAndRemoveChosenOpponentAndUpdateCandidates(candidates);
         } else {
             return this.joinerService.updateCandidates(candidates);

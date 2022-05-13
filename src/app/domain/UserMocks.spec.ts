@@ -51,4 +51,9 @@ export class UserMocks {
     public static readonly OPPONENT_MINIMAL_USER: MinimalUser = UserMocks.OPPONENT_AUTH_USER.toMinimalUser();
 
     public static readonly CANDIDATE_MINIMAL_USER: MinimalUser = UserMocks.CANDIDATE_AUTH_USER.toMinimalUser();
+
+    public static readonly OTHER_OPPONENT_MINIMAL_USER: MinimalUser = {
+        id: 'secondCandidate-user-doc-id',
+        name: 'secondCandidate',
+    };
 }
