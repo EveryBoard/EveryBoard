@@ -1,13 +1,13 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
-import { Player } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -42,7 +42,7 @@ export abstract class GameWrapper {
 
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
-                protected authenticationService: AuthenticationService) {
+                protected connectedUserService: ConnectedUserService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
     public getMatchingComponent(gameName: string) : Type<AbstractGameComponent> {
@@ -119,7 +119,7 @@ export abstract class GameWrapper {
 
     public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract
-        if (this.observerRole === Player.NONE.value) {
+        if (this.observerRole === PlayerOrNone.NONE.value) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
         }
@@ -133,7 +133,7 @@ export abstract class GameWrapper {
         // Not needed by default'
     }
     public isPlayerTurn(): boolean {
-        if (this.observerRole === Player.NONE.value) {
+        if (this.observerRole === PlayerOrNone.NONE.value) {
             return false;
         }
         if (this.gameComponent == null) {

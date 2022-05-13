@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert } from 'src/app/utils/assert';
@@ -9,7 +9,7 @@ import { assert } from 'src/app/utils/assert';
     templateUrl: './reset-password.component.html',
 })
 export class ResetPasswordComponent {
-    constructor(public authService: AuthenticationService) {}
+    constructor(public authService: ConnectedUserService) {}
 
     public success: boolean = false;
     public errorMessage: MGPOptional<string> = MGPOptional.empty();

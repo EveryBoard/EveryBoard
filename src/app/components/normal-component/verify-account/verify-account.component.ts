@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 /**
@@ -32,7 +32,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         username: new FormControl(),
     });
 
-    constructor(private readonly authService: AuthenticationService,
+    constructor(private readonly authService: ConnectedUserService,
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
@@ -76,6 +76,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
     public async finalizeEmailVerification(): Promise<void> {
         this.triedToFinalize = true;
         await this.authService.reloadUser();
+        window.open(window.location.href, '_self');
     }
     public ngOnDestroy(): void {
         if (this.userSub != null && this.userSub.unsubscribe != null) {

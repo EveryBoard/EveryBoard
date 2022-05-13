@@ -4,7 +4,7 @@ import { GameStatus, Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { P4State } from './P4State';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { P4Move } from './P4Move';
@@ -23,7 +23,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     public static getVictoriousCoords(state: P4State): Coord[] {
         const coords: Coord[] = [];
         for (let x: number = 0; x < 7; x++) {
-            for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE; y--) {
+            for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
                 const caseScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (caseScore === Player.ZERO.getVictoryValue() ||
                     caseScore === Player.ONE.getVictoryValue())
@@ -40,7 +40,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
-            for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE; y--) {
+            for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
                 const tmpScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
@@ -55,14 +55,14 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return new NodeUnheritance(score);
     }
-    public static getLowestUnoccupiedCase(board: Table<Player>, x: number): number {
+    public static getLowestUnoccupiedCase(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
-        while (y < 6 && board[y][x] === Player.NONE) {
+        while (y < 6 && board[y][x] === PlayerOrNone.NONE) {
             y++;
         }
         return y - 1;
     }
-    public static getNumberOfFreeSpacesAndAllies(board: Table<Player>,
+    public static getNumberOfFreeSpacesAndAllies(board: Table<PlayerOrNone>,
                                                  i: Coord,
                                                  dir: Direction,
                                                  opponent: Player,
@@ -79,7 +79,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         let coord: Coord = new Coord(i.x + dir.x, i.y + dir.y);
         while (coord.isInRange(7, 6) && freeSpaces !== 3) {
             // while we're on the board
-            const currentCase: Player = board[coord.y][coord.x];
+            const currentCase: PlayerOrNone = board[coord.y][coord.x];
             if (currentCase === opponent) {
                 return [freeSpaces, allies];
             }
@@ -97,26 +97,26 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return [freeSpaces, allies];
     }
-    private static getOpponent(board: Table<Player>, coord: Coord): Player {
-        const c: Player = board[coord.y][coord.x];
-        assert(c !== Player.NONE, 'getOpponent should not be called with Player.NONE');
+    private static getOpponent(board: Table<PlayerOrNone>, coord: Coord): Player {
+        const c: PlayerOrNone = board[coord.y][coord.x];
+        assert(c.isPlayer(), 'getOpponent should not be called with PlayerOrNone.NONE');
         return (c === Player.ONE) ? Player.ZERO : Player.ONE;
     }
-    public static getSquareScore(board: Table<Player>, coord: Coord): number {
+    public static getSquareScore(board: Table<PlayerOrNone>, coord: Coord): number {
         display(P4Rules.VERBOSE, 'getSquareScore(board, ' + coord.x + ', ' + coord.y + ') called');
         display(P4Rules.VERBOSE, board);
-        assert(board[coord.y][coord.x] !== Player.NONE, 'getSquareScore should not be called on an empty space');
 
         let score: number = 0; // final result, count the theoretical victorys possibility
 
         const opponent: Player = P4Rules.getOpponent(board, coord);
-        const ally: Player = board[coord.y][coord.x];
+        const ally: Player = opponent.getOpponent();
 
         const distByDirs: MGPMap<Direction, number> = new MGPMap();
         const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
 
         for (const dir of Direction.DIRECTIONS) {
-            const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, coord, dir, opponent, ally);
+            const tmpData: [number, number] =
+                P4Rules.getNumberOfFreeSpacesAndAllies(board, coord, dir, opponent, ally);
             distByDirs.set(dir, tmpData[0]);
             alliesByDirs.set(dir, tmpData[1]);
         }
@@ -126,8 +126,8 @@ export class P4Rules extends Rules<P4Move, P4State> {
             const lineAllies: number = alliesByDirs.get(dir).get() + alliesByDirs.get(dir.getOpposite()).get();
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
-                    'there is some kind of victory here (' + coord.x + ', ' + coord.y + ')' + '\n' +
-                    'line allies : ' + lineAllies + '\n',
+                  'there is some kind of victory here (' + coord.x + ', ' + coord.y + ')' + '\n' +
+                  'line allies : ' + lineAllies + '\n',
                 board,
                 });
                 return ally.getVictoryValue();
@@ -150,7 +150,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const moves: P4Move[] = [];
 
         for (let x: number = 0; x < 7; x++) {
-            if (originalState.getPieceAtXY(x, 0) === Player.NONE) {
+            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
             }
@@ -167,7 +167,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     public applyLegalMove(move: P4Move, state: P4State, _status: void): P4State
     {
         const x: number = move.x;
-        const board: Player[][] = state.getCopiedBoard();
+        const board: PlayerOrNone[][] = state.getCopiedBoard();
         const y: number = P4Rules.getLowestUnoccupiedCase(board, x);
 
         const turn: number = state.turn;
@@ -179,7 +179,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public isLegal(move: P4Move, state: P4State): MGPFallible<void> {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
-        if (state.getPieceAtXY(move.x, 0) !== Player.NONE) {
+        if (state.getPieceAtXY(move.x, 0).isPlayer()) {
             return MGPFallible.failure(P4Failure.COLUMN_IS_FULL());
         }
         return MGPFallible.success(undefined);
@@ -188,7 +188,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const state: P4State = node.gameState;
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
-            for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE; y--) {
+            for (let y: number = 5; y >= 0 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
                 const tmpScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {

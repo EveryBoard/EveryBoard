@@ -1,66 +1,76 @@
 /* eslint-disable max-lines-per-function */
 import { FirstPlayer, Joiner, PartStatus, PartType } from './Joiner';
+import { UserMocks } from './UserMocks.spec';
 
 export class JoinerMocks {
+
     public static readonly INITIAL: Joiner = {
         candidates: [],
-        creator: 'creator',
-        chosenPlayer: null,
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
     public static readonly WITH_FIRST_CANDIDATE: Joiner = {
-        candidates: ['firstCandidate'],
-        creator: 'creator',
-        chosenPlayer: null,
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
-    public static readonly WITH_SECOND_CANDIDATE: Joiner = {
-        candidates: ['firstCandidate', 'secondCandidate'],
-        creator: 'creator',
-        chosenPlayer: null,
+    public static readonly WITH_TWO_CANDIDATES: Joiner = {
+        candidates: [
+            UserMocks.OPPONENT_MINIMAL_USER,
+            UserMocks.OTHER_OPPONENT_MINIMAL_USER,
+        ],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
-    public static readonly WITH_CHOSEN_PLAYER: Joiner = {
-        candidates: ['firstCandidate'],
-        creator: 'creator',
-        chosenPlayer: 'firstCandidate',
+    public static readonly WITH_CHOSEN_OPPONENT: Joiner = {
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
+    public static readonly WITH_ANOTHER_CHOSEN_OPPONENT: Joiner = {
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER, UserMocks.OTHER_OPPONENT_MINIMAL_USER],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
+        firstPlayer: FirstPlayer.RANDOM.value,
+        partType: PartType.STANDARD.value,
+        partStatus: PartStatus.PART_CREATED.value,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
+    };
     public static readonly WITH_PROPOSED_CONFIG: Joiner = {
-        candidates: ['firstCandidate'],
-        creator: 'creator',
-        chosenPlayer: 'firstCandidate',
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.CONFIG_PROPOSED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
     public static readonly WITH_ACCEPTED_CONFIG: Joiner = {
-        candidates: ['firstCandidate'],
-        creator: 'creator',
-        chosenPlayer: 'firstCandidate',
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_STARTED.value,

@@ -3,7 +3,7 @@ import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { SiamPiece } from './SiamPiece';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -169,8 +169,23 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const mountainsRow: number[] = mountainsInfo.rows;
         const mountainsColumn: number[] = mountainsInfo.columns;
 
-        const winner: Player = SiamRules.getWinner(state, move, mountainsInfo.nbMountain);
-        if (winner === Player.NONE) {
+        const winner: PlayerOrNone = SiamRules.getWinner(state, move, mountainsInfo.nbMountain);
+        if (winner.isPlayer()) {
+            // 1. victories
+            if (winner === Player.ZERO) {
+                return {
+                    shortestZero: 0,
+                    shortestOne: Number.POSITIVE_INFINITY,
+                    boardValue: Number.MIN_SAFE_INTEGER,
+                };
+            } else {
+                return {
+                    shortestZero: Number.POSITIVE_INFINITY,
+                    shortestOne: 0,
+                    boardValue: Number.MAX_SAFE_INTEGER,
+                };
+            }
+        } else {
             const pushers: { distance: number, coord: Coord}[] =
                 SiamRules.getPushers(state, mountainsColumn, mountainsRow);
             let zeroShortestDistance: number = Number.MAX_SAFE_INTEGER;
@@ -196,21 +211,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                                                                                oneShortestDistance,
                                                                                currentPlayer);
             return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
-        } else {
-            // 1. victories
-            if (winner === Player.ZERO) {
-                return {
-                    shortestZero: 0,
-                    shortestOne: Number.POSITIVE_INFINITY,
-                    boardValue: Number.MIN_SAFE_INTEGER,
-                };
-            } else {
-                return {
-                    shortestZero: Number.POSITIVE_INFINITY,
-                    shortestOne: 0,
-                    boardValue: Number.MAX_SAFE_INTEGER,
-                };
-            }
         }
     }
     public static getScoreFromShortestDistances(zeroShortestDistance: number,
@@ -247,14 +247,14 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return { rows, columns, nbMountain };
     }
-    public static getWinner(state: SiamState, move: MGPOptional<SiamMove>, nbMountain: number): Player {
+    public static getWinner(state: SiamState, move: MGPOptional<SiamMove>, nbMountain: number): PlayerOrNone {
         if (nbMountain === 2) {
             return SiamRules.getPusher(state, move.get());
         } else {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
     }
-    public static getPusher(state: SiamState, finishingMove: SiamMove): Player {
+    public static getPusher(state: SiamState, finishingMove: SiamMove): PlayerOrNone {
         // here we will call the piece that started the move "moveStarter", obviously
         // and the piece in the right direction that was the closest to the falling mountain: the pusher
 
@@ -268,7 +268,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         const pushingDirection: Orthogonal = moveStarterPiece.getDirection();
         const pusherCoord: Coord = SiamRules.getPusherCoord(state, pushingDirection, moveStarterCoord);
-        const winner: Player = state.getPieceAt(pusherCoord).getOwner();
+        const winner: PlayerOrNone = state.getPieceAt(pusherCoord).getOwner();
         display(SiamRules.VERBOSE, moveStarterCoord.toString() + ' belong to ' + state.getCurrentOpponent().value + ', ' +
                 pusherCoord.toString() + ' belong to ' + winner.value + ', ' + winner.value + ' win');
         return winner;
@@ -511,13 +511,11 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             SiamRules.getMountainsRowsAndColumns(node.gameState);
 
-        const winner: Player = SiamRules.getWinner(node.gameState,
-                                                   node.move,
-                                                   mountainsInfo.nbMountain);
-        if (winner === Player.NONE) {
-            return GameStatus.ONGOING;
-        } else {
+        const winner: PlayerOrNone = SiamRules.getWinner(node.gameState, node.move, mountainsInfo.nbMountain);
+        if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);
+        } else {
+            return GameStatus.ONGOING;
         }
     }
 }

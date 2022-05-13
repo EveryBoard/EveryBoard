@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { FirstPlayer, Joiner, JoinerDocument, PartStatus, PartType } from 'src/app/domain/Joiner';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
 export class JoinerServiceMock {
+
     public static VERBOSE: boolean = false;
 
     public static emittedsJoiner: JoinerDocument[];
 
-    public constructor(private readonly joinerDAO: JoinerDAO) {
+    public constructor() {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.constructor');
     }
     public joinGame(): Promise<void> {
@@ -27,9 +27,9 @@ export class JoinerServiceMock {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
         return new Promise((resolve: (j: Joiner) => void) => {
             resolve({
-                candidates: ['uniqueCandidate'],
-                creator: 'creator',
-                chosenPlayer: 'uniqueCandidate',
+                candidates: [{ id: '24854rf', name: 'uniqueCandidate' }],
+                creator: { id: 'doc-creator', name: 'creator' },
+                chosenOpponent: { id: 'uniqueCandidate-doc-id', name: 'uniqueCandidate' },
                 firstPlayer: FirstPlayer.CREATOR.value,
                 partType: PartType.STANDARD.value,
                 partStatus: PartStatus.PART_STARTED.value,
@@ -39,8 +39,8 @@ export class JoinerServiceMock {
             });
         });
     }
-    public async setChosenPlayer(username: string): Promise<void> {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.setChosenPlayer');
+    public async setChosenOpponent(username: string): Promise<void> {
+        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.setChosenOpponent');
         return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK

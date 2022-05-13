@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { display } from 'src/app/utils/utils';
@@ -10,7 +10,6 @@ import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -35,11 +34,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                authenticationService: AuthenticationService,
                 public cdr: ChangeDetectorRef,
+                protected readonly connectedUserService: ConnectedUserService,
                 private readonly messageDisplayer: MessageDisplayer)
     {
-        super(componentFactoryResolver, actRoute, authenticationService);
+        super(componentFactoryResolver, actRoute, connectedUserService);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
@@ -72,7 +71,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
-            if (gameStatus.winner !== Player.NONE) {
+            if (gameStatus.winner.isPlayer()) {
                 this.winner = MGPOptional.of($localize`Player ${gameStatus.winner.value + 1}`);
             }
         }
@@ -82,7 +81,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
             // bot's turn
-            setTimeout(async() => {
+            window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
         }

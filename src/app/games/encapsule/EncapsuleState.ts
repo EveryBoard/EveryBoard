@@ -1,6 +1,6 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
@@ -15,7 +15,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
         this.remainingPieces = remainingPieces;
     }
     public static getInitialState(): EncapsuleState {
-        const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+        const emptyCase: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         const emptyNumber: number = emptyCase.encode();
         const startingNumberBoard: number[][] = ArrayUtils.createTable(3, 3, emptyNumber);
         const startingBoard: EncapsuleCase[][] = ArrayUtils.mapBiArray(startingNumberBoard,
@@ -50,33 +50,34 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 
 export class EncapsuleCase {
 
-    public static readonly EMPTY: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+    public static readonly EMPTY: EncapsuleCase =
+        new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 
     public static decode(encapsuleCase: number): EncapsuleCase {
         assert(encapsuleCase % 1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
         assert(encapsuleCase >= 0, 'To small representation for EncapsuleCase: ' + encapsuleCase);
         assert(encapsuleCase <= 26, 'To big representation for EncapsuleCase: ' + encapsuleCase);
-        const small: Player = Player.of(encapsuleCase%3);
+        const small: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleCase%3);
         encapsuleCase -= small.value;
         encapsuleCase/=3;
-        const medium: Player = Player.of(encapsuleCase%3);
+        const medium: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleCase%3);
         encapsuleCase -= medium.value;
         encapsuleCase/=3;
-        const big: Player = Player.of(encapsuleCase);
+        const big: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleCase);
         return new EncapsuleCase(small, medium, big);
     }
-    constructor(public readonly small: Player,
-                public readonly medium: Player,
-                public readonly big: Player) {
+    constructor(public readonly small: PlayerOrNone,
+                public readonly medium: PlayerOrNone,
+                public readonly big: PlayerOrNone) {
     }
     public isEmpty(): boolean {
-        return this.small === Player.NONE && this.medium === Player.NONE && this.big === Player.NONE;
+        return this.small === PlayerOrNone.NONE && this.medium === PlayerOrNone.NONE && this.big === PlayerOrNone.NONE;
     }
     public toList(): EncapsulePiece[] {
         const l: EncapsulePiece[] = [];
-        if (this.small !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
-        if (this.medium !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium));
-        if (this.big !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
+        if (this.small.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
+        if (this.medium.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium));
+        if (this.big.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
         return l;
     }
     public toOrderedPieceNames(): string[] {
@@ -114,31 +115,31 @@ export class EncapsuleCase {
         const size: Size = removedPiece.getSize();
         switch (size) {
             case Size.BIG:
-                removedCase = new EncapsuleCase(this.small, this.medium, Player.NONE);
+                removedCase = new EncapsuleCase(this.small, this.medium, PlayerOrNone.NONE);
                 break;
             case Size.MEDIUM:
-                removedCase = new EncapsuleCase(this.small, Player.NONE, Player.NONE);
+                removedCase = new EncapsuleCase(this.small, PlayerOrNone.NONE, PlayerOrNone.NONE);
                 break;
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                removedCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+                removedCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         }
         return { removedCase, removedPiece };
     }
     public put(piece: EncapsulePiece): EncapsuleCase {
         if (piece === EncapsulePiece.NONE) throw new Error('Cannot put NONE on space');
-        const piecePlayer: Player = piece.getPlayer();
+        const piecePlayer: PlayerOrNone = piece.getPlayer();
         const size: Size = piece.getSize();
         switch (size) {
             case Size.BIG:
                 return new EncapsuleCase(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
-                assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
+                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(this.small, piecePlayer, this.big);
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
-                assert(this.medium === Player.NONE, 'Cannot put a piece on top of a bigger one');
+                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                assert(this.medium === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(piecePlayer, this.medium, this.big);
         }
     }

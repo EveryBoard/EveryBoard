@@ -11,10 +11,10 @@ import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
-import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { ChatDAO } from '../../dao/ChatDAO';
@@ -26,10 +26,7 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { HumanDuration } from '../TimeUtils';
 import { Utils } from '../utils';
-import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
-import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MGPOptional } from '../MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -38,6 +35,11 @@ import { AbstractGameComponent } from 'src/app/components/game-components/game-c
 import { findMatchingRoute } from 'src/app/app.module.spec';
 import * as Firestore from '@angular/fire/firestore';
 import * as Auth from '@angular/fire/auth';
+import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
+import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
+import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
+import { FirebaseTimePipe } from 'src/app/pipes-and-directives/firebase-time.pipe';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -88,7 +90,8 @@ export class SimpleComponentTestUtils<T> {
             ],
             declarations: [
                 componentType,
-                HumanDuration,
+                FirebaseTimePipe,
+                HumanDurationPipe,
                 AutofocusDirective,
                 ToggleVisibilityDirective,
             ],
@@ -97,7 +100,7 @@ export class SimpleComponentTestUtils<T> {
             ],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
@@ -105,7 +108,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.fixture = TestBed.createComponent(componentType);
         testUtils.component = testUtils.fixture.componentInstance;
@@ -183,7 +186,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1);
@@ -213,7 +216,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
@@ -468,7 +471,7 @@ export async function setupEmulators(): Promise<unknown> {
             FirebaseProviders.database(),
         ],
         providers: [
-            AuthenticationService,
+            ConnectedUserService,
         ],
     }).compileComponents();
     TestBed.inject(Firestore.Firestore);

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -23,7 +23,7 @@ export class RegisterComponent {
         password: new FormControl(),
     });
 
-    constructor(public authService: AuthenticationService,
+    constructor(public authService: ConnectedUserService,
                 public router: Router) {}
 
     public async registerWithEmail(): Promise<void> {

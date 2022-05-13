@@ -9,9 +9,9 @@ describe('UserService', () => {
     let service: UserService;
 
     beforeEach(() => {
-        const joueursDAOMock: UserDAOMock = new UserDAOMock();
-        service = new UserService(new ActiveUsersService(joueursDAOMock as unknown as UserDAO),
-                                  joueursDAOMock as unknown as UserDAO);
+        const userDAOMock: UserDAOMock = new UserDAOMock();
+        service = new UserService(new ActiveUsersService(userDAOMock as unknown as UserDAO),
+                                  userDAOMock as unknown as UserDAO);
     });
     it('should create', () => {
         expect(service).toBeTruthy();

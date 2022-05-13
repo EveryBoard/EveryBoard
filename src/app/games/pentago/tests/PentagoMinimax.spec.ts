@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PentagoMinimax } from '../PentagoMinimax';
@@ -11,9 +11,9 @@ describe('PentagoMinimax', () => {
 
     let rules: PentagoRules;
     let minimax: PentagoMinimax;
-    const _: Player = Player.NONE;
-    const O: Player = Player.ZERO;
-    const X: Player = Player.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
 
     beforeEach(() => {
         rules = new PentagoRules(PentagoState);
@@ -24,7 +24,7 @@ describe('PentagoMinimax', () => {
     });
     it('Should propose to click on empty square afterward', () => {
         // Given a state with one piece on it
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [O, _, _, _, _, _],
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
@@ -52,7 +52,7 @@ describe('PentagoMinimax', () => {
     });
     it('should not include drop when there is no neutral block', () => {
         // Given a state without neutralable block
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [O, _, _, _, _, _],
             [_, X, _, _, X, _],
             [_, _, _, _, O, _],
@@ -75,7 +75,7 @@ describe('PentagoMinimax', () => {
     });
     it('Should only propose one rotation when we just made the last neutral block non-neutral', () => {
         // Given a state without neutralable block
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, X, _, _],
             [_, X, _, _, _, _],
             [_, _, _, _, _, _],

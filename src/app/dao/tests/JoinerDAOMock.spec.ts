@@ -8,6 +8,7 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
@@ -80,7 +81,7 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(1);
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
-        await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
+        await joinerDAOMock.update('joinerId', { candidates: [UserMocks.OPPONENT_MINIMAL_USER] });
 
         expect(callCount).toEqual(2);
         expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);

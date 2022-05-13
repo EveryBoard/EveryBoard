@@ -1,12 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SiamPiece, SiamPieceValue } from '../SiamPiece';
 
 describe('SiamPiece:', () => {
-    it('Should throw when static method are called inadequately', () => {
-        expect(() => SiamPiece.of(Orthogonal.UP, Player.NONE)).toThrowError(`Player None does not have any pieces.`);
-    });
     it('should give string version of each pieces', () => {
         const values: SiamPieceValue[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         const pieces: SiamPiece[] = values.map((value: SiamPieceValue) => SiamPiece.decode(value));
@@ -39,12 +35,15 @@ describe('SiamPiece:', () => {
         expect(pieces).toEqual(expectedPieces);
     });
     it('Should consider moutains as belonging to no player and pieces to their respective players', () => {
-        expect(SiamPiece.MOUNTAIN.belongTo(Player.NONE)).toBeFalse();
+        expect(SiamPiece.MOUNTAIN.belongTo(Player.ONE)).toBeFalse();
+        expect(SiamPiece.MOUNTAIN.belongTo(Player.ZERO)).toBeFalse();
         expect(SiamPiece.BLACK_DOWN.belongTo(Player.ZERO)).toBeFalse();
+        expect(SiamPiece.BLACK_DOWN.belongTo(Player.ONE)).toBeTrue();
+        expect(SiamPiece.WHITE_RIGHT.belongTo(Player.ZERO)).toBeTrue();
         expect(SiamPiece.WHITE_RIGHT.belongTo(Player.ONE)).toBeFalse();
     });
     it('should give the owner of each piece with getOwner', () => {
-        expect(SiamPiece.MOUNTAIN.getOwner()).toBe(Player.NONE);
+        expect(SiamPiece.MOUNTAIN.getOwner()).toBe(PlayerOrNone.NONE);
         expect(SiamPiece.BLACK_DOWN.getOwner()).toBe(Player.ONE);
         expect(SiamPiece.WHITE_RIGHT.getOwner()).toBe(Player.ZERO);
     });

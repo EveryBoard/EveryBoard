@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -21,10 +21,10 @@ export class LoginComponent implements OnInit {
     });
 
     constructor(public router: Router,
-                public authenticationService: AuthenticationService) {
+                public connectedUserService: ConnectedUserService) {
     }
     public ngOnInit(): void {
-        this.authenticationService.getUserObs()
+        this.connectedUserService.getUserObs()
             .subscribe(async(user: AuthUser) => {
                 if (user !== AuthUser.NOT_CONNECTED) {
                     await this.redirect();
@@ -32,13 +32,13 @@ export class LoginComponent implements OnInit {
             });
     }
     public async loginWithEmail(value: {email: string, password: string}): Promise<void> {
-        const result: MGPValidation = await this.authenticationService.doEmailLogin(value.email, value.password);
+        const result: MGPValidation = await this.connectedUserService.doEmailLogin(value.email, value.password);
         if (result.isFailure()) {
             this.errorMessage = result.getReason();
         }
     }
     public async loginWithGoogle(): Promise<void> {
-        const result: MGPValidation = await this.authenticationService.doGoogleLogin();
+        const result: MGPValidation = await this.connectedUserService.doGoogleLogin();
         if (result.isFailure()) {
             this.errorMessage = result.getReason();
         }

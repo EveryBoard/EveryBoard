@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -14,7 +14,7 @@ describe('RegisterComponent', () => {
 
     let router: Router;
 
-    let authService: AuthenticationService;
+    let authService: ConnectedUserService;
 
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
@@ -37,7 +37,7 @@ describe('RegisterComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(RegisterComponent);
         testUtils.detectChanges();
         router = TestBed.inject(Router);
-        authService = TestBed.inject(AuthenticationService);
+        authService = TestBed.inject(ConnectedUserService);
     }));
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
