@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { CanActivate, UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthenticationService, AuthUser } from '../services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +11,7 @@ import { AuthenticationService, AuthUser } from '../services/AuthenticationServi
  */
 export abstract class AccountGuard implements CanActivate, OnDestroy {
     private userSub!: Subscription; // always bound in canActivate
-    constructor(private readonly authService: AuthenticationService) {
+    constructor(private readonly authService: ConnectedUserService) {
     }
     public async canActivate(): Promise<boolean | UrlTree > {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {

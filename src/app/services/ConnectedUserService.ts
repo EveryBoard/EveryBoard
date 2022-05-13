@@ -58,7 +58,7 @@ export class AuthUser {
      * - the username of the user, which may be null if the user hasn't chosen a username yet
      * - a boolean indicating whether the user is verified
      */
-    constructor(public userId: string,
+    constructor(public id: string,
                 public email: MGPOptional<string>,
                 public username: MGPOptional<string>,
                 public verified: boolean) {
@@ -68,7 +68,7 @@ export class AuthUser {
     }
     public toMinimalUser(): MinimalUser {
         return {
-            id: this.userId,
+            id: this.id,
             name: this.username.get(),
         };
     }
@@ -77,7 +77,8 @@ export class AuthUser {
 @Injectable({
     providedIn: 'root',
 })
-export class AuthenticationService implements OnDestroy {
+export class ConnectedUserService implements OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     public unsubscribeFromAuth!: Unsubscribe; // public for testing purposes only
@@ -89,12 +90,6 @@ export class AuthenticationService implements OnDestroy {
      */
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
 
-    /**
-     * The id of the current user, if there is one.
-     * Similar to user, components depending on AccountGuard can assume it is define.
-     */
-    public uid: MGPOptional<string> = MGPOptional.empty();
-
     private userUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     private readonly userRS: ReplaySubject<AuthUser>;
@@ -105,31 +100,29 @@ export class AuthenticationService implements OnDestroy {
                 private readonly auth: FireAuth.Auth,
                 private readonly connectivityDAO: ConnectivityDAO)
     {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService constructor');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.unsubscribeFromAuth =
             FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
-                    display(AuthenticationService.VERBOSE, 'User is not connected');
+                    display(ConnectedUserService.VERBOSE, 'User is not connected');
                     if (this.userUnsubscribe.isPresent()) {
                         this.userUnsubscribe.get()();
                     }
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
-                    this.uid = MGPOptional.empty();
                 } else { // new user logged in
-                    assert(this.uid.isAbsent(), 'AuthenticationService received a double update for an user, this is unexpected');
-                    this.uid = MGPOptional.of(user.uid);
+                    assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
                     await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
                     this.userUnsubscribe = MGPOptional.of(
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                             if (doc.isPresent()) {
                                 const username: string | undefined = doc.get().username;
-                                display(AuthenticationService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                                display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
                                 const userHasFinalizedVerification: boolean =
-                                  this.emailVerified(user) === true && username != null;
+                                    this.emailVerified(user) === true && username != null;
                                 if (userHasFinalizedVerification === true && doc.get().verified === false) {
                                     // The user has finalized verification but isn't yet marked as so in the DB.
                                     // So we mark it, and we'll get notified when the user is marked.
@@ -163,7 +156,7 @@ export class AuthenticationService implements OnDestroy {
      * Returns the firebase user upon success, or a failure otherwise.
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doRegister(' + email + ')');
         if (await this.userDAO.usernameIsAvailable(username)) {
             return this.registerAfterUsernameCheck(username, email, password);
         } else {
@@ -204,17 +197,17 @@ export class AuthenticationService implements OnDestroy {
             case 'auth/popup-blocked':
                 return $localize`The authentication popup was blocked. Try again after disabling popup blocking.`;
             default:
-                ErrorLoggerService.logError('AuthenticationService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
+                ErrorLoggerService.logError('ConnectedUserService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
         }
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.sendEmailVerification()');
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return ErrorLoggerService.logError('AuthenticationService', 'Verified users should not ask email verification after being verified');
+                return ErrorLoggerService.logError('ConnectedUserService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await Auth.sendEmailVerification(user.get());
@@ -224,16 +217,15 @@ export class AuthenticationService implements OnDestroy {
             }
         } else {
             // This should not be reachable from a component
-            return ErrorLoggerService.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
+            return ErrorLoggerService.logError('ConnectedUserService', 'Unlogged users cannot request for email verification');
         }
     }
-
     /**
      * Logs in using an email and a password. Returns a validation to indicate
      * either success, or failure with a specific error.
      */
     public async doEmailLogin(email: string, password: string): Promise<MGPValidation> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doEmailLogin(' + email + ')');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doEmailLogin(' + email + ')');
         try {
             // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
             await Auth.signInWithEmailAndPassword(this.auth, email, password);
@@ -320,11 +312,22 @@ export class AuthenticationService implements OnDestroy {
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
+    public updateObservedPart(observedPart: string): Promise<void> {
+        assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
+        return this.userDAO.update(this.user.get().id, { observedPart });
+    }
+    public removeObservedPart(): Promise<void> {
+        assert(this.user.isPresent(), 'Should not call removeObservedPart when not connected');
+        return this.userDAO.update(this.user.get().id, { observedPart: null });
+    }
+    public sendPresenceToken(): Promise<void> {
+        assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
+        return this.userDAO.updatePresenceToken(this.user.get().id);
+    }
     public ngOnDestroy(): void {
         if (this.userUnsubscribe.isPresent()) {
             this.userUnsubscribe.get()();
         }
         this.unsubscribeFromAuth();
     }
-
 }

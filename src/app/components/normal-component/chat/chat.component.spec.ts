@@ -1,15 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
 import { ChatService } from 'src/app/services/ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { DebugElement } from '@angular/core';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Message } from 'src/app/domain/Message';
 import { serverTimestamp } from 'firebase/firestore';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { UserDAO } from 'src/app/dao/UserDAO';
 
 describe('ChatComponent', () => {
 
@@ -51,7 +53,7 @@ describe('ChatComponent', () => {
     describe('connected chat', () => {
         it('should display message content and sender name', fakeAsync(async() => {
             // Given a user that is connected
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
 
             // When displaying a chat that contains a message
@@ -66,7 +68,7 @@ describe('ChatComponent', () => {
         }));
         it('should propose to hide chat when chat is visible, and work', fakeAsync(async() => {
             // Given a user that is connected
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             const chat: DebugElement = testUtils.findElement('#chatForm');
@@ -84,7 +86,7 @@ describe('ChatComponent', () => {
             testUtils.expectElementNotToExist('#chatForm');
         }));
         it('should propose to show chat when chat is hidden, and work', fakeAsync(async() => {
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
@@ -107,7 +109,7 @@ describe('ChatComponent', () => {
         }));
         it('should show how many messages where sent since you hid the chat', fakeAsync(async() => {
             // Given a hidden chat with no message
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
@@ -124,7 +126,7 @@ describe('ChatComponent', () => {
         }));
         it('should scroll to the bottom on load', fakeAsync(async() => {
             // Given a visible chat with multiple messages
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             spyOn(component, 'scrollTo');
             await addMessages('fauxChat', 100);
 
@@ -137,7 +139,7 @@ describe('ChatComponent', () => {
         it('should not scroll down upon new messages if the user scrolled up, but show an indicator', fakeAsync(async() => {
             const SCROLL: number = 200;
             // Given a visible chat with multiple messages, that has been scrolled up
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             await addMessages('fauxChat', 100);
             testUtils.detectChanges();
@@ -159,7 +161,7 @@ describe('ChatComponent', () => {
         }));
         it('should scroll to bottom when clicking on the new message indicator', fakeAsync(async() => {
             // Given a visible chat with the indicator
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             await addMessages('fauxChat', 100);
             testUtils.detectChanges();
@@ -185,7 +187,7 @@ describe('ChatComponent', () => {
         }));
         it('should reset new messages count once messages have been read', fakeAsync(async() => {
             // Given a hidden chat with one unseen message
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
@@ -211,7 +213,7 @@ describe('ChatComponent', () => {
         it('should send messages using the chat service', fakeAsync(async() => {
             spyOn(chatService, 'sendMessage');
             // given a chat
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
 
             // when the form is filled and the send button clicked
@@ -225,14 +227,14 @@ describe('ChatComponent', () => {
             await testUtils.whenStable();
 
             // then the message is sent
-            const user: MinimalUser = UserMocks.CONNECTED.toMinimalUser();
+            const user: MinimalUser = UserMocks.CONNECTED_MINIMAL_USER;
             expect(chatService.sendMessage).toHaveBeenCalledWith(user, 'hello', 2);
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));
         it('should scroll to bottom when sending a message', fakeAsync(async() => {
             // given a chat with many messages
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             await addMessages('fauxChat', 100);
             testUtils.detectChanges();
             spyOn(component, 'scrollTo');
@@ -247,9 +249,25 @@ describe('ChatComponent', () => {
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
         }));
+        it('should not loadChatContent when user is online, then updated but still online', fakeAsync(() => {
+            // Given a chat component
+            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            void userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
+            tick();
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
+            testUtils.detectChanges();
+
+            // When the user's last_changed time is updated
+            spyOn(component, 'loadChatContent').and.callThrough();
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
+            tick();
+
+            // Then loadChatContent should not have been called
+            expect(component.loadChatContent).not.toHaveBeenCalled();
+        }));
         it('should not do anything when a message is deleted', fakeAsync(async() => {
             // Given a chat with some messages
-            AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             const messageId: string = await chatDAO.addMessage('fauxChat', MSG);
             testUtils.detectChanges();
 

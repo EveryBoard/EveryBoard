@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { display } from 'src/app/utils/utils';
@@ -34,11 +34,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                authenticationService: AuthenticationService,
                 public cdr: ChangeDetectorRef,
+                protected readonly connectedUserService: ConnectedUserService,
                 private readonly messageDisplayer: MessageDisplayer)
     {
-        super(componentFactoryResolver, actRoute, authenticationService);
+        super(componentFactoryResolver, actRoute, connectedUserService);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
@@ -81,7 +81,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
             // bot's turn
-            setTimeout(async() => {
+            window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
         }

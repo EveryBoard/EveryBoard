@@ -109,11 +109,11 @@
                 <div class="field">
                     <label class="label" i18n>Opponents</label>
                     <div class="control">
-                        <div *ngIf="viewInfo.candidates.length === 0 else chooseCandidate" i18n>Potential opponents that join the game will appear here.<br/>Wait for an opponent to join, so that you can pick one.</div>
-                        <ng-template #chooseCandidate>
+                        <div *ngIf="viewInfo.candidates.length === 0 else chooseOpponent" i18n>Potential opponents that join the game will appear here.<br/>Wait for an opponent to join, so that you can pick one.</div>
+                        <ng-template #chooseOpponent>
                             <ng-container i18n>Click on the opponent against which you would like to play.</ng-container>
                             <div class="table-container"
-                                 id="chooseCandidate">
+                                 id="chooseOpponent">
                                 <table class="table is-fullwidth is-hoverable is-striped">
                                     <thead>
                                         <tr>
@@ -123,12 +123,12 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let candidate of viewInfo.candidates"
-                                            (click)="selectOpponent(candidate)"
+                                            id="presenceOf_{{ candidate }}"
                                             [ngClass]="viewInfo.candidateClasses[candidate]"
-                                            id="presenceOf_{{ candidate }}">
-                                            <td class="td"
-                                                [id]="viewInfo.chosenOpponent === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
-                                                >{{ candidate }}</td>
+                                            (click)="selectOpponent(candidate)" >
+                                            <td [id]="viewInfo.chosenOpponent === candidate ? ('selected_' + candidate) : ('candidate_' + candidate)"
+                                                class="td"
+                                            >{{ candidate }}</td>
                                             <td class="td">
                                                 <button *ngIf="viewInfo.chosenOpponent !== candidate"
                                                         class="button is-primary"

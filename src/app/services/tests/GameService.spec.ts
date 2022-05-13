@@ -14,15 +14,17 @@ import { Joiner, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthenticationService } from '../AuthenticationService';
-import { AuthenticationServiceMock } from './AuthenticationService.spec';
+import { ConnectedUserService } from '../ConnectedUserService';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('GameService', () => {
 
@@ -33,6 +35,8 @@ describe('GameService', () => {
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
 
+    const CANDIDATES: MinimalUser[] = [{ id: 'joiner-user-doc-id', name: 'joiner' }];
+
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [
@@ -42,7 +46,7 @@ describe('GameService', () => {
                 BrowserAnimationsModule,
             ],
             providers: [
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
@@ -98,7 +102,7 @@ describe('GameService', () => {
         await service.deletePart('partId');
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     }));
-    it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
+    it('should forbid to accept a take back that the players proposed themselves', fakeAsync(async() => {
         spyOn(ErrorLoggerService, 'logError');
         const error: string = 'Illegal to accept your own request';
         for (const player of [Player.ZERO, Player.ONE]) {
@@ -134,9 +138,9 @@ describe('GameService', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
             const joiner: Joiner = {
-                candidates: ['joiner'],
-                chosenPlayer: 'joiner',
-                creator: { name: 'creator', id: 'creatorId' },
+                candidates: CANDIDATES,
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -150,14 +154,14 @@ describe('GameService', () => {
 
             // then we should have a creator starting the game
             expect(startConfig.playerZero).toBe(joiner.creator.name);
-            expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenPlayer));
+            expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
         }));
-        it('should put chosen player first when math.random() is over 0.5', fakeAsync(async() => {
+        it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
             const joiner: Joiner = {
-                candidates: ['joiner'],
-                chosenPlayer: 'joiner',
-                creator: { name: 'creator', id: 'creatorId' },
+                candidates: CANDIDATES,
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -170,7 +174,7 @@ describe('GameService', () => {
             const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenPlayer));
+            expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
             expect(startConfig.playerOne).toBe(joiner.creator.name);
         }));
     });
@@ -208,9 +212,9 @@ describe('GameService', () => {
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameJoiner: Joiner = {
-                candidates: ['joiner'],
-                chosenPlayer: 'joiner',
-                creator: { name: 'creator', id: 'creatorId' },
+                candidates: CANDIDATES,
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'CREATOR',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -252,9 +256,9 @@ describe('GameService', () => {
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameJoiner: Joiner = {
-                candidates: ['joiner'],
-                chosenPlayer: 'joiner',
-                creator: { name: 'creator', id: 'creatorId' },
+                candidates: CANDIDATES,
+                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
