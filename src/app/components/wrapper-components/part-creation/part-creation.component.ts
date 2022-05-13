@@ -145,8 +145,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                   await this.onCurrentJoinerUpdate(joiner);
                                               });
         this.joinerService.subscribeToCandidates(this.partId,
-                                                 async(candidates: MinimalUser[]) => {
-                                                     await this.onCandidatesUpdate(candidates);
+                                                 (candidates: MinimalUser[]) => {
+                                                     this.onCandidatesUpdate(candidates);
                                                  });
     }
     private getForm(name: string): AbstractControl {

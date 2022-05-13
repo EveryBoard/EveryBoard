@@ -21,6 +21,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('PartCreationComponent:', () => {
 
@@ -42,12 +43,13 @@ describe('PartCreationComponent:', () => {
         Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).setValue(1000);
         testUtils.detectChanges();
     }
+    const FIRST_CANDIDATE: MinimalUser = { id: 'firstCandidate', name: 'firstCandidate' };
     async function mockCandidateArrival(): Promise<void> {
-        await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
+        await joinerDAOMock.addCandidate('joinerId', FIRST_CANDIDATE);
         testUtils.detectChanges();
     }
     async function chooseOpponent(): Promise<void> {
-        await component.selectOpponent('firstCandidate');
+        await component.selectOpponent(FIRST_CANDIDATE.name);
         testUtils.detectChanges();
     }
     const CREATOR: User = UserMocks.CREATOR;
@@ -132,7 +134,7 @@ describe('PartCreationComponent:', () => {
                 await mockCandidateArrival();
 
                 // Then it is possible to choose a candidate
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
+                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
                 testUtils.expectElementToExist('#chooseCandidate');
             }));
             it('should not see candidate change if it is modified', fakeAsync(async() => {
@@ -495,7 +497,7 @@ describe('PartCreationComponent:', () => {
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
         }));
         describe('Arrival', () => {
-            it('should change joiner doc', fakeAsync(async() => {
+            it('should add candidate', fakeAsync(async() => {
                 spyOn(joinerDAOMock, 'update').and.callThrough();
 
                 // When candidate arrives
@@ -503,10 +505,8 @@ describe('PartCreationComponent:', () => {
                 tick();
 
                 // Then the candidate is added to the joiner and the joiner is updated
-                expect(joinerDAOMock.update).toHaveBeenCalledOnceWith('joinerId', {
-                    candidates: ['firstCandidate'],
-                });
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
+                expect(joinerDAOMock.addCandidate).toHaveBeenCalledOnceWith('joinerId', FIRST_CANDIDATE);
+                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
         });
         describe('Creator leaves', () => {

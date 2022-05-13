@@ -67,11 +67,11 @@ export class JoinerService {
         this.candidatesUnsubscribe.get()();
         this.candidatesUnsubscribe = MGPOptional.empty();
     }
+    // TODO FOR REVIEW: wouldn't the joiner service be much simpler to use if: all functions that take a user instead rely on the currently logged in user? 
     public async createInitialJoiner(creator: MinimalUser, joinerId: string): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator.id + ', ' + joinerId + ')');
 
         const newJoiner: Joiner = {
-            candidates: [],
             chosenPlayer: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
@@ -91,7 +91,7 @@ export class JoinerService {
         } else {
             if (joiner.get().creator.id !== user.id) {
                 // Only add actual candidates to the game, not the creator
-                await this.joinerDAO.subCollectionDAO(partId, 'candidates').set(user.id, user);
+                await this.joinerDAO.addCandidate(partId, user);
             }
             return MGPValidation.SUCCESS;
         }
@@ -127,14 +127,8 @@ export class JoinerService {
                 partStatus,
             };
             await this.joinerDAO.update(this.observedJoinerId, update);
-            await this.joinerDAO.subCollectionDAO(this.observedJoinerId, 'candidates').delete(user.id);
+            await this.joinerDAO.removeCandidate(this.observedJoinerId, user);
         }
-    }
-    public async updateCandidates(candidates: string[]): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        const update: Partial<Joiner> = { candidates };
-        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), update);
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerService.VERBOSE,

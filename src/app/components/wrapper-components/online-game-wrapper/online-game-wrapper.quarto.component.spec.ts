@@ -128,11 +128,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.partCreation)
             .withContext('partCreation field should also be present')
             .toBeTruthy();
-        await joinerDAO.update('joinerId', { candidates: ['firstCandidate'] });
+        await joinerDAO.addCandidate('joinerId', { id: 'firstCandidate', name: 'firstCandidate' });
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', {
             partStatus: PartStatus.PART_CREATED.value,
-            candidates: ['firstCandidate'],
             chosenPlayer: 'firstCandidate',
         });
         // TODO: replace by real actor action (chooseCandidate)

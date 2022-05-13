@@ -8,6 +8,7 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
@@ -20,6 +21,12 @@ export class JoinerDAOMock extends FirebaseFirestoreDAOMock<Joiner> {
     public constructor() {
         super('JoinerDAOMock', JoinerDAOMock.VERBOSE);
         display(this.VERBOSE, 'JoinerDAOMock.constructor');
+    }
+    public addCandidate(partId: string, candidate: MinimalUser): Promise<void> {
+        return this.subCollectionDAO(partId, 'candidates').set(candidate.id, candidate);
+    }
+    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
+        return this.subCollectionDAO(partId, 'candidates').delete(candidate.id);
     }
     public getStaticDB(): MGPMap<string, JoinerOS> {
         return JoinerDAOMock.joinerDB;
@@ -43,6 +50,7 @@ describe('JoinerDAOMock', () => {
         lastJoiner = MGPOptional.empty();
     });
     it('Total update should update', fakeAsync(async() => {
+        // Given an initial joiner to which we subscribed to the changes
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
 
         expect(lastJoiner).toEqual(MGPOptional.empty());
@@ -52,19 +60,21 @@ describe('JoinerDAOMock', () => {
             callCount++;
             lastJoiner = joiner;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
-            // TODO: REDO
         });
 
         expect(callCount).toEqual(1);
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
-        await joinerDAOMock.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
+        // When it is updated
+        await joinerDAOMock.update('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER);
 
+        // Then we should have seen the update
         expect(callCount).toEqual(2);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER);
         unsubscribe();
     }));
     it('Partial update should update', fakeAsync(async() => {
+        // Given an initial joiner to which we subscribed to the changes
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
 
         expect(callCount).toEqual(0);
@@ -72,18 +82,19 @@ describe('JoinerDAOMock', () => {
 
         const unsubscribe: Unsubscribe = joinerDAOMock.subscribeToChanges('joinerId', (joiner: MGPOptional<Joiner>) => {
             callCount++;
-            // TODO: REDO
-            expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
             lastJoiner = joiner;
+            expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
         });
 
         expect(callCount).toEqual(1);
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
-        await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
+        // When it is updated
+        await joinerDAOMock.update('joinerId', { chosenPlayer: 'firstCandidate' });
 
+        // Then we should see the update
         expect(callCount).toEqual(2);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER);
         unsubscribe();
     }));
 });

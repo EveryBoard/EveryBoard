@@ -34,7 +34,6 @@ describe('UserDAO', () => {
             dao.observeUserByUsername('jeanjaja', callback);
             expect(dao.observingWhere).toHaveBeenCalledWith([
                 ['username', '==', 'jeanjaja'],
-                ['verified', '==', true],
             ],
                                                             callback);
         });
