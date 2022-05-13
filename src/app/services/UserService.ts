@@ -7,6 +7,7 @@ import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirebaseTime } from '../domain/Time';
+import { assert } from '../utils/assert';
 
 /**
   * The aim of this service is to:
@@ -42,18 +43,11 @@ export class UserService {
     public async getUserLastChanged(id: string): Promise<MGPOptional<FirebaseTime>> {
         const user: MGPOptional<User> = await this.userDAO.read(id);
         if (user.isAbsent()) {
-            console.log('no user to lastChange !')
             return MGPOptional.empty();
         } else {
-            // TODO FOR REVIEW: rendre ça "jamais nul en db" ?
             const lastChanged: FirebaseTime | undefined = user.get().last_changed;
-            if (lastChanged == null) {
-                console.log('last changed was nul!')
-                return MGPOptional.empty();
-            } else {
-                console.log('last changed was', lastChanged)
-                return MGPOptional.of(lastChanged);
-            }
+            assert(lastChanged != null, 'should not receive a last_changed equal to null')
+            return MGPOptional.of(lastChanged as FirebaseTime);
         }
     }
 }

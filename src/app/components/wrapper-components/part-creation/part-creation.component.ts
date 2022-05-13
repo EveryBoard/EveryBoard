@@ -312,7 +312,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
         } else {
-            if (this.chosenOpponentJustLeft(joiner)) {
+            if (this.chosenOpponentJustLeft(joiner.get())) {
                 const currentJoiner: Joiner = Utils.getNonNullable(this.currentJoiner);
                 const userName: string = Utils.getNonNullable(currentJoiner.chosenOpponent).name;
                 this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
@@ -328,12 +328,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private chosenOpponentJustLeft(newJoiner: MGPOptional<Joiner>): boolean {
+    private chosenOpponentJustLeft(newJoiner: Joiner): boolean {
         if (this.currentJoiner == null) return false;
-        if (newJoiner.isAbsent()) return false;
         const currentJoiner: Joiner = this.currentJoiner;
         const thereWasAChosenOpponent: boolean = currentJoiner.chosenOpponent != null;
-        const thereIsNoLongerChosenOpponent: boolean = newJoiner.get().chosenOpponent == null;
+        const thereIsNoLongerChosenOpponent: boolean = newJoiner.chosenOpponent == null;
         return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
     }
     private async onGameCancelled() {
