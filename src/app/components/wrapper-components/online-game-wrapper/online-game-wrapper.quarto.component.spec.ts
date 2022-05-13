@@ -1343,16 +1343,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
     });
     describe('User "handshake"', () => {
-        it(`Should make opponent's name lightgrey when he is absent`, fakeAsync(async() => {
-            await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            tick(1);
-            expect(wrapper.getPlayerNameClass(1)).toEqual('has-text-black');
-            await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline' });
-            componentTestUtils.detectChanges();
-            tick();
-            expect(wrapper.getPlayerNameClass(1)).toBe('has-text-grey-light');
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
+        it(`Should make opponent's name lightgrey when he is token-outdated`);
     });
     describe('Resign', () => {
         it('should end game after clicking on resign button', fakeAsync(async() => {

@@ -3,7 +3,6 @@ import { Database, DatabaseReference, onDisconnect, ref, set } from '@angular/fi
 import { serverTimestamp } from 'firebase/database';
 
 interface ConnectivityStatus {
-    state: string,
     // eslint-disable-next-line camelcase
     last_changed: unknown,
 }
@@ -13,11 +12,9 @@ interface ConnectivityStatus {
 })
 export class ConnectivityDAO {
     private static readonly OFFLINE: ConnectivityStatus = {
-        state: 'offline',
         last_changed: serverTimestamp(),
     };
     private static readonly ONLINE: ConnectivityStatus = {
-        state: 'online',
         last_changed: serverTimestamp(),
     };
     public constructor(private readonly db: Database) {

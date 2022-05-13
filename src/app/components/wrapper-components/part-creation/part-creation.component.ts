@@ -133,7 +133,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return;
     }
     private checkInputs() {
-        assert(this.connectedUserService.user.get().username.get() !== '', 'PartCreationComponent should not be created with an empty userName');
+        const user: MGPOptional<AuthUser> = this.connectedUserService.user;
+        assert(user.isPresent() && (user.get() !== AuthUser.NOT_CONNECTED),
+               'PartCreationComponent should not be created with an empty userName');
         assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
     private createForms() {
@@ -212,7 +214,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
             this.viewInfo.totalPartDuration = joiner.totalPartDuration;
             this.viewInfo.partType = joiner.partType;
-            this.viewInfo.chosenOpponent = joiner.chosenOpponent == null ? undefined : joiner.chosenOpponent.name;
+            this.viewInfo.chosenOpponent = joiner.chosenOpponent?.name;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
         }
         switch (joiner.partType) {

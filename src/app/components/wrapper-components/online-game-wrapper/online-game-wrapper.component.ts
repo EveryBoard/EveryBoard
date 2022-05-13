@@ -581,19 +581,16 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.observerRole = PlayerOrNone.NONE.value;
         }
         if (opponentName.isPresent()) {
-            const onDocumentCreated: (foundUser: UserDocument[]) => void = (foundUser: UserDocument[]) => {
-                this.opponent = foundUser[0].data;
-            };
-            const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
-                this.opponent = modifiedUsers[0].data;
+            const onDocumentCreatedOrModified: (f: UserDocument[]) => void = (user: UserDocument[]) => {
+                this.opponent = user[0].data;
             };
             const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             };
             const callback: FirebaseCollectionObserver<User> =
-                new FirebaseCollectionObserver(onDocumentCreated,
-                                               onDocumentModified,
+                new FirebaseCollectionObserver(onDocumentCreatedOrModified,
+                                               onDocumentCreatedOrModified,
                                                onDocumentDeleted);
             const subscription: () => void = this.userService.observeUserByUsername(opponentName.get(), callback);
             this.opponentSubscription = MGPOptional.of(subscription);
@@ -653,9 +650,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const victoriousPlayer: string = Utils.getNonNullable(opponent.username);
             await this.notifyTimeoutVictory(victoriousPlayer, user, lastIndex, this.getPlayerName());
         } else {
-            if (this.endGame) {
-                display(true, 'time might be better handled in the future');
-            } else if (this.opponentIsOffline()) { // the other player has timed out
+            assert(this.endGame === false, 'time might be better handled in the future');
+            if (this.opponentIsOffline()) { // the other player has timed out
                 const loosingPlayer: string = Utils.getNonNullable(opponent.username);
                 await this.notifyTimeoutVictory(this.getPlayerName(), user, player, loosingPlayer);
                 this.endGame = true;
@@ -781,8 +777,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public opponentIsOffline(): boolean {
-        return this.opponent != null &&
-               this.opponent.state === 'offline';
+        return false; // TODO FIRST
     }
     public canResign(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canResign');

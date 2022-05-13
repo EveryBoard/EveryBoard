@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -252,78 +252,6 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
-        describe('Candidate/chosenOpponent disconnection', () => {
-            it('should not go back to start when ChosenOpponent goes offline', fakeAsync(async() => {
-                // Given a page that has loaded, a candidate joined and has been chosen as opponent
-                awaitComponentInitialisation();
-                await mockCandidateArrival();
-                chooseOpponent();
-                expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
-
-                // When the candidate goes offline
-                await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline' });
-                tick();
-
-                // Then it is still selected
-                expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_CHOSEN_OPPONENT);
-                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-            }));
-            it('should not remove disconnected candidates from the list', fakeAsync(async() => {
-                // Given a component that is loaded and there is a non-chosen candidate
-                awaitComponentInitialisation();
-                await mockCandidateArrival();
-                expectElementToExist('#candidate_firstCandidate');
-
-                // When the candidate goes "offline"
-                await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline' });
-                tick();
-
-                // Then the candidate should not have disappeared and the joiner not have been updated
-                expectElementToExist('#candidate_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
-                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-            }));
-            it('should not remove candidate from lobby if they directly appears offline', fakeAsync(async() => {
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-                // Given a page that is loaded and there is no candidate yet
-                awaitComponentInitialisation();
-
-                // When the candidate joins but is directly offline
-                await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline' });
-                await mockCandidateArrival();
-
-                // Then the candidate should still appear on the page
-                expectElementToExist('#presenceOf_firstCandidate');
-                // and logError should not have been called
-                expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
-                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-            }));
-            it(`should not fail when receiving twice an 'offline' update`, fakeAsync(async() => {
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-
-                // Given a part creation with a candidate
-                awaitComponentInitialisation();
-                await mockCandidateArrival();
-
-                // When the candidate updates twice with the offline status
-                await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline' });
-                tick();
-                expectElementToExist('#candidate_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
-
-                await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { state: 'offline', dummyField: true });
-                tick();
-                expectElementToExist('#candidate_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
-
-                // Then it is still displayed amongst the candidates, and no error has been produced
-                // this is because we don't put too many trust in offline/online status since we had issue in the past
-                expectElementToExist('#candidate_firstCandidate');
-                expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
-                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-            }));
-        });
         describe('Candidate/ChosenOpponent removal', () => {
             it('should deselect candidate, remove it, and call logError when a candidate is removed from db', fakeAsync(async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
@@ -551,7 +479,7 @@ describe('PartCreationComponent', () => {
                 const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
                 spyOn(authService, 'removeObservedPart').and.callThrough();
                 clickElement('#cancel');
-                tick();
+                tick(3000);
 
                 // then observedPart should be emptied
                 expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
@@ -559,7 +487,6 @@ describe('PartCreationComponent', () => {
                 await partDAO.set('joinerId', PartMocks.INITIAL);
                 await joinerDAO.set('joinerId', JoinerMocks.INITIAL);
                 await chatDAO.set('joinerId', { messages: [], status: 'dummy status' });
-                flush();
             }));
             it('should unsubscribe from joiner service upon destruction', fakeAsync(async() => {
                 // Given a component that is loaded by anyone (here, the creator)
@@ -624,24 +551,6 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 // tick(PartCreationComponent.TOKEN_INTERVAL);
             }));
-            it(`should not delete part when finding a 'offline' creator`, fakeAsync(async() => {
-                spyOn(gameService, 'deletePart').and.callThrough();
-                spyOn(joinerService, 'deleteJoiner').and.callThrough();
-                spyOn(chatService, 'deleteChat').and.callThrough();
-
-                // Given a component where creator is offline
-                await userDAO.update(UserMocks.CREATOR_AUTH_USER.id, { state: 'offline' });
-                await partDAO.set('joinerId', PartMocks.INITIAL);
-
-                // When arriving on that component
-                awaitComponentInitialisation();
-
-                // Then the part and all its related data should be removed
-                expect(gameService.deletePart).not.toHaveBeenCalled();
-                expect(joinerService.deleteJoiner).not.toHaveBeenCalled();
-                expect(chatService.deleteChat).not.toHaveBeenCalled();
-                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-            }));
             it(`should delete part when finding an outdated creator token`, fakeAsync(async() => {
                 spyOn(gameService, 'deletePart').and.callThrough();
                 spyOn(joinerService, 'deleteJoiner').and.callThrough();
@@ -649,20 +558,20 @@ describe('PartCreationComponent', () => {
 
                 // Given a component where creator has an out of date token
                 const creatorLastChange: Time = { seconds: - PartCreationComponent.TOKEN_TIMEOUT, nanoseconds: 0 };
-                await userDAO.update(UserMocks.CREATOR_AUTH_USER.id, { state: 'offline', last_changed: creatorLastChange });
+                await userDAO.update(UserMocks.CREATOR_AUTH_USER.id, { last_changed: creatorLastChange });
                 await partDAO.set('joinerId', PartMocks.INITIAL);
 
                 // When arriving on that component
                 awaitComponentInitialisation();
                 // and waiting one TOKEN_INTERVAL
                 tick(PartCreationComponent.TOKEN_INTERVAL);
+                tick(3000);
 
                 // Then the part and all its related data should be removed
                 expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
                 expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-                flush();
             }));
         });
         describe('Not chosen yet', () => {
@@ -680,23 +589,6 @@ describe('PartCreationComponent', () => {
 
                 // Then the user is rerouted to the server
                 expectValidRouting(router, ['/lobby'], LobbyComponent);
-                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-            }));
-            it('should not delete part when observer seeing that creator goes offline', fakeAsync(async() => {
-                spyOn(gameService, 'deletePart');
-                spyOn(joinerService, 'deleteJoiner');
-                spyOn(chatService, 'deleteChat');
-
-                // Given a component with creator and candidate present
-                awaitComponentInitialisation();
-
-                // When the creator goes offline
-                await userDAO.update(UserMocks.CREATOR_AUTH_USER.id, { state: 'offline' });
-
-                // Then the part is not deleted
-                expect(gameService.deletePart).not.toHaveBeenCalled();
-                expect(joinerService.deleteJoiner).not.toHaveBeenCalled();
-                expect(chatService.deleteChat).not.toHaveBeenCalled();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should not start sending presence token once selected as chosen opponent', fakeAsync(async() => {
@@ -722,7 +614,6 @@ describe('PartCreationComponent', () => {
                 // When 2 * 5 sec pass
                 spyOn(connectedUserService, 'sendPresenceToken').and.callFake(async() => {});
                 tick(PartCreationComponent.TOKEN_TIMEOUT);
-                flush();
 
                 // Then a presence token should be emitted
                 expect(connectedUserService.sendPresenceToken).toHaveBeenCalledTimes(2);
