@@ -90,7 +90,6 @@ service cloud.firestore {
             // - beginning once the part has started
             // the part is considered to be started as soon as beginning is set
             // For any other fields, both players can modify them
-            // TODO: for moves, only add a move
             allow update: if userIsVerified() &&
                              preservesField('typeGame') &&
                              (preservesField('playerZero') || resource.data.beginning == null) &&
@@ -107,7 +106,7 @@ service cloud.firestore {
             // The creator can delete a joiner
             allow delete: if userIsVerified() && userIsCreator(resource.data);
             // Anybody else can delete a joiner only if the creator is offline
-            allow delete: if UserIsVerified() && creatorIsOffline(resource.data);
+            allow delete: if userIsVerified() && creatorIsOffline(resource.data);
             // The creator can change all fields except changing partStatus to STARTED (3)
             allow update: if userIsVerified() &&
                              userIsCreator(resource.data) &&
@@ -124,7 +123,9 @@ service cloud.firestore {
             allow read: if userIsVerified();
         }
         match /joiners/{partId}/candidates/{userId} {
+            // A user can add only add themself to the candidate list
             allow write: if userIsVerified() && userId == request.auth.uid;
+            // Any verified user can read the candidate list
             allow read: if userIsVerified();
         }
         function userIsVerified() {
@@ -138,13 +139,8 @@ service cloud.firestore {
                    joiner.creator.id == request.auth.uid &&
                    debug(joiner.creator.name) == debug(usernameOf(request.auth.uid));
         }
-        function creatorIsOffline(joiner) {
+        function creatorIsOffline(_joiner) {
             return true; // TODO
-        }
-        function isCurrentUser(user) {
-            let uid = request.auth.uid;
-            let username = get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
-            return user.id == uid && user.name == username;
         }
         function preservesField(field) {
             return !(field in request.resource.data) || (request.resource.data[field] == resource.data[field]);
