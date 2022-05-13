@@ -266,11 +266,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const user: MinimalUser | undefined = candidates.find((c: MinimalUser) => c.name === username);
         return Utils.getNonNullable(user);
     }
-    private getUserFromId(userId: string): MinimalUser {
-        const candidates: MinimalUser[] = Utils.getNonNullable(this.currentJoiner).candidates;
-        const user: MinimalUser | undefined = candidates.find((c: MinimalUser) => c.id === userId);
-        return Utils.getNonNullable(user);
-    }
     public async changeConfig(): Promise<void> {
         return this.joinerService.reviewConfig();
     }
