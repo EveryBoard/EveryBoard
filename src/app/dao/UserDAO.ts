@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { serverTimestamp } from 'firebase/firestore';
 import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
@@ -9,13 +10,14 @@ import { Firestore } from '@angular/fire/firestore';
     providedIn: 'root',
 })
 export class UserDAO extends FirebaseFirestoreDAO<User> {
+
     public static VERBOSE: boolean = false;
 
     public static COLLECTION_NAME: string = 'joueurs';
 
     constructor(firestore: Firestore) {
         super(UserDAO.COLLECTION_NAME, firestore);
-        display(UserDAO.VERBOSE, 'JoueursDAO.constructor');
+        display(UserDAO.VERBOSE, 'UserDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
         const usersWithSameUsername: FirebaseDocument<User>[] = await this.findWhere([['username', '==', username]]);
@@ -35,5 +37,10 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
     }
     public observeActiveUsers(callback: FirebaseCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
+    }
+    public updatePresenceToken(userId: string): Promise<void> {
+        return this.update(userId, {
+            last_changed: serverTimestamp(),
+        });
     }
 }

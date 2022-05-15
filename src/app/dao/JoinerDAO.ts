@@ -9,6 +9,7 @@ import { MinimalUser } from '../domain/MinimalUser';
     providedIn: 'root',
 })
 export class JoinerDAO extends FirebaseFirestoreDAO<Joiner> {
+
     public static VERBOSE: boolean = false;
 
     constructor(firestore: Firestore) {

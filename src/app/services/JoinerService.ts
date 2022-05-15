@@ -14,12 +14,16 @@ import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
     providedIn: 'root',
 })
 export class JoinerService {
+
     public static VERBOSE: boolean = false;
 
     private observedJoinerId: string | null;
 
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
     private candidatesUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
+
+    public static readonly USER_ALREADY_IN_GAME: () => string = () => $localize`You cannot join this game because you are already in another one.`;
+    public static readonly GAME_DOES_NOT_EXIST: () => string = () => $localize`Game does not exist`;
 
     constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
@@ -72,7 +76,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator.id + ', ' + joinerId + ')');
 
         const newJoiner: Joiner = {
-            chosenPlayer: null,
+            chosenOpponent: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
@@ -87,7 +91,7 @@ export class JoinerService {
 
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
-            return MGPValidation.failure('Game does not exist');
+            return MGPValidation.failure(JoinerService.GAME_DOES_NOT_EXIST());
         } else {
             if (joiner.get().creator.id !== user.id) {
                 // Only add actual candidates to the game, not the creator
@@ -115,15 +119,15 @@ export class JoinerService {
             return;
         } else {
             const joiner: Joiner = joinerOpt.get();
-            let chosenPlayer: string | null = joiner.chosenPlayer;
+            let chosenOpponent: MinimalUser | null = joiner.chosenOpponent;
             let partStatus: number = joiner.partStatus;
-            if (chosenPlayer === user.name) {
-                // if the chosenPlayer leave, we're back to initial part creation
-                chosenPlayer = null;
+            if (chosenOpponent?.id === user.id) {
+                // if the chosenOpponent leave, we're back to initial part creation
+                chosenOpponent = null;
                 partStatus = PartStatus.PART_CREATED.value;
             }
             const update: Partial<Joiner> = {
-                chosenPlayer,
+                chosenOpponent: chosenOpponent,
                 partStatus,
             };
             await this.joinerDAO.update(this.observedJoinerId, update);
@@ -136,7 +140,7 @@ export class JoinerService {
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
         return this.joinerDAO.delete(Utils.getNonNullable(this.observedJoinerId));
     }
-    public async proposeConfig(chosenPlayer: string,
+    public async proposeConfig(chosenOpponent: MinimalUser,
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
@@ -150,19 +154,18 @@ export class JoinerService {
 
         return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
-            chosenPlayer,
+            chosenOpponent: chosenOpponent,
             partType: partType.value,
             maximalMoveDuration,
             totalPartDuration,
             firstPlayer: firstPlayer.value,
         });
     }
-    public setChosenPlayer(player: string): Promise<void> {
-        display(JoinerService.VERBOSE, `JoinerService.setChosenPlayer(${player})`);
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+    public setChosenOpponent(chosenOpponent: MinimalUser): Promise<void> {
+        display(JoinerService.VERBOSE, `JoinerService.setChosenOpponent(${chosenOpponent.name})`);
 
         return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
-            chosenPlayer: player,
+            chosenOpponent: chosenOpponent,
         });
     }
     public async reviewConfig(): Promise<void> {
@@ -179,7 +182,7 @@ export class JoinerService {
 
         return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.PART_CREATED.value,
-            chosenPlayer: null,
+            chosenOpponent: null,
         });
     }
     public acceptConfig(): Promise<void> {

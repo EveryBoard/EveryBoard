@@ -1,12 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
+import * as FireAuth from '@angular/fire/auth';
 import { User } from 'src/app/domain/User';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
-import * as FireAuth from '@angular/fire/auth';
+import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { FirebaseCondition } from '../FirebaseFirestoreDAO';
+import { serverTimestamp } from 'firebase/firestore';
 
 describe('UserDAO', () => {
 
@@ -32,10 +34,10 @@ describe('UserDAO', () => {
             );
             spyOn(dao, 'observingWhere');
             dao.observeUserByUsername('jeanjaja', callback);
-            expect(dao.observingWhere).toHaveBeenCalledWith([
+            const parameters: FirebaseCondition[] = [
                 ['username', '==', 'jeanjaja'],
-            ],
-                                                            callback);
+            ];
+            expect(dao.observingWhere).toHaveBeenCalledWith(parameters, callback);
         });
     });
     describe('observeActiveUsers', () => {
@@ -47,11 +49,11 @@ describe('UserDAO', () => {
             );
             spyOn(dao, 'observingWhere');
             dao.observeActiveUsers(callback);
-            expect(dao.observingWhere).toHaveBeenCalledWith([
+            const parameters: FirebaseCondition[] = [
                 ['state', '==', 'online'],
                 ['verified', '==', true],
-            ],
-                                                            callback);
+            ];
+            expect(dao.observingWhere).toHaveBeenCalledWith(parameters, callback);
         });
     });
     describe('setUsername', () => {
@@ -68,6 +70,18 @@ describe('UserDAO', () => {
             expect(userWithUsername.username).toEqual('foo');
 
             await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
+        });
+    });
+    describe('updatePresenceToken', () => {
+        it('should delegate to update', async() => {
+            // Given any situation
+            spyOn(dao, 'update');
+
+            // When calling updatePresenceToken
+            await dao.updatePresenceToken('joserId');
+
+            // Then update should be called
+            expect(dao.update).toHaveBeenCalledOnceWith('joserId', { last_changed: serverTimestamp() });
         });
     });
     describe('security', () => {

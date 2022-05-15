@@ -58,7 +58,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
             const newState: AbaloneState = new AbaloneState(status.get(), state.turn + 1);
             const newScores: [number, number] = newState.getScores();
             if (newScores[OPPONENT] > scores[OPPONENT]) {
-                return false; // he just pushed himself
+                return false; // some player just push themself
             } else {
                 return true;
             }

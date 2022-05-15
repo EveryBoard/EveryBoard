@@ -9,6 +9,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
@@ -66,11 +67,11 @@ describe('JoinerDAOMock', () => {
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
         // When it is updated
-        await joinerDAOMock.update('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER);
+        await joinerDAOMock.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
 
         // Then we should have seen the update
         expect(callCount).toEqual(2);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_CHOSEN_OPPONENT);
         unsubscribe();
     }));
     it('Partial update should update', fakeAsync(async() => {
@@ -90,11 +91,11 @@ describe('JoinerDAOMock', () => {
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
         // When it is updated
-        await joinerDAOMock.update('joinerId', { chosenPlayer: 'firstCandidate' });
+        await joinerDAOMock.update('joinerId', { chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER });
 
         // Then we should see the update
         expect(callCount).toEqual(2);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_CHOSEN_OPPONENT);
         unsubscribe();
     }));
 });

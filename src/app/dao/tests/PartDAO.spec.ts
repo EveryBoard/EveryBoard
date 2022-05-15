@@ -4,7 +4,7 @@ import { Auth, signOut } from '@angular/fire/auth';
 import { Part, MGPResult } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
+import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { PartDAO } from '../PartDAO';

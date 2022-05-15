@@ -9,7 +9,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Utils } from 'src/app/utils/utils';
 
 describe('JoinerService', () => {
 
@@ -51,8 +50,10 @@ describe('JoinerService', () => {
     it('createInitialJoiner should delegate to the DAO set method', fakeAsync(async() => {
         // Given a JoinerService
         spyOn(dao, 'set');
+
         // When creating the initial joiner
         await service.createInitialJoiner(UserMocks.CREATOR_MINIMAL_USER, 'id');
+
         // Then it should delegate to the DAO and create the initial joiner
         expect(dao.set).toHaveBeenCalledWith('id', JoinerMocks.INITIAL);
     }));
@@ -72,7 +73,7 @@ describe('JoinerService', () => {
 
             // Then it should fail
             expect(joinResult.isFailure()).toBeTrue();
-            expect(joinResult.getReason()).toBe('User already in the game');
+            expect(joinResult.getReason()).toBe('You cannot join this game because you are already in another one.');
         }));
         it('should not update joiner when called by the creator', fakeAsync(async() => {
             // Given a joiner where we are the creator
@@ -95,6 +96,7 @@ describe('JoinerService', () => {
 
             // When joining it
             const user: MinimalUser = { id: 'userId', name: 'some totally new user' };
+
             await service.joinGame('joinerId', user);
 
             // We should be added to the candidate list
@@ -103,8 +105,7 @@ describe('JoinerService', () => {
         it('should fail when joining an invalid joiner', fakeAsync(async() => {
             spyOn(dao, 'read').and.resolveTo(MGPOptional.empty());
             // When trying to join an invalid joiner
-            const user: MinimalUser = { id: 'userId', name: 'some-user' };
-            const result: Promise<MGPValidation> = service.joinGame('invalidJoinerId', user);
+            const result: Promise<MGPValidation> = service.joinGame('invalidJoinerId', UserMocks.CREATOR_MINIMAL_USER);
             // Then it should fail
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure('Game does not exist'));
         }));
@@ -121,8 +122,8 @@ describe('JoinerService', () => {
         it('should delegate update to DAO', fakeAsync(async() => {
             // Given a joiner that we are observing and that we joined
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            const user: MinimalUser = { id: 'userId', name: 'someone totally new' };
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
+            const user: MinimalUser = { id: '7sf857erf87d', name: 'someone totally new' };
             await service.joinGame('joinerId', user);
 
             spyOn(dao, 'removeCandidate');
@@ -135,16 +136,12 @@ describe('JoinerService', () => {
         }));
         it('should start as new when chosenPlayer leaves', fakeAsync(async() => {
             // Given a joiner that we are observing, with a chosen player
-            await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER);
-            const chosenPlayer: MinimalUser = {
-                id: 'chosenPlayer',
-                name: Utils.getNonNullable(JoinerMocks.WITH_CHOSEN_PLAYER.chosenPlayer),
-            };
-            await dao.addCandidate('joinerId', chosenPlayer);
+            await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
+            await dao.addCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             // When the chosen player leaves
-            await service.cancelJoining(chosenPlayer);
+            await service.cancelJoining(UserMocks.OPPONENT_MINIMAL_USER);
 
             // Then the joiner is back to the initial one
             const currentJoiner: MGPOptional<Joiner> = await dao.read('joinerId');
@@ -199,7 +196,7 @@ describe('JoinerService', () => {
         }));
     });
     describe('reviewConfigAndRemoveChosenPlayer', () => {
-        it('should change part status, chosen player and candidates with DAO', fakeAsync(async() => {
+        it('should change part status and chosen opponent with DAO', fakeAsync(async() => {
             // Given a joiner that we are observing
             await dao.set('joinerId', JoinerMocks.INITIAL);
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
@@ -212,7 +209,7 @@ describe('JoinerService', () => {
             // Then the part is updated accordingly
             expect(dao.update).toHaveBeenCalledWith('joinerId', {
                 partStatus: PartStatus.PART_CREATED.value,
-                chosenPlayer: null,
+                chosenOpponent: null,
             });
         }));
     });

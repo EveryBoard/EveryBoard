@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ResetPasswordComponent } from './reset-password.component';
@@ -8,7 +8,7 @@ import { ResetPasswordComponent } from './reset-password.component';
 describe('ResetPasswordComponent', () => {
     let testUtils: SimpleComponentTestUtils<ResetPasswordComponent>;
 
-    let authService: AuthenticationService;
+    let authService: ConnectedUserService;
 
     const email: string = 'jean@jaja.europe';
 
@@ -25,7 +25,7 @@ describe('ResetPasswordComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ResetPasswordComponent);
         testUtils.detectChanges();
-        authService = TestBed.inject(AuthenticationService);
+        authService = TestBed.inject(ConnectedUserService);
     }));
 
     it('should create', () => {

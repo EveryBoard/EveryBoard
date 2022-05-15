@@ -1,28 +1,32 @@
 /* eslint-disable max-lines-per-function */
-import { Auth, AuthenticationService, AuthUser } from '../AuthenticationService';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
+import { Database, ref, remove } from '@angular/fire/database';
+import { FirebaseError } from '@angular/fire/app';
+import * as FireAuth from '@angular/fire/auth';
+import { serverTimestamp } from 'firebase/firestore';
+
+import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Database, ref, remove } from '@angular/fire/database';
-import { FirebaseError } from '@angular/fire/app';
-import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
+import { User } from 'src/app/domain/User';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { Part } from 'src/app/domain/Part';
 
 @Injectable()
-export class AuthenticationServiceMock {
+export class ConnectedUserServiceMock {
     public static setUser(user: AuthUser, notifyObservers: boolean = true, userId: string = 'userId'): void {
-        (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock)
+        (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
             .setUser(userId, user, notifyObservers);
     }
-
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
     public uid: MGPOptional<string> = MGPOptional.empty();
 
@@ -40,44 +44,50 @@ export class AuthenticationServiceMock {
             this.userRS.next(user);
         }
     }
-    public async getUser(): Promise<AuthUser> {
-        return this.user.get();
-    }
     public getUserObs(): Observable<AuthUser> {
         return this.userRS.asObservable();
     }
     public async disconnect(): Promise<MGPValidation> {
-        return MGPValidation.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.disconnect not implemented');
     }
     public async doRegister(_username: string, _email: string, _password: string)
     : Promise<MGPFallible<FireAuth.User>>
     {
-        return MGPFallible.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.doRegister not implemented');
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
-        return MGPValidation.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.sendEmailVerification not implemented');
     }
     public async doEmailLogin(): Promise<MGPValidation> {
-        return MGPValidation.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.doEmailLogin not implemented');
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
-        return MGPValidation.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.doGoogleLogin not implemented');
     }
     public async setUsername(_username: string): Promise<MGPValidation> {
-        return MGPValidation.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.setUsername not implemented');
     }
     public async setPicture(_url: string): Promise<MGPValidation> {
-        return MGPValidation.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.setPicture not implemented');
     }
     public async reloadUser(): Promise<void> {
         if (this.user.isPresent()) {
             this.userRS.next(this.user.get());
         } else {
-            throw new Error('AuthenticationServiceMock: cannot reload user without setting a user first');
+            throw new Error('ConnectedUserServiceMock: cannot reload user without setting a user first');
         }
     }
     public async sendPasswordResetEmail(): Promise<MGPValidation> {
-        return MGPValidation.failure('not mocked');
+        throw new Error('ConnectedUserServiceMock.sendPasswordResetEmail not implemented');
+    }
+    public async updateObservedPart(observedPart: string): Promise<void> {
+        return;
+    }
+    public async sendPresenceToken(): Promise<void> {
+        return;
+    }
+    public async removeObservedPart(observedPart: string): Promise<void> {
+        return;
     }
 }
 
@@ -95,7 +105,7 @@ async function setupAuthTestModule(): Promise<unknown> {
  * await firebase.auth().signOut();
  */
 export async function createConnectedGoogleUser(email: string, username?: string): Promise<FireAuth.User> {
-    TestBed.inject(AuthenticationService);
+    TestBed.inject(ConnectedUserService);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
@@ -142,9 +152,9 @@ async function createDisconnectedGoogleUser(email: string): Promise<FireAuth.Use
     return user;
 }
 
-describe('AuthenticationService', () => {
+describe('ConnectedUserService', () => {
     let auth: FireAuth.Auth;
-    let service: AuthenticationService;
+    let service: ConnectedUserService;
 
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
@@ -154,7 +164,7 @@ describe('AuthenticationService', () => {
 
     beforeEach(async() => {
         await setupAuthTestModule();
-        service = TestBed.inject(AuthenticationService);
+        service = TestBed.inject(ConnectedUserService);
         auth = TestBed.inject(FireAuth.Auth);
     });
 
@@ -179,7 +189,7 @@ describe('AuthenticationService', () => {
         });
         const subscription: Subscription = service.getUserObs().subscribe((_user: AuthUser) => {
             // Wait 200ms to ensure that the handler has the time to mark for verification
-            setTimeout(resolvePromise, 2000);
+            window.setTimeout(resolvePromise, 2000);
         });
         await service.doEmailLogin(email, password);
         await userHasUpdated;
@@ -274,8 +284,8 @@ describe('AuthenticationService', () => {
 
             // then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe('AuthenticationService: Unlogged users cannot request for email verification');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Unlogged users cannot request for email verification');
+            expect(result.getReason()).toBe('ConnectedUserService: Unlogged users cannot request for email verification');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unlogged users cannot request for email verification');
         });
         it('should fail if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
@@ -287,8 +297,8 @@ describe('AuthenticationService', () => {
 
             // then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe('AuthenticationService: Verified users should not ask email verification after being verified');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Verified users should not ask email verification after being verified');
+            expect(result.getReason()).toBe('ConnectedUserService: Verified users should not ask email verification after being verified');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Verified users should not ask email verification after being verified');
         });
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // given a user that just registered and hence is not verified
@@ -442,7 +452,7 @@ describe('AuthenticationService', () => {
         });
     });
     describe('mapFirebaseError', () => {
-        it('calls logError when encountering an unsupported error', async() => {
+        it('should call logError when encountering an unsupported error', async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // given an unsupported error
@@ -452,13 +462,14 @@ describe('AuthenticationService', () => {
             service.mapFirebaseError(error);
 
             // then logError is called
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
         });
         it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
+                'auth/popup-blocked',
             ];
 
             for (const code of errorCodes) {
@@ -517,7 +528,7 @@ describe('AuthenticationService', () => {
             // then it fails
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
+            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
         it('should reject empty usernames', async() => {
             // when the username is set to an empty username
@@ -564,7 +575,7 @@ describe('AuthenticationService', () => {
             // then it fails and logs the error
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
+            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
     });
     describe('sendPasswordResetEmail', () => {
@@ -601,6 +612,86 @@ describe('AuthenticationService', () => {
 
         // then it unsubscribed
         expect(service.unsubscribeFromAuth).toHaveBeenCalledWith();
+    });
+    describe('updateObservedPart', () => {
+        it('should throw when called while no user is logged', async() => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
+            let failed: boolean = false;
+            try {
+                await service.updateObservedPart('some-part-doc-id');
+            } catch (error) {
+                expect(error.message).toBe(expectedError);
+                failed = true;
+            }
+            expect(failed).toBeTrue();
+        });
+        it('should delegate to userDAO', async() => {
+            // Given a service observing an user
+            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+
+            // When asking to update observedPart
+            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+            const observedPart: string = 'observedPartId';
+            await service.updateObservedPart(observedPart);
+
+            // Then the userDAO should update the connected user doc
+            expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart });
+        });
+    });
+    describe('removeObservedPart', () => {
+        it('should throw when asking to remove while no user is logged', async() => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
+            let failed: boolean = false;
+            try {
+                await service.removeObservedPart();
+            } catch (error) {
+                expect(error.message).toBe(expectedError);
+                failed = true;
+            }
+            expect(failed).toBeTrue();
+        });
+        it('should delegate removal to userDAO', async() => {
+            // Given a service observing an user
+            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+
+            // When asking to update observedPart
+            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+            await service.removeObservedPart();
+
+            // Then the userDAO should update the connected user doc
+            expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart: null });
+        });
+    });
+    describe('sendPresenceToken', () => {
+        it('should throw when asking to send presence token while no user is logged', async() => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            const expectedError: string = 'Assertion failure: Should not call sendPresenceToken when not connected';
+            let failed: boolean = false;
+            try {
+                await service.sendPresenceToken();
+            } catch (error) {
+                expect(error.message).toBe(expectedError);
+                failed = true;
+            }
+            expect(failed).toBeTrue();
+        });
+        it('should delegate presence token sending to userDAO', async() => {
+            // Given a service observing an user
+            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+
+            // When asking to send presence token
+            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+            await service.sendPresenceToken();
+
+            // Then the userDAO should update the connected user doc
+            const userDocId: string = UserMocks.CREATOR_MINIMAL_USER.id;
+            expect(userDAO.update).toHaveBeenCalledOnceWith(userDocId, { last_changed: serverTimestamp() });
+        });
     });
     afterEach(async() => {
         if (alreadyDestroyed === false) {

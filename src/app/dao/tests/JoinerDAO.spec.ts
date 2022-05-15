@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { JoinerDAO } from '../JoinerDAO';
 import * as FireAuth from '@angular/fire/auth';
-import { createConnectedGoogleUser, createUnverifiedUser, reconnectUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { PartDAO } from '../PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -11,6 +10,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { UserDAO } from '../UserDAO';
 import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { createConnectedGoogleUser, createUnverifiedUser, reconnectUser } from 'src/app/services/tests/ConnectedUserService.spec';
 
 describe('JoinerDAO', () => {
 
