@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, flush, discardPeriodicTasks } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
@@ -117,7 +117,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         context = 'partCreation field should also be present';
         expect(wrapper.partCreation).withContext(context).toBeTruthy();
         await joinerDAO.update('joinerId', JoinerMocks.INITIAL);
-        await joinerDAO.addCandidate('joinerId', { id: 'firstCandidate', name: 'firstCandidate' });
+        await joinerDAO.addCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
         // TODO: replace by a click on the component to really simulate it "end2end"
@@ -139,7 +139,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
         }
         const update: Partial<Part> = {
-            playerOne: 'firstCandidate',
+            playerOne: UserMocks.OPPONENT_MINIMAL_USER.name,
             turn: 0,
             remainingMsForZero: 1800 * 1000,
             remainingMsForOne: 1800 * 1000,
@@ -453,7 +453,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 request: null,
                 lastUpdateTime: serverTimestamp(),
                 winner: 'creator',
-                loser: 'firstCandidate',
+                loser: UserMocks.OPPONENT_MINIMAL_USER.name,
                 result: MGPResult.VICTORY.value,
             });
             componentTestUtils.expectElementToExist('#youWonIndicator');
@@ -1344,7 +1344,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
     });
     describe('User "handshake"', () => {
-        it(`Should make opponent's name lightgrey when he is token-outdated`);
+        it(`Should make opponent's name lightgrey when their token is outdated`);
     });
     describe('Resign', () => {
         it('should end game after clicking on resign button', fakeAsync(async() => {
@@ -1363,7 +1363,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     index: 3,
                     player: Player.ZERO.value,
                 },
-                winner: 'firstCandidate',
+                winner: UserMocks.OPPONENT_MINIMAL_USER.name,
                 loser: 'creator',
                 request: null,
                 result: MGPResult.RESIGN.value,
@@ -1394,7 +1394,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
             await receivePartDAOUpdate({
                 winner: 'creator',
-                loser: 'firstCandidate',
+                loser: UserMocks.OPPONENT_MINIMAL_USER.name,
                 result: MGPResult.RESIGN.value,
                 request: null,
             }, 3);

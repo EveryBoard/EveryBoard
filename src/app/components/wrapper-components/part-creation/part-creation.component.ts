@@ -20,7 +20,6 @@ import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { FirebaseTime, Time } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { User } from 'src/app/domain/User';
-import { MGPMap } from 'src/app/utils/MGPMap';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -92,7 +91,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public candidates: MinimalUser[] = [];
 
     // Subscription
-    private readonly candidateSubscription: MGPMap<MinimalUser, () => void> = new MGPMap();
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
     private allUserInterval: MGPOptional<number> = MGPOptional.empty();
     private ownTokenInterval: MGPOptional<number> = MGPOptional.empty();
@@ -159,7 +157,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.onCurrentJoinerUpdate(joiner);
         };
         const candidatesCallback: (candidates: MinimalUser[]) => void = async(candidates: MinimalUser[]) => {
-            this.onCandidatesUpdate(candidates);
+            await this.onCandidatesUpdate(candidates);
         };
         this.joinerService.subscribeToChanges(this.partId, joinerCallback);
         this.joinerService.subscribeToCandidates(this.partId, candidatesCallback);
@@ -322,7 +320,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
             this.currentJoiner = joiner.get();
             if (this.allUserInterval.isAbsent()) { // Only do it once
-                await this.observeNeededPlayers();
+                await this.observePlayers();
             }
             this.updateViewInfo();
             if (this.isGameStarted()) {
@@ -331,9 +329,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private onCandidatesUpdate(candidates: MinimalUser[]): void {
+    private async onCandidatesUpdate(candidates: MinimalUser[]): Promise<void> {
         this.candidates = candidates;
-        this.observeNeededPlayers();
         this.updateViewInfo();
     }
     private chosenOpponentJustLeft(newJoiner: Joiner): boolean {
@@ -360,10 +357,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.gameStarted = true;
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted finished');
     }
-    private async observeNeededPlayers(): Promise<void> {
-        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
+    private async observePlayers(): Promise<void> {
+        assert(this.allUserInterval.isAbsent(), 'Cannot observe players multiple times');
         const currentUserId: string = this.connectedUserService.user.get().id;
-        display(PartCreationComponent.VERBOSE, { PartCreationComponent_updateJoiner: { joiner } });
         this.allUserInterval = MGPOptional.of(window.setInterval(async() => {
             const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
             const currentTime: Time = this.lastToken;
@@ -407,9 +403,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async removeCandidateFromLobby(user: MinimalUser): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
-        if (user.name === joiner.chosenPlayer) {
+        if (user.id === joiner.chosenOpponent?.id) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${user.name} left the game, please pick another opponent.`);
+            // A message will be displayed once the joiner has been update
             await this.joinerService.reviewConfigAndRemoveChosenPlayer();
         }
         return this.joinerService.removeCandidate(user);
@@ -439,10 +435,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             window.clearInterval(this.allUserInterval.get());
         }
         this.selfSubscription();
-    }
-    private unsubscribeFrom(user: MinimalUser): void {
-        const subscription: () => void = this.candidateSubscription.delete(user);
-        subscription();
     }
     public acceptConfig(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');

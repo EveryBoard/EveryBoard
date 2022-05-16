@@ -182,8 +182,8 @@ describe('PartCreationComponent', () => {
                 await receiveJoinerUpdate({
                     partStatus: PartStatus.PART_CREATED.value,
                     chosenOpponent: null,
-                    candidates: [],
                 });
+                await joinerDAO.removeCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
                 tick(3000);
 
                 // Then it is not selected anymore, joiner went back to start and a toast to warn creator has appeared
@@ -201,9 +201,7 @@ describe('PartCreationComponent', () => {
                 spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
                 // When the candidate leaves
-                await receiveJoinerUpdate({
-                    candidates: [],
-                });
+                await joinerDAO.removeCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
 
                 // Then it is not selected anymore, joiner is back to start, and no toast appeared
                 expectElementNotToExist('#presenceOf_' + UserMocks.OPPONENT.username);
@@ -214,19 +212,21 @@ describe('PartCreationComponent', () => {
         });
         describe('Candidate/chosenOpponent stop sending token', () => {
             it('should go back to start when ChosenOpponent token is too old', fakeAsync(async() => {
-                // Given a page that has loaded, a candidate joined and has been chosen as opponent
+                // Given a page that has loaded, a candidate that has joined and that has been chosen as opponent
                 awaitComponentInitialisation();
                 await mockCandidateArrival({ seconds: 123, nanoseconds: 456000000 });
                 chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
                 spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
-                // When the candidate token become too old
-                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id); // Creator update his last presence
-                // but chosenOpponent don't
-                tick(PartCreationComponent.TOKEN_TIMEOUT); // two token time pass and reactive the timeout
+                // When the candidate token becomes too old
+                // Creator update his last presence
+                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
+                // but chosenOpponent does not
+                tick(PartCreationComponent.TOKEN_TIMEOUT);
+                // two 'token time' pass, which reactivates the timeout
 
-                // Then there is no longer opponent nor chosen opponent in the room
+                // Then there is no longer any candidate nor chosen opponent in the room
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
@@ -273,7 +273,7 @@ describe('PartCreationComponent', () => {
                 // and the candidate has been removed from the lobby
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-                tick(3000); // Even with the mock it waits 3000 though
+                tick(3000);
             }));
         });
         describe('Config proposal', () => {
