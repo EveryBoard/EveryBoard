@@ -11,7 +11,7 @@ import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { createConnectedGoogleUser, createUnverifiedUser, reconnectUser } from 'src/app/services/tests/ConnectedUserService.spec';
 
-fdescribe('JoinerDAO', () => {
+describe('JoinerDAO', () => {
 
     let partDAO: PartDAO;
     let joinerDAO: JoinerDAO;
