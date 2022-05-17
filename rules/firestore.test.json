@@ -102,31 +102,45 @@ service cloud.firestore {
         }
         match /joiners/{partId} {
             // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
-            allow create: if userIsVerified() && userIsCreator(request.resource.data) && exists(/databases/$(database)/documents/parties/$(partId));
+            allow create: if userIsVerified() &&
+                             userIsCreator(request.resource.data) &&
+                             exists(/databases/$(database)/documents/parties/$(partId));
             // The creator can delete a joiner
             allow delete: if userIsVerified() && userIsCreator(resource.data);
             // Anybody else can delete a joiner only if the creator is offline
             allow delete: if userIsVerified() && creatorIsOffline(resource.data);
             // The creator can change all fields except changing partStatus to STARTED (3)
-            allow update: if userIsVerified() &&
-                             userIsCreator(resource.data) &&
+            allow update: if userIsVerified() && userIsCreator(resource.data) &&
                              request.resource.data.partStatus != 3;
             // For anybody else:
-            //   - a chosenPlayer can remove itself
-            //   - the chosen player can change the config fro from PROPOSED to STARTED
-            allow update: if userIsVerified() &&
-                             preservesField('creator') && preservesField('firstPlayer') && preservesField('partType') && preservesField('maximalMoveDuration') && preservesField('totalPartDuration') &&
-                             (preservesField('partStatus') || changePartStatusAsChosenPlayer()) &&
-                             (preservesField('chosenPlayer') || removesOneSelfFromChosenPlayer());
+            //   - the chosen opponent can remove itself from the corresponding field
+            //   - the chosen opponent can change the config fro from PROPOSED to STARTED
+            allow update: if userIsVerified() && !userIsCreator(resource.data) &&
+                             preservesField('creator') &&
+                             preservesField('firstPlayer') &&
+                             preservesField('partType') &&
+                             preservesField('maximalMoveDuration') &&
+                             preservesField('totalPartDuration') &&
+                             (preservesField('partStatus') || changePartStatusAsChosenOpponent()) &&
+                             (preservesField('chosenOpponent') || removesOneSelfFromChosenPlayer());
 
             // Any verified user can read a joiner
             allow read: if userIsVerified();
         }
         match /joiners/{partId}/candidates/{userId} {
-            // A user can add only add themself to the candidate list
-            allow write: if userIsVerified() && userId == request.auth.uid;
+            // A user can add only add themself to the candidate list, with the right username, and if they are not the creator
+            allow create: if userIsVerified() && userId == request.auth.uid &&
+                             request.resource.data.name == usernameOf(request.auth.uid) &&
+                             request.auth.uid != creatorOf(partId).id;
+            // A user can only delete themself
+            allow delete: if userIsVerified() && userId == request.auth.uid;
+            // No updates can be made
+            allow update: if false;
             // Any verified user can read the candidate list
             allow read: if userIsVerified();
+        }
+        function creatorOf(partId) {
+            return get(/databases/$(database)/documents/joiners/$(partId)).data.creator;
         }
         function userIsVerified() {
             return request != null &&
@@ -143,20 +157,20 @@ service cloud.firestore {
             return true; // TODO
         }
         function preservesField(field) {
+            // A field is preserved if it is not part of the update
+            // or if the same value is given in the update
             return !(field in request.resource.data) || (request.resource.data[field] == resource.data[field]);
         }
-        function changePartStatusAsChosenPlayer() {
+        function changePartStatusAsChosenOpponent() {
             let uid = request.auth.uid;
-            let username = get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
-            return resource.data.chosenPlayer == username &&
+            return resource.data.chosenOpponent.id == uid &&
                    resource.data.partStatus == 2 && // CONFIG_PROPOSED
                    request.resource.data.partStatus == 3; // PART_STARTED
         }
         function removesOneSelfFromChosenPlayer() {
             let uid = request.auth.uid;
-            let username = get(/databases/$(database)/documents/joueurs/$(uid)).data.username;
-            return resource.data.chosenPlayer == username &&
-                   request.resource.data.chosenPlayer == null;
+            return resource.data.chosenOpponent.id == uid &&
+                   request.resource.data.chosenOpponent == null;
         }
     }
 }

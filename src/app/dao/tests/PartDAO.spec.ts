@@ -10,7 +10,8 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { PartDAO } from '../PartDAO';
 import * as FireAuth from '@angular/fire/auth';
 import { UserDAO } from '../UserDAO';
-import { JSONValue } from 'src/app/utils/utils';
+import { serverTimestamp } from 'firebase/firestore';
+import { Request } from 'src/app/domain/Request';
 
 describe('PartDAO', () => {
 
@@ -128,50 +129,46 @@ describe('PartDAO', () => {
         await expectFirebasePermissionDenied(result);
     });
     it('should forbid to change playerZero/playerOne/beginning once a part has started', async() => {
-        const fieldsAndUpdates: Record<string, JSONValue> = {
-            playerZero: 'kreator',
-            playerOne: 'kreator',
-            beginning: 42,
-        };
+        const updates: Partial<Part>[] = [
+            { playerZero: 'kreator' },
+            { playerOne: 'kreator' },
+            { beginning: serverTimestamp() },
+        ];
 
-        for (const [field, update] of Object.entries(fieldsAndUpdates)) {
+        for (const update of updates) {
             // Given a player of the game
             await createConnectedGoogleUser('foo@bar.com', 'creator');
             await partDAO.create(PartMocks.INITIAL);
 
             // When trying to change the field
-            const jsonUpdate: JSONValue = {};
-            jsonUpdate[field] = update;
-            const result: Promise<void> = partDAO.update('partId', jsonUpdate);
+            const result: Promise<void> = partDAO.update('partId', update);
             // Then it should failn
             await expectFirebasePermissionDenied(result);
         }
     });
     it('should forbid non-player to change writable fields', async() => {
-        const fieldsAndUpdates: Record<string, JSONValue> = {
-            lastUpdate: { index: 1, player: 0 },
-            turn: 42,
-            result: 3,
-            listMoves: [{ a: 1 }],
-            lastUpdateTime: 42,
-            remainingMsForZero: 42,
-            remainingMsForOne: 42,
-            winner: 'me!',
-            loser: 'you',
-            scorePlayerZero: 42,
-            scorePlayerOne: 42,
-            request: 2,
-        };
-        for (const [field, update] of Object.entries(fieldsAndUpdates)) {
-            // Given a user who is not playing in this game
-            await createConnectedGoogleUser('foo@bar.com', 'non-playing-user');
-            await partDAO.create(PartMocks.INITIAL);
+        const updates: Partial<Part>[] = [
+            { lastUpdate: { index: 1, player: 0 } },
+            { turn: 42 },
+            { result: 3 },
+            { listMoves: [{ a: 1 }] },
+            { lastUpdateTime: serverTimestamp() },
+            { remainingMsForZero: 42 },
+            { remainingMsForOne: 42 },
+            { winner: 'me!' },
+            { loser: 'you' },
+            { scorePlayerZero: 42 },
+            { scorePlayerOne: 42 },
+            { request: Request.rematchProposed(Player.ZERO) },
+        ];
+        // Given a user who is not playing in this game
+        await createConnectedGoogleUser('foo@bar.com', 'non-playing-user');
+        await partDAO.create(PartMocks.INITIAL);
 
+        for (const update of updates) {
             // When trying to change the field
-            const jsonUpdate: JSONValue = {};
-            jsonUpdate[field] = update;
-            const result: Promise<void> = partDAO.update('partId', jsonUpdate);
-            // Then it should failn
+            const result: Promise<void> = partDAO.update('partId', update);
+            // Then it should fail
             await expectFirebasePermissionDenied(result);
 
         }

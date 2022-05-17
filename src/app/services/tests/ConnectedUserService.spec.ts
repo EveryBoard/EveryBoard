@@ -135,9 +135,7 @@ export async function createUnverifiedUser(email: string, username?: string): Pr
                                             FireAuth.GoogleAuthProvider.credential(token));
     await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
     if (username != null) {
-        // This needs to happen in multiple updates to match the security rules
         await TestBed.inject(UserDAO).update(credential.user.uid, { username });
-        await TestBed.inject(UserDAO).update(credential.user.uid, { verified: true });
     }
     return credential.user;
 }
