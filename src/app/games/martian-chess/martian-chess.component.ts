@@ -173,7 +173,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         classes.push(y <= 3 ? 'player0' : 'player1');
         const selectedCoord: Coord = this.selectedPiece.getOrElse(new Coord(-1, -1));
         if (selectedCoord.equals(clickedCoord)) {
-            classes.push('selected');
+            classes.push('highlighted');
         }
         if (this.rules.node.move.isPresent()) {
             const move: MartianChessMove = this.rules.node.move.get();
@@ -253,7 +253,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getClockCircleClasses(): string[] {
         const classes: string[] = ['base'];
         if (this.callTheClock) {
-            classes.push('selected');
+            classes.push('highlighted');
         }
         if (this.getCurrentPlayer() === Player.ZERO) {
             classes.push('player0-stroke');

@@ -5,6 +5,10 @@
     stroke-linecap: butt;
     stroke-linejoin: round;
 }
+.base-no-stroke {
+    stroke: none;
+    fill: var(--base-stroke);
+}
 .base-no-fill {
     stroke: var(--base-stroke);
     stroke-width: 8;
@@ -12,9 +16,6 @@
 .arrow {
     stroke: var(--base-stroke);
     stroke-width: 3;
-}
-.base-stroke {
-    fill: var(--base-stroke);
 }
 .text {
     fill: var(--base-stroke);
@@ -88,6 +89,9 @@
 }
 .highlighted {
     stroke: var(--selectable);
+}
+.highlighted > .base-no-stroke {
+    fill: var(--selectable);
 }
 .last-move {
     stroke: var(--last-move);

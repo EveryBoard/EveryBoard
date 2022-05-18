@@ -29,9 +29,10 @@
             [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
             [attr.cy]="0.5 * MartianChessComponent.SPACE_SIZE"
             [attr.r]="(0.2 / 3) * MartianChessComponent.SPACE_SIZE" />
-<svg:circle *ngIf="style.points === 'Horizontal Points'"
-            class="base-stroke"
-            [attr.stroke]="horizontalDotsRadius"
-            [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
-            [attr.cy]="0.5 * MartianChessComponent.SPACE_SIZE"
-            [attr.r]="horizontalDotsRadius" />
+<svg:g *ngIf="style.points === 'Horizontal Points'"
+       [ngClass]="pieceClasses">
+    <svg:circle class="base-no-stroke"
+                [attr.cx]="0.5 * MartianChessComponent.SPACE_SIZE"
+                [attr.cy]="0.5 * MartianChessComponent.SPACE_SIZE"
+                [attr.r]="1.5 * horizontalDotsRadius" />
+</svg:g>

@@ -28,8 +28,8 @@ describe('MartianChessComponent', () => {
         // When clicking on on of your pieces
         await componentTestUtils.expectClickSuccess('#click_2_2');
 
-        // Then the piece should have a selected style
-        componentTestUtils.expectElementToHaveClass('#pawn_2_2', 'selected');
+        // Then the piece should have a highlighted style
+        componentTestUtils.expectElementToHaveClass('#pawn_2_2', 'highlighted');
     }));
     it('should not select opponent piece', fakeAsync(async() => {
         // Given the initial board
@@ -38,7 +38,7 @@ describe('MartianChessComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_3_7');
 
         // Then it should not select the piece but not toast error
-        componentTestUtils.expectElementNotToHaveClass('#queen_3_7', 'selected');
+        componentTestUtils.expectElementNotToHaveClass('#queen_3_7', 'highlighted');
     }));
     it('should not select empty case', fakeAsync(async() => {
         // Given the initial board
@@ -54,7 +54,7 @@ describe('MartianChessComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_2_2');
 
         // Then the piece should be deselected
-        componentTestUtils.expectElementNotToHaveClass('#pawn_2_2', 'selected');
+        componentTestUtils.expectElementNotToHaveClass('#pawn_2_2', 'highlighted');
     }));
     it('should not throw when attempting invalid move', fakeAsync(async() => {
         // Given a board where a first click was done
@@ -157,7 +157,7 @@ describe('MartianChessComponent', () => {
             await componentTestUtils.expectClickSuccess('#clockOrCountDownView');
 
             // Then the clock circle should be highlighted
-            componentTestUtils.expectElementToHaveClass('#clockOrCountDownCircle', 'selected');
+            componentTestUtils.expectElementToHaveClass('#clockOrCountDownCircle', 'highlighted');
         }));
         it('should be possible to unselect the clock when changing your mind', fakeAsync(async() => {
             // Given a board with the clock not called yet but the clock just called (locally)
@@ -167,7 +167,7 @@ describe('MartianChessComponent', () => {
             await componentTestUtils.expectClickSuccess('#clockOrCountDownView');
 
             // Then the clock should no longer be highlighted
-            componentTestUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected');
+            componentTestUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'highlighted');
         }));
         it('should send the move with clock call when doing it with a selected clock', fakeAsync(async() => {
             // Given a board where clock has been clicked a a piece too
@@ -203,10 +203,10 @@ describe('MartianChessComponent', () => {
             await componentTestUtils.expectClickSuccess('#clockOrCountDownView');
 
             // Then the clock should not have been selected
-            componentTestUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected');
+            componentTestUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'highlighted');
         }));
     });
-    describe('Visual Modes', () => {
+    fdescribe('Visual Modes', () => {
         it('should unfold "Mode Panel" when clicking on the cog', fakeAsync(async() => {
             // Given the initial board
             // When clicking on the cog

@@ -18,6 +18,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     extends RectangularGameComponent<R, M, S, TaflPawn>
 {
 
+    public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
+
     public NONE: TaflPawn = TaflPawn.UNOCCUPIED;
 
     protected captureds: Coord[] = [];
@@ -45,6 +47,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         if (this.lastMove.isPresent()) {
             this.showPreviousMove();
         }
+        this.updateViewInfo();
     }
     private showPreviousMove(): void {
         const previousState: S = this.rules.node.mother.get().gameState;
@@ -61,6 +64,25 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                 }
             }
         }
+    }
+    private updateViewInfo(): void {
+        const pieceClasses: string[][][] = [];
+        for (let y: number = 0; y < this.board.length; y++) {
+            const newLine: string[][] = [];
+            for (let x: number = 0; x < this.board[0].length; x++) {
+                let newSpace: string[] = [];
+                if (this.board[y][x].getOwner() === PlayerOrNone.NONE) {
+                    console.log('NONE', x, y)
+                    newSpace = [''];
+                } else {
+                    console.log('OCCUPIED', x, y, this.getPieceClasses(x, y))
+                    newSpace = this.getPieceClasses(x, y);
+                }
+                newLine.push(newSpace);
+            }
+            pieceClasses.push(newLine);
+        }
+        this.viewInfo = { pieceClasses };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         display(this.VERBOSE, 'TaflComponent.onClick(' + x + ', ' + y + ')');
@@ -98,6 +120,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         }
 
         this.chosen = new Coord(x, y);
+        this.updateViewInfo();
         display(this.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
         return MGPValidation.SUCCESS;
     }
@@ -125,6 +148,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equals(coord)) {
+            console.log('SALUK')
             classes.push('selected');
         }
 
@@ -166,17 +190,5 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
-    }
-    public getKingPolyline(x: number, y: number): string {
-        const ax: number = 85 + 100*x; const ay: number = 85 + 100*y;
-        const bx: number = 30 + 100*x; const by: number = 30 + 100*y;
-        const cx: number = 50 + 100*x; const cy: number = 10 + 100*y;
-        const dx: number = 70 + 100*x; const dy: number = 30 + 100*y;
-        const ex: number = 15 + 100*x; const ey: number = 85 + 100*y;
-        return ax + ' ' + ay + ' ' +
-               bx + ' ' + by + ' ' +
-               cx + ' ' + cy + ' ' +
-               dx + ' ' + dy + ' ' +
-               ex + ' ' + ey;
     }
 }
