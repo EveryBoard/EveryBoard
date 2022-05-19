@@ -9,16 +9,12 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { createConnectedGoogleUser, createUnverifiedUser, reconnectUser } from 'src/app/services/tests/ConnectedUserService.spec';
+import { createConnectedGoogleUser, createUnverifiedUser, reconnectUser, signOut } from 'src/app/services/tests/ConnectedUserService.spec';
 
 describe('JoinerDAO', () => {
 
     let partDAO: PartDAO;
     let joinerDAO: JoinerDAO;
-
-    function signOut(): Promise<void> {
-        return TestBed.inject(FireAuth.Auth).signOut();
-    }
 
     beforeEach(async() => {
         await setupEmulators();

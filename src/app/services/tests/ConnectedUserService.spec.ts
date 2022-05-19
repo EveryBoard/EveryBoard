@@ -373,7 +373,7 @@ describe('ConnectedUserService', () => {
     describe('google login', () => {
         it('should delegate to signInPopup and create the user if it does not exist', async() => {
             // given a non-existing google user
-            spyOn(service, 'createUser').and.resolveTo();
+            spyOn(service, 'createUser').and.callThrough();
             const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),

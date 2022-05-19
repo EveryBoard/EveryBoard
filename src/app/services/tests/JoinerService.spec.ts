@@ -230,4 +230,40 @@ describe('JoinerService', () => {
             });
         }));
     });
+    describe('subscribeToCandidates', () => {
+        let candidates: MinimalUser[] = [];
+        beforeEach(fakeAsync(async() => {
+            // Given a joiner for which we are observing the candidates
+            await dao.set('joinerId', JoinerMocks.INITIAL);
+            service.subscribeToChanges('joinerId', () => {});
+            service.subscribeToCandidates('joinerId', (newCandidates: MinimalUser[]) => {
+                candidates = newCandidates;
+            });
+        }));
+        it('should see new candidates appear', fakeAsync(async() => {
+            // When a candidate is added
+            await service.joinGame('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            // Then the candidate has been seen
+            expect(candidates).toEqual([UserMocks.CANDIDATE_MINIMAL_USER]);
+        }));
+        it('should see removed candidates disappear', fakeAsync(async() => {
+            // and given an existing candidate
+            await service.joinGame('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            // When a candidate is removed
+            await service.removeCandidate(UserMocks.CANDIDATE_MINIMAL_USER);
+            // Then the candidate has been seen
+            expect(candidates).toEqual([]);
+        }));
+        it('should see modified candidates correctly modified', fakeAsync(async() => {
+            // and given some existing candidates
+            await service.joinGame('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            await service.joinGame('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
+
+            // When a candidate is modified
+            // (This should never happen in practice, but we still want the correct behavior just in case)
+            await dao.subCollectionDAO('joinerId', 'candidates').update(UserMocks.CANDIDATE_MINIMAL_USER.id, { name: 'foo' });
+            expect(candidates).toEqual([{ ...UserMocks.CANDIDATE_MINIMAL_USER, name: 'foo' }, UserMocks.OPPONENT_MINIMAL_USER]);
+
+        }));
+    });
 });

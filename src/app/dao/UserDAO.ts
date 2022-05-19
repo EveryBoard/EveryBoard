@@ -5,6 +5,7 @@ import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { User } from '../domain/User';
 import { Firestore } from '@angular/fire/firestore';
+import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',
@@ -28,9 +29,6 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
     }
     public async markVerified(uid: string): Promise<void> {
         await this.update(uid, { verified: true });
-    }
-    public observeUser(id: string, callback: FirebaseCollectionObserver<User>): () => void {
-        return this.observingWhere([['id', '==', id]], callback);
     }
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
         return this.observingWhere([['username', '==', username]], callback);

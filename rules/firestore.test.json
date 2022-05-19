@@ -82,8 +82,12 @@ service cloud.firestore {
         match /parties/{id} {
             // Anybody can create a part
             allow create: if userIsVerified();
-            // TODO: who can delete a part?
-            allow delete: if userIsVerified();
+            // The owner of a part can delete it
+            allow delete: if userIsVerified() &&
+                             creatorOf(id).id == request.auth.uid;
+            // Anyone can delete a part if the owner is not observing it or has timed out
+            allow delete: if userIsVerified() &&
+                             notObservingOrTimedOut(creatorOf(id), id);
             // A number of fields are readonly:
             // - typeGame
             // - playerZero/playerOne once the part has started
@@ -100,6 +104,12 @@ service cloud.firestore {
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
         }
+        function notObservingOrTimedOut(creator, partId) {
+            let creatorUser =  get(/databases/$(database)/documents/joueurs/$(creator.id));
+            let notObserving = creatorUser.data.observedPart != partId;
+            let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(creatorUser.data.last_changed.seconds, 's') + duration.value(10, 's');
+            return notObserving || timedOut;
+        }
         match /joiners/{partId} {
             // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
             allow create: if userIsVerified() &&
@@ -108,7 +118,7 @@ service cloud.firestore {
             // The creator can delete a joiner
             allow delete: if userIsVerified() && userIsCreator(resource.data);
             // Anybody else can delete a joiner only if the creator is offline
-            allow delete: if userIsVerified() && creatorIsOffline(resource.data);
+            allow delete: if userIsVerified() && notObservingOrTimedOut(creatorOf(partId), partId);
             // The creator can change all fields except changing partStatus to STARTED (3)
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
                              request.resource.data.partStatus != 3;
@@ -151,10 +161,7 @@ service cloud.firestore {
         function userIsCreator(joiner) {
             return joiner.creator != null &&
                    joiner.creator.id == request.auth.uid &&
-                   debug(joiner.creator.name) == debug(usernameOf(request.auth.uid));
-        }
-        function creatorIsOffline(_joiner) {
-            return true; // TODO
+                   joiner.creator.name == usernameOf(request.auth.uid);
         }
         function preservesField(field) {
             // A field is preserved if it is not part of the update

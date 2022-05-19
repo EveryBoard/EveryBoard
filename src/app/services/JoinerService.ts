@@ -101,10 +101,8 @@ export class JoinerService {
         }
     }
     public async removeCandidate(user: MinimalUser): Promise<void> {
-        if (this.observedJoinerId == null) {
-            throw new Error('cannot remove candidate when not observing a joiner');
-        }
-        return this.joinerDAO.subCollectionDAO(this.observedJoinerId, 'candidates').delete(user.id);
+        assert(this.observedJoinerId != null, 'cannot remove candidate if not observing a joiner');
+        return this.joinerDAO.removeCandidate(Utils.getNonNullable(this.observedJoinerId), user);
     }
     public async cancelJoining(user: MinimalUser): Promise<void> {
         display(JoinerService.VERBOSE,

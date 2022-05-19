@@ -5,6 +5,12 @@ service cloud.firestore {
             // by default, nothing can be read or written unless explicitly authorized
             allow read, write: if false;
         }
+        // From here, the rest of the file matches with firestore.rules
+        // Unfortunately, firebase does not support imports so we have to copy it manually
+        match /{document=**} {
+            // by default, nothing can be read or written unless explicitly authorized
+            allow read, write: if false;
+        }
         match /errors/{errorId} {
             // Anybody can read, create and update errors
             allow create: if true;
@@ -35,8 +41,7 @@ service cloud.firestore {
                    hasField(message, 'postedTime');
         }
         function hasField(data, field) {
-            // TODO: replace by 'in' (field in data)
-            return data[field] != null;
+            return field in data && data[field] != null;
         }
         function isMessageAuthor(message) {
             return request.auth.uid == message.sender.id
@@ -62,10 +67,10 @@ service cloud.firestore {
                 request.auth.uid == userId;
         }
         function doesNotModifyUsernameIfSet() {
-            let usernameNotYetSet = ('username' in resource.data) == false;
-            let usernameBeingSet = ('username' in request.resource.data);
+            let usernameNotYetSet = hasField(resource.data, 'username') == false;
+            let usernameBeingSet = hasField(request.resource.data, 'username');
             // It sometimes happens that firebase sends the username as part as updates, even though it is not actually updated. Hence, we accept usernames as part of updates, only if it doesn't change.
-            let doesNotChange = 'username' in resource.data && 'username' in request.resource.data && resource.data['username'] == request.resource.data['username'];
+            let doesNotChange = hasField(resource.data, 'username') && hasField(request.resource.data, 'username') && resource.data['username'] == request.resource.data['username'];
             return usernameNotYetSet || usernameBeingSet == false || doesNotChange;
         }
         function onlyModifiesVerifiedIfVerified() {
@@ -74,16 +79,104 @@ service cloud.firestore {
                    (userIsVerified() && resource.data.username != null);
         }
         match /parties/{id} {
-            allow write, read: if userIsVerified();
+            // Anybody can create a part
+            allow create: if userIsVerified();
+            // The owner of a part can delete it
+            allow delete: if userIsVerified() &&
+                             creatorOf(id).id == request.auth.uid;
+            // Anyone can delete a part if the owner is not observing it or has timed out
+            allow delete: if userIsVerified() &&
+                             notObservingOrTimedOut(creatorOf(id), id);
+            // A number of fields are readonly:
+            // - typeGame
+            // - playerZero/playerOne once the part has started
+            // - beginning once the part has started
+            // the part is considered to be started as soon as beginning is set
+            // For any other fields, both players can modify them
+            allow update: if userIsVerified() &&
+                             preservesField('typeGame') &&
+                             (preservesField('playerZero') || resource.data.beginning == null) &&
+                             (preservesField('playerOne') || resource.data.beginning == null) &&
+                             (preservesField('beginning') || resource.data.beginning == null) &&
+                             (resource.data.playerZero == usernameOf(request.auth.uid) ||
+                              resource.data.playerOne == usernameOf(request.auth.uid));
+            // All verified user can read parts (needed for the lobby)
+            allow read: if userIsVerified();
         }
-        match /joiners/{id} {
-            allow write, read: if userIsVerified();
+        function notObservingOrTimedOut(creator, partId) {
+            let creatorUser =  get(/databases/$(database)/documents/joueurs/$(creator.id));
+            let notObserving = creatorUser.data.observedPart != partId;
+            let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(creatorUser.data.last_changed.seconds, 's') + duration.value(10, 's');
+            return notObserving || timedOut;
+        }
+        match /joiners/{partId} {
+            // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
+            allow create: if userIsVerified() &&
+                             userIsCreator(request.resource.data) &&
+                             exists(/databases/$(database)/documents/parties/$(partId));
+            // The creator can delete a joiner
+            allow delete: if userIsVerified() && userIsCreator(resource.data);
+            // Anybody else can delete a joiner only if the creator is offline
+            allow delete: if userIsVerified() && notObservingOrTimedOut(creatorOf(partId), partId);
+            // The creator can change all fields except changing partStatus to STARTED (3)
+            allow update: if userIsVerified() && userIsCreator(resource.data) &&
+                             request.resource.data.partStatus != 3;
+            // For anybody else:
+            //   - the chosen opponent can remove itself from the corresponding field
+            //   - the chosen opponent can change the config fro from PROPOSED to STARTED
+            allow update: if userIsVerified() && !userIsCreator(resource.data) &&
+                             preservesField('creator') &&
+                             preservesField('firstPlayer') &&
+                             preservesField('partType') &&
+                             preservesField('maximalMoveDuration') &&
+                             preservesField('totalPartDuration') &&
+                             (preservesField('partStatus') || changePartStatusAsChosenOpponent()) &&
+                             (preservesField('chosenOpponent') || removesOneSelfFromChosenPlayer());
+
+            // Any verified user can read a joiner
+            allow read: if userIsVerified();
+        }
+        match /joiners/{partId}/candidates/{userId} {
+            // A user can add only add themself to the candidate list, with the right username, and if they are not the creator
+            allow create: if userIsVerified() && userId == request.auth.uid &&
+                             request.resource.data.name == usernameOf(request.auth.uid) &&
+                             request.auth.uid != creatorOf(partId).id;
+            // A user can only delete themself
+            allow delete: if userIsVerified() && userId == request.auth.uid;
+            // No updates can be made
+            allow update: if false;
+            // Any verified user can read the candidate list
+            allow read: if userIsVerified();
+        }
+        function creatorOf(partId) {
+            return get(/databases/$(database)/documents/joiners/$(partId)).data.creator;
         }
         function userIsVerified() {
             return request != null &&
                    request.auth != null &&
                    request.auth.uid != null &&
                    request.auth.token.email_verified == true;
+        }
+        function userIsCreator(joiner) {
+            return joiner.creator != null &&
+                   joiner.creator.id == request.auth.uid &&
+                   joiner.creator.name == usernameOf(request.auth.uid);
+        }
+        function preservesField(field) {
+            // A field is preserved if it is not part of the update
+            // or if the same value is given in the update
+            return !(field in request.resource.data) || (request.resource.data[field] == resource.data[field]);
+        }
+        function changePartStatusAsChosenOpponent() {
+            let uid = request.auth.uid;
+            return resource.data.chosenOpponent.id == uid &&
+                   resource.data.partStatus == 2 && // CONFIG_PROPOSED
+                   request.resource.data.partStatus == 3; // PART_STARTED
+        }
+        function removesOneSelfFromChosenPlayer() {
+            let uid = request.auth.uid;
+            return resource.data.chosenOpponent.id == uid &&
+                   request.resource.data.chosenOpponent == null;
         }
     }
 }

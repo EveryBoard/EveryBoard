@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { Auth, signOut } from '@angular/fire/auth';
 import { Part, MGPResult } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
+import { createConnectedGoogleUser, createUnverifiedUser, signOut } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { PartDAO } from '../PartDAO';
@@ -12,16 +11,23 @@ import * as FireAuth from '@angular/fire/auth';
 import { UserDAO } from '../UserDAO';
 import { serverTimestamp } from 'firebase/firestore';
 import { Request } from 'src/app/domain/Request';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { JoinerDAO } from '../JoinerDAO';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { Time } from 'src/app/domain/Time';
 
 describe('PartDAO', () => {
 
     let partDAO: PartDAO;
     let userDAO: UserDAO;
+    let joinerDAO: JoinerDAO;
 
     beforeEach(async() => {
         await setupEmulators();
         partDAO = TestBed.inject(PartDAO);
         userDAO = TestBed.inject(UserDAO);
+        joinerDAO = TestBed.inject(JoinerDAO);
     });
     it('should be created', () => {
         expect(partDAO).toBeTruthy();
@@ -103,7 +109,7 @@ describe('PartDAO', () => {
 
         });
         afterEach(async() => {
-            await signOut(TestBed.inject(Auth));
+            await signOut();
         });
     });
     it('should allow a verified user to create a part', async() => {
@@ -128,25 +134,62 @@ describe('PartDAO', () => {
         // Then it should fail
         await expectFirebasePermissionDenied(result);
     });
-    it('should forbid to change playerZero/playerOne/beginning once a part has started', async() => {
+    it('should forbid player to change playerZero/playerOne/beginning once a part has started', async() => {
+        // Given a part that has started (i.e., turn >= 0), and a player (here creator)
+        await createConnectedGoogleUser('foo@bar.com', 'creator');
+        await partDAO.create({ ...PartMocks.INITIAL, turn: 1, playerZero: 'creator', playerOne: 'candidate' });
+
         const updates: Partial<Part>[] = [
             { playerZero: 'kreator' },
             { playerOne: 'kreator' },
             { beginning: serverTimestamp() },
         ];
-
         for (const update of updates) {
-            // Given a player of the game
-            await createConnectedGoogleUser('foo@bar.com', 'creator');
-            await partDAO.create(PartMocks.INITIAL);
-
             // When trying to change the field
             const result: Promise<void> = partDAO.update('partId', update);
-            // Then it should failn
+            // Then it should fail
             await expectFirebasePermissionDenied(result);
         }
     });
     it('should forbid non-player to change writable fields', async() => {
+        // Given a part, and a user who is not playing in this game
+        await createConnectedGoogleUser('foo@bar.com', 'creator');
+        await partDAO.create(PartMocks.INITIAL);
+        await signOut();
+        await createConnectedGoogleUser('bar@bar.com', 'non-player');
+
+        const updates: Partial<Part>[] = [
+            { lastUpdate: { index: 1, player: 0 } },
+            { turn: 42 },
+            { result: 3 },
+            { listMoves: [{ a: 1 }] },
+            { lastUpdateTime: serverTimestamp() },
+            { remainingMsForZero: 42 },
+            { remainingMsForOne: 42 },
+            { winner: 'me!' },
+            { loser: 'you' },
+            { scorePlayerZero: 42 },
+            { scorePlayerOne: 42 },
+            { request: Request.rematchProposed(Player.ZERO) },
+        ];
+        for (const update of updates) {
+            // When trying to change the field
+            const result: Promise<void> = partDAO.update('partId', update);
+            // Then it should fail
+            await expectFirebasePermissionDenied(result);
+        }
+    });
+    it('should forbid player to change typeGame', async() => {
+        // Given a part and a player
+        await createConnectedGoogleUser('foo@bar.com', 'creator');
+        await partDAO.create({ ...PartMocks.INITIAL, playerZero: 'creator' });
+
+        // When trying to change the game type
+        const result: Promise<void> = partDAO.update('partId', { typeGame: 'P4' });
+        // Then it should fail
+        await expectFirebasePermissionDenied(result);
+    });
+    it('should allow player to change writable fields', async() => {
         const updates: Partial<Part>[] = [
             { lastUpdate: { index: 1, player: 0 } },
             { turn: 42 },
@@ -170,24 +213,103 @@ describe('PartDAO', () => {
             const result: Promise<void> = partDAO.update('partId', update);
             // Then it should fail
             await expectFirebasePermissionDenied(result);
-
         }
     });
-    it('should forbid to change typeGame', async() => {
-        // Given a player of the game
+    it('should allow verified users to read parts', async() => {
+        // Given a part and a verified user
         await createConnectedGoogleUser('foo@bar.com', 'creator');
-        await partDAO.create(PartMocks.INITIAL);
+        const partId: string = await partDAO.create(PartMocks.INITIAL);
+        await signOut();
 
-        // When trying to change the game type
-        const result: Promise<void> = partDAO.update('partId', { typeGame: 'P4' });
+        await createConnectedGoogleUser('bar@bar.com', 'non-player');
+        // When reading the part
+        const result: Promise<MGPOptional<Part>> = partDAO.read(partId);
+        // Then it should succeed
+        await expectAsync(result).toBeResolvedTo(MGPOptional.of(PartMocks.INITIAL));
+    });
+    it('should forbid non-verified users to read parts', async() => {
+        // Given a part and a non-verified user
+        await createConnectedGoogleUser('foo@bar.com', 'creator');
+        const partId: string = await partDAO.create(PartMocks.INITIAL);
+        await signOut();
+
+        await createUnverifiedUser('bar@bar.com', 'non-verified');
+        // When reading the part
+        const result: Promise<MGPOptional<Part>> = partDAO.read(partId);
         // Then it should fail
         await expectFirebasePermissionDenied(result);
     });
-    it('should allow player to change writable fields', async() => {
-        // TODO: do it for player zero and player one
+    it('should allow owner to delete part', async() => {
+        // Given a part and its owner (as defined in the joiner)
+        const creatorUser: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
+        const creator: MinimalUser = { id: creatorUser.uid, name: 'creator' };
+        const partId: string = await partDAO.create(PartMocks.INITIAL);
+        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+
+        // When deleting the part
+        const result: Promise<void> = partDAO.delete(partId);
+
+        // Then it should succeed
+        await expectAsync(result).toBeResolvedTo();
     });
-    it('should allow verified users to read parts', async() => {
+    it('should allow verified user to delete part if owner is not observing anymore', async() => {
+        // Given a part with its owner not observing this part
+        const creatorUser: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
+        const creator: MinimalUser = { id: creatorUser.uid, name: 'creator' };
+        const partId: string = await partDAO.create(PartMocks.INITIAL);
+        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+        // eslint-disable-next-line camelcase
+        const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+        await userDAO.update(creator.id, { observedPart: null, last_changed });
+        await signOut();
+
+        // and given another user
+        await createConnectedGoogleUser('bar@bar.com', 'visitor');
+
+        // When the other user deletes the part
+        const result: Promise<void> = partDAO.delete(partId);
+
+        // Then it should succeed
+        await expectAsync(result).toBeResolvedTo();
     });
-    it('should forbid non-verified users to read parts', async() => {
+    it('should allow verified user to delete part if owner has timed out', async() => {
+        // Given a part with its owner who has timed out
+        const creatorUser: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
+        const creator: MinimalUser = { id: creatorUser.uid, name: 'creator' };
+        const partId: string = await partDAO.create(PartMocks.INITIAL);
+        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+        // eslint-disable-next-line camelcase
+        const last_changed: Time = { seconds: 0, nanoseconds: 0 }; // owner is stuck in 1970
+        await userDAO.update(creator.id, { observedPart: partId, last_changed });
+        await signOut();
+
+        // and given another user
+        await createConnectedGoogleUser('bar@bar.com', 'visitor');
+
+        // When the other user deletes the part
+        const result: Promise<void> = partDAO.delete(partId);
+
+        // Then it should succeed
+        await expectAsync(result).toBeResolvedTo();
+    });
+    it('should forbid to delete a part if owner is still observing it and has not timed out', async() => {
+        // Given a part with its owner
+        const creatorUser: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
+        const creator: MinimalUser = { id: creatorUser.uid, name: 'creator' };
+        const partId: string = await partDAO.create(PartMocks.INITIAL);
+        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+        // eslint-disable-next-line camelcase
+        const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+        await userDAO.update(creator.id, { observedPart: partId, last_changed });
+        await signOut();
+
+        // and given another user
+        await createConnectedGoogleUser('bar@bar.com', 'visitor');
+
+        // When the other user deletes the part
+        const result: Promise<void> = partDAO.delete(partId);
+
+        // Then it should fail
+        await expectFirebasePermissionDenied(result);
     });
 });
