@@ -136,6 +136,10 @@ describe('SiamComponent', () => {
         await componentTestUtils.expectMoveSuccess('#chooseDirection_DOWN', move);
     }));
     it('should toast when clicking as first click on an empty square', fakeAsync(async() => {
-        expect('TODO').toBe('DONE');
+        // Given the initial board
+        // When clicking on an empty piece
+        // Then a toast should say it's forbidden
+        const reason: string = 'You should insert or choose one of your pieces!';
+        await componentTestUtils.expectClickFailure('#insertAt_2_1', reason);
     }));
 });

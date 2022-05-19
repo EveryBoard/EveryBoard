@@ -72,10 +72,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             for (let x: number = 0; x < this.board[0].length; x++) {
                 let newSpace: string[] = [];
                 if (this.board[y][x].getOwner() === PlayerOrNone.NONE) {
-                    console.log('NONE', x, y)
                     newSpace = [''];
                 } else {
-                    console.log('OCCUPIED', x, y, this.getPieceClasses(x, y))
                     newSpace = this.getPieceClasses(x, y);
                 }
                 newLine.push(newSpace);
@@ -148,7 +146,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equals(coord)) {
-            console.log('SALUK')
             classes.push('selected');
         }
 

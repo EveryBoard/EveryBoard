@@ -80,8 +80,8 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             { key: GoPiece.EMPTY, value: this.emptyCoords.length },
             { key: GoPiece.BLACK, value: this.blackCoords.length + this.deadWhiteCoords.length },
             { key: GoPiece.WHITE, value: this.whiteCoords.length + this.deadBlackCoords.length },
-            { key: this.color.nonTerritory(), value: 0 },
         ]);
+        wrapperSizes.put(this.color.nonTerritory(), 0);
         const nonEmptyWrapper: MGPMap<GoPiece, number> =
             wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
         if (nonEmptyWrapper.size() === 1) {
