@@ -50,37 +50,38 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
                 landingCoords.push(landingCoord);
             }
         }
-        return this.addMoves(state, coord, landingCoords);
+        return this.addLegalMoves(state, coord, landingCoords);
     }
-    private addMoves(state: MartianChessState,
-                     coord: Coord,
-                     landingCoords: Coord[])
+    private addLegalMoves(state: MartianChessState,
+                          startingCoord: Coord,
+                          validLandingCoords: Coord[])
     {
         const moves: MartianChessMove[] = [];
-        const firstPiece: MartianChessPiece = state.getPieceAt(coord);
+        const firstPiece: MartianChessPiece = state.getPieceAt(startingCoord);
         const canCallTheClock: boolean = state.countDown.isAbsent();
         const canPromoteDrone: boolean = state.isTherePieceOnPlayerSide(MartianChessPiece.DRONE) === false;
         const canPromoteQueen: boolean = state.isTherePieceOnPlayerSide(MartianChessPiece.QUEEN) === false;
         const last: MGPOptional<MartianChessMove> = state.lastMove;
-        for (const landingCoord of landingCoords) {
+        for (const landingCoord of validLandingCoords) {
             const landedPiece: MartianChessPiece = state.getPieceAt(landingCoord);
             if (landedPiece === MartianChessPiece.EMPTY) {
                 // Moves
-                this.add(moves, MartianChessMove.from(coord, landingCoord).get(), canCallTheClock, last);
+                this.add(moves, MartianChessMove.from(startingCoord, landingCoord).get(), canCallTheClock, last);
             } else if (state.isInPlayerTerritory(landingCoord)) {
                 // Promotions
                 const promotion: MGPOptional<MartianChessPiece> = MartianChessPiece.tryMerge(landedPiece, firstPiece);
                 if (promotion.isPresent()) {
                     const promoted: MartianChessPiece = promotion.get();
+                    const move: MartianChessMove = MartianChessMove.from(startingCoord, landingCoord).get();
                     if (promoted === MartianChessPiece.DRONE && canPromoteDrone) {
-                        this.add(moves, MartianChessMove.from(coord, landingCoord).get(), canCallTheClock, last);
+                        this.add(moves, move, canCallTheClock, last);
                     } else if (promoted === MartianChessPiece.QUEEN && canPromoteQueen) {
-                        this.add(moves, MartianChessMove.from(coord, landingCoord).get(), canCallTheClock, last);
+                        this.add(moves, move, canCallTheClock, last);
                     }
                 }
             } else {
                 // Capture
-                this.add(moves, MartianChessMove.from(coord, landingCoord).get(), canCallTheClock, last);
+                this.add(moves, MartianChessMove.from(startingCoord, landingCoord).get(), canCallTheClock, last);
             }
         }
         return moves;
@@ -103,7 +104,7 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     public getMovesForDroneAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const coord: Coord = new Coord(x, y);
         const landingCoords: Coord[] = this.getValidLandingCoordForDrone(coord, state);
-        return this.addMoves(state, coord, landingCoords);
+        return this.addLegalMoves(state, coord, landingCoords);
     }
     private getValidLandingCoordForDrone(startingCoord: Coord, state: MartianChessState): Coord[] {
         const landingCoords: Coord[] = [];
@@ -132,7 +133,7 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     public getMovesForQueenAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const startingCoord: Coord = new Coord(x, y);
         const landingCoords: Coord[] = this.getLandingCoordForQueen(startingCoord, state);
-        return this.addMoves(state, startingCoord, landingCoords);
+        return this.addLegalMoves(state, startingCoord, landingCoords);
     }
     private getLandingCoordForQueen(startingCoord: Coord, state: MartianChessState): Coord[] {
         const landingCoords: Coord[] = [];

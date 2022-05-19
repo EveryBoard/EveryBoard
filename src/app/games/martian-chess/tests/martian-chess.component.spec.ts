@@ -206,7 +206,7 @@ describe('MartianChessComponent', () => {
             componentTestUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'highlighted');
         }));
     });
-    fdescribe('Visual Modes', () => {
+    describe('Visual Modes', () => {
         it('should unfold "Mode Panel" when clicking on the cog', fakeAsync(async() => {
             // Given the initial board
             // When clicking on the cog

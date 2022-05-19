@@ -67,7 +67,6 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
     }
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
         const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
-        const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
         for (let y: number = 0; y < this.width; y++) {
@@ -84,8 +83,10 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 }
             }
         }
-        map.set(Player.ZERO, new CoordSet(zeroPieces));
-        map.set(Player.ONE, new CoordSet(onePieces));
+        const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap([
+            { key: Player.ZERO, value: new CoordSet(zeroPieces) },
+            { key: Player.ONE, value: new CoordSet(onePieces) },
+        ]);
         return map;
     }
     public getThreatMap(state: TaflState,

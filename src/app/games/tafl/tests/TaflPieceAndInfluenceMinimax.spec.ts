@@ -266,12 +266,13 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
-            const expectedMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
             const expectedThreats: SandwichThreat[] = [
                 new SandwichThreat(new Coord(4, 3), new CoordSet([new Coord(2, 4)])),
                 new SandwichThreat(new Coord(3, 4), new CoordSet([new Coord(4, 2)])),
             ];
-            expectedMap.set(new Coord(3, 3), new MGPSet(expectedThreats));
+            const expectedMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap([
+                { key: new Coord(3, 3), value: new MGPSet(expectedThreats) },
+            ]);
             expect(filteredThreatMap.equals(expectedMap)).toBeTrue();
         });
         it(`should not consider "moving" opponent's threatened pieces as threatening`, () => {

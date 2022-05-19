@@ -23,12 +23,11 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         const nanoseconds: number = ms * 1000 * 1000;
         return { seconds, nanoseconds };
     }
-
     public callbacks: [FirebaseCondition[], FirebaseCollectionObserver<T>][] = [];
     private readonly subDAOs: MGPMap<string, IFirebaseFirestoreDAO<FirebaseJSONObject>> = new MGPMap();
     constructor(public readonly collectionName: string,
-                public VERBOSE: boolean,
-    ) {
+                public VERBOSE: boolean)
+    {
         this.reset();
     }
     public abstract getStaticDB(): MGPMap<string, DocumentSubject<T>>;
@@ -42,7 +41,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         this.resetStaticDB();
     }
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Unsubscribe {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.getObsById(' + id + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.subscribeToChanges(' + id + ')');
 
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
@@ -164,11 +163,11 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             }
             return Promise.resolve();
         } else {
-            throw new Error('Cannot update element ' + id + ' absent from ' + this.collectionName);
+            throw new Error(`Cannot update element '${id}' absent from '${this.collectionName}'`);
         }
     }
     public async delete(id: string): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.delete(' + id + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + `.delete('${id}')`);
 
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {

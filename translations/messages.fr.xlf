@@ -2262,7 +2262,7 @@
         <target>Cette pièce n&apos;a aucun mouvement possible, choisissez-en une autre.</target>
       </trans-unit>
       <trans-unit id="1586272441819129629" datatype="html">
-        <source>A move must be orthogonal or diagonal</source>
+        <source>A move must be orthogonal or diagonal.</source>
         <target>Un mouvement dois se faire selon une direction orthogonale ou diagonale.</target>
       </trans-unit>
       <trans-unit id="6241913890536717263" datatype="html">
@@ -2356,20 +2356,20 @@
         Vous jouez Foncé, forcez l&apos;égalité en un coup.</target>
       </trans-unit>
       <trans-unit id="3465749033229113029" datatype="html">
-        <source>Drones must move two orthogonal steps</source>
-        <target>Les drônes doivent se déplacer de deux cases horizontalement et/ou verticalement</target>
+        <source>Drones must move two orthogonal steps.</source>
+        <target>Les drônes doivent se déplacer de deux cases horizontalement et/ou verticalement.</target>
       </trans-unit>
       <trans-unit id="9029311278017369367" datatype="html">
-        <source>You must pick a piece from your side of the board in order to move it</source>
-        <target>Choisissez une pièce de votre propre territoire pour la déplacer</target>
+        <source>You must pick a piece from your side of the board in order to move it.</source>
+        <target>Choisissez une pièce de votre propre territoire pour la déplacer.</target>
       </trans-unit>
       <trans-unit id="718669789440146602" datatype="html">
-        <source>This is not a valid promotion nor a valid capture</source>
-        <target>Ce mouvement n'est ni une promotion valide ni une capture valide</target>
+        <source>This is not a valid promotion nor a valid capture.</source>
+        <target>Ce mouvement n'est ni une promotion valide ni une capture valide.</target>
       </trans-unit>
       <trans-unit id="6727655377292062560" datatype="html">
-        <source>You cannot perform a move that is the reverse of the previous one</source>
-        <target>Vous ne pouvez pas faire le mouvement inverse au dernier coup</target>
+        <source>You cannot perform a move that is the reverse of the previous one.</source>
+        <target>Vous ne pouvez pas faire un mouvement inverse au dernier coup.</target>
       </trans-unit>
       <trans-unit id="8829851561226315844" datatype="html">
         <source>The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.</source>
@@ -2496,8 +2496,8 @@
         <target>Votre pièce est toujours dans votre territoire !</target>
       </trans-unit>
       <trans-unit id="6078708685274182252" datatype="html">
-        <source>Pawns must move one diagonal step</source>
-        <target>Les pions doivent se déplacer d'une case en diagonale</target>
+        <source>Pawns must move one step diagonally.</source>
+        <target>Les pions doivent se déplacer d'une case en diagonale.</target>
       </trans-unit>
       <trans-unit id="6266016430504496647" datatype="html">
         <source>Please put your piece in an incomplete column.</source>
@@ -3662,6 +3662,10 @@
       <trans-unit id="3618174181025506941" datatype="html">
         <source>This username is already in use, please select a different one.</source>
         <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
+      </trans-unit>
+      <trans-unit id="4938355530757756821" datatype="html">
+        <source>You cannot join this game because you are already in another one.</source>
+        <target>Vous ne pouvez pas rejoindre cette partie car vous êtes déjà dans une autre.</target>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

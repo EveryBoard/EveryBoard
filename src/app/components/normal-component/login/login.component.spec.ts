@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -14,7 +14,7 @@ describe('LoginComponent', () => {
 
     let router: Router;
 
-    let authenticationService: AuthenticationService;
+    let connectedUserService: ConnectedUserService;
 
     let userRS: ReplaySubject<AuthUser>;
 
@@ -25,11 +25,11 @@ describe('LoginComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LoginComponent);
         router = TestBed.inject(Router);
-        authenticationService = TestBed.inject(AuthenticationService);
+        connectedUserService = TestBed.inject(ConnectedUserService);
 
         userRS = new ReplaySubject<AuthUser>(1);
         const userObs: Observable<AuthUser> = userRS.asObservable();
-        spyOn(authenticationService, 'getUserObs').and.returnValue(userObs);
+        spyOn(connectedUserService, 'getUserObs').and.returnValue(userObs);
 
         testUtils.detectChanges();
     }));
@@ -41,7 +41,7 @@ describe('LoginComponent', () => {
             spyOn(router, 'navigate').and.callFake(async() => true);
 
             // given an existing user
-            const user: AuthUser = UserMocks.CONNECTED;
+            const user: AuthUser = UserMocks.CONNECTED_AUTH_USER;
 
             // when the user gets connected
             userRS.next(user);
@@ -76,17 +76,17 @@ describe('LoginComponent', () => {
 
         it('should dispatch email login to authentication service', fakeAsync(async() => {
             // given an existing user
-            spyOn(authenticationService, 'doEmailLogin').and.resolveTo(MGPValidation.SUCCESS);
+            spyOn(connectedUserService, 'doEmailLogin').and.resolveTo(MGPValidation.SUCCESS);
 
             // when the user logs in
             await login();
 
             // then email login has been performed
-            expect(authenticationService.doEmailLogin).toHaveBeenCalledWith(email, password);
+            expect(connectedUserService.doEmailLogin).toHaveBeenCalledWith(email, password);
         }));
         it('should show an error if login fails', fakeAsync(async() => {
             // given a user that will fail to login
-            spyOn(authenticationService, 'doEmailLogin').and.resolveTo(MGPValidation.failure('Error message'));
+            spyOn(connectedUserService, 'doEmailLogin').and.resolveTo(MGPValidation.failure('Error message'));
 
             // when the user logs in
             await login();
@@ -101,17 +101,17 @@ describe('LoginComponent', () => {
         }
         it('should dispatch google login to authentication service', fakeAsync(async() => {
             // given a google user
-            spyOn(authenticationService, 'doGoogleLogin').and.resolveTo(MGPValidation.SUCCESS);
+            spyOn(connectedUserService, 'doGoogleLogin').and.resolveTo(MGPValidation.SUCCESS);
 
             // when the user logs in
             await login();
 
             // then google login has been performed
-            expect(authenticationService.doGoogleLogin).toHaveBeenCalledWith();
+            expect(connectedUserService.doGoogleLogin).toHaveBeenCalledWith();
         }));
         it('should show an error if login fails', fakeAsync(async() => {
             // given a user that will fail to login
-            spyOn(authenticationService, 'doGoogleLogin').and.resolveTo(MGPValidation.failure('Error message'));
+            spyOn(connectedUserService, 'doGoogleLogin').and.resolveTo(MGPValidation.failure('Error message'));
 
             // when the user logs in
             await login();

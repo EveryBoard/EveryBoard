@@ -51,9 +51,9 @@ export class GameService {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    private createUnstartedPart(creatorName: string, typeGame: string): Promise<string> {
+    private createUnstartedPart(creator: MinimalUser, typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
-                'GameService.createPart(' + creatorName + ', ' + typeGame + ')');
+                'GameService.createPart(' + creator.name + ', ' + typeGame + ')');
 
         const newPart: Part = {
             lastUpdate: {
@@ -61,7 +61,7 @@ export class GameService {
                 player: 0,
             },
             typeGame,
-            playerZero: creatorName,
+            playerZero: creator.name,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -76,7 +76,7 @@ export class GameService {
     public async createPartJoinerAndChat(creator: MinimalUser, typeGame: string): Promise<string> {
         display(GameService.VERBOSE, `GameService.createGame(${creator.id}, ${typeGame})`);
 
-        const gameId: string = await this.createUnstartedPart(creator.name, typeGame);
+        const gameId: string = await this.createUnstartedPart(creator, typeGame);
         await this.joinerService.createInitialJoiner(creator, gameId);
         await this.createChat(gameId);
         return gameId;
@@ -100,9 +100,9 @@ export class GameService {
         let playerOne: string;
         if (whoStarts === FirstPlayer.CREATOR) {
             playerZero = joiner.creator.name;
-            playerOne = Utils.getNonNullable(joiner.chosenPlayer);
+            playerOne = Utils.getNonNullable(joiner.chosenOpponent).name;
         } else {
-            playerZero = Utils.getNonNullable(joiner.chosenPlayer);
+            playerZero = Utils.getNonNullable(joiner.chosenOpponent).name;
             playerOne = joiner.creator.name;
         }
         return {

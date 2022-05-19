@@ -12,9 +12,9 @@ export class MartianChessMoveFailure {
 
     public static readonly END_COORD_OUT_OF_RANGE: string = 'End coord cannot be out of range';
 
-    public static readonly PAWN_MUST_MOVE_ONE_DIAGONAL_STEP: () => string = () => $localize`Pawns must move one diagonal step`;
+    public static readonly PAWN_MUST_MOVE_ONE_DIAGONAL_STEP: () => string = () => $localize`Pawns must move one step diagonally.`;
 
-    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS: () => string = () => $localize`Drones must move two orthogonal steps`;
+    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS: () => string = () => $localize`Drones must move two orthogonal steps.`;
 }
 
 export class MartianChessMove extends MoveCoordToCoord {

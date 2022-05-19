@@ -135,4 +135,7 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await componentTestUtils.expectMoveSuccess('#chooseDirection_DOWN', move);
     }));
+    it('should toast when clicking as first click on an empty square', fakeAsync(async() => {
+        expect('TODO').toBe('DONE');
+    }));
 });

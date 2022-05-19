@@ -1,15 +1,21 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
-import { LobbyComponent } from './lobby.component';
-import { AuthUser } from 'src/app/services/AuthenticationService';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { DebugElement } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
+
+import { LobbyComponent } from './lobby.component';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { BehaviorSubject } from 'rxjs';
 import { PartDocument } from 'src/app/domain/Part';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { User } from 'src/app/domain/User';
 
 describe('LobbyComponent', () => {
 
@@ -18,7 +24,7 @@ describe('LobbyComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LobbyComponent);
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         component = testUtils.getComponent();
     }));
     it('should create', fakeAsync(async() => {
@@ -36,7 +42,6 @@ describe('LobbyComponent', () => {
         // Then online-game-selection component is on the page
         testUtils.expectElementToExist('#online-game-selection');
     }));
-
     it('Should redirect to /play when clicking a game', fakeAsync(async() => {
         // Given a server with one active part
         const activePart: PartDocument = new PartDocument('some-part-id', PartMocks.INITIAL);
@@ -66,5 +71,29 @@ describe('LobbyComponent', () => {
         expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
         // and ActivePartsService should have been told to stop observing
         expect(activePartsService.stopObserving).toHaveBeenCalledOnceWith();
+    }));
+    it('should display firebase time HH:mm:ss', fakeAsync(() => {
+        // Given a lobby in which we observe tab chat, and where one user is here
+        const HH: number = 11 * 3600;
+        const mm: number = 34 * 60;
+        const ss: number = 56;
+        const timeStampInSecond: number = HH + mm + ss;
+        const userWithLastChange: User = {
+            ...UserMocks.CREATOR,
+            last_changed: { seconds: timeStampInSecond, nanoseconds: 0 },
+        };
+        void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.id, userWithLastChange);
+        tick();
+        void testUtils.clickElement('#tab-chat');
+        tick();
+
+        // When rendering it
+        testUtils.detectChanges();
+
+        // Then the date should be written in format HH:mm:ss (with 1h added due to Locale?)
+        const element: DebugElement = testUtils.findElement('#' + UserMocks.CREATOR_MINIMAL_USER.name);
+        const time: string = element.nativeElement.innerText;
+        const timeAsString: string = formatDate(timeStampInSecond * 1000, 'HH:mm:ss', 'en-US');
+        expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': ' + timeAsString);
     }));
 });

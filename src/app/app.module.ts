@@ -12,7 +12,7 @@ import { PartDAO } from './dao/PartDAO';
 
 import { ChatService } from './services/ChatService';
 import { UserService } from './services/UserService';
-import { AuthenticationService } from './services/AuthenticationService';
+import { ConnectedUserService } from './services/ConnectedUserService';
 import { GameService } from './services/GameService';
 import { JoinerService } from './services/JoinerService';
 
@@ -232,7 +232,7 @@ export class FirebaseProviders {
         FontAwesomeModule,
     ],
     providers: [
-        AuthenticationService,
+        ConnectedUserService,
         GameService,
         JoinerService,
         UserService,

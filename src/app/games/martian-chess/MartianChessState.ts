@@ -74,9 +74,10 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
     {
         super(board, turn);
         if (captured == null) {
-            captured = new MGPMap();
-            captured.set(Player.ZERO, MartianChessCapture.from([]));
-            captured.set(Player.ONE, MartianChessCapture.from([]));
+            captured = new MGPMap([
+                { key: Player.ZERO, value: MartianChessCapture.from([]) },
+                { key: Player.ONE, value: MartianChessCapture.from([]) },
+            ]);
         }
         captured.makeImmutable();
         this.captured = captured;
