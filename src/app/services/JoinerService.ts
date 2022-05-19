@@ -22,7 +22,6 @@ export class JoinerService {
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
     private candidatesUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
-    public static readonly USER_ALREADY_IN_GAME: () => string = () => $localize`You cannot join this game because you are already in another one.`;
     public static readonly GAME_DOES_NOT_EXIST: () => string = () => $localize`Game does not exist`;
 
     constructor(private readonly joinerDAO: JoinerDAO) {
