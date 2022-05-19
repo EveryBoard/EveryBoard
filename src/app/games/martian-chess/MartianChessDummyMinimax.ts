@@ -103,10 +103,10 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     }
     public getMovesForDroneAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const coord: Coord = new Coord(x, y);
-        const landingCoords: Coord[] = this.getValidLandingCoordForDrone(coord, state);
+        const landingCoords: Coord[] = this.getValidLandingCoordsForDrone(coord, state);
         return this.addLegalMoves(state, coord, landingCoords);
     }
-    private getValidLandingCoordForDrone(startingCoord: Coord, state: MartianChessState): Coord[] {
+    private getValidLandingCoordsForDrone(startingCoord: Coord, state: MartianChessState): Coord[] {
         const landingCoords: Coord[] = [];
         for (const dir of Direction.DIRECTIONS) {
             if (dir.isDiagonal()) {
@@ -132,10 +132,10 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     }
     public getMovesForQueenAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const startingCoord: Coord = new Coord(x, y);
-        const landingCoords: Coord[] = this.getLandingCoordForQueen(startingCoord, state);
+        const landingCoords: Coord[] = this.getLandingCoordsForQueen(startingCoord, state);
         return this.addLegalMoves(state, startingCoord, landingCoords);
     }
-    private getLandingCoordForQueen(startingCoord: Coord, state: MartianChessState): Coord[] {
+    private getLandingCoordsForQueen(startingCoord: Coord, state: MartianChessState): Coord[] {
         const landingCoords: Coord[] = [];
         for (const dir of Direction.DIRECTIONS) {
             let dist: number = 1;

@@ -2057,7 +2057,7 @@
         <source>You must choose different starting and ending coordinates.</source>
       </trans-unit>
       <trans-unit id="8967052565751964880" datatype="html">
-        <source>There is a piece between the piece you choose and its landing space.</source>
+        <source>There is a piece between the piece you chose and its landing space.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

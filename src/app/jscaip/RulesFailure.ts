@@ -20,5 +20,5 @@ export class RulesFailure {
 
     public static readonly MOVE_CANNOT_BE_STATIC: Localized = () => $localize`You must choose different starting and ending coordinates.`;
 
-    public static readonly SOMETHING_IN_THE_WAY: Localized = () => $localize`There is a piece between the piece you choose and its landing space.`;
+    public static readonly SOMETHING_IN_THE_WAY: Localized = () => $localize`There is a piece between the piece you chose and its landing space.`;
 }
