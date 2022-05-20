@@ -9,6 +9,7 @@ import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
+import { ConnectedUserService } from './ConnectedUserService';
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +25,9 @@ export class JoinerService {
 
     public static readonly GAME_DOES_NOT_EXIST: () => string = () => $localize`Game does not exist`;
 
-    constructor(private readonly joinerDAO: JoinerDAO) {
+    constructor(private readonly joinerDAO: JoinerDAO,
+                private readonly connectedUserService: ConnectedUserService)
+    {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
     public subscribeToChanges(joinerId: string, callback: (doc: MGPOptional<Joiner>) => void): void {
@@ -70,10 +73,10 @@ export class JoinerService {
         this.candidatesUnsubscribe.get()();
         this.candidatesUnsubscribe = MGPOptional.empty();
     }
-    // TODO FOR REVIEW: wouldn't the joiner service be much simpler to use if: all functions that take a user instead rely on the currently logged in user? 
-    public async createInitialJoiner(creator: MinimalUser, joinerId: string): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator.id + ', ' + joinerId + ')');
+    public async createInitialJoiner(joinerId: string): Promise<void> {
+        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + joinerId + ')');
 
+        const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const newJoiner: Joiner = {
             chosenOpponent: null,
             firstPlayer: FirstPlayer.RANDOM.value,

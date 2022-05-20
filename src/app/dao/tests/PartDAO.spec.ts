@@ -16,6 +16,7 @@ import { JoinerDAO } from '../JoinerDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { Time } from 'src/app/domain/Time';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('PartDAO', () => {
 
@@ -73,29 +74,28 @@ describe('PartDAO', () => {
                 player: 0,
             },
             typeGame: 'P4',
-            playerZero: 'foo',
+            playerZero: UserMocks.CREATOR_MINIMAL_USER,
             turn: 0,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
         };
-        const username: string = 'jeanjaja';
         beforeEach(async() => {
             // These tests need a logged in user to create documents
             await createConnectedGoogleUser('foo@bar.com');
         });
         it('should return true when user has an active part as player zero', async() => {
             // Given a part where user is player zero
-            await partDAO.create({ ...part, playerZero: username });
+            await partDAO.create({ ...part, playerZero: UserMocks.OPPONENT_MINIMAL_USER });
             // When checking if the user has an active part
-            const result: boolean = await partDAO.userHasActivePart(username);
+            const result: boolean = await partDAO.userHasActivePart(UserMocks.OPPONENT_MINIMAL_USER);
             // Then it should return true
             expect(result).toBeTrue();
         });
         it('should return true when user has an active part as player one', async() => {
             // Given a part where user is player zero
-            await partDAO.create({ ...part, playerOne: username });
+            await partDAO.create({ ...part, playerOne: UserMocks.OPPONENT_MINIMAL_USER });
             // When checking if the user has an active part
-            const result: boolean = await partDAO.userHasActivePart(username);
+            const result: boolean = await partDAO.userHasActivePart(UserMocks.OPPONENT_MINIMAL_USER);
             // Then it should return true
             expect(result).toBeTrue();
         });
@@ -103,7 +103,7 @@ describe('PartDAO', () => {
             // Given a part where the user is not active
             await partDAO.create(part);
             // When checking if the user has an active part
-            const result: boolean = await partDAO.userHasActivePart(username);
+            const result: boolean = await partDAO.userHasActivePart(UserMocks.OPPONENT_MINIMAL_USER);
             // Then it should return false
             expect(result).toBeFalse();
 
@@ -136,12 +136,18 @@ describe('PartDAO', () => {
     });
     it('should forbid player to change playerZero/playerOne/beginning once a part has started', async() => {
         // Given a part that has started (i.e., turn >= 0), and a player (here creator)
-        await createConnectedGoogleUser('foo@bar.com', 'creator');
-        await partDAO.create({ ...PartMocks.INITIAL, turn: 1, playerZero: 'creator', playerOne: 'candidate' });
+        const creatorUser: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
+        const creator: MinimalUser = { id: creatorUser.uid, name: 'creator' };
+        await partDAO.create({
+            ...PartMocks.INITIAL,
+            turn: 1,
+            playerZero: creator,
+            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+        });
 
         const updates: Partial<Part>[] = [
-            { playerZero: 'kreator' },
-            { playerOne: 'kreator' },
+            { playerZero: UserMocks.OPPONENT_MINIMAL_USER },
+            { playerOne: creator },
             { beginning: serverTimestamp() },
         ];
         for (const update of updates) {
@@ -181,8 +187,9 @@ describe('PartDAO', () => {
     });
     it('should forbid player to change typeGame', async() => {
         // Given a part and a player
-        await createConnectedGoogleUser('foo@bar.com', 'creator');
-        await partDAO.create({ ...PartMocks.INITIAL, playerZero: 'creator' });
+        const creatorUser: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
+        const playerZero: MinimalUser = { id: creatorUser.uid, name: 'creator' };
+        await partDAO.create({ ...PartMocks.INITIAL, playerZero });
 
         // When trying to change the game type
         const result: Promise<void> = partDAO.update('partId', { typeGame: 'P4' });

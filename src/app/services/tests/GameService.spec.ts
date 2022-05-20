@@ -24,7 +24,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('GameService', () => {
 
@@ -34,8 +33,6 @@ describe('GameService', () => {
 
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
-
-    const CANDIDATES: MinimalUser[] = [{ id: 'joiner-user-doc-id', name: 'joiner' }];
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -66,8 +63,8 @@ describe('GameService', () => {
                 player: 0,
             },
             typeGame: 'Quarto',
-            playerZero: 'creator',
-            playerOne: 'joiner',
+            playerZero: UserMocks.CREATOR_MINIMAL_USER,
+            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 2,
             listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
@@ -112,8 +109,8 @@ describe('GameService', () => {
                     player: player.value,
                 },
                 typeGame: 'Quarto',
-                playerZero: 'creator',
-                playerOne: 'joiner',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 turn: 2,
                 listMoves: [MOVE_1, MOVE_2],
                 request: Request.takeBackAsked(player),
@@ -138,8 +135,7 @@ describe('GameService', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
             const joiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -153,14 +149,13 @@ describe('GameService', () => {
             const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(joiner.creator.name);
-            expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
+            expect(startConfig.playerZero).toEqual(joiner.creator);
+            expect(startConfig.playerOne).toEqual(Utils.getNonNullable(joiner.chosenOpponent));
         }));
         it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
             const joiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -174,8 +169,8 @@ describe('GameService', () => {
             const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
-            expect(startConfig.playerOne).toBe(joiner.creator.name);
+            expect(startConfig.playerZero).toEqual(Utils.getNonNullable(joiner.chosenOpponent));
+            expect(startConfig.playerOne).toEqual(joiner.creator);
         }));
     });
     describe('rematch', () => {
@@ -200,8 +195,8 @@ describe('GameService', () => {
                     player: 0,
                 },
                 listMoves: [MOVE_1, MOVE_2],
-                playerZero: 'creator',
-                playerOne: 'joiner',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
@@ -212,8 +207,7 @@ describe('GameService', () => {
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameJoiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'CREATOR',
                 maximalMoveDuration: 10,
@@ -244,8 +238,8 @@ describe('GameService', () => {
                     player: 0,
                 },
                 listMoves: [MOVE_1, MOVE_2],
-                playerZero: 'joiner',
-                playerOne: 'creator',
+                playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOne: UserMocks.CREATOR_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
@@ -256,8 +250,7 @@ describe('GameService', () => {
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameJoiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -288,8 +281,8 @@ describe('GameService', () => {
                 player: 0,
             },
             typeGame: 'Quarto',
-            playerZero: 'creator',
-            playerOne: 'joiner',
+            playerZero: UserMocks.CREATOR_MINIMAL_USER,
+            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 1,
             listMoves: [MOVE_1],
             request: null,

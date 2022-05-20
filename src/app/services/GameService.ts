@@ -15,10 +15,11 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { FieldValue, Unsubscribe } from '@angular/fire/firestore';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
+import { ConnectedUserService } from './ConnectedUserService';
 
 export interface StartingPartConfig extends Partial<Part> {
-    playerZero: string,
-    playerOne: string,
+    playerZero: MinimalUser,
+    playerOne: MinimalUser,
     turn: number,
     beginning?: FieldValue | Time,
 }
@@ -35,6 +36,7 @@ export class GameService {
     private followedPartUnsubscribe: Unsubscribe;
 
     constructor(private readonly partDAO: PartDAO,
+                private readonly connectedUserService: ConnectedUserService,
                 private readonly joinerService: JoinerService,
                 private readonly chatService: ChatService)
     {
@@ -51,9 +53,11 @@ export class GameService {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    private createUnstartedPart(creator: MinimalUser, typeGame: string): Promise<string> {
+    private createUnstartedPart(typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
-                'GameService.createPart(' + creator.name + ', ' + typeGame + ')');
+                'GameService.createPart(' + typeGame + ')');
+
+        const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
 
         const newPart: Part = {
             lastUpdate: {
@@ -61,7 +65,7 @@ export class GameService {
                 player: 0,
             },
             typeGame,
-            playerZero: creator.name,
+            playerZero,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -73,11 +77,11 @@ export class GameService {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(creator: MinimalUser, typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, `GameService.createGame(${creator.id}, ${typeGame})`);
+    public async createPartJoinerAndChat(typeGame: string): Promise<string> {
+        display(GameService.VERBOSE, `GameService.createGame(${typeGame})`);
 
-        const gameId: string = await this.createUnstartedPart(creator, typeGame);
-        await this.joinerService.createInitialJoiner(creator, gameId);
+        const gameId: string = await this.createUnstartedPart(typeGame);
+        await this.joinerService.createInitialJoiner(gameId);
         await this.createChat(gameId);
         return gameId;
     }
@@ -96,14 +100,14 @@ export class GameService {
                 whoStarts = FirstPlayer.CHOSEN_PLAYER;
             }
         }
-        let playerZero: string;
-        let playerOne: string;
+        let playerZero: MinimalUser;
+        let playerOne: MinimalUser;
         if (whoStarts === FirstPlayer.CREATOR) {
-            playerZero = joiner.creator.name;
-            playerOne = Utils.getNonNullable(joiner.chosenOpponent).name;
+            playerZero = joiner.creator;
+            playerOne = Utils.getNonNullable(joiner.chosenOpponent);
         } else {
-            playerZero = Utils.getNonNullable(joiner.chosenOpponent).name;
-            playerOne = joiner.creator.name;
+            playerZero = Utils.getNonNullable(joiner.chosenOpponent);
+            playerOne = joiner.creator;
         }
         return {
             playerZero,
@@ -184,7 +188,7 @@ export class GameService {
 
         const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
         let firstPlayer: FirstPlayer;
-        if (part.playerZero === iJoiner.creator.name) {
+        if (part.playerZero.id === iJoiner.creator.id) {
             firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
         } else {
             firstPlayer = FirstPlayer.CREATOR;

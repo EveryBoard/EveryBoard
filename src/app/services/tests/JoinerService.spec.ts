@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { JoinerService } from '../JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { Joiner, PartStatus } from 'src/app/domain/Joiner';
@@ -9,17 +9,35 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { ConnectedUserService } from '../ConnectedUserService';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('JoinerService', () => {
 
-    let dao: JoinerDAOMock;
+    let dao: JoinerDAO;
 
     let service: JoinerService;
 
-    beforeEach(() => {
-        dao = new JoinerDAOMock();
-        service = new JoinerService(dao as unknown as JoinerDAO);
-    });
+    beforeEach(fakeAsync(async() => {
+        await TestBed.configureTestingModule({
+            imports: [
+                RouterTestingModule.withRoutes([
+                    { path: '**', component: BlankComponent },
+                ]),
+                BrowserAnimationsModule,
+            ],
+            providers: [
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                { provide: JoinerDAO, useClass: JoinerDAOMock },
+
+            ],
+        }).compileComponents();
+        dao = TestBed.inject(JoinerDAO);
+        service = TestBed.inject(JoinerService);
+    }));
     it('should create', fakeAsync(() => {
         expect(service).toBeTruthy();
     }));
@@ -50,31 +68,15 @@ describe('JoinerService', () => {
     it('createInitialJoiner should delegate to the DAO set method', fakeAsync(async() => {
         // Given a JoinerService
         spyOn(dao, 'set');
+        TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
         // When creating the initial joiner
-        await service.createInitialJoiner(UserMocks.CREATOR_MINIMAL_USER, 'id');
+        await service.createInitialJoiner('id');
 
         // Then it should delegate to the DAO and create the initial joiner
         expect(dao.set).toHaveBeenCalledWith('id', JoinerMocks.INITIAL);
     }));
     describe('joinGame', () => {
-        // TODO FOR REVIEW: test disabled because now you cannot have duplicate candidates
-        // If you try to join the game a second time, you will not be added a second time to the candidate list
-        // Can we remove this test?
-        xit('should fail when called by a candidate already in the game', fakeAsync(async() => {
-            // Given a joiner with a first candidate
-            const joinerId: string = 'joinerId';
-            await dao.set(joinerId, JoinerMocks.INITIAL);
-            const candidate: MinimalUser = { id: 'firstCandidateId', name: 'firstCandidate' };
-            await dao.addCandidate(joinerId, candidate);
-
-            // When a candidate tries to join the game one more time
-            const joinResult: MGPValidation = await service.joinGame(joinerId, candidate);
-
-            // Then it should fail
-            expect(joinResult.isFailure()).toBeTrue();
-            expect(joinResult.getReason()).toBe('You cannot join this game because you are already in another one.');
-        }));
         it('should not update joiner when called by the creator', fakeAsync(async() => {
             // Given a joiner where we are the creator
             await dao.set('joinerId', JoinerMocks.INITIAL);
@@ -146,21 +148,6 @@ describe('JoinerService', () => {
             // Then the joiner is back to the initial one
             const currentJoiner: MGPOptional<Joiner> = await dao.read('joinerId');
             expect(currentJoiner.get()).withContext('should be as new').toEqual(JoinerMocks.INITIAL);
-        }));
-        // TODO: this should become impossible
-        xit('should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {
-            // Given a joiner that we are observing and that we joined
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
-            const user: MinimalUser = { id: 'userId', name: 'whoever' };
-            await service.joinGame('joinerId', user);
-
-            // When cancelling the join of a non-candidate
-            const otherUser: MinimalUser = { id: 'otherUserId', name: 'who is that' };
-            const result: Promise<void> = service.cancelJoining(otherUser);
-            // Then it should throw an error
-            const error: string = 'someone that was not candidate nor chosenPlayer just left the chat: who is that';
-            await expectAsync(result).toBeRejectedWithError(error);
         }));
     });
     describe('deleteJoiner', () => {

@@ -565,8 +565,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public setPlayersDatas(updatedICurrentPart: PartDocument): void {
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
         this.players = [
-            MGPOptional.of(updatedICurrentPart.data.playerZero),
-            MGPOptional.ofNullable(updatedICurrentPart.data.playerOne),
+            MGPOptional.of(updatedICurrentPart.data.playerZero.name),
+            MGPOptional.ofNullable(updatedICurrentPart.data.playerOne?.name),
         ];
         assert(updatedICurrentPart.data.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();

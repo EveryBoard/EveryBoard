@@ -4,6 +4,7 @@ import { Request } from './Request';
 import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
+import { MinimalUser } from './MinimalUser';
 
 interface LastUpdateInfo extends FirebaseJSONObject {
     readonly index: number,
@@ -12,12 +13,12 @@ interface LastUpdateInfo extends FirebaseJSONObject {
 export interface Part extends FirebaseJSONObject {
     readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
-    readonly playerZero: string, // the id of the first player
+    readonly playerZero: MinimalUser, // the first player
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn
     readonly result: IMGPResult,
     readonly listMoves: ReadonlyArray<JSONValueWithoutArray>,
 
-    readonly playerOne?: string, // the id of the second player
+    readonly playerOne?: MinimalUser, // the second player
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
@@ -68,10 +69,10 @@ export class PartDocument implements FirebaseDocument<Part> {
     }
     public getDrawAccepter(): string {
         if (this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
-            return this.data.playerZero;
+            return this.data.playerZero.name;
         } else {
             assert(this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
-            return Utils.getNonNullable(this.data.playerOne);
+            return Utils.getNonNullable(this.data.playerOne).name;
         }
     }
     public isWin(): boolean {

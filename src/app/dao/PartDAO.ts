@@ -5,6 +5,7 @@ import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { Player } from '../jscaip/Player';
 import { Firestore } from '@angular/fire/firestore';
+import { MinimalUser } from '../domain/MinimalUser';
 
 @Injectable({
     providedIn: 'root',
@@ -35,13 +36,13 @@ export class PartDAO extends FirebaseFirestoreDAO<Part> {
     public observeActiveParts(callback: FirebaseCollectionObserver<Part>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
-    public async userHasActivePart(username: string): Promise<boolean> {
+    public async userHasActivePart(user: MinimalUser): Promise<boolean> {
         // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
         const userIsFirstPlayer: FirebaseDocument<Part>[] = await this.findWhere([
-            ['playerZero', '==', username],
+            ['playerZero', '==', user],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
         const userIsSecondPlayer: FirebaseDocument<Part>[] = await this.findWhere([
-            ['playerOne', '==', username],
+            ['playerOne', '==', user],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
         return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;
     }

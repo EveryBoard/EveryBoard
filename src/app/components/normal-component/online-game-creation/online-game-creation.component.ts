@@ -36,8 +36,8 @@ export class OnlineGameCreationComponent implements OnInit {
         const authUser: AuthUser = this.connectedUserService.user.get();
         assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
         const user: MinimalUser = authUser.toMinimalUser();
-        if (await this.canCreateOnlineGame(user.name)) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(user, game);
+        if (await this.canCreateOnlineGame(user)) {
+            const gameId: string = await this.gameService.createPartJoinerAndChat(game);
             // create Part and Joiner
             await this.router.navigate(['/play', game, gameId]);
             return true;
@@ -47,8 +47,8 @@ export class OnlineGameCreationComponent implements OnInit {
             return false;
         }
     }
-    private async canCreateOnlineGame(username: string): Promise<boolean> {
-        const hasActivePart: boolean = await this.partDAO.userHasActivePart(username);
+    private async canCreateOnlineGame(user: MinimalUser): Promise<boolean> {
+        const hasActivePart: boolean = await this.partDAO.userHasActivePart(user);
         return hasActivePart === false;
     }
 }
