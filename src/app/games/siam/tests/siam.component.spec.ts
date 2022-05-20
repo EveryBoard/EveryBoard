@@ -139,7 +139,7 @@ describe('SiamComponent', () => {
         // Given the initial board
         // When clicking on an empty piece
         // Then a toast should say it's forbidden
-        const reason: string = 'You should insert or choose one of your pieces!';
+        const reason: string = SiamFailure.MUST_INSERT_OR_CHOOSE_YOUR_PIECE();
         await componentTestUtils.expectClickFailure('#insertAt_2_1', reason);
     }));
 });

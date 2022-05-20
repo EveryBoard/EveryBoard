@@ -2261,7 +2261,7 @@
         <source>This piece has no possible move, select another one.</source>
         <target>Cette pièce n&apos;a aucun mouvement possible, choisissez-en une autre.</target>
       </trans-unit>
-      <trans-unit id="1586272441819129629" datatype="html">
+      <trans-unit id="2976242446104349974" datatype="html">
         <source>A move must be orthogonal or diagonal.</source>
         <target>Un mouvement dois se faire selon une direction orthogonale ou diagonale.</target>
       </trans-unit>
@@ -2355,19 +2355,19 @@
         simultanément, alors la partie se termine par une égalité.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, forcez l&apos;égalité en un coup.</target>
       </trans-unit>
-      <trans-unit id="3465749033229113029" datatype="html">
+      <trans-unit id="5149169656993878806" datatype="html">
         <source>Drones must move two orthogonal steps.</source>
         <target>Les drônes doivent se déplacer de deux cases horizontalement et/ou verticalement.</target>
       </trans-unit>
-      <trans-unit id="9029311278017369367" datatype="html">
+      <trans-unit id="4174188766565583979" datatype="html">
         <source>You must pick a piece from your side of the board in order to move it.</source>
         <target>Choisissez une pièce de votre propre territoire pour la déplacer.</target>
       </trans-unit>
-      <trans-unit id="718669789440146602" datatype="html">
+      <trans-unit id="4126120518252508337" datatype="html">
         <source>This is not a valid promotion nor a valid capture.</source>
         <target>Ce mouvement n'est ni une promotion valide ni une capture valide.</target>
       </trans-unit>
-      <trans-unit id="6727655377292062560" datatype="html">
+      <trans-unit id="820589591452307194" datatype="html">
         <source>You cannot perform a move that is the reverse of the previous one.</source>
         <target>Vous ne pouvez pas faire un mouvement inverse au dernier coup.</target>
       </trans-unit>
@@ -2495,7 +2495,7 @@
         <source>Your piece is still in you territory!</source>
         <target>Votre pièce est toujours dans votre territoire !</target>
       </trans-unit>
-      <trans-unit id="6078708685274182252" datatype="html">
+      <trans-unit id="7020322239499292850" datatype="html">
         <source>Pawns must move one step diagonally.</source>
         <target>Les pions doivent se déplacer d'une case en diagonale.</target>
       </trans-unit>
@@ -3041,6 +3041,10 @@
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
         <target>Votre poussée est invalide : elle n'est pas droite, ne pousse rien, ou sort du plateau.</target>
       </trans-unit>
+      <trans-unit id="5868009287424458246" datatype="html">
+        <source>You should insert or choose one of your pieces!</source>
+        <target>Vous devez insérez ou choisir une de vos pièces !</target>
+      </trans-unit>
       <trans-unit id="4223815631577991732" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
@@ -3309,7 +3313,7 @@
         <source>Soldiers cannot sit on the throne.</source>
         <target>Les soldats n&apos;ont pas le droit de se poser sur le trône.</target>
       </trans-unit>
-      <trans-unit id="8967052565751964880" datatype="html">
+      <trans-unit id="4065705313723361978" datatype="html">
         <source>There is a piece between the piece you chose and its landing space.</source>
         <target>Il y a une pièce entre la pièce que vous avez choisie et sa case d'atterissage.</target>
       </trans-unit>
