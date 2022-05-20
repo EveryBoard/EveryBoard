@@ -117,8 +117,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.checkInputs();
         this.createForms();
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, user);
+        const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId);
         if (joinResult.isFailure()) {
             const reason: string = joinResult.getReason();
             this.messageDisplayer.criticalMessage(reason);
@@ -470,7 +469,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: you(joiner) about to cancel game joining');
             await this.connectedUserService.removeObservedPart();
-            await this.joinerService.cancelJoining(authUser.toMinimalUser());
+            await this.joinerService.cancelJoining();
         }
         return;
     }

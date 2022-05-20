@@ -88,9 +88,10 @@ export class JoinerService {
         };
         return this.set(joinerId, newJoiner);
     }
-    public async joinGame(partId: string, user: MinimalUser): Promise<MGPValidation> {
-        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + user.name + ')');
+    public async joinGame(partId: string): Promise<MGPValidation> {
+        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ')');
 
+        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
             return MGPValidation.failure(JoinerService.GAME_DOES_NOT_EXIST());
@@ -106,13 +107,14 @@ export class JoinerService {
         assert(this.observedJoinerId != null, 'cannot remove candidate if not observing a joiner');
         return this.joinerDAO.removeCandidate(Utils.getNonNullable(this.observedJoinerId), user);
     }
-    public async cancelJoining(user: MinimalUser): Promise<void> {
+    public async cancelJoining(): Promise<void> {
         display(JoinerService.VERBOSE,
-                'JoinerService.cancelJoining(' + user.name + '); this.observedJoinerId = ' + this.observedJoinerId);
+                'JoinerService.cancelJoining(); this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
         }
+        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const joinerOpt: MGPOptional<Joiner> = await this.joinerDAO.read(this.observedJoinerId);
         if (joinerOpt.isAbsent()) {
             // The part does not exist, so we can consider that we succesfully cancelled joining

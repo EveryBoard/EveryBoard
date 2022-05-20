@@ -694,12 +694,12 @@ describe('PartCreationComponent', () => {
                 const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
                 spyOn(authService, 'removeObservedPart').and.callThrough();
                 spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
-                spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
+                spyOn(joinerService, 'cancelJoining').and.callFake(async() => {});
                 await component.ngOnDestroy();
                 destroyed = true;
 
                 // Then joinerService.cancelJoining should have been called
-                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER);
+                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith();
                 expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
             }));
         });

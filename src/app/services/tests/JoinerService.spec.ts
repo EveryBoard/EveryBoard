@@ -79,12 +79,13 @@ describe('JoinerService', () => {
     describe('joinGame', () => {
         it('should not update joiner when called by the creator', fakeAsync(async() => {
             // Given a joiner where we are the creator
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
             await dao.set('joinerId', JoinerMocks.INITIAL);
             spyOn(dao, 'update').and.callThrough();
             expect(dao.update).not.toHaveBeenCalled();
 
             // When joining it
-            await service.joinGame('joinerId', JoinerMocks.INITIAL.creator);
+            await service.joinGame('joinerId');
 
             // Then it should not update the joiner, and the joiner is still the initial one
             expect(dao.update).not.toHaveBeenCalled();
@@ -93,57 +94,58 @@ describe('JoinerService', () => {
         }));
         it('should be delegated to JoinerDAO', fakeAsync(async() => {
             // Given a joiner
+            ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             await dao.set('joinerId', JoinerMocks.INITIAL);
             spyOn(dao, 'addCandidate').and.callThrough();
 
             // When joining it
-            const user: MinimalUser = { id: 'userId', name: 'some totally new user' };
-
-            await service.joinGame('joinerId', user);
+            await service.joinGame('joinerId');
 
             // We should be added to the candidate list
-            expect(dao.addCandidate).toHaveBeenCalledWith('joinerId', user);
+            expect(dao.addCandidate).toHaveBeenCalledWith('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
         it('should fail when joining an invalid joiner', fakeAsync(async() => {
             spyOn(dao, 'read').and.resolveTo(MGPOptional.empty());
+            ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             // When trying to join an invalid joiner
-            const result: Promise<MGPValidation> = service.joinGame('invalidJoinerId', UserMocks.CREATOR_MINIMAL_USER);
+            const result: Promise<MGPValidation> = service.joinGame('invalidJoinerId');
             // Then it should fail
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure('Game does not exist'));
         }));
     });
     describe('cancelJoining', () => {
         it('cancelJoining should throw when there was no observed joiner', fakeAsync(async() => {
+            ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             // When cancelling on an invalid joiner
-            const user: MinimalUser = { id: 'whoever', name: 'whoever' };
-            const result: Promise<void> = service.cancelJoining(user);
+            const result: Promise<void> = service.cancelJoining();
             // Then it should throw
             const expectedError: string = 'cannot cancel joining when not observing a joiner';
             await expectAsync(result).toBeRejectedWithError(expectedError);
         }));
         it('should delegate update to DAO', fakeAsync(async() => {
             // Given a joiner that we are observing and that we joined
+            ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             await dao.set('joinerId', JoinerMocks.INITIAL);
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
-            const user: MinimalUser = { id: '7sf857erf87d', name: 'someone totally new' };
-            await service.joinGame('joinerId', user);
+            await service.joinGame('joinerId');
 
             spyOn(dao, 'removeCandidate');
 
             // When cancelling our join
-            await service.cancelJoining(user);
+            await service.cancelJoining();
 
             // Then we are removed from the list
-            expect(dao.removeCandidate).toHaveBeenCalledWith('joinerId', user);
+            expect(dao.removeCandidate).toHaveBeenCalledWith('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
         it('should start as new when chosenPlayer leaves', fakeAsync(async() => {
             // Given a joiner that we are observing, with a chosen player
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
             await dao.addCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             // When the chosen player leaves
-            await service.cancelJoining(UserMocks.OPPONENT_MINIMAL_USER);
+            await service.cancelJoining();
 
             // Then the joiner is back to the initial one
             const currentJoiner: MGPOptional<Joiner> = await dao.read('joinerId');
@@ -228,14 +230,16 @@ describe('JoinerService', () => {
             });
         }));
         it('should see new candidates appear', fakeAsync(async() => {
+            ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             // When a candidate is added
-            await service.joinGame('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            await service.joinGame('joinerId');
             // Then the candidate has been seen
             expect(candidates).toEqual([UserMocks.CANDIDATE_MINIMAL_USER]);
         }));
         it('should see removed candidates disappear', fakeAsync(async() => {
             // and given an existing candidate
-            await service.joinGame('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
+            await service.joinGame('joinerId');
             // When a candidate is removed
             await service.removeCandidate(UserMocks.CANDIDATE_MINIMAL_USER);
             // Then the candidate has been seen
@@ -243,8 +247,10 @@ describe('JoinerService', () => {
         }));
         it('should see modified candidates correctly modified', fakeAsync(async() => {
             // and given some existing candidates
-            await service.joinGame('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
-            await service.joinGame('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
+            await service.joinGame('joinerId');
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            await service.joinGame('joinerId');
 
             // When a candidate is modified
             // (This should never happen in practice, but we still want the correct behavior just in case)

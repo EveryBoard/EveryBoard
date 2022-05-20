@@ -77,7 +77,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             // Then joinGame and observe should have been called
             expect(wrapper.currentPartId).withContext('currentPartId should be defined').toBeDefined();
-            expect(joinerService.joinGame).toHaveBeenCalledOnceWith('joinerId', UserMocks.CREATOR_MINIMAL_USER);
+            expect(joinerService.joinGame).toHaveBeenCalledOnceWith('joinerId');
             expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
 
             // finish the game to have no timeout still running
