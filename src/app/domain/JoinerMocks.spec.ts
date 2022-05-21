@@ -3,65 +3,74 @@ import { FirstPlayer, Joiner, PartStatus, PartType } from './Joiner';
 import { UserMocks } from './UserMocks.spec';
 
 export class JoinerMocks {
+
     public static readonly INITIAL: Joiner = {
         candidates: [],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: null,
+        chosenOpponent: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
     public static readonly WITH_FIRST_CANDIDATE: Joiner = {
-        candidates: ['firstCandidate'],
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: null,
+        chosenOpponent: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
-    public static readonly WITH_SECOND_CANDIDATE: Joiner = {
-        candidates: ['firstCandidate', 'secondCandidate'],
+    public static readonly WITH_TWO_CANDIDATES: Joiner = {
+        candidates: [
+            UserMocks.OPPONENT_MINIMAL_USER,
+            UserMocks.OTHER_OPPONENT_MINIMAL_USER,
+        ],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: null,
+        chosenOpponent: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
-    public static readonly WITH_CHOSEN_PLAYER: Joiner = {
-        candidates: ['firstCandidate'],
+    public static readonly WITH_CHOSEN_OPPONENT: Joiner = {
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: 'firstCandidate',
+        chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
+    public static readonly WITH_ANOTHER_CHOSEN_OPPONENT: Joiner = {
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER, UserMocks.OTHER_OPPONENT_MINIMAL_USER],
+        creator: UserMocks.CREATOR_MINIMAL_USER,
+        chosenOpponent: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
+        firstPlayer: FirstPlayer.RANDOM.value,
+        partType: PartType.STANDARD.value,
+        partStatus: PartStatus.PART_CREATED.value,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
+    };
     public static readonly WITH_PROPOSED_CONFIG: Joiner = {
-        candidates: ['firstCandidate'],
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: 'firstCandidate',
+        chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.CONFIG_PROPOSED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
-
     public static readonly WITH_ACCEPTED_CONFIG: Joiner = {
-        candidates: ['firstCandidate'],
+        candidates: [UserMocks.OPPONENT_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: 'firstCandidate',
+        chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_STARTED.value,

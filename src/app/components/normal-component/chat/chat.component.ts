@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
 import { ChatService } from '../../../services/ChatService';
 import { Message, MessageDocument } from '../../../domain/Message';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
     templateUrl: './chat.component.html',
 })
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     @Input() public chatId!: string;
@@ -34,7 +35,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
     constructor(private readonly chatService: ChatService,
-                private readonly authenticationService: AuthenticationService) {
+                private readonly connectedUserService: ConnectedUserService) {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
@@ -122,7 +123,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public async sendMessage(): Promise<void> {
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        const sender: MinimalUser = this.authenticationService.user.get().toMinimalUser();
+        const sender: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         await this.chatService.sendMessage(sender, content, this.turn);
     }
     public ngOnDestroy(): void {

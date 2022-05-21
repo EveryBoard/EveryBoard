@@ -27,6 +27,7 @@ export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJ
 export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 
 export class Utils {
+
     public static expectToBe<T>(value: T, expected: T, message?: string): void {
         if (value !== expected) {
             if (message !== undefined) {

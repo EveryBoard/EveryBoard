@@ -164,12 +164,12 @@ export class CountDownComponent implements OnInit, OnDestroy {
         display(CountDownComponent.VERBOSE, this.debugName + '.clearTimeouts');
 
         if (this.timeoutHandleSec != null) {
-            clearTimeout(this.timeoutHandleSec);
+            window.clearTimeout(this.timeoutHandleSec);
             this.timeoutHandleSec = null;
         }
 
         if (this.timeoutHandleGlobal != null) {
-            clearTimeout(this.timeoutHandleGlobal);
+            window.clearTimeout(this.timeoutHandleGlobal);
             this.timeoutHandleGlobal = null;
         }
     }

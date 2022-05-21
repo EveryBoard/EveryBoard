@@ -42,7 +42,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         this.resetStaticDB();
     }
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Unsubscribe {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.getObsById(' + id + ')');
+        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.subscribeToChanges(' + id + ')');
 
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
@@ -164,11 +164,11 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             }
             return Promise.resolve();
         } else {
-            throw new Error('Cannot update element ' + id + ' absent from ' + this.collectionName);
+            throw new Error(`Cannot update element '${id}' absent from '${this.collectionName}'`);
         }
     }
     public async delete(id: string): Promise<void> {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.delete(' + id + ')');
+        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, `${this.collectionName}.delete(${id})`);
 
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {

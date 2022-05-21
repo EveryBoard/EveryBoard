@@ -12,7 +12,9 @@ import { MessageDisplayer } from './MessageDisplayer';
     providedIn: 'root',
 })
 export class ErrorLoggerService {
-    private static singleton: MGPOptional<ErrorLoggerService>;
+
+    private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
+
     public static setSingletonInstance(service: ErrorLoggerService) {
         ErrorLoggerService.singleton = MGPOptional.of(service);
     }

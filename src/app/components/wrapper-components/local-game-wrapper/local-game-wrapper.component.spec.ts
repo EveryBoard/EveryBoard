@@ -3,7 +3,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
@@ -17,18 +17,18 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(LocalGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -51,7 +51,7 @@ describe('LocalGameWrapperComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
-        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
     it('should create', () => {

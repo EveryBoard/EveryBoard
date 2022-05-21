@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { TutorialStep, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
@@ -38,11 +38,11 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 router: Router,
-                authenticationService: AuthenticationService,
                 messageDisplayer: MessageDisplayer,
-                public cdr: ChangeDetectorRef)
+                public cdr: ChangeDetectorRef,
+                protected connectedUserService: ConnectedUserService)
     {
-        super(componentFactoryResolver, actRoute, authenticationService, router, messageDisplayer);
+        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
     }
     public getNumberOfSteps(): number {
@@ -154,7 +154,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
-            setTimeout(() => {
+            window.setTimeout(() => {
                 this.cdr.detectChanges();
             }, 10);
             return MGPValidation.SUCCESS;

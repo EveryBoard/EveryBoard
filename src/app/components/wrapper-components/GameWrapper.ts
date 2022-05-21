@@ -1,7 +1,7 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, Utils } from 'src/app/utils/utils';
@@ -48,9 +48,10 @@ export abstract class GameWrapper {
 
     constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
                 protected readonly actRoute: ActivatedRoute,
-                protected readonly authenticationService: AuthenticationService,
+                protected readonly connectedUserService: ConnectedUserService,
                 protected readonly router: Router,
-                protected readonly messageDisplayer: MessageDisplayer) {
+                protected readonly messageDisplayer: MessageDisplayer)
+    {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
     public getMatchingComponent(gameName: string) : MGPOptional<Type<AbstractGameComponent>> {

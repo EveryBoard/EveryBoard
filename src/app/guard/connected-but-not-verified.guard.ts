@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { AuthenticationService, AuthUser } from '../services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
 import { AccountGuard } from './account-guard';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConnectedButNotVerifiedGuard extends AccountGuard {
-    constructor(authService: AuthenticationService,
+    constructor(authService: ConnectedUserService,
                 private readonly router : Router) {
         super(authService);
     }

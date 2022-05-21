@@ -11,10 +11,10 @@ import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
-import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { ChatDAO } from '../../dao/ChatDAO';
@@ -98,7 +98,7 @@ export class SimpleComponentTestUtils<T> {
             ],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
@@ -106,7 +106,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
-        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.fixture = TestBed.createComponent(componentType);
         testUtils.component = testUtils.fixture.componentInstance;
@@ -184,7 +184,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1);
@@ -214,7 +214,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
@@ -469,7 +469,7 @@ export async function setupEmulators(): Promise<unknown> {
             FirebaseProviders.database(),
         ],
         providers: [
-            AuthenticationService,
+            ConnectedUserService,
         ],
     }).compileComponents();
     TestBed.inject(Firestore.Firestore);

@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
@@ -82,7 +82,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPartId: string;
     public gameStarted: boolean = false;
     public opponent: User | null = null;
-    public playerName: string | null = null;
+    public authUser: AuthUser;
     public currentPlayer: string;
 
     public rematchProposed: boolean = false;
@@ -104,13 +104,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                authenticationService: AuthenticationService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
+                connectedUserService: ConnectedUserService,
                 private readonly userService: UserService,
                 private readonly gameService: GameService)
     {
-        super(componentFactoryResolver, actRoute, authenticationService, router, messageDisplayer);
+        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
@@ -128,7 +128,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return Player.of(this.observerRole);
     }
     public getPlayerName(): string {
-        return Utils.getNonNullable(this.playerName);
+        return Utils.getNonNullable(this.authUser.username.get());
     }
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
@@ -166,11 +166,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSub = this.authenticationService.getUserObs()
-            .subscribe((user: AuthUser) => {
-                // player should be authenticated and have a username to be here
-                this.playerName = user.username.get();
-            });
+        this.userSub = this.connectedUserService.getUserObs().subscribe((user: AuthUser) => {
+            // player should be authenticated and have a username to be here
+            this.authUser = user;
+        });
         await this.setCurrentPartIdOrRedirect();
     }
     public async startGame(iJoiner: Joiner): Promise<void> {
@@ -180,8 +179,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.joiner = iJoiner;
 
         this.gameStarted = true;
-
-        setTimeout(async() => {
+        window.setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
@@ -234,8 +232,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.msToSubstract = this.getLastUpdateTime(oldPart, part, updateType);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
-                const oldPartHadNoBeginningTime: boolean = oldPart == null ||
-                                                           oldPart.data.beginning == null;
+                const oldPartHadNoBeginningTime: boolean = oldPart == null || oldPart.data.beginning == null;
                 const newPartHasBeginningTime: boolean = this.currentPart == null ||
                                                          this.currentPart.data.beginning != null;
                 // Assert from ~September 2021, could be removed if it is never encountered
@@ -605,18 +602,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.observerRole = PlayerOrNone.NONE.value;
         }
         if (opponentName.isPresent()) {
-            const onDocumentCreated: (foundUser: UserDocument[]) => void = (foundUser: UserDocument[]) => {
-                this.opponent = foundUser[0].data;
-            };
-            const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
-                this.opponent = modifiedUsers[0].data;
+            const onDocumentCreatedOrModified: (f: UserDocument[]) => void = (user: UserDocument[]) => {
+                this.opponent = user[0].data;
             };
             const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             };
             const callback: FirestoreCollectionObserver<User> =
-                new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
+                new FirestoreCollectionObserver(onDocumentCreatedOrModified,
+                                                onDocumentCreatedOrModified,
+                                                onDocumentDeleted);
             this.opponentSubscription =
                 MGPOptional.of(this.userService.observeUserByUsername(opponentName.get(), callback));
         }
@@ -675,9 +671,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const victoriousPlayer: string = Utils.getNonNullable(opponent.username);
             await this.notifyTimeoutVictory(victoriousPlayer, user, lastIndex, this.getPlayerName());
         } else {
-            if (this.endGame) {
-                display(true, 'time might be better handled in the future');
-            } else if (this.opponentIsOffline()) { // the other player has timed out
+            assert(this.endGame === false, 'time might be better handled in the future');
+            if (this.opponentIsOffline()) { // the other player has timed out
                 const loosingPlayer: string = Utils.getNonNullable(opponent.username);
                 await this.notifyTimeoutVictory(this.getPlayerName(), user, player, loosingPlayer);
                 this.endGame = true;
@@ -803,8 +798,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public opponentIsOffline(): boolean {
-        return this.opponent != null &&
-               this.opponent.state === 'offline';
+        return false; // TODO FIRST
     }
     public canResign(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canResign');
@@ -847,13 +841,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public ngOnDestroy(): void {
-        if (this.routerEventsSub != null && this.routerEventsSub.unsubscribe != null) {
-            this.routerEventsSub.unsubscribe();
-        }
-        if (this.userSub != null && this.userSub.unsubscribe != null) {
-            this.userSub.unsubscribe();
-        }
-        if (this.gameStarted) {
+        this.routerEventsSub.unsubscribe();
+        this.userSub.unsubscribe();
+        if (this.gameStarted === true) {
             if (this.opponentSubscription.isPresent()) {
                 this.opponentSubscription.get()();
             }
