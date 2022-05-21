@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
@@ -20,16 +20,17 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
 
-async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
-    await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
-    await TestBed.inject(PartDAO).set('joinerId', initialPart);
-    await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
-}
-
 describe('OnlineGameWrapper for non-existing game', () => {
+    async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
+        await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
+        await TestBed.inject(PartDAO).set('joinerId', initialPart);
+        await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
+        await TestBed.inject(UserDAO).set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
+    }
+    let testUtils: ComponentTestUtils<AbstractGameComponent>;
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
-        const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game');
+        testUtils = await ComponentTestUtils.basic('invalid-game');
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
@@ -44,6 +45,8 @@ describe('OnlineGameWrapper for non-existing game', () => {
         // Then it goes to /notFound with the expected error message
         const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
         expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+
+        discardPeriodicTasks();
     }));
 });
 
