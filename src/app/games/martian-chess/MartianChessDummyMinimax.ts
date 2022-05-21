@@ -89,7 +89,7 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     private add(moves: MartianChessMove[],
                 move: MartianChessMove,
                 canCallTheClock: boolean,
-                last: MGPOptional<MartianChessMove> = MGPOptional.empty())
+                last: MGPOptional<MartianChessMove>)
     : void
     {
         const isCancellingLastMove: boolean = move.isUndoneBy(last);

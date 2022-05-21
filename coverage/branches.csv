@@ -1,13 +1,10 @@
 ActiveUsersService.ts,1
 app.module.ts,1
 AttackEpaminondasMinimax.ts,1
-AuthenticationService.ts,40
 CoerceoPiecesThreatTilesMinimax.ts,3
 GameWrapper.ts,1
 GoGroupsDatas.ts,5
 LinesOfActionRules.ts,1
-MartianChessDummyMinimax.ts,1
-MartianChessState.ts,1
 MGPNode.ts,1
 ObjectUtils.ts,3
 online-game-wrapper.component.ts,11

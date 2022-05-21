@@ -442,8 +442,7 @@ describe('YinshRules', () => {
 
             RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
         });
-        it('should not allow making moves once victory has been reached', () => {
-        });
+        it('should not allow making moves once victory has been reached');
     });
     describe('getPossibleCaptures', () => {
         it('should not consider rings as capturable pieces', () => {
