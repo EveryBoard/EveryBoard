@@ -13,14 +13,15 @@ describe('GoMinimax', () => {
     const X: GoPiece = GoPiece.WHITE;
     const O: GoPiece = GoPiece.BLACK;
     const u: GoPiece = GoPiece.DEAD_BLACK;
+    const k: GoPiece = GoPiece.DEAD_WHITE;
     const w: GoPiece = GoPiece.WHITE_TERRITORY;
+    const b: GoPiece = GoPiece.BLACK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
     beforeEach(() => {
         const rules: GoRules = new GoRules(GoState);
         minimax = new GoMinimax(rules, 'Dummy');
     });
-
     describe('getListMove', () => {
         it('should count as many move as empty space in Phase.PLAYING turn, + PASS', () => {
             const board: Table<GoPiece> = [
@@ -59,7 +60,7 @@ describe('GoMinimax', () => {
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
-        it('should want to switch dead piece when it consider those pieces alive', () => {
+        it('should want to switch dead piece when it consider those pieces alive (for white)', () => {
             const board: Table<GoPiece> = [
                 [u, w, w, X, w],
                 [X, X, X, X, X],
@@ -68,6 +69,20 @@ describe('GoMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
+            const initialNode: GoNode = new GoNode(state);
+            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            expect(moves.length).toBe(1);
+            expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
+        });
+        it('should want to switch dead piece when it consider those pieces alive (for black)', () => {
+            const board: Table<GoPiece> = [
+                [k, b, b, O, b],
+                [O, O, O, O, O],
+                [_, _, _, _, _],
+                [_, _, _, X, _],
+                [_, _, _, _, _],
+            ];
+            const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves.length).toBe(1);

@@ -1,5 +1,6 @@
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
+import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { Utils } from 'src/app/utils/utils';
 import { GoPiece } from './GoState';
@@ -37,9 +38,8 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         return allCoords.some((c: Coord) => c.equals(coord));
     }
     public addPawn(coord: Coord, color: GoPiece): void {
-        if (this.contains(coord)) {
-            throw new Error('This group already contains ' + coord);
-        }
+        assert(this.contains(coord) === false, 'This group already contains ' + coord.toString());
+
         switch (color) {
             case GoPiece.BLACK:
                 this.blackCoords = GroupDatas.insertAsEntryPoint(this.blackCoords, coord);

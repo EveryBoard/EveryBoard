@@ -72,7 +72,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                 GoPiece.pieceBelongTo(capturer, Player.ZERO) ? capturersInfo.blackCoords : capturersInfo.whiteCoords;
             if (capturersFreedoms.length === 1 &&
                 capturersFreedoms[0].equals(captured) &&
-                capturersGroup.length === 1) {
+                capturersGroup.length === 1)
+            {
                 return MGPOptional.of(captured);
             }
         }
