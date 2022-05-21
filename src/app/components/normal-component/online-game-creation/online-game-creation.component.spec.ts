@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LobbyComponent } from '../lobby/lobby.component';
@@ -22,7 +22,7 @@ describe('OnlineGameCreationComponent', () => {
         // Given a page that is loaded for a specific game by an online user that can create a game
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
-        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const partDAO: PartDAO = TestBed.inject(PartDAO);
         spyOn(partDAO, 'userHasActivePart').and.resolveTo(false);
 
@@ -38,7 +38,7 @@ describe('OnlineGameCreationComponent', () => {
         const router: Router = TestBed.inject(Router);
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         spyOn(router, 'navigate').and.callThrough();
-        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         spyOn(messageDisplayer, 'infoMessage').and.callThrough();
         const partDAO: PartDAO = TestBed.inject(PartDAO);
         spyOn(partDAO, 'userHasActivePart').and.resolveTo(true);

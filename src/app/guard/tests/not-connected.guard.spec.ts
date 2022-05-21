@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { Router } from '@angular/router';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { NotConnectedGuard } from '../not-connected.guard';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('NotConnectedGuard', () => {
     let guard: NotConnectedGuard;
 
-    let authService: AuthenticationService;
+    let authService: ConnectedUserService;
 
     let router: Router;
 
@@ -23,32 +23,32 @@ describe('NotConnectedGuard', () => {
                 ]),
             ],
             providers: [
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate');
-        authService = TestBed.inject(AuthenticationService);
+        authService = TestBed.inject(ConnectedUserService);
         guard = new NotConnectedGuard(authService, router);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();
     });
     it('should accept unconnected users', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         await expectAsync(guard.canActivate()).toBeResolvedTo(true);
     }));
     it('should move connected (but unverified) users to the main page', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(UserMocks.CONNECTED_UNVERIFIED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_UNVERIFIED);
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/'));
     }));
     it('should move verified user to the main page', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/'));
     }));
     it('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
         // Given a guard that has executed
-        AuthenticationServiceMock.setUser(UserMocks.CONNECTED);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await guard.canActivate();
         spyOn(guard['userSub'], 'unsubscribe');
 
