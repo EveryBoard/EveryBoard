@@ -59,7 +59,7 @@ class GameDescription {
 
     public static readonly LINES_OF_ACTION: Localized = () => $localize`Regroup your pieces to win. But your possible moves will often change!`;
 
-    public static readonly MARTIAN_CHESS: Localized = () => $localize`Win points by capturing pieces, but piece ownership is position related!`;
+    public static readonly MARTIAN_CHESS: Localized = () => $localize`Win points by capturing pieces, but you only control pieces on your side of the board!`;
 
     public static readonly P4: Localized = () => $localize`The classical 4 in a row game!`;
 

@@ -182,9 +182,9 @@
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
         <target>Regroupez vos pièces pour gagner. Mais les mouvements possibles changent constamment !</target>
       </trans-unit>
-      <trans-unit id="8563103165608607520" datatype="html">
-        <source>Win points by capturing pieces, but piece ownership is position related!</source>
-        <target>Gagnez des points en capturant des pièces, vous ne contrôlez que celles dans votre camps!</target>
+      <trans-unit id="8346622786152147853" datatype="html">
+        <source>Win points by capturing pieces, but you only control pieces on your side of the board!</source>
+        <target>Gagnez des points en capturant des pièces, mais en ne contrôlant que celles dans votre camp!</target>
       </trans-unit>
       <trans-unit id="287142221400627248" datatype="html">
         <source>The classical 4 in a row game!</source>
@@ -958,8 +958,8 @@
         <source>Drop</source>
         <target>Pose</target>
       </trans-unit>
-      <trans-unit id="5812794158768312814" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
+      <trans-unit id="3315005504406796815" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You're playing Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
         <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
@@ -2355,9 +2355,9 @@
         simultanément, alors la partie se termine par une égalité.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, forcez l&apos;égalité en un coup.</target>
       </trans-unit>
-      <trans-unit id="5149169656993878806" datatype="html">
-        <source>Drones must move two orthogonal steps.</source>
-        <target>Les drônes doivent se déplacer de deux cases horizontalement et/ou verticalement.</target>
+      <trans-unit id="4409865504289904426" datatype="html">
+        <source>Drones must move one or two steps in any direction.</source>
+        <target>Les drônes doivent se déplacer de un ou deux pas dans n'importe quelle direction.</target>
       </trans-unit>
       <trans-unit id="4174188766565583979" datatype="html">
         <source>You must pick a piece from your side of the board in order to move it.</source>
@@ -2371,25 +2371,25 @@
         <source>You cannot perform a move that is the reverse of the previous one.</source>
         <target>Vous ne pouvez pas faire un mouvement inverse au dernier coup.</target>
       </trans-unit>
-      <trans-unit id="8829851561226315844" datatype="html">
-        <source>The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.</source>
+      <trans-unit id="8222019911539798219" datatype="html">
+        <source>The goal of Martian Chess is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
         <target>Le but des Échecs Martiens est d'avoir le plus de points à la fin de la partie. Quand vous capturez une pièce, vous gagnez sa valeur. Le plateau est divisé en deux par une ligne rouge appellée "le canal". Il y a un côté pour chaque joueur, vous ne contrôlez que les pièces de votre côté du canal, la couleur des pièces n'est là que pour vous aider, les pièces changent de couleur en traversant le canal.</target>
       </trans-unit>
       <trans-unit id="8633649754808970040" datatype="html">
         <source>The pieces</source>
         <target>Les pièces</target>
       </trans-unit>
-      <trans-unit id="7789634278464863772" datatype="html">
-        <source>The dark pieces belong to the first player, the light ones to the second one. There is 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 points.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 points.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one point.&lt;/li&gt;&lt;/ul&gt;</source>
+      <trans-unit id="6163961304202440887" datatype="html">
+        <source>The dark pieces belong to the first player, the light ones to the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
         <target>Les pièces foncées appartiennent au premier joueur, les claires au second. Il y a trois types de pièces: &lt;ul&gt;&lt;li&gt;Les reines: représentées par des cercles avec 3 points.&lt;/li&gt;&lt;li&gt;Les drônes: représentés par des cercles avec 2 points.&lt;/li&gt;&lt;li&gt;Les pions: représentés par des cercles avec un point.&lt;/li&gt;&lt;/ul&gt;</target>
       </trans-unit>
       <trans-unit id="2033063585111632444" datatype="html">
         <source>Moving pawns</source>
         <target>Déplacer les pions</target>
       </trans-unit>
-      <trans-unit id="8936057054084924877" datatype="html">
-        <source>Pawns are worth one point. They can move one step in each diagonals.&lt;br/&gt;&lt;br/&gt;You play the first player (Dark), move a pawn.</source>
-        <target>Les pions valent un point. Ils peuvent se déplacer d'un pas sur l'une des diagonales.&lt;br/&gt;&lt;br/&gt;Vous jouez le premier joueur (Foncé), bougez un pion.</target>
+      <trans-unit id="4687071087997357225" datatype="html">
+        <source>Pawns are worth one point. They can move one step diagonally.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a pawn.</source>
+        <target>Les pions valent un point. Ils peuvent se déplacer d'un pas sur l'une des diagonales.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, bougez un pion.</target>
       </trans-unit>
       <trans-unit id="5961522758680599293" datatype="html">
         <source>This is not a pawn!</source>
@@ -2399,9 +2399,9 @@
         <source>Moving drones</source>
         <target>Déplacer les drônes</target>
       </trans-unit>
-      <trans-unit id="3814365450894484010" datatype="html">
-        <source>Drones are worth two points. They can move two orthogonals steps.&lt;br/&gt;&lt;br/&gt;You play Dark, move a drone.</source>
-        <target>Les drônes valent deux points. Ils peuvent se déplacer de deux pas orthogonaux.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez un drône.</target>
+      <trans-unit id="5696861628061349828" datatype="html">
+        <source>Drones are worth two points. They can move one or two steps in any of the 8 directions.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a drone.</source>
+        <target>Les drônes valent deux points. Ils peuvent se déplacer de un ou deux pas dans n'importe quelle direction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez un drône.</target>
       </trans-unit>
       <trans-unit id="412189766091253797" datatype="html">
         <source>This is not a drone!</source>
@@ -2411,33 +2411,29 @@
         <source>Moving queens</source>
         <target>Déplacer les reines</target>
       </trans-unit>
-      <trans-unit id="4882360936897284697" datatype="html">
-        <source>Queens are worth three points. They can move any number of step in one of the 8 directions, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You play Dark, move a queen.</source>
+      <trans-unit id="8545836576372384330" datatype="html">
+        <source>Queens are worth three points. They can move any number of step in any direction, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
         <target>Les reines valent trois points. </target>
       </trans-unit>
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>
         <target>Ceci n'est pas une reine !</target>
       </trans-unit>
-      <trans-unit id="7709812641272083812" datatype="html">
-        <source>When your piece cross the canal and land on another piece, you capture it and win the captured piece&apos;s value, yet, you loose control of your piece!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
-        <target>Quand votre pièce traverse le canal et atteris sur une autre pièce, vous la capturez et gagnez la valeur de la pièce, yet, cependant vous en perdez le contrôle !&lt;br/&gt;&lt;br/&gt;Une capture est possible pour Foncé, faites-en une.</target>
+      <trans-unit id="486876720495966186" datatype="html">
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crossed the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
+        <target>Quand une pièce traverse le canal et atteris sur une autre pièce, vous la capturez et gagnez la valeur de la pièce, cependant vous en perdez le contrôle car elle a traversé le canal !&lt;br/&gt;&lt;br/&gt;Une capture est possible pour Foncé, faites-en une.</target>
       </trans-unit>
       <trans-unit id="6741042150149637612" datatype="html">
         <source>Congratulations! By capturing that pawn, you won one point.</source>
         <target>Bravo ! En capturant ce pion, vous gagnez un point.</target>
       </trans-unit>
-      <trans-unit id="7745152781577869202" datatype="html">
-        <source>This move was not a capture.</source>
-        <target>Ce mouvement n'était pas une capture.</target>
-      </trans-unit>
       <trans-unit id="7827243981380355367" datatype="html">
         <source>Field Promotion (1/2)</source>
         <target>Promotion (1/2)</target>
       </trans-unit>
-      <trans-unit id="8793884153151063826" datatype="html">
-        <source>You have the option to do something called the field promotion: when you don&apos;t have a piece, you can merge two pieces, to get a piece who&apos;se value equals the addition of the two merged pieces values. First example, if you have no drones, you can merge two pawns into one drone.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
-        <target>Vous avez l'option de faire ce qu'on appelle une promotion: quand vous n'avez pas un type de pièce, vous pouvez fusionner deux pièces pour obtenir une pièce dont la valeur est l'addition des valeurs des deux pièces fusionnées. Premier exemple, si vous n'avez pas de drône, vous pouvez fusionner deux pions en un drône.&lt;br/&gt;&lt;br/&gt;Un tel coup est possible pour Foncé, faites-le.</target>
+      <trans-unit id="8675845222727327919" datatype="html">
+        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
+        <target>Il est parfois possible de faire ce qu'on appelle une promotion. Quand vous n'avez pas un type de pièce, vous pouvez fusionner deux pièces pour additionner leur valeur et obtenir une nouvelle pièce. Premier exemple, si vous n'avez pas de drône, vous pouvez fusionner deux de vos pions en un drône. Pour ce faire, déplacez un de vos pions sur un autre.&lt;br/&gt;&lt;br/&gt;Un tel coup est possible pour Foncé, faites-le.</target>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
@@ -2447,17 +2443,17 @@
         <source>Field Promotion (2/2)</source>
         <target>Promotion (2/2)</target>
       </trans-unit>
-      <trans-unit id="4978345032080562427" datatype="html">
-        <source>The other kind of field promotion is merging a drone and a pawn, to have a queen.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
+      <trans-unit id="1012300757521682008" datatype="html">
+        <source>The other kind of field promotion is to merge a drone and a pawn to obtain a queen.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
         <target>L'autre sorte de promotion est de fusionner un drône et un pion, pour obtenir une reine.&lt;br/&gt;&lt;br/&gt;Un tel mouvement est possible pour Clair. Faites-le.</target>
       </trans-unit>
       <trans-unit id="304909585169663876" datatype="html">
         <source>Call the clock</source>
         <target>Lancer le compte à rebour</target>
       </trans-unit>
-      <trans-unit id="7507826666050566628" datatype="html">
-        <source>When the part seem to be going nowhere, during their turn, you can &quot;call the clock&quot;, by clicking on the clock symbol on the right, then do your move. Once done, only seven more turn will be played.&lt;br/&gt;&lt;br/&gt;Call the clock.</source>
-        <target>Quand la partie ne semble aller nulle part, durant votre tour, vous pouvez lancer le compte à rebour, en clickant sur l'horloge à droite, puis faire votre mouvement. Une fois votre mouvement fait, seul 7 autres pourront être fait.&lt;br/&gt;&lt;br/&gt;Lancez le compte à rebour.</target>
+      <trans-unit id="8898741439943904413" datatype="html">
+        <source>When the game seems to be going nowhere, you can &quot;call the clock&quot; during your turn. To do so, click on the clock symbol on the right, then perform your move. Once the clock is called, seven more turn will be played.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Call the clock and perform a move.</source>
+        <target>Quand la partie ne semble aller nulle part, vous pouvez lancer le compte à rebour, en cliquant sur l'horloge à droite, puis faire votre mouvement. Une fois votre mouvement fait, seul 7 autres pourront être fait.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, lancez le compte à rebour.</target>
       </trans-unit>
       <trans-unit id="6784225180868580907" datatype="html">
         <source>You did not call the clock!</source>
@@ -2479,8 +2475,8 @@
         <source>End game (by clock)</source>
         <target>Fin au temps</target>
       </trans-unit>
-      <trans-unit id="8072396591341214517" datatype="html">
-        <source>When seven turn pass after the clock is called, the player that has the more points win. If none has more points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
+      <trans-unit id="8197598020273984721" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
         <target>Quand 7 tours passent après que le compte à rebour ai démarré, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le dernier mouvement.</target>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">

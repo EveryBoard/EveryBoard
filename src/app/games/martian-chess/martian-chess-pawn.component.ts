@@ -17,8 +17,6 @@ export class MartianChessPawnComponent {
     private static readonly TRIANGLE_Y_OFFSET: number = MartianChessPawnComponent.yOffsetForVerticalCentering();
     public static TRIANGLE: string = MartianChessPawnComponent.getTriangle();
 
-    public concreteTriangleYOffset: number = 0;
-
     public MartianChessComponent: typeof MartianChessComponent = MartianChessComponent;
     public MartianChessPawnComponent: typeof MartianChessPawnComponent = MartianChessPawnComponent;
 

@@ -59,8 +59,8 @@
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
       </trans-unit>
-      <trans-unit id="8563103165608607520" datatype="html">
-        <source>Win points by capturing pieces, but piece ownership is position related!</source>
+      <trans-unit id="8346622786152147853" datatype="html">
+        <source>Win points by capturing pieces, but you only control pieces on your side of the board!</source>
       </trans-unit>
       <trans-unit id="287142221400627248" datatype="html">
         <source>The classical 4 in a row game!</source>
@@ -194,6 +194,9 @@
       <trans-unit id="5395533573244657143" datatype="html">
         <source>This step is not expecting any move from your part.</source>
       </trans-unit>
+      <trans-unit id="5608779123109622436" datatype="html">
+        <source>Failed, you did not capture any piece.</source>
+      </trans-unit>
       <trans-unit id="6050846802280051862" datatype="html">
         <source>You cannot move more than 3 of your pieces!</source>
       </trans-unit>
@@ -268,8 +271,8 @@
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
       </trans-unit>
-      <trans-unit id="5812794158768312814" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
+      <trans-unit id="3315005504406796815" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You&apos;re playing Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
@@ -1222,8 +1225,8 @@
       <trans-unit id="7020322239499292850" datatype="html">
         <source>Pawns must move one step diagonally.</source>
       </trans-unit>
-      <trans-unit id="5149169656993878806" datatype="html">
-        <source>Drones must move two orthogonal steps.</source>
+      <trans-unit id="4409865504289904426" datatype="html">
+        <source>Drones must move one or two steps in any direction.</source>
       </trans-unit>
       <trans-unit id="4174188766565583979" datatype="html">
         <source>You must pick a piece from your side of the board in order to move it.</source>
@@ -1237,20 +1240,20 @@
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
       </trans-unit>
-      <trans-unit id="8829851561226315844" datatype="html">
-        <source>The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.</source>
+      <trans-unit id="8222019911539798219" datatype="html">
+        <source>The goal of Martian Chess is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
       </trans-unit>
       <trans-unit id="8633649754808970040" datatype="html">
         <source>The pieces</source>
       </trans-unit>
-      <trans-unit id="7789634278464863772" datatype="html">
-        <source>The dark pieces belong to the first player, the light ones to the second one. There is 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 points.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 points.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one point.&lt;/li&gt;&lt;/ul&gt;</source>
+      <trans-unit id="6163961304202440887" datatype="html">
+        <source>The dark pieces belong to the first player, the light ones to the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
       </trans-unit>
       <trans-unit id="2033063585111632444" datatype="html">
         <source>Moving pawns</source>
       </trans-unit>
-      <trans-unit id="8936057054084924877" datatype="html">
-        <source>Pawns are worth one point. They can move one step in each diagonals.&lt;br/&gt;&lt;br/&gt;You play the first player (Dark), move a pawn.</source>
+      <trans-unit id="4687071087997357225" datatype="html">
+        <source>Pawns are worth one point. They can move one step diagonally.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a pawn.</source>
       </trans-unit>
       <trans-unit id="5961522758680599293" datatype="html">
         <source>This is not a pawn!</source>
@@ -1258,8 +1261,8 @@
       <trans-unit id="6187825194726438285" datatype="html">
         <source>Moving drones</source>
       </trans-unit>
-      <trans-unit id="3814365450894484010" datatype="html">
-        <source>Drones are worth two points. They can move two orthogonals steps.&lt;br/&gt;&lt;br/&gt;You play Dark, move a drone.</source>
+      <trans-unit id="5696861628061349828" datatype="html">
+        <source>Drones are worth two points. They can move one or two steps in any of the 8 directions.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a drone.</source>
       </trans-unit>
       <trans-unit id="412189766091253797" datatype="html">
         <source>This is not a drone!</source>
@@ -1267,38 +1270,35 @@
       <trans-unit id="731242877035493751" datatype="html">
         <source>Moving queens</source>
       </trans-unit>
-      <trans-unit id="4882360936897284697" datatype="html">
-        <source>Queens are worth three points. They can move any number of step in one of the 8 directions, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You play Dark, move a queen.</source>
+      <trans-unit id="8545836576372384330" datatype="html">
+        <source>Queens are worth three points. They can move any number of step in any direction, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
       </trans-unit>
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>
       </trans-unit>
-      <trans-unit id="7709812641272083812" datatype="html">
-        <source>When your piece cross the canal and land on another piece, you capture it and win the captured piece&apos;s value, yet, you loose control of your piece!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
+      <trans-unit id="486876720495966186" datatype="html">
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crossed the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
       </trans-unit>
       <trans-unit id="6741042150149637612" datatype="html">
         <source>Congratulations! By capturing that pawn, you won one point.</source>
       </trans-unit>
-      <trans-unit id="7745152781577869202" datatype="html">
-        <source>This move was not a capture.</source>
-      </trans-unit>
       <trans-unit id="7827243981380355367" datatype="html">
         <source>Field Promotion (1/2)</source>
       </trans-unit>
-      <trans-unit id="8793884153151063826" datatype="html">
-        <source>You have the option to do something called the field promotion: when you don&apos;t have a piece, you can merge two pieces, to get a piece who&apos;se value equals the addition of the two merged pieces values. First example, if you have no drones, you can merge two pawns into one drone.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
+      <trans-unit id="8675845222727327919" datatype="html">
+        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
       </trans-unit>
       <trans-unit id="5120415661423244234" datatype="html">
         <source>Field Promotion (2/2)</source>
       </trans-unit>
-      <trans-unit id="4978345032080562427" datatype="html">
-        <source>The other kind of field promotion is merging a drone and a pawn, to have a queen.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
+      <trans-unit id="1012300757521682008" datatype="html">
+        <source>The other kind of field promotion is to merge a drone and a pawn to obtain a queen.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
       </trans-unit>
       <trans-unit id="304909585169663876" datatype="html">
         <source>Call the clock</source>
       </trans-unit>
-      <trans-unit id="7507826666050566628" datatype="html">
-        <source>When the part seem to be going nowhere, during their turn, you can &quot;call the clock&quot;, by clicking on the clock symbol on the right, then do your move. Once done, only seven more turn will be played.&lt;br/&gt;&lt;br/&gt;Call the clock.</source>
+      <trans-unit id="8898741439943904413" datatype="html">
+        <source>When the game seems to be going nowhere, you can &quot;call the clock&quot; during your turn. To do so, click on the clock symbol on the right, then perform your move. Once the clock is called, seven more turn will be played.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Call the clock and perform a move.</source>
       </trans-unit>
       <trans-unit id="6784225180868580907" datatype="html">
         <source>You did not call the clock!</source>
@@ -1315,8 +1315,8 @@
       <trans-unit id="4805475752093007535" datatype="html">
         <source>End game (by clock)</source>
       </trans-unit>
-      <trans-unit id="8072396591341214517" datatype="html">
-        <source>When seven turn pass after the clock is called, the player that has the more points win. If none has more points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
+      <trans-unit id="8197598020273984721" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">
         <source>End by emptyness</source>
@@ -1474,9 +1474,6 @@
       </trans-unit>
       <trans-unit id="8313533670567464817" datatype="html">
         <source>Failed, you only captured one piece.</source>
-      </trans-unit>
-      <trans-unit id="5608779123109622436" datatype="html">
-        <source>Failed, you did not capture any piece.</source>
       </trans-unit>
       <trans-unit id="3455768301736755830" datatype="html">
         <source>Congratulations, you have saved up two pieces.</source>

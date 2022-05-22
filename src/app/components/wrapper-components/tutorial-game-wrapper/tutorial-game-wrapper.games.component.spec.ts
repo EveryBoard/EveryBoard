@@ -72,6 +72,7 @@ import { MartianChessTutorial, NOT_A_FIELD_PROMOTION } from 'src/app/games/marti
 import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
 import { MartianChessState } from 'src/app/games/martian-chess/MartianChessState';
 import { MartianChessMove } from 'src/app/games/martian-chess/MartianChessMove';
+import { TutorialStepFailure } from './TutorialStepFailure';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -204,7 +205,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     new PylosRules(PylosState),
                     pylosTutorial[4],
                     PylosMove.fromDrop(new PylosCoord(3, 3, 0), []),
-                    MGPValidation.failure(`Failed, you did not capture any piece.`),
+                    MGPValidation.failure(TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
                 ], [
                     new PylosRules(PylosState),
                     pylosTutorial[4],

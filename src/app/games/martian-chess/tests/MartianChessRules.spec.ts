@@ -15,7 +15,7 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules, MartianChe
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
-describe('MartianChessRules', () => {
+fdescribe('MartianChessRules', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -140,27 +140,6 @@ describe('MartianChessRules', () => {
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('should be illegal to jump over another piece with a drone (perpendicular move)', () => {
-        // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, A, _],
-            [_, _, B, A],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 1);
-
-        // When moving a queen over another piece
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(3, 6)).get();
-
-        // Then the move should be illegal
-        const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
-    });
     it('should be illegal to land on your own pieces', () => {
         // Given any board
         const board: Table<MartianChessPiece> = [
@@ -233,6 +212,68 @@ describe('MartianChessRules', () => {
             [_, B, C, C],
         ];
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('should be legal to move a drone of one diagonal step', () => {
+        // Given any board
+        const board: Table<MartianChessPiece> = [
+            [_, A, B, C],
+            [_, A, B, C],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, A, _],
+            [_, _, B, A],
+        ];
+        const state: MartianChessState = new MartianChessState(board, 1);
+
+        // When moving a queen over another piece
+        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(3, 6)).get();
+
+        // Then the move should be legal
+        const expectedBoard: Table<MartianChessPiece> = [
+            [_, A, B, C],
+            [_, A, B, C],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, A, B],
+            [_, _, _, A],
+        ];
+        const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('should be legal to move a drone of two diagonals step', () => {
+        // Given any board
+        const board: Table<MartianChessPiece> = [
+            [_, A, B, C],
+            [_, A, B, C],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, A, _],
+            [_, _, B, A],
+        ];
+        const state: MartianChessState = new MartianChessState(board, 1);
+
+        // When moving a queen over another piece
+        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(0, 5)).get();
+
+        // Then the move should be legal
+        const expectedBoard: Table<MartianChessPiece> = [
+            [_, A, B, C],
+            [_, A, B, C],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [B, _, _, _],
+            [_, _, A, _],
+            [_, _, _, A],
+        ];
+        const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should be legal to move a queen as far as you want linearly', () => {

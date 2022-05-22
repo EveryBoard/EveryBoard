@@ -212,8 +212,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
             const moveString: string = move.toString();
-            const message: string = 'The minimax "' + minimax.name + '" has proposed an illegal move (' + moveString + '), this should not happen.';
-            assert(legality.isSuccess(), message);
+            assert(legality.isSuccess(), 'The minimax "' + minimax.name + '" has proposed an illegal move (' + moveString + '), this should not happen.');
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, legality.get());
             child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));
             this.childs.get().push(child.get());

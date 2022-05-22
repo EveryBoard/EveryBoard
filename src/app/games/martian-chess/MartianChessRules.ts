@@ -137,15 +137,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
                 return MGPFallible.failure(MartianChessMoveFailure.PAWN_MUST_MOVE_ONE_DIAGONAL_STEP());
             }
         } else if (movedPiece === MartianChessPiece.DRONE) {
-            if (move.isValidForDrone()) {
-                const direction: Direction = move.coord.getDirectionToward(move.end).get();
-                if (direction.isDiagonal()) {
-                    const isDiagonalLegalForDrone: boolean = this.isDiagonalLegalForDrone(state, direction, move.coord);
-                    if (isDiagonalLegalForDrone === false) {
-                        return MGPFallible.failure(RulesFailure.SOMETHING_IN_THE_WAY());
-                    }
-                }
-            } else {
+            if (move.isValidForDrone() === false) {
                 return MGPFallible.failure(MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS());
             }
         }

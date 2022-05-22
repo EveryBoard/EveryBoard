@@ -5,6 +5,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
 const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -18,17 +19,17 @@ export class MartianChessTutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal of Martian Chess is to have the more points at the end of the game. When you capture a piece, you win its value. The board is divided in two by a line called the canal. There is one side for each player. You have no ownership over pieces, you only control the ones on your side of the canal, the color of the piece is just there to help you, they will change color when crossing the canal.`,
+            $localize`The goal of Martian Chess is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.`,
             MartianChessState.getInitialState(),
         ),
         TutorialStep.informational(
             $localize`The pieces`,
-            $localize`The dark pieces belong to the first player, the light ones to the second one. There is 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 points.</li><li>The Drones: represented as circles with 2 points.</li><li>The Pawns: represented as circles with one point.</li></ul>`,
+            $localize`The dark pieces belong to the first player, the light ones to the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots.</li><li>The Drones: represented as circles with 2 dots.</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
             MartianChessState.getInitialState(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving pawns`,
-            $localize`Pawns are worth one point. They can move one step in each diagonals.<br/><br/>You play the first player (Dark), move a pawn.`,
+            $localize`Pawns are worth one point. They can move one step diagonally.<br/><br/>You're playing Dark, move a pawn.`,
             MartianChessState.getInitialState(),
             MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get(),
             (move: MartianChessMove, state: MartianChessState) => {
@@ -42,7 +43,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Moving drones`,
-            $localize`Drones are worth two points. They can move two orthogonals steps.<br/><br/>You play Dark, move a drone.`,
+            $localize`Drones are worth two points. They can move one or two steps in any of the 8 directions.<br/><br/>You're playing Dark, move a drone.`,
             MartianChessState.getInitialState(),
             MartianChessMove.from(new Coord(0, 2), new Coord(0, 4)).get(),
             (move: MartianChessMove, state: MartianChessState) => {
@@ -56,7 +57,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Moving queens`,
-            $localize`Queens are worth three points. They can move any number of step in one of the 8 directions, without jumping over other pieces.<br/><br/>You play Dark, move a queen.`,
+            $localize`Queens are worth three points. They can move any number of step in any direction, without jumping over other pieces.<br/><br/>You're playing Dark, move a queen.`,
             new MartianChessState([
                 [B, A, A, _],
                 [C, _, _, _],
@@ -79,7 +80,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capture`,
-            $localize`When your piece cross the canal and land on another piece, you capture it and win the captured piece's value, yet, you loose control of your piece!<br/><br/>A capture is possible for Dark, do it.`,
+            $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crossed the canal!<br/><br/>A capture is possible for Dark, do it.`,
             new MartianChessState([
                 [B, A, A, _],
                 [_, _, _, _],
@@ -92,11 +93,11 @@ export class MartianChessTutorial {
             ], 0),
             [MartianChessMove.from(new Coord(0, 2), new Coord(2, 4)).get()],
             $localize`Congratulations! By capturing that pawn, you won one point.`,
-            $localize`This move was not a capture.`,
+            TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE(),
         ),
         TutorialStep.fromMove(
             $localize`Field Promotion (1/2)`,
-            $localize`You have the option to do something called the field promotion: when you don't have a piece, you can merge two pieces, to get a piece who'se value equals the addition of the two merged pieces values. First example, if you have no drones, you can merge two pawns into one drone.<br/><br/>Such a move is possible for Dark. Do it.`,
+            $localize`It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.<br/><br/>Such a move is possible for Dark. Do it.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],
@@ -116,7 +117,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Field Promotion (2/2)`,
-            $localize`The other kind of field promotion is merging a drone and a pawn, to have a queen.<br/><br/>Such a move is possible for Light. Do it.`,
+            $localize`The other kind of field promotion is to merge a drone and a pawn to obtain a queen.<br/><br/>Such a move is possible for Light. Do it.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],
@@ -140,7 +141,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Call the clock`,
-            $localize`When the part seem to be going nowhere, during their turn, you can "call the clock", by clicking on the clock symbol on the right, then do your move. Once done, only seven more turn will be played.<br/><br/>Call the clock.`,
+            $localize`When the game seems to be going nowhere, you can "call the clock" during your turn. To do so, click on the clock symbol on the right, then perform your move. Once the clock is called, seven more turn will be played.<br/><br/>You're playing Dark. Call the clock and perform a move.`,
             MartianChessState.getInitialState(),
             MartianChessMove.from(new Coord(2, 2), new Coord(3, 3), true).get(),
             (move: MartianChessMove, _: MartianChessState) => {
@@ -171,7 +172,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.anyMove(
             $localize`End game (by clock)`,
-            $localize`When seven turn pass after the clock is called, the player that has the more points win. If none has more points, it is a tie.<br/><br/>You are playing Dark, do the last move.`,
+            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You are playing Dark, do the last move.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],

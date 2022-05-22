@@ -11,7 +11,7 @@ import { MartianChessRulesFailure } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
-describe('MartianChessComponent', () => {
+fdescribe('MartianChessComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<MartianChessComponent>;
 

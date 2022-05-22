@@ -14,7 +14,7 @@ export class MartianChessMoveFailure {
 
     public static readonly PAWN_MUST_MOVE_ONE_DIAGONAL_STEP: () => string = () => $localize`Pawns must move one step diagonally.`;
 
-    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS: () => string = () => $localize`Drones must move two orthogonal steps.`;
+    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS: () => string = () => $localize`Drones must move one or two steps in any direction.`;
 }
 
 export class MartianChessMove extends MoveCoordToCoord {
@@ -60,8 +60,8 @@ export class MartianChessMove extends MoveCoordToCoord {
         return (dx === 1) && (dy === 1);
     }
     public isValidForDrone(): boolean {
-        const distance: number = this.coord.getOrthogonalDistance(this.end);
-        return distance === 2;
+        const distance: number = this.coord.getDistance(this.end);
+        return distance <= 2;
     }
     public isUndoneBy(moveOpt: MGPOptional<MartianChessMove>): boolean {
         if (moveOpt.isAbsent()) {

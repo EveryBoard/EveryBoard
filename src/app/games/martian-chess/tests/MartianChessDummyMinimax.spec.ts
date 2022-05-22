@@ -11,7 +11,7 @@ import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
-describe('MartianChessDummyMinimax', () => {
+fdescribe('MartianChessDummyMinimax', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -31,7 +31,7 @@ describe('MartianChessDummyMinimax', () => {
         rules = new MartianChessRules(MartianChessState);
         minimax = new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax');
     });
-    it('should includes all moves at first turn', () => {
+    fit('should includes all moves at first turn', () => {
         // Given the initial state
         const state: MartianChessState = MartianChessState.getInitialState();
         const node: MartianChessNode = new MartianChessNode(state);
@@ -39,23 +39,23 @@ describe('MartianChessDummyMinimax', () => {
         // When asking the list of moves
         const moves: MartianChessMove[] = minimax.getListMoves(node);
 
-        // Then half the move would includes call the clock
+        // Then half the move should includes call the clock
         const clockCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock);
         const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock);
-        expect(clockCalled.length).toBe(10);
-        expect(notCalled.length).toBe(10);
+        expect(clockCalled.length).toBe(13);
+        expect(notCalled.length).toBe(13);
 
-        // each of thoses half would contain 7 pawn moves
+        // and each of thoses half should contain 7 pawn moves
         const pawnAndClock: MartianChessMove[] = clockCalled.filter((m: MartianChessMove) => isPawnMove(m, state));
         const pawnWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isPawnMove(m, state));
         expect(pawnAndClock.length).toBe(7);
         expect(pawnWithoutClock.length).toBe(7);
 
-        // each of thoses half would contain 3 drone move
+        // and each of thoses half should contain 6 drone move
         const droneAndClock: MartianChessMove[] = clockCalled.filter((m: MartianChessMove) => isDroneMove(m, state));
         const droneWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isDroneMove(m, state));
-        expect(droneAndClock.length).toBe(3);
-        expect(droneWithoutClock.length).toBe(3);
+        expect(droneAndClock.length).toBe(6);
+        expect(droneWithoutClock.length).toBe(6);
     });
     it('should include drone promotions and capture', () => {
         // Given a state with pawn on the edge and another
@@ -75,7 +75,7 @@ describe('MartianChessDummyMinimax', () => {
         // When asking the list of moves
         const moves: MartianChessMove[] = minimax.getListMoves(node);
 
-        // Then the 14 moves should be included (times two for the called clock)
+        // Then 6 moves should be included (times two for the called clock)
         const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock);
         const pawnWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isPawnMove(m, state));
         expect(pawnWithoutClock.length).toBe(6);
@@ -99,10 +99,12 @@ describe('MartianChessDummyMinimax', () => {
         // When asking the list of moves
         const moves: MartianChessMove[] = minimax.getListMoves(node);
 
-        // Then the 9 moves should be included, 2 for the pawn and 7 for the drone
+        // Then the 15 moves should be included, 2 for the pawn and 13 for the drone
         const pawn: MartianChessMove[] = moves.filter((m: MartianChessMove) => isPawnMove(m, state));
         expect(pawn.length).toBe(2);
-        expect(moves.length).toBe(9);
+        const drone: MartianChessMove[] = moves.filter((m: MartianChessMove) => isDroneMove(m, state));
+        expect(drone.length).toBe(13);
+        expect(moves.length).toBe(15);
     });
     it('should exclude illegal "move cancellation"', () => {
         // Given a state in which last move could be cancelled
