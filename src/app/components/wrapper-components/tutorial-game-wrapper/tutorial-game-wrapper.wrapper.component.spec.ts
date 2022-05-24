@@ -822,7 +822,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('When unwanted click, and no move done, show restart button with possibility of seeing solution', fakeAsync(async() => {
+        it('show restart button (with possibility of seeing solution) when unwanted click with no move done', fakeAsync(async() => {
             // Given a TutorialStep with possible invalid clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -1111,17 +1111,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[5],
-                    new LodestoneMove(new Coord(0, 0), 'push', false),
+                    new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
                     MGPValidation.failure(`You have not captured any of the opponent's pieces, try again!`),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[6],
-                    new LodestoneMove(new Coord(0, 0), 'push', false),
+                    new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
                     MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble!`),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[7],
-                    new LodestoneMove(new Coord(0, 1), 'push', false),
+                    new LodestoneMove(new Coord(0, 1), 'push', 'orthogonal'),
                     MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble a second time!`),
                 ], [
                     new PentagoRules(PentagoState),

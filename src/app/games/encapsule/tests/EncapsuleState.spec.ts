@@ -107,7 +107,7 @@ describe('EncapsuleCase', () => {
         });
     });
     describe('put', () => {
-        it('should forbid putting a none piece', () => {
+        it('should forbid putting an empty piece', () => {
             const c: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(() => c.put(EncapsulePiece.EMPTY)).toThrow();
         });

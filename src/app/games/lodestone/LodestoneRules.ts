@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
-import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone } from './LodestonePiece';
+import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone } from './LodestonePiece';
 import { LodestoneState, LodestoneLodestonesPositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
 
 export class LodestoneNode extends MGPNode<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos> { }
@@ -21,9 +21,10 @@ export type LodestoneInfos = {
     moved: Coord[]
 }
 
+type LodestonePressurePlatePositionInformation = Record<LodestonePressurePlatePosition, [Coord, Coord, Direction]>;
+
 export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, LodestoneInfos> {
-    public static readonly PRESSURE_PLATES_POSITIONS
-    : Record<LodestonePressurePlatePosition, [Coord, Coord, Direction]> = {
+    public static readonly PRESSURE_PLATES_POSITIONS: LodestonePressurePlatePositionInformation = {
         top: [new Coord(0, 0), new Coord(0, 1), Direction.RIGHT],
         bottom: [new Coord(0, LodestoneState.SIZE-1), new Coord(0, LodestoneState.SIZE-2), Direction.RIGHT],
         left: [new Coord(0, 0), new Coord(1, 0), Direction.DOWN],
@@ -45,8 +46,8 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(infos.board);
-        const lodestones: LodestoneLodestonesPositions = [state.lodestones[0], state.lodestones[1]];
-        lodestones[currentPlayer.value] = MGPOptional.of(move.coord);
+        const lodestones: LodestoneLodestonesPositions = state.lodestones.getCopy();
+        lodestones.replace(currentPlayer, MGPOptional.of(move.coord));
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         this.updatePressurePlates(board, pressurePlates, lodestones, opponent, move.captures);
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
@@ -99,9 +100,9 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         for (let coord: Coord = start; // eslint-disable-next-line indent
              coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE); // eslint-disable-next-line indent
              coord = coord.getNext(direction)) {
-            for (let player: number = 0; player < 2; player++) {
-                if (lodestones[player].equalsValue(coord)) {
-                    lodestones[player] = MGPOptional.empty();
+            for (const player of [Player.ZERO, Player.ONE]) {
+                if (lodestones.get(player).get().equalsValue(coord)) {
+                    lodestones.replace(player, MGPOptional.empty());
                 }
             }
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
@@ -133,15 +134,16 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     public applyMoveWithoutPlacingCaptures(state: LodestoneState,
                                            coord: Coord,
                                            direction: LodestoneDirection,
-                                           diagonal: boolean,
-    ): LodestoneInfos {
+                                           diagonal: LodestoneOrientation,
+    ): LodestoneInfos
+    {
         let result: LodestoneInfos;
         if (direction === 'pull') {
             result = this.applyPull(state, coord, diagonal);
         } else {
             result = this.applyPush(state, coord, diagonal);
         }
-        const previousLodestonePosition: MGPOptional<Coord> = state.lodestones[state.getCurrentPlayer().value];
+        const previousLodestonePosition: MGPOptional<Coord> = state.lodestones.get(state.getCurrentPlayer()).get();
         if (previousLodestonePosition.isPresent()) {
             const previousCoord: Coord = previousLodestonePosition.get();
             result.board[previousCoord.y][previousCoord.x] = LodestonePieceNone.EMPTY;
@@ -150,13 +152,13 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         result.moved.push(coord);
         return result;
     }
-    private applyPull(state: LodestoneState, lodestone: Coord, diagonal: boolean): LodestoneInfos {
+    private applyPull(state: LodestoneState, lodestone: Coord, diagonal: LodestoneOrientation): LodestoneInfos {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const captures: Coord[] = [];
         const moved: Coord[] = [];
-        const directions: readonly Direction[] = diagonal ? Direction.DIAGONALS : Direction.ORTHOGONALS;
+        const directions: readonly Direction[] = diagonal === 'diagonal' ? Direction.DIAGONALS : Direction.ORTHOGONALS;
         for (const direction of directions) {
             for (let coord: Coord = lodestone.getNext(direction); // eslint-disable-next-line indent
                  state.isOnBoard(coord); // eslint-disable-next-line indent
@@ -187,13 +189,13 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return { board, captures, moved };
     }
-    private applyPush(state: LodestoneState, lodestone: Coord, diagonal: boolean): LodestoneInfos {
+    private applyPush(state: LodestoneState, lodestone: Coord, diagonal: LodestoneOrientation): LodestoneInfos {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const captures: Coord[] = [];
         const moved: Coord[] = [];
-        const directions: readonly Direction[] = diagonal ? Direction.DIAGONALS : Direction.ORTHOGONALS;
+        const directions: readonly Direction[] = diagonal === 'diagonal' ? Direction.DIAGONALS : Direction.ORTHOGONALS;
         for (const direction of directions) {
             const start: Coord = lodestone.getNext(direction, LodestoneState.SIZE);
             for (let coord: Coord = start; // eslint-disable-next-line indent

@@ -98,7 +98,7 @@ export class EncapsuleCase {
     public tryToSuperposePiece(piece: EncapsulePiece): MGPOptional<EncapsuleCase> {
         const biggestPresent: Size = this.getBiggest().getSize();
         if (piece === EncapsulePiece.EMPTY) {
-            throw new Error('Cannot move NONE on a space');
+            throw new Error('Cannot move EMPTY on a space');
         }
         if (piece.getSize() > biggestPresent) {
             return MGPOptional.of(this.put(piece));
@@ -127,7 +127,7 @@ export class EncapsuleCase {
         return { removedCase, removedPiece };
     }
     public put(piece: EncapsulePiece): EncapsuleCase {
-        if (piece === EncapsulePiece.EMPTY) throw new Error('Cannot put NONE on space');
+        if (piece === EncapsulePiece.EMPTY) throw new Error('Cannot put EMPTY on space');
         const piecePlayer: PlayerOrNone = piece.getPlayer();
         const size: Size = piece.getSize();
         switch (size) {

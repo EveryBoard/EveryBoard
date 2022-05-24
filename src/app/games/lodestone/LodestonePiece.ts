@@ -1,6 +1,7 @@
 import { Player } from 'src/app/jscaip/Player';
 
 export type LodestoneDirection = 'push' | 'pull'
+export type LodestoneOrientation = 'orthogonal' | 'diagonal'
 
 export class LodestonePieceNone {
     public static UNREACHABLE: LodestonePieceNone = new LodestonePieceNone(true);
@@ -61,32 +62,34 @@ export class LodestonePieceLodestone {
     public static LODESTONES: LodestoneStaticMapping = {
         0: {
             'push': {
-                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'push', true),
-                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'push', false),
+                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'push', 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'push', 'orthogonal'),
             },
             'pull': {
-                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'pull', true),
-                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'pull', false),
+                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'pull', 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'pull', 'orthogonal'),
             },
         },
         1: {
             'push': {
-                'diagonal': new LodestonePieceLodestone(Player.ONE, 'push', true),
-                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'push', false),
+                'diagonal': new LodestonePieceLodestone(Player.ONE, 'push', 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'push', 'orthogonal'),
             },
             'pull': {
-                'diagonal': new LodestonePieceLodestone(Player.ONE, 'pull', true),
-                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'pull', false),
+                'diagonal': new LodestonePieceLodestone(Player.ONE, 'pull', 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'pull', 'orthogonal'),
             },
         },
     };
 
     private constructor(public readonly owner: Player,
                         public readonly direction: LodestoneDirection,
-                        public readonly diagonal: boolean) {
+                        public readonly orientation: LodestoneOrientation) {
     }
-    public static of(player: Player, direction: LodestoneDirection, diagonal: boolean): LodestonePieceLodestone {
-        return LodestonePieceLodestone.LODESTONES[player.value][direction][diagonal ? 'diagonal' : 'orthogonal'];
+    public static of(player: Player, direction: LodestoneDirection, orientation: LodestoneOrientation)
+    : LodestonePieceLodestone
+    {
+        return LodestonePieceLodestone.LODESTONES[player.value][direction][orientation];
     }
     public isLodestone(): this is LodestonePieceLodestone {
         return true;

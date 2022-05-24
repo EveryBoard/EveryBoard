@@ -2,6 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneDummyMinimax } from '../LodestoneDummyMinimax';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
@@ -34,8 +35,8 @@ describe('LodestoneDummyMinimax', () => {
     });
     it('should propose 8 moves on a specific minimal board', () => {
         // Given a state with 4 empty spaces and no remaining pressure plate
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', true);
-        const Y: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, 'push', true);
+        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'diagonal');
+        const Y: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, 'push', 'diagonal');
         const board: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
@@ -46,8 +47,10 @@ describe('LodestoneDummyMinimax', () => {
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
         ];
-        const lodestones: LodestoneLodestonesPositions =
-            [MGPOptional.of(new Coord(5, 4)), MGPOptional.of(new Coord(4, 2))];
+        const lodestones: LodestoneLodestonesPositions = new MGPMap([
+            { key: Player.ZERO, value: MGPOptional.of(new Coord(5, 4)) },
+            { key: Player.ONE, value: MGPOptional.of(new Coord(4, 2)) },
+        ]);
         const pressurePlates: LodestonePressurePlates = {
             top: MGPOptional.empty(),
             bottom: MGPOptional.empty(),
@@ -73,8 +76,10 @@ describe('LodestoneDummyMinimax', () => {
             [N, _, _, _, _, _, _, N],
             [N, N, N, N, N, N, N, N],
         ];
-        const lodestones: LodestoneLodestonesPositions =
-            [MGPOptional.empty(), MGPOptional.empty()];
+        const lodestones: LodestoneLodestonesPositions = new MGPMap([
+            { key: Player.ZERO, value: MGPOptional.empty() },
+            { key: Player.ONE, value: MGPOptional.empty() },
+        ]);
         const pressurePlates: LodestonePressurePlates = {
             top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
             bottom: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),

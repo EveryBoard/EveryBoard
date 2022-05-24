@@ -2361,7 +2361,7 @@
       </trans-unit>
       <trans-unit id="391843145298276672" datatype="html">
         <source>As long as there are pressure plates, you must place all the pieces that you have captured on them, not more nor less.</source>
-        <target>Tant qu'il reste des plaques de pression, vous devez placer les pièces que vous avez capturé dessus, ni plus ni moins.</target>
+        <target>Tant qu'il reste des plaques de pression, vous devez placer les pièces que vous avez capturé dessus.</target>
       </trans-unit>
       <trans-unit id="3917449010922856612" datatype="html">
         <source>You must place your lodestone on a non-crumbled square!</source>
@@ -2379,8 +2379,8 @@
         <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
         <target>Vous ne pouvez pas encore placer de captures, vous devez d'abord placer votre pierre magnétique sur le plateau !</target>
       </trans-unit>
-+      <trans-unit id="3233989185853354365" datatype="html">
-+        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
+      <trans-unit id="3233989185853354365" datatype="html">
+        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
         <target>Lodestone se joue sur un plateau 8x8, qui contient ce qui s'appelle des &lt;i&gt;plaques de pression&lt;/i&gt; sur son pourtour, où les pièces capturées seront placées. Le plateau initial est montré ci-contre. Le but du jeu est d'être le seul joueur restant avec des pièces sur le plateau. Pour y arriver, vous allez devoir pousser les pièces de votre adversaire hors du plateau, ou les écraser avec vos pièces. Vous le ferez avec une pierre magnétique.</target>
       </trans-unit>
       <trans-unit id="2109934310949694886" datatype="html">

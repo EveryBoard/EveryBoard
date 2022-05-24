@@ -5,8 +5,8 @@
     <g *ngFor="let line of viewInfo.boardInfo; index as y">
         <g *ngFor="let square of line; index as x">
             <g *ngIf="square.crumbled === false"
-               (click)="selectCoord(square.coord)"
-               id="square_{{ x }}_{{ y }}" >
+               id="square_{{ x }}_{{ y }}"
+               (click)="selectCoord(square.coord)" >
                 <rect class="base"
                       [ngClass]="square.squareClasses"
                       [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
@@ -29,7 +29,7 @@
                     <circle class="base no-stroke"
                             [ngClass]="square.lodestone.pieceClasses"
                             [attr.r]="PIECE_RADIUS / 4" />
-                    <g attr.transform="rotate({{ square.lodestone.diagonal ? 45 : 0 }})">
+                    <g attr.transform="rotate({{ square.lodestone.orientation === 'diagonal' ? 45 : 0 }})">
                         <g *ngFor="let i of [0, 1, 2, 3]">
                             <polygon *ngIf="square.lodestone.direction === 'push'"
                                      class="base no-stroke"
@@ -48,23 +48,24 @@
         </g>
     </g>
     <g *ngFor="let capture of viewInfo.capturesToPlace; index as x"
+       id="capture_{{ x }}"
        attr.transform="translate({{ (x + (4 - viewInfo.capturesToPlace.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ -10 + -2 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
-       id="capture_{{ x }}">
+       >
         <circle class="base"
                 [ngClass]="capture.pieceClasses"
                 [attr.r]="PIECE_RADIUS" />
     </g>
     <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
        attr.transform="translate({{ (x + (viewInfo.availableLodestones.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 10 + 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
-       (click)="selectLodestone(lodestone.direction, lodestone.diagonal)"
-       id="lodestone_{{ lodestone.direction }}_{{ lodestone.diagonal ? 'diagonal' : 'orthogonal' }}">
+       id="lodestone_{{ lodestone.direction }}_{{ lodestone.orientation }}"
+       (click)="selectLodestone(lodestone.direction, lodestone.orientation)" >
         <circle class="base black-fill outside"
                 [ngClass]="lodestone.selectedClass"
                 [attr.r]="PIECE_RADIUS" />
         <circle class="base no-stroke"
                 [ngClass]="lodestone.pieceClasses"
                 [attr.r]="PIECE_RADIUS / 4" />
-        <g attr.transform="rotate({{ lodestone.diagonal ? 45 : 0 }})">
+        <g attr.transform="rotate({{ lodestone.orientation === 'diagonal' ? 45 : 0 }})">
             <g *ngFor="let i of [0, 1, 2, 3]">
                 <polygon *ngIf="lodestone.direction === 'push'"
                          class="base no-stroke"
@@ -82,9 +83,10 @@
     <g *ngFor="let plate of viewInfo.pressurePlates"
        id="pressurePlate_{{ plate.position }}">
         <g *ngFor="let square of plate.coords; index as i">
+            <g id="plate_{{ plate.position }}_{{ i }}"
+               (click)="(square.temporary) ? deselectPressurePlate(plate.position, i) : selectPressurePlate(plate.position, i)" >
             <rect id="plateSquare_{{ plate.position }}_{{ i }}"
                   class="base"
-                  (click)="(square.temporary) ? deselectPressurePlate(plate.position, i) : selectPressurePlate(plate.position, i)"
                   [ngClass]="square.squareClasses"
                   [attr.x]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
                   [attr.y]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
@@ -94,12 +96,12 @@
                   ry="20" />
             <circle *ngIf="square.hasPiece"
                     id="platePiece_{{ plate.position }}_{{ i }}"
-                    (click)="(square.temporary) ? deselectPressurePlate(plate.position, i) : selectPressurePlate(plate.position, i)"
                     class="base"
                     [ngClass]="square.pieceClasses"
                     [attr.r]="PIECE_RADIUS"
                     [attr.cx]="(SPACE_SIZE * square.coord.x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
                     [attr.cy]="(SPACE_SIZE * square.coord.y) + STROKE_WIDTH + (SPACE_SIZE / 2)" />
+            </g>
         </g>
     </g>
     <rect *ngIf="viewInfo.selected.isPresent()"

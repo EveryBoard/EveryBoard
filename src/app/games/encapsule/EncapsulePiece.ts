@@ -89,7 +89,7 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.SMALL_WHITE: return 'SMALL_WHITE';
             default:
                 Utils.expectToBe(this, EncapsulePiece.EMPTY);
-                return 'NONE';
+                return 'EMPTY';
         }
     }
 }

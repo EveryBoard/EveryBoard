@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
-import { LodestoneDirection, LodestonePiece } from './LodestonePiece';
+import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
 
@@ -15,7 +15,8 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         return this.flatMapEmptyCoords(state, (coord: Coord): LodestoneMove[] => {
             const moves: LodestoneMove[] = [];
             for (const direction of this.nextDirection(state)) {
-                for (const diagonal of [true, false]) {
+                const orientations: LodestoneOrientation[] = ['diagonal', 'orthogonal'];
+                for (const diagonal of orientations) {
                     const infos: LodestoneInfos =
                         LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
                     const captures: Coord[] = infos.captures;
@@ -83,11 +84,9 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
     public getBoardValue(node: LodestoneNode): NodeUnheritance {
         const scores: [number, number] = node.gameState.getScores();
         let score: number;
-        if (scores[0] === 24 && scores[1] === 24) {
-            score = 0;
-        } else if (scores[0] === 24) {
+        if (scores[0] === 24 && scores[1] !== 24) {
             score = Player.ZERO.getVictoryValue();
-        } else if (scores[1] === 24) {
+        } else if (scores[0] !== 24 && scores[1] === 24) {
             score = Player.ONE.getVictoryValue();
         } else {
             score = scores[0] * Player.ZERO.getScoreModifier() + scores[1] * Player.ONE.getScoreModifier();

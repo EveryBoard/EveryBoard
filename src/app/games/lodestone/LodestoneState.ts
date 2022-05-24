@@ -4,6 +4,7 @@ import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneCaptures } from './LodestoneMove';
 
@@ -22,20 +23,20 @@ export class LodestonePressurePlate {
             return 3 - this.pieces.length;
         }
     }
-    public addCaptured(player: Player, howMany: number): MGPOptional<LodestonePressurePlate> {
-        if (this.pieces.length + howMany >= this.width) {
+    public addCaptured(player: Player, quantity: number): MGPOptional<LodestonePressurePlate> {
+        if (this.pieces.length + quantity >= this.width) {
             // The pressure plate is full, it therefore crumbles the floor.
             if (this.width === 5) {
                 // Put the rest of the pieces on the next pressure plate
-                return LodestonePressurePlate.EMPTY_3.addCaptured(player, howMany + this.pieces.length - 5);
+                return LodestonePressurePlate.EMPTY_3.addCaptured(player, quantity + this.pieces.length - 5);
             } else {
                 // This was the last plate level
-                assert(this.pieces.length + howMany === 3, 'should never put more pieces than the plate can support');
+                assert(this.pieces.length + quantity === 3, 'should never put more pieces than the plate can support');
                 return MGPOptional.empty();
             }
         } else {
             const newPieces: LodestonePiecePlayer[] = ArrayUtils.copyImmutableArray(this.pieces);
-            for (let i: number = 0; i < howMany; i++) {
+            for (let i: number = 0; i < quantity; i++) {
                 newPieces.push(LodestonePiecePlayer.of(player));
             }
             return MGPOptional.of(new LodestonePressurePlate(this.width, newPieces));
@@ -53,7 +54,7 @@ export class LodestonePressurePlate {
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
 export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, MGPOptional<LodestonePressurePlate>>
 
-export type LodestoneLodestonesPositions = [MGPOptional<Coord>, MGPOptional<Coord>]
+export type LodestoneLodestonesPositions = MGPMap<Player, MGPOptional<Coord>>
 
 export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
@@ -75,7 +76,10 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         ];
         return new LodestoneState(board,
                                   0,
-                                  [MGPOptional.empty(), MGPOptional.empty()],
+                                  new MGPMap([
+                                      { key: Player.ZERO, value: MGPOptional.empty() },
+                                      { key: Player.ONE, value: MGPOptional.empty() },
+                                  ]),
                                   {
                                       top: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
                                       bottom: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
@@ -125,10 +129,9 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     }
     public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {
         const currentPlayer: Player = this.getCurrentPlayer();
-        if (this.lodestones[currentPlayer.value].isAbsent()) {
-            return MGPOptional.empty();
-        } else {
-            const piece: LodestonePiece = this.getPieceAt(this.lodestones[currentPlayer.value].get());
+        const lodestonePosition: MGPOptional<Coord> = this.lodestones.get(currentPlayer).get();
+        if (lodestonePosition.isPresent()) {
+            const piece: LodestonePiece = this.getPieceAt(lodestonePosition.get());
             assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)');
             const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
             const currentDirection: LodestoneDirection = lodestone.direction;
@@ -136,6 +139,8 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
                 case 'push': return MGPOptional.of('pull');
                 case 'pull': return MGPOptional.of('push');
             }
+        } else {
+            return MGPOptional.empty();
         }
     }
 }
