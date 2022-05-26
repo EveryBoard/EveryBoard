@@ -67,7 +67,6 @@ export class PylosState extends GameState {
         const higherPieces: PylosCoord[] = coord.getHigherPieces();
         for (const higherPiece of higherPieces) {
             if (this.getPieceAt(higherPiece).isPlayer()) {
-                console.log('HEYOELAOSD')
                 return true;
             }
         }
