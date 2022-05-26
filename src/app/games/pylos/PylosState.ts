@@ -88,4 +88,9 @@ export class PylosState extends GameState {
         }
         return ownershipMap;
     }
+    public getCurrentPlayersPiecesBellow(coord: PylosCoord): PylosCoord[] {
+        if (coord.z === 0) return [];
+        const currentPlayer: Player = this.getCurrentPlayer();
+        return coord.getLowerPieces().filter((coord: PylosCoord) => this.getPieceAt(coord) === currentPlayer);
+    }
 }

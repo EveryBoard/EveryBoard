@@ -21,6 +21,7 @@ describe('GoGroupDatas:', () => {
         expect(() => group.getWrapper()).toThrowError(`Can't call getWrapper on non-mono-wrapped group`);
     });
     it('should throw when addPawn is called two times with the same coord', () => {
+        console.log('NOW WE USE')
         // Givne any GoGroupDatas containing "coord" already
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [], [], [], [], []);
         group.addPawn(coord, GoPiece.BLACK);
@@ -28,14 +29,7 @@ describe('GoGroupDatas:', () => {
         // When adding the coord again
         // Then it should throw
         const expectedError: string = 'Assertion failure: This group already contains (0, 0) (extra data: undefined)';
-        let failed: boolean = false;
-        try {
-            group.addPawn(coord, GoPiece.BLACK);
-        } catch (error) {
-            expect(error.message).toBe(expectedError);
-            failed = true;
-        }
-        expect(failed).toBeTrue();
+        expect(() => group.addPawn(coord, GoPiece.BLACK)).toThrowError(expectedError);
     });
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY,

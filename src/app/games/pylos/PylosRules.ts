@@ -76,7 +76,8 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return false;
     }
-    public static getPossibleCaptures(freeToMoves: PylosCoord[],
+    public static getPossibleCaptures(state: PylosState,
+                                      freeToMoves: PylosCoord[],
                                       startingCoord: MGPOptional<PylosCoord>,
                                       landingCoord: PylosCoord)
     : PylosCoord[][]
@@ -93,6 +94,10 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             for (let j: number = i + 1; j < capturables.length; j++) {
                 const secondCapture: PylosCoord = capturables[j];
                 possiblesCapturesSet.push([secondCapture, firstCapture]);
+            }
+            const newCapturables: PylosCoord[] = state.getCurrentPlayersPiecesBellow(firstCapture);
+            for (const newCapturable of newCapturables) {
+                possiblesCapturesSet.push([newCapturable, firstCapture]);
             }
         }
         return possiblesCapturesSet;

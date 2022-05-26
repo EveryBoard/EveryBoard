@@ -23,15 +23,16 @@ describe('PylosMinimax:', () => {
     it('Should provide 16 drops at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(16);
     });
-    it('Should provide 7 drops without capture, 6 drops with one capture, 15 drops with two capture, 3 climbing', () => {
+    it('Should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {
+        // Given a board on which all kind of moves is possible
         const board: PlayerOrNone[][][] = [
             [
                 [X, O, O, _],
                 [X, O, _, X],
-                [X, _, O, O],
-                [_, _, _, _],
+                [X, X, O, O],
+                [X, _, _, _],
             ], [
-                [_, _, _],
+                [O, _, _],
                 [_, _, _],
                 [_, _, _],
             ], [
@@ -41,10 +42,24 @@ describe('PylosMinimax:', () => {
                 [_],
             ],
         ];
-
         const state: PylosState = new PylosState(board, 0);
         const node: PylosNode = new PylosNode(state);
-        expect(minimax.getListMoves(node).length).toBe(31);
+
+        // When listing all possibles moves
+        const choices: PylosMove[] = minimax.getListMoves(node);
+
+        // Then the minimax should provide them all
+        const climbing: number = choices.filter((move: PylosMove) => move.isClimb()).length;
+        expect(climbing).toBe(3);
+        const captures: PylosMove[] = choices.filter((move: PylosMove) => move.firstCapture.isPresent());
+        const dropWithoutCapture: number =
+            choices.filter((move: PylosMove) => move.isClimb() === false && move.firstCapture.isAbsent()).length;
+        expect(dropWithoutCapture).toBe(5);
+        const monoCapture: number = captures.filter((move: PylosMove) => move.secondCapture.isAbsent()).length;
+        expect(monoCapture).toBe(5);
+        const dualCapture: number = choices.filter((move: PylosMove) => move.secondCapture.isPresent()).length;
+        expect(dualCapture).toBe(12);
+        expect(choices.length).toBe(climbing + dropWithoutCapture + monoCapture + dualCapture);
     });
     it('should calculate board value according to number of pawn of each player', () => {
         const board: PlayerOrNone[][][] = [
