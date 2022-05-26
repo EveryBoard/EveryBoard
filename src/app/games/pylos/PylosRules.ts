@@ -58,16 +58,16 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     public static canCapture(state: PylosState, landingCoord: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
         for (const vertical of [Orthogonal.UP, Orthogonal.DOWN]) {
-            const firstNeighboors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
-            if (firstNeighboors.isPresent() && state.getPieceAt(firstNeighboors.get()) === currentPlayer) {
+            const firstNeighbors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
+            if (firstNeighbors.isPresent() && state.getPieceAt(firstNeighbors.get()) === currentPlayer) {
                 for (const horizontal of [Orthogonal.LEFT, Orthogonal.RIGHT]) {
-                    const secondNeighboors: MGPOptional<PylosCoord> = firstNeighboors.get().getNextValid(horizontal);
-                    if (secondNeighboors.isPresent() &&
-                        state.getPieceAt(secondNeighboors.get()) === currentPlayer)
+                    const secondNeighbors: MGPOptional<PylosCoord> = firstNeighbors.get().getNextValid(horizontal);
+                    if (secondNeighbors.isPresent() &&
+                        state.getPieceAt(secondNeighbors.get()) === currentPlayer)
                     {
                         const thirdDirection: Orthogonal = vertical.getOpposite();
-                        const thirdNeighboors: PylosCoord = secondNeighboors.get().getNextValid(thirdDirection).get();
-                        if (state.getPieceAt(thirdNeighboors) === currentPlayer) {
+                        const thirdNeighbors: PylosCoord = secondNeighbors.get().getNextValid(thirdDirection).get();
+                        if (state.getPieceAt(thirdNeighbors) === currentPlayer) {
                             return true;
                         }
                     }

@@ -44,11 +44,11 @@ describe('DvonnMove', () => {
     it('should override equality', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(2, 2), new Coord(2, 3));
         const sameMove: DvonnMove = DvonnMove.of(new Coord(2, 2), new Coord(2, 3));
-        const neighboor: DvonnMove = DvonnMove.of(new Coord(3, 3), new Coord(2, 3));
+        const neighbor: DvonnMove = DvonnMove.of(new Coord(3, 3), new Coord(2, 3));
         const stranger: DvonnMove = DvonnMove.of(new Coord(5, 2), new Coord(6, 2));
         expect(move.equals(move)).toBeTrue();
         expect(move.equals(sameMove)).toBeTrue();
-        expect(move.equals(neighboor)).toBeFalse();
+        expect(move.equals(neighbor)).toBeFalse();
         expect(move.equals(stranger)).toBeFalse();
     });
     it('should construct (-1,-1)->(-2,-2) as PASS', () => {

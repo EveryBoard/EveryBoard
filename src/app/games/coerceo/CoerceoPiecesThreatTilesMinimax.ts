@@ -83,10 +83,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const OPPONENT: Player = threatenerPlayer.getOpponent();
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         const directThreats: Coord[] = [];
-        const neighboors: Coord[] = TriangularCheckerBoard
+        const neighbors: Coord[] = TriangularCheckerBoard
             .getNeighbors(coord)
             .filter((c: Coord) => c.isInRange(15, 10));
-        for (const directThreat of neighboors) {
+        for (const directThreat of neighbors) {
             const threat: FourStatePiece = state.getPieceAt(directThreat);
             if (threat.is(OPPONENT)) {
                 directThreats.push(directThreat);

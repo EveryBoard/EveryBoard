@@ -23,11 +23,11 @@ describe('Coord', () => {
     });
     it('Should override equals correctly', () => {
         const coord: Coord = new Coord(0, 0);
-        const horizontalNeighboors: Coord = new Coord(1, 0);
-        const verticalNeighboors: Coord = new Coord(0, 1);
+        const horizontalNeighbors: Coord = new Coord(1, 0);
+        const verticalNeighbors: Coord = new Coord(0, 1);
         expect(coord.equals(coord)).toBeTrue();
-        expect(coord.equals(horizontalNeighboors)).toBeFalse();
-        expect(coord.equals(verticalNeighboors)).toBeFalse();
+        expect(coord.equals(horizontalNeighbors)).toBeFalse();
+        expect(coord.equals(verticalNeighbors)).toBeFalse();
     });
     it('Should vectorise correctly', () => {
         const c: Coord = new Coord(3, -11);
@@ -42,11 +42,11 @@ describe('Coord', () => {
     it('Should give correct coords between this and other coord', () => {
         const coord: Coord = new Coord(0, 0);
         const notAligned: Coord = new Coord(2, 1);
-        const neighboors: Coord = new Coord(1, 1);
+        const neighbors: Coord = new Coord(1, 1);
         const alignedFar: Coord = new Coord(2, 2);
         expect(coord.getCoordsToward(coord)).toEqual([]);
         expect(coord.getCoordsToward(notAligned)).toEqual([]);
-        expect(coord.getCoordsToward(neighboors)).toEqual([]);
+        expect(coord.getCoordsToward(neighbors)).toEqual([]);
         expect(coord.getCoordsToward(alignedFar)).toEqual([new Coord(1, 1)]);
     });
     it('Should throw when asked distance toward an unaligned coord', () => {

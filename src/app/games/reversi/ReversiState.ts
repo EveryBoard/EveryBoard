@@ -19,7 +19,7 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
         board[4][3] = Player.ONE;
         return new ReversiState(board, 0);
     }
-    public static getNeighbooringPawnLike(board: PlayerOrNone[][],
+    public static getNeighboringPawnLike(board: PlayerOrNone[][],
                                           searchedValue: Player,
                                           cx: number,
                                           cy: number)

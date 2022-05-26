@@ -63,20 +63,20 @@ describe('GoGroupDatas:', () => {
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.BLACK_TERRITORY, [coord], [coord, coord], [], [], []);
         expect(group.getWrapper()).toEqual(GoPiece.BLACK);
     });
-    describe('getNeighboorsEntryPoint', () => {
-        it('should give entry points for each neighboor groups', () => {
-            // Given a group with all kind of neighboors
+    describe('getNeighborsEntryPoint', () => {
+        it('should give entry points for each neighbor groups', () => {
+            // Given a group with all kind of neighbors
             const group: GoGroupDatas = new GoGroupDatas(GoPiece.BLACK_TERRITORY,
                                                          [coord],
                                                          [],
                                                          [coord],
                                                          [coord],
                                                          [coord]);
-            // When asking for neighboors entry points
-            const neighboorsEntryPoint: Coord[] = group.getNeighboorsEntryPoint();
+            // When asking for neighbors entry points
+            const neighborsEntryPoint: Coord[] = group.getNeighborsEntryPoint();
 
             // Then the four entry coord should be there
-            expect(neighboorsEntryPoint.length).toBe(4);
+            expect(neighborsEntryPoint.length).toBe(4);
         });
     });
 });

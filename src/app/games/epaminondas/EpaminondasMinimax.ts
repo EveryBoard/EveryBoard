@@ -97,12 +97,12 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
                     wasPresent[player.value] = mod;
                     row += mod;
                     for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
-                        let neighboor: Coord = coord.getNext(dir, 1);
-                        while (neighboor.isInRange(14, 12) &&
-                               state.getPieceAt(neighboor) === player)
+                        let neighbor: Coord = coord.getNext(dir, 1);
+                        while (neighbor.isInRange(14, 12) &&
+                               state.getPieceAt(neighbor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;
-                            neighboor = neighboor.getNext(dir, 1);
+                            neighbor = neighbor.getNext(dir, 1);
                         }
                     }
                 }

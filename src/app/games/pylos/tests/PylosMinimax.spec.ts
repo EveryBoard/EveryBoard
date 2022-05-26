@@ -20,11 +20,9 @@ describe('PylosMinimax:', () => {
         rules = new PylosRules(PylosState);
         minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
-
     it('Should provide 16 drops at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(16);
     });
-
     it('Should provide 7 drops without capture, 6 drops with one capture, 15 drops with two capture, 3 climbing', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -48,7 +46,6 @@ describe('PylosMinimax:', () => {
         const node: PylosNode = new PylosNode(state);
         expect(minimax.getListMoves(node).length).toBe(31);
     });
-
     it('should calculate board value according to number of pawn of each player', () => {
         const board: PlayerOrNone[][][] = [
             [

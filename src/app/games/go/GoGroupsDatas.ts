@@ -90,23 +90,23 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
         }
     }
-    public getNeighboorsEntryPoint(): Coord[] {
-        const neighboorsEntryPoint: Coord[] = [];
+    public getNeighborsEntryPoint(): Coord[] {
+        const neighborsEntryPoint: Coord[] = [];
         if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0) {
-            neighboorsEntryPoint.push(this.emptyCoords[0]);
+            neighborsEntryPoint.push(this.emptyCoords[0]);
         }
         if (this.color !== GoPiece.BLACK && this.blackCoords.length > 0) {
-            neighboorsEntryPoint.push(this.blackCoords[0]);
+            neighborsEntryPoint.push(this.blackCoords[0]);
         }
         if (this.color !== GoPiece.WHITE && this.whiteCoords.length > 0) {
-            neighboorsEntryPoint.push(this.whiteCoords[0]);
+            neighborsEntryPoint.push(this.whiteCoords[0]);
         }
         if (this.color !== GoPiece.DEAD_BLACK && this.deadBlackCoords.length > 0) {
-            neighboorsEntryPoint.push(this.deadBlackCoords[0]);
+            neighborsEntryPoint.push(this.deadBlackCoords[0]);
         }
         if (this.color !== GoPiece.DEAD_WHITE && this.deadWhiteCoords.length > 0) {
-            neighboorsEntryPoint.push(this.deadWhiteCoords[0]);
+            neighborsEntryPoint.push(this.deadWhiteCoords[0]);
         }
-        return neighboorsEntryPoint;
+        return neighborsEntryPoint;
     }
 }

@@ -14,7 +14,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
     public static VERBOSE: boolean = false;
 
-    public static readonly NEIGHBOORS_TILES_DIRECTIONS: ReadonlyArray<Vector> = [
+    public static readonly NEIGHBORS_TILES_DIRECTIONS: ReadonlyArray<Vector> = [
         new Vector(+0, -2), // UP
         new Vector(+3, -1), // UP_RIGHT
         new Vector(+3, +1), // DOWN_RIGHT
@@ -35,7 +35,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     public static isInRange: (c: Coord) => boolean = (coord: Coord) => {
         return coord.isInRange(15, 10);
     };
-    public static getPresentNeighboorEntrances(tileUpperLeft: Coord): Coord[] {
+    public static getPresentNeighborEntrances(tileUpperLeft: Coord): Coord[] {
         return [
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y - 1), // UP
             new Coord(tileUpperLeft.x + 3, tileUpperLeft.y + 0), // UP-RIGHT
@@ -105,7 +105,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         });
     }
     public isSurrounded(coord: Coord): boolean {
-        const remainingFreedom: Coord[] = this.getEmptyNeighboors(coord, FourStatePiece.EMPTY);
+        const remainingFreedom: Coord[] = this.getEmptyNeighbors(coord, FourStatePiece.EMPTY);
         return remainingFreedom.length === 0;
     }
     public capture(coord: Coord): CoerceoState {
@@ -127,7 +127,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             this.isDeconnectable(currentTile))
         {
             resultingState = this.deconnectTile(currentTile, countTiles);
-            const neighbors: Coord[] = CoerceoState.getPresentNeighboorEntrances(currentTile);
+            const neighbors: Coord[] = CoerceoState.getPresentNeighborEntrances(currentTile);
             for (const neighbor of neighbors) {
                 const caseContent: FourStatePiece = resultingState.getPieceAt(neighbor);
                 if (caseContent === FourStatePiece.EMPTY) {
@@ -155,41 +155,41 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return true;
     }
     public isDeconnectable(tile: Coord): boolean {
-        const neighboorsIndex: number[] = this.getPresentNeighboorTilesRelativeIndexes(tile);
-        if (neighboorsIndex.length > 3) {
+        const neighborsIndex: number[] = this.getPresentNeighborTilesRelativeIndexes(tile);
+        if (neighborsIndex.length > 3) {
             return false;
         }
         let holeCount: number = 0;
-        for (let i: number = 1; i < neighboorsIndex.length; i++) {
-            if (this.areNeighboor(neighboorsIndex[i - 1], neighboorsIndex[i]) === false) {
+        for (let i: number = 1; i < neighborsIndex.length; i++) {
+            if (this.areNeighbor(neighborsIndex[i - 1], neighborsIndex[i]) === false) {
                 holeCount += 1;
             }
         }
-        if (this.areNeighboor(neighboorsIndex[0], neighboorsIndex[neighboorsIndex.length - 1]) === false) {
+        if (this.areNeighbor(neighborsIndex[0], neighborsIndex[neighborsIndex.length - 1]) === false) {
             holeCount += 1;
         }
         return holeCount <= 1;
     }
-    private areNeighboor(smallTileIndex: number, bigTileIndex: number): boolean {
+    private areNeighbor(smallTileIndex: number, bigTileIndex: number): boolean {
         return smallTileIndex + 1 === bigTileIndex ||
                (smallTileIndex === 0 && bigTileIndex === 5);
     }
-    public getPresentNeighboorTilesRelativeIndexes(tile: Coord): number[] {
-        const neighboorsIndexes: number[] = [];
+    public getPresentNeighborTilesRelativeIndexes(tile: Coord): number[] {
+        const neighborsIndexes: number[] = [];
         let firstIndex: MGPOptional<number> = MGPOptional.empty();
         for (let i: number = 0; i < 6; i++) {
-            const vector: Vector = CoerceoState.NEIGHBOORS_TILES_DIRECTIONS[i];
-            const neighboorTile: Coord = tile.getNext(vector, 1);
-            if (neighboorTile.isInRange(15, 10) &&
-                this.getPieceAt(neighboorTile) !== FourStatePiece.NONE)
+            const vector: Vector = CoerceoState.NEIGHBORS_TILES_DIRECTIONS[i];
+            const neighborTile: Coord = tile.getNext(vector, 1);
+            if (neighborTile.isInRange(15, 10) &&
+                this.getPieceAt(neighborTile) !== FourStatePiece.NONE)
             {
                 if (firstIndex.isAbsent()) {
                     firstIndex = MGPOptional.of(i);
                 }
-                neighboorsIndexes.push(i - firstIndex.get());
+                neighborsIndexes.push(i - firstIndex.get());
             }
         }
-        return neighboorsIndexes;
+        return neighborsIndexes;
     }
     public deconnectTile(tileUpperLeft: Coord, countTiles: boolean): CoerceoState {
         display(CoerceoState.VERBOSE,
@@ -231,7 +231,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                 const piece: FourStatePiece = this.board[y][x];
                 if (piece.isPlayer()) {
                     const nbFreedom: number =
-                        this.getEmptyNeighboors(new Coord(x, y), FourStatePiece.EMPTY).length;
+                        this.getEmptyNeighbors(new Coord(x, y), FourStatePiece.EMPTY).length;
                     const oldValue: number = playersScores[piece.value][nbFreedom];
                     playersScores[piece.value][nbFreedom] = oldValue + 1;
                 }

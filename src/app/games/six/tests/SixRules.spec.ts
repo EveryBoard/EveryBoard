@@ -168,7 +168,7 @@ describe('SixRules', () => {
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should refuse dropping piece where its only neighboor is herself last turn', () => {
+        it('Should refuse dropping piece where its only neighbor is herself last turn', () => {
             // Given a board in phase 2
             const board: NumberTable = [
                 [_, _, O],

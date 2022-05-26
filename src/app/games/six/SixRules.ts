@@ -59,16 +59,16 @@ export class SixRules extends Rules<SixMove,
         }
     }
     public static getLegalLandings(state: SixState): Coord[] {
-        const neighboors: MGPSet<Coord> = new CoordSet();
+        const neighbors: MGPSet<Coord> = new CoordSet();
         for (const piece of state.pieces.listKeys()) {
             for (const dir of HexaDirection.factory.all) {
-                const neighboor: Coord = piece.getNext(dir, 1);
-                if (state.getPieceAt(neighboor) === PlayerOrNone.NONE) {
-                    neighboors.add(neighboor);
+                const neighbor: Coord = piece.getNext(dir, 1);
+                if (state.getPieceAt(neighbor) === PlayerOrNone.NONE) {
+                    neighbors.add(neighbor);
                 }
             }
         }
-        return neighboors.toList();
+        return neighbors.toList();
     }
     public isLegalDrop(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop() === false) {

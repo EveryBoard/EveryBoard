@@ -29,8 +29,8 @@ export class BoardDatas {
         const groupsInfos: GroupInfos[] = [];
         for (const groupDatas of groupsDatas) {
             const coords: Coord[] = groupDatas.getCoords();
-            const neighboorsEP: Coord[] = groupDatas.getNeighboorsEntryPoint();
-            const groupInfos: GroupInfos = new GroupInfos(coords, neighboorsEP);
+            const neighborsEP: Coord[] = groupDatas.getNeighborsEntryPoint();
+            const groupInfos: GroupInfos = new GroupInfos(coords, neighborsEP);
             groupsInfos.push(groupInfos);
         }
         return new BoardDatas(groupIndexes, groupsInfos);
@@ -39,7 +39,7 @@ export class BoardDatas {
 
 export class GroupInfos {
     public constructor(readonly coords: ReadonlyArray<Coord>,
-                       readonly neighboorsEP: ReadonlyArray<Coord>) { }
+                       readonly neighborsEP: ReadonlyArray<Coord>) { }
 }
 
 export abstract class GroupDatasFactory<T> {
@@ -82,7 +82,7 @@ export abstract class GroupDatas<T> {
 
     public abstract addPawn(coord: Coord, color: T): void;
 
-    public abstract getNeighboorsEntryPoint(): Coord[];
+    public abstract getNeighborsEntryPoint(): Coord[];
 
     public selfContains(coord: Coord): boolean {
         const ownCoords: Coord[] = this.getCoords();
