@@ -60,7 +60,7 @@ describe('GoMinimax', () => {
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
-        it('should want to switch dead piece when it consider those pieces alive (for white)', () => {
+        it('should want to switch dead piece when it consider those pieces alive (Player.ZERO)', () => {
             const board: Table<GoPiece> = [
                 [u, w, w, X, w],
                 [X, X, X, X, X],
@@ -74,7 +74,7 @@ describe('GoMinimax', () => {
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });
-        it('should want to switch dead piece when it consider those pieces alive (for black)', () => {
+        it('should want to switch dead piece when it consider those pieces alive (Player.ONE)', () => {
             const board: Table<GoPiece> = [
                 [k, b, b, O, b],
                 [O, O, O, O, O],
