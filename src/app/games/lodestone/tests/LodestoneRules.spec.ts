@@ -88,9 +88,9 @@ describe('LodestoneRules', () => {
     });
     it('should allow placing a lodestone on the square where it already was', () => {
         // Given a state with our lodestone
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
         const board: Table<LodestonePiece> = [
-            [X, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -128,9 +128,9 @@ describe('LodestoneRules', () => {
     });
     it('should remove the lodestone from its previous square', () => {
         // Given a state with our lodestone
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
         const board: Table<LodestonePiece> = [
-            [X, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -184,13 +184,13 @@ describe('LodestoneRules', () => {
     });
     it('should forbid choosing the wrong side of the lodestone when it was already on the board (push)', () => {
         // Given a state where the lodestone is on the board
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -200,7 +200,7 @@ describe('LodestoneRules', () => {
             { key: Player.ONE, value: MGPOptional.empty() },
         ]);
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
-        // When pllacing a lodestone in the same direction
+        // When placing a lodestone in the same direction
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 3), 'push', 'orthogonal');
         // Then the move should be illegal
         const reason: string = LodestoneFailure.MUST_FLIP_LODESTONE();
@@ -208,13 +208,13 @@ describe('LodestoneRules', () => {
     });
     it('should forbid choosing the wrong side of the lodestone when it was already on the board (pull)', () => {
         // Given a state where the lodestone is on the board
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'diagonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'diagonal');
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -224,7 +224,7 @@ describe('LodestoneRules', () => {
             { key: Player.ONE, value: MGPOptional.empty() },
         ]);
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
-        // When pllacing a lodestone in the same direction
+        // When placing a lodestone in the same direction
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 3), 'pull', 'orthogonal');
         // Then the move should be illegal
         const reason: string = LodestoneFailure.MUST_FLIP_LODESTONE();
@@ -274,23 +274,23 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, A],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, B, _, _, _],
             [_, _, _, _, _, _, _, _],
+            [_, _, _, B, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
-        // When placing a lodestone to push the B
+        // When placing a lodestone to pull the A
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'pull', 'diagonal');
-        // Then the move is legal, and B is pushed, but not A
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'diagonal');
+        // Then the move is legal, and A is pulled, but not B
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'diagonal');
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, A, _],
-            [_, _, _, _, _, X, _, _],
-            [_, _, _, _, B, _, _, _],
+            [_, _, _, _, _, O, _, _],
             [_, _, _, _, _, _, _, _],
+            [_, _, _, B, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
         const expectedLodestones: LodestoneLodestonesPositions = new MGPMap([
@@ -329,13 +329,13 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to pull the two As
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'pull', 'orthogonal');
         // Then the move is legal, and no player pieces have moved
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, B, _, _, _],
@@ -364,13 +364,13 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push the B
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', 'orthogonal');
         // Then the move is legal, and B is pushed, but not A
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, B, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -399,13 +399,13 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push the B
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'push', 'diagonal');
         // Then the move is legal, and B is pushed, but not A
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'diagonal');
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, A, _],
-            [_, _, _, _, _, X, _, _],
+            [_, _, _, _, _, O, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, B, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -437,13 +437,13 @@ describe('LodestoneRules', () => {
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move is legal, and B is pushed and captured, but not A
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -481,13 +481,13 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push Bs
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', 'orthogonal');
         // Then the move should be legal, but no B moves
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, B, _, _, _],
-            [_, _, _, _, X, B, Y, _],
+            [_, _, _, _, O, B, Y, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -548,13 +548,13 @@ describe('LodestoneRules', () => {
                                                       'orthogonal',
                                                       { top: 0, bottom: 1, left: 0, right: 0 });
         // Then the move should be valid and B falls
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -594,13 +594,13 @@ describe('LodestoneRules', () => {
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -640,13 +640,13 @@ describe('LodestoneRules', () => {
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles a second time
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -686,13 +686,13 @@ describe('LodestoneRules', () => {
                                                       'orthogonal',
                                                       { top: 5, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles *twice*
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
-            [_, _, _, A, X, A, _, _],
+            [_, _, _, A, O, A, _, _],
             [_, _, _, _, A, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -758,13 +758,13 @@ describe('LodestoneRules', () => {
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, but only one piece is captured
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -809,13 +809,13 @@ describe('LodestoneRules', () => {
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, but only one piece is captured
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, A, _, _, _],
-            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -854,12 +854,12 @@ describe('LodestoneRules', () => {
         // When placing a lodestone to push B
         const move: LodestoneMove = new LodestoneMove(new Coord(3, 3), 'push', 'orthogonal');
         // Then the move should be valid and no piece is actually considered captured
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'push', 'orthogonal');
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
             [N, N, _, _, _, _, N, N],
-            [N, N, _, X, A, _, N, N],
+            [N, N, _, O, A, _, N, N],
             [N, N, _, _, _, _, N, N],
             [N, N, _, _, _, _, N, N],
             [N, N, N, N, N, N, N, N],

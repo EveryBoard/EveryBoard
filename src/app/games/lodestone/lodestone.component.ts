@@ -6,6 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
@@ -61,6 +62,12 @@ interface SquareInfo {
     lodestone?: LodestoneInfo,
 }
 
+
+interface LodestoneDescription {
+    direction: LodestoneDirection
+    orientation: LodestoneOrientation
+}
+
 @Component({
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
@@ -88,7 +95,7 @@ export class LodestoneComponent
     private lastInfos: MGPOptional<LodestoneInfos> = MGPOptional.empty();
     private capturesToPlace: number = 0;
     private selectedCoord: MGPOptional<Coord> = MGPOptional.empty();
-    private selectedLodestone: MGPOptional<[LodestoneDirection, LodestoneOrientation]> = MGPOptional.empty();
+    private selectedLodestone: MGPOptional<LodestoneDescription> = MGPOptional.empty();
     private captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -141,7 +148,7 @@ export class LodestoneComponent
 
         assert(this.capturesToPlace === 0, 'should not be able to click on a lodestone when captures need to be placed');
 
-        this.selectedLodestone = MGPOptional.of([direction, orientation]);
+        this.selectedLodestone = MGPOptional.of({ direction, orientation });
         if (this.selectedCoord.isPresent()) {
             return this.putLodestone();
         } else {
@@ -153,12 +160,14 @@ export class LodestoneComponent
         assert(this.selectedCoord.isPresent(), 'coord should have been selected');
         assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
         const coord: Coord = this.selectedCoord.get();
-        const [direction, diagonal]: [LodestoneDirection, LodestoneOrientation] = this.selectedLodestone.get();
+        const lodestone: LodestoneDescription = this.selectedLodestone.get();
         const state: LodestoneState = this.getState();
-        const validity: MGPValidation = LodestoneRules.get().isLegalWithoutCaptures(state, coord, direction);
+        const validity: MGPValidation = LodestoneRules.get().isLegalWithoutCaptures(state, coord, lodestone.direction);
         assert(validity.isSuccess(), 'Lodestone component should only allow creation of legal moves');
-        const infos: LodestoneInfos =
-            LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
+        const infos: LodestoneInfos = LodestoneRules.get().applyMoveWithoutPlacingCaptures(state,
+                                                                                           coord,
+                                                                                           lodestone.direction,
+                                                                                           lodestone.orientation);
         this.lastInfos = MGPOptional.of(infos);
         this.capturesToPlace = Math.min(infos.captures.length, state.remainingSpaces());
         if (this.capturesToPlace === 0) {
@@ -174,8 +183,8 @@ export class LodestoneComponent
         assert(this.selectedCoord.isPresent(), 'coord should have been selected');
         assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
         const coord: Coord = this.selectedCoord.get();
-        const [direction, diagonal]: [LodestoneDirection, LodestoneOrientation] = this.selectedLodestone.get();
-        const move: LodestoneMove = new LodestoneMove(coord, direction, diagonal, this.captures);
+        const lodestone: LodestoneDescription = this.selectedLodestone.get();
+        const move: LodestoneMove = new LodestoneMove(coord, lodestone.direction, lodestone.orientation, this.captures);
         return this.chooseMove(move, this.getState());
     }
     public async selectPressurePlate(position: LodestonePressurePlatePosition, index: number): Promise<MGPValidation> {
@@ -273,33 +282,7 @@ export class LodestoneComponent
             this.viewInfo.boardInfo.push([]);
             for (let x: number = 0; x < LodestoneState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
-                const squareInfo: SquareInfo = {
-                    coord,
-                    squareClasses: [],
-                    crumbled: piece.isUnreachable(),
-                    hasPiece: piece.isPlayerPiece(),
-                    pieceClasses: [],
-                };
-                if (piece.isPlayerPiece()) {
-                    squareInfo.pieceClasses = [this.getPlayerClass(piece.owner)];
-                }
-                if (piece.isLodestone()) {
-                    squareInfo.lodestone = {
-                        direction: piece.direction,
-                        pieceClasses: [this.getPlayerClass(piece.owner)],
-                        selectedClass: '',
-                        movingClass: '',
-                        orientation: piece.orientation,
-                    };
-                    if (piece.direction === 'push') {
-                        squareInfo.lodestone.movingClass = this.getPlayerClass(piece.owner.getOpponent());
-                    } else {
-                        squareInfo.lodestone.movingClass = this.getPlayerClass(piece.owner);
-                    }
-
-                }
-                this.viewInfo.boardInfo[y].push(squareInfo);
+                this.viewInfo.boardInfo[y].push(this.getSquareInfo(coord));
             }
         }
         if (this.selectedCoord.isPresent() &&
@@ -308,6 +291,34 @@ export class LodestoneComponent
         } else {
             this.viewInfo.selected = MGPOptional.empty();
         }
+    }
+    private getSquareInfo(coord: Coord): SquareInfo {
+        const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
+        const squareInfo: SquareInfo = {
+            coord,
+            squareClasses: [],
+            crumbled: piece.isUnreachable(),
+            hasPiece: piece.isPlayerPiece(),
+            pieceClasses: [],
+        };
+        if (piece.isPlayerPiece()) {
+            squareInfo.pieceClasses = [this.getPlayerClass(piece.owner)];
+        }
+        if (piece.isLodestone()) {
+            squareInfo.lodestone = {
+                direction: piece.direction,
+                pieceClasses: [this.getPlayerClass(piece.owner)],
+                selectedClass: '',
+                movingClass: '',
+                orientation: piece.orientation,
+            };
+            if (piece.direction === 'push') {
+                squareInfo.lodestone.movingClass = this.getPlayerClass(piece.owner.getOpponent());
+            } else {
+                squareInfo.lodestone.movingClass = this.getPlayerClass(piece.owner);
+            }
+        }
+        return squareInfo;
     }
     private showAvailableLodestones(): void {
         if (this.capturesToPlace > 0) {
@@ -359,19 +370,19 @@ export class LodestoneComponent
             info.movingClass = this.getPlayerClass(player);
         }
         if (this.selectedLodestone.isPresent() &&
-            this.selectedLodestone.get()[0] === direction &&
-            this.selectedLodestone.get()[1] === orientation) {
+            this.selectedLodestone.get().direction === direction &&
+            this.selectedLodestone.get().orientation === orientation) {
             info.selectedClass = 'selected';
         }
         return info;
     }
     private static readonly PRESSURE_PLATES_POSITIONS
-    : Record<LodestonePressurePlatePosition, [Coord, Coord, Direction]> = {
+    : MGPMap<LodestonePressurePlatePosition, [Coord, Coord, Direction]> = MGPMap.from({
         'top': [new Coord(0.5, -1), new Coord(1.5, 0), Direction.RIGHT],
         'bottom': [new Coord(0.5, 8), new Coord(1.5, 7), Direction.RIGHT],
         'left': [new Coord(-1, 0.5), new Coord(0, 1.5), Direction.DOWN],
         'right': [new Coord(8, 0.5), new Coord(7, 1.5), Direction.DOWN],
-    };
+    });
     private showPressurePlates(): void {
         this.viewInfo.pressurePlates = [];
         for (const pressurePlate of LodestonePressurePlate.POSITIONS) {
@@ -379,7 +390,7 @@ export class LodestoneComponent
             const plate: MGPOptional<LodestonePressurePlate> = this.displayedState.pressurePlates[pressurePlate];
             if (plate.isPresent()) {
                 const [start5, start3, dir]: [Coord, Coord, Direction] =
-                    LodestoneComponent.PRESSURE_PLATES_POSITIONS[pressurePlate];
+                    LodestoneComponent.PRESSURE_PLATES_POSITIONS.get(pressurePlate).get();
                 const size: 3 | 5 = plate.get().width;
                 let coord: Coord = size === 5 ? start5 : start3;
                 for (let i: number = 0; i < size; i++) {

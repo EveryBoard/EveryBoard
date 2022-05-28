@@ -31,7 +31,7 @@ export class LodestoneTutorial {
         ),
         TutorialStep.forClick(
             $localize`Selecting a lodestone`,
-            $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>push</i> side with which it will push the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>pull</i> side with which it will pull your pieces (indicated by the inward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that pushes your pieces diagonally.`,
+            $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>push</i> side with which it will push the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>pull</i> side with which it will pull your pieces (indicated by the inward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that pushes your opponent's pieces diagonally.`,
             LodestoneState.getInitialState(),
             ['#lodestone_push_diagonal'],
             $localize`Congratulations!`,
@@ -39,7 +39,7 @@ export class LodestoneTutorial {
         ),
         TutorialStep.informational(
             $localize`The pushing lodestone`,
-            $localize`Upon placing a lodestone on the board, it will move all pieces it acts upon (according to the lodestone side and direction) simultaneously. Let us first see how the push lodestone acts on the pieces. All the opponent's pieces aligned with the lodestone, as indicated by the triangles' orientations, will be pushed one square away from the lodestone. An opponent's piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent's piece falls out of the board, it is considered as captured.`,
+            $localize`Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the push lodestone acts on the pieces. All the opponent's pieces aligned with the lodestone, as indicated by the triangles' orientations, will be pushed one square away from the lodestone. An opponent's piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent's piece falls out of the board, it is considered as captured.`,
             LodestoneState.getInitialState(),
         ),
         TutorialStep.informational(
@@ -54,9 +54,9 @@ export class LodestoneTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Capturing`,
-            $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a pushing lodestone, by pushing your opponent's pieces out of the board, or</li><li>with a pulling lodestone, by pulling your pieces over your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on the pressure plate of your choice for each capture.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
+            $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a pushing lodestone, by pushing your opponent's pieces out of the board, or</li><li>with a pulling lodestone, by pulling your pieces over your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on an piece you just put on a pressure plate.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
             LodestoneState.getInitialState(),
-            new LodestoneMove(new Coord(3, 3), 'push', 'orthogonal', { top: 2, bottom: 0, left: 0, right: 0 }),
+            new LodestoneMove(new Coord(0, 6), 'pull', 'orthogonal', { top: 2, bottom: 1, left: 1, right: 1 }),
             (_: LodestoneMove, state: LodestoneState) => {
                 if (state.remainingSpaces() === 32) {
                     return MGPValidation.failure($localize`You have not captured any of the opponent's pieces, try again!`);

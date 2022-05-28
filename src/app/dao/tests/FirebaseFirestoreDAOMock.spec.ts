@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { display, FirebaseJSONObject, FirebaseJSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -9,6 +8,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { Time } from 'src/app/domain/Time';
 import { FieldValue, Unsubscribe, UpdateData } from '@angular/fire/firestore';
+import { display, FirebaseJSONObject, FirebaseJSONValue, Utils } from 'src/app/utils/utils';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirebaseDocument<T>>>;
 

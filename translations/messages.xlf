@@ -1675,8 +1675,8 @@
       <trans-unit id="7419338702295170530" datatype="html">
         <source>You must flip your lodestone before putting it back on the board.</source>
       </trans-unit>
-      <trans-unit id="391843145298276672" datatype="html">
-        <source>As long as there are pressure plates, you must place all the pieces that you have captured on them, not more nor less.</source>
+      <trans-unit id="8683881271933340082" datatype="html">
+        <source>As long as there are pressure plates, you must place all the pieces that you have captured on them.</source>
       </trans-unit>
       <trans-unit id="3917449010922856612" datatype="html">
         <source>You must place your lodestone on a non-crumbled square!</source>
@@ -1696,14 +1696,17 @@
       <trans-unit id="2109934310949694886" datatype="html">
         <source>Selecting a lodestone</source>
       </trans-unit>
-      <trans-unit id="422404143076992044" datatype="html">
-        <source>To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: &lt;ul&gt;&lt;li&gt;its &lt;i&gt;push&lt;/i&gt; side with which it will push the opponent&apos;s pieces (indicated by the outward triangles of your opponent&apos;s color on the lodestone), and&lt;/li&gt;&lt;li&gt;its &lt;i&gt;pull&lt;/i&gt; side with which it will pull your pieces (indicated by the inward triangles of your color on the lodestone).&lt;/li&gt;&lt;/ul&gt;Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Select the lodestone that pushes your pieces diagonally.</source>
+      <trans-unit id="4518886427364111175" datatype="html">
+        <source>To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: &lt;ul&gt;&lt;li&gt;its &lt;i&gt;push&lt;/i&gt; side with which it will push the opponent&apos;s pieces (indicated by the outward triangles of your opponent&apos;s color on the lodestone), and&lt;/li&gt;&lt;li&gt;its &lt;i&gt;pull&lt;/i&gt; side with which it will pull your pieces (indicated by the inward triangles of your color on the lodestone).&lt;/li&gt;&lt;/ul&gt;Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Select the lodestone that pushes your opponent&apos;s pieces diagonally.</source>
+      </trans-unit>
+      <trans-unit id="2963285511284379717" datatype="html">
+        <source>This is not the right lodestone, try again.</source>
       </trans-unit>
       <trans-unit id="336512998257722350" datatype="html">
         <source>The pushing lodestone</source>
       </trans-unit>
-      <trans-unit id="8961895935902127771" datatype="html">
-        <source>Upon placing a lodestone on the board, it will move all pieces it acts upon (according to the lodestone side and direction) simultaneously. Let us first see how the push lodestone acts on the pieces. All the opponent&apos;s pieces aligned with the lodestone, as indicated by the triangles&apos; orientations, will be pushed one square away from the lodestone. An opponent&apos;s piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent&apos;s piece falls out of the board, it is considered as captured.</source>
+      <trans-unit id="621784725548341552" datatype="html">
+        <source>Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the push lodestone acts on the pieces. All the opponent&apos;s pieces aligned with the lodestone, as indicated by the triangles&apos; orientations, will be pushed one square away from the lodestone. An opponent&apos;s piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent&apos;s piece falls out of the board, it is considered as captured.</source>
       </trans-unit>
       <trans-unit id="1236123469376567884" datatype="html">
         <source>The pulling lodestone</source>
@@ -1717,8 +1720,8 @@
       <trans-unit id="1473939189457777260" datatype="html">
         <source>Note that, after every move, you must flip your lodestone: if it was on its push side, you must use it on its pull side, and vice versa. Also, you are allowed to place your lodestone on the same location as it was on your previous turn.</source>
       </trans-unit>
-      <trans-unit id="6402295576674458076" datatype="html">
-        <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a pushing lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with a pulling lodestone, by pulling your pieces over your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on the pressure plate of your choice for each capture.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
+      <trans-unit id="9015734792815354042" datatype="html">
+        <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a pushing lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with a pulling lodestone, by pulling your pieces over your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on an piece you just put on a pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
       </trans-unit>
       <trans-unit id="575124313782539246" datatype="html">
         <source>You have not captured any of the opponent&apos;s pieces, try again!</source>
