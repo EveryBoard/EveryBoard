@@ -93,7 +93,7 @@
                    app-martian-chess-queen
                    (click)="chooseStyle(y)"
                    [attr.transform]="'translate(0, ' + (-(y+1) * SPACE_SIZE) + ')'"
-                   [pieceClasses]="getPieceClasses(0, 0)"
+                   [pieceClasses]="['player' + getCurrentPlayer().value]"
                    [style]="proposedStyle.style" />
             </ng-container>
         </g>
