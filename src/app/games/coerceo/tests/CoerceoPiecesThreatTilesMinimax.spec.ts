@@ -153,6 +153,74 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
+    it('Should prefer current player to be falsely threatened than really threatened (direct threat is fake)', () => {
+        // Given a weakBoard where current player is really threatened
+        const weakBoard: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            [N, N, N, O, _, _, X, _, X, N, N, N, N, N, N],
+            [N, N, N, _, _, _, _, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
+        ];
+        const weakState: CoerceoState = new CoerceoState(weakBoard, 0, [0, 0], [0, 0]);
+        // And a strong board where current player is falsely threatened
+        const strongBoard: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            [N, N, N, _, _, _, X, _, X, N, N, N, N, N, N],
+            [N, N, N, X, _, _, _, _, O, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+        ];
+        const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ZERO);
+    });
+    it('Should prefer current player to be falsely threatened than really threatened (moving threat is fake)', () => {
+        // Given a weakBoard where current player is really threatened
+        const weakBoard: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            [N, N, N, _, _, _, _, _, X, O, _, _, N, N, N],
+            [N, N, N, X, _, _, O, _, _, _, _, _, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+        ];
+        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, [0, 0], [0, 0]);
+        // And a strong board where current player is falsely threatened
+        const strongBoard: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            [N, N, N, _, _, _, _, _, X, O, _, _, N, N, N],
+            [N, N, N, _, _, X, O, _, _, _, _, _, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+        ];
+        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ONE);
+    });
     describe('filteredThreatMap', () => {
         it('should see threats coming', () => {
             const board: Table<FourStatePiece> = [

@@ -13,7 +13,6 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { assert } from 'src/app/utils/assert';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
@@ -116,10 +115,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }
         return MGPOptional.empty();
     }
-    public filterThreatMap(threatMap: MGPMap<Coord, PieceThreat>,
-                           state: CoerceoState)
-    : MGPMap<Coord, PieceThreat>
-    {
+    public filterThreatMap(threatMap: MGPMap<Coord, PieceThreat>, state: CoerceoState): MGPMap<Coord, PieceThreat> {
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         const threateneds: Coord[] = threatMap.listKeys();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
@@ -130,20 +126,20 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
-            assert(oldThreat.directThreats.size() === 1, 'oldThreat must contain exactly one direct threat');
-            const onlyDirectOldThreat: Coord = oldThreat.directThreats.getAnyElement().get();
             let newThreat: MGPOptional<PieceThreat> = MGPOptional.empty();
-            if (threatenedOpponentPieces.contains(onlyDirectOldThreat) === false) {
-                // if the direct threat of this piece is not a false threat
-                const newMover: Coord[] = [];
-                for (const mover of oldThreat.mover) {
-                    if (threatenedOpponentPieces.contains(mover) === false) {
-                        // if the moving threat of this piece is real
-                        newMover.push(mover);
+            for (const directOldThreat of oldThreat.directThreats) {
+                if (threatenedOpponentPieces.contains(directOldThreat) === false) {
+                    // if the direct threat of this piece is not a false threat
+                    const newMover: Coord[] = [];
+                    for (const mover of oldThreat.mover) {
+                        if (threatenedOpponentPieces.contains(mover) === false) {
+                            // if the moving threat of this piece is real
+                            newMover.push(mover);
+                        }
                     }
-                }
-                if (newMover.length > 0) {
-                    newThreat = MGPOptional.of(new PieceThreat(oldThreat.directThreats, new CoordSet(newMover)));
+                    if (newMover.length > 0) {
+                        newThreat = MGPOptional.of(new PieceThreat(oldThreat.directThreats, new CoordSet(newMover)));
+                    }
                 }
             }
             if (newThreat.isPresent()) {

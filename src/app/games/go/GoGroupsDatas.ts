@@ -61,12 +61,9 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
     public isMonoWrapped(): boolean {
         // If a group is empty, we assign him 1, else 2
         // If only the group of the group and the group of his wrapper are filled, result will be 2*2*1
-        const emptyWrapper: number = this.emptyCoords.length === 0 ? 1 : 2;
-        const blackWrapper: number = (this.blackCoords.length + this.deadWhiteCoords.length) === 0 ? 1 : 2;
-        const whiteWrapper: number = (this.whiteCoords.length + this.deadBlackCoords.length) === 0 ? 1 : 2;
-        // const deadBlackWrapper: number = this.deadBlackCoords.length === 0 ? 1 : 2;
-        // const deadWhiteWrapper: number = this.deadWhiteCoords.length === 0 ? 1 : 2;
-        return (emptyWrapper * blackWrapper * whiteWrapper) === 4;
+        const blackWrapper: number = (this.blackCoords.length + this.deadWhiteCoords.length) === 0 ? 0 : 1;
+        const whiteWrapper: number = (this.whiteCoords.length + this.deadBlackCoords.length) === 0 ? 0 : 1;
+        return blackWrapper + whiteWrapper === 1;
     }
     public getWrapper(): GoPiece {
         // If a piece is wrapped by a player and/or by dead pawn of his opponent, it's returning the player

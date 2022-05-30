@@ -84,4 +84,37 @@ describe('PylosMinimax:', () => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         expect(minimax.getBoardValue(new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move))).value).toBe(0);
     });
+    it('Should not include starting case in captures', () => {
+        // Given a node of a board with a climbing as last move
+        const board: PlayerOrNone[][][] = [
+            [
+                [O, X, X, _],
+                [O, O, X, _],
+                [O, X, X, _],
+                [_, _, _, O],
+            ], [
+                [O, O, _],
+                [_, O, _],
+                [_, _, _],
+            ], [
+                [_, _],
+                [_, _],
+            ], [
+                [_],
+            ],
+        ];
+        const state: PylosState = new PylosState(board, 0);
+        const node: PylosNode = new PylosNode(state);
+
+        // When listing all possibles moves
+        const choices: PylosMove[] = minimax.getListMoves(node);
+
+        // Then the minimax should not provide one that capture the startingCoord
+        const climbs: PylosMove[] = choices.filter((move: PylosMove) => move.isClimb());
+        const wrongChoices: PylosMove[] = climbs.filter((move: PylosMove) => {
+            return move.startingCoord.equals(move.firstCapture) ||
+                   move.startingCoord.equals(move.secondCapture);
+        });
+        expect(wrongChoices.length).toBe(0);
+    });
 });

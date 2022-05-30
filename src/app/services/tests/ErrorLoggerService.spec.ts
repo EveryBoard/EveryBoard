@@ -33,7 +33,6 @@ describe('ErrorLoggerService', () => {
         errorDAO = TestBed.inject(ErrorDAO);
     }));
     it('should create', fakeAsync(async() => {
-        console.log('THIS IS NOW SET')
         expect(service).toBeTruthy();
     }));
     it('should throw instead of logging the error when not initialized', () => {

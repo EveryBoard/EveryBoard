@@ -78,16 +78,14 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
     public static getPossibleCaptures(state: PylosState,
                                       freeToMoves: PylosCoord[],
-                                      startingCoord: MGPOptional<PylosCoord>,
-                                      landingCoord: PylosCoord)
+                                      move: PylosMove)
     : PylosCoord[][]
     {
         const possiblesCapturesSet: PylosCoord[][] = [];
 
-        // TODO this must be covered by a test (currently, commenting the line does not break anything)
-        freeToMoves = freeToMoves.filter((c: PylosCoord) => startingCoord.equalsValue(c) === false);
+        freeToMoves = freeToMoves.filter((c: PylosCoord) => move.startingCoord.equalsValue(c) === false);
 
-        const capturables: PylosCoord[] = freeToMoves.concat(landingCoord);
+        const capturables: PylosCoord[] = freeToMoves.concat(move.landingCoord);
         for (let i: number = 0; i < capturables.length; i++) {
             const firstCapture: PylosCoord = capturables[i];
             possiblesCapturesSet.push([firstCapture]);

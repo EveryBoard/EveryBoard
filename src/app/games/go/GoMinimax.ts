@@ -85,8 +85,7 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
                 return pawn;
             }
         };
-        const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(),
-                                                        markAsDead);
+        const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(), markAsDead);
         const allDeadState: GoState = new GoState(allDeadBoard,
                                                   currentState.getCapturedCopy(),
                                                   currentState.turn,

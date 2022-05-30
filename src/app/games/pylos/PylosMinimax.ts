@@ -21,8 +21,7 @@ export class PylosMinimax extends Minimax<PylosMove, PylosState> {
             if (PylosRules.canCapture(state, move.landingCoord)) {
                 possiblesCaptures = PylosRules.getPossibleCaptures(state,
                                                                    stateInfo.freeToMove,
-                                                                   move.startingCoord,
-                                                                   move.landingCoord);
+                                                                   move);
             }
             for (const possiblesCapture of possiblesCaptures) {
                 const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);

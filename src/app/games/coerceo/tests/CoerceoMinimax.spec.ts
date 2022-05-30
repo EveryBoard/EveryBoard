@@ -3,7 +3,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoMinimax } from '../CoerceoMinimax';
-import { CoerceoRules } from '../CoerceoRules';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
@@ -52,5 +52,22 @@ describe('CoerceoMinimax', () => {
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
+    });
+    it('Should count correct number of moves', () => {
+        const board: FourStatePiece[][] = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
+        expect(minimax.getListMoves(node).length).toBe(3);
     });
 });

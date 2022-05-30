@@ -2,6 +2,7 @@
 import { GoPiece } from '../GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 describe('GoGroupDatas:', () => {
 
@@ -21,15 +22,23 @@ describe('GoGroupDatas:', () => {
         expect(() => group.getWrapper()).toThrowError(`Can't call getWrapper on non-mono-wrapped group`);
     });
     it('should throw when addPawn is called two times with the same coord', () => {
-        console.log('NOW WE USE')
-        // Givne any GoGroupDatas containing "coord" already
+        // Given any GoGroupDatas containing "coord" already
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [], [], [], [], []);
         group.addPawn(coord, GoPiece.BLACK);
 
         // When adding the coord again
         // Then it should throw
-        const expectedError: string = 'Assertion failure: This group already contains (0, 0) (extra data: undefined)';
-        expect(() => group.addPawn(coord, GoPiece.BLACK)).toThrowError(expectedError);
+        let threw: boolean = false;
+        const expectedError: string = 'This group already contains (0, 0)';
+        spyOn(ErrorLoggerService, 'logError').and.callThrough();
+        try {
+            group.addPawn(coord, GoPiece.BLACK);
+        } catch {
+            threw = true;
+        } finally {
+            expect(threw).toBe(true);
+            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', expectedError);
+        }
     });
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY,

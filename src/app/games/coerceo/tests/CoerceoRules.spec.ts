@@ -9,12 +9,14 @@ import { CoerceoMinimax } from '../CoerceoMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { CoerceoPiecesThreatTilesMinimax } from '../CoerceoPiecesThreatTilesMinimax';
 
 describe('CoerceoRules', () => {
 
     let rules: CoerceoRules;
 
-    let minimax: CoerceoMinimax;
+    let minimaxes: Minimax<CoerceoMove, CoerceoState>[];
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.NONE;
@@ -23,7 +25,10 @@ describe('CoerceoRules', () => {
 
     beforeEach(() => {
         rules = new CoerceoRules(CoerceoState);
-        minimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
+        minimaxes = [
+            new CoerceoMinimax(rules, 'CoerceoMinimax'),
+            new CoerceoPiecesThreatTilesMinimax(rules, 'CoerceoPiecesThreatTilesMinimax'),
+        ];
     });
     describe('Deplacement', () => {
         it('Should forbid to start move from outside the board', () => {
@@ -332,25 +337,6 @@ describe('CoerceoRules', () => {
         const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    describe('GetListMoves', () => {
-        it('Should count correct number of moves', () => {
-            const board: FourStatePiece[][] = [
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            ];
-            const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(state);
-            expect(minimax.getListMoves(node).length).toBe(3);
-        });
-    });
     describe('GetBoardValue', () => {
         it('Should set minimal value to victory of Player.ZERO', () => {
             const board: FourStatePiece[][] = [
@@ -367,7 +353,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [18, 17]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('Should set minimal value to victory of Player.ONE', () => {
             const board: FourStatePiece[][] = [
@@ -384,7 +370,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [17, 18]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
     });
 });

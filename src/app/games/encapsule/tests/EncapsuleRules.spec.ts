@@ -103,6 +103,7 @@ describe('EncapsuleRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
+        // TODOTODO remove all [minimax], for no minimaxes deserve to be excluded !
     });
     it('should allow simplest victory for player zero', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
