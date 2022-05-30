@@ -11,7 +11,7 @@ import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
-fdescribe('MartianChessDummyMinimax', () => {
+describe('MartianChessDummyMinimax', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -31,7 +31,7 @@ fdescribe('MartianChessDummyMinimax', () => {
         rules = new MartianChessRules(MartianChessState);
         minimax = new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax');
     });
-    fit('should includes all moves at first turn', () => {
+    it('should includes all moves at first turn (but no call the clock)', () => {
         // Given the initial state
         const state: MartianChessState = MartianChessState.getInitialState();
         const node: MartianChessNode = new MartianChessNode(state);
@@ -40,21 +40,15 @@ fdescribe('MartianChessDummyMinimax', () => {
         const moves: MartianChessMove[] = minimax.getListMoves(node);
 
         // Then half the move should includes call the clock
-        const clockCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock);
-        const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock);
-        expect(clockCalled.length).toBe(13);
+        const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock === false);
         expect(notCalled.length).toBe(13);
 
         // and each of thoses half should contain 7 pawn moves
-        const pawnAndClock: MartianChessMove[] = clockCalled.filter((m: MartianChessMove) => isPawnMove(m, state));
         const pawnWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isPawnMove(m, state));
-        expect(pawnAndClock.length).toBe(7);
         expect(pawnWithoutClock.length).toBe(7);
 
         // and each of thoses half should contain 6 drone move
-        const droneAndClock: MartianChessMove[] = clockCalled.filter((m: MartianChessMove) => isDroneMove(m, state));
         const droneWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isDroneMove(m, state));
-        expect(droneAndClock.length).toBe(6);
         expect(droneWithoutClock.length).toBe(6);
     });
     it('should include drone promotions and capture', () => {
@@ -76,10 +70,10 @@ fdescribe('MartianChessDummyMinimax', () => {
         const moves: MartianChessMove[] = minimax.getListMoves(node);
 
         // Then 6 moves should be included (times two for the called clock)
-        const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock);
+        const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock === false);
         const pawnWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isPawnMove(m, state));
         expect(pawnWithoutClock.length).toBe(6);
-        expect(moves.length).toBe(12);
+        expect(moves.length).toBe(6);
     });
     it('should include queen promotions', () => {
         // Given a state with pawn on the edge a drone

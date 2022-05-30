@@ -7,7 +7,7 @@ import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 
-fdescribe('MartianChessMove', () => {
+describe('MartianChessMove', () => {
 
     it('should be illegal to choose a coord out of the board', () => {
         const move: MGPFallible<MartianChessMove> = MartianChessMove.from(new Coord(-1, -1), new Coord(0, 0));

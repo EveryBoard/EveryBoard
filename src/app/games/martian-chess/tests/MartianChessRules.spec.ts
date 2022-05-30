@@ -15,7 +15,7 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules, MartianChe
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
-fdescribe('MartianChessRules', () => {
+describe('MartianChessRules', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
