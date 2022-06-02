@@ -13,8 +13,8 @@ describe('GoComponent', () => {
     let componentTestUtils: ComponentTestUtils<GoComponent>;
 
     const _: GoPiece = GoPiece.EMPTY;
-    const O: GoPiece = GoPiece.BLACK;
-    const X: GoPiece = GoPiece.WHITE;
+    const O: GoPiece = GoPiece.DARK;
+    const X: GoPiece = GoPiece.LIGHT;
 
     beforeAll(() => {
         GoState.HEIGHT = 5;

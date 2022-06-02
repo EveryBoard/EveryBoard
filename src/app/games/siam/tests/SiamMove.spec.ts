@@ -14,7 +14,7 @@ describe('SiamMove', () => {
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
 
-    const D: SiamPiece = SiamPiece.WHITE_DOWN;
+    const D: SiamPiece = SiamPiece.LIGHT_DOWN;
 
     it('SiamMove.encoder should be correct', () => {
         const board: Table<SiamPiece> = [

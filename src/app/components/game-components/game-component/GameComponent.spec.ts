@@ -71,7 +71,7 @@ describe('GameComponent', () => {
             Dvonn: { onClick: [0, 0] },
             Encapsule: {
                 onBoardClick: [0, 0],
-                onPieceClick: [0, EncapsulePiece.BIG_WHITE, 0],
+                onPieceClick: [0, EncapsulePiece.BIG_LIGHT, 0],
             },
             Epaminondas: { onClick: [0, 0] },
             Gipf: { onClick: [0, 0] },

@@ -15,7 +15,7 @@ describe('EncapsulePiece', () => {
     });
     describe('ofSizeAndPlayer', () => {
         it('should construct the expected piece', () => {
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ONE)).toBe(EncapsulePiece.MEDIUM_WHITE);
+            expect(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ONE)).toBe(EncapsulePiece.MEDIUM_LIGHT);
         });
         it('should return the none piece if player or size is none', () => {
             expect(EncapsulePiece.ofSizeAndPlayer(Size.NONE, Player.ONE)).toBe(EncapsulePiece.NONE);
@@ -24,18 +24,18 @@ describe('EncapsulePiece', () => {
     });
     describe('getPlayer', () => {
         it('should return the owner of the piece', () => {
-            expect(EncapsulePiece.SMALL_BLACK.getPlayer()).toBe(Player.ZERO);
+            expect(EncapsulePiece.SMALL_DARK.getPlayer()).toBe(Player.ZERO);
         });
     });
     describe('getSize', () => {
         it('should return the size of the piece', () => {
-            expect(EncapsulePiece.SMALL_BLACK.getSize()).toBe(Size.SMALL);
+            expect(EncapsulePiece.SMALL_DARK.getSize()).toBe(Size.SMALL);
         });
     });
     describe('belongsTo', () => {
         it('should identify that a piece belong to its owner only', () => {
-            expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.ZERO)).toBeTrue();
-            expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.ONE)).toBeFalse();
+            expect(EncapsulePiece.SMALL_DARK.belongsTo(Player.ZERO)).toBeTrue();
+            expect(EncapsulePiece.SMALL_DARK.belongsTo(Player.ONE)).toBeFalse();
         });
     });
 });

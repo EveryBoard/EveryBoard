@@ -93,7 +93,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
                 const secondCapture: PylosCoord = capturables[j];
                 possiblesCapturesSet.push([secondCapture, firstCapture]);
             }
-            const newCapturables: PylosCoord[] = state.getCurrentPlayersPiecesBellow(firstCapture);
+            const newCapturables: PylosCoord[] = state.getCurrentPlayersPiecesBelow(firstCapture);
             for (const newCapturable of newCapturables) {
                 possiblesCapturesSet.push([newCapturable, firstCapture]);
             }

@@ -10,12 +10,12 @@ import { PylosFailure } from '../PylosFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('PylosRules:', () => {
 
     let rules: PylosRules;
-    let minimax: PylosMinimax;
-    let minimaxes: PylosMinimax[];
+    let minimaxes: Minimax<PylosMove, PylosState>[];
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = Player.ZERO;
@@ -23,8 +23,9 @@ describe('PylosRules:', () => {
 
     beforeEach(() => {
         rules = new PylosRules(PylosState);
-        minimax = new PylosMinimax(rules, 'PylosMinimax');
-        minimaxes = [minimax];
+        minimaxes = [
+            new PylosMinimax(rules, 'PylosMinimax'),
+        ];
     });
     it(`should forbid move who'se landing coord is not empty`, () => {
         const board: PlayerOrNone[][][] = [

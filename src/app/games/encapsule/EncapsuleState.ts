@@ -21,10 +21,10 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
         const startingBoard: EncapsuleCase[][] = ArrayUtils.mapBiArray(startingNumberBoard,
                                                                        (piece: number) => EncapsuleCase.decode(piece));
         const initialPieces: EncapsulePiece[] = [
-            EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_WHITE,
-            EncapsulePiece.BIG_WHITE, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK,
-            EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.SMALL_BLACK,
-            EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE,
+            EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
+            EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
+            EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.SMALL_DARK,
+            EncapsulePiece.SMALL_DARK, EncapsulePiece.SMALL_LIGHT, EncapsulePiece.SMALL_LIGHT,
         ];
         return new EncapsuleState(startingBoard, 0, initialPieces);
     }
@@ -87,12 +87,12 @@ export class EncapsuleCase {
         return [smallPiece.toString(), mediumPiece.toString(), bigPiece.toString()];
     }
     public getBiggest(): EncapsulePiece {
-        if (this.big === Player.ZERO) return EncapsulePiece.BIG_BLACK;
-        if (this.big === Player.ONE) return EncapsulePiece.BIG_WHITE;
-        if (this.medium === Player.ZERO) return EncapsulePiece.MEDIUM_BLACK;
-        if (this.medium === Player.ONE) return EncapsulePiece.MEDIUM_WHITE;
-        if (this.small === Player.ZERO) return EncapsulePiece.SMALL_BLACK;
-        if (this.small === Player.ONE) return EncapsulePiece.SMALL_WHITE;
+        if (this.big === Player.ZERO) return EncapsulePiece.BIG_DARK;
+        if (this.big === Player.ONE) return EncapsulePiece.BIG_LIGHT;
+        if (this.medium === Player.ZERO) return EncapsulePiece.MEDIUM_DARK;
+        if (this.medium === Player.ONE) return EncapsulePiece.MEDIUM_LIGHT;
+        if (this.small === Player.ZERO) return EncapsulePiece.SMALL_DARK;
+        if (this.small === Player.ONE) return EncapsulePiece.SMALL_LIGHT;
         return EncapsulePiece.NONE;
     }
     public tryToSuperposePiece(piece: EncapsulePiece): MGPOptional<EncapsuleCase> {

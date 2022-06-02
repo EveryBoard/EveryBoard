@@ -9,12 +9,13 @@ import { EncapsulePiece } from '../EncapsulePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
 
-    let minimax: EncapsuleMinimax;
+    let minimaxes: Minimax<EncapsuleMove, EncapsuleState, EncapsuleCase>[];
 
     const drop: (piece: EncapsulePiece, coord: Coord) => boolean = (piece: EncapsulePiece, coord: Coord) => {
         const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
@@ -32,16 +33,18 @@ describe('EncapsuleRules', () => {
     const _O_: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
     const __O: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
     const XO_: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
-    const O0: EncapsulePiece = EncapsulePiece.SMALL_BLACK;
-    const O1: EncapsulePiece = EncapsulePiece.MEDIUM_BLACK;
-    const O2: EncapsulePiece = EncapsulePiece.BIG_BLACK;
-    const X0: EncapsulePiece = EncapsulePiece.SMALL_WHITE;
-    const X1: EncapsulePiece = EncapsulePiece.MEDIUM_WHITE;
-    const X2: EncapsulePiece = EncapsulePiece.BIG_WHITE;
+    const O0: EncapsulePiece = EncapsulePiece.SMALL_DARK;
+    const O1: EncapsulePiece = EncapsulePiece.MEDIUM_DARK;
+    const O2: EncapsulePiece = EncapsulePiece.BIG_DARK;
+    const X0: EncapsulePiece = EncapsulePiece.SMALL_LIGHT;
+    const X1: EncapsulePiece = EncapsulePiece.MEDIUM_LIGHT;
+    const X2: EncapsulePiece = EncapsulePiece.BIG_LIGHT;
 
     beforeEach(() => {
         rules = new EncapsuleRules(EncapsuleState);
-        minimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
+        minimaxes = [
+            new EncapsuleMinimax(rules, 'EncapsuleMinimax'),
+        ];
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -71,7 +74,7 @@ describe('EncapsuleRules', () => {
             ]);
             expect(EncapsuleRules.isVictory(state).isPresent()).toBeFalse();
             const node: EncapsuleNode = new EncapsuleNode(state);
-            expect(minimax.getBoardValue(node).value).toBe(0);
+            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
     });
     it('should know winner even when he was not playing', () => {
@@ -102,25 +105,24 @@ describe('EncapsuleRules', () => {
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
-        // TODOTODO remove all [minimax], for no minimaxes deserve to be excluded !
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should allow simplest victory for player zero', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 1))).toBeTrue();
-        expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(2, 2))).toBeTrue();
-        expect(rules.node.getOwnValue(minimax).value).toBe(Number.MIN_SAFE_INTEGER);
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_LIGHT, new Coord(1, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(1, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_LIGHT, new Coord(0, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_DARK, new Coord(2, 2))).toBeTrue();
+        RulesUtils.expectToBeVictoryFor(rules, rules.node, Player.ZERO, minimaxes);
     });
     it('should allow simplest victory for player one', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(1, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(1, 1))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 1))).toBeTrue();
-        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(2, 2))).toBeTrue();
-        expect(rules.node.getOwnValue(minimax).value).toBe(Number.MAX_SAFE_INTEGER);
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(2, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_LIGHT, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_DARK, new Coord(1, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_LIGHT, new Coord(1, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(0, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_LIGHT, new Coord(2, 2))).toBeTrue();
+        RulesUtils.expectToBeVictoryFor(rules, rules.node, Player.ONE, minimaxes);
     });
     it('should allow moving pieces on empty coord', () => {
         // Given a board with piece on it
@@ -170,8 +172,8 @@ describe('EncapsuleRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid moving pieces on a piece with the same size', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(2, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(2, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 1))).toBeTrue();
         expect(move(new Coord(2, 0), new Coord(2, 1))).toBeFalse();
     });
     it('should forbid dropping a piece on a bigger piece', () => {
@@ -181,47 +183,33 @@ describe('EncapsuleRules', () => {
             [___, ___, ___],
         ];
         const state: EncapsuleState = new EncapsuleState(board, 2, [
-            EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE,
-            EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
-            EncapsulePiece.BIG_WHITE, EncapsulePiece.BIG_WHITE,
-            EncapsulePiece.SMALL_BLACK, EncapsulePiece.MEDIUM_BLACK,
-            EncapsulePiece.BIG_BLACK,
+            EncapsulePiece.SMALL_LIGHT, EncapsulePiece.SMALL_LIGHT,
+            EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT,
+            EncapsulePiece.BIG_LIGHT, EncapsulePiece.BIG_LIGHT,
+            EncapsulePiece.SMALL_DARK, EncapsulePiece.MEDIUM_DARK,
+            EncapsulePiece.BIG_DARK,
         ]);
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
         RulesUtils.expectMoveFailure(rules, state, move, EncapsuleFailure.INVALID_PLACEMENT());
     });
     it('should refuse to put three identical piece on the board', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 1))).toBeTrue();
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 2))).toBeFalse();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_LIGHT, new Coord(1, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(1, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_LIGHT, new Coord(0, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(2, 2))).toBeFalse();
     });
     it('should refuse to move small piece on bigger piece', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
-        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_LIGHT, new Coord(1, 0))).toBeTrue();
         expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
     });
     it('should refuse to move opponent piece on the board', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_DARK, new Coord(0, 0))).toBeTrue();
         expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
     });
     it('should refuse to move or drop void', () => {
         expect(drop(EncapsulePiece.NONE, new Coord(0, 0))).toBeFalse();
         expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
-    });
-    describe('getListMoves', () => {
-        it('should have 27 moves on first turn', () => {
-            // 3 pieces x 9 coords = 27 moves
-            expect(minimax.getListMoves(rules.node).length).toBe(27);
-        });
-        it('should have XX moves on a specific third turn', () => {
-            drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
-            drop(EncapsulePiece.SMALL_WHITE, new Coord(1, 0));
-            // Drops medium = 9, drops big = 9, drops small = 7
-            // Moving the piece on board = 7 possible landing cases
-            // Total: 32
-            expect(minimax.getListMoves(rules.node).length).toBe(32);
-        });
     });
 });

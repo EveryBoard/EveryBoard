@@ -10,12 +10,12 @@ describe('GoMinimax', () => {
 
     let minimax: GoMinimax;
 
-    const X: GoPiece = GoPiece.WHITE;
-    const O: GoPiece = GoPiece.BLACK;
-    const u: GoPiece = GoPiece.DEAD_BLACK;
-    const k: GoPiece = GoPiece.DEAD_WHITE;
-    const w: GoPiece = GoPiece.WHITE_TERRITORY;
-    const b: GoPiece = GoPiece.BLACK_TERRITORY;
+    const X: GoPiece = GoPiece.LIGHT;
+    const O: GoPiece = GoPiece.DARK;
+    const u: GoPiece = GoPiece.DEAD_DARK;
+    const k: GoPiece = GoPiece.DEAD_LIGHT;
+    const w: GoPiece = GoPiece.LIGHT_TERRITORY;
+    const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
     beforeEach(() => {
@@ -60,7 +60,7 @@ describe('GoMinimax', () => {
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
-        it('should want to switch dead piece when it consider those pieces alive (Player.ZERO)', () => {
+        it('should switch dead piece when it consider those pieces alive (Player.ZERO)', () => {
             const board: Table<GoPiece> = [
                 [u, w, w, X, w],
                 [X, X, X, X, X],
@@ -74,7 +74,7 @@ describe('GoMinimax', () => {
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });
-        it('should want to switch dead piece when it consider those pieces alive (Player.ONE)', () => {
+        it('should switch dead piece when it consider those pieces alive (Player.ONE)', () => {
             const board: Table<GoPiece> = [
                 [k, b, b, O, b],
                 [O, O, O, O, O],

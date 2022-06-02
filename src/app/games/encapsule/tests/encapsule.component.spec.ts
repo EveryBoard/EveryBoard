@@ -32,9 +32,9 @@ describe('EncapsuleComponent', () => {
         expect(componentTestUtils.getComponent()).withContext('EncapsuleComponent should be created').toBeTruthy();
     });
     it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#piece_0_SMALL_BLACK');
+        await componentTestUtils.expectClickSuccess('#piece_0_SMALL_DARK');
 
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
         await componentTestUtils.expectMoveSuccess('#click_0_0', move);
     }));
     it('should forbid clicking directly on the board without selecting a piece', fakeAsync(async() => {
@@ -47,10 +47,10 @@ describe('EncapsuleComponent', () => {
             [x, _, _],
             [_, _, _],
         ];
-        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_BLACK]));
-        await componentTestUtils.expectClickSuccess('#piece_0_MEDIUM_BLACK');
+        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_DARK]));
+        await componentTestUtils.expectClickSuccess('#piece_0_MEDIUM_DARK');
 
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.MEDIUM_BLACK, new Coord(0, 1));
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.MEDIUM_DARK, new Coord(0, 1));
         await componentTestUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('should forbid dropping a piece on a bigger one', fakeAsync(async() => {
@@ -60,21 +60,21 @@ describe('EncapsuleComponent', () => {
             [x, _, _],
             [_, _, _],
         ];
-        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_BLACK]));
-        await componentTestUtils.expectClickSuccess('#piece_0_SMALL_BLACK');
+        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
+        await componentTestUtils.expectClickSuccess('#piece_0_SMALL_DARK');
 
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 1));
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 1));
         await componentTestUtils.expectMoveFailure('#click_0_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
     }));
     it('should forbid selecting a piece that is not remaining', fakeAsync(async() => {
         componentTestUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, []));
 
-        componentTestUtils.expectElementNotToExist('#piece_0_SMALL_BLACK');
+        componentTestUtils.expectElementNotToExist('#piece_0_SMALL_DARK');
     }));
     it('should forbid selecting a piece from the other player', fakeAsync(async() => {
-        componentTestUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, [EncapsulePiece.SMALL_WHITE]));
+        componentTestUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, [EncapsulePiece.SMALL_LIGHT]));
 
-        await componentTestUtils.expectClickFailure('#piece_1_SMALL_WHITE', EncapsuleFailure.NOT_DROPPABLE());
+        await componentTestUtils.expectClickFailure('#piece_1_SMALL_LIGHT', EncapsuleFailure.NOT_DROPPABLE());
     }));
     it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
@@ -139,11 +139,11 @@ describe('EncapsuleComponent', () => {
             [x, X, _],
             [_, _, _],
         ];
-        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_BLACK]));
+        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_DARK]));
 
-        await componentTestUtils.expectClickSuccess('#piece_0_MEDIUM_BLACK');
+        await componentTestUtils.expectClickSuccess('#piece_0_MEDIUM_DARK');
 
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.MEDIUM_BLACK, new Coord(2, 1));
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.MEDIUM_DARK, new Coord(2, 1));
         await componentTestUtils.expectMoveSuccess('#click_2_1', move);
 
         const component: EncapsuleComponent = componentTestUtils.getComponent();
@@ -174,10 +174,10 @@ describe('EncapsuleComponent', () => {
             [x, _, _],
             [_, _, _],
         ];
-        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_BLACK]));
+        componentTestUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
 
         await componentTestUtils.expectClickSuccess('#click_0_1');
 
-        await componentTestUtils.expectClickFailure('#piece_0_SMALL_BLACK', EncapsuleFailure.END_YOUR_MOVE());
+        await componentTestUtils.expectClickFailure('#piece_0_SMALL_DARK', EncapsuleFailure.END_YOUR_MOVE());
     }));
 });

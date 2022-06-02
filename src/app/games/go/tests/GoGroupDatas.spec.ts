@@ -24,7 +24,7 @@ describe('GoGroupDatas:', () => {
     it('should throw when addPawn is called two times with the same coord', () => {
         // Given any GoGroupDatas containing "coord" already
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [], [], [], [], []);
-        group.addPawn(coord, GoPiece.BLACK);
+        group.addPawn(coord, GoPiece.DARK);
 
         // When adding the coord again
         // Then it should throw
@@ -32,7 +32,7 @@ describe('GoGroupDatas:', () => {
         const expectedError: string = 'This group already contains (0, 0)';
         spyOn(ErrorLoggerService, 'logError').and.callThrough();
         try {
-            group.addPawn(coord, GoPiece.BLACK);
+            group.addPawn(coord, GoPiece.DARK);
         } catch {
             threw = true;
         } finally {
@@ -47,11 +47,11 @@ describe('GoGroupDatas:', () => {
                                                      [coord, coord],
                                                      [coord, coord],
                                                      []);
-        expect(group.getWrapper()).toEqual(GoPiece.WHITE);
+        expect(group.getWrapper()).toEqual(GoPiece.LIGHT);
     });
     it('should return the mono wrapper when alive', () => {
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [coord], [coord, coord], [], [], []);
-        expect(group.getWrapper()).toEqual(GoPiece.BLACK);
+        expect(group.getWrapper()).toEqual(GoPiece.DARK);
     });
     it('should return the alive version of the monowrapper when dead', () => {
         const deadWrapper: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY,
@@ -60,25 +60,25 @@ describe('GoGroupDatas:', () => {
                                                            [],
                                                            [],
                                                            [coord, coord]);
-        expect(deadWrapper.getWrapper()).toEqual(GoPiece.BLACK);
+        expect(deadWrapper.getWrapper()).toEqual(GoPiece.DARK);
     });
     it('should count territory as empty', () => {
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.BLACK_TERRITORY, [coord], [coord, coord], [], [], []);
-        expect(group.getWrapper()).toEqual(GoPiece.BLACK);
+        const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY, [coord], [coord, coord], [], [], []);
+        expect(group.getWrapper()).toEqual(GoPiece.DARK);
     });
     describe('getNeighborsEntryPoint', () => {
         it('should give entry points for each neighbor groups', () => {
             // Given a group with all kind of neighbors
-            const group: GoGroupDatas = new GoGroupDatas(GoPiece.BLACK_TERRITORY,
+            const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY,
                                                          [coord],
                                                          [],
                                                          [coord],
                                                          [coord],
                                                          [coord]);
             // When asking for neighbors entry points
-            const neighborsEntryPoint: Coord[] = group.getNeighborsEntryPoint();
+            const neighborsEntryPoint: Coord[] = group.getNeighborsEntryPoints();
 
-            // Then the four entry coord should be there
+            // Then the four entry coords should be there
             expect(neighborsEntryPoint.length).toBe(4);
         });
     });
