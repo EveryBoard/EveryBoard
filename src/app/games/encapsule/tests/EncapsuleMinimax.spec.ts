@@ -7,7 +7,7 @@ import { EncapsuleState } from '../EncapsuleState';
 
 describe('EncapsuleMinimax', () => {
 
-    const rules: EncapsuleRules = new EncapsuleRules(EncapsuleState);
+    let rules: EncapsuleRules;
 
     let minimax: EncapsuleMinimax;
 
@@ -16,6 +16,7 @@ describe('EncapsuleMinimax', () => {
         return rules.choose(move);
     };
     beforeEach(() => {
+        rules = new EncapsuleRules(EncapsuleState);
         minimax = new EncapsuleMinimax(rules, 'Encapsule Minimax');
     });
     describe('getListMoves', () => {
