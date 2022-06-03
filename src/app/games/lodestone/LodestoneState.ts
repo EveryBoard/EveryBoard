@@ -54,7 +54,7 @@ export class LodestonePressurePlate {
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
 export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, MGPOptional<LodestonePressurePlate>>
 
-export type LodestoneLodestonesPositions = MGPMap<Player, MGPOptional<Coord>>
+export type LodestonePositions = MGPMap<Player, Coord>
 
 export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
@@ -76,10 +76,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         ];
         return new LodestoneState(board,
                                   0,
-                                  new MGPMap([
-                                      { key: Player.ZERO, value: MGPOptional.empty() },
-                                      { key: Player.ONE, value: MGPOptional.empty() },
-                                  ]),
+                                  new MGPMap(),
                                   {
                                       top: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
                                       bottom: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
@@ -90,7 +87,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
     public constructor(board: Table<LodestonePiece>,
                        turn: number,
-                       public readonly lodestones: LodestoneLodestonesPositions,
+                       public readonly lodestones: LodestonePositions,
                        public readonly pressurePlates: LodestonePressurePlates) {
         super(board, turn);
     }
@@ -129,7 +126,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     }
     public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {
         const currentPlayer: Player = this.getCurrentPlayer();
-        const lodestonePosition: MGPOptional<Coord> = this.lodestones.get(currentPlayer).get();
+        const lodestonePosition: MGPOptional<Coord> = this.lodestones.get(currentPlayer);
         if (lodestonePosition.isPresent()) {
             const piece: LodestonePiece = this.getPieceAt(lodestonePosition.get());
             assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)');

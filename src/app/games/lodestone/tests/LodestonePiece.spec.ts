@@ -1,3 +1,4 @@
+import { Player } from 'src/app/jscaip/Player';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 
 describe('LodestonePiece', () => {
@@ -5,7 +6,8 @@ describe('LodestonePiece', () => {
         const empty: LodestonePiece = LodestonePieceNone.EMPTY;
         const unreachable: LodestonePiece = LodestonePieceNone.UNREACHABLE;
         const piece: LodestonePiece = LodestonePiecePlayer.ZERO;
-        const lodestone: LodestonePiece = LodestonePieceLodestone.LODESTONES[0].push.orthogonal;
+        const lodestone: LodestonePiece =
+            LodestonePieceLodestone.of(Player.ZERO, { direction: 'push', orientation: 'orthogonal' });
 
         expect(empty.equals(unreachable)).toBeFalse();
         expect(empty.equals(empty)).toBeTrue();

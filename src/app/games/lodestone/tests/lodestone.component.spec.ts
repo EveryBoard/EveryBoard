@@ -11,7 +11,7 @@ import { LodestoneComponent } from '../lodestone.component';
 import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
-import { LodestoneLodestonesPositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneComponent', () => {
     let testUtils: ComponentTestUtils<LodestoneComponent>;
@@ -28,10 +28,7 @@ describe('LodestoneComponent', () => {
         right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
     };
 
-    const noLodestones: LodestoneLodestonesPositions = new MGPMap([
-        { key: Player.ZERO, value: MGPOptional.empty() },
-        { key: Player.ONE, value: MGPOptional.empty() },
-    ]);
+    const noLodestones: LodestonePositions = new MGPMap();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<LodestoneComponent>('Lodestone');
@@ -98,9 +95,9 @@ describe('LodestoneComponent', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal');
         await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
         // Then the square part of the move should be shown as 'moved'
-        testUtils.expectElementToExist('#square_0_0 > .moved');
-        testUtils.expectElementToExist('#square_5_0 > .moved');
-        testUtils.expectElementToExist('#square_6_0 > .moved');
+        testUtils.expectElementToHaveClass('#square_0_0 > rect', 'moved');
+        testUtils.expectElementToHaveClass('#square_5_0 > rect', 'moved');
+        testUtils.expectElementToHaveClass('#square_6_0 > rect', 'moved');
     }));
     it('should show intermediary state before placing captures', fakeAsync(async() => {
         // Given the initial state
@@ -233,7 +230,8 @@ describe('LodestoneComponent', () => {
     }));
     it('should display only the available lodestones when a lodestone is already on the board', fakeAsync(async() => {
         // Given a state with the player lodestone on the board
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO, 'pull', 'orthogonal');
+        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
+                                                             { direction: 'pull', orientation: 'orthogonal' });
         const board: Table<LodestonePiece> = [
             [X, _, _, _, _, _, _, B],
             [_, _, _, _, _, _, _, _],
@@ -244,9 +242,8 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestonesPositions = new MGPMap([
-            { key: Player.ZERO, value: MGPOptional.of(new Coord(0, 0)) },
-            { key: Player.ONE, value: MGPOptional.empty() },
+        const lodestones: LodestonePositions = new MGPMap([
+            { key: Player.ZERO, value: new Coord(0, 0) },
         ]);
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
         // When displaying the state
@@ -257,7 +254,8 @@ describe('LodestoneComponent', () => {
     }));
     it('should reallow selecting any lodestone face if a lodestone falls from the board', fakeAsync(async() => {
         // Given a state where a pressure plate will soon crumble, taking a lodestone with it
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, 'pull', 'orthogonal');
+        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
+                                                             { direction: 'pull', orientation: 'orthogonal' });
         const board: Table<LodestonePiece> = [
             [X, _, _, _, _, _, _, B],
             [_, _, _, _, _, _, _, _],
@@ -268,9 +266,8 @@ describe('LodestoneComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const lodestones: LodestoneLodestonesPositions = new MGPMap([
-            { key: Player.ZERO, value: MGPOptional.empty() },
-            { key: Player.ONE, value: MGPOptional.of(new Coord(0, 0)) },
+        const lodestones: LodestonePositions = new MGPMap([
+            { key: Player.ONE, value: new Coord(0, 0) },
         ]);
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,

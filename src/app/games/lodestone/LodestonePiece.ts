@@ -54,12 +54,17 @@ export class LodestonePiecePlayer {
     }
 }
 
-type LodestoneStaticMapping = Record<0 | 1,
-                                     Record<LodestoneDirection,
-                                            Record<'diagonal' | 'orthogonal',
-                                                   LodestonePieceLodestone>>>;
+type LodestoneOrientationMap = Record<LodestoneOrientation, LodestonePieceLodestone>;
+type LodestoneDirectionMap = Record<LodestoneDirection, LodestoneOrientationMap>;
+type LodestoneMap = Record<0 | 1, LodestoneDirectionMap>;
+
+export interface LodestoneDescription {
+    direction: LodestoneDirection
+    orientation: LodestoneOrientation
+}
+
 export class LodestonePieceLodestone {
-    public static LODESTONES: LodestoneStaticMapping = {
+    private static readonly LODESTONES: LodestoneMap = {
         0: {
             'push': {
                 'diagonal': new LodestonePieceLodestone(Player.ZERO, 'push', 'diagonal'),
@@ -86,10 +91,10 @@ export class LodestonePieceLodestone {
                         public readonly direction: LodestoneDirection,
                         public readonly orientation: LodestoneOrientation) {
     }
-    public static of(player: Player, direction: LodestoneDirection, orientation: LodestoneOrientation)
+    public static of(player: Player, description: LodestoneDescription)
     : LodestonePieceLodestone
     {
-        return LodestonePieceLodestone.LODESTONES[player.value][direction][orientation];
+        return LodestonePieceLodestone.LODESTONES[player.value][description.direction][description.orientation];
     }
     public isLodestone(): this is LodestonePieceLodestone {
         return true;

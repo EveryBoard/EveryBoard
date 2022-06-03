@@ -12,7 +12,7 @@ const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
 const _: LodestonePiece = LodestonePieceNone.EMPTY;
 const A: LodestonePiece = LodestonePiecePlayer.ZERO;
 const B: LodestonePiece = LodestonePiecePlayer.ONE;
-const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, 'push', 'orthogonal');
+const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, { direction: 'push', orientation: 'orthogonal' });
 
 const allPressurePlates: LodestonePressurePlates = {
     top: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
@@ -31,30 +31,30 @@ export class LodestoneTutorial {
         ),
         TutorialStep.forClick(
             $localize`Selecting a lodestone`,
-            $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>push</i> side with which it will push the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>pull</i> side with which it will pull your pieces (indicated by the inward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that pushes your opponent's pieces diagonally.`,
+            $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>repelling</i> side with which it will repel the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>attracting</i> side with which it will attract your pieces (indicated by the inward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that repels your opponent's pieces diagonally.`,
             LodestoneState.getInitialState(),
             ['#lodestone_push_diagonal'],
             $localize`Congratulations!`,
             $localize`This is not the right lodestone, try again.`,
         ),
         TutorialStep.informational(
-            $localize`The pushing lodestone`,
-            $localize`Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the push lodestone acts on the pieces. All the opponent's pieces aligned with the lodestone, as indicated by the triangles' orientations, will be pushed one square away from the lodestone. An opponent's piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent's piece falls out of the board, it is considered as captured.`,
+            $localize`The repelling lodestone`,
+            $localize`Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the repelling lodestone acts on the pieces. All the opponent's pieces aligned with the lodestone, as indicated by the triangles' orientations, will be pushed one square away from the lodestone. An opponent's piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent's piece falls out of the board, it captured.`,
             LodestoneState.getInitialState(),
         ),
         TutorialStep.informational(
-            $localize`The pulling lodestone`,
-            $localize`When the lodestone is on its pull side it will pull your pieces one square towards it. In case your pieces encounter a lodestone on their way or another blocked piece, they are blocked. However, if they encounter an opponent's piece, they will crush it and the opponent's piece is considered as captured.`,
+            $localize`The attracting lodestone`,
+            $localize`When the lodestone is on its attracting side it will pull your pieces one square towards it. In case one of your pieces encounters a lodestone on its way or another blocked piece, it is blocked. However, if it encounter an opponent's piece, it will capture it.`,
             LodestoneState.getInitialState(),
         ),
         TutorialStep.informational(
             $localize`Flipping the lodestone`,
-            $localize`Note that, after every move, you must flip your lodestone: if it was on its push side, you must use it on its pull side, and vice versa. Also, you are allowed to place your lodestone on the same location as it was on your previous turn.`,
+            $localize`Note that, after every move, you must flip your lodestone: if it was on its repelling side, you must use it on its attracating side, and vice versa. Also, you are allowed to place your lodestone on the same location as it was on your previous turn.`,
             LodestoneState.getInitialState(),
         ),
         TutorialStep.fromPredicate(
             $localize`Capturing`,
-            $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a pushing lodestone, by pushing your opponent's pieces out of the board, or</li><li>with a pulling lodestone, by pulling your pieces over your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on an piece you just put on a pressure plate.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
+            $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a repelling lodestone, by pushing your opponent's pieces out of the board, or</li><li>with a attracting lodestone, by moving your pieces over your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on an piece you just put on a pressure plate.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
             LodestoneState.getInitialState(),
             new LodestoneMove(new Coord(0, 6), 'pull', 'orthogonal', { top: 2, bottom: 1, left: 1, right: 1 }),
             (_: LodestoneMove, state: LodestoneState) => {
@@ -78,8 +78,7 @@ export class LodestoneTutorial {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
             ], 0, new MGPMap([
-                { key: Player.ZERO, value: MGPOptional.empty() },
-                { key: Player.ONE, value: MGPOptional.of(new Coord(2, 2)) },
+                { key: Player.ONE, value: new Coord(2, 2) },
             ]), {
                 ...allPressurePlates,
                 top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
@@ -106,8 +105,7 @@ export class LodestoneTutorial {
                 [_, _, _, _, B, _, _, _],
                 [_, _, _, _, _, _, _, _],
             ], 0, new MGPMap([
-                { key: Player.ZERO, value: MGPOptional.empty() },
-                { key: Player.ONE, value: MGPOptional.of(new Coord(1, 4)) },
+                { key: Player.ONE, value: new Coord(1, 4) },
             ]), {
                 ...allPressurePlates,
                 top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ONE, 2),
@@ -134,8 +132,7 @@ export class LodestoneTutorial {
                 [N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N],
             ], 0, new MGPMap([
-                { key: Player.ZERO, value: MGPOptional.empty() },
-                { key: Player.ONE, value: MGPOptional.of(new Coord(2, 3)) },
+                { key: Player.ONE, value: new Coord(2, 3) },
             ]), {
                 top: MGPOptional.empty(),
                 bottom: MGPOptional.empty(),
@@ -156,8 +153,7 @@ export class LodestoneTutorial {
                 [_, _, B, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
             ], 0, new MGPMap([
-                { key: Player.ZERO, value: MGPOptional.empty() },
-                { key: Player.ONE, value: MGPOptional.of(new Coord(3, 2)) },
+                { key: Player.ONE, value: new Coord(3, 2) },
             ]), {
                 ...allPressurePlates,
                 top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
@@ -179,8 +175,7 @@ export class LodestoneTutorial {
                 [N, _, _, _, A, _, N, N],
                 [N, N, N, N, N, N, N, N],
             ], 0, new MGPMap([
-                { key: Player.ZERO, value: MGPOptional.empty() },
-                { key: Player.ONE, value: MGPOptional.of(new Coord(2, 3)) },
+                { key: Player.ONE, value: new Coord(2, 3) },
             ]), {
                 top: MGPOptional.empty(),
                 bottom: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),

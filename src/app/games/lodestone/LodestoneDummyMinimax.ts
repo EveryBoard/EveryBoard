@@ -16,13 +16,13 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
             const moves: LodestoneMove[] = [];
             for (const direction of this.nextDirection(state)) {
                 const orientations: LodestoneOrientation[] = ['diagonal', 'orthogonal'];
-                for (const diagonal of orientations) {
+                for (const orientation of orientations) {
                     const infos: LodestoneInfos =
-                        LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, direction, diagonal);
+                        LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, { direction, orientation });
                     const captures: Coord[] = infos.captures;
                     const numberOfCaptures: number = captures.length;
                     for (const captures of this.captureCombinations(state, numberOfCaptures)) {
-                        moves.push(new LodestoneMove(coord, direction, diagonal, captures));
+                        moves.push(new LodestoneMove(coord, direction, orientation, captures));
                     }
                 }
             }

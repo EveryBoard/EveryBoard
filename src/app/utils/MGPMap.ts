@@ -8,7 +8,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     : MGPMap<K, V>
     {
         const keys: K[] = Object.keys(record) as K[];
-        const map: MGPMap<K, V>= new MGPMap();
+        const map: MGPMap<K, V> = new MGPMap();
         for (const key of keys) {
             map.set(key, record[key]);
         }

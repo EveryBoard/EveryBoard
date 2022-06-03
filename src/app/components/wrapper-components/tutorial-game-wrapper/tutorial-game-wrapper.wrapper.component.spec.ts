@@ -776,7 +776,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
     describe('TutorialStep awaiting a click', () => {
-        it('Should show success message after step success (one of several clics)', fakeAsync(async() => {
+        it('should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -799,7 +799,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('Should show failure message after step failure (one of several clics)', fakeAsync(async() => {
+        it('should show failure message after step failure (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -822,7 +822,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('show restart button (with possibility of seeing solution) when unwanted click with no move done', fakeAsync(async() => {
+        it('should show restart button (with possibility of seeing solution) when unwanted click with no move is done', fakeAsync(async() => {
             // Given a TutorialStep with possible invalid clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -868,7 +868,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1'); // click at the wrong place!
+            // This click is legal, however it is not the one expected from the tutorial!
+            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
 
             // When clicking on 'see solution'
             await componentTestUtils.clickElement('#showSolutionButton');
