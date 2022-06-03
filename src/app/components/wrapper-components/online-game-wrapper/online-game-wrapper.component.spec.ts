@@ -21,12 +21,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
 
 describe('OnlineGameWrapper for non-existing game', () => {
-    async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
-        await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
-        await TestBed.inject(PartDAO).set('joinerId', initialPart);
-        await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
-        await TestBed.inject(UserDAO).set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
-    }
     let testUtils: ComponentTestUtils<AbstractGameComponent>;
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
@@ -36,7 +30,10 @@ describe('OnlineGameWrapper for non-existing game', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
 
-        await prepareComponent(JoinerMocks.INITIAL, { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
+        await TestBed.inject(JoinerDAO).set('joinerId', JoinerMocks.INITIAL);
+        await TestBed.inject(PartDAO).set('joinerId', { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
+        await TestBed.inject(ChatDAO).set('joinerId', { });
+        await TestBed.inject(UserDAO).set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
         testUtils.detectChanges();
 
         // When loading the component
@@ -71,7 +68,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         joinerDAO = TestBed.inject(JoinerDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await TestBed.inject(PartDAO).set('joinerId', initialPart);
-        await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
+        await TestBed.inject(ChatDAO).set('joinerId', { });
         const userDAO: UserDAO = TestBed.inject(UserDAO);
         await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);

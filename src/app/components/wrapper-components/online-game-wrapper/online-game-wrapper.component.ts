@@ -180,7 +180,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameStarted = true;
         window.setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             this.startPart();

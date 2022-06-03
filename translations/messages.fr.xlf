@@ -3567,6 +3567,10 @@
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
         <target><x id="PH" equiv-text="first"/> et <x id="PH_1" equiv-text="second"/></target>
       </trans-unit>
+      <trans-unit id="5120671221766405888" datatype="html">
+        <source>Game does not exist</source>
+        <target>Partie inexistante</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
