@@ -84,8 +84,9 @@
         </g>
     </g>
     <g *ngFor="let plate of viewInfo.pressurePlates"
-       id="pressurePlate_{{ plate.position }}">
-        <g *ngFor="let square of plate.coords; index as i">
+       id="pressurePlate_{{ plate.position }}" >
+        <g *ngFor="let square of plate.coords; index as i"
+           attr.transform="translate({{ viewInfo.pressurePlateShift[plate.position].x * SPACE_SIZE }}, {{ viewInfo.pressurePlateShift[plate.position].y * SPACE_SIZE }})" >
             <g id="plate_{{ plate.position }}_{{ i }}"
                (click)="(square.temporary) ? deselectPressurePlate(plate.position, i) : selectPressurePlate(plate.position, i)" >
                 <rect id="plateSquare_{{ plate.position }}_{{ i }}"

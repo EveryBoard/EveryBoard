@@ -51,6 +51,7 @@ interface ViewInfo {
     currentPlayerClass: string,
     opponentClass: string,
     selected: MGPOptional<Coord>,
+    pressurePlateShift: Record<LodestonePressurePlatePosition, Coord>;
 }
 
 interface SquareInfo {
@@ -88,6 +89,12 @@ export class LodestoneComponent
         opponentClass: '',
         pressurePlates: [],
         selected: MGPOptional.empty(),
+        pressurePlateShift: {
+            top: new Coord(0, 0),
+            left: new Coord(0, 0),
+            right: new Coord(0, 0),
+            bottom: new Coord(0, 0),
+        },
     };
 
     private displayedState: LodestoneState;
@@ -274,6 +281,7 @@ export class LodestoneComponent
         this.showAvailableLodestones();
         this.showCapturesToPlace();
         this.showPressurePlates();
+        this.computePressurePlateShift();
         if (this.lastInfos.isPresent()) {
             this.showMovedAndCaptured(this.lastInfos.get());
         }
@@ -488,6 +496,26 @@ export class LodestoneComponent
         }
         for (const captured of infos.captures) {
             this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured');
+        }
+    }
+    private computePressurePlateShift(): void {
+        const state: LodestoneState = this.displayedState;
+        const left: number = this.getPressurePlateShift(state.pressurePlates.left);
+        const right: number = this.getPressurePlateShift(state.pressurePlates.right);
+        const top: number = this.getPressurePlateShift(state.pressurePlates.top);
+        const bottom: number = this.getPressurePlateShift(state.pressurePlates.bottom);
+        this.viewInfo.pressurePlateShift.top = new Coord(0.5 * (left-right), 0);
+        this.viewInfo.pressurePlateShift.bottom = new Coord(0.5 * (left-right), 0);
+        this.viewInfo.pressurePlateShift.left = new Coord(0, 0.5 * (top-bottom));
+        this.viewInfo.pressurePlateShift.right = new Coord(0, 0.5 * (top-bottom));
+    }
+    private getPressurePlateShift(plate: MGPOptional<LodestonePressurePlate>): number {
+        if (plate.isAbsent()) {
+            return 2;
+        } else if (plate.get().width === 3) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 }
