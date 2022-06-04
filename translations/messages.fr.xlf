@@ -2371,8 +2371,8 @@
         <source>You cannot perform a move that is the reverse of the previous one.</source>
         <target>Vous ne pouvez pas faire un mouvement inverse au dernier coup.</target>
       </trans-unit>
-      <trans-unit id="8222019911539798219" datatype="html">
-        <source>The goal of Martian Chess is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
+      <trans-unit id="101461993624237538" datatype="html">
+        <source>At Martian Chess, the goal is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
         <target>Le but des Échecs Martiens est d'avoir le plus de points à la fin de la partie. Quand vous capturez une pièce, vous gagnez sa valeur. Le plateau est divisé en deux par une ligne rouge appellée "le canal". Il y a un côté pour chaque joueur, vous ne contrôlez que les pièces de votre côté du canal, la couleur des pièces n'est là que pour vous aider, les pièces changent de couleur en traversant le canal.</target>
       </trans-unit>
       <trans-unit id="8633649754808970040" datatype="html">
@@ -3575,9 +3575,9 @@
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
         Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
       </trans-unit>
-      <trans-unit id="959404061737779252" datatype="html">
-        <source>Non linear move are not allowed: <x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/></source>
-        <target>Les mouvements non linéaire ne sont pas authorisés: <x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/></target>
+      <trans-unit id="18889351960813137" datatype="html">
+        <source>Move must be orthogonal or diagonal, not (<x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/>)</source>
+        <target>Les mouvements doivent êtres orthogonaux ou diagonaux, pas (<x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/>)</target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

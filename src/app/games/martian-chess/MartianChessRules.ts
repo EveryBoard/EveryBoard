@@ -151,15 +151,6 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         }
         return MGPFallible.success(undefined);
     }
-    public isDiagonalLegalForDrone(state: MartianChessState, diagonal: Direction, startingCoord: Coord): boolean {
-        const verticalVector: Vector = new Vector(0, diagonal.y);
-        const verticalStep: Coord = startingCoord.getNext(verticalVector);
-        const verticalNeighboorIsEmpty: boolean = state.getPieceAt(verticalStep) === MartianChessPiece.EMPTY;
-        const horizontalVector: Vector = new Vector(diagonal.x, 0);
-        const horizontalStep: Coord = startingCoord.getNext(horizontalVector);
-        const horizontalNeighboorIsEmpty: boolean = state.getPieceAt(horizontalStep) === MartianChessPiece.EMPTY;
-        return verticalNeighboorIsEmpty || horizontalNeighboorIsEmpty;
-    }
     public getPromotedPiece(move: MartianChessMove, state: MartianChessState): MGPOptional<MartianChessPiece> {
         const startPiece: MartianChessPiece = state.getPieceAt(move.coord);
         const endPiece: MartianChessPiece = state.getPieceAt(move.end);

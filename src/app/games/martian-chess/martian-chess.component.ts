@@ -135,17 +135,17 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getConfigViewTranslation(): string {
         const padding: number = 0;
         const xTranslate: number = (5 * this.SPACE_SIZE) + padding;
-        const yTranslate: number = (7 * this.SPACE_SIZE) + padding + (2 * this.STROKE_WIDTH);
+        const yTranslate: number = (6 * this.SPACE_SIZE) + padding + (2 * this.STROKE_WIDTH);
         const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
         return translate;
     }
     public getConfigCogTransformation(): string {
         const padding: number = this.STROKE_WIDTH;
         const wantedSize: number = this.SPACE_SIZE - padding;
-        const scaler: number = wantedSize / 512;
+        const scaler: number = wantedSize / 40;
         const scale: string = 'scale(' + scaler + ' ' + scaler +')';
-        const translate: string = 'translate(' + (3 * padding) + ', ' + (3 * padding) + ')';
-        return scale + ' ' + translate;
+        const translate: string = 'translate(' + (1.0 * padding) + ', ' + (1.0 * padding) + ')';
+        return translate + ' ' + scale;
     }
     public getClockNeedlesPoints(): string {
         const c: number = 0.5 * this.SPACE_SIZE;

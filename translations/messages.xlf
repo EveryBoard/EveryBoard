@@ -1240,8 +1240,8 @@
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
       </trans-unit>
-      <trans-unit id="8222019911539798219" datatype="html">
-        <source>The goal of Martian Chess is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
+      <trans-unit id="101461993624237538" datatype="html">
+        <source>At Martian Chess, the goal is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
       </trans-unit>
       <trans-unit id="8633649754808970040" datatype="html">
         <source>The pieces</source>
@@ -2026,8 +2026,8 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
       </trans-unit>
-      <trans-unit id="959404061737779252" datatype="html">
-        <source>Non linear move are not allowed: <x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/></source>
+      <trans-unit id="18889351960813137" datatype="html">
+        <source>Move must be orthogonal or diagonal, not (<x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/>)</source>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

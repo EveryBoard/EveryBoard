@@ -1,4 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -21,7 +22,7 @@ describe('MartianChessMove', () => {
     });
     it('should be illegal to make a non linar move', () => {
         const move: MGPFallible<MartianChessMove> = MartianChessMove.from(new Coord(0, 0), new Coord(1, 2));
-        const expectedResult: string = 'Non linear move are not allowed: 1, 2';
+        const expectedResult: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR(1, 2);
         expect(move.getReasonOr('')).toBe(expectedResult);
     });
     it('should be illegal to make a static move', () => {

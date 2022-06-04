@@ -69,7 +69,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
-        return MGPFallible.failure($localize`Non linear move are not allowed: ${dx}, ${dy}`);
+        return MGPFallible.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR(dx, dy));
     }
     public fromMove(start: Coord, end: Coord): MGPFallible<T> {
         return this.fromDelta(end.x - start.x, end.y - start.y);
@@ -196,4 +196,8 @@ export class Orthogonal extends BaseDirection {
         const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
         return opposite.get();
     }
+}
+
+export class DirectionFailure {
+    public static readonly DIRECTION_MUST_BE_LINEAR: (dx: number, dy: number) => string = (dx: number, dy: number) => $localize`Move must be orthogonal or diagonal, not (${dx}, ${dy})`
 }

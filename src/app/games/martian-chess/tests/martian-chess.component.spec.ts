@@ -10,6 +10,7 @@ import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessRulesFailure } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
+import { DirectionFailure } from 'src/app/jscaip/Direction';
 
 describe('MartianChessComponent', () => {
 
@@ -62,7 +63,7 @@ describe('MartianChessComponent', () => {
 
         // When cliking on a invalid second coord
         // Then the move should have been illegal
-        const reason: string = 'Non linear move are not allowed: 1, 2';
+        const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR(1, 2);
         await componentTestUtils.expectClickFailure('#click_3_4', reason);
     }));
     it('should attempt the move when doing the second click (illegal)', fakeAsync(async() => {
