@@ -167,9 +167,18 @@ jobs:
           node-version: 12
       - name: Setup dependencies (install dependencies)
         run: npm ci
-      - name: Setup dependencies (setup Firebase secret)
+      - name: Setup dependencies (setup Firebase secret, master)
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
-          echo "export const firebaseConfig = { apiKey: '${{ secrets.FIREBASE_API_KEY }}', authDomain: '${{ secrets.FIREBASE_AUTH_DOMAIN }}', databaseURL: '${{ secrets.FIREBASE_DATABASE_URL }}', projectId: '${{ secrets.FIREBASE_PROJECT_ID }}', storageBucket: '${{ secrets.FIREBASE_STORAGE_BUCKET }}', messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}' };" > src/app/firebaseConfig.ts
+          echo "${{ secrets.FIREBASE_CONFIG_MASTER }}" > src/app/firebaseConfig.ts
+      - name: Setup dependencies (setup Firebase secret, dev)
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+        run: |
+          echo "${{ secrets.FIREBASE_CONFIG_DEV }}" > src/app/firebaseConfig.ts
+      - name: Setup dependencies (setup Firebase secret, others)
+        if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
+        run: |
+          echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
