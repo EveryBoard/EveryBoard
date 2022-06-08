@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
@@ -13,8 +13,8 @@ describe('PylosMinimax:', () => {
     let minimax: PylosMinimax;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = new PylosRules(PylosState);
@@ -84,7 +84,7 @@ describe('PylosMinimax:', () => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         expect(minimax.getBoardValue(new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move))).value).toBe(0);
     });
-    it('Should not include starting case in captures', () => {
+    it('Should not include uncapturable pieces in captures', () => {
         // Given a node of a board with a climbing as last move
         const board: PlayerOrNone[][][] = [
             [
@@ -111,9 +111,12 @@ describe('PylosMinimax:', () => {
 
         // Then the minimax should not provide one that capture the startingCoord
         const climbs: PylosMove[] = choices.filter((move: PylosMove) => move.isClimb());
+        const uncapturable: PylosCoord = new PylosCoord(1, 1, 0);
         const wrongChoices: PylosMove[] = climbs.filter((move: PylosMove) => {
             return move.startingCoord.equals(move.firstCapture) ||
-                   move.startingCoord.equals(move.secondCapture);
+                   move.startingCoord.equals(move.secondCapture) ||
+                   move.firstCapture.equalsValue(uncapturable) ||
+                   move.secondCapture.equalsValue(uncapturable);
         });
         expect(wrongChoices.length).toBe(0);
     });

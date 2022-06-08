@@ -262,7 +262,7 @@
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
       </trans-unit>
-      <trans-unit id="5812794158768312814" datatype="html">
+      <trans-unit id="3315005504406796815" datatype="html">
         <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You&apos;re playing Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
@@ -1285,9 +1285,6 @@
       </trans-unit>
       <trans-unit id="2162535855239454361" datatype="html">
         <source>Your piece must land on the board or on 4 other pieces.</source>
-      </trans-unit>
-      <trans-unit id="1024410441498731703" datatype="html">
-        <source>You cannot land on this space.</source>
       </trans-unit>
       <trans-unit id="70110199629015603" datatype="html">
         <source>You cannot capture.</source>
@@ -2418,6 +2415,9 @@
       </trans-unit>
       <trans-unit id="7583363829279229518" datatype="html">
         <source>Congratulations, you completed the tutorial.</source>
+      </trans-unit>
+      <trans-unit id="9045384613260924473" datatype="html">
+        <source>You cannot choose supporting piece.</source>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

@@ -3,6 +3,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { GameState } from 'src/app/jscaip/GameState';
+import { Utils } from 'src/app/utils/utils';
 
 export class PylosState extends GameState {
 
@@ -14,6 +15,15 @@ export class PylosState extends GameState {
         const turn: number = 0;
         return new PylosState([board0, board1, board2, board3], turn);
     }
+    public static getLevelRange(z: number): number[] {
+        switch (z) {
+            case 0: return [0, 1, 2, 3];
+            case 1: return [0, 1, 2];
+            default:
+                Utils.expectToBe(z, 2);
+                return [0, 1];
+        }
+    }
     constructor(public readonly boards: Table<ReadonlyArray<PlayerOrNone>>,
                 turn: number)
     {
@@ -22,7 +32,7 @@ export class PylosState extends GameState {
     public getPieceAt(coord: PylosCoord): PlayerOrNone {
         return this.boards[coord.z][coord.y][coord.x];
     }
-    public applyLegalMove(move: PylosMove): PylosState {
+    public applyLegalMove(move: PylosMove, increment: boolean = true): PylosState {
         const updateValues: { coord: PylosCoord, value: PlayerOrNone }[] = [];
         updateValues.push({ coord: move.landingCoord, value: this.getCurrentPlayer() });
         if (move.startingCoord.isPresent()) {
@@ -34,7 +44,13 @@ export class PylosState extends GameState {
         if (move.secondCapture.isPresent()) {
             updateValues.push({ coord: move.secondCapture.get(), value: PlayerOrNone.NONE });
         }
-        return this.setBoardAts(updateValues, this.turn + 1);
+        let turn: number;
+        if (increment) {
+            turn = this.turn + 1;
+        } else {
+            turn = this.turn;
+        }
+        return this.setBoardAts(updateValues, turn);
     }
     public setBoardAts(coordValues: {coord: PylosCoord, value: PlayerOrNone}[], turn: number): PylosState {
         const newBoard: PlayerOrNone[][][] = [
@@ -64,7 +80,7 @@ export class PylosState extends GameState {
     }
     public isSupporting(coord: PylosCoord): boolean {
         if (coord.z === 3) return false;
-        const higherPieces: PylosCoord[] = coord.getHigherPieces();
+        const higherPieces: PylosCoord[] = coord.getHigherCoords();
         for (const higherPiece of higherPieces) {
             if (this.getPieceAt(higherPiece).isPlayer()) {
                 return true;
@@ -88,9 +104,36 @@ export class PylosState extends GameState {
         }
         return ownershipMap;
     }
-    public getCurrentPlayersPiecesBelow(coord: PylosCoord): PylosCoord[] {
-        if (coord.z === 0) return [];
+    public removeCoord(coord: PylosCoord): PylosState {
+        const removeCoord: {coord: PylosCoord, value: PlayerOrNone} = {
+            coord,
+            value: PlayerOrNone.NONE,
+        };
+        return this.setBoardAts([removeCoord], this.turn);
+    }
+    public applyDrop(coord: PylosCoord): PylosState {
+        const addCurrentPlayer: {coord: PylosCoord, value: PlayerOrNone} = {
+            coord,
+            value: this.getCurrentPlayer(),
+        };
+        return this.setBoardAts([addCurrentPlayer], this.turn);
+    }
+    public getFreeToMoves(): PylosCoord[] {
+        const freeToMove: PylosCoord[] = [];
         const currentPlayer: Player = this.getCurrentPlayer();
-        return coord.getLowerPieces().filter((coord: PylosCoord) => this.getPieceAt(coord) === currentPlayer);
+        for (let z: number = 0; z <= 2; z++) {
+            const levelRange: number[] = PylosState.getLevelRange(z);
+            for (const y of levelRange) {
+                for (const x of levelRange) {
+                    const coord: PylosCoord = new PylosCoord(x, y, z);
+                    if (this.getPieceAt(coord).equals(currentPlayer) &&
+                        this.isSupporting(coord) === false)
+                    {
+                        freeToMove.push(coord);
+                    }
+                }
+            }
+        }
+        return freeToMove;
     }
 }

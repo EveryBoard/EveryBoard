@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 
 export class PylosCoord extends Coord {
+
     public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
         let result: number;
         if (optionalCoord.isPresent()) {
@@ -49,11 +50,11 @@ export class PylosCoord extends Coord {
     public toShortString(): string {
         return '(' + this.x + ', ' + this.y + ', ' + this.z + ')';
     }
-    public equals(obj: PylosCoord): boolean {
-        if (this === obj) return true;
-        if (obj.x !== this.x) return false;
-        if (obj.y !== this.y) return false;
-        return obj.z === this.z;
+    public equals(o: PylosCoord): boolean {
+        if (this === o) return true;
+        if (o.x !== this.x) return false;
+        if (o.y !== this.y) return false;
+        return o.z === this.z;
     }
     public isUpperThan(p: PylosCoord): boolean {
         return this.z > p.z;
@@ -67,7 +68,7 @@ export class PylosCoord extends Coord {
         const downRight: PylosCoord = new PylosCoord(this.x + 1, this.y + 1, lowerZ);
         return [upLeft, upRight, downLeft, downRight];
     }
-    public getHigherPieces(): PylosCoord[] {
+    public getHigherCoords(): PylosCoord[] {
         if (this.z === 3) throw new Error(`Top piece don't have lower pieces.`);
         const higherZ: number = this.z + 1;
         const upLeft: Coord = new Coord(this.x - 1, this.y - 1);

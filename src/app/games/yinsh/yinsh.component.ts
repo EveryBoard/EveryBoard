@@ -457,7 +457,7 @@ export class YinshComponent
         }
         this.moveEnd = MGPOptional.of(coord);
         this.currentlyMoved = this.coordsBetween(this.moveStart.get(), coord);
-        this.constructedState = this.rules.applyRingMoveAndFlip(this.constructedState, this.moveStart.get(), coord);
+        this.constructedState = this.rules.applyRingMoveAndFlip(this.moveStart.get(), coord, this.constructedState);
         this.updateViewInfo();
         return this.moveToFinalCapturePhaseOrTryMove();
     }

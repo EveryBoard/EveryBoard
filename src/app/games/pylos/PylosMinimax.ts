@@ -6,6 +6,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { PylosNode, PylosRules } from './PylosRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class PylosMinimax extends Minimax<PylosMove, PylosState> {
 
@@ -17,14 +18,15 @@ export class PylosMinimax extends Minimax<PylosMove, PylosState> {
         const drops: PylosMove[] = PylosRules.getDropMoves(stateInfo);
         const moves: PylosMove[] = climbings.concat(drops);
         for (const move of moves) {
-            let possiblesCaptures: PylosCoord[][] = [[]];
-            if (PylosRules.canCapture(state, move.landingCoord)) {
-                possiblesCaptures = PylosRules.getPossibleCaptures(state,
-                                                                   stateInfo.freeToMove,
-                                                                   move);
+            const postMoveState: PylosState = state.applyLegalMove(move, false);
+            let possiblesCaptures: MGPSet<MGPSet<PylosCoord>> = new MGPSet();
+            if (PylosRules.canCapture(postMoveState, move.landingCoord)) {
+                possiblesCaptures = PylosRules.getPossibleCaptures(postMoveState);
+            } else {
+                result.push(move);
             }
             for (const possiblesCapture of possiblesCaptures) {
-                const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);
+                const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture.toList());
                 result.push(newMove);
             }
         }

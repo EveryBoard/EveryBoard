@@ -8,8 +8,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ConspirateursMinimax', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const A: PlayerOrNone = Player.ZERO;
-    const B: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConspirateursRules;
     let minimax: ConspirateursMinimax;
@@ -36,7 +36,7 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, A, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -61,9 +61,9 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, B, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, B, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, A, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -84,7 +84,7 @@ describe('ConspirateursMinimax', () => {
             const weakState: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -101,7 +101,7 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             const strongState: ConspirateursState = new ConspirateursState([
-                [_, _, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -127,7 +127,7 @@ describe('ConspirateursMinimax', () => {
         });
         it('should assign a higher score to a board with a piece in a shelter than on the side', () => {
             const strongState: ConspirateursState = new ConspirateursState([
-                [_, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -146,7 +146,7 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             const weakState: ConspirateursState = new ConspirateursState([
-                [_, _, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -172,7 +172,7 @@ describe('ConspirateursMinimax', () => {
         it('should assign a higher score for a piece close to an empty shelter', () => {
             // Here, A is close to two empty shelters
             const strongState: ConspirateursState = new ConspirateursState([
-                [_, _, A, _, _, _, _, _, _, _, _, _, _, _, _, B, B],
+                [_, _, O, _, _, _, _, _, _, _, _, _, _, _, _, X, X],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -192,7 +192,7 @@ describe('ConspirateursMinimax', () => {
             ], 60);
             // Here, A is stuck between two occupied shelters
             const weakState: ConspirateursState = new ConspirateursState([
-                [_, B, A, B, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, X, O, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

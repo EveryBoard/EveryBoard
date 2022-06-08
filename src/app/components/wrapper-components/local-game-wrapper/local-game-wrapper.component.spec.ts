@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -22,9 +22,9 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 describe('LocalGameWrapperComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<P4Component>;
-    const O: PlayerOrNone = Player.ZERO;
-    const X: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);

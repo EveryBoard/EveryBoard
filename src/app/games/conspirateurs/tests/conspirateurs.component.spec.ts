@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ConspirateursComponent } from '../conspirateurs.component';
@@ -11,8 +11,8 @@ import { ConspirateursState } from '../ConspirateursState';
 
 describe('ConspirateursComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const A: PlayerOrNone = Player.ZERO;
-    const B: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let testUtils: ComponentTestUtils<ConspirateursComponent>;
 
@@ -55,7 +55,7 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, A, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -80,10 +80,10 @@ describe('ConspirateursComponent', () => {
             const state: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, A, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, B, _, A, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, X, _, O, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -183,23 +183,23 @@ describe('ConspirateursComponent', () => {
     it('should highlight shelters of victorious pieces upon victory', fakeAsync(async() => {
         // Given a state where player 1 has sheltered all of its pieces
         const state: ConspirateursState = new ConspirateursState([
-            [B, B, _, B, _, B, _, B, B, B, _, B, _, B, _, B, B],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, X, _, X, _, X, _, X, X, X, _, X, _, X, _, X, X],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [A, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 60);
         // When the state is displayed
         testUtils.setupState(state);

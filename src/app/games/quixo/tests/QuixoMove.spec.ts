@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 describe('QuixoMove:', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     it('Should forbid move creation for invalid x or y coord', () => {
         expect(() => new QuixoMove(-1, 0, Orthogonal.UP))

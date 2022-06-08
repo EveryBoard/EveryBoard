@@ -35,11 +35,7 @@ export class SixRules extends Rules<SixMove,
 
     private currentVictorySource: SixVictorySource;
 
-    public applyLegalMove(move: SixMove,
-                          state: SixState,
-                          kept: SixLegalityInformation)
-    : SixState
-    {
+    public applyLegalMove(move: SixMove, state: SixState, kept: SixLegalityInformation): SixState {
         if (state.turn < 40) {
             return state.applyLegalDrop(move.landing);
         } else {

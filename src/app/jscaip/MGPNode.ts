@@ -190,7 +190,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         let child: MGPOptional<MGPNode<R, M, S, L, U>> = this.getSonByMove(move);
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
-            assert(legality.isSuccess(), 'The minimax has accepted an illegal move, this should not happen.');
+            assert(legality.isSuccess(), `The minimax has accepted an illegal move(${move.toString()}), this should not happen.`);
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, legality.get());
             child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));
             this.childs.get().push(child.get());

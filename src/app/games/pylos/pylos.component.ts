@@ -12,8 +12,12 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
-import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+
+export class PylosComponentFailure {
+
+    public static readonly CANNOT_CLICK_SUPPORTING_PIECE: () => string = () => $localize`You cannot choose supporting piece.`;
+}
 
 @Component({
     selector: 'app-pylos',
@@ -25,6 +29,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public static VERBOSE: boolean = false;
 
     public state: PylosState;
+    public constructedState: PylosState;
 
     public lastLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
     public lastStartingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
@@ -53,21 +58,23 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.updateBoard();
     }
     public getLevelRange(z: number): number[] {
-        switch (z) {
-            case 0: return [0, 1, 2, 3];
-            case 1: return [0, 1, 2];
-            default:
-                Utils.expectToBe(z, 2);
-                return [0, 1];
-        }
+        return PylosState.getLevelRange(z);
     }
-    public isDrawable(x: number, y: number, z: number): boolean {
+    public mustDraw(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (this.state.getPieceAt(coord) === PlayerOrNone.NONE) {
-            return this.state.isLandable(coord);
-        } else {
+        if (this.constructedState.getPieceAt(coord).isPlayer()) {
             return true;
         }
+        if (this.justClimbed(coord)) {
+            return true;
+        }
+        if (this.isCaptured(coord)) {
+            return true;
+        }
+        return this.chosenLandingCoord.isAbsent() && this.constructedState.isLandable(coord);
+    }
+    private isCaptured(coord: PylosCoord): boolean {
+        return this.chosenFirstCapture.equalsValue(coord);
     }
     public async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
@@ -80,14 +87,28 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (pieceBelongToOpponent) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
+        if (this.isSupporting(clickedCoord)) {
+            return this.cancelMove(PylosComponentFailure.CANNOT_CLICK_SUPPORTING_PIECE());
+        }
         if (this.chosenLandingCoord.isAbsent()) {
-            // Starting do describe a climbing move
-            this.chosenStartingCoord = MGPOptional.of(clickedCoord);
-            return MGPValidation.SUCCESS;
+            return this.onClimbClick(clickedCoord);
         }
         // Starting to select capture
+        return this.onCaptureClick(clickedCoord);
+    }
+    private isSupporting(clickedCoord: PylosCoord): boolean {
+        return this.constructedState.isSupporting(clickedCoord);
+    }
+    private async onClimbClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
+        // Starting do describe a climbing move
+        this.chosenStartingCoord = MGPOptional.of(clickedCoord);
+        this.constructedState = this.constructedState.removeCoord(clickedCoord);
+        return MGPValidation.SUCCESS;
+    }
+    private async onCaptureClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (this.chosenFirstCapture.isAbsent()) { // First capture
             this.chosenFirstCapture = MGPOptional.of(clickedCoord);
+            this.constructedState = this.constructedState.removeCoord(clickedCoord);
             return MGPValidation.SUCCESS;
         } else if (this.chosenFirstCapture.equalsValue(clickedCoord)) {
             return this.concludeMoveWithCapture([this.chosenFirstCapture.get()]);
@@ -111,6 +132,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return this.chooseMove(move, state);
     }
     public cancelMoveAttempt(): void {
+        this.constructedState = this.state;
         this.chosenStartingCoord = MGPOptional.empty();
         this.chosenLandingCoord = MGPOptional.empty();
         this.chosenFirstCapture = MGPOptional.empty();
@@ -121,8 +143,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        if (PylosRules.canCapture(this.state, clickedCoord)) {
+        if (PylosRules.canCapture(this.constructedState, clickedCoord)) {
             this.chosenLandingCoord = MGPOptional.of(clickedCoord);
+            this.constructedState = this.constructedState.applyDrop(clickedCoord);
             return MGPValidation.SUCCESS; // now player can click on his captures
         } else {
             if (this.isCapturelessMoveFinished(clickedCoord)) {
@@ -149,8 +172,16 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             } else if (coord.equals(move.landingCoord) || move.startingCoord.equalsValue(coord)) {
                 return ['moved'];
             }
+        } else {
+            if (this.justClimbed(coord)) {
+                return ['moved'];
+            }
         }
         return [];
+    }
+    private justClimbed(coord: PylosCoord): boolean {
+        return this.chosenLandingCoord.isPresent() &&
+               this.chosenStartingCoord.equalsValue(coord);
     }
     public getPieceRadius(z: number): number {
         return 90 + (z * 5);
@@ -163,6 +194,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
+        if (this.justClimbed(coord)) {
+            return false;
+        }
         const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord).isPlayer();
         const landingCoord: boolean = this.chosenLandingCoord.equalsValue(coord);
         return reallyOccupied || landingCoord;
@@ -200,20 +234,16 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public updateBoard(): void {
         this.state = this.rules.node.gameState;
+        this.constructedState = this.state;
         this.lastMove = this.rules.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         this.highCapture = MGPOptional.empty();
+        this.cancelMoveAttempt();
         if (this.lastMove.isPresent()) {
             this.showLastMove();
         } else {
-            this.lastLandingCoord = MGPOptional.empty();
-            this.lastStartingCoord = MGPOptional.empty();
-            this.lastFirstCapture = MGPOptional.empty();
-            this.lastSecondCapture = MGPOptional.empty();
-            this.chosenFirstCapture = MGPOptional.empty();
-            this.chosenStartingCoord = MGPOptional.empty();
-            this.chosenLandingCoord = MGPOptional.empty();
+            this.hideLastMove();
         }
     }
     private showLastMove(): void {
@@ -223,15 +253,21 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.lastFirstCapture = lastMove.firstCapture;
         this.lastSecondCapture = lastMove.secondCapture;
         if (this.lastFirstCapture.isPresent() &&
-            this.isDrawableCoord(this.lastFirstCapture.get()) === false)
+            this.mustDrawCoord(this.lastFirstCapture.get()) === false)
         {
             this.highCapture = this.lastFirstCapture;
         }
     }
-    private isDrawableCoord(coord: PylosCoord): boolean {
+    private hideLastMove(): void {
+        this.lastStartingCoord = MGPOptional.empty();
+        this.lastLandingCoord = MGPOptional.empty();
+        this.lastFirstCapture = MGPOptional.empty();
+        this.lastSecondCapture = MGPOptional.empty();
+    }
+    private mustDrawCoord(coord: PylosCoord): boolean {
         const x: number = coord.x;
         const y: number = coord.y;
         const z: number = coord.z;
-        return this.isDrawable(x, y, z);
+        return this.mustDraw(x, y, z);
     }
 }

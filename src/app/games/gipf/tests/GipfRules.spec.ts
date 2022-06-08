@@ -387,7 +387,7 @@ describe('GipfRules:', () => {
         it('should not allow applying placements where a piece already is no direction is given', () => {
             const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 3), MGPOptional.empty());
-            expect(() => GipfRules.applyPlacement(state, placement)).toThrow();
+            expect(() => GipfRules.applyPlacement(placement, state)).toThrow();
         });
     });
     describe('getBoardValue', () => {

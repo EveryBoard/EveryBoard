@@ -2,7 +2,7 @@
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasComponent } from '../epaminondas.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -16,8 +16,8 @@ describe('EpaminondasComponent', () => {
     let componentTestUtils: ComponentTestUtils<EpaminondasComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     function expectClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);

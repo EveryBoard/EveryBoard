@@ -22,7 +22,7 @@
     <g *ngFor="let z of [0, 1, 2]">
         <g *ngFor="let y of getLevelRange(z)">
             <g *ngFor="let x of getLevelRange(z)">
-                <ng-container *ngIf="isDrawable(x, y, z)">
+                <ng-container *ngIf="mustDraw(x, y, z)">
                     <circle *ngIf="isOccupied(x, y, z) else onlyRect"
                             id="piece_{{ x }}_{{ y }}_{{ z }}"
                             (click)="onPieceClick(x, y, z)"

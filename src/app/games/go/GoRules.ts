@@ -343,8 +343,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                            MGPOptional.empty(),
                            phase);
     }
-    private static applyNormalLegalMove(currentState: GoState,
-                                        legalMove: GoMove,
+    private static applyNormalLegalMove(legalMove: GoMove,
+                                        currentState: GoState,
                                         capturedCoords: GoLegalityInformation)
     : GoState
     {
@@ -413,7 +413,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return GoRules.applyDeadMarkingMove(legalMove, state);
         } else {
             display(GoRules.VERBOSE, 'GoRules.applyLegalMove: else it is normal move');
-            return GoRules.applyNormalLegalMove(state, legalMove, status);
+            return GoRules.applyNormalLegalMove(legalMove, state, status);
         }
     }
     public getGameStatus(node: GoNode): GameStatus {
