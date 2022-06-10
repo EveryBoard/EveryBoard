@@ -12,7 +12,7 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { Part } from 'src/app/domain/Part';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
@@ -26,6 +26,7 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirebaseTime, Time } from 'src/app/domain/Time';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { ObservedPart } from 'src/app/domain/User';
 
 describe('PartCreationComponent', () => {
 
@@ -85,7 +86,7 @@ describe('PartCreationComponent', () => {
         testUtils.expectElementToHaveClass(elementName, classes);
     }
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
+        testUtils = await SimpleComponentTestUtils.create(PartCreationComponent, new ActivatedRouteStub('JOSER'));
         destroyed = false;
         chatDAO = TestBed.inject(ChatDAO);
         partDAO = TestBed.inject(PartDAO);
@@ -121,6 +122,22 @@ describe('PartCreationComponent', () => {
                 expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
                 expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+            it('should add observedPart to user doc', fakeAsync(() => {
+                // Given a partCreation
+                spyOn(connectedUserService, 'updateObservedPart').and.callFake(async() => {});
+
+                // When candidate arrives
+                awaitComponentInitialisation();
+
+                // Then observedPart in user doc should be set
+                const observedPart: ObservedPart = {
+                    id: 'joinerId',
+                    opponent: null,
+                    typeGame: 'JOSER',
+                };
+                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith(observedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should not start observing joiner if part does not exist', fakeAsync(() => {
@@ -535,7 +552,12 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
-                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith('joinerId');
+                const observedPart: ObservedPart = {
+                    id: 'joinerId',
+                    opponent: UserMocks.CREATOR_AUTH_USER.username.get(),
+                    typeGame: 'JOSER',
+                };
+                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith(observedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should start sending presence token', fakeAsync(() => {

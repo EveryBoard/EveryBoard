@@ -2005,8 +2005,11 @@
       <trans-unit id="3468367367164457633" datatype="html">
         <source>Learn the rules</source>
       </trans-unit>
-      <trans-unit id="4930506384627295710" datatype="html">
-        <source>Settings</source>
+      <trans-unit id="187187500641108332" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/></source>
+      </trans-unit>
+      <trans-unit id="5278893585527723172" datatype="html">
+        <source> against </source>
       </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>

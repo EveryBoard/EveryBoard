@@ -17,23 +17,30 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { User } from 'src/app/domain/User';
+import { ObservedPart, User } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
 
 @Injectable()
 export class ConnectedUserServiceMock {
+
     public static setUser(user: AuthUser, notifyObservers: boolean = true, userId: string = 'userId'): void {
         (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
             .setUser(userId, user, notifyObservers);
+    }
+    public static setObservedPart(observedPart: MGPOptional<ObservedPart>): void {
+        (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
+            .setObservedPart(observedPart);
     }
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
     public uid: MGPOptional<string> = MGPOptional.empty();
 
     private readonly userRS: ReplaySubject<AuthUser>;
+    private readonly observedPartRS: ReplaySubject<MGPOptional<ObservedPart>>;
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
+        this.observedPartRS = new ReplaySubject<MGPOptional<ObservedPart>>(1);
     }
     public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {
         this.user = MGPOptional.of(user);
@@ -44,8 +51,14 @@ export class ConnectedUserServiceMock {
             this.userRS.next(user);
         }
     }
+    public setObservedPart(observedPart: MGPOptional<ObservedPart>): void {
+        this.observedPartRS.next(observedPart);
+    }
     public getUserObs(): Observable<AuthUser> {
         return this.userRS.asObservable();
+    }
+    public getObservedPartObs(): Observable<MGPOptional<ObservedPart>> {
+        return this.observedPartRS.asObservable();
     }
     public async disconnect(): Promise<MGPValidation> {
         throw new Error('ConnectedUserServiceMock.disconnect not implemented');
@@ -586,57 +599,87 @@ describe('ConnectedUserService', () => {
         // then it unsubscribed
         expect(service.unsubscribeFromAuth).toHaveBeenCalledWith();
     });
-    describe('updateObservedPart', () => {
-        it('should throw when called while no user is logged', async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
-            let failed: boolean = false;
-            try {
-                await service.updateObservedPart('some-part-doc-id');
-            } catch (error) {
-                expect(error.message).toBe(expectedError);
-                failed = true;
-            }
-            expect(failed).toBeTrue();
-        });
-        it('should delegate to userDAO', async() => {
-            // Given a service observing an user
-            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+    describe('observed part', () => {
+        it('should update observedPart observable when UserDao touches it', async() => {
+            // Given a connected user
+            // and the observedPart observable
+            const uid: string = (await createConnectedGoogleUser(true)).uid;
+            let resolvePromise: () => void;
+            const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
+                resolvePromise = resolve;
+            });
+            let lastValue: MGPOptional<ObservedPart> = MGPOptional.empty();
+            const subscription: Subscription =
+                service.getObservedPartObs().subscribe((observedPart: MGPOptional<ObservedPart>) => {
+                    lastValue = observedPart;
+                    window.setTimeout(resolvePromise, 2000);
+                });
 
-            // When asking to update observedPart
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
-            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
-            const observedPart: string = 'observedPartId';
-            await service.updateObservedPart(observedPart);
+            // When the UserDAO modify observedPart in the user document
+            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
+            await userHasUpdated;
 
-            // Then the userDAO should update the connected user doc
-            expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart });
+            // Then the observable should have updated its valuer
+            expect(lastValue).toEqual(MGPOptional.of({ id: '1234', typeGame: 'P4' }));
+            subscription.unsubscribe();
         });
-    });
-    describe('removeObservedPart', () => {
-        it('should throw when asking to remove while no user is logged', async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
-            let failed: boolean = false;
-            try {
+        describe('updateObservedPart', () => {
+            const observedPart: ObservedPart = {
+                id: 'some-part-doc-id',
+                opponent: 'whoever',
+                typeGame: 'le jeu',
+            };
+            it('should throw when called while no user is logged', async() => {
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
+                let failed: boolean = false;
+                try {
+                    await service.updateObservedPart(observedPart);
+                } catch (error) {
+                    expect(error.message).toBe(expectedError);
+                    failed = true;
+                }
+                expect(failed).toBeTrue();
+            });
+            it('should delegate to userDAO', async() => {
+                // Given a service observing an user
+                service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+
+                // When asking to update observedPart
+                const userDAO: UserDAO = TestBed.inject(UserDAO);
+                spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+                await service.updateObservedPart(observedPart);
+
+                // Then the userDAO should update the connected user doc
+                expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart });
+            });
+        });
+        describe('removeObservedPart', () => {
+            it('should throw when asking to remove while no user is logged', async() => {
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
+                let failed: boolean = false;
+                try {
+                    await service.removeObservedPart();
+                } catch (error) {
+                    expect(error.message).toBe(expectedError);
+                    failed = true;
+                }
+                expect(failed).toBeTrue();
+            });
+            it('should delegate removal to userDAO', async() => {
+                // Given a service observing an user
+                service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+
+                // When asking to update observedPart
+                const userDAO: UserDAO = TestBed.inject(UserDAO);
+                spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
                 await service.removeObservedPart();
-            } catch (error) {
-                expect(error.message).toBe(expectedError);
-                failed = true;
-            }
-            expect(failed).toBeTrue();
-        });
-        it('should delegate removal to userDAO', async() => {
-            // Given a service observing an user
-            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
-            // When asking to update observedPart
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
-            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
-            await service.removeObservedPart();
-
-            // Then the userDAO should update the connected user doc
-            expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart: null });
+                // Then the userDAO should update the connected user doc
+                expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id,
+                                                                { observedPart: null });
+            });
         });
     });
     describe('sendPresenceToken', () => {

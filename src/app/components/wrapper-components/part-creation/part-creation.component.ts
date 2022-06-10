@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -19,7 +19,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { FirebaseTime, Time } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { User } from 'src/app/domain/User';
+import { ObservedPart, User } from 'src/app/domain/User';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -101,6 +101,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public allDocDeleted: boolean = false;
 
     public constructor(public readonly router: Router,
+                       public actRoute: ActivatedRoute,
                        public readonly connectedUserService: ConnectedUserService,
                        public readonly gameService: GameService,
                        public readonly joinerService: JoinerService,
@@ -123,7 +124,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.messageDisplayer.criticalMessage(reason);
             return;
         }
-        await this.updateUserDocWithObservedPart();
         await this.startSendingPresenceTokens();
         this.gameExists = true;
         this.subscribeToJoinerDoc();
@@ -148,8 +148,22 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         });
     }
     private updateUserDocWithObservedPart(): Promise<void> {
-        display(PartCreationComponent.VERBOSE, `updateUserDocWithObservedPart of '` + this.partId + `'`);
-        return this.connectedUserService.updateObservedPart(this.partId);
+        display(PartCreationComponent.VERBOSE || true, `updateUserDocWithObservedPart of '` + this.partId + `'`);
+        const observedPart: ObservedPart = {
+            id: this.partId,
+            opponent: this.getOpponent(),
+            typeGame: Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo')),
+        };
+        return this.connectedUserService.updateObservedPart(observedPart);
+    }
+    private getOpponent(): string | null {
+        let stringOrUndefined: string | undefined = undefined;
+        if (this.connectedUserService.user.get().id === this.currentJoiner?.creator.id) {
+            stringOrUndefined = this.currentJoiner.chosenOpponent?.name;
+        } else {
+            stringOrUndefined = this.currentJoiner?.creator.name;
+        }
+        return stringOrUndefined === undefined ? null : stringOrUndefined;
     }
     private subscribeToJoinerDoc(): void {
         const callback: (joiner: MGPOptional<Joiner>) => void = async(joiner: MGPOptional<Joiner>) => {
@@ -316,6 +330,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
             this.currentJoiner = joiner.get();
             if (this.allUserInterval.isAbsent()) { // Only do it once
+                await this.updateUserDocWithObservedPart();
                 await this.observeNeededPlayers();
             }
             this.updateViewInfo();

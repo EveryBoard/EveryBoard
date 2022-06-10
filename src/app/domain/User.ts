@@ -10,5 +10,11 @@ export interface User extends FirebaseJSONObject {
     // eslint-disable-next-line camelcase
     last_changed?: FirebaseTime,
     verified: boolean,
-    observedPart?: string | null,
+    observedPart?: ObservedPart | null,
+}
+
+export interface ObservedPart extends FirebaseJSONObject {
+    id: string,
+    typeGame: string,
+    opponent?: string | null,
 }

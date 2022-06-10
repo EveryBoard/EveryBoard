@@ -372,8 +372,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.pauseCountDownsFor(player);
         this.resumeCountDownFor(player);
     }
-    private applyEndGame() {
+    private async applyEndGame() {
         // currently working for normal victory, resign, and timeouts!
+        await this.connectedUserService.removeObservedPart();
         const currentPart: PartDocument = this.currentPart;
         const player: Player = Player.fromTurn(currentPart.data.turn);
         this.endGame = true;

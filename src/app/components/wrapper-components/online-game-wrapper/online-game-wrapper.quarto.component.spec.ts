@@ -23,7 +23,7 @@ import { User } from 'src/app/domain/User';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthUser } from 'src/app/services/ConnectedUserService';
+import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { GameWrapperMessages } from '../GameWrapper';
@@ -425,7 +425,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     describe('Move victory', () => {
-        it('Victory move from player should notifyVictory', fakeAsync(async() => {
+        it('should notifyVictory when one player win', fakeAsync(async() => {
             //  Given a board on which user can win
             const move0: QuartoMove = new QuartoMove(0, 3, QuartoPiece.AAAB);
             const move1: QuartoMove = new QuartoMove(1, 3, QuartoPiece.AABA);
@@ -458,7 +458,26 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             componentTestUtils.expectElementToExist('#youWonIndicator');
             expectGameToBeOver();
         }));
-        it('Draw move from player should notifyDraw', fakeAsync(async() => {
+        it('should removeObservedPart when one player win', fakeAsync(async() => {
+            //  Given a board on which user can win
+            const move0: QuartoMove = new QuartoMove(0, 3, QuartoPiece.AAAB);
+            const move1: QuartoMove = new QuartoMove(1, 3, QuartoPiece.AABA);
+            const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
+            const move3: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AABB);
+            await prepareBoard([move0, move1, move2, move3]);
+            componentTestUtils.expectElementNotToExist('#winnerIndicator');
+
+            // When doing winning move
+            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+            spyOn(connectedUserService, 'removeObservedPart').and.callThrough();
+            const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
+            await doMove(winningMove, true);
+
+            // Then removeObservedPart should have been called
+            expect(connectedUserService.removeObservedPart).toHaveBeenCalledOnceWith();
+            expectGameToBeOver();
+        }));
+        it('should notifyDraw when a draw move from player is done', fakeAsync(async() => {
             //  Given a board on which user can draw
             const moves: QuartoMove[] = [
                 new QuartoMove(0, 0, QuartoPiece.AAAB),
@@ -483,12 +502,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareBoard(moves, Player.ONE);
             componentTestUtils.expectElementNotToExist('#winnerIndicator');
 
-            // When doing winning move
+            // When doing drawing move
             spyOn(partDAO, 'update').and.callThrough();
             const drawingMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
             await doMove(drawingMove, true);
 
-            // Then the game should be a victory
+            // Then the game should be a draw
             expect(wrapper.gameComponent.rules.node.move.get()).toEqual(drawingMove);
             const listMoves: QuartoMove[] = moves.concat(drawingMove);
             expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
@@ -504,6 +523,41 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.HARD_DRAW.value,
             });
             componentTestUtils.expectElementToExist('#hardDrawIndicator');
+            expectGameToBeOver();
+        }));
+        it('should removeObservedPart when players draw', fakeAsync(async() => {
+            //  Given a board on which user can draw
+            const moves: QuartoMove[] = [
+                new QuartoMove(0, 0, QuartoPiece.AAAB),
+                new QuartoMove(0, 1, QuartoPiece.AABA),
+                new QuartoMove(0, 2, QuartoPiece.BBAA),
+                new QuartoMove(0, 3, QuartoPiece.ABAA),
+
+                new QuartoMove(1, 0, QuartoPiece.ABAB),
+                new QuartoMove(1, 1, QuartoPiece.ABBA),
+                new QuartoMove(1, 2, QuartoPiece.BABB),
+                new QuartoMove(1, 3, QuartoPiece.BAAA),
+
+                new QuartoMove(2, 0, QuartoPiece.BAAB),
+                new QuartoMove(2, 1, QuartoPiece.BABA),
+                new QuartoMove(2, 2, QuartoPiece.ABBB),
+                new QuartoMove(2, 3, QuartoPiece.AABB),
+
+                new QuartoMove(3, 0, QuartoPiece.BBBA),
+                new QuartoMove(3, 1, QuartoPiece.BBAB),
+                new QuartoMove(3, 2, QuartoPiece.BBBB),
+            ];
+            await prepareBoard(moves, Player.ONE);
+            componentTestUtils.expectElementNotToExist('#winnerIndicator');
+
+            // When doing drawing move
+            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+            spyOn(connectedUserService, 'removeObservedPart').and.callThrough();
+            const drawingMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+            await doMove(drawingMove, true);
+
+            // Then removeObservedPart should have been called
+            expect(connectedUserService.removeObservedPart).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
     });
@@ -1030,6 +1084,23 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             componentTestUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
             expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
+        it('should removeObservedPart when opponent accepts our proposed draw', fakeAsync(async() => {
+            // Given a gameComponent where draw has been proposed
+            await setup();
+            await componentTestUtils.clickElement('#proposeDrawButton');
+
+            // When draw is accepted
+            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+            spyOn(connectedUserService, 'removeObservedPart').and.callThrough();
+            await receivePartDAOUpdate({
+                result: MGPResult.AGREED_DRAW_BY_ONE.value,
+                request: null,
+            }, 3);
+
+            // Then removeObservedPart should have been called
+            expect(connectedUserService.removeObservedPart).toHaveBeenCalledOnceWith();
+            expectGameToBeOver();
+        }));
         it('should send refusal when player asks to', fakeAsync(async() => {
             await setup();
             await receiveRequest(Request.drawProposed(Player.ONE), 1);
@@ -1403,6 +1474,27 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then we should see "opponent has resign"
             expect(resignText).toBe(`firstCandidate has resigned.`);
+            expectGameToBeOver();
+        }));
+        it('Should removeObservedPart when the opponent resigned', fakeAsync(async() => {
+            // Given a board where user has resign
+            await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
+
+            // When receiving opponents submission to our greatness and recognition as overlord of their land
+            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+            spyOn(connectedUserService, 'removeObservedPart').and.callThrough();
+            await receivePartDAOUpdate({
+                winner: 'creator',
+                loser: 'firstCandidate',
+                result: MGPResult.RESIGN.value,
+                request: null,
+            }, 3);
+
+            // Then removeObservedPart should be called
+            expect(connectedUserService.removeObservedPart).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
     });

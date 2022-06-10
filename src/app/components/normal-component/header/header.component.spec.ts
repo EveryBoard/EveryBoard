@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UserDAO } from 'src/app/dao/UserDAO';
+import { ObservedPart } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -43,4 +45,44 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent().username).toEqual(email);
     }));
+    describe('observedPart', () => {
+        it('should display information about current part of connection player', fakeAsync(async() => {
+            // Given a connected user that has no observedPart
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+            testUtils.detectChanges();
+            tick();
+            testUtils.expectElementNotToExist('#observedPartLink');
+
+            // When user become link to an observedPart
+            const observedPart: ObservedPart = { id: '123', typeGame: 'P4' };
+            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            testUtils.detectChanges();
+            tick();
+
+            // Then "P4 against Jean-Jaja" should be displayed
+            const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
+            expect(observedPartLink.nativeElement.innerText).toEqual('P4 (waiting for opponent)');
+        }));
+        it('should display opponent name when this one is set', fakeAsync(async() => {
+            // Given a connected user that has no observedPart
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+            testUtils.detectChanges();
+            tick();
+            testUtils.expectElementNotToExist('#observedPartLink');
+
+            // When user become link to an observedPart
+            const observedPart: ObservedPart = { id: '123', opponent: 'Jean-Jaja', typeGame: 'P4' };
+            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            testUtils.detectChanges();
+            tick();
+
+            // Then "P4 against Jean-Jaja" should be displayed
+            const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
+            expect(observedPartLink.nativeElement.innerText).toEqual('P4 against Jean-Jaja');
+        }));
+        it('should remove comment in header when disconnecting', () => {
+            // TODOTODO
+        });
+        // TODOTODO frikin add the cog back !
+    });
 });
