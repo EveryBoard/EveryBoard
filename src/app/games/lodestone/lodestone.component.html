@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-100 -200 1016 1216"
+     viewBox="-100 -210 1016 1236"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of viewInfo.boardInfo; index as y">
         <g *ngFor="let square of line; index as x">
@@ -53,7 +53,7 @@
     </g>
     <g *ngFor="let capture of viewInfo.capturesToPlace; index as x"
        id="capture_{{ x }}"
-       attr.transform="translate({{ (x + (4 - viewInfo.capturesToPlace.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ -10 + -2 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})" >
+       attr.transform="translate({{ (x + (4 - viewInfo.capturesToPlace.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ -20 + -2 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})" >
         <circle class="base"
                 [ngClass]="capture.pieceClasses"
                 [attr.r]="PIECE_RADIUS"
@@ -62,7 +62,7 @@
     </g>
     <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
        id="lodestone_{{ lodestone.direction }}_{{ lodestone.orientation }}"
-       attr.transform="translate({{ (x + (viewInfo.availableLodestones.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 10 + 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
+       attr.transform="translate({{ (x + (viewInfo.availableLodestones.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 20 + 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
        (click)="selectLodestone(lodestone)" >
         <circle class="base black-fill outside"
                 [ngClass]="lodestone.selectedClass"

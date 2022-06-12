@@ -387,26 +387,27 @@ export class LodestoneComponent
         return info;
     }
 
+    private static readonly PRESSURE_PLATE_EXTRA_SHIFT: number = 0.2;
     private static readonly PRESSURE_PLATES_POSITIONS
     : MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition> = MGPMap.from({
         'top': {
-            startForBigPlate: new Coord(0.5, -1),
-            startForSmallPlate: new Coord(1.5, 0),
+            startForBigPlate: new Coord(0.5, -1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
+            startForSmallPlate: new Coord(1.5, 0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             direction: Direction.RIGHT,
         },
         'bottom': {
-            startForBigPlate: new Coord(0.5, 8),
-            startForSmallPlate: new Coord(1.5, 7),
+            startForBigPlate: new Coord(0.5, 8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
+            startForSmallPlate: new Coord(1.5, 7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             direction: Direction.RIGHT,
         },
         'left': {
-            startForBigPlate: new Coord(-1, 0.5),
-            startForSmallPlate: new Coord(0, 1.5),
+            startForBigPlate: new Coord(-1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
+            startForSmallPlate: new Coord(0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
             direction: Direction.DOWN,
         },
         'right': {
-            startForBigPlate: new Coord(8, 0.5),
-            startForSmallPlate: new Coord(7, 1.5),
+            startForBigPlate: new Coord(8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
+            startForSmallPlate: new Coord(7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
             direction: Direction.DOWN,
         },
     });
