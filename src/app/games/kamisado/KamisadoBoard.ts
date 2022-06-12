@@ -10,7 +10,7 @@ export class KamisadoBoard {
 
     public static SIZE: number = 8;
 
-    private static COLORS: Table<KamisadoColor> = ArrayUtils.mapBiArray([
+    private static readonly COLORS: Table<KamisadoColor> = ArrayUtils.mapBiArray([
         [1, 2, 3, 4, 5, 6, 7, 8],
         [6, 1, 4, 7, 2, 5, 8, 3],
         [7, 4, 1, 6, 3, 8, 5, 2],

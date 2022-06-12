@@ -60,6 +60,7 @@ describe('LobbyComponent', () => {
     it('should stop watching current part observable and part list when destroying component', fakeAsync(async() => {
         // Given a server page
         testUtils.detectChanges();
+        // eslint-disable-next-line dot-notation
         spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
         spyOn(activePartsService, 'stopObserving');
@@ -68,6 +69,7 @@ describe('LobbyComponent', () => {
         component.ngOnDestroy();
 
         // Then the router active part observer should have been unsubscribed
+        // eslint-disable-next-line dot-notation
         expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
         // and ActivePartsService should have been told to stop observing
         expect(activePartsService.stopObserving).toHaveBeenCalledOnceWith();

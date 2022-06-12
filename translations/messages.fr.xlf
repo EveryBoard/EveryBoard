@@ -106,13 +106,13 @@
         <source>The replay game is loading, please wait, it should not take long.</source>
         <target>Le partie de revanche se charge. Veuillez attendre, cela ne devrait pas prendre longtemps.</target>
       </trans-unit>
-      <trans-unit id="5120671221766405888" datatype="html">
-        <source>Game does not exist</source>
-        <target>Partie inexistante</target>
+      <trans-unit id="6595008830732269870" datatype="html">
+        <source>Not found</source>
+        <target>Page introuvable</target>
       </trans-unit>
-      <trans-unit id="5769704000858519890" datatype="html">
-        <source>The game you tried to join does not exist anymore.</source>
-        <target>La partie que vous avez essayé de rejoindre n&apos;existe plus.</target>
+      <trans-unit id="4204327513039663989" datatype="html">
+        <source>This page does not exist.</source>
+        <target>Cette page n'existe pas.</target>
       </trans-unit>
       <trans-unit id="7017932994058745268" datatype="html">
         <source>Creating online game, please wait, it should not take long.</source>
@@ -509,6 +509,14 @@
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
         <target>Clôner une partie n&apos;est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.</target>
+      </trans-unit>
+      <trans-unit id="443650994975920138" datatype="html">
+        <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
+        <target>Ce jeu (<x id="PH" equiv-text="gameName"/>) n'existe pas.</target>
+      </trans-unit>
+      <trans-unit id="777716481777788338" datatype="html">
+        <source>The game you tried to join does not exist.</source>
+        <target>La partie que vous essayez de rejoindre n'existe pas.</target>
       </trans-unit>
       <trans-unit id="3568920234618711065" datatype="html">
         <source>The game has ended.</source>
@@ -3694,6 +3702,10 @@
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
         <target><x id="PH" equiv-text="first"/> et <x id="PH_1" equiv-text="second"/></target>
+      </trans-unit>
+      <trans-unit id="5120671221766405888" datatype="html">
+        <source>Game does not exist</source>
+        <target>Partie inexistante</target>
       </trans-unit>
     </body>
   </file>
