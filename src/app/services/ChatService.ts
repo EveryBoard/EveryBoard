@@ -8,7 +8,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { serverTimestamp } from 'firebase/firestore';
-import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MinimalUser } from '../domain/MinimalUser';
 
 export class ChatMessages {
@@ -29,7 +29,7 @@ export class ChatService implements OnDestroy {
     constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
-    public startObserving(chatId: string, callback: FirebaseCollectionObserver<Message>): void {
+    public startObserving(chatId: string, callback: FirestoreCollectionObserver<Message>): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
         if (this.followedChatId.isAbsent()) {

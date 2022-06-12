@@ -7,6 +7,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameInfo } from '../pick-game/pick-game.component';
+import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 export class OnlineGameCreationMessages {
@@ -36,6 +39,10 @@ export class OnlineGameCreationComponent implements OnInit {
         const authUser: AuthUser = this.connectedUserService.user.get();
         assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
         const user: MinimalUser = authUser.toMinimalUser();
+        if (this.gameExists(game) === false) {
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
+            return false;
+        }
         if (await this.canCreateOnlineGame(user)) {
             const gameId: string = await this.gameService.createPartJoinerAndChat(game);
             // create Part and Joiner
@@ -46,6 +53,11 @@ export class OnlineGameCreationComponent implements OnInit {
             await this.router.navigate(['/lobby']);
             return false;
         }
+    }
+    private gameExists(gameName: string): boolean {
+        const gameInfo: MGPOptional<GameInfo> =
+            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
+        return gameInfo.isPresent();
     }
     private async canCreateOnlineGame(user: MinimalUser): Promise<boolean> {
         const hasActivePart: boolean = await this.partDAO.userHasActivePart(user);

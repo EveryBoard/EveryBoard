@@ -1,4 +1,4 @@
-import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { JSONObject } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MinimalUser } from './MinimalUser';
@@ -15,7 +15,8 @@ export interface Joiner extends JSONObject {
     readonly totalPartDuration: number;
 }
 
-export type JoinerDocument = FirebaseDocument<Joiner>
+
+export type JoinerDocument = FirestoreDocument<Joiner>
 
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
 

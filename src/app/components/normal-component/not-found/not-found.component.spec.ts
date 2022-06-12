@@ -1,23 +1,37 @@
 /* eslint-disable max-lines-per-function */
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
+import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { NotFoundComponent } from './not-found.component';
 
 describe('NotFoundComponent', () => {
-    let component: NotFoundComponent;
-    let fixture: ComponentFixture<NotFoundComponent>;
+    const MESSAGE: string = 'Displayed message';
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
-            declarations: [
-                NotFoundComponent,
-            ],
-        }).compileComponents();
-        fixture = TestBed.createComponent(NotFoundComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+    let testUtils: SimpleComponentTestUtils<NotFoundComponent>;
+    let routeStub: ActivatedRouteStub;
+
+    beforeEach(() => {
+        routeStub = new ActivatedRouteStub();
     });
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+
+    it('should create', fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(NotFoundComponent, routeStub);
+
+        expect(testUtils.getComponent()).toBeTruthy();
+    }));
+    it('should display the message provided as argument', fakeAsync(async() => {
+        routeStub.setRoute('message', MESSAGE);
+        testUtils = await SimpleComponentTestUtils.create(NotFoundComponent, routeStub);
+
+        testUtils.detectChanges();
+        const messageElement: DebugElement = testUtils.findElement('.message-body');
+        expect(messageElement.nativeElement.innerText).toEqual(MESSAGE);
+    }));
+    it('should have a default message in case none are given', fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(NotFoundComponent, routeStub);
+        testUtils.detectChanges();
+        const messageElement: DebugElement = testUtils.findElement('.message-body');
+        expect(messageElement.nativeElement.innerText).toEqual(`This page does not exist.`);
+    }));
 });

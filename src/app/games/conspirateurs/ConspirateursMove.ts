@@ -105,7 +105,9 @@ export class ConspirateursMoveJump extends Move {
             };
         }
         public decodeMove(encoded: JSONValue): ConspirateursMoveJump {
+            // eslint-disable-next-line dot-notation
             assert(Utils.getNonNullable(encoded)['coords'] != null, 'Encoded ConspirateursMoveJump should contain coords');
+            // eslint-disable-next-line dot-notation
             const coords: number[] = Utils.getNonNullable(encoded)['coords'] as number[];
             const decoded: Coord[] = coords.map(this.coordEncoder.decodeNumber);
             return ConspirateursMoveJump.of(decoded).get();

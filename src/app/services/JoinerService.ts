@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
+import { display, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
-import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { FirebaseDocument, IFirebaseFirestoreDAO } from '../dao/FirebaseFirestoreDAO';
 import { ConnectedUserService } from './ConnectedUserService';
+import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
+import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 
 @Injectable({
     providedIn: 'root',
@@ -36,14 +36,14 @@ export class JoinerService {
     }
     public subscribeToCandidates(joinerId: string, callback: (candidates: MinimalUser[]) => void): void {
         let candidates: MinimalUser[] = [];
-        const observer: FirebaseCollectionObserver<MinimalUser> = new FirebaseCollectionObserver(
-            (created: FirebaseDocument<MinimalUser>[]) => {
+        const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
+            (created: FirestoreDocument<MinimalUser>[]) => {
                 for (const candidate of created) {
                     candidates.push(candidate.data);
                 }
                 callback(candidates);
             },
-            (modified: FirebaseDocument<MinimalUser>[]) => {
+            (modified: FirestoreDocument<MinimalUser>[]) => {
                 // This should never happen, but we can still update the candidates list just in case
                 for (const modifiedCandidate of modified) {
                     candidates = candidates.map((candidate: MinimalUser) => {
@@ -56,14 +56,14 @@ export class JoinerService {
                 }
                 callback(candidates);
             },
-            (deleted: FirebaseDocument<MinimalUser>[]) => {
+            (deleted: FirestoreDocument<MinimalUser>[]) => {
                 for (const deletedCandidate of deleted) {
                     candidates = candidates.filter((candidate: MinimalUser) =>
                         candidate.id !== deletedCandidate.data.id);
                 }
                 callback(candidates);
             });
-        const subCollection: IFirebaseFirestoreDAO<FirebaseJSONObject> =
+        const subCollection: IFirestoreDAO<FirestoreJSONObject> =
             this.joinerDAO.subCollectionDAO(joinerId, 'candidates');
         this.candidatesUnsubscribe = MGPOptional.of(subCollection.observingWhere([], observer));
     }

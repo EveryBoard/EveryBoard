@@ -273,11 +273,6 @@ export class GameService {
     }
     public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
-
-        assert(this.followedPartId.isPresent(), '!!! GameService.stopObserving: we already stop watching doc');
-
-        display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
-
         this.followedPartId = MGPOptional.empty();
         this.followedPartUnsubscribe();
     }

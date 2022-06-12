@@ -17,7 +17,7 @@ import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserSe
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
-import { FirebaseTime, Time } from 'src/app/domain/Time';
+import { FirestoreTime, Time } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { User } from 'src/app/domain/User';
 
@@ -390,7 +390,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private async didUserTimeout(id: string, currentTime: Time): Promise<boolean> {
-        const lastChangedOpt: MGPOptional<FirebaseTime> = await this.userService.getUserLastChanged(id);
+        const lastChangedOpt: MGPOptional<FirestoreTime> = await this.userService.getUserLastChanged(id);
         if (lastChangedOpt.isAbsent()) {
             const error: string = 'found no user while observing ' + id + ' !';
             ErrorLoggerService.logError('PartCreationComponent', error);

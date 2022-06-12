@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import * as FireAuth from '@angular/fire/auth';
+import { serverTimestamp } from 'firebase/firestore';
 import { User } from 'src/app/domain/User';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
+import { FirestoreCondition } from '../FirestoreDAO';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { FirebaseCondition } from '../FirebaseFirestoreDAO';
-import { serverTimestamp } from 'firebase/firestore';
 
 describe('UserDAO', () => {
 
@@ -27,14 +27,14 @@ describe('UserDAO', () => {
     });
     describe('observeUserByUsername', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
+            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },
             );
             spyOn(dao, 'observingWhere');
             dao.observeUserByUsername('jeanjaja', callback);
-            const parameters: FirebaseCondition[] = [
+            const parameters: FirestoreCondition[] = [
                 ['username', '==', 'jeanjaja'],
             ];
             expect(dao.observingWhere).toHaveBeenCalledWith(parameters, callback);
@@ -42,14 +42,14 @@ describe('UserDAO', () => {
     });
     describe('observeActiveUsers', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
+            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },
             );
             spyOn(dao, 'observingWhere');
             dao.observeActiveUsers(callback);
-            const parameters: FirebaseCondition[] = [
+            const parameters: FirestoreCondition[] = [
                 ['state', '==', 'online'],
                 ['verified', '==', true],
             ];

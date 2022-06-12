@@ -1,7 +1,7 @@
-import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
-import { FirebaseJSONObject } from '../utils/utils';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { FirestoreJSONObject } from '../utils/utils';
 
 // A chat has no object, it only contains a sub collection with the messages
-export type Chat = FirebaseJSONObject
+export type Chat = FirestoreJSONObject
 
-export type ChatDocument = FirebaseDocument<Chat>
+export type ChatDocument = FirestoreDocument<Chat>

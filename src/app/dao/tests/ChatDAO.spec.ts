@@ -12,9 +12,9 @@ import { PartDAO } from '../PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { JoinerDAO } from '../JoinerDAO';
-import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { IFirestoreDAO } from '../FirestoreDAO';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 
 describe('ChatDAO', () => {
 
@@ -43,11 +43,11 @@ describe('ChatDAO', () => {
     describe('subscribeToMessages', () => {
         it('should rely on observingWhere of messages DAO and sort by postedTime', () => {
             // Given a chat DAO
-            const messagesDAO: IFirebaseFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
+            const messagesDAO: IFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
             spyOn(messagesDAO, 'observingWhere').and.returnValue(() => { });
             // When calling subscribeToMessages
-            const callback: FirebaseCollectionObserver<Message> =
-                new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {});
+            const callback: FirestoreCollectionObserver<Message> =
+                new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {});
             chatDAO.subscribeToMessages('chatId', callback);
             // Then it should call observingWhere and sort by postedTime
             expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');
@@ -259,3 +259,4 @@ describe('ChatDAO', () => {
         });
     });
 });
+

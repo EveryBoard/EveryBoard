@@ -5,7 +5,7 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedGoogleUser, createUnverifiedUser, signOut } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { PartDAO } from '../PartDAO';
 import * as FireAuth from '@angular/fire/auth';
 import { UserDAO } from '../UserDAO';
@@ -35,7 +35,7 @@ describe('PartDAO', () => {
     });
     describe('observeActiveParts', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<Part> = new FirebaseCollectionObserver<Part>(
+            const callback: FirestoreCollectionObserver<Part> = new FirestoreCollectionObserver<Part>(
                 () => void { },
                 () => void { },
                 () => void { },
