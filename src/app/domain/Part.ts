@@ -67,12 +67,12 @@ export class PartDocument implements FirebaseDocument<Part> {
         return this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value ||
                this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value;
     }
-    public getDrawAccepter(): string {
+    public getDrawAccepter(): MinimalUser {
         if (this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
-            return this.data.playerZero.name;
+            return this.data.playerZero;
         } else {
             assert(this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
-            return Utils.getNonNullable(this.data.playerOne).name;
+            return Utils.getNonNullable(this.data.playerOne);
         }
     }
     public isWin(): boolean {

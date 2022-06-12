@@ -48,16 +48,15 @@ service cloud.firestore {
             return request.auth.uid == message.sender.id
         }
         function usernameOf(uid) {
-            return get(/databases/$(database)/documents/joueurs/$(uid)).data.username
+            return get(/databases/$(database)/documents/users/$(uid)).data.username
         }
-        // joueurs will be renamed to users
-        match /joueurs/{userId} {
+        match /users/{userId} {
             // Only an authenticated account can create its own user, and they cannot directly be verified
             allow create: if isOwner(userId) && request.resource.data.verified == false
             // Only the user can change its fields
             // Moreover, the username cannot be changed once set
             // And the verified field can only be changed to true if the user has a username and has its email verified
-            allow update: if isOwner(userId) && doesNotModifyUsernameIfSet() && onlyModifiesVerifiedIfVerified();
+            allow update: if isOwner(userId) && doesNotModifyUsernameIfSet() && onlyModifiesVerifiedFieldIfUserIsVerified();
             // Anybody can read the fields of a user.
             // This is because before user creation, we need to check if the username is free.
             allow read: if true;
@@ -74,7 +73,7 @@ service cloud.firestore {
             let doesNotChange = hasField(resource.data, 'username') && hasField(request.resource.data, 'username') && resource.data['username'] == request.resource.data['username'];
             return usernameNotYetSet || usernameBeingSet == false || doesNotChange;
         }
-        function onlyModifiesVerifiedIfVerified() {
+        function onlyModifiesVerifiedFieldIfUserIsVerified() {
             return hasField(request.resource.data, 'verified') == false ||
                    request.resource.data.verified == false ||
                    (userIsVerified() && resource.data.username != null);
@@ -85,9 +84,9 @@ service cloud.firestore {
             // The owner of a part can delete it
             allow delete: if userIsVerified() &&
                              creatorOf(id).id == request.auth.uid;
-            // Anyone can delete a part if the owner is not observing it or has timed out
+            // Anyone can delete a part if the owner has timed out
             allow delete: if userIsVerified() &&
-                             notObservingOrTimedOut(creatorOf(id), id);
+                             hasTimedOut(creatorOf(id));
             // A number of fields are readonly:
             // - typeGame
             // - playerZero/playerOne once the part has started
@@ -104,11 +103,10 @@ service cloud.firestore {
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
         }
-        function notObservingOrTimedOut(creator, partId) {
-            let creatorUser =  get(/databases/$(database)/documents/joueurs/$(creator.id));
-            let notObserving = creatorUser.data.observedPart != partId;
+        function hasTimedOut(creator) {
+            let creatorUser =  get(/databases/$(database)/documents/users/$(creator.id));
             let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(creatorUser.data.last_changed.seconds, 's') + duration.value(10, 's');
-            return notObserving || timedOut;
+            return timedOut;
         }
         match /joiners/{partId} {
             // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
@@ -118,7 +116,7 @@ service cloud.firestore {
             // The creator can delete a joiner
             allow delete: if userIsVerified() && userIsCreator(resource.data);
             // Anybody else can delete a joiner only if the creator is offline
-            allow delete: if userIsVerified() && notObservingOrTimedOut(creatorOf(partId), partId);
+            allow delete: if userIsVerified() && hasTimedOut(creatorOf(partId));
             // The creator can change all fields except changing partStatus to STARTED (3)
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
                              request.resource.data.partStatus != 3;
@@ -141,6 +139,7 @@ service cloud.firestore {
             // A user can add only add themself to the candidate list, with the right username, and if they are not the creator
             allow create: if userIsVerified() && userId == request.auth.uid &&
                              request.resource.data.name == usernameOf(request.auth.uid) &&
+                             request.resource.data.id == request.auth.uid &&
                              request.auth.uid != creatorOf(partId).id;
             // A user can only delete themself
             allow delete: if userIsVerified() && userId == request.auth.uid;

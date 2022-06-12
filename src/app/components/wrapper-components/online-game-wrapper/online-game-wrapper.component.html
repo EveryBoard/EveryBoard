@@ -129,8 +129,8 @@
                     <p class="title" id="hardDrawIndicator" i18n>Draw</p>
                 </div>
                 <div *ngIf="currentPart.isAgreedDraw()">
-                    <p class="title" id="youAgreedToDrawIndicator" *ngIf="currentPart.getDrawAccepter() === getPlayerName()" i18n>You agreed to draw.</p>
-                    <p class="title" id="yourOpponentAgreedToDrawIndicator" *ngIf="(currentPart.getDrawAccepter() !== getPlayerName()) && isPlaying()" i18n>Your draw proposal has been accepted.</p>
+                    <p class="title" id="youAgreedToDrawIndicator" *ngIf="currentPart.getDrawAccepter().name === getPlayerName()" i18n>You agreed to draw.</p>
+                    <p class="title" id="yourOpponentAgreedToDrawIndicator" *ngIf="(currentPart.getDrawAccepter().name !== getPlayerName()) && isPlaying()" i18n>Your draw proposal has been accepted.</p>
                     <p class="title" id="playersAgreedToDraw" *ngIf="isPlaying() === false" i18n>Players agreed to draw.</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">

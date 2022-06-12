@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { display, Utils } from 'src/app/utils/utils';
+import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
+import { FirebaseDocument, IFirebaseFirestoreDAO } from '../dao/FirebaseFirestoreDAO';
 import { ConnectedUserService } from './ConnectedUserService';
 
 @Injectable({
@@ -63,7 +63,9 @@ export class JoinerService {
                 }
                 callback(candidates);
             });
-        this.candidatesUnsubscribe = MGPOptional.of(this.joinerDAO.subCollectionDAO(joinerId, 'candidates').observingWhere([], observer));
+        const subCollection: IFirebaseFirestoreDAO<FirebaseJSONObject> =
+            this.joinerDAO.subCollectionDAO(joinerId, 'candidates');
+        this.candidatesUnsubscribe = MGPOptional.of(subCollection.observingWhere([], observer));
     }
     public unsubscribe(): void {
         assert(this.joinerUnsubscribe.isPresent(), 'JoinerService cannot unsubscribe if no joiner is observed');
@@ -103,9 +105,9 @@ export class JoinerService {
             return MGPValidation.SUCCESS;
         }
     }
-    public async removeCandidate(user: MinimalUser): Promise<void> {
+    public async removeCandidate(candidate: MinimalUser): Promise<void> {
         assert(this.observedJoinerId != null, 'cannot remove candidate if not observing a joiner');
-        return this.joinerDAO.removeCandidate(Utils.getNonNullable(this.observedJoinerId), user);
+        return this.joinerDAO.removeCandidate(Utils.getNonNullable(this.observedJoinerId), candidate);
     }
     public async cancelJoining(): Promise<void> {
         display(JoinerService.VERBOSE,

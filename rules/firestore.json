@@ -47,10 +47,9 @@ service cloud.firestore {
             return request.auth.uid == message.sender.id
         }
         function usernameOf(uid) {
-            return get(/databases/$(database)/documents/joueurs/$(uid)).data.username
+            return get(/databases/$(database)/documents/users/$(uid)).data.username
         }
-        // joueurs will be renamed to users
-        match /joueurs/{userId} {
+        match /users/{userId} {
             // Only an authenticated account can create its own user, and they cannot directly be verified
             allow create: if isOwner(userId) && request.resource.data.verified == false
             // Only the user can change its fields
@@ -104,7 +103,7 @@ service cloud.firestore {
             allow read: if userIsVerified();
         }
         function notObservingOrTimedOut(creator, partId) {
-            let creatorUser =  get(/databases/$(database)/documents/joueurs/$(creator.id));
+            let creatorUser =  get(/databases/$(database)/documents/users/$(creator.id));
             let notObserving = creatorUser.data.observedPart != partId;
             let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(creatorUser.data.last_changed.seconds, 's') + duration.value(10, 's');
             return notObserving || timedOut;

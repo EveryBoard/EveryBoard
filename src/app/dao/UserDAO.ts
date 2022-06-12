@@ -5,7 +5,6 @@ import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { User } from '../domain/User';
 import { Firestore } from '@angular/fire/firestore';
-import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +13,7 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
 
     public static VERBOSE: boolean = false;
 
-    public static COLLECTION_NAME: string = 'joueurs';
+    public static COLLECTION_NAME: string = 'users';
 
     constructor(firestore: Firestore) {
         super(UserDAO.COLLECTION_NAME, firestore);

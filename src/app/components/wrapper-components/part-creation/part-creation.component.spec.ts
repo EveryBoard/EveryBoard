@@ -25,7 +25,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirebaseTime, Time } from 'src/app/domain/Time';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('PartCreationComponent', () => {
 

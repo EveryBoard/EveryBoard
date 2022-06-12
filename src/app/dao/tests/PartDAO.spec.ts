@@ -259,7 +259,7 @@ describe('PartDAO', () => {
         // Then it should succeed
         await expectAsync(result).toBeResolvedTo();
     });
-    it('should allow verified user to delete part if owner is not observing anymore', async() => {
+    it('should forbid verified user to delete part even if owner is not observing anymore', async() => {
         // Given a part with its owner not observing this part
         const creatorUser: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'creator');
         const creator: MinimalUser = { id: creatorUser.uid, name: 'creator' };
@@ -276,8 +276,8 @@ describe('PartDAO', () => {
         // When the other user deletes the part
         const result: Promise<void> = partDAO.delete(partId);
 
-        // Then it should succeed
-        await expectAsync(result).toBeResolvedTo();
+        // Then it should fail
+        await expectFirebasePermissionDenied(result);
     });
     it('should allow verified user to delete part if owner has timed out', async() => {
         // Given a part with its owner who has timed out
