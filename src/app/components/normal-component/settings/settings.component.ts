@@ -21,7 +21,7 @@ export class SettingsComponent {
     public currentTheme: string;
     public currentLanguage: string;
 
-    public constructor(private userSettingsService: UserSettingsService,
+    public constructor(private readonly userSettingsService: UserSettingsService,
                        themeService: ThemeService) {
         this.currentTheme = themeService.getTheme();
         this.currentLanguage = this.userSettingsService.getLanguage();

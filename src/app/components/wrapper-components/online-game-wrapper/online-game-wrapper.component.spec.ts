@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
+import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { Joiner } from 'src/app/domain/Joiner';
@@ -15,8 +15,37 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { GameWrapperMessages } from '../GameWrapper';
+
+describe('OnlineGameWrapper for non-existing game', () => {
+    let testUtils: ComponentTestUtils<AbstractGameComponent>;
+    it('should redirect to /notFound', fakeAsync(async() => {
+        // Given a game wrapper for a game that does not exist
+        testUtils = await ComponentTestUtils.basic('invalid-game');
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        testUtils.prepareFixture(OnlineGameWrapperComponent);
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        await TestBed.inject(JoinerDAO).set('joinerId', JoinerMocks.INITIAL);
+        await TestBed.inject(PartDAO).set('joinerId', { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
+        await TestBed.inject(ChatDAO).set('joinerId', { });
+        await TestBed.inject(UserDAO).set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
+        testUtils.detectChanges();
+
+        // When loading the component
+        tick(1);
+
+        // Then it goes to /notFound with the expected error message
+        const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
+        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+
+        discardPeriodicTasks();
+    }));
+});
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
@@ -39,7 +68,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         joinerDAO = TestBed.inject(JoinerDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await TestBed.inject(PartDAO).set('joinerId', initialPart);
-        await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
+        await TestBed.inject(ChatDAO).set('joinerId', { });
         const userDAO: UserDAO = TestBed.inject(UserDAO);
         await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
@@ -206,7 +235,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(1);
         }));
     });
-    it('should redirect to index page if part does not exist', fakeAsync(async() => {
+    it('should redirect to /notFound if part does not exist', fakeAsync(async() => {
         testUtils = await ComponentTestUtils.basic('P4');
         ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
 
@@ -218,6 +247,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         testUtils.detectChanges();
         tick(3000); // Since a criticalToast will pop
 
-        expectValidRouting(router, ['/notFound'], NotFoundComponent);
+        expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
 });
+

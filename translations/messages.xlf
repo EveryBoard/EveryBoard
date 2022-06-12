@@ -2464,6 +2464,9 @@
       <trans-unit id="4938355530757756821" datatype="html">
         <source>You cannot join this game because you are already in another one.</source>
       </trans-unit>
+      <trans-unit id="5120671221766405888" datatype="html">
+        <source>Game does not exist</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

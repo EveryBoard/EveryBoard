@@ -61,7 +61,7 @@ export class YinshCapture extends GipfCapture {
 }
 
 export class YinshMove extends Move {
-    private static coordOptionalEncoder: Encoder<MGPOptional<Coord>> = MGPOptionalEncoder(Coord.encoder);
+    private static readonly coordOptionalEncoder: Encoder<MGPOptional<Coord>> = MGPOptionalEncoder(Coord.encoder);
     public static encoder: MoveEncoder<YinshMove> = new class extends MoveEncoder<YinshMove> {
         public encodeMove(move: YinshMove): JSONValueWithoutArray {
             const encoded: JSONValue = {

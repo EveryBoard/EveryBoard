@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FirebaseDocument } from 'src/app/dao/FirebaseFirestoreDAO';
+import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils';
@@ -37,6 +37,7 @@ describe('ErrorLoggerService', () => {
     }));
     it('should throw instead of logging the error when not initialized', () => {
         // Given a non-initialized error logger service
+        // eslint-disable-next-line dot-notation
         ErrorLoggerService['singleton'] = MGPOptional.empty();
         // When logging an error
         // Then it throws instead
@@ -107,8 +108,8 @@ describe('ErrorLoggerService', () => {
         const message: string = 'my new error message';
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
-        tick(3000);
-        const errors: FirebaseDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
+        tick(1000);
+        const errors: FirestoreDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
 
