@@ -665,20 +665,21 @@ describe('LodestoneRules', () => {
         const board: Table<LodestonePiece> = [
             [_, _, _, _, O, _, _, _],
             [_, _, _, _, X, _, _, _],
-            [_, _, _, _, O, _, _, _],
-            [_, _, _, _, X, _, _, _],
             [_, _, O, X, _, X, O, _],
+            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
             [_, _, _, _, X, _, _, _],
             [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
+
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
             top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ZERO, 3),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone to capture all Bs
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
+        const move: LodestoneMove = new LodestoneMove(new Coord(4, 2),
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 5, bottom: 0, left: 0, right: 0 });
@@ -688,15 +689,15 @@ describe('LodestoneRules', () => {
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, O, _, _, _],
             [_, _, _, O, A, O, _, _],
+            [_, _, _, _, O, _, _, _],
+            [_, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
         const expectedLodestones: LodestonePositions = new MGPMap([
-            { key: Player.ZERO, value: new Coord(4, 4) },
+            { key: Player.ZERO, value: new Coord(4, 2) },
         ]);
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
@@ -878,7 +879,7 @@ describe('LodestoneRules', () => {
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('should consider player victory when they have no more piece', () => {
-        for (const player of [Player.ZERO, Player.ONE]) {
+        for (const player of Player.PLAYERS) {
             // Given a state with no pieces left for the other player
             const P: LodestonePiece = LodestonePiecePlayer.of(player);
             const board: Table<LodestonePiece> = [

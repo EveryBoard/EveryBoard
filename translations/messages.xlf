@@ -1711,8 +1711,8 @@
       <trans-unit id="7572976598676202841" datatype="html">
         <source>The repelling lodestone</source>
       </trans-unit>
-      <trans-unit id="6941913412708011587" datatype="html">
-        <source>Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the repelling lodestone acts on the pieces. All the opponent&apos;s pieces aligned with the lodestone, as indicated by the triangles&apos; orientations, will be pushed one square away from the lodestone. An opponent&apos;s piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent&apos;s piece falls out of the board, it captured.</source>
+      <trans-unit id="3639714905640085837" datatype="html">
+        <source>Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the repelling lodestone acts on the pieces. All the opponent&apos;s pieces aligned with the lodestone, as indicated by the triangles&apos; orientations, will be pushed one square away from the lodestone. An opponent&apos;s piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent&apos;s piece falls out of the board, it is captured.</source>
       </trans-unit>
       <trans-unit id="609421287344629004" datatype="html">
         <source>The attracting lodestone</source>
@@ -1723,11 +1723,11 @@
       <trans-unit id="5747624424535894902" datatype="html">
         <source>Flipping the lodestone</source>
       </trans-unit>
-      <trans-unit id="2065421697429941163" datatype="html">
-        <source>Note that, after every move, you must flip your lodestone: if it was on its repelling side, you must use it on its attracating side, and vice versa. Also, you are allowed to place your lodestone on the same location as it was on your previous turn.</source>
+      <trans-unit id="6611993830828980213" datatype="html">
+        <source>Note that, after every move, you must flip your lodestone: if it was on its repelling side, you must use it on its attracting side, and vice versa. Also, you are allowed to place your lodestone on the same location as it was on your previous turn.</source>
       </trans-unit>
-      <trans-unit id="6013265423190663440" datatype="html">
-        <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a repelling lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with a attracting lodestone, by moving your pieces over your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on an piece you just put on a pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
+      <trans-unit id="1164074897639591703" datatype="html">
+        <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a repelling lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with an attracting lodestone, by moving your pieces on your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on a piece you just put on a pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
       </trans-unit>
       <trans-unit id="575124313782539246" datatype="html">
         <source>You have not captured any of the opponent&apos;s pieces, try again!</source>

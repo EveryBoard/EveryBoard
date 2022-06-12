@@ -6,6 +6,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LodestoneFailure } from './LodestoneFailure';
@@ -21,15 +22,38 @@ export type LodestoneInfos = {
     moved: Coord[]
 }
 
-type LodestonePressurePlatePositionInformation = Record<LodestonePressurePlatePosition, [Coord, Coord, Direction]>;
+export interface PressurePlateViewPosition {
+    startForBigPlate: Coord,
+    startForSmallPlate: Coord,
+    direction: Direction,
+}
+
+export type PressurePlatePositionInformation =
+    MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition>;
 
 export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, LodestoneInfos> {
-    public static readonly PRESSURE_PLATES_POSITIONS: LodestonePressurePlatePositionInformation = {
-        top: [new Coord(0, 0), new Coord(0, 1), Direction.RIGHT],
-        bottom: [new Coord(0, LodestoneState.SIZE-1), new Coord(0, LodestoneState.SIZE-2), Direction.RIGHT],
-        left: [new Coord(0, 0), new Coord(1, 0), Direction.DOWN],
-        right: [new Coord(LodestoneState.SIZE-1, 0), new Coord(LodestoneState.SIZE-2, 0), Direction.DOWN],
-    };
+    public static readonly PRESSURE_PLATES_POSITIONS: PressurePlatePositionInformation = MGPMap.from({
+        top: {
+            startForBigPlate: new Coord(0, 0),
+            startForSmallPlate: new Coord(0, 1),
+            direction: Direction.RIGHT,
+        },
+        bottom: {
+            startForBigPlate: new Coord(0, LodestoneState.SIZE-1),
+            startForSmallPlate: new Coord(0, LodestoneState.SIZE-2),
+            direction: Direction.RIGHT,
+        },
+        left: {
+            startForBigPlate: new Coord(0, 0),
+            startForSmallPlate: new Coord(1, 0),
+            direction: Direction.DOWN,
+        },
+        right: {
+            startForBigPlate: new Coord(LodestoneState.SIZE-1, 0),
+            startForSmallPlate: new Coord(LodestoneState.SIZE-2, 0),
+            direction: Direction.DOWN,
+        },
+    });
 
     private static singleton: MGPOptional<LodestoneRules> = MGPOptional.empty();
     public static get(): LodestoneRules {
@@ -79,14 +103,14 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         if (pressurePlate.isPresent()) {
             const newPressurePlate: MGPOptional<LodestonePressurePlate> =
                 pressurePlate.get().addCaptured(opponent, captured);
-            const plateInfo: [Coord, Coord, Direction] = LodestoneRules.PRESSURE_PLATES_POSITIONS[position];
+            const plateInfo: PressurePlateViewPosition = LodestoneRules.PRESSURE_PLATES_POSITIONS.get(position).get();
             if (newPressurePlate.isAbsent()) {
                 // The second pressure plate has fallen, crumble both rows
-                this.removePressurePlate(board, plateInfo[0], plateInfo[2], lodestones);
-                this.removePressurePlate(board, plateInfo[1], plateInfo[2], lodestones);
+                this.removePressurePlate(board, plateInfo.startForBigPlate, plateInfo.direction, lodestones);
+                this.removePressurePlate(board, plateInfo.startForSmallPlate, plateInfo.direction, lodestones);
             } else if (newPressurePlate.get().width < pressurePlate.get().width) {
                 // The first pressure plate has fallen
-                this.removePressurePlate(board, plateInfo[0], plateInfo[2], lodestones);
+                this.removePressurePlate(board, plateInfo.startForBigPlate, plateInfo.direction, lodestones);
             }
             return newPressurePlate;
         } else {
@@ -102,7 +126,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         for (let coord: Coord = start; // eslint-disable-next-line indent
              coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE); // eslint-disable-next-line indent
              coord = coord.getNext(direction)) {
-            for (const player of [Player.ZERO, Player.ONE]) {
+            for (const player of Player.PLAYERS) {
                 if (lodestones.get(player).equalsValue(coord)) {
                     lodestones.delete(player);
                 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -14,7 +14,7 @@ import { LodestoneDummyMinimax } from './LodestoneDummyMinimax';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
-import { LodestoneInfos, LodestoneRules } from './LodestoneRules';
+import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneTutorial } from './LodestoneTutorial';
 
@@ -51,7 +51,7 @@ interface ViewInfo {
     currentPlayerClass: string,
     opponentClass: string,
     selected: MGPOptional<Coord>,
-    pressurePlateShift: Record<LodestonePressurePlatePosition, Coord>;
+    pressurePlateShift: Record<LodestonePressurePlatePosition, Vector>;
 }
 
 interface SquareInfo {
@@ -61,12 +61,6 @@ interface SquareInfo {
     hasPiece: boolean,
     pieceClasses: string[],
     lodestone?: LodestoneInfo,
-}
-
-interface PressurePlateViewPosition {
-    startForBigPlate: Coord,
-    startForSmallPlate: Coord,
-    direction: Direction,
 }
 
 @Component({
@@ -90,10 +84,10 @@ export class LodestoneComponent
         pressurePlates: [],
         selected: MGPOptional.empty(),
         pressurePlateShift: {
-            top: new Coord(0, 0),
-            left: new Coord(0, 0),
-            right: new Coord(0, 0),
-            bottom: new Coord(0, 0),
+            top: new Vector(0, 0),
+            left: new Vector(0, 0),
+            right: new Vector(0, 0),
+            bottom: new Vector(0, 0),
         },
     };
 
@@ -388,24 +382,23 @@ export class LodestoneComponent
     }
 
     private static readonly PRESSURE_PLATE_EXTRA_SHIFT: number = 0.2;
-    private static readonly PRESSURE_PLATES_POSITIONS
-    : MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition> = MGPMap.from({
-        'top': {
+    private static readonly PRESSURE_PLATES_POSITIONS: PressurePlatePositionInformation = MGPMap.from({
+        top: {
             startForBigPlate: new Coord(0.5, -1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             startForSmallPlate: new Coord(1.5, 0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             direction: Direction.RIGHT,
         },
-        'bottom': {
+        bottom: {
             startForBigPlate: new Coord(0.5, 8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             startForSmallPlate: new Coord(1.5, 7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             direction: Direction.RIGHT,
         },
-        'left': {
+        left: {
             startForBigPlate: new Coord(-1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
             startForSmallPlate: new Coord(0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
             direction: Direction.DOWN,
         },
-        'right': {
+        right: {
             startForBigPlate: new Coord(8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
             startForSmallPlate: new Coord(7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
             direction: Direction.DOWN,
@@ -518,5 +511,27 @@ export class LodestoneComponent
         } else {
             return 0;
         }
+    }
+    public getSquareTransform(x: number, y: number): string {
+        const dx: number = x * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        const dy: number = y * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        return `translate(${dx}, ${dy})`;
+    }
+    public getCaptureTransform(x: number): string {
+        const dx: number = (x + (4 - this.viewInfo.capturesToPlace.length / 2)) * this.SPACE_SIZE +
+            this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        const dy: number = -20 + -2 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        return `translate(${dx}, ${dy})`;
+    }
+    public getAvailableLodestoneTransform(x: number): string {
+        const dx: number = (x + (this.viewInfo.availableLodestones.length / 2)) * this.SPACE_SIZE +
+            this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        const dy: number = 20 + 9 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        return `translate(${dx}, ${dy})`;
+    }
+    public getPressurePlateTransform(position: LodestonePressurePlatePosition): string {
+        const dx: number = this.viewInfo.pressurePlateShift[position].x * this.SPACE_SIZE;
+        const dy: number = this.viewInfo.pressurePlateShift[position].y * this.SPACE_SIZE;
+        return `translate(${dx}, ${dy})`;
     }
 }

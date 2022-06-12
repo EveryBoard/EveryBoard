@@ -230,10 +230,10 @@ describe('LodestoneComponent', () => {
     }));
     it('should display only the available lodestones when a lodestone is already on the board', fakeAsync(async() => {
         // Given a state with the player lodestone on the board
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
+        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'pull', orientation: 'orthogonal' });
         const board: Table<LodestonePiece> = [
-            [X, _, _, _, _, _, _, B],
+            [O, _, _, _, _, _, _, B],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],

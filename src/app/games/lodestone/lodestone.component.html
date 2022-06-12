@@ -22,7 +22,7 @@
                         [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)" />
                 <g *ngIf="square.lodestone"
                    class="lodestone"
-                   attr.transform="translate({{ x * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ y * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})">
+                   [attr.transform]="getSquareTransform(x, y)">
                     <circle class="base black-fill outside"
                             [ngClass]="square.lodestone.selectedClass"
                             [attr.r]="PIECE_RADIUS"
@@ -53,7 +53,7 @@
     </g>
     <g *ngFor="let capture of viewInfo.capturesToPlace; index as x"
        id="capture_{{ x }}"
-       attr.transform="translate({{ (x + (4 - viewInfo.capturesToPlace.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ -20 + -2 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})" >
+       [attr.transform]="getCaptureTransform(x)" >
         <circle class="base"
                 [ngClass]="capture.pieceClasses"
                 [attr.r]="PIECE_RADIUS"
@@ -62,7 +62,7 @@
     </g>
     <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
        id="lodestone_{{ lodestone.direction }}_{{ lodestone.orientation }}"
-       attr.transform="translate({{ (x + (viewInfo.availableLodestones.length / 2)) * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }}, {{ 20 + 9 * SPACE_SIZE + STROKE_WIDTH + SPACE_SIZE / 2 }})"
+       [attr.transform]="getAvailableLodestoneTransform(x)"
        (click)="selectLodestone(lodestone)" >
         <circle class="base black-fill outside"
                 [ngClass]="lodestone.selectedClass"
@@ -86,7 +86,7 @@
     <g *ngFor="let plate of viewInfo.pressurePlates"
        id="pressurePlate_{{ plate.position }}" >
         <g *ngFor="let square of plate.coords; index as i"
-           attr.transform="translate({{ viewInfo.pressurePlateShift[plate.position].x * SPACE_SIZE }}, {{ viewInfo.pressurePlateShift[plate.position].y * SPACE_SIZE }})" >
+           [attr.transform]="getPressurePlateTransform(plate.position)" >
             <g id="plate_{{ plate.position }}_{{ i }}"
                (click)="(square.temporary) ? deselectPressurePlate(plate.position, i) : selectPressurePlate(plate.position, i)" >
                 <rect id="plateSquare_{{ plate.position }}_{{ i }}"
