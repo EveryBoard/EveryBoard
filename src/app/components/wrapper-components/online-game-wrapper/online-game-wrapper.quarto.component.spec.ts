@@ -116,7 +116,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partCreationId).withContext(context).toBeTruthy();
         context = 'partCreation field should also be present';
         expect(wrapper.partCreation).withContext(context).toBeTruthy();
-        await joinerDAO.update('joinerId', JoinerMocks.INITIAL);
         await joinerDAO.addCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);

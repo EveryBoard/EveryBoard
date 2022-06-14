@@ -118,7 +118,7 @@ export class GameService {
             remainingMsForOne: joiner.totalPartDuration * 1000,
         };
     }
-    public async deletePart(partId: string): Promise<void> {
+    public deletePart(partId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
         return this.partDAO.delete(partId);
     }

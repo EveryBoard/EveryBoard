@@ -138,11 +138,15 @@ export class JoinerService {
             await this.joinerDAO.removeCandidate(this.observedJoinerId, user);
         }
     }
-    public async deleteJoiner(): Promise<void> {
+    public async deleteJoiner(candidates: MinimalUser[]): Promise<void> {
         display(JoinerService.VERBOSE,
                 'JoinerService.deleteJoiner(); this.observedJoinerId = ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        return this.joinerDAO.delete(Utils.getNonNullable(this.observedJoinerId));
+        const joinerId: string = Utils.getNonNullable(this.observedJoinerId);
+        await this.joinerDAO.delete(joinerId);
+        for (const candidate of candidates) {
+            await this.joinerDAO.removeCandidate(joinerId, candidate);
+        }
     }
     public async proposeConfig(chosenOpponent: MinimalUser,
                                partType: PartType,
@@ -180,7 +184,7 @@ export class JoinerService {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
-    public async reviewConfigAndRemoveChosenPlayer(): Promise<void> {
+    public async reviewConfigAndRemoveChosenOpponent(): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 

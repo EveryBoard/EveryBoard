@@ -295,7 +295,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.chatService.deleteChat(this.partId);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat deleted');
 
-        await this.joinerService.deleteJoiner();
+        await this.joinerService.deleteJoiner(this.candidates);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat and joiner deleted');
 
         await this.gameService.deletePart(this.partId);
@@ -405,7 +405,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         if (user.id === joiner.chosenOpponent?.id) {
             // The chosen player has been removed, the user will have to review the config
             // A message will be displayed once the joiner has been update
-            await this.joinerService.reviewConfigAndRemoveChosenPlayer();
+            await this.joinerService.reviewConfigAndRemoveChosenOpponent();
         }
         return this.joinerService.removeCandidate(user);
     }

@@ -6,17 +6,13 @@ import { User } from 'src/app/domain/User';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
+import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { FirestoreCondition } from '../FirestoreDAO';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('UserDAO', () => {
 
     let dao: UserDAO;
-
-    function signOut(): Promise<void> {
-        return TestBed.inject(FireAuth.Auth).signOut();
-    }
 
     beforeEach(async() => {
         await setupEmulators();
@@ -68,8 +64,6 @@ describe('UserDAO', () => {
             // then its username has changed
             const userWithUsername: User = (await dao.read(uid)).get();
             expect(userWithUsername.username).toEqual('foo');
-
-            await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
         });
     });
     describe('updatePresenceToken', () => {
@@ -87,8 +81,7 @@ describe('UserDAO', () => {
     describe('security', () => {
         it('should authorize connected user to read any other user', async() => {
             // Given an existing user and a logged in user
-            const other: FireAuth.User = await createConnectedGoogleUser('bar@bar.com', 'other-user');
-            await signOut();
+            const other: FireAuth.User = await createDisconnectedGoogleUser('bar@bar.com', 'other-user');
             await createConnectedGoogleUser('foo@bar.com', 'user');
 
             // When trying to read another user
@@ -99,8 +92,7 @@ describe('UserDAO', () => {
         });
         it('should allow disconnected user to read any user', async() => {
             // Given an existing user and a disconnected visitor
-            const other: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'other-user');
-            await signOut();
+            const other: FireAuth.User = await createDisconnectedGoogleUser('foo@bar.com', 'other-user');
 
             // When trying to read a user
             const userRead: MGPOptional<User> = await dao.read(other.uid);
@@ -140,11 +132,11 @@ describe('UserDAO', () => {
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set the username
             const result: Promise<void> = dao.setUsername(user.uid, 'user!');
-            // Then it should succeed
+            // Then it should fail
             await expectFirebasePermissionDenied(result);
         });
         it('should authorize setting the user to verified when it is', async() => {
-            // Given an non-verified user, with a username
+            // Given a non-verified user, with a username
             const token: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
@@ -152,7 +144,7 @@ describe('UserDAO', () => {
             await dao.set(credential.user.uid, { verified: false, username: 'user' });
 
             // When marking the user as verified
-            const result: Promise<void> = dao.markVerified(credential.user.uid);
+            const result: Promise<void> = dao.markAsVerified(credential.user.uid);
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -165,7 +157,7 @@ describe('UserDAO', () => {
             await dao.set(credential.user.uid, { verified: false });
 
             // When marking the user as verified
-            const result: Promise<void> = dao.markVerified(credential.user.uid);
+            const result: Promise<void> = dao.markAsVerified(credential.user.uid);
             // Then it should fail
             await expectFirebasePermissionDenied(result);
         });
@@ -178,14 +170,13 @@ describe('UserDAO', () => {
             await dao.set(credential.user.uid, { verified: false, username: 'foo' });
 
             // When marking the user as verified
-            const result: Promise<void> = dao.markVerified(credential.user.uid);
+            const result: Promise<void> = dao.markAsVerified(credential.user.uid);
             // Then it should fail
             await expectFirebasePermissionDenied(result);
         });
         it('should forbid to update the fields another user', async() => {
             // Given an existing user and a logged in user
-            const other: FireAuth.User = await createConnectedGoogleUser('bar@bar.com', 'other-user');
-            await signOut();
+            const other: FireAuth.User = await createDisconnectedGoogleUser('bar@bar.com', 'other-user');
             await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to change a field of another user
             const result: Promise<void> = dao.update(other.uid, { username: 'jean? jaja!' });
@@ -202,8 +193,7 @@ describe('UserDAO', () => {
         });
         it('should forbid to delete another user', async() => {
             // Given an existing user and a logged in user
-            const other: FireAuth.User = await createConnectedGoogleUser('bar@bar.com', 'other-user');
-            await signOut();
+            const other: FireAuth.User = await createDisconnectedGoogleUser('bar@bar.com', 'other-user');
             await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to delete the other user
             const result: Promise<void> = dao.delete(other.uid);

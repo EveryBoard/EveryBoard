@@ -19,6 +19,7 @@ import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 @Injectable()
 export class ConnectedUserServiceMock {
@@ -121,30 +122,33 @@ export async function createConnectedGoogleUser(email: string, username?: string
     return credential.user;
 }
 
+export async function createUser(email: string, username: string): Promise<MinimalUser> {
+    const user: FireAuth.User = await createConnectedGoogleUser(email, username);
+    return { id: user.uid, name: username };
+}
+
 export async function reconnectUser(email: string): Promise<void> {
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                         FireAuth.GoogleAuthProvider.credential(token));
 }
 
-export async function createUnverifiedUser(email: string, username?: string): Promise<FireAuth.User> {
+export async function createUnverifiedUser(email: string, username: string): Promise<MinimalUser> {
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": false}';
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
     await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
-    if (username != null) {
-        await TestBed.inject(UserDAO).update(credential.user.uid, { username });
-    }
-    return credential.user;
+    await TestBed.inject(UserDAO).update(credential.user.uid, { username });
+    return { id: credential.user.uid, name: username };
 }
 
 export function signOut(): Promise<void> {
     return TestBed.inject(FireAuth.Auth).signOut();
 }
 
-async function createDisconnectedGoogleUser(email: string): Promise<FireAuth.User> {
-    const user: FireAuth.User = await createConnectedGoogleUser(email);
+export async function createDisconnectedGoogleUser(email: string, username?: string): Promise<FireAuth.User> {
+    const user: FireAuth.User = await createConnectedGoogleUser(email, username);
     await signOut();
     return user;
 }
@@ -170,7 +174,7 @@ describe('ConnectedUserService', () => {
     }));
     it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
         const userDAO: UserDAO = TestBed.inject(UserDAO);
-        spyOn(userDAO, 'markVerified');
+        spyOn(userDAO, 'markAsVerified');
 
         // given a registered user that has finalized all steps to verify its account
         const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
@@ -192,7 +196,7 @@ describe('ConnectedUserService', () => {
         await userHasUpdated;
 
         // then its status is set to verified
-        expect(userDAO.markVerified).toHaveBeenCalledWith(uid);
+        expect(userDAO.markAsVerified).toHaveBeenCalledWith(uid);
 
         subscription.unsubscribe();
     });

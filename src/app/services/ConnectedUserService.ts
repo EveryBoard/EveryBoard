@@ -126,7 +126,7 @@ export class ConnectedUserService implements OnDestroy {
                                 if (userHasFinalizedVerification === true && doc.get().verified === false) {
                                     // The user has finalized verification but isn't yet marked as so in the DB.
                                     // So we mark it, and we'll get notified when the user is marked.
-                                    return this.userDAO.markVerified(user.uid);
+                                    return this.userDAO.markAsVerified(user.uid);
                                 }
                                 const authUser: AuthUser = new AuthUser(user.uid,
                                                                         MGPOptional.ofNullable(user.email),
@@ -292,7 +292,7 @@ export class ConnectedUserService implements OnDestroy {
             await Auth.updateProfile(currentUser, { displayName: username });
             await this.userDAO.setUsername(currentUser.uid, username);
             // Only gmail accounts can set their username, and they become finalized once they do
-            await this.userDAO.markVerified(currentUser.uid);
+            await this.userDAO.markAsVerified(currentUser.uid);
             // Reload the user to notify listeners that the user has changed
             await this.reloadUser();
             return MGPValidation.SUCCESS;

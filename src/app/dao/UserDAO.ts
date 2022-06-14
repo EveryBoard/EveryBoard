@@ -26,7 +26,7 @@ export class UserDAO extends FirestoreDAO<User> {
     public async setUsername(uid: string, username: string): Promise<void> {
         await this.update(uid, { username: username });
     }
-    public async markVerified(uid: string): Promise<void> {
+    public async markAsVerified(uid: string): Promise<void> {
         await this.update(uid, { verified: true });
     }
     public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {

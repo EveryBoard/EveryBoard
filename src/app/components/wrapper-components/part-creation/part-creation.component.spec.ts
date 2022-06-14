@@ -466,7 +466,7 @@ describe('PartCreationComponent', () => {
 
                 // Then game, joiner, and chat are deleted
                 expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
+                expect(joinerService.deleteJoiner).toHaveBeenCalledWith([]);
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -566,7 +566,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the part and all its related data should be removed
                 expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
+                expect(joinerService.deleteJoiner).toHaveBeenCalledWith([]);
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

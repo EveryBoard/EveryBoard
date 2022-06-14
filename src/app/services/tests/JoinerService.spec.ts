@@ -104,11 +104,11 @@ describe('JoinerService', () => {
             // We should be added to the candidate list
             expect(dao.addCandidate).toHaveBeenCalledWith('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
-        it('should fail when joining an invalid joiner', fakeAsync(async() => {
+        it('should fail when joining an unexisting joiner', fakeAsync(async() => {
             spyOn(dao, 'read').and.resolveTo(MGPOptional.empty());
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             // When trying to join an invalid joiner
-            const result: Promise<MGPValidation> = service.joinGame('invalidJoinerId');
+            const result: Promise<MGPValidation> = service.joinGame('unexistingJoinerId');
             // Then it should fail
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure('Game does not exist'));
         }));
@@ -137,14 +137,14 @@ describe('JoinerService', () => {
             // Then we are removed from the list
             expect(dao.removeCandidate).toHaveBeenCalledWith('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
-        it('should start as new when chosenPlayer leaves', fakeAsync(async() => {
-            // Given a joiner that we are observing, with a chosen player
+        it('should start as new when chosen opponent leaves', fakeAsync(async() => {
+            // Given a joiner that we are observing, with a chosen opponent
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
             await dao.addCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
-            // When the chosen player leaves
+            // When the chosen opponent leaves
             await service.cancelJoining();
 
             // Then the joiner is back to the initial one
@@ -161,10 +161,13 @@ describe('JoinerService', () => {
             spyOn(dao, 'delete');
 
             // When we delete it
-            await service.deleteJoiner();
+            await service.deleteJoiner([]);
 
             // Then it is deleted in the DAO
             expect(dao.delete).toHaveBeenCalledWith('joinerId');
+        }));
+        it('should delete candidates as well', fakeAsync(async() => {
+            throw new Error('TODO')
         }));
     });
     describe('reviewConfig', () => {
@@ -184,7 +187,7 @@ describe('JoinerService', () => {
             });
         }));
     });
-    describe('reviewConfigAndRemoveChosenPlayer', () => {
+    describe('reviewConfigAndRemoveChosenOpponent', () => {
         it('should change part status and chosen opponent with DAO', fakeAsync(async() => {
             // Given a joiner that we are observing
             await dao.set('joinerId', JoinerMocks.INITIAL);
@@ -192,8 +195,8 @@ describe('JoinerService', () => {
 
             spyOn(dao, 'update');
 
-            // When reviewing the config (because the chosen player left)
-            await service.reviewConfigAndRemoveChosenPlayer();
+            // When reviewing the config (because the chosen opponent left)
+            await service.reviewConfigAndRemoveChosenOpponent();
 
             // Then the part is updated accordingly
             expect(dao.update).toHaveBeenCalledWith('joinerId', {
