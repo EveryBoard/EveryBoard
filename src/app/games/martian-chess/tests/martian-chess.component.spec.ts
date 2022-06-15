@@ -7,10 +7,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessRulesFailure } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('MartianChessComponent', () => {
 
@@ -31,6 +31,43 @@ describe('MartianChessComponent', () => {
 
         // Then the piece should have a highlighted style
         componentTestUtils.expectElementToHaveClass('#pawn_2_2', 'highlighted');
+    }));
+    it('should show indicators of next possible click once piece is selected', fakeAsync(async() => {
+        // Given any board where displacement, capture and promotions are all possible
+        const board: Table<MartianChessPiece> = [
+            [_, _, _, _],
+            [_, _, _, _],
+            [C, C, B, _],
+            [_, _, _, _],
+
+            [_, _, B, A],
+            [_, B, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+        ];
+        const state: MartianChessState = new MartianChessState(board, 1);
+        componentTestUtils.setupState(state);
+
+        // When selecting a piece able to do capture/promotion/displacement
+        await componentTestUtils.expectClickSuccess('#click_2_4');
+
+        // Then all thoses option should be shown as a landing coord
+        componentTestUtils.expectElementToExist('#indicator_2_2'); // capturable opponent
+        componentTestUtils.expectElementToExist('#indicator_2_3'); // displacement
+        componentTestUtils.expectElementToExist('#indicator_3_3'); // displacement
+
+        componentTestUtils.expectElementToExist('#indicator_3_4'); // promotion
+        componentTestUtils.expectElementToExist('#indicator_3_5'); // displacement
+
+        componentTestUtils.expectElementToExist('#indicator_2_6'); // displacement
+        componentTestUtils.expectElementToExist('#indicator_2_5'); // displacement
+        componentTestUtils.expectElementNotToExist('#indicator_0_6'); // illegal displacement
+        componentTestUtils.expectElementNotToExist('#indicator_1_5'); // illegal promotion
+
+        componentTestUtils.expectElementToExist('#indicator_0_4'); // displacement
+        componentTestUtils.expectElementToExist('#indicator_1_4'); // displacement
+        componentTestUtils.expectElementToExist('#indicator_0_2'); // capturable opponent
+        componentTestUtils.expectElementToExist('#indicator_1_3'); // displacement
     }));
     it('should not select opponent piece', fakeAsync(async() => {
         // Given the initial board
@@ -66,16 +103,34 @@ describe('MartianChessComponent', () => {
         const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR(1, 2);
         await componentTestUtils.expectClickFailure('#click_3_4', reason);
     }));
-    it('should attempt the move when doing the second click (illegal)', fakeAsync(async() => {
+    it('should change selectedPiece when second clicking on a non-landable friendly piece', fakeAsync(async() => {
         // Given a board where a first click was done
-        await componentTestUtils.expectClickSuccess('#click_2_2');
+        await componentTestUtils.expectClickSuccess('#click_0_0');
 
-        // When cliking on a illegal second coord
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get();
+        // When cliking on one of your other piece that cannot be your landing coord
+        await componentTestUtils.expectClickSuccess('#click_1_1');
 
-        // Then the move should have been illegal
-        const reason: string = MartianChessRulesFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
-        await componentTestUtils.expectMoveFailure('#click_1_1', reason, move);
+        // Then the move should not have been cancelled but the first piece selected changed
+        componentTestUtils.expectElementToHaveClass('#drone_1_1', 'highlighted');
+    }));
+    it('should propose illegal move so that a toast is given to explain', fakeAsync(async() => {
+        // Given a board where a first click was done
+        await componentTestUtils.expectClickSuccess('#click_0_0');
+
+        // When clicking on a fully illegal coord
+        // Then the move should be illegal
+        const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
+        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(3, 3)).get();
+        await componentTestUtils.expectMoveFailure('#click_3_3', reason, move);
+    }));
+    it('should toast the move invalidity', fakeAsync(async() => {
+        // Given a board where a first click was done
+        await componentTestUtils.expectClickSuccess('#click_0_0');
+
+        // When finishing an invalid move creation
+        // Then the move failure reason should have been toasted
+        const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR(3, 4);
+        await componentTestUtils.expectClickFailure('#click_3_4', reason);
     }));
     it('should attempt the move when doing the second click (success)', fakeAsync(async() => {
         // Given a board where a first click was done

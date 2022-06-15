@@ -1,24 +1,25 @@
 :root {
+    --alt-alt-background-fill: dimgray;
+    --alt-background-fill: gray;
+    --alt-captured: #990000;
+    --background-color: white;
+    --base-stroke: black;
+    --capturable: yellow;
+    --captured: red;
+    --clickable: yellow;
+    --indicator: green;
+    --last-move: orange;
+    --moved: gray;
+    --nonplayer: #5c0838;
+    --nonplayer-light: #8d2660;
     --player0: #994d00;
     --player0-alternate: #d3853d;
     --player1: #ffc34d;
     --player1-alternate: #ffe19b;
-    --base-stroke: black;
-    --background-fill: lightgrey;
-    --alt-background-fill: gray;
-    --alt-alt-background-fill: dimgray;
-    --nonplayer: #5c0838;
-    --nonplayer-light: #8d2660;
     --pre-captured: pink;
-    --captured: red;
-    --alt-captured: #990000;
-    --moved: gray;
-    --indicator: green;
-    --last-move: orange;
-    --capturable: yellow;
-    --clickable: yellow;
     --selectable: yellow;
     --selected: blue;
+    --spaces-fill: lightgrey;
     --victory: yellow;
 }
 

@@ -23,6 +23,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
     public static VERBOSE: boolean = false;
+    public VERBOSE: boolean = false;
 
     public aiDepths: [string, string] = ['0', '0'];
 

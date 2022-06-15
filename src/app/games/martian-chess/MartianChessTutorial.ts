@@ -24,7 +24,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.informational(
             $localize`The pieces`,
-            $localize`The dark pieces belong to the first player, the light ones to the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots.</li><li>The Drones: represented as circles with 2 dots.</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
+            $localize`The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots.</li><li>The Drones: represented as circles with 2 dots.</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
             MartianChessState.getInitialState(),
         ),
         TutorialStep.fromPredicate(
@@ -43,7 +43,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Moving drones`,
-            $localize`Drones are worth two points. They can move one or two steps in any of the 8 directions.<br/><br/>You're playing Dark, move a drone.`,
+            $localize`Drones are worth two points. They can move one or two steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a drone.`,
             MartianChessState.getInitialState(),
             MartianChessMove.from(new Coord(0, 2), new Coord(0, 4)).get(),
             (move: MartianChessMove, state: MartianChessState) => {
@@ -57,7 +57,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Moving queens`,
-            $localize`Queens are worth three points. They can move any number of step in any direction, without jumping over other pieces.<br/><br/>You're playing Dark, move a queen.`,
+            $localize`Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a queen.`,
             new MartianChessState([
                 [B, A, A, _],
                 [C, _, _, _],

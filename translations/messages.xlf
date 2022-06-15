@@ -1246,8 +1246,8 @@
       <trans-unit id="8633649754808970040" datatype="html">
         <source>The pieces</source>
       </trans-unit>
-      <trans-unit id="6163961304202440887" datatype="html">
-        <source>The dark pieces belong to the first player, the light ones to the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
+      <trans-unit id="4066930341904859929" datatype="html">
+        <source>The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
       </trans-unit>
       <trans-unit id="2033063585111632444" datatype="html">
         <source>Moving pawns</source>
@@ -1261,8 +1261,8 @@
       <trans-unit id="6187825194726438285" datatype="html">
         <source>Moving drones</source>
       </trans-unit>
-      <trans-unit id="5696861628061349828" datatype="html">
-        <source>Drones are worth two points. They can move one or two steps in any of the 8 directions.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a drone.</source>
+      <trans-unit id="4279721125731228701" datatype="html">
+        <source>Drones are worth two points. They can move one or two steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a drone.</source>
       </trans-unit>
       <trans-unit id="412189766091253797" datatype="html">
         <source>This is not a drone!</source>
@@ -1270,8 +1270,8 @@
       <trans-unit id="731242877035493751" datatype="html">
         <source>Moving queens</source>
       </trans-unit>
-      <trans-unit id="8545836576372384330" datatype="html">
-        <source>Queens are worth three points. They can move any number of step in any direction, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
+      <trans-unit id="246448750813949151" datatype="html">
+        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
       </trans-unit>
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>

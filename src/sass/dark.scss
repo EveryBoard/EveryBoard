@@ -1,24 +1,25 @@
 :root {
+    --alt-alt-background-fill: #AAA;
+    --alt-background-fill: #666;
+    --alt-captured: #990000;
+    --background-color: #242424;
+    --base-stroke: #444;
+    --capturable: #990;
+    --captured: red;
+    --clickable: #990;
+    --indicator: #990;
+    --last-move: #AA8;
+    --moved: #AAA;
+    --nonplayer: #5c0838;
+    --nonplayer-light: #8d2660;
     --player0: #994d00;
     --player0-alternate: #d3853d;
     --player1: #ffc34d;
     --player1-alternate: #ffe19b;
-    --base-stroke: #444;
-    --background-fill: #888;
-    --moved: #AAA;
-    --alt-background-fill: #666;
-    --alt-alt-background-fill: #AAA;
-    --nonplayer: #5c0838;
-    --nonplayer-light: #8d2660;
     --pre-captured: pink;
-    --captured: red;
-    --alt-captured: #990000;
-    --indicator: #990;
-    --last-move: #AA8;
-    --capturable: #990;
-    --clickable: #990;
     --selectable: #990;
     --selected: #99E;
+    --spaces-fill: #888;
     --victory: green;
 }
 
@@ -98,4 +99,5 @@ $red-invert: white;
 /* Show the page only after the CSS has been loaded */
 html, body {
     display: block;
+// TODOTODO    background-color: var(--background-color);
 }

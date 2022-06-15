@@ -1,7 +1,7 @@
 .base {
     stroke: var(--base-stroke);
     stroke-width: 8;
-    fill: var(--background-fill);
+    fill: var(--spaces-fill);
     stroke-linecap: butt;
     stroke-linejoin: round;
 }
@@ -27,7 +27,10 @@
     stroke: white;
 }
 .background {
-    fill: var(--background-fill);
+    fill: var(--spaces-fill);
+}
+.background-color {
+    fill: var(--background-color);
 }
 .background2 {
     fill: var(--alt-background-fill);

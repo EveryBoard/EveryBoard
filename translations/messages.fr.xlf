@@ -2379,9 +2379,9 @@
         <source>The pieces</source>
         <target>Les pièces</target>
       </trans-unit>
-      <trans-unit id="6163961304202440887" datatype="html">
-        <source>The dark pieces belong to the first player, the light ones to the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
-        <target>Les pièces foncées appartiennent au premier joueur, les claires au second. Il y a trois types de pièces: &lt;ul&gt;&lt;li&gt;Les reines: représentées par des cercles avec 3 points.&lt;/li&gt;&lt;li&gt;Les drônes: représentés par des cercles avec 2 points.&lt;/li&gt;&lt;li&gt;Les pions: représentés par des cercles avec un point.&lt;/li&gt;&lt;/ul&gt;</target>
+      <trans-unit id="4066930341904859929" datatype="html">
+        <source>The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
+        <target>Les pièces sont foncées du côté du premier joueur, les claires du côté du second. Il y a trois types de pièces: &lt;ul&gt;&lt;li&gt;Les reines: représentées par des cercles avec 3 points.&lt;/li&gt;&lt;li&gt;Les drônes: représentés par des cercles avec 2 points.&lt;/li&gt;&lt;li&gt;Les pions: représentés par des cercles avec un point.&lt;/li&gt;&lt;/ul&gt;</target>
       </trans-unit>
       <trans-unit id="2033063585111632444" datatype="html">
         <source>Moving pawns</source>
@@ -2399,9 +2399,9 @@
         <source>Moving drones</source>
         <target>Déplacer les drônes</target>
       </trans-unit>
-      <trans-unit id="5696861628061349828" datatype="html">
-        <source>Drones are worth two points. They can move one or two steps in any of the 8 directions.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a drone.</source>
-        <target>Les drônes valent deux points. Ils peuvent se déplacer de un ou deux pas dans n'importe quelle direction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez un drône.</target>
+      <trans-unit id="4279721125731228701" datatype="html">
+        <source>Drones are worth two points. They can move one or two steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a drone.</source>
+        <target>Les drônes valent deux points. Ils peuvent se déplacer de un ou deux pas dans n'importe quelle direction, en ligne droite, sans sauter au dessus d'autres pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez un drône.</target>
       </trans-unit>
       <trans-unit id="412189766091253797" datatype="html">
         <source>This is not a drone!</source>
@@ -2411,9 +2411,9 @@
         <source>Moving queens</source>
         <target>Déplacer les reines</target>
       </trans-unit>
-      <trans-unit id="8545836576372384330" datatype="html">
-        <source>Queens are worth three points. They can move any number of step in any direction, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
-        <target>Les reines valent trois points. </target>
+      <trans-unit id="246448750813949151" datatype="html">
+        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
+        <target>Les reines valent trois points. Elles peuvent se déplacer d'autant de pas qu'elles veulent dans n'importe quelle direction, en ligne droite, sans sauter au dessus d'autres pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une reine.</target>
       </trans-unit>
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>

@@ -139,6 +139,19 @@ export class Direction extends BaseDirection {
         };
     public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
 
+    public static readonly DIAGONALS: ReadonlyArray<Direction> = [
+        Direction.UP_RIGHT,
+        Direction.DOWN_RIGHT,
+        Direction.DOWN_LEFT,
+        Direction.UP_LEFT,
+    ];
+    public static readonly ORTHOGONALS: ReadonlyArray<Direction> = [
+        Direction.UP,
+        Direction.RIGHT,
+        Direction.DOWN,
+        Direction.LEFT,
+    ];
+
     public static readonly encoder: Encoder<Direction> = new DirectionEncoder();
 
     private constructor(x: 0|1|-1, y: 0|1|-1) {

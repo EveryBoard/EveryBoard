@@ -200,6 +200,7 @@ describe('ConnectedUserService', () => {
             expect(result.getReason()).toBe('This email address is already in use.');
         });
         it('should fail when trying to register an user with an username that is already registered', async() => {
+            // Last
             // given an user that already exists
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
