@@ -142,9 +142,7 @@ export class LodestoneComponent
             return MGPValidation.SUCCESS;
         }
     }
-    public async selectLodestone(lodestone: LodestoneDescription)
-    : Promise<MGPValidation>
-    {
+    public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#lodestone_' + lodestone.direction + '_' + lodestone.orientation);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -520,13 +518,13 @@ export class LodestoneComponent
     public getCaptureTransform(x: number): string {
         const dx: number = (x + (4 - this.viewInfo.capturesToPlace.length / 2)) * this.SPACE_SIZE +
             this.STROKE_WIDTH + this.SPACE_SIZE / 2;
-        const dy: number = -20 + -2 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        const dy: number = -30 + -2 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         return `translate(${dx}, ${dy})`;
     }
     public getAvailableLodestoneTransform(x: number): string {
         const dx: number = (x + (this.viewInfo.availableLodestones.length / 2)) * this.SPACE_SIZE +
             this.STROKE_WIDTH + this.SPACE_SIZE / 2;
-        const dy: number = 20 + 9 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        const dy: number = 30 + 9 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         return `translate(${dx}, ${dy})`;
     }
     public getPressurePlateTransform(position: LodestonePressurePlatePosition): string {

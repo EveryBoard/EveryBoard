@@ -887,7 +887,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            // This click is legal, however it is not the one expected from the tutorial!
+            // This click is legal, however it is not the one expected by the tutorial!
             await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
 
             // When clicking on 'see solution'
