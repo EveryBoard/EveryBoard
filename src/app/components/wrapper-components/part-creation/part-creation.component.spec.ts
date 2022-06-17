@@ -566,7 +566,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the part and all its related data should be removed
                 expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith([]);
+                expect(joinerService.deleteJoiner).toHaveBeenCalledWith([UserMocks.OPPONENT_MINIMAL_USER]);
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

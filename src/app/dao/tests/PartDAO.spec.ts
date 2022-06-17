@@ -291,11 +291,12 @@ describe('PartDAO', () => {
         await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
         // eslint-disable-next-line camelcase
         const last_changed: Time = { seconds: 0, nanoseconds: 0 }; // owner is stuck in 1970
+        // eslint-disable-next-line camelcase
         await userDAO.update(creator.id, { observedPart: partId, last_changed });
         await signOut();
 
         // and given another user
-        await createUser(UserMocks.CONNECTED_AUTH_USER.email.get(), UserMocks.CONNECTED_AUTH_USER.username.get());
+        await createUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
 
         // When the other user deletes the part
         const result: Promise<void> = partDAO.delete(partId);

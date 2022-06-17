@@ -329,7 +329,7 @@ describe('JoinerDAO', () => {
             await signOut();
 
             // We will finally act as the chosen opponent
-            await reconnectUser(CANDIDATE_NAME);
+            await reconnectUser(CANDIDATE_EMAIL);
         });
         it('should allow chosen opponent to change status from PROPOSED to STARTED', async() => {
             // When the candidate accepts the config by setting partStatus

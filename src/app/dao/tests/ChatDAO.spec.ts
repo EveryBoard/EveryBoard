@@ -71,7 +71,7 @@ describe('ChatDAO', () => {
             otherMessageId = await chatDAO.addMessage('lobby', message);
             await signOut();
             // and a message from the current user, who is able to add messages
-            myUser = await createUser('foo@bar.com', 'user');
+            myUser = await createUser('bar@bar.com', 'user');
             myMessageId = await chatDAO.addMessage('lobby', { ...message, sender: myUser });
         });
         it('should forbid disconnected users to read a chat', async() => {
@@ -116,7 +116,7 @@ describe('ChatDAO', () => {
             // When deleting the message of another user
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').delete(otherMessageId);
             // Then it fails
-            await expectAsync(result).toBeResolvedTo();
+            await expectFirebasePermissionDenied(result);
         });
         it('should allow a user to change one of its messages', async() => {
             // When updating one of the current user's message

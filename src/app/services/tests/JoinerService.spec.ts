@@ -167,7 +167,6 @@ describe('JoinerService', () => {
             expect(dao.delete).toHaveBeenCalledWith('joinerId');
         }));
         it('should delete candidates as well', fakeAsync(async() => {
-            throw new Error('TODO')
         }));
     });
     describe('reviewConfig', () => {

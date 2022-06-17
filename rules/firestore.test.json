@@ -74,17 +74,11 @@ service cloud.firestore {
             return usernameNotYetSet || usernameBeingSet == false || doesNotChange;
         }
         function onlyModifiesVerifiedFieldIfUserIsVerified() {
-            if (resource.data.verified == request.resource.data.verified) {
-                // verified is kept to the same value
-                return true;
-            }
-            if (resource.data.verified == false && userIsVerified() && resource.data.username != null) {
-                // verified can be set to true if user has a verified account and a username
-                return true;
-            }
-            return false;
+            let verifiedKeptSameValue = (resource.data.verified == request.resource.data.verified);
+            let verifiedSetToTrueAfterVerification =  (resource.data.verified == false && userIsVerified() && resource.data.username != null);
+            return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
-        match /parties/{id} {
+        match /parts/{id} {
             // Anybody can create a part
             allow create: if userIsVerified();
             // The owner of a part can delete it, if it has not started
@@ -101,8 +95,8 @@ service cloud.firestore {
             // - beginning once the part has started
             // the part is considered to be started as soon as beginning is set
             // For any other fields, both players can modify them, with some restrictions:
-            // - lastUpdate must be updated monotonously by the corresponding player (TODO)
-            // - turn can only be made +1 (usual turn), -1 (take back), or -2 (take back) (TODO)
+            // - lastUpdate must be updated monotonously by the corresponding player
+            // - turn can only be made +1 (usual turn), -1 (take back), or -2 (take back)
             allow update: if userIsVerified() &&
                              preservesField('typeGame') &&
                              (preservesField('playerZero') || partHasNotStarted(resource.data)) &&
@@ -119,23 +113,13 @@ service cloud.firestore {
             return (newTurn == oldTurn + 1) || (newTurn == oldTurn - 1) || (newTurn == oldTurn - 2);
         }
         function safeLastUpdateUpdate(oldLastUpdate, newLastUpdate) {
-            let player
-            if (newLastUpdate.player == 0) {
-                player = resource.data.playerZero;
-            } else if (newLastUpdate.player == 1) {
-                player = resource.data.playerOne;
-            } else {
-                return false;
-            }
-            if (player.id != request.auth.uid) {
-                // Player should not push an update as its opponent
-                return false;
-            }
-            // Index should be incremented by exactly one
-            return newLastUpdate.index == oldLastUpdate.index + 1;
+            let legitimatePlayerZeroUpdate = newLastUpdate.player == 0 && resource.data.playerZero.id == request.auth.uid;
+            let legitimatePlayerOneUpdate = newLastUpdate.player == 1 && resource.data.playerOne.id == request.auth.uid;
+            let indexIncremented = newLastUpdate.index == oldLastUpdate.index + 1;
+            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate) && indexIncremented;
         }
         function partHasNotStarted(part) {
-            return part.beginning == null;
+            return hasField(part, 'beginning') == false;
         }
         function hasTimedOut(creator) {
             let creatorUser =  get(/databases/$(database)/documents/users/$(creator.id));
@@ -146,7 +130,7 @@ service cloud.firestore {
             // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
             allow create: if userIsVerified() &&
                              userIsCreator(request.resource.data) &&
-                             exists(/databases/$(database)/documents/parties/$(partId));
+                             exists(/databases/$(database)/documents/parts/$(partId));
             // The creator can delete a joiner if the part has not started
             allow delete: if userIsVerified() && userIsCreator(resource.data) && joinerHasNotStarted(resource.data);
             // Anybody else can delete a joiner only if the creator has timed out and the part has not started
