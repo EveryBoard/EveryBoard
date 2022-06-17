@@ -1241,7 +1241,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const rules: Rules<Move, GameState, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
-                    if (step.hasSolution()) {
+                    if (step.isStepWithSolution()) {
                         const moveResult: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
                         if (moveResult.isSuccess()) {
                             if (step.isPredicate()) {

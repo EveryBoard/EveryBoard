@@ -32,7 +32,7 @@ export type PressurePlatePositionInformation =
     MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition>;
 
 export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, LodestoneInfos> {
-    public static readonly PRESSURE_PLATES_POSITIONS: PressurePlatePositionInformation = MGPMap.from({
+    public static readonly THREATENED_COORD_RANGE: PressurePlatePositionInformation = MGPMap.from({
         top: {
             startForBigPlate: new Coord(0, 0),
             startForSmallPlate: new Coord(0, 1),
@@ -103,7 +103,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         if (pressurePlate.isPresent()) {
             const newPressurePlate: MGPOptional<LodestonePressurePlate> =
                 pressurePlate.get().addCaptured(opponent, captured);
-            const plateInfo: PressurePlateViewPosition = LodestoneRules.PRESSURE_PLATES_POSITIONS.get(position).get();
+            const plateInfo: PressurePlateViewPosition = LodestoneRules.THREATENED_COORD_RANGE.get(position).get();
             if (newPressurePlate.isAbsent()) {
                 // The second pressure plate has fallen, crumble both rows
                 this.removePressurePlate(board, plateInfo.startForBigPlate, plateInfo.direction, lodestones);

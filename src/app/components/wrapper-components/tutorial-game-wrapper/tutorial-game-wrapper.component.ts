@@ -205,7 +205,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public async showSolution(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.showSolution()');
         const step: TutorialStep = this.steps[this.stepIndex];
-        if (step.hasSolution()) {
+        if (step.isStepWithSolution()) {
             const awaitedMove: Move = step.getSolution();
             this.showStep(this.stepIndex);
             this.gameComponent.rules.choose(awaitedMove);
@@ -214,7 +214,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         } else {
             assert(step.isClick(), 'Step should be click');
             const clickStep: TutorialStepClick = step as TutorialStepClick;
-            const awaitedClick: string = clickStep.acceptedClicks[0];
+            const awaitedClick: string = clickStep.getSolution();
             this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(awaitedClick) as HTMLElement;
             element.dispatchEvent(new Event('click'));

@@ -188,7 +188,18 @@ export class LodestoneComponent
         const move: LodestoneMove = new LodestoneMove(coord, lodestone.direction, lodestone.orientation, this.captures);
         return this.chooseMove(move, this.getState());
     }
-    public async selectPressurePlate(position: LodestonePressurePlatePosition, index: number): Promise<MGPValidation> {
+    public selectOrDeselectPressurePlate(
+        temporary: boolean,
+        position: LodestonePressurePlatePosition,
+        index: number)
+    : Promise<MGPValidation> {
+        if (temporary) {
+            return this.deselectPressurePlate(position, index);
+        } else {
+            return this.selectPressurePlate(position, index);
+        }
+    }
+    private async selectPressurePlate(position: LodestonePressurePlatePosition, index: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#plate_' + position + '_' + index);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
