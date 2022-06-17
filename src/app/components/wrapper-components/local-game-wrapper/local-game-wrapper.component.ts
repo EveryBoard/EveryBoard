@@ -1,6 +1,6 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
@@ -35,11 +35,12 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                public cdr: ChangeDetectorRef,
-                protected readonly connectedUserService: ConnectedUserService,
-                private readonly messageDisplayer: MessageDisplayer)
+                connectedUserService: ConnectedUserService,
+                router: Router,
+                messageDisplayer: MessageDisplayer,
+                public cdr: ChangeDetectorRef)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService);
+        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
@@ -50,10 +51,12 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.afterGameIncluderViewInit();
-            this.restartGame();
-            this.cdr.detectChanges();
+        setTimeout(async() => {
+            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            if (createdSuccessfully) {
+                this.restartGame();
+                this.cdr.detectChanges();
+            }
         }, 1);
     }
     public updatePlayer(player: 0|1): void {
@@ -134,6 +137,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return this.getPlayingAI().isPresent();
     }
     public restartGame(): void {
+        // eslint-disable-next-line dot-notation
         const state: GameState = this.gameComponent.rules.stateType['getInitialState']();
         this.gameComponent.rules.node = new MGPNode(state);
         this.gameComponent.updateBoard();

@@ -35,7 +35,9 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
                 }
             }
             public decodeMove(encoded: JSONValueWithoutArray): T1 | T2 | T3 {
+                // eslint-disable-next-line dot-notation
                 const type_: string = Utils.getNonNullable(encoded)['type'];
+                // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
                 if (type_ === 'T1') {
                     return encoder1.decode(content);

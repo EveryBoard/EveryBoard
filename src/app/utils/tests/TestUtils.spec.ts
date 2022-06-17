@@ -38,7 +38,7 @@ import * as Auth from '@angular/fire/auth';
 import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
-import { FirebaseTimePipe } from 'src/app/pipes-and-directives/firebase-time.pipe';
+import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 @Component({})
@@ -51,11 +51,9 @@ export class ActivatedRouteStub {
         this.snapshot = {
             paramMap: {
                 get: (str: string) => {
-                    const value: string = this.route[str];
-                    if (value == null) {
-                        throw new Error('ActivatedRouteStub: invalid route for ' + str + ', call setRoute before using!');
-                    }
-                    return value;
+                    // Returns null in case the route does not exist.
+                    // This is the same behaviour than ActivatedRoute
+                    return this.route[str];
                 },
             },
         };
@@ -90,7 +88,7 @@ export class SimpleComponentTestUtils<T> {
             ],
             declarations: [
                 componentType,
-                FirebaseTimePipe,
+                FirestoreTimePipe,
                 HumanDurationPipe,
                 AutofocusDirective,
                 ToggleVisibilityDirective,
@@ -336,7 +334,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state ?? this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -511,7 +509,7 @@ function getComponentClassName(component: Type<any>): string {
 export function expectValidRouting(router: Router,
                                    path: string[],
                                    component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                   otherRoutes: boolean = false)
+                                   options?: { otherRoutes?: boolean, skipLocationChange?: boolean})
 : void
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
@@ -524,17 +522,28 @@ export function expectValidRouting(router: Router,
     const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
+    const otherRoutes: boolean = options != null && options.otherRoutes != null && options.otherRoutes;
+    const skipLocationChange: boolean =
+        options != null && options.skipLocationChange != null && options.skipLocationChange;
     if (otherRoutes) {
-        expect(router.navigate).toHaveBeenCalledWith(path);
+        if (skipLocationChange) {
+            expect(router.navigate).toHaveBeenCalledWith(path, { skipLocationChange: true });
+        } else {
+            expect(router.navigate).toHaveBeenCalledWith(path);
+        }
     } else {
-        expect(router.navigate).toHaveBeenCalledOnceWith(path);
+        if (skipLocationChange) {
+            expect(router.navigate).toHaveBeenCalledOnceWith(path, { skipLocationChange: true });
+        } else {
+            expect(router.navigate).toHaveBeenCalledOnceWith(path);
+        }
     }
 }
 
 /**
  * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
  */
-export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<any>): void {
+export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>): void {
     expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
 
     expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();

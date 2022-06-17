@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
-import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';
 import { Time } from '../domain/Time';
 
@@ -46,10 +46,8 @@ export class ActiveUsersService {
                     !deletedUsers.some((user: UserDocument) => user.id === u.id));
             this.activeUsersBS.next(this.sort(newUsersList));
         };
-        const usersObserver: FirebaseCollectionObserver<User> =
-            new FirebaseCollectionObserver(onDocumentCreated,
-                                           onDocumentModified,
-                                           onDocumentDeleted);
+        const usersObserver: FirestoreCollectionObserver<User> =
+            new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         this.unsubscribe = this.userDAO.observeActiveUsers(usersObserver);
     }
     public stopObserving(): void {
