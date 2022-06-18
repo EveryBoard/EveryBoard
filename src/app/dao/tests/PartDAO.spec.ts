@@ -121,218 +121,268 @@ describe('PartDAO', () => {
             await signOut();
         });
     });
-    it('should allow a verified user to create a part', async() => {
-        // Given a verified user
-        await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        // When creating a part
-        const result: Promise<string> = partDAO.create(PartMocks.INITIAL);
-        // Then it should succeed
-        await expectAsync(result).toBeResolved();
-
-    });
-    it('should forbid a non-verified user to create a part', async() => {
-        // Given a non-verified user
-        await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-
-        // When creating a part
-        const result: Promise<string> = partDAO.create(PartMocks.INITIAL);
-        // Then it should fail
-        await expectFirebasePermissionDenied(result);
-    });
-    it('should forbid player to change playerZero/playerOne/beginning once a part has started', async() => {
-        // Given a part that has started (i.e., beginning is set), and a player (here creator)
-        const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        await partDAO.create({
-            ...PartMocks.INITIAL,
-            beginning: serverTimestamp(),
-            playerZero: creator,
-            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+    describe('for verified user', () => {
+        it('should allow creating a part', async() => {
+            // Given a verified user
+            await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            // When creating a part
+            const result: Promise<string> = partDAO.create(PartMocks.INITIAL);
+            // Then it should succeed
+            await expectAsync(result).toBeResolved();
         });
+        it('should allow reading parts', async() => {
+            // Given a part and a verified user
+            await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await signOut();
 
-        const updates: Partial<Part>[] = [
-            { playerZero: UserMocks.OPPONENT_MINIMAL_USER },
-            { playerOne: creator },
-            { beginning: serverTimestamp() },
-        ];
-        for (const update of updates) {
-            // When trying to change the field
-            const result: Promise<void> = partDAO.update('partId', update);
+            await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+            // When reading the part
+            const result: Promise<MGPOptional<Part>> = partDAO.read(partId);
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo(MGPOptional.of(PartMocks.INITIAL));
+        });
+        it('should forbid non-player to change fields', async() => {
+            // Given a part, and a user who is not playing in this game
+            await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await signOut();
+            await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+
+            const updates: Partial<Part>[] = [
+                { lastUpdate: { index: 1, player: 0 } },
+                { turn: 42 },
+                { result: 3 },
+                { listMoves: [{ a: 1 }] },
+                { lastUpdateTime: serverTimestamp() },
+                { remainingMsForZero: 42 },
+                { remainingMsForOne: 42 },
+                { winner: 'me!' },
+                { loser: 'you' },
+                { scorePlayerZero: 42 },
+                { scorePlayerOne: 42 },
+                { request: Request.rematchProposed(Player.ZERO) },
+            ];
+            for (const update of updates) {
+                // When trying to change the field
+                const result: Promise<void> = partDAO.update(partId, update);
+                // Then it should fail
+                await expectFirebasePermissionDenied(result);
+            }
+        });
+        it('should forbid deleting part even if owner is not observing anymore', async() => {
+            // Given a part with its owner not observing this part
+            const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            // eslint-disable-next-line camelcase
+            const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+            await userDAO.update(creator.id, { observedPart: null, last_changed });
+            await signOut();
+
+            // and given another user
+            await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+
+            // When the other user deletes the part
+            const result: Promise<void> = partDAO.delete(partId);
+
             // Then it should fail
             await expectFirebasePermissionDenied(result);
-        }
-    });
-    it('should forbid non-player to change fields', async() => {
-        // Given a part, and a user who is not playing in this game
-        await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        await partDAO.create(PartMocks.INITIAL);
-        await signOut();
-        await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+        });
+        it('should allow deleting non-started part if owner has timed out', async() => {
+            // Given a non-started part with its owner who has timed out
+            const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            // eslint-disable-next-line camelcase
+            const last_changed: Time = { seconds: 0, nanoseconds: 0 }; // owner is stuck in 1970
+            // eslint-disable-next-line camelcase
+            await userDAO.update(creator.id, { observedPart: partId, last_changed });
+            await signOut();
 
-        const updates: Partial<Part>[] = [
-            { lastUpdate: { index: 1, player: 0 } },
-            { turn: 42 },
-            { result: 3 },
-            { listMoves: [{ a: 1 }] },
-            { lastUpdateTime: serverTimestamp() },
-            { remainingMsForZero: 42 },
-            { remainingMsForOne: 42 },
-            { winner: 'me!' },
-            { loser: 'you' },
-            { scorePlayerZero: 42 },
-            { scorePlayerOne: 42 },
-            { request: Request.rematchProposed(Player.ZERO) },
-        ];
-        for (const update of updates) {
-            // When trying to change the field
-            const result: Promise<void> = partDAO.update('partId', update);
+            // and given another user
+            await createUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+
+            // When the other user deletes the part
+            const result: Promise<void> = partDAO.delete(partId);
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+        it('should forbid deleting a non-started part if owner is still observing it and has not timed out', async() => {
+            // Given a part with its owner
+            const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            // eslint-disable-next-line camelcase
+            const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+            await userDAO.update(creator.id, { observedPart: partId, last_changed });
+            await signOut();
+
+            // and given another user
+            await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+
+            // When the other user deletes the part
+            const result: Promise<void> = partDAO.delete(partId);
+
             // Then it should fail
             await expectFirebasePermissionDenied(result);
-        }
+        });
     });
-    it('should forbid player to change typeGame', async() => {
-        // Given a part and a player
-        const playerZero: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        await partDAO.create({ ...PartMocks.INITIAL, playerZero });
-
-        // When trying to change the game type
-        const result: Promise<void> = partDAO.update('partId', { typeGame: 'P4' });
-        // Then it should fail
-        await expectFirebasePermissionDenied(result);
-    });
-    it('should allow player to change writable fields', async() => {
-        const updates: Partial<Part>[] = [
-            { lastUpdate: { index: 1, player: 0 } },
-            { turn: 42 },
-            { result: 3 },
-            { listMoves: [{ a: 1 }] },
-            { lastUpdateTime: serverTimestamp() },
-            { remainingMsForZero: 42 },
-            { remainingMsForOne: 42 },
-            { winner: 'me!' },
-            { loser: 'you' },
-            { scorePlayerZero: 42 },
-            { scorePlayerOne: 42 },
-            { request: Request.rematchProposed(Player.ZERO) },
-        ];
-        // Given a user who is not playing in this game
-        await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-        await partDAO.create(PartMocks.INITIAL);
-
-        for (const update of updates) {
-            // When trying to change the field
-            const result: Promise<void> = partDAO.update('partId', update);
+    describe('for unverified user', () => {
+        it('should forbid creating a part', async() => {
+            // Given a non-verified user
+            await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+            // When creating a part
+            const result: Promise<string> = partDAO.create(PartMocks.INITIAL);
             // Then it should fail
             await expectFirebasePermissionDenied(result);
-        }
+        });
+        it('should forbid reading parts', async() => {
+            // Given a part and a non-verified user
+            await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await signOut();
+
+            await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+            // When reading the part
+            const result: Promise<MGPOptional<Part>> = partDAO.read(partId);
+            // Then it should fail
+            await expectFirebasePermissionDenied(result);
+        });
     });
-    it('should allow verified users to read parts', async() => {
-        // Given a part and a verified user
-        await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        const partId: string = await partDAO.create(PartMocks.INITIAL);
-        await signOut();
+    describe('for creator', () => {
+        it('should forbid creator to change playerZero/playerOne/beginning once a part has started', async() => {
+            // Given a part that has started (i.e., beginning is set), and a player (here creator)
+            const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({
+                ...PartMocks.INITIAL,
+                beginning: serverTimestamp(),
+                playerZero: creator,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+            });
 
-        await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-        // When reading the part
-        const result: Promise<MGPOptional<Part>> = partDAO.read(partId);
-        // Then it should succeed
-        await expectAsync(result).toBeResolvedTo(MGPOptional.of(PartMocks.INITIAL));
+            const updates: Partial<Part>[] = [
+                { playerZero: UserMocks.OPPONENT_MINIMAL_USER },
+                { playerOne: creator },
+                { beginning: serverTimestamp() },
+            ];
+            for (const update of updates) {
+                // When trying to change the field
+                const result: Promise<void> =
+                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, update);
+                // Then it should fail
+                await expectFirebasePermissionDenied(result);
+            }
+        });
+        it('should allow deleting part if it has not started', async() => {
+            // Given a non-started part and its owner (as defined in the joiner)
+            const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+
+            // When deleting the part
+            const result: Promise<void> = partDAO.delete(partId);
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+        it('should forbid deleting part after it has started', async() => {
+            // Given a started part and its owner (as defined in the joiner)
+            const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({ ...PartMocks.INITIAL, beginning: serverTimestamp() });
+            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+
+            // When deleting the part
+            const result: Promise<void> = partDAO.delete(partId);
+
+            // Then it should fail
+            await expectFirebasePermissionDenied(result);
+        });
     });
-    it('should forbid non-verified users to read parts', async() => {
-        // Given a part and a non-verified user
-        await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        const partId: string = await partDAO.create(PartMocks.INITIAL);
-        await signOut();
+    describe('for player', () => {
+        it('should forbid player to change typeGame', async() => {
+            // Given a part and a player (here, creator)
+            const playerZero: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
 
-        await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-        // When reading the part
-        const result: Promise<MGPOptional<Part>> = partDAO.read(partId);
-        // Then it should fail
-        await expectFirebasePermissionDenied(result);
-    });
-    it('should allow owner to delete part if it has not started', async() => {
-        // Given a non-started part and its owner (as defined in the joiner)
-        const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        const partId: string = await partDAO.create(PartMocks.INITIAL);
-        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            // When trying to change the game type
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, { typeGame: 'P4' });
+            // Then it should fail
+            await expectFirebasePermissionDenied(result);
+        });
+        it('should allow to increment turn and decrement it for take backs', async() => {
+            // Given a player (here, creator)
+            const playerZero: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
 
-        // When deleting the part
-        const result: Promise<void> = partDAO.delete(partId);
+            const turnUpdates: number[] = [
+                PartMocks.INITIAL.turn + 1, // move
+                PartMocks.INITIAL.turn - 1, // take back
+                PartMocks.INITIAL.turn - 2, // take back when it was our turn again
+            ];
+            for (const turn of turnUpdates) {
+                // Given a part
+                const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
+                // When updating turns with a legitimate increase/decrease
+                const result: Promise<void> =
+                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, { turn });
+                // Then it should succeed
+                await expectAsync(result).toBeResolvedTo();
+            }
+        });
+        it('should forbid to increment or decrement the turn too much', async() => {
+            // Given a player (here, creator)
+            const playerZero: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
 
-        // Then it should succeed
-        await expectAsync(result).toBeResolvedTo();
-    });
-    it('should forbid owner to delete part when it has started', async() => {
-        console.log('TODO')
-        // TODO: similar tests for joiner deletion
-    });
-    it('should forbid verified user to delete part even if owner is not observing anymore', async() => {
-        // Given a part with its owner not observing this part
-        const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        const partId: string = await partDAO.create(PartMocks.INITIAL);
-        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
-        // eslint-disable-next-line camelcase
-        const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
-        await userDAO.update(creator.id, { observedPart: null, last_changed });
-        await signOut();
+            const turnUpdates: number[] = [
+                PartMocks.INITIAL.turn + 2,
+                PartMocks.INITIAL.turn - 3,
+            ];
+            for (const turn of turnUpdates) {
+                // Given a part
+                const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
+                // When updating turns with an illegal increase/decrease
+                const result: Promise<void> =
+                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, { turn });
+                // Then it should fail
+                await expectFirebasePermissionDenied(result);
+            }
+        });
+        it('should allow updates to lastUpdate if it is a +1 increment and matches the player', async() => {
+            // Given a part and a player (here, creator)
+            const playerZero: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
 
-        // and given another user
-        await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+            // When updating lastUpdate as expected
+            const result: Promise<void> =
+                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, { });
 
-        // When the other user deletes the part
-        const result: Promise<void> = partDAO.delete(partId);
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+        it('should forbid updates to lastUpdate if it increments more than once', async() => {
+            // Given a part and a player (here, creator)
+            const playerZero: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
 
-        // Then it should fail
-        await expectFirebasePermissionDenied(result);
-    });
-    it('should allow verified user to delete non-started part if owner has timed out', async() => {
-        // Given a non-started part with its owner who has timed out
-        const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        const partId: string = await partDAO.create(PartMocks.INITIAL);
-        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
-        // eslint-disable-next-line camelcase
-        const last_changed: Time = { seconds: 0, nanoseconds: 0 }; // owner is stuck in 1970
-        // eslint-disable-next-line camelcase
-        await userDAO.update(creator.id, { observedPart: partId, last_changed });
-        await signOut();
+            // When incrementing the index of lastUpdate too much
+            const result: Promise<void> =
+                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index + 1, { });
 
-        // and given another user
-        await createUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            // Then it should fail
+            await expectFirebasePermissionDenied(result);
+        });
+        it('should forbid updates to lastUpdate for another user', async() => {
+            // Given a part and a player (here, creator)
+            const playerZero: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
 
-        // When the other user deletes the part
-        const result: Promise<void> = partDAO.delete(partId);
+            // When providing the wrong player in lastUpdate
+            const result: Promise<void> =
+                    partDAO.updateAndBumpIndex(partId, Player.ONE, PartMocks.INITIAL.lastUpdate.index + 1, { });
 
-        // Then it should succeed
-        await expectAsync(result).toBeResolvedTo();
-    });
-    it('should forbid to delete a non-started part if owner is still observing it and has not timed out', async() => {
-        // Given a part with its owner
-        const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
-        const partId: string = await partDAO.create(PartMocks.INITIAL);
-        await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
-        // eslint-disable-next-line camelcase
-        const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
-        await userDAO.update(creator.id, { observedPart: partId, last_changed });
-        await signOut();
-
-        // and given another user
-        await createUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-
-        // When the other user deletes the part
-        const result: Promise<void> = partDAO.delete(partId);
-
-        // Then it should fail
-        await expectFirebasePermissionDenied(result);
-    });
-    it('should allow player to increment turn and decrement it for take backs', async() => {
-        console.log('TODO')
-    });
-    it('should forbid player to incrementi or decrementi the turn too much', async() => {
-        console.log('TODO')
-    });
-    it('should allow updates to lastUpdate if it is a +1 increment and matches the player', async() => {
-    });
-    it('should forbid updates to lastUpdate if it increments more than once', async() => {
-    });
-    it('should forbid updates to lastUpdate for another user', async() => {
+            // Then it should fail
+            await expectFirebasePermissionDenied(result);
+        });
     });
 });

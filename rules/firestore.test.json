@@ -102,20 +102,25 @@ service cloud.firestore {
                              (preservesField('playerZero') || partHasNotStarted(resource.data)) &&
                              (preservesField('playerOne') || partHasNotStarted(resource.data)) &&
                              (preservesField('beginning') || partHasNotStarted(resource.data)) &&
-                             (preservesField('turn') || safeTurnUpdate(resource.data.turn, request.data.turn)) &&
-                             (preservesField('lastUpdate') || safeLastUpdateUpdate(resource.data.lastUpdate, request.data.lastUpdate)) &&
-                             (resource.data.playerZero == usernameOf(request.auth.uid) ||
-                              resource.data.playerOne == usernameOf(request.auth.uid));
+                             (preservesField('turn') || safeTurnUpdate(resource.data.turn, request.resource.data.turn)) &&
+                             safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate) &&
+                             userIsPlayer(resource.data)
+
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
+        }
+        function userIsPlayer(part) {
+            let userIsPlayerZero = part.playerZero.id == request.auth.uid;
+            let userIsPlayerOne = hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;
+            return userIsPlayerZero || userIsPlayerOne;
         }
         function safeTurnUpdate(oldTurn, newTurn) {
             return (newTurn == oldTurn + 1) || (newTurn == oldTurn - 1) || (newTurn == oldTurn - 2);
         }
-        function safeLastUpdateUpdate(oldLastUpdate, newLastUpdate) {
+        function safeLastUpdate(oldLastUpdate, newLastUpdate) {
             let legitimatePlayerZeroUpdate = newLastUpdate.player == 0 && resource.data.playerZero.id == request.auth.uid;
-            let legitimatePlayerOneUpdate = newLastUpdate.player == 1 && resource.data.playerOne.id == request.auth.uid;
-            let indexIncremented = newLastUpdate.index == oldLastUpdate.index + 1;
+            let legitimatePlayerOneUpdate = hasField(resource.data, 'playerOne') && newLastUpdate.player == 1 && resource.data.playerOne.id == request.auth.uid;
+            let indexIncremented = debug(newLastUpdate.index) == debug(oldLastUpdate.index + 1);
             return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate) && indexIncremented;
         }
         function partHasNotStarted(part) {
@@ -129,7 +134,7 @@ service cloud.firestore {
         match /joiners/{partId} {
             // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
             allow create: if userIsVerified() &&
-                             userIsCreator(request.resource.data) &&
+                             userIsCreatorWithValidName(request.resource.data) &&
                              exists(/databases/$(database)/documents/parts/$(partId));
             // The creator can delete a joiner if the part has not started
             allow delete: if userIsVerified() && userIsCreator(resource.data) && joinerHasNotStarted(resource.data);
@@ -189,7 +194,10 @@ service cloud.firestore {
         }
         function userIsCreator(joiner) {
             return joiner.creator != null &&
-                   joiner.creator.id == request.auth.uid &&
+                   joiner.creator.id == request.auth.uid;
+        }
+        function userIsCreatorWithValidName(joiner) {
+            return userIsCreator(joiner) &&
                    joiner.creator.name == usernameOf(request.auth.uid);
         }
         function preservesField(field) {
