@@ -140,12 +140,13 @@ service cloud.firestore {
             allow delete: if userIsVerified() && userIsCreator(resource.data) && joinerHasNotStarted(resource.data);
             // Anybody else can delete a joiner only if the creator has timed out and the part has not started
             allow delete: if userIsVerified() && hasTimedOut(creatorOf(partId)) && joinerHasNotStarted(resource.data);
-            // The creator can change all fields except changing partStatus to STARTED (3)
+            // The creator can change all fields except changing partStatus to STARTED (3), until the part starts
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
                              resource.data.partStatus < 3 && request.resource.data.partStatus != 3;
-            // The creator can only change partStatus once the part has been started
+            // The creator can only change partStatus (to finished)  once the part has been started
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
                              resource.data.partStatus == 3 &&
+                             (request.resource.data.partStatus >= 3) &&
                              preservesField('creator') &&
                              preservesField('firstPlayer') &&
                              preservesField('partType') &&
