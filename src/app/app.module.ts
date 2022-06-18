@@ -83,7 +83,6 @@ import { OnlineGameCreationComponent } from './components/normal-component/onlin
 
 import * as Firebase from '@angular/fire/app';
 import * as Firestore from '@angular/fire/firestore';
-import * as Database from '@angular/fire/database';
 import * as Auth from '@angular/fire/auth';
 import { ThemeService } from './services/ThemeService';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
@@ -129,17 +128,6 @@ export class FirebaseProviders {
                 Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
             }
             return firestore;
-        });
-    }
-    public static database(): ModuleWithProviders<Database.DatabaseModule> {
-        return Database.provideDatabase(() => {
-            const database: Database.Database = Database.getDatabase();
-
-            // eslint-disable-next-line dot-notation
-            if (environment.useEmulators && database['_instanceStarted'] === false) {
-                Database.connectDatabaseEmulator(database, 'localhost', 9000);
-            }
-            return database;
         });
     }
     public static auth(): ModuleWithProviders<Auth.AuthModule> {
@@ -215,7 +203,6 @@ export class FirebaseProviders {
         FirebaseProviders.app(),
         FirebaseProviders.firestore(),
         FirebaseProviders.auth(),
-        FirebaseProviders.database(),
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(routes, { useHash: false }),

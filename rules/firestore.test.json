@@ -157,12 +157,13 @@ service cloud.firestore {
             //   - the chosen opponent can remove itself from the corresponding field
             //   - the chosen opponent can change the config from PROPOSED to STARTED
             allow update: if userIsVerified() && !userIsCreator(resource.data) &&
+                             userIsChosenOpponent() &&
                              preservesField('creator') &&
                              preservesField('firstPlayer') &&
                              preservesField('partType') &&
                              preservesField('maximalMoveDuration') &&
                              preservesField('totalPartDuration') &&
-                             (preservesField('partStatus') || changePartStatusAsChosenOpponent()) &&
+                             (preservesField('partStatus') || acceptsConfig()) &&
                              (preservesField('chosenOpponent') || removesOneSelfFromChosenOpponent());
 
             // Any verified user can read a joiner
@@ -172,12 +173,12 @@ service cloud.firestore {
             return joiner.partStatus < 3;
         }
         match /joiners/{partId}/candidates/{userId} {
-            // A user can add only add themself to the candidate list, with the right username, and if they are not the creator
+            // Users can only add themselves to the candidate list if they are not the creator and if they use the right username
             allow create: if userIsVerified() && userId == request.auth.uid &&
+                             request.auth.uid != creatorOf(partId).id &&
                              request.resource.data.name == usernameOf(request.auth.uid) &&
-                             request.resource.data.id == request.auth.uid &&
-                             request.auth.uid != creatorOf(partId).id;
-            // A user can only delete themself
+                             request.resource.data.id == request.auth.uid;
+            // Users can only delete themselves
             allow delete: if userIsVerified() && userId == request.auth.uid;
             // No updates can be made
             allow update: if false;
@@ -206,10 +207,12 @@ service cloud.firestore {
             // or if the same value is given in the update
             return !(field in request.resource.data) || (request.resource.data[field] == resource.data[field]);
         }
-        function changePartStatusAsChosenOpponent() {
+        function userIsChosenOpponent() {
             let uid = request.auth.uid;
-            return resource.data.chosenOpponent.id == uid &&
-                   resource.data.partStatus == 2 && // CONFIG_PROPOSED
+            return resource.data.chosenOpponent.id == uid;
+        }
+        function acceptsConfig() {
+            return resource.data.partStatus == 2 && // CONFIG_PROPOSED
                    request.resource.data.partStatus == 3; // PART_STARTED
         }
         function removesOneSelfFromChosenOpponent() {

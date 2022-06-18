@@ -2,7 +2,6 @@
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import { Database, ref, remove } from '@angular/fire/database';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { serverTimestamp } from 'firebase/firestore';
@@ -14,7 +13,6 @@ import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -91,12 +89,8 @@ export class ConnectedUserServiceMock {
     }
 }
 
-async function setupAuthTestModule(): Promise<unknown> {
-    await setupEmulators();
-    // Clear the rtdb data before each test
-    const db: Database = TestBed.inject(Database);
-    await remove(ref(db));
-    return;
+function setupAuthTestModule(): Promise<unknown> {
+    return setupEmulators();
 }
 
 /**
@@ -483,26 +477,6 @@ describe('ConnectedUserService', () => {
                 // then it is properly handled
                 expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
             }
-        });
-    });
-    describe('launchAutomaticPresenceUpdate', () => {
-        it('should be called and update user presence when user gets connected', async() => {
-            const connectivityDAO: ConnectivityDAO = TestBed.inject(ConnectivityDAO);
-            spyOn(connectivityDAO, 'launchAutomaticPresenceUpdate').and.callThrough();
-
-            // given a registered user
-            const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
-            expect(result.isSuccess()).toBeTrue();
-            const user: FireAuth.User = result.get();
-
-            // when the user logs in
-            await service.doEmailLogin(email, password);
-
-            // and logs out
-            await auth.signOut();
-
-            // Then launchAutomaticPresenceUpdate is called
-            expect(connectivityDAO.launchAutomaticPresenceUpdate).toHaveBeenCalledWith(user.uid);
         });
     });
     describe('setUsername', () => {

@@ -361,7 +361,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state ?? this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -467,7 +467,6 @@ export async function setupEmulators(): Promise<unknown> {
             FirebaseProviders.app(),
             FirebaseProviders.firestore(),
             FirebaseProviders.auth(),
-            FirebaseProviders.database(),
         ],
         providers: [
             ConnectedUserService,

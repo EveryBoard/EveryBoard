@@ -10,7 +10,6 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
-import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 
@@ -97,8 +96,7 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userObs: Observable<AuthUser>;
 
     constructor(private readonly userDAO: UserDAO,
-                private readonly auth: FireAuth.Auth,
-                private readonly connectivityDAO: ConnectivityDAO)
+                private readonly auth: FireAuth.Auth)
     {
         display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
 
@@ -115,7 +113,6 @@ export class ConnectedUserService implements OnDestroy {
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
                     assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
-                    await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
                     this.userUnsubscribe = MGPOptional.of(
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                             if (doc.isPresent()) {
@@ -268,8 +265,6 @@ export class ConnectedUserService implements OnDestroy {
     public async disconnect(): Promise<MGPValidation> {
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
-            const uid: string = user.get().uid;
-            await this.connectivityDAO.setOffline(uid);
             await this.auth.signOut();
             return MGPValidation.SUCCESS;
         } else {
