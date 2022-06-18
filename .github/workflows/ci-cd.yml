@@ -179,6 +179,7 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
+          ls src/app
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
@@ -193,6 +194,7 @@ jobs:
       - name: Deploy master on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
+          ls src/app/
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
             npm install @angular-devkit/architect
