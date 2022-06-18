@@ -179,7 +179,6 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
-          ls src/app
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
@@ -214,7 +213,6 @@ jobs:
       - name: Deploy feature branch if org member
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
-          ls src/app/
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
             npm run build:netlify

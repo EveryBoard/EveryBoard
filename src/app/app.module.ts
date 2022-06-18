@@ -117,9 +117,6 @@ export const routes: Route[] = [
 export class FirebaseProviders {
     public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
         return Firebase.provideFirebaseApp(() => {
-            if (environment.useEmulators) {
-                environment.firebaseConfig.databaseURL = 'http://localhost:9000?ns=default';
-            }
             return Firebase.initializeApp(environment.firebaseConfig);
         });
     }
