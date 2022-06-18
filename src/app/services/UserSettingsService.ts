@@ -6,8 +6,6 @@ import { MGPOptional } from '../utils/MGPOptional';
     providedIn: 'root',
 })
 export class UserSettingsService {
-    constructor() {
-    }
 
     public changeTheme(theme: string): void {
         localStorage.setItem('theme', theme);
