@@ -20,7 +20,7 @@ describe('LinesOfActionMove', () => {
         expect(LinesOfActionMove.of(new Coord(7, 7), new Coord(9, 9))).toEqual(MGPFallible.failure('end coord is not in range'));
     });
     it('should not create a move with an invalid direction', () => {
-        const error: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR(1, 2);
+        const error: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
         expect(LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPFallible.failure(error));
     });
     describe('toString', () => {

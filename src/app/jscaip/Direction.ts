@@ -4,6 +4,7 @@ import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Encoder } from './Encoder';
+import { Localized } from '../utils/LocaleUtils';
 
 export class Vector implements ComparableObject {
     public equals(other: Vector): boolean {
@@ -69,7 +70,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
-        return MGPFallible.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR(dx, dy));
+        return MGPFallible.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR());
     }
     public fromMove(start: Coord, end: Coord): MGPFallible<T> {
         return this.fromDelta(end.x - start.x, end.y - start.y);
@@ -212,5 +213,6 @@ export class Orthogonal extends BaseDirection {
 }
 
 export class DirectionFailure {
-    public static readonly DIRECTION_MUST_BE_LINEAR: (dx: number, dy: number) => string = (dx: number, dy: number) => $localize`Move must be orthogonal or diagonal, not (${dx}, ${dy})`
+
+    public static readonly DIRECTION_MUST_BE_LINEAR: Localized = () => $localize`You must move in a straight line! You can only move orthogonally or diagonally!`
 }

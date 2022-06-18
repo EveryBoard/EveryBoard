@@ -2363,6 +2363,14 @@
         simultanément, alors la partie se termine par une égalité.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, forcez l&apos;égalité en un coup.</target>
       </trans-unit>
+      <trans-unit id="4594736386763524275" datatype="html">
+        <source>Start coord cannot be out of range</source>
+        <target>La coordonnée de départ ne peut pas être hors du plateau</target>
+      </trans-unit>
+      <trans-unit id="8024507002452740554" datatype="html">
+        <source>End coord cannot be out of range</source>
+        <target>La coordonnée de fin ne peut pas être hors du plateau</target>
+      </trans-unit>
       <trans-unit id="4409865504289904426" datatype="html">
         <source>Drones must move one or two steps in any direction.</source>
         <target>Les drônes doivent se déplacer de un ou deux pas dans n'importe quelle direction.</target>
@@ -3583,9 +3591,9 @@
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
         Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
       </trans-unit>
-      <trans-unit id="18889351960813137" datatype="html">
-        <source>Move must be orthogonal or diagonal, not (<x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/>)</source>
-        <target>Les mouvements doivent êtres orthogonaux ou diagonaux, pas (<x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/>)</target>
+      <trans-unit id="7542102025019708759" datatype="html">
+        <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
+        <target>Votre mouvement doit être en ligne droite ! Votre mouvement doit être orthogonal ou diagonal !</target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

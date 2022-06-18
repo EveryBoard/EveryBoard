@@ -171,6 +171,16 @@ export class Coord implements ComparableObject {
         const bToThis: Coord = b.getMinimalVectorToward(this);
         return aToThis.equals(bToThis.getOpposite());
     }
+    public getUntil(end: Coord): Coord[] {
+        const coords: Coord[] = [];
+        const direction: Direction = this.getDirectionToward(end).get();
+        let c: Coord = this.getNext(direction);
+        while (c.equals(end) === false) {
+            coords.push(c);
+            c = c.getNext(direction);
+        }
+        return coords;
+    }
     // Override
 
     public equals(obj: Coord): boolean {

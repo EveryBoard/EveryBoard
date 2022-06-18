@@ -1,5 +1,3 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -11,17 +9,18 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
 import { MartianChessCapture, MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class MartianChessRulesFailure {
 
-    public static readonly MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY: () => string = () => $localize`You must pick a piece from your side of the board in order to move it.`;
+    public static readonly MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY: Localized = () => $localize`You must pick a piece from your side of the board in order to move it.`;
 
-    public static readonly CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT: () => string = () => $localize`This is not a valid promotion nor a valid capture.`;
+    public static readonly CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT: Localized = () => $localize`This is not a valid promotion nor a valid capture.`;
 
-    public static readonly CANNOT_UNDO_LAST_MOVE: () => string = () => $localize`You cannot perform a move that is the reverse of the previous one.`;
+    public static readonly CANNOT_UNDO_LAST_MOVE: Localized = () => $localize`You cannot perform a move that is the reverse of the previous one.`;
 }
 
-export class MartianChessMoveResult {
+export interface MartianChessMoveResult {
 
     score: MGPMap<Player, MartianChessCapture>;
 
@@ -123,8 +122,8 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         }
     }
     private isLegalMove(move: MartianChessMove, state: MartianChessState): MGPFallible<void> {
-        const moveStartInPlayerTerritory: boolean = state.isInPlayerTerritory(move.coord);
-        if (moveStartInPlayerTerritory === false) {
+        const moveStartsInPlayerTerritory: boolean = state.isInPlayerTerritory(move.coord);
+        if (moveStartsInPlayerTerritory === false) {
             return MGPFallible.failure(MartianChessRulesFailure.MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY());
         }
         const movedPiece: MartianChessPiece = state.getPieceAt(move.coord);
@@ -141,13 +140,10 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
                 return MGPFallible.failure(MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS());
             }
         }
-        const direction: Direction = move.coord.getDirectionToward(move.end).get();
-        let coord: Coord = move.coord.getNext(direction);
-        while (coord.equals(move.end) === false) {
+        for (const coord of move.coord.getUntil(move.end)) {
             if (state.getPieceAt(coord) !== MartianChessPiece.EMPTY) {
                 return MGPFallible.failure(RulesFailure.SOMETHING_IN_THE_WAY());
             }
-            coord = coord.getNext(direction);
         }
         return MGPFallible.success(undefined);
     }

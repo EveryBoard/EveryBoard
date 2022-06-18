@@ -1222,6 +1222,12 @@
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
       </trans-unit>
+      <trans-unit id="4594736386763524275" datatype="html">
+        <source>Start coord cannot be out of range</source>
+      </trans-unit>
+      <trans-unit id="8024507002452740554" datatype="html">
+        <source>End coord cannot be out of range</source>
+      </trans-unit>
       <trans-unit id="7020322239499292850" datatype="html">
         <source>Pawns must move one step diagonally.</source>
       </trans-unit>
@@ -2026,8 +2032,8 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
       </trans-unit>
-      <trans-unit id="18889351960813137" datatype="html">
-        <source>Move must be orthogonal or diagonal, not (<x id="PH" equiv-text="dx"/>, <x id="PH_1" equiv-text="dy"/>)</source>
+      <trans-unit id="7542102025019708759" datatype="html">
+        <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

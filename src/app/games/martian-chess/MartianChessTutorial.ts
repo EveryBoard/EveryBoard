@@ -6,13 +6,14 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
 const A: MartianChessPiece = MartianChessPiece.PAWN;
 const B: MartianChessPiece = MartianChessPiece.DRONE;
 const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
-export const NOT_A_FIELD_PROMOTION: () => string = () => $localize`This is not a field promotion!`;
+export const NOT_A_FIELD_PROMOTION: Localized = () => $localize`This is not a field promotion!`;
 
 export class MartianChessTutorial {
 

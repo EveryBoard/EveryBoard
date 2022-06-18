@@ -552,7 +552,7 @@ describe('MartianChessRules', () => {
     describe('end game', () => {
         describe('empty territory end', () => {
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ZERO)', () => {
-                // Given a boad with only one piece in the current player territory
+                // Given a board with only one piece in the current player territory
                 const board: Table<MartianChessPiece> = [
                     [_, C, _, _],
                     [_, _, _, _],
@@ -588,7 +588,7 @@ describe('MartianChessRules', () => {
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ONE)', () => {
-                // Given a boad with only one piece in the current player territory
+                // Given a board with only one piece in the current player territory
                 const board: Table<MartianChessPiece> = [
                     [C, _, B, _],
                     [_, _, _, _],
@@ -624,7 +624,7 @@ describe('MartianChessRules', () => {
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
             it('should declare winner last player when one player put its last piece in the opponent territory and score are equal', () => {
-                // Given a boad with only one piece in the current player territory
+                // Given a board with only one piece in the current player territory
                 const board: Table<MartianChessPiece> = [
                     [C, _, _, _],
                     [_, _, _, _],
@@ -722,7 +722,7 @@ describe('MartianChessRules', () => {
                 // When doing a move
                 const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
 
-                // Then the count down should ... be counting downward !
+                // Then the count down should ... be counting down !
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],
@@ -759,7 +759,7 @@ describe('MartianChessRules', () => {
                 // When doing a move
                 const move: MartianChessMove = MartianChessMove.from(new Coord(3, 3), new Coord(3, 5)).get();
 
-                // Then the count down should ... be counting downward !
+                // Then the count down should ... be counting down !
                 const expectedBoard: Table<MartianChessPiece> = [
                     [_, _, _, _],
                     [_, _, _, _],
@@ -780,7 +780,7 @@ describe('MartianChessRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             });
             it('should end the game when 7 moves passed since clock called, and declare biggest score winner (zero)', () => {
-                // Given a board with clock about to "timeout"
+                // Given a board with clock about to time out
                 const initialState: MartianChessState = MartianChessState.getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
                 const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
@@ -794,7 +794,7 @@ describe('MartianChessRules', () => {
                 // When doing the last move
                 const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
 
-                // Then the count down should reach zero and the game ended; Zero winning 1-0
+                // Then the count down should reach zero and the game should have ended; Zero winning 1-0
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],
@@ -815,7 +815,7 @@ describe('MartianChessRules', () => {
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('should end the game when 7 moves passed since clock called, and declare biggest score winner (one)', () => {
-                // Given a board with clock about to "timeout"
+                // Given a board with clock about to time out
                 const initialState: MartianChessState = MartianChessState.getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
                 const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
@@ -829,7 +829,7 @@ describe('MartianChessRules', () => {
                 // When doing the last move
                 const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
 
-                // Then the count down should reach zero and the game ended; Zero winning 1-0
+                // Then the count down should reach zero and the game should have ended; One winning 1-0
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],
@@ -850,7 +850,7 @@ describe('MartianChessRules', () => {
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
             it('should end the game when 7 moves passed since clock called, and declare draw if score are equal', () => {
-                // Given a board with clock about to "timeout"
+                // Given a board with clock about to time out
                 const initialState: MartianChessState = MartianChessState.getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
                 const state: MartianChessState = new MartianChessState(board,
@@ -861,7 +861,7 @@ describe('MartianChessRules', () => {
                 // When doing the last move
                 const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
 
-                // Then the count down and game should be a draw
+                // Then the count down should reach zero and game should be a draw
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],

@@ -20,17 +20,17 @@
                [attr.transform]="getPieceLocation(x, y)">
                 <g *ngIf="piece === pieces.PAWN"
                    app-martian-chess-pawn
-                   [mainShapeId]="'pawn_' + x + '_' + y"
+                   mainShapeId="pawn_{{ x }}_{{ y }}"
                    [pieceClasses]="getPieceClasses(x, y)"
                    [style]="style" />
                 <g *ngIf="piece === pieces.DRONE"
                    app-martian-chess-drone
                    [pieceClasses]="getPieceClasses(x, y)"
-                   [mainShapeId]="'drone_' + x + '_' + y"
+                   mainShapeId="drone_{{ x }}_{{ y }}"
                    [style]="style" />
                 <g *ngIf="piece === pieces.QUEEN"
                    app-martian-chess-queen
-                   [mainShapeId]="'queen_' + x + '_' + y"
+                   mainShapeId="queen_{{ x }}_{{ y }}"
                    [pieceClasses]="getPieceClasses(x, y)"
                    [style]="style" />
             </g>

@@ -3,18 +3,19 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MartianChessMoveFailure {
 
-    public static readonly START_COORD_OUT_OF_RANGE: string = 'Start coord cannot be out of range';
+    public static readonly START_COORD_OUT_OF_RANGE: Localized = () => $localize`Start coord cannot be out of range`;
 
-    public static readonly END_COORD_OUT_OF_RANGE: string = 'End coord cannot be out of range';
+    public static readonly END_COORD_OUT_OF_RANGE: Localized = () => $localize`End coord cannot be out of range`;
 
-    public static readonly PAWN_MUST_MOVE_ONE_DIAGONAL_STEP: () => string = () => $localize`Pawns must move one step diagonally.`;
+    public static readonly PAWN_MUST_MOVE_ONE_DIAGONAL_STEP: Localized = () => $localize`Pawns must move one step diagonally.`;
 
-    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS: () => string = () => $localize`Drones must move one or two steps in any direction.`;
+    public static readonly DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS: Localized = () => $localize`Drones must move one or two steps in any direction.`;
 }
 
 export class MartianChessMove extends MoveCoordToCoord {
@@ -26,10 +27,10 @@ export class MartianChessMove extends MoveCoordToCoord {
     );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
         if (start.isNotInRange(4, 8)) {
-            return MGPFallible.failure(MartianChessMoveFailure.START_COORD_OUT_OF_RANGE);
+            return MGPFallible.failure(MartianChessMoveFailure.START_COORD_OUT_OF_RANGE());
         }
         if (end.isNotInRange(4, 8)) {
-            return MGPFallible.failure(MartianChessMoveFailure.END_COORD_OUT_OF_RANGE);
+            return MGPFallible.failure(MartianChessMoveFailure.END_COORD_OUT_OF_RANGE());
         }
         if (end.equals(start)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());

@@ -51,7 +51,7 @@ describe('MartianChessComponent', () => {
         // When selecting a piece able to do capture/promotion/displacement
         await componentTestUtils.expectClickSuccess('#click_2_4');
 
-        // Then all thoses option should be shown as a landing coord
+        // Then all those options should be shown as a landing coord
         componentTestUtils.expectElementToExist('#indicator_2_2'); // capturable opponent
         componentTestUtils.expectElementToExist('#indicator_2_3'); // displacement
         componentTestUtils.expectElementToExist('#indicator_3_3'); // displacement
@@ -100,7 +100,7 @@ describe('MartianChessComponent', () => {
 
         // When cliking on a invalid second coord
         // Then the move should have been illegal
-        const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR(1, 2);
+        const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
         await componentTestUtils.expectClickFailure('#click_3_4', reason);
     }));
     it('should change selectedPiece when second clicking on a non-landable friendly piece', fakeAsync(async() => {
@@ -129,7 +129,7 @@ describe('MartianChessComponent', () => {
 
         // When finishing an invalid move creation
         // Then the move failure reason should have been toasted
-        const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR(3, 4);
+        const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
         await componentTestUtils.expectClickFailure('#click_3_4', reason);
     }));
     it('should attempt the move when doing the second click (success)', fakeAsync(async() => {
