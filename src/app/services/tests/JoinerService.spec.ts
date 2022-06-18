@@ -164,7 +164,7 @@ describe('JoinerService', () => {
             await service.deleteJoiner([]);
 
             // Then it is deleted in the DAO
-            expect(dao.delete).toHaveBeenCalleOnceWith('joinerId');
+            expect(dao.delete).toHaveBeenCalledOnceWith('joinerId');
         }));
         it('should delete candidates as well', fakeAsync(async() => {
             // Given a joiner that we are observing, which has candidates
