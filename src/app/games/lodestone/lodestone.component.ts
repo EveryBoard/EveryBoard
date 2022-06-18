@@ -528,13 +528,15 @@ export class LodestoneComponent
     }
     public getCaptureTransform(x: number): string {
         const dx: number = (x + (4 - this.viewInfo.capturesToPlace.length / 2)) * this.SPACE_SIZE +
-            this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+            this.STROKE_WIDTH + this.SPACE_SIZE / 2 +
+            this.viewInfo.pressurePlateShift.top.x * this.SPACE_SIZE;
         const dy: number = -30 + -2 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         return `translate(${dx}, ${dy})`;
     }
     public getAvailableLodestoneTransform(x: number): string {
-        const dx: number = (x + (this.viewInfo.availableLodestones.length / 2)) * this.SPACE_SIZE +
-            this.STROKE_WIDTH + this.SPACE_SIZE / 2;
+        const dx: number = (x + (4 - this.viewInfo.availableLodestones.length / 2)) * this.SPACE_SIZE +
+            this.STROKE_WIDTH + this.SPACE_SIZE / 2 +
+            this.viewInfo.pressurePlateShift.top.x * this.SPACE_SIZE;
         const dy: number = 30 + 9 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         return `translate(${dx}, ${dy})`;
     }
