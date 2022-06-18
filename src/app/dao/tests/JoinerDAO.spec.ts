@@ -34,8 +34,6 @@ describe('JoinerDAO', () => {
         expect(joinerDAO).toBeTruthy();
     });
 
-    describe('chosen opponent', () => {
-    });
     describe('for non-verified users', () => {
         it('should forbid to create a joiner', async() => {
             // Given an existing part.
@@ -308,7 +306,7 @@ describe('JoinerDAO', () => {
                 await reconnectUser(CREATOR_EMAIL);
                 const update: Partial<Joiner> = {
                     chosenOpponent: candidate,
-                    partStatus: PartStatus.CONFIG_PROPOSED.value
+                    partStatus: PartStatus.CONFIG_PROPOSED.value,
                 };
                 await expectAsync(joinerDAO.update(partId, update)).toBeResolvedTo();
                 await signOut();
