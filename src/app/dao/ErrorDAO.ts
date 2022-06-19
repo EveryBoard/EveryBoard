@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { FirebaseTime } from '../domain/Time';
-import { FirebaseJSONObject, JSONValue } from '../utils/utils';
-import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
+import { FirestoreTime } from '../domain/Time';
+import { FirestoreJSONObject, JSONValue } from '../utils/utils';
+import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
 
-export interface MGPError extends FirebaseJSONObject {
+export interface MGPError extends FirestoreJSONObject {
     // The component in which the error occured
     component: string,
     // Route on which the error occured
@@ -14,19 +14,19 @@ export interface MGPError extends FirebaseJSONObject {
     // Some extra data for the error
     data?: NonNullable<JSONValue>,
     // First time the error occured
-    firstEncounter: FirebaseTime,
+    firstEncounter: FirestoreTime,
     // Last time the error occured
-    lastEncounter: FirebaseTime,
+    lastEncounter: FirestoreTime,
     // Number of times the error occured
     occurences: number,
 }
-export type ErrorDocument = FirebaseDocument<MGPError>;
+export type ErrorDocument = FirestoreDocument<MGPError>;
 
 @Injectable({
     providedIn: 'root',
 })
 // The DAO used to log the errors within firebase
-export class ErrorDAO extends FirebaseFirestoreDAO<MGPError> {
+export class ErrorDAO extends FirestoreDAO<MGPError> {
     public constructor(firestore: Firestore) {
         super('errors', firestore);
     }

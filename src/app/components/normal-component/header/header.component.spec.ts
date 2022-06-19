@@ -24,15 +24,32 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     }));
-    it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
-        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        testUtils.detectChanges();
-        spyOn(testUtils.getComponent().connectedUserService, 'disconnect');
-        void testUtils.clickElement('#logout');
-        tick();
-        const component: HeaderComponent = testUtils.getComponent();
-        expect(component.connectedUserService.disconnect).toHaveBeenCalledTimes(1);
-    }));
+    describe('disconnection', () => {
+        it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+            testUtils.detectChanges();
+            spyOn(testUtils.getComponent().connectedUserService, 'disconnect');
+            void testUtils.clickElement('#logout');
+            tick();
+            const component: HeaderComponent = testUtils.getComponent();
+            expect(component.connectedUserService.disconnect).toHaveBeenCalledTimes(1);
+        }));
+        it('should remove comment in header when disconnecting', fakeAsync(async() => {
+            // Given a connected user that has a observedPart
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+            const observedPart: ObservedPart = { id: '123', opponent: 'Jean-Jaja', typeGame: 'P4' };
+            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            testUtils.detectChanges();
+            tick();
+
+            // When user disconnected
+            await testUtils.clickElement('#connectedUserName');
+            await testUtils.clickElement('#logout');
+
+            // Then observedPartLink should not be displayed
+            testUtils.expectElementNotToExist('#observedPartLink');
+        }));
+    });
     it('should have empty username when user is not connected', fakeAsync(async() => {
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.detectChanges();
@@ -80,9 +97,5 @@ describe('HeaderComponent', () => {
             const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
             expect(observedPartLink.nativeElement.innerText).toEqual('P4 against Jean-Jaja');
         }));
-        it('should remove comment in header when disconnecting', () => {
-            // TODOTODO
-        });
-        // TODOTODO frikin add the cog back !
     });
 });

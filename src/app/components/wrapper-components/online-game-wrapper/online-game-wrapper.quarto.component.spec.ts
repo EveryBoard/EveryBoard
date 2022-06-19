@@ -382,7 +382,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         componentTestUtils.expectElementNotToExist('#passButton');
 
         wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent['pass'] = async() => {
+        wrapper.gameComponent.pass = async() => {
             return MGPValidation.SUCCESS;
         };
         componentTestUtils.detectChanges();
@@ -1306,7 +1306,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveRequest(Request.addTurnTime(Player.ONE), 1);
 
                 // Then chrono local of player one should be increased
-                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
                 const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
                 expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
                 tick(msUntilTimeout);
@@ -1320,7 +1319,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
 
                 // Then chrono local of player one should be increased
-                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
                 const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
                 expect(wrapper.chronoZeroTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
                 tick(msUntilTimeout);
@@ -1355,7 +1353,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveRequest(Request.addGlobalTime(Player.ONE), 1);
 
                 // Then chrono global of player one should be increased by 5 new minutes
-                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
                 expect(wrapper.chronoOneGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -1368,7 +1365,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveRequest(Request.addGlobalTime(Player.ZERO), 1);
 
                 // Then chrono global of player one should be increased by 5 new minutes
-                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
                 expect(wrapper.chronoZeroGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -1963,15 +1959,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'), 3);
 
             // Then it should redirect to new part
-            expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, true);
-            expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, true);
+            expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, { otherRoutes: true });
+            expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, { otherRoutes: true });
         }));
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
             spyOn(ErrorLoggerService, 'logError');
             await prepareStartedGameFor(USER_OBSERVER);
-            spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
+            spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [
                 'canProposeDraw', // non async
@@ -1997,7 +1993,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should display that the game is a draw', fakeAsync(async() => {
             // Given a part that the two player agreed to draw
             await prepareStartedGameFor(USER_OBSERVER);
-            spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
+            spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
             await receiveRequest(Request.drawProposed(Player.ONE), 1);
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ZERO.value,

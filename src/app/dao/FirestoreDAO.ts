@@ -1,16 +1,16 @@
-import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
-import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
+import { display, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
+import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 
-export interface FirebaseDocument<T> {
+export interface FirestoreDocument<T> {
     id: string
     data: T
 }
 
-export type FirebaseCondition = [string, Firestore.WhereFilterOp, unknown]
+export type FirestoreCondition = [string, Firestore.WhereFilterOp, unknown]
 
-export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
+export interface IFirestoreDAO<T extends FirestoreJSONObject> {
 
     create(newElement: T): Promise<string>;
 
@@ -29,22 +29,22 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
      */
     subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Firestore.Unsubscribe;
 
-    observingWhere(conditions: FirebaseCondition[],
-                   callback: FirebaseCollectionObserver<T>,
+    observingWhere(conditions: FirestoreCondition[],
+                   callback: FirestoreCollectionObserver<T>,
                    order?: string): () => void;
 
-    findWhere(conditions: FirebaseCondition[], order?: string, limit?: number): Promise<FirebaseDocument<T>[]>
+    findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]>
 
-    subCollectionDAO<T extends FirebaseJSONObject>(id: string, name: string): IFirebaseFirestoreDAO<T>;
+    subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T>;
 }
 
-export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
+export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
 
     public static VERBOSE: boolean = false;
 
-    private readonly collection: Firestore.CollectionReference<T>;
+    public readonly collection: Firestore.CollectionReference<T>;
 
-    private readonly subDAOs: Record<string, IFirebaseFirestoreDAO<FirebaseJSONObject>> = {};
+    private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};
 
     constructor(public readonly collectionName: string,
                 protected readonly firestore: Firestore.Firestore) {
@@ -80,7 +80,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         return Firestore.deleteDoc(Firestore.doc(this.collection, id));
     }
     public set(id: string, element: T): Promise<void> {
-        display(FirebaseFirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
+        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
         return Firestore.setDoc(Firestore.doc(this.collection, id), element);
     }
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Firestore.Unsubscribe {
@@ -88,8 +88,8 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
             callback(MGPOptional.ofNullable(doc.data()));
         });
     }
-    public async findWhere(conditions: FirebaseCondition[], order?: string, limit?: number)
-    : Promise<FirebaseDocument<T>[]>
+    public async findWhere(conditions: FirestoreCondition[], order?: string, limit?: number)
+    : Promise<FirestoreDocument<T>[]>
     {
         const query: Firestore.Query<T> = this.constructQuery(conditions, order, limit);
         const snapshot: Firestore.QuerySnapshot<T> = await Firestore.getDocs(query);
@@ -106,19 +106,19 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
      * - a comparison
      * - a value that is matched against the field using the comparison
      **/
-    public observingWhere(conditions: FirebaseCondition[],
-                          callback: FirebaseCollectionObserver<T>,
+    public observingWhere(conditions: FirestoreCondition[],
+                          callback: FirestoreCollectionObserver<T>,
                           order?: string)
     : () => void
     {
         const query: Firestore.Query<T> = this.constructQuery(conditions, order);
         return Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
-            const createdDocs: FirebaseDocument<T>[] = [];
-            const modifiedDocs: FirebaseDocument<T>[] = [];
-            const deletedDocs: FirebaseDocument<T>[] = [];
+            const createdDocs: FirestoreDocument<T>[] = [];
+            const modifiedDocs: FirestoreDocument<T>[] = [];
+            const deletedDocs: FirestoreDocument<T>[] = [];
             snapshot.docChanges()
                 .forEach((change: Firestore.DocumentChange<T>) => {
-                    const doc: FirebaseDocument<T> = {
+                    const doc: FirestoreDocument<T> = {
                         id: change.doc.id,
                         data: change.doc.data(),
                     };
@@ -135,23 +135,23 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                     }
                 });
             if (createdDocs.length > 0) {
-                display(FirebaseFirestoreDAO.VERBOSE,
+                display(FirestoreDAO.VERBOSE,
                         'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
                 callback.onDocumentCreated(createdDocs);
             }
             if (modifiedDocs.length > 0) {
-                display(FirebaseFirestoreDAO.VERBOSE,
+                display(FirestoreDAO.VERBOSE,
                         'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
                 callback.onDocumentModified(modifiedDocs);
             }
             if (deletedDocs.length > 0) {
-                display(FirebaseFirestoreDAO.VERBOSE,
+                display(FirestoreDAO.VERBOSE,
                         'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
                 callback.onDocumentDeleted(deletedDocs);
             }
         });
     }
-    private constructQuery(conditions: FirebaseCondition[], order?: string, limit?: number): Firestore.Query<T> {
+    private constructQuery(conditions: FirestoreCondition[], order?: string, limit?: number): Firestore.Query<T> {
         let query: Firestore.Query<T> = Firestore.query(this.collection);
         if (order != null) {
             query = Firestore.query(query, Firestore.orderBy(order));
@@ -164,12 +164,12 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         }
         return query;
     }
-    public subCollectionDAO<T extends FirebaseJSONObject>(id: string, name: string): IFirebaseFirestoreDAO<T> {
+    public subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T> {
         const fullPath: string = `${this.collection.path}/${id}/${name}`;
         if (fullPath in this.subDAOs) {
-            return this.subDAOs[fullPath] as IFirebaseFirestoreDAO<T>;
+            return this.subDAOs[fullPath] as IFirestoreDAO<T>;
         } else {
-            const subDAO: FirebaseFirestoreDAO<T> = new class extends FirebaseFirestoreDAO<T> {
+            const subDAO: FirestoreDAO<T> = new class extends FirestoreDAO<T> {
                 constructor(firestore: Firestore.Firestore) {
                     super(fullPath, firestore);
                 }

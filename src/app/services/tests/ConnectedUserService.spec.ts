@@ -61,7 +61,13 @@ export class ConnectedUserServiceMock {
         return this.observedPartRS.asObservable();
     }
     public async disconnect(): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.disconnect not implemented');
+        if (this.user.isPresent()) {
+            this.observedPartRS.next(MGPOptional.empty());
+            this.user = MGPOptional.empty();
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('Cannot disconnect a non-connected user');
+        }
     }
     public async doRegister(_username: string, _email: string, _password: string)
     : Promise<MGPFallible<FireAuth.User>>
@@ -421,7 +427,7 @@ describe('ConnectedUserService', () => {
             // then it fails
             expect(result).toEqual(MGPValidation.failure('Cannot disconnect a non-connected user'));
         });
-        it('should succeed if a user is connected, and result in the user being disconnected', async() => {
+        it('should succeed if a user is connected, and disconnected the user', async() => {
             // given a registered and connected user
             const registrationResult: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
             expect(registrationResult.isSuccess()).toBeTrue();
@@ -435,6 +441,31 @@ describe('ConnectedUserService', () => {
 
             // and there is no current user
             expect(auth.currentUser).toBeNull();
+        });
+        it('should remove the observedPart', async() => {
+            // given a registered and connected user observing a game
+            const uid: string = (await createConnectedGoogleUser(true)).uid;
+            let resolvePromise: () => void;
+            const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
+                resolvePromise = resolve;
+            });
+            let observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
+            const subscription: Subscription =
+                service.getObservedPartObs().subscribe((newValue: MGPOptional<ObservedPart>) => {
+                    observedPart = newValue;
+                    window.setTimeout(resolvePromise, 2000);
+                });
+            await service.doEmailLogin(email, password);
+            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
+            await userHasUpdated;
+            expect(observedPart).toEqual(MGPOptional.of({ id: '1234', typeGame: 'P4' }));
+
+            // when trying to disconnect
+            await service.disconnect();
+
+            // then it should have removed the observedPart
+            expect(observedPart.isAbsent()).toBeTrue();
+            subscription.unsubscribe();
         });
     });
     describe('mapFirebaseError', () => {

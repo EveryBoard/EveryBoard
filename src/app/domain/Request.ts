@@ -27,12 +27,15 @@ export class Request implements JSONObject {
     public static addGlobalTime: (to: Player) => Request = makeWithPlayer('AddGlobalTime');
 
     public static getPlayer(request: Request): Player {
+        // eslint-disable-next-line dot-notation
         return Player.of(Utils.getNonNullable(request.data)['player']);
     }
     public static getTypeGame(request: Request): string {
+        // eslint-disable-next-line dot-notation
         return Utils.getNonNullable(request.data)['typeGame'];
     }
     public static getPartId(request: Request): string {
+        // eslint-disable-next-line dot-notation
         return Utils.getNonNullable(request.data)['partId'];
     }
 

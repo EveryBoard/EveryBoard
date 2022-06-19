@@ -14,7 +14,7 @@ import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 
-// This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
+// This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
     public static createUserWithEmailAndPassword(auth: FireAuth.Auth, email: string, password: string)
     : Promise<FireAuth.UserCredential>
@@ -142,7 +142,6 @@ export class ConnectedUserService implements OnDestroy {
                                                                         userHasFinalizedVerification);
                                 this.user = MGPOptional.of(authUser);
                                 this.userRS.next(authUser);
-
                                 console.log('updating observedPart')
                                 this.observedPart = MGPOptional.ofNullable(doc.get().observedPart);
                                 this.observedPartRS.next(this.observedPart);
@@ -279,6 +278,7 @@ export class ConnectedUserService implements OnDestroy {
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
             const uid: string = user.get().uid;
+            this.observedPartRS.next(MGPOptional.empty());
             await this.connectivityDAO.setOffline(uid);
             await this.auth.signOut();
             return MGPValidation.SUCCESS;

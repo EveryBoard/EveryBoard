@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import { FirebaseDocument, FirebaseFirestoreDAO, IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
-import { FirebaseJSONObject } from 'src/app/utils/utils';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
+import { FirestoreJSONObject } from 'src/app/utils/utils';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
 
-interface Foo extends FirebaseJSONObject {
+interface Foo extends FirestoreJSONObject {
     value: string,
     otherValue: number,
 }
@@ -16,13 +16,13 @@ interface Foo extends FirebaseJSONObject {
 @Injectable({
     providedIn: 'root',
 })
-class FooDAO extends FirebaseFirestoreDAO<Foo> {
+class FooDAO extends FirestoreDAO<Foo> {
     constructor(firestore: Firestore.Firestore) {
         super('foo', firestore);
     }
 }
 
-describe('FirebaseFirestoreDAO', () => {
+describe('FirestoreDAO', () => {
     let dao: FooDAO;
     beforeEach(async() => {
         await setupEmulators();
@@ -94,7 +94,7 @@ describe('FirebaseFirestoreDAO', () => {
             };
         });
         it('should observe document creation with the given condition', async() => {
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunction,
                 () => void { },
                 () => void { },
@@ -105,7 +105,7 @@ describe('FirebaseFirestoreDAO', () => {
             unsubscribe();
         });
         it('should observe document creation according to multiple conditions', async() => {
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunction,
                 () => void { },
                 () => void { },
@@ -117,7 +117,7 @@ describe('FirebaseFirestoreDAO', () => {
         });
         it('should not observe document creation when the condition does not hold (simple)', async() => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunctionLog,
                 () => void { },
                 () => void { },
@@ -129,7 +129,7 @@ describe('FirebaseFirestoreDAO', () => {
         });
         it('should not observe document creation when the condition does not hold (complexe)', async() => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunctionLog,
                 () => void { },
                 () => void { },
@@ -140,7 +140,7 @@ describe('FirebaseFirestoreDAO', () => {
             unsubscribe();
         });
         it('should observe document update with the given condition', async() => {
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 () => void { },
                 callbackFunction,
                 () => void { },
@@ -152,7 +152,7 @@ describe('FirebaseFirestoreDAO', () => {
             unsubscribe();
         });
         it('should not observe document update when the condition does not hold', async() => {
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 () => void { },
                 callbackFunction,
                 () => void { },
@@ -164,7 +164,7 @@ describe('FirebaseFirestoreDAO', () => {
             unsubscribe();
         });
         it('should observe document deletions with the given condition', async() => {
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 () => void { },
                 () => void { },
                 callbackFunction,
@@ -176,7 +176,7 @@ describe('FirebaseFirestoreDAO', () => {
             unsubscribe();
         });
         it('should not observe document deletions when the condition does not hold', async() => {
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 () => void { },
                 callbackFunction,
                 () => void { },
@@ -195,7 +195,7 @@ describe('FirebaseFirestoreDAO', () => {
             await dao.create({ value: 'foo', otherValue: 2 });
 
             // When calling findWhere
-            const docs: FirebaseDocument<Foo>[] = await dao.findWhere([['otherValue', '==', 1]]);
+            const docs: FirestoreDocument<Foo>[] = await dao.findWhere([['otherValue', '==', 1]]);
 
             // Then it should return the matching documents only
             expect(docs.length).toBe(1);
@@ -205,11 +205,13 @@ describe('FirebaseFirestoreDAO', () => {
     describe('subCollectionDAO', () => {
         it('should provide the subcollection with the fully correct path', async() => {
             // Given a dao with a certain path
-            const path: string = dao['collection'].path;
+            const path: string = dao.collection.path;
             // When calling subCollectionDAO
-            const subDAO: IFirebaseFirestoreDAO<FirebaseJSONObject> = dao.subCollectionDAO('foo', 'sub');
+            const subDAO: FirestoreDAO<FirestoreJSONObject> =
+                dao.subCollectionDAO('foo', 'sub') as FirestoreDAO<FirestoreJSONObject>;
             // Then it should have the right path
-            const subDAOPath: string = subDAO['collection'].path;
+            // eslint-disable-next-line dot-notation
+            const subDAOPath: string = subDAO.collection.path;
             expect(subDAOPath).toEqual(path + '/foo/sub');
         });
     });

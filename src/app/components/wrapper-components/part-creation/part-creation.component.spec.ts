@@ -24,7 +24,7 @@ import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { FirebaseTime, Time } from 'src/app/domain/Time';
+import { FirestoreTime, Time } from 'src/app/domain/Time';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPart } from 'src/app/domain/User';
 
@@ -177,7 +177,7 @@ describe('PartCreationComponent', () => {
 
                 // When the candidate user's document changes
                 // eslint-disable-next-line camelcase
-                const last_changed: FirebaseTime = { seconds: 500, nanoseconds: 0 };
+                const last_changed: FirestoreTime = { seconds: 500, nanoseconds: 0 };
                 await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { last_changed });
                 tick(PartCreationComponent.TOKEN_INTERVAL);
 

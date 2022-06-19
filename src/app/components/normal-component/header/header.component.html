@@ -11,6 +11,7 @@
     </div>
 
     <div id="menu" class="navbar-menu" [ngClass]="showMenu ? 'is-active' : ''" (click)="showMenu = !showMenu">
+
         <div class="navbar-start">
             <a class="navbar-item" [routerLink]="['/']" i18n>Home</a>
             <div class="navbar-item has-dropdown is-hoverable">
@@ -28,16 +29,18 @@
                 </div>
             </div>
         </div>
+
         <div class="navbar-end">
-            <a *ngIf="observedPart.isPresent()"
-               id="observedPartLink"
-               class="navbar-item"
+            <a *ngIf="observedPart.isPresent()" id="observedPartLink" class="navbar-item"
             ><ng-container *ngIf="observedPart.get().opponent else waitingForOpponent" i18n
             >{{ observedPart.get().typeGame }} against {{ observedPart.get().opponent }}</ng-container><ng-template #waitingForOpponent><ng-container i18n>{{ observedPart.get().typeGame }} (waiting for opponent)</ng-container></ng-template></a>
+
+            <a class="navbar-item" [routerLink]="['/settings']" i18n-data-tooltip data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
+
             <div class="navbar-item">
                 <ng-container *ngIf="username else connect">
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">{{username}}</a>
+                        <a id="connectedUserName" class="navbar-link">{{ username }}</a>
                         <div class="navbar-dropdown">
                             <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
                         </div>
