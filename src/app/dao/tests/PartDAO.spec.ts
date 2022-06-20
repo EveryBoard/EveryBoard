@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Part, MGPResult } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { createUser, createUnverifiedUser, signOut } from 'src/app/services/tests/ConnectedUserService.spec';
+import { createUser, createUnverifiedUser, signOut, reconnectUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { PartDAO } from '../PartDAO';
@@ -16,6 +16,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { Time } from 'src/app/domain/Time';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { Joiner, PartStatus } from 'src/app/domain/Joiner';
 
 describe('PartDAO', () => {
 
@@ -227,6 +228,48 @@ describe('PartDAO', () => {
 
             // Then it should fail
             await expectFirebasePermissionDenied(result);
+        });
+        fit('should allow starting a part when chosen as opponent', async() => {
+            // Given a part, an accepted config, and a user who is the chosen opponent in the joiner
+            // Creator creates the joiner
+            const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create(PartMocks.INITIAL);
+            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            await signOut();
+
+            // A candidate adds themself to the candidates list
+            const candidate: MinimalUser = await createUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            await expectAsync(joinerDAO.addCandidate(partId, candidate)).toBeResolvedTo();
+            await signOut();
+
+            // The creator then selects candidates as the chosen opponent and proposes the config
+            await reconnectUser(CREATOR_EMAIL);
+            const update: Partial<Joiner> = {
+                chosenOpponent: candidate,
+                partStatus: PartStatus.CONFIG_PROPOSED.value,
+            };
+            await expectAsync(joinerDAO.update(partId, update)).toBeResolvedTo();
+            await signOut();
+
+            // And the candidate accepts the config
+            await reconnectUser(CANDIDATE_EMAIL);
+            await joinerDAO.update(partId, { partStatus: PartStatus.PART_STARTED.value });
+
+            // When chosen opponents updates the part document
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId,
+                                                                     Player.ONE,
+                                                                     PartMocks.INITIAL.lastUpdate.index,
+                                                                     {
+                                                                         playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                                                                         playerOne: UserMocks.CANDIDATE_MINIMAL_USER,
+                                                                         turn: 0,
+                                                                         beginning: serverTimestamp(),
+                                                                         remainingMsForZero: 1000,
+                                                                         remainingMsForOne: 1000,
+                                                                     });
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
         });
     });
     describe('for unverified user', () => {

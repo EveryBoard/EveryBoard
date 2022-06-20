@@ -103,11 +103,15 @@ service cloud.firestore {
                              (preservesField('playerOne') || partHasNotStarted(resource.data)) &&
                              (preservesField('beginning') || partHasNotStarted(resource.data)) &&
                              (preservesField('turn') || safeTurnUpdate(resource.data.turn, request.resource.data.turn)) &&
-                             safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate) &&
-                             userIsPlayer(resource.data)
+                             (safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate)) &&
+                             (userIsPlayer(resource.data) || (partHasNotStarted(resource.data) && userIsChosenOpponentInJoiner(id)));
 
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
+        }
+        function userIsChosenOpponentInJoiner(partId) {
+            let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
+            return hasField(joiner, 'chosenOpponent') && joiner.chosenOpponent.id == request.auth.uid;
         }
         function userIsPlayer(part) {
             let userIsPlayerZero = part.playerZero.id == request.auth.uid;
@@ -120,15 +124,15 @@ service cloud.firestore {
         function safeLastUpdate(oldLastUpdate, newLastUpdate) {
             let legitimatePlayerZeroUpdate = newLastUpdate.player == 0 && resource.data.playerZero.id == request.auth.uid;
             let legitimatePlayerOneUpdate = hasField(resource.data, 'playerOne') && newLastUpdate.player == 1 && resource.data.playerOne.id == request.auth.uid;
-            let indexIncremented = debug(newLastUpdate.index) == debug(oldLastUpdate.index + 1);
-            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate) && indexIncremented;
+            let indexIncremented = newLastUpdate.index == oldLastUpdate.index + 1;
+            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate || partHasNotStarted(resource.data)) && indexIncremented;
         }
         function partHasNotStarted(part) {
             return hasField(part, 'beginning') == false;
         }
         function hasTimedOut(creator) {
-            let creatorUser =  get(/databases/$(database)/documents/users/$(creator.id));
-            let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(creatorUser.data.last_changed.seconds, 's') + duration.value(10, 's');
+            let creatorUser =  get(/databases/$(database)/documents/users/$(creator.id)).data;
+            let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(creatorUser.last_changed.seconds, 's') + duration.value(10, 's');
             return timedOut;
         }
         match /joiners/{partId} {
@@ -209,7 +213,7 @@ service cloud.firestore {
         }
         function userIsChosenOpponent() {
             let uid = request.auth.uid;
-            return resource.data.chosenOpponent.id == uid;
+            return hasField(resource.data, 'chosenOpponent') && resource.data.chosenOpponent.id == uid;
         }
         function acceptsConfig() {
             return resource.data.partStatus == 2 && // CONFIG_PROPOSED
@@ -217,7 +221,8 @@ service cloud.firestore {
         }
         function removesOneSelfFromChosenOpponent() {
             let uid = request.auth.uid;
-            return resource.data.chosenOpponent.id == uid &&
+            return hasField(resource.data, 'chosenOpponent') &&
+                   resource.data.chosenOpponent.id == uid &&
                    request.resource.data.chosenOpponent == null;
         }
     }
