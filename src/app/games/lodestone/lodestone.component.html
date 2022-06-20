@@ -88,7 +88,7 @@
         <g *ngFor="let square of plate.coords; index as i"
            [attr.transform]="getPressurePlateTransform(plate.position)" >
             <g id="plate_{{ plate.position }}_{{ i }}"
-               (click)="selectOrDeselectPressurePlate(square.temporary, plate.position, i)" >
+               (click)="onPressurePlateClick(square.temporary, plate.position, i)" >
                 <rect id="plateSquare_{{ plate.position }}_{{ i }}"
                       class="base"
                       [ngClass]="square.squareClasses"
