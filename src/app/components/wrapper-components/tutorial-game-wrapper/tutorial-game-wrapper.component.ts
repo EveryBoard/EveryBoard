@@ -145,7 +145,6 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        console.log(currentStep)
         if (currentStep.isClick()) {
             this.gameComponent.updateBoard();
             this.moveAttemptMade = true;
