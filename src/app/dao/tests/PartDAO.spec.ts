@@ -229,7 +229,7 @@ describe('PartDAO', () => {
             // Then it should fail
             await expectFirebasePermissionDenied(result);
         });
-        fit('should allow starting a part when chosen as opponent', async() => {
+        it('should allow starting a part when chosen as opponent', async() => {
             // Given a part, an accepted config, and a user who is the chosen opponent in the joiner
             // Creator creates the joiner
             const creator: MinimalUser = await createUser(CREATOR_EMAIL, CREATOR_NAME);
