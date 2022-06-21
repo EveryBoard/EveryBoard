@@ -8,7 +8,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { TutorialStep, TutorialStepClick, TutorialStepMove } from './TutorialStep';
+import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -145,6 +145,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
+        console.log(currentStep)
         if (currentStep.isClick()) {
             this.gameComponent.updateBoard();
             this.moveAttemptMade = true;
@@ -205,21 +206,20 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public async showSolution(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.showSolution()');
         const step: TutorialStep = this.steps[this.stepIndex];
-        if (step.isStepWithSolution()) {
-            const awaitedMove: Move = step.getSolution();
+        assert(step.hasSolution(), 'step must have solution');
+        const solutionStep: TutorialStepWithSolution | TutorialStepClick =
+            step as TutorialStepWithSolution | TutorialStepClick;
+        const solution: Move | Click = solutionStep.getSolution();
+        if (solution instanceof Move) {
             this.showStep(this.stepIndex);
-            this.gameComponent.rules.choose(awaitedMove);
+            this.gameComponent.rules.choose(solution);
             this.gameComponent.updateBoard();
-            this.currentMessage = step.getSuccessMessage();
         } else {
-            assert(step.isClick(), 'Step should be click');
-            const clickStep: TutorialStepClick = step as TutorialStepClick;
-            const awaitedClick: string = clickStep.getSolution();
             this.showStep(this.stepIndex);
-            const element: HTMLElement = window.document.querySelector(awaitedClick) as HTMLElement;
+            const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;
             element.dispatchEvent(new Event('click'));
-            this.currentMessage = clickStep.getSuccessMessage();
         }
+        this.currentMessage = solutionStep.getSuccessMessage();
         this.moveAttemptMade = true;
         this.cdr.detectChanges();
     }

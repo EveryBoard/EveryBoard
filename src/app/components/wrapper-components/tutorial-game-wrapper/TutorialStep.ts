@@ -4,6 +4,8 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 
+export type Click = string
+
 export abstract class TutorialStep {
     public static fromMove(title: string,
                            instruction: string,
@@ -72,7 +74,7 @@ export abstract class TutorialStep {
     public isInformation(): this is TutorialStepInformational {
         return false;
     }
-    public isStepWithSolution(): this is TutorialStepWithSolution {
+    public hasSolution(): this is TutorialStepWithSolution | TutorialStepClick {
         return false;
     }
     public withPreviousMove(previousMove: Move): this {
@@ -89,10 +91,10 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
                        private readonly successMessage: string) {
         super(title, instruction, state);
     }
-    public isStepWithSolution(): this is TutorialStepWithSolution {
+    public hasSolution(): this is TutorialStepWithSolution | TutorialStepClick {
         return true;
     }
-    public getSolution(): Move {
+    public getSolution(): Move | Click {
         return this.solution;
     }
     public getSuccessMessage(): string {
@@ -140,10 +142,13 @@ export class TutorialStepClick extends TutorialStep {
                        public readonly failureMessage: string) {
         super(title, instruction, state);
     }
+    public hasSolution(): this is TutorialStepWithSolution | TutorialStepClick {
+        return true;
+    }
     public isClick(): this is TutorialStepClick {
         return true;
     }
-    public getSolution(): string {
+    public getSolution(): Move | Click {
         return this.acceptedClicks[0];
     }
     public getSuccessMessage(): string {

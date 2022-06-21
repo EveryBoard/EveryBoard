@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
-import { TutorialStep } from './TutorialStep';
+import { Click, TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -1241,18 +1241,21 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const rules: Rules<Move, GameState, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
-                    if (step.isStepWithSolution()) {
-                        const moveResult: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
-                        if (moveResult.isSuccess()) {
-                            if (step.isPredicate()) {
-                                const state: GameState =
-                                    rules.applyLegalMove(step.getSolution(), step.state, moveResult.get());
-                                expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
-                                    .toEqual(MGPValidation.SUCCESS);
+                    if (step.hasSolution()) {
+                        const solution: Move | Click = step.getSolution();
+                        if (solution instanceof Move) {
+                            const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state);
+                            if (moveResult.isSuccess()) {
+                                if (step.isPredicate()) {
+                                    const state: GameState =
+                                        rules.applyLegalMove(solution, step.state, moveResult.get());
+                                    expect(Utils.getNonNullable(step.predicate)(solution, state))
+                                        .toEqual(MGPValidation.SUCCESS);
+                                }
+                            } else {
+                                const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
+                                expect(moveResult.getReason()).withContext(context).toBeNull();
                             }
-                        } else {
-                            const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
-                            expect(moveResult.getReason()).withContext(context).toBeNull();
                         }
                     }
                 }
