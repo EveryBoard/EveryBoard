@@ -25,14 +25,14 @@ export class MartianChessTutorial {
         ),
         TutorialStep.informational(
             $localize`The pieces`,
-            $localize`The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots.</li><li>The Drones: represented as circles with 2 dots.</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
+            $localize`The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots;</li><li>The Drones: represented as circles with 2 dots;</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
             MartianChessState.getInitialState(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving pawns`,
             $localize`Pawns are worth one point. They can move one step diagonally.<br/><br/>You're playing Dark, move a pawn.`,
             MartianChessState.getInitialState(),
-            MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get(),
+            MartianChessMove.from(new Coord(1, 2), new Coord(2, 3)).get(),
             (move: MartianChessMove, state: MartianChessState) => {
                 if (state.getPieceAt(move.end) === MartianChessPiece.PAWN) {
                     return MGPValidation.SUCCESS;
@@ -46,7 +46,7 @@ export class MartianChessTutorial {
             $localize`Moving drones`,
             $localize`Drones are worth two points. They can move one or two steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a drone.`,
             MartianChessState.getInitialState(),
-            MartianChessMove.from(new Coord(0, 2), new Coord(0, 4)).get(),
+            MartianChessMove.from(new Coord(2, 0), new Coord(3, 0)).get(),
             (move: MartianChessMove, state: MartianChessState) => {
                 if (state.getPieceAt(move.end) === MartianChessPiece.DRONE) {
                     return MGPValidation.SUCCESS;
@@ -60,7 +60,7 @@ export class MartianChessTutorial {
             $localize`Moving queens`,
             $localize`Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a queen.`,
             new MartianChessState([
-                [B, A, A, _],
+                [B, A, _, _],
                 [C, _, _, _],
                 [_, _, _, _],
                 [_, _, C, _],
@@ -69,7 +69,7 @@ export class MartianChessTutorial {
                 [_, _, _, _],
                 [C, B, A, _],
             ], 0),
-            MartianChessMove.from(new Coord(0, 1), new Coord(0, 7)).get(),
+            MartianChessMove.from(new Coord(2, 3), new Coord(2, 7)).get(),
             (move: MartianChessMove, state: MartianChessState) => {
                 if (state.getPieceAt(move.end) === MartianChessPiece.QUEEN) {
                     return MGPValidation.SUCCESS;
@@ -81,7 +81,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capture`,
-            $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crossed the canal!<br/><br/>A capture is possible for Dark, do it.`,
+            $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!<br/><br/>A capture is possible for Dark, do it.`,
             new MartianChessState([
                 [B, A, A, _],
                 [_, _, _, _],
@@ -189,7 +189,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`End by emptyness`,
-            $localize`When a player send his last piece into the opponent territory, the game ends. If both players have the same number of points, the last player win!<br/><br/>Light player can win this way, do it!`,
+            $localize`When a player's last piece is sent into the opponent territory, the game ends. If both players have the same number of points, the last player win!<br/><br/>Light player can win this way, do it!`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],

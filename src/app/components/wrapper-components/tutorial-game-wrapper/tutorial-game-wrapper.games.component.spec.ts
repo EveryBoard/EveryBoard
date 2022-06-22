@@ -174,7 +174,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new MartianChessRules(MartianChessState),
                     martianChessTutorial[4],
-                    MartianChessMove.from(new Coord(2, 0), new Coord(3, 1)).get(),
+                    MartianChessMove.from(new Coord(1, 0), new Coord(2, 1)).get(),
                     MGPValidation.failure(`This is not a queen!`),
                 ], [
                     new MartianChessRules(MartianChessState),

@@ -277,8 +277,8 @@
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
       </trans-unit>
-      <trans-unit id="759585629296293659" datatype="html">
-        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
+      <trans-unit id="8091992009354748018" datatype="html">
+        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is;&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
       </trans-unit>
       <trans-unit id="2553091915151695430" datatype="html">
         <source>This move is a drop, please do a transfer!</source>
@@ -1252,8 +1252,8 @@
       <trans-unit id="8633649754808970040" datatype="html">
         <source>The pieces</source>
       </trans-unit>
-      <trans-unit id="4066930341904859929" datatype="html">
-        <source>The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
+      <trans-unit id="6714001193228580235" datatype="html">
+        <source>The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots;&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots;&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
       </trans-unit>
       <trans-unit id="2033063585111632444" datatype="html">
         <source>Moving pawns</source>
@@ -1282,8 +1282,8 @@
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>
       </trans-unit>
-      <trans-unit id="486876720495966186" datatype="html">
-        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crossed the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
+      <trans-unit id="3324500494494988533" datatype="html">
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
       </trans-unit>
       <trans-unit id="6741042150149637612" datatype="html">
         <source>Congratulations! By capturing that pawn, you won one point.</source>
@@ -1327,8 +1327,8 @@
       <trans-unit id="1679797944253761486" datatype="html">
         <source>End by emptyness</source>
       </trans-unit>
-      <trans-unit id="3317049298165339378" datatype="html">
-        <source>When a player send his last piece into the opponent territory, the game ends. If both players have the same number of points, the last player win!&lt;br/&gt;&lt;br/&gt;Light player can win this way, do it!</source>
+      <trans-unit id="7627031314193688876" datatype="html">
+        <source>When a player&apos;s last piece is sent into the opponent territory, the game ends. If both players have the same number of points, the last player win!&lt;br/&gt;&lt;br/&gt;Light player can win this way, do it!</source>
       </trans-unit>
       <trans-unit id="5831506127438574716" datatype="html">
         <source>Your piece is still in you territory!</source>
@@ -1862,8 +1862,8 @@
       <trans-unit id="1634828513961256784" datatype="html">
         <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
-      <trans-unit id="3703259835450002878" datatype="html">
-        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
+      <trans-unit id="3168485194270408725" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want;&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece;&lt;/li&gt;&lt;li&gt;Horizontally or vertically;&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne;&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
       </trans-unit>
       <trans-unit id="6012770625680782650" datatype="html">
         <source>Capturing a soldier (1/2)</source>

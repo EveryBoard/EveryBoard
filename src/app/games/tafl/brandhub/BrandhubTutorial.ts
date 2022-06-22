@@ -18,7 +18,7 @@ export class BrandhubTutorial {
         ),
         TutorialStep.anyMove(
             $localize`Moving`,
-            $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move: <ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a corner throne.</li><li>Once the king left his central throne, he can't go back on it, nor can the other pieces.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
+            $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move: <ol><li>By as many squares as you want;</li><li>Without going over another piece or stopping on another piece;</li><li>Horizontally or vertically;</li><li>Only the king can land on a corner throne;</li><li>Once the king left his central throne, he can't go back on it, nor can the other pieces.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
             BrandhubState.getInitialState(),
             BrandhubMove.of(new Coord(3, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
