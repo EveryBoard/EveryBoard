@@ -165,7 +165,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSub = this.connectedUserService.getUserObs().subscribe((user: AuthUser) => {
+        this.userSub = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             // player should be authenticated and have a username to be here
             this.authUser = user;
         });

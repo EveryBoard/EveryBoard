@@ -5,6 +5,7 @@ import { Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService
@@ -28,8 +29,8 @@ export class ActivePartsService {
         this.activePartsBS = new BehaviorSubject<PartDocument[]>([]);
         this.activePartsObs = this.activePartsBS.asObservable();
     }
-    public getActivePartsObs(): Observable<PartDocument[]> {
-        return this.activePartsObs;
+    public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
+        return this.activePartsObs.subscribe(callback);
     }
     public startObserving(): void {
         assert(this.unsubscribe.isAbsent(), 'ActivePartsService: already observing');

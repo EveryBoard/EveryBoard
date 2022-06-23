@@ -32,12 +32,12 @@ describe('ActivePartsService', () => {
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    describe('getActivePartsObs', () => {
+    describe('subscribeToActiveParts', () => {
         it('should notify about new parts', fakeAsync(async() => {
             // Given a service where we are observing active parts
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: PartDocument[]) => {
+            const activePartsSub: Subscription = service.subscribeToActiveParts(
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -65,8 +65,8 @@ describe('ActivePartsService', () => {
         it('should not notify about new parts when we stopped observing', fakeAsync(async() => {
             // Given a service where we were observing active parts, but have stopped observing
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: PartDocument[]) => {
+            const activePartsSub: Subscription = service.subscribeToActiveParts(
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
             service.stopObserving();
@@ -109,10 +109,9 @@ describe('ActivePartsService', () => {
             };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: PartDocument[]) => {
-                    seenActiveParts = activeParts;
-                });
+            const activePartsSub: Subscription = service.subscribeToActiveParts((activeParts: PartDocument[]) => {
+                seenActiveParts = activeParts;
+            });
 
             // When an existing part is deleted
             await partDAO.delete(partId);
@@ -139,10 +138,9 @@ describe('ActivePartsService', () => {
             const partToBeDeleted: string = await partDAO.create(part);
             const partThatWillRemain: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: PartDocument[]) => {
-                    seenActiveParts = activeParts;
-                });
+            const activePartsSub: Subscription = service.subscribeToActiveParts((activeParts: PartDocument[]) => {
+                seenActiveParts = activeParts;
+            });
 
             // When one existing part is deleted
             await partDAO.delete(partToBeDeleted);
@@ -169,10 +167,9 @@ describe('ActivePartsService', () => {
             };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: PartDocument[]) => {
-                    seenActiveParts = activeParts;
-                });
+            const activePartsSub: Subscription = service.subscribeToActiveParts((activeParts: PartDocument[]) => {
+                seenActiveParts = activeParts;
+            });
 
             // When an existing part is updated
             await partDAO.update(partId, { turn: 1 });
@@ -200,8 +197,8 @@ describe('ActivePartsService', () => {
             const partToBeModified: string = await partDAO.create(part);
             const partThatWontChange: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: PartDocument[]) => {
+            const activePartsSub: Subscription = service.subscribeToActiveParts(
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 

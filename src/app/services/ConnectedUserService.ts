@@ -13,6 +13,7 @@ import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Subscription } from 'rxjs';
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -274,8 +275,8 @@ export class ConnectedUserService implements OnDestroy {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
         }
     }
-    public getUserObs(): Observable<AuthUser> {
-        return this.userObs;
+    public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
+        return this.userObs.subscribe(callback)
     }
     public async setUsername(username: string): Promise<MGPValidation> {
         if (username === '') {

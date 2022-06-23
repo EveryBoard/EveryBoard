@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Unsubscribe } from 'firebase/auth';
-import { Observable } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
-import { User, UserDocument } from '../domain/User';
-import { ActiveUsersService } from './ActiveUsersService';
+import { User } from '../domain/User';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
@@ -22,15 +20,7 @@ import { assert } from '../utils/assert';
 })
 export class UserService {
 
-    constructor(private readonly activeUsersService: ActiveUsersService,
-                private readonly userDAO: UserDAO) {
-    }
-    public getActiveUsersObs(): Observable<UserDocument[]> {
-        this.activeUsersService.startObserving();
-        return this.activeUsersService.activeUsersObs;
-    }
-    public unSubFromActiveUsersObs(): void {
-        this.activeUsersService.stopObserving();
+    constructor(private readonly userDAO: UserDAO) {
     }
     public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
         // the callback will be called on the foundUser

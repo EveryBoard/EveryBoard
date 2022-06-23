@@ -1,26 +1,32 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';
 import { Time } from '../domain/Time';
+import { Subscription } from 'rxjs';
+import { MGPOptional } from '../utils/MGPOptional';
+import { assert } from '../utils/assert';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ActiveUsersService {
+export class ActiveUsersService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
     private readonly activeUsersBS: BehaviorSubject<UserDocument[]> = new BehaviorSubject<UserDocument[]>([]);
 
-    public activeUsersObs: Observable<UserDocument[]>;
+    private readonly activeUsersObs!: Observable<UserDocument[]>;
 
-    private unsubscribe: () => void;
+    private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
 
     constructor(public userDAO: UserDAO) {
         this.activeUsersObs = this.activeUsersBS.asObservable();
+    }
+    public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {
+        return this.activeUsersObs.subscribe(callback);
     }
     public startObserving(): void {
         display(ActiveUsersService.VERBOSE, 'ActiveUsersService.startObservingActiveUsers');
@@ -48,10 +54,13 @@ export class ActiveUsersService {
         };
         const usersObserver: FirestoreCollectionObserver<User> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        this.unsubscribe = this.userDAO.observeActiveUsers(usersObserver);
+        this.unsubscribe = MGPOptional.of(this.userDAO.observeActiveUsers(usersObserver));
     }
     public stopObserving(): void {
-        this.unsubscribe();
+        if (this.unsubscribe.isPresent()) {
+            this.unsubscribe.get()();
+            this.unsubscribe = MGPOptional.empty();
+        }
         this.activeUsersBS.next([]);
     }
     public sort(users: UserDocument[]): UserDocument[] {
@@ -62,5 +71,8 @@ export class ActiveUsersService {
             const secondTimestamp: number = Utils.getNonNullable(secondData).seconds;
             return firstTimestamp - secondTimestamp;
         });
+    }
+    public ngOnDestroy(): void {
+        assert(this.unsubscribe.isAbsent(), 'ActiveUsersService should not have any subscription left');
     }
 }

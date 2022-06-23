@@ -44,8 +44,8 @@ export class ConnectedUserServiceMock {
             this.userRS.next(user);
         }
     }
-    public getUserObs(): Observable<AuthUser> {
-        return this.userRS.asObservable();
+    public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
+        return this.userRS.asObservable().subscribe(callback);
     }
     public async disconnect(): Promise<MGPValidation> {
         throw new Error('ConnectedUserServiceMock.disconnect not implemented');
@@ -164,7 +164,7 @@ describe('ConnectedUserService', () => {
         const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
             resolvePromise = resolve;
         });
-        const subscription: Subscription = service.getUserObs().subscribe((_user: AuthUser) => {
+        const subscription: Subscription = service.subscribeToUser((_user: AuthUser) => {
             // Wait 200ms to ensure that the handler has the time to mark for verification
             window.setTimeout(resolvePromise, 2000);
         });
@@ -312,7 +312,7 @@ describe('ConnectedUserService', () => {
 
             let subscription!: Subscription;
             const updateSeen: Promise<void> = new Promise((resolve: () => void) => {
-                subscription = service.getUserObs().subscribe((user: AuthUser): void => {
+                subscription = service.subscribeToUser((user: AuthUser): void => {
                     if (user.isConnected()) {
                         resolve();
                     }

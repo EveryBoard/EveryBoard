@@ -8,8 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import localeFr from '@angular/common/locales/fr';
 
-import { PartDAO } from './dao/PartDAO';
-
 import { ChatService } from './services/ChatService';
 import { UserService } from './services/UserService';
 import { ConnectedUserService } from './services/ConnectedUserService';
@@ -233,7 +231,6 @@ export class FirebaseProviders {
         JoinerService,
         UserService,
         ChatService,
-        PartDAO,
         ThemeService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],

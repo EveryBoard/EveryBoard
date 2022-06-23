@@ -46,7 +46,9 @@ describe('LobbyComponent', () => {
         // Given a server with one active part
         const activePart: PartDocument = new PartDocument('some-part-id', PartMocks.INITIAL);
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-        spyOn(activePartsService, 'getActivePartsObs').and.returnValue((new BehaviorSubject([activePart])).asObservable());
+        spyOn(activePartsService, 'subscribeToActiveParts').and.callFake(
+            (callback: (parts: PartDocument[]) => void) =>
+                new BehaviorSubject([activePart]).asObservable().subscribe(callback));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
         testUtils.detectChanges();
@@ -92,7 +94,7 @@ describe('LobbyComponent', () => {
         // When rendering it
         testUtils.detectChanges();
 
-        // Then the date should be written in format HH:mm:ss (with 1h added due to Locale?)
+        // Then the date should be written in format HH:mm:ss
         const element: DebugElement = testUtils.findElement('#' + UserMocks.CREATOR_MINIMAL_USER.name);
         const time: string = element.nativeElement.innerText;
         const timeAsString: string = formatDate(timeStampInSecond * 1000, 'HH:mm:ss', 'en-US');
