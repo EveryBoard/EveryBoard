@@ -17,6 +17,7 @@ describe('ChatService', () => {
 
     let service: ChatService;
     let chatDAO: ChatDAO;
+    let destroyed: boolean = false;
 
     const MESSAGE: Message = {
         content: 'foo',
@@ -118,20 +119,21 @@ describe('ChatService', () => {
             // then the update is not observed by the callback
             await expectAsync(promise).toBePending();
         }));
-        it('should throw when stopObserving is called but no chat is observed', fakeAsync(async() => {
-            expect(() => service.stopObserving()).toThrowError('ChatService.stopObserving should not be called if not observing');
+        it('should not do anything throw when stopObserving is called but no chat is observed', fakeAsync(async() => {
+            // Given that no chat is observed
+            // When calling stopObserving
+            service.stopObserving()
+            // Then nothing should happen (i.e., no error thrown)
         }));
-        it('should stop observing upon destroy', fakeAsync(async() => {
-            spyOn(service, 'stopObserving');
-            // given a chat that we're observing
+        it('should throw upon destruction if it is still observing a chat', fakeAsync(async() => {
+            // Given a chat that we're observing
             await service.createNewChat('id');
             service.startObserving('id', new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {}));
 
-            // when the service is destroyed
-            service.ngOnDestroy();
-
-            // then it stops observing
-            expect(service.stopObserving).toHaveBeenCalledTimes(1);
+            // When the service is destroyed
+            // Then it throws
+            expect(() => service.ngOnDestroy()).toThrowError('Assertion failure: ChatService should have unsubscribed before being destroyed (extra data: undefined)');
+            destroyed = true;
         }));
     });
     describe('deleteChat', () => {
@@ -201,6 +203,9 @@ describe('ChatService', () => {
         }));
     });
     afterEach(() => {
-        service.ngOnDestroy();
+        service.stopObserving();
+        if (destroyed === false) {
+            service.ngOnDestroy();
+        }
     });
 });

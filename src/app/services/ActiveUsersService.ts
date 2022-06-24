@@ -8,6 +8,7 @@ import { Time } from '../domain/Time';
 import { Subscription } from 'rxjs';
 import { MGPOptional } from '../utils/MGPOptional';
 import { assert } from '../utils/assert';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',
@@ -20,7 +21,7 @@ export class ActiveUsersService implements OnDestroy {
 
     private readonly activeUsersObs!: Observable<UserDocument[]>;
 
-    private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
+    private unsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     constructor(public userDAO: UserDAO) {
         this.activeUsersObs = this.activeUsersBS.asObservable();
@@ -60,8 +61,8 @@ export class ActiveUsersService implements OnDestroy {
         if (this.unsubscribe.isPresent()) {
             this.unsubscribe.get()();
             this.unsubscribe = MGPOptional.empty();
+            this.activeUsersBS.next([]);
         }
-        this.activeUsersBS.next([]);
     }
     public sort(users: UserDocument[]): UserDocument[] {
         return users.sort((first: UserDocument, second: UserDocument) => {
@@ -73,6 +74,6 @@ export class ActiveUsersService implements OnDestroy {
         });
     }
     public ngOnDestroy(): void {
-        assert(this.unsubscribe.isAbsent(), 'ActiveUsersService should not have any subscription left');
+        assert(this.unsubscribe.isAbsent(), 'ActiveUsersService should have unsubscribed before being destroyed');
     }
 }

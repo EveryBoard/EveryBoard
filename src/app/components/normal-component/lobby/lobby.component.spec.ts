@@ -65,7 +65,7 @@ describe('LobbyComponent', () => {
         // eslint-disable-next-line dot-notation
         spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-        spyOn(activePartsService, 'stopObserving');
+        spyOn(activePartsService, 'stopObserving').and.callThrough();
 
         // When destroying the component
         component.ngOnDestroy();

@@ -74,8 +74,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Output('gameStartNotification') gameStartNotification: EventEmitter<Joiner> = new EventEmitter<Joiner>();
     public gameStarted: boolean = false;
 
-    private gameExists: boolean = false;
-
     public viewInfo: PartCreationViewInfo = {
         userIsCreator: false,
         userIsChosenOpponent: false,
@@ -125,7 +123,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         await this.updateUserDocWithObservedPart();
         await this.startSendingPresenceTokens();
-        this.gameExists = true;
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
 
@@ -292,7 +289,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.chatService.deleteChat(this.partId);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat deleted');
 
-        await this.joinerService.deleteJoiner();
+        await this.joinerService.deleteJoiner(this.partId);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat and joiner deleted');
 
         await this.gameService.deletePart(this.partId);
@@ -448,10 +445,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
 
         this.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-        if (this.gameExists) {
-            this.joinerService.unsubscribe();
-        }
         const authUser: AuthUser = this.connectedUserService.user.get();
+        this.joinerService.unsubscribe();
+
         if (this.gameStarted === true) {
             // Avoid canceling game creation if part started but user leave
             return;
@@ -459,7 +455,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         if (this.currentJoiner === null) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: there is no part here');
-            return;
         } else if (authUser.id === this.currentJoiner.creator.id) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: you(creator) about to cancel creation.');
@@ -468,8 +463,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: you(joiner) about to cancel game joining');
             await this.connectedUserService.removeObservedPart();
-            await this.joinerService.cancelJoining(authUser.toMinimalUser());
+            await this.joinerService.cancelJoining(this.partId, authUser.toMinimalUser());
         }
-        return;
     }
 }

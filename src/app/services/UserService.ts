@@ -22,7 +22,7 @@ export class UserService {
 
     constructor(private readonly userDAO: UserDAO) {
     }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
+    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): Unsubscribe {
         // the callback will be called on the foundUser
         return this.userDAO.observeUserByUsername(username, callback);
     }

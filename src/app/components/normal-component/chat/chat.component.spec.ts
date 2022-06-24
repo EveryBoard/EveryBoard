@@ -43,7 +43,7 @@ describe('ChatComponent', () => {
         chatService = TestBed.inject(ChatService);
         chatDAO = TestBed.inject(ChatDAO);
         await chatDAO.set('fauxChat', {});
-        spyOn(chatService, 'stopObserving');
+        spyOn(chatService, 'stopObserving').and.callThrough();
     }));
     it('should create', fakeAsync(async() => {
         // wait for the chat to be initialized (without it, ngOnInit will not be called)

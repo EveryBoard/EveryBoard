@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { Part, PartDocument } from '../domain/Part';
@@ -6,6 +6,7 @@ import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver'
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService
@@ -17,13 +18,13 @@ import { Subscription } from 'rxjs';
  * and game component. You must start observing when you need to observe parts,
  * and stop observing when you're done.
  */
-export class ActivePartsService {
+export class ActivePartsService implements OnDestroy {
 
     private readonly activePartsBS: BehaviorSubject<PartDocument[]>;
 
     private readonly activePartsObs: Observable<PartDocument[]>;
 
-    private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
+    private unsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     constructor(private readonly partDAO: PartDAO) {
         this.activePartsBS = new BehaviorSubject<PartDocument[]>([]);
@@ -61,9 +62,13 @@ export class ActivePartsService {
         this.unsubscribe = MGPOptional.of(this.partDAO.observeActiveParts(partObserver));
     }
     public stopObserving(): void {
-        assert(this.unsubscribe.isPresent(), 'Cannot stop observing active parts when you have not started observing');
-        this.activePartsBS.next([]);
-        this.unsubscribe.get()();
-        this.unsubscribe = MGPOptional.empty();
+        if (this.unsubscribe.isPresent()) {
+            this.unsubscribe.get()();
+            this.unsubscribe = MGPOptional.empty();
+            this.activePartsBS.next([]);
+        }
+    }
+    public ngOnDestroy(): void {
+        assert(this.unsubscribe.isAbsent(), 'ActivePartsService should have unsubscribed before being destroyed');
     }
 }

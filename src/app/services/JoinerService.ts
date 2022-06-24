@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
@@ -12,11 +12,11 @@ import { MinimalUser } from '../domain/MinimalUser';
 @Injectable({
     providedIn: 'root',
 })
-export class JoinerService {
+export class JoinerService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    private observedJoinerId: string;
+    private observedJoinerId: MGPOptional<string> = MGPOptional.empty();
 
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
@@ -27,13 +27,15 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
     public subscribeToChanges(joinerId: string, callback: (doc: MGPOptional<Joiner>) => void): void {
-        this.observedJoinerId = joinerId;
+        this.observedJoinerId = MGPOptional.of(joinerId);
         this.joinerUnsubscribe = MGPOptional.of(this.joinerDAO.subscribeToChanges(joinerId, callback));
     }
     public unsubscribe(): void {
-        assert(this.joinerUnsubscribe.isPresent(), 'JoinerService cannot unsubscribe if no joiner is observed');
-        this.joinerUnsubscribe.get()();
-        this.joinerUnsubscribe = MGPOptional.empty();
+        if (this.joinerUnsubscribe.isPresent()) {
+            this.joinerUnsubscribe.get()();
+            this.joinerUnsubscribe = MGPOptional.empty();
+            this.observedJoinerId = MGPOptional.empty();
+        }
     }
     public async createInitialJoiner(creator: MinimalUser, joinerId: string): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator.id + ', ' + joinerId + ')');
@@ -68,14 +70,11 @@ export class JoinerService {
             return MGPValidation.SUCCESS;
         }
     }
-    public async cancelJoining(user: MinimalUser): Promise<void> {
+    public async cancelJoining(joinerId: string, user: MinimalUser): Promise<void> {
         display(JoinerService.VERBOSE,
-                'JoinerService.cancelJoining(' + user.name + '); this.observedJoinerId = ' + this.observedJoinerId);
+                'JoinerService.cancelJoining(' + joinerId + ',' + user.name + ');');
 
-        if (this.observedJoinerId == null) {
-            throw new Error('cannot cancel joining when not observing a joiner');
-        }
-        const joinerOpt: MGPOptional<Joiner> = await this.joinerDAO.read(this.observedJoinerId);
+        const joinerOpt: MGPOptional<Joiner> = await this.joinerDAO.read(joinerId);
         if (joinerOpt.isAbsent()) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
@@ -98,20 +97,17 @@ export class JoinerService {
                 partStatus,
                 candidates,
             };
-            return this.joinerDAO.update(this.observedJoinerId, update);
+            return this.joinerDAO.update(joinerId, update);
         }
     }
     public async updateCandidates(candidates: MinimalUser[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+        assert(this.observedJoinerId.isPresent(), 'JoinerService is not observing a joiner');
         const update: Partial<Joiner> = { candidates };
-        return this.joinerDAO.update(this.observedJoinerId, update);
+        return this.joinerDAO.update(this.observedJoinerId.get(), update);
     }
-    public async deleteJoiner(): Promise<void> {
-        display(JoinerService.VERBOSE,
-                'JoinerService.deleteJoiner(); this.observedJoinerId = ' + this.observedJoinerId);
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        return this.joinerDAO.delete(this.observedJoinerId);
+    public async deleteJoiner(joinerId: string): Promise<void> {
+        return this.joinerDAO.delete(joinerId);
     }
     public async proposeConfig(chosenOpponent: MinimalUser,
                                partType: PartType,
@@ -123,9 +119,9 @@ export class JoinerService {
         display(JoinerService.VERBOSE,
                 { joinerService_proposeConfig: { maximalMoveDuration, firstPlayer, totalPartDuration } });
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+        assert(this.observedJoinerId.isPresent(), 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId.get(), {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             chosenOpponent: chosenOpponent,
             partType: partType.value,
@@ -136,25 +132,25 @@ export class JoinerService {
     }
     public setChosenOpponent(chosenOpponent: MinimalUser): Promise<void> {
         display(JoinerService.VERBOSE, `JoinerService.setChosenOpponent(${chosenOpponent.name})`);
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+        assert(this.observedJoinerId.isPresent(), 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId.get(), {
             chosenOpponent: chosenOpponent,
         });
     }
     public async reviewConfig(): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+        assert(this.observedJoinerId.isPresent(), 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId.get(), {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
     public async reviewConfigAndRemoveChosenOpponentAndUpdateCandidates(candidates: MinimalUser[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+        assert(this.observedJoinerId.isPresent(), 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId.get(), {
             partStatus: PartStatus.PART_CREATED.value,
             candidates,
             chosenOpponent: null,
@@ -162,9 +158,9 @@ export class JoinerService {
     }
     public acceptConfig(): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.acceptConfig');
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+        assert(this.observedJoinerId.isPresent(), 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
+        return this.joinerDAO.update(this.observedJoinerId.get(), { partStatus: PartStatus.PART_STARTED.value });
     }
     public async createJoiner(joiner: Joiner): Promise<string> {
         display(JoinerService.VERBOSE, 'JoinerService.create(' + JSON.stringify(joiner) + ')');
@@ -185,5 +181,8 @@ export class JoinerService {
         display(JoinerService.VERBOSE, { joinerService_updateJoinerById: { partId, update } });
 
         return this.joinerDAO.update(partId, update);
+    }
+    public ngOnDestroy(): void {
+        assert(this.joinerUnsubscribe.isAbsent(), 'JoinerService should have unsubscribed before being destroyed');
     }
 }

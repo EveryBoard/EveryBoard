@@ -25,7 +25,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirestoreTime, Time } from 'src/app/domain/Time';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('PartCreationComponent', () => {
 
@@ -467,7 +466,7 @@ describe('PartCreationComponent', () => {
 
                 // Then game, joiner, and chat are deleted
                 expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
+                expect(joinerService.deleteJoiner).toHaveBeenCalledWith('joinerId');
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -491,8 +490,8 @@ describe('PartCreationComponent', () => {
             it('should unsubscribe from joiner service upon destruction', fakeAsync(async() => {
                 // Given a component that is loaded by anyone (here, the creator)
                 awaitComponentInitialisation();
-                spyOn(joinerService, 'unsubscribe');
-                spyOn(component, 'cancelGameCreation'); // spied in order to avoid calling it
+                spyOn(joinerService, 'unsubscribe').and.callThrough();
+                spyOn(component, 'cancelGameCreation').and.resolveTo();
 
                 // When the component is destroyed
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -549,7 +548,6 @@ describe('PartCreationComponent', () => {
 
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-                // tick(PartCreationComponent.TOKEN_INTERVAL);
             }));
             it(`should delete part when finding an outdated creator token`, fakeAsync(async() => {
                 spyOn(gameService, 'deletePart').and.callThrough();
@@ -569,7 +567,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the part and all its related data should be removed
                 expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
+                expect(joinerService.deleteJoiner).toHaveBeenCalledWith('joinerId');
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -693,13 +691,15 @@ describe('PartCreationComponent', () => {
                 // When leaving the page (tested here by calling ngOnDestroy)
                 const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
                 spyOn(authService, 'removeObservedPart').and.callThrough();
-                spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
-                spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
-                await component.ngOnDestroy();
+                spyOn(joinerService, 'unsubscribe').and.callThrough();
+                spyOn(joinerService, 'cancelJoining').and.callThrough();
+                testUtils.destroy();
+                tick(3000);
+                await testUtils.whenStable();
                 destroyed = true;
 
                 // Then joinerService.cancelJoining should have been called
-                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER);
+                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
                 expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
             }));
         });

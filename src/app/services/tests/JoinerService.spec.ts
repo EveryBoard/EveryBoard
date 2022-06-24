@@ -104,13 +104,6 @@ describe('JoinerService', () => {
         }));
     });
     describe('cancelJoining', () => {
-        it('cancelJoining should throw when there was no observed joiner', fakeAsync(async() => {
-            // When cancelling on an invalid joiner
-            // Then it should throw
-            const expectedError: string = 'cannot cancel joining when not observing a joiner';
-            const unknown: MinimalUser = { id: 'unknown-doc-id', name: 'who is that' };
-            await expectAsync(service.cancelJoining(unknown)).toBeRejectedWithError(expectedError);
-        }));
         it('should delegate update to DAO', fakeAsync(async() => {
             // Given a joiner that we are observing and that we joined
             await dao.set('joinerId', JoinerMocks.INITIAL);
@@ -121,7 +114,7 @@ describe('JoinerService', () => {
             spyOn(dao, 'update');
 
             // When cancelling our join
-            await service.cancelJoining(user);
+            await service.cancelJoining('joinerId', user);
 
             // Then we are removed from the list
             expect(dao.update).toHaveBeenCalledWith('joinerId', {
@@ -136,7 +129,7 @@ describe('JoinerService', () => {
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             // When the ChosenOpponent leaves
-            await service.cancelJoining(UserMocks.OPPONENT_MINIMAL_USER);
+            await service.cancelJoining('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
 
             // Then the joiner is back to the initial one
             const currentJoiner: MGPOptional<Joiner> = await dao.read('joinerId');
@@ -152,7 +145,7 @@ describe('JoinerService', () => {
             // Then it should throw an error
             const error: string = 'someone that was not candidate nor ChosenOpponent just left the chat: who is that';
             const unknown: MinimalUser = { id: 'unknown-doc-id', name: 'who is that' };
-            await expectAsync(service.cancelJoining(unknown)).toBeRejectedWithError(error);
+            await expectAsync(service.cancelJoining('joinerId', unknown)).toBeRejectedWithError(error);
         }));
     });
     describe('updateCandidates', () => {
@@ -186,7 +179,7 @@ describe('JoinerService', () => {
             spyOn(dao, 'delete');
 
             // When we delete it
-            await service.deleteJoiner();
+            await service.deleteJoiner('joinerId');
 
             // Then it is deleted in the DAO
             expect(dao.delete).toHaveBeenCalledWith('joinerId');

@@ -10,6 +10,7 @@ import { ErrorLoggerService } from './ErrorLoggerService';
 import { serverTimestamp } from 'firebase/firestore';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MinimalUser } from '../domain/MinimalUser';
+import { assert } from '../utils/assert';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
@@ -24,7 +25,7 @@ export class ChatService implements OnDestroy {
 
     private followedChatId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedChatUnsubscribe: Unsubscribe;
+    private followedChatUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
@@ -36,7 +37,7 @@ export class ChatService implements OnDestroy {
             display(ChatService.VERBOSE, '[start watching chat ' + chatId);
 
             this.followedChatId = MGPOptional.of(chatId);
-            this.followedChatUnsubscribe = this.chatDAO.subscribeToMessages(chatId, callback);
+            this.followedChatUnsubscribe = MGPOptional.of(this.chatDAO.subscribeToMessages(chatId, callback));
         } else if (this.followedChatId.equalsValue(chatId)) {
             ErrorLoggerService.logErrorAndFail('ChatService', 'Already observing same chat', { chatId });
         } else {
@@ -46,13 +47,12 @@ export class ChatService implements OnDestroy {
         }
     }
     public stopObserving(): void {
-        if (!this.isObserving()) {
-            throw new Error('ChatService.stopObserving should not be called if not observing');
-        }
         display(ChatService.VERBOSE, 'stopped watching chat ' + this.followedChatId + ']');
-        this.followedChatId = MGPOptional.empty();
-        this.followedChatUnsubscribe();
-
+        if (this.followedChatUnsubscribe.isPresent()) {
+            this.followedChatId = MGPOptional.empty();
+            this.followedChatUnsubscribe.get()();
+            this.followedChatUnsubscribe = MGPOptional.empty();
+        }
     }
     public isObserving(): boolean {
         return this.followedChatId.isPresent();
@@ -92,8 +92,6 @@ export class ChatService implements OnDestroy {
         return (message === '');
     }
     public ngOnDestroy(): void {
-        if (this.isObserving()) {
-            this.stopObserving();
-        }
+        assert(this.followedChatUnsubscribe.isAbsent(), 'ChatService should have unsubscribed before being destroyed');
     }
 }
