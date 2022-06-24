@@ -74,7 +74,7 @@ export abstract class TutorialStep {
     public isInformation(): this is TutorialStepInformational {
         return false;
     }
-    public hasSolution(): this is TutorialStepWithSolution | TutorialStepClick {
+    public hasSolution(): this is TutorialStepWithSolution {
         return false;
     }
     public withPreviousMove(previousMove: Move): this {
@@ -90,7 +90,7 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
                        private readonly successMessage: string) {
         super(title, instruction, state);
     }
-    public hasSolution(): this is TutorialStepWithSolution | TutorialStepClick {
+    public hasSolution(): this is TutorialStepWithSolution {
         return true;
     }
     public abstract getSolution(): Move | Click
