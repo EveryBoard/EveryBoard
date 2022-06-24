@@ -8,7 +8,7 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
 
     public static getInitialState(): GipfState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
-        const N: FourStatePiece = FourStatePiece.NONE;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
         const board: Table<FourStatePiece> = [
@@ -52,6 +52,6 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }
-        return this.board[coord.y][coord.x] !== FourStatePiece.NONE;
+        return this.board[coord.y][coord.x] !== FourStatePiece.UNREACHABLE;
     }
 }

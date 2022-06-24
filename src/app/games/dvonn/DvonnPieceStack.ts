@@ -13,7 +13,7 @@ export class DvonnPieceStack {
         });
     public static MAX_SIZE: number = 49; // The maximal possible size for a stack
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, 0, false);
-    public static NONE: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, -1, false);
+    public static UNREACHABLE: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, -1, false);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 1, false);
     public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 1, false);
     public static SOURCE: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, 1, true);

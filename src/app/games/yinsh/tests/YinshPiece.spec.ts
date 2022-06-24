@@ -8,7 +8,7 @@ describe('YinshPiece', () => {
 
     it('should correctly encode and decode all pieces', () => {
         for (const piece of [
-            YinshPiece.NONE,
+            YinshPiece.UNREACHABLE,
             YinshPiece.EMPTY,
             YinshPiece.MARKER_ZERO,
             YinshPiece.MARKER_ONE,
@@ -18,7 +18,7 @@ describe('YinshPiece', () => {
         }
     });
     it('should have redefined toString', () => {
-        expect(YinshPiece.NONE.toString()).toBe('NONE');
+        expect(YinshPiece.UNREACHABLE.toString()).toBe('NONE');
         expect(YinshPiece.EMPTY.toString()).toBe('EMPTY');
         expect(YinshPiece.MARKER_ZERO.toString()).toBe('MARKER_ZERO');
         expect(YinshPiece.MARKER_ONE.toString()).toBe('MARKER_ONE');

@@ -135,7 +135,7 @@ export class YinshComponent
             this.setRingInfo(coord, piece);
             this.setMarkerInfo(coord, piece);
         });
-        for (const player of [Player.ZERO, Player.ONE]) {
+        for (const player of Player.PLAYERS) {
             this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
         }
         this.showCurrentMoveCaptures();

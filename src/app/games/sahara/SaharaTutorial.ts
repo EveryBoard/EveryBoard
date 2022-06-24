@@ -5,7 +5,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const N: FourStatePiece = FourStatePiece.NONE;
+const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const _: FourStatePiece = FourStatePiece.EMPTY;

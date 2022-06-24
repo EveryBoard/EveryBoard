@@ -12,7 +12,7 @@ describe('QuartoComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
 
-    const NULL: QuartoPiece = QuartoPiece.NONE;
+    const NULL: QuartoPiece = QuartoPiece.EMPTY;
     const AAAA: QuartoPiece = QuartoPiece.AAAA;
 
     beforeEach(fakeAsync(async() => {
@@ -59,7 +59,7 @@ describe('QuartoComponent', () => {
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
             [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
             [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
-            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
+            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
         ];
         const pieceInHand: QuartoPiece = QuartoPiece.BAAB;
         const state: QuartoState = new QuartoState(board, 15, pieceInHand);
@@ -67,7 +67,7 @@ describe('QuartoComponent', () => {
 
         // When clicking on the last empty square
         // Then the move should be accepted
-        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
         await componentTestUtils.expectMoveSuccess('#chooseCoord_3_3', move);
     }));
 });

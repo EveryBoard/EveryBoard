@@ -13,7 +13,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('SaharaRules', () => {
 
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     const _: FourStatePiece = FourStatePiece.EMPTY;

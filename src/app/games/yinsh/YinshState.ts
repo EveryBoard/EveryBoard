@@ -10,7 +10,7 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
 
     public static getInitialState(): YinshState {
         const _: YinshPiece = YinshPiece.EMPTY;
-        const N: YinshPiece = YinshPiece.NONE;
+        const N: YinshPiece = YinshPiece.UNREACHABLE;
         const board: Table<YinshPiece> = [
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
@@ -62,7 +62,7 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }
-        return this.board[coord.y][coord.x] !== YinshPiece.NONE;
+        return this.board[coord.y][coord.x] !== YinshPiece.UNREACHABLE;
     }
     public setAtUnsafe(coord: Coord, value: YinshPiece): this {
         const newBoard: YinshPiece[][] = ArrayUtils.copyBiArray(this.board);

@@ -6,6 +6,8 @@ export class RulesFailure {
 
     public static readonly MUST_CLICK_ON_EMPTY_SPACE: Localized = () => $localize`You must click on an empty space.`;
 
+    public static readonly MUST_CLICK_ON_EMPTY_SQUARE: Localized = () => $localize`You must click on an empty square.`;
+
     public static readonly CANNOT_SELF_CAPTURE: Localized = () => $localize`Your landing space should be empty or contain a piece of the opponent.`;
 
     public static readonly MUST_CHOOSE_PLAYER_PIECE: Localized = () => $localize`You must pick one of your pieces.`;

@@ -10,7 +10,7 @@ export class FourStatePiece implements ComparableObject {
 
     public static EMPTY: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE.value);
 
-    public static NONE: FourStatePiece = new FourStatePiece(3);
+    public static UNREACHABLE: FourStatePiece = new FourStatePiece(3);
 
     public static from(value: number): FourStatePiece {
         switch (value) {
@@ -20,8 +20,8 @@ export class FourStatePiece implements ComparableObject {
                 return FourStatePiece.ONE;
             case FourStatePiece.EMPTY.value:
                 return FourStatePiece.EMPTY;
-            case FourStatePiece.NONE.value:
-                return FourStatePiece.NONE;
+            case FourStatePiece.UNREACHABLE.value:
+                return FourStatePiece.UNREACHABLE;
             default:
                 throw new Error('FourStatePiece has no value matching ' + value);
         }
