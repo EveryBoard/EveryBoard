@@ -830,6 +830,59 @@ describe('LodestoneRules', () => {
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+    it('should not block piece at the previous lodestone position', () => {
+        // Given a specific state
+        const R: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
+                                                             { direction: 'push', orientation: 'orthogonal' });
+        const B: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
+                                                             { direction: 'push', orientation: 'diagonal' });
+        const board: Table<LodestonePiece> = [
+            [N, N, N, N, N, N, N, N],
+            [N, N, _, O, _, _, N, N],
+            [N, N, _, R, _, _, N, N],
+            [N, N, _, _, _, B, N, N],
+            [N, N, _, _, _, _, N, N],
+            [N, N, _, _, X, _, N, N],
+            [N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N],
+        ];
+        const pressurePlates: LodestonePressurePlates = {
+            bottom: MGPOptional.empty(),
+            left: MGPOptional.empty(),
+            right: MGPOptional.empty(),
+            top: MGPOptional.of(new LodestonePressurePlate(3, [LodestonePiecePlayer.ONE, LodestonePiecePlayer.ZERO])),
+        };
+        const lodestones: LodestonePositions = new MGPMap([
+            { key: Player.ZERO, value: new Coord(3, 2) },
+            { key: Player.ONE, value: new Coord(5, 3) },
+        ]);
+        const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
+        // When performing a specific pull move
+        const move: LodestoneMove = new LodestoneMove(new Coord(3, 3),
+                                                      'pull',
+                                                      'orthogonal',
+                                                      { top: 0, bottom: 0, left: 0, right: 0 });
+        // Then the move should be valid and the piece has been pulled
+        const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
+                                                             { direction: 'pull', orientation: 'orthogonal' });
+        const expectedBoard: Table<LodestonePiece> = [
+            [N, N, N, N, N, N, N, N],
+            [N, N, _, _, _, _, N, N],
+            [N, N, _, O, _, _, N, N],
+            [N, N, _, A, _, B, N, N],
+            [N, N, _, _, _, _, N, N],
+            [N, N, _, _, X, _, N, N],
+            [N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N],
+        ];
+        const expectedLodestones: LodestonePositions = new MGPMap([
+            { key: Player.ZERO, value: new Coord(3, 3) },
+            { key: Player.ONE, value: new Coord(5, 3) },
+        ]);
+        const expectedState: LodestoneState =
+            new LodestoneState(expectedBoard, 1, expectedLodestones, pressurePlates);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
     it('should not consider pieces fallen when there is no more pressure plate as capture', () => {
         // Given a fully crumbled state with an opponent piece that will soon fall
         const board: Table<LodestonePiece> = [

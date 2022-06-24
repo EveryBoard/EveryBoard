@@ -163,25 +163,25 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     : LodestoneInfos
     {
         let result: LodestoneInfos;
-        if (lodestone.direction === 'pull') {
-            result = this.applyPull(state, coord, lodestone.orientation);
-        } else {
-            result = this.applyPush(state, coord, lodestone.orientation);
-        }
+        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const previousLodestonePosition: MGPOptional<Coord> = state.lodestones.get(state.getCurrentPlayer());
         if (previousLodestonePosition.isPresent()) {
             const previousCoord: Coord = previousLodestonePosition.get();
-            result.board[previousCoord.y][previousCoord.x] = LodestonePieceNone.EMPTY;
+            board[previousCoord.y][previousCoord.x] = LodestonePieceNone.EMPTY;
+        }
+        if (lodestone.direction === 'pull') {
+            result = this.applyPull(state, board, coord, lodestone.orientation);
+        } else {
+            result = this.applyPush(state, board, coord, lodestone.orientation);
         }
         result.board[coord.y][coord.x] =
             LodestonePieceLodestone.of(state.getCurrentPlayer(), lodestone);
         result.moved.push(coord);
         return result;
     }
-    private applyPull(state: LodestoneState, lodestone: Coord, orientation: LodestoneOrientation): LodestoneInfos {
+    private applyPull(state: LodestoneState, board: LodestonePiece[][], lodestone: Coord, orientation: LodestoneOrientation): LodestoneInfos {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const captures: Coord[] = [];
         const moved: Coord[] = [];
         const directions: readonly Direction[] = orientation === 'diagonal' ? Direction.DIAGONALS : Direction.ORTHOGONALS;
@@ -215,10 +215,9 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return { board, captures, moved };
     }
-    private applyPush(state: LodestoneState, lodestone: Coord, orientation: LodestoneOrientation): LodestoneInfos {
+    private applyPush(state: LodestoneState, board: LodestonePiece[][], lodestone: Coord, orientation: LodestoneOrientation): LodestoneInfos {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const captures: Coord[] = [];
         const moved: Coord[] = [];
         const directions: readonly Direction[] = orientation === 'diagonal' ? Direction.DIAGONALS : Direction.ORTHOGONALS;

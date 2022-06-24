@@ -129,7 +129,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         const lodestonePosition: MGPOptional<Coord> = this.lodestones.get(currentPlayer);
         if (lodestonePosition.isPresent()) {
             const piece: LodestonePiece = this.getPieceAt(lodestonePosition.get());
-            assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)');
+            assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)' + lodestonePosition.get());
             const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
             const currentDirection: LodestoneDirection = lodestone.direction;
             switch (currentDirection) {
