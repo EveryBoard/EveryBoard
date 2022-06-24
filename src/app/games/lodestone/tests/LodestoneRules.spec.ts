@@ -831,7 +831,7 @@ describe('LodestoneRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should not block piece at the previous lodestone position', () => {
-        // Given a specific state
+        // Given a specific state with a lodestone is aligned with a piece
         const R: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'push', orientation: 'orthogonal' });
         const B: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
@@ -857,11 +857,13 @@ describe('LodestoneRules', () => {
             { key: Player.ONE, value: new Coord(5, 3) },
         ]);
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
-        // When performing a specific pull move
+
+        // When performing a pull move where the piece will move to the last position of the lodestone
         const move: LodestoneMove = new LodestoneMove(new Coord(3, 3),
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 0, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be valid and the piece has been pulled
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'pull', orientation: 'orthogonal' });
