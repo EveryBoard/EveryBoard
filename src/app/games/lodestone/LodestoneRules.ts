@@ -179,7 +179,12 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         result.moved.push(coord);
         return result;
     }
-    private applyPull(state: LodestoneState, board: LodestonePiece[][], lodestone: Coord, orientation: LodestoneOrientation): LodestoneInfos {
+    private applyPull(state: LodestoneState,
+                      board: LodestonePiece[][],
+                      lodestone: Coord,
+                      orientation: LodestoneOrientation)
+    : LodestoneInfos
+    {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const captures: Coord[] = [];
@@ -215,7 +220,12 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return { board, captures, moved };
     }
-    private applyPush(state: LodestoneState, board: LodestonePiece[][], lodestone: Coord, orientation: LodestoneOrientation): LodestoneInfos {
+    private applyPush(state: LodestoneState,
+                      board: LodestonePiece[][],
+                      lodestone: Coord,
+                      orientation: LodestoneOrientation)
+    : LodestoneInfos
+    {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const captures: Coord[] = [];
