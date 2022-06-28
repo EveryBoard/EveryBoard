@@ -2,8 +2,6 @@ ActiveUsersService.ts,1
 app.module.ts,1
 AttackEpaminondasMinimax.ts,1
 CoerceoPiecesThreatTilesMinimax.ts,3
-ConnectedUserService.ts,2
-FirebaseFirestoreDAO.ts,9
 GoGroupsDatas.ts,5
 LinesOfActionRules.ts,1
 online-game-wrapper.component.ts,11

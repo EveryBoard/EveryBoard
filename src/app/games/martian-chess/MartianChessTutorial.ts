@@ -25,7 +25,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.informational(
             $localize`The pieces`,
-            $localize`The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots;</li><li>The Drones: represented as circles with 2 dots;</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
+            $localize`The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots.</li><li>The Drones: represented as circles with 2 dots.</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
             MartianChessState.getInitialState(),
         ),
         TutorialStep.fromPredicate(
@@ -120,12 +120,12 @@ export class MartianChessTutorial {
             $localize`Field Promotion (2/2)`,
             $localize`The other kind of field promotion is to merge a drone and a pawn to obtain a queen.<br/><br/>Such a move is possible for Light. Do it.`,
             new MartianChessState([
-                [_, _, _, C],
-                [_, A, _, _],
+                [A, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
-                [_, _, _, A],
+                [_, _, _, _],
+                [_, _, _, _],
                 [_, _, B, _],
                 [_, A, _, _],
             ], 1),
@@ -156,9 +156,9 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Restarting the clock`,
-            $localize`If the clock has been called, whenever a capture is done the countdown restart.<br/><br/>You are playing Dark, do a capture to restart the countdown.`,
+            $localize`If the clock has been called, whenever a capture is done the countdown restarts.<br/><br/>You are playing Dark, do a capture to restart the countdown.`,
             new MartianChessState([
-                [_, _, _, C],
+                [_, _, _, _],
                 [_, A, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
@@ -167,7 +167,7 @@ export class MartianChessTutorial {
                 [_, _, B, _],
                 [_, A, _, _],
             ], 14, MGPOptional.empty(), MGPOptional.of(1)),
-            [MartianChessMove.from(new Coord(3, 0), new Coord(3, 5)).get()],
+            [MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get()],
             $localize`Congratulations!`,
             $localize`This is not a capture, the game is now over, please retry!`,
         ),
@@ -189,7 +189,7 @@ export class MartianChessTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`End by emptyness`,
-            $localize`When a player's last piece is sent into the opponent territory, the game ends. If both players have the same number of points, the last player win!<br/><br/>Light player can win this way, do it!`,
+            $localize`When a player's last piece is moved into the opponent territory, the game ends. If both players have the same number of points, the last player win!<br/><br/>Light player can win this way, do it!`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],

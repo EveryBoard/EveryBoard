@@ -23,7 +23,7 @@ export class MartianChessPawnComponent {
     public readonly horizontalDotsRadius: number = MartianChessComponent.SPACE_SIZE / 15;
 
     public static getTriangle(): string {
-        // The aim of the incoming calculation is to make the shape vertically centered inside the square
+        // The aim of the following computation is to make the shape vertically centered inside the square
         return MartianChessComponent.getRegularPolygon(3, MartianChessPawnComponent.TRIANGLE_Y_OFFSET);
     }
     private static yOffsetForVerticalCentering() {

@@ -44,8 +44,8 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     public getMovesForPawnAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const coord: Coord = new Coord(x, y);
         const landingCoords: Coord[] = [];
-        for (const dir of Direction.DIRECTIONS.filter((d: Direction) => d.isDiagonal())) {
-            const landingCoord: Coord = coord.getNext(dir);
+        for (const diagonal of Direction.DIAGONALS) {
+            const landingCoord: Coord = coord.getNext(diagonal);
             if (landingCoord.isInRange(4, 8)) {
                 landingCoords.push(landingCoord);
             }

@@ -2,7 +2,7 @@
 <svg:polygon *ngIf="style.shape === 'Polygon'"
              [id]="mainShapeId"
              class="base"
-             [attr.points]="MartianChessQueenComponent.HEPTAGONE"
+             [attr.points]="MartianChessQueenComponent.HEPTAGON"
              [ngClass]="pieceClasses"
              stroke-linecap="round" />
 <svg:polygon *ngIf="style.shape === 'Star'"

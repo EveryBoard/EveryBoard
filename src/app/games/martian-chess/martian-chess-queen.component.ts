@@ -12,7 +12,7 @@ export class MartianChessQueenComponent {
     @Input() pieceClasses: string[];
     @Input() style: MartianChessFace;
 
-    public static HEPTAGONE: string = MartianChessComponent.getRegularPolygon(7);
+    public static HEPTAGON: string = MartianChessComponent.getRegularPolygon(7);
     public static EIGHT_POINTED_STAR: string = MartianChessComponent.getNPointedStar(8, 0);
 
     public readonly MartianChessQueenComponent: typeof MartianChessQueenComponent = MartianChessQueenComponent;

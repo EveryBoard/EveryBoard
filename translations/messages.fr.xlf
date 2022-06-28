@@ -974,8 +974,8 @@
         <source>Transfer</source>
         <target>Transfert</target>
       </trans-unit>
-      <trans-unit id="8091992009354748018" datatype="html">
-        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is;&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
+      <trans-unit id="759585629296293659" datatype="html">
+        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
         <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
       </trans-unit>
       <trans-unit id="2553091915151695430" datatype="html">
@@ -2395,8 +2395,8 @@
         <source>The pieces</source>
         <target>Les pièces</target>
       </trans-unit>
-      <trans-unit id="6714001193228580235" datatype="html">
-        <source>The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots;&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots;&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
+      <trans-unit id="4066930341904859929" datatype="html">
+        <source>The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
         <target>Les pièces sont foncées du côté du premier joueur, les claires du côté du second. Il y a trois types de pièces: &lt;ul&gt;&lt;li&gt;Les reines: représentées par des cercles avec 3 points ;&lt;/li&gt;&lt;li&gt;Les drônes: représentés par des cercles avec 2 points ;&lt;/li&gt;&lt;li&gt;Les pions: représentés par des cercles avec un point.&lt;/li&gt;&lt;/ul&gt;</target>
       </trans-unit>
       <trans-unit id="2033063585111632444" datatype="html">
@@ -2479,8 +2479,8 @@
         <source>Restarting the clock</source>
         <target>Redémarrer le compte à rebour</target>
       </trans-unit>
-      <trans-unit id="3990040520793429593" datatype="html">
-        <source>If the clock has been called, whenever a capture is done the countdown restart.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture to restart the countdown.</source>
+      <trans-unit id="1506256477130467669" datatype="html">
+        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture to restart the countdown.</source>
         <target>Si le compte à rebour a été lancé, chaque capture remet le compteur à 7.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture pour redémarrer le compte à rebour.</target>
       </trans-unit>
       <trans-unit id="7392280182595989107" datatype="html">
@@ -2500,7 +2500,7 @@
         <target>Fin par le vide</target>
       </trans-unit>
       <trans-unit id="7627031314193688876" datatype="html">
-        <source>When a player&apos;s last piece is sent into the opponent territory, the game ends. If both players have the same number of points, the last player win!&lt;br/&gt;&lt;br/&gt;Light player can win this way, do it!</source>
+        <source>When a player&apos;s last piece is moved into the opponent territory, the game ends. If both players have the same number of points, the last player win!&lt;br/&gt;&lt;br/&gt;Light player can win this way, do it!</source>
         <target>Quand un joueur déplace sa dernière pièce dans le territoire adverse, la partie prend fin. Si les deux joueurs ont le même nombre de points, le dernier joueur gagne !&lt;br/&gt;&lt;br/&gt;Clair peut gagner de cette façon, faites-le !</target>
       </trans-unit>
       <trans-unit id="5831506127438574716" datatype="html">
@@ -3337,8 +3337,8 @@
         <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Brandhub est la version irlandaise du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
       </trans-unit>
-      <trans-unit id="3168485194270408725" datatype="html">
-        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want;&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece;&lt;/li&gt;&lt;li&gt;Horizontally or vertically;&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne;&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
+      <trans-unit id="3703259835450002878" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
         <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de cases que souhaité ;&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce ;&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins ;&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, il ne peut plus y retourner, les autres pièces non plus.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Ceci est le plateau initial, faites le premier coup.</target>
       </trans-unit>
       <trans-unit id="2643653187802774042" datatype="html">

@@ -1,7 +1,6 @@
 ActiveUsersService.ts,3
 CoerceoPiecesThreatTilesMinimax.ts,1
-ConnectedUserService.ts,5
-FirebaseFirestoreDAO.ts,23
+ConnectedUserService.ts,3
 GoGroupsDatas.ts,4
 LinesOfActionRules.ts,1
 online-game-wrapper.component.ts,11

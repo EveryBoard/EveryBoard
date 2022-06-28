@@ -29,6 +29,27 @@ describe('MartianChessRules', () => {
 
     let minimaxes: Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult>[];
 
+    const boardWhereCaptureCanBeDone: Table<MartianChessPiece> = [
+        [A, _, _, _],
+        [_, _, _, _],
+        [_, _, _, _],
+        [_, A, _, _],
+        [_, _, A, _],
+        [_, _, _, _],
+        [_, _, _, _],
+        [_, _, _, A],
+    ];
+    const expectedBoardAfterCapture: Table<MartianChessPiece> = [
+        [A, _, _, _],
+        [_, _, _, _],
+        [_, _, _, _],
+        [_, _, _, _],
+        [_, _, A, _],
+        [_, _, _, _],
+        [_, _, _, _],
+        [_, _, _, A],
+    ];
+
     beforeEach(() => {
         rules = new MartianChessRules(MartianChessState);
         minimaxes = [
@@ -37,20 +58,10 @@ describe('MartianChessRules', () => {
     });
     it('Should be illegal to choose a piece in the opponent territory', () => {
         // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, B, C],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = MartianChessState.getInitialState();
 
         // When choosing a piece in the opponent's territory
-        const move: MartianChessMove = MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get();
+        const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
 
         // Then the move should be illegal
         const reason: string = MartianChessRulesFailure.MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY();
@@ -58,20 +69,10 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to choose an empty square', () => {
         // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, B, C],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 0);
+        const state: MartianChessState = MartianChessState.getInitialState();
 
         // When choosing an empty square
-        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(0, 1)).get();
+        const move: MartianChessMove = MartianChessMove.from(new Coord(3, 3), new Coord(3, 4)).get();
 
         // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
@@ -79,20 +80,10 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to move a pawn not on one of the 4 diagonal neighboor', () => {
         // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, B, C],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = MartianChessState.getInitialState();
 
         // When moving one of your pawn vertically
-        const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(1, 6)).get();
+        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(2, 3)).get();
 
         // Then the move should be illegal
         const reason: string = MartianChessMoveFailure.PAWN_MUST_MOVE_ONE_DIAGONAL_STEP();
@@ -100,20 +91,10 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to land a drone more than two orthogonal step', () => {
         // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, B, C],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = MartianChessState.getInitialState();
 
         // When moving a drone three orthogonal step
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(2, 4)).get();
+        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 2), new Coord(0, 5)).get();
 
         // Then the move should be illegal
         const reason: string = MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS();
@@ -121,20 +102,10 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to jump over another piece with a queen (aligned move)', () => {
         // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, A, _],
-            [_, _, C, _],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = MartianChessState.getInitialState();
 
         // When moving a queen over another piece
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(2, 5)).get();
+        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(0, 5)).get();
 
         // Then the move should be illegal
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
@@ -142,19 +113,9 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to land on your own pieces', () => {
         // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, _, _, _],
-            [_, A, _, _],
-            [_, _, C, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, _, _],
-            [_, _, _, _],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 0);
+        const state: MartianChessState = MartianChessState.getInitialState();
 
-        // When moving a queen over another piece
+        // When landing your piece on one of your piece, when no promotion are possible
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get();
 
         // Then the move should be illegal
@@ -217,67 +178,57 @@ describe('MartianChessRules', () => {
     it('should be legal to move a drone of one diagonal step', () => {
         // Given any board
         const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
+            [B, A, _, _],
+            [A, _, _, _],
             [_, _, _, _],
             [_, _, _, _],
             [_, _, _, _],
             [_, _, _, _],
             [_, _, A, _],
-            [_, _, B, A],
+            [_, _, _, _],
         ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = new MartianChessState(board, 0);
 
-        // When moving a queen over another piece
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(3, 6)).get();
+        // When moving a drone of one diagonal step
+        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(1, 1)).get();
 
         // Then the move should be legal
         const expectedBoard: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
+            [_, A, _, _],
+            [A, B, _, _],
             [_, _, _, _],
             [_, _, _, _],
             [_, _, _, _],
             [_, _, _, _],
-            [_, _, A, B],
-            [_, _, _, A],
+            [_, _, A, _],
+            [_, _, _, _],
         ];
-        const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
+        const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('should be legal to move a drone of two diagonals step', () => {
+    it('should be legal to move a drone of two diagonal steps', () => {
         // Given any board
-        const board: Table<MartianChessPiece> = [
-            [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, A, _],
-            [_, _, B, A],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = MartianChessState.getInitialState();
 
-        // When moving a queen over another piece
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 7), new Coord(0, 5)).get();
+        // When moving a drone of two diagonal steps
+        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 2), new Coord(2, 4)).get();
 
         // Then the move should be legal
         const expectedBoard: Table<MartianChessPiece> = [
+            [C, C, B, _],
+            [C, B, A, _],
+            [_, A, A, _],
+            [_, _, _, _],
+            [_, _, B, _],
+            [_, A, A, B],
             [_, A, B, C],
-            [_, A, B, C],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [B, _, _, _],
-            [_, _, A, _],
-            [_, _, _, A],
+            [_, B, C, C],
         ];
-        const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
+        const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should be legal to move a queen as far as you want linearly', () => {
-        // Given the initial board
+        // Given a board where a queen is free to move
         const board: Table<MartianChessPiece> = [
             [C, C, B, _],
             [_, _, _, _],
@@ -309,36 +260,16 @@ describe('MartianChessRules', () => {
     });
     it('should add score when capturing first time', () => {
         // Given a board where a capture can be done
-        const board: Table<MartianChessPiece> = [
-            [A, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, _, _],
-            [_, _, A, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, A],
-        ];
-        const state: MartianChessState = new MartianChessState(board, 0);
+        const state: MartianChessState = new MartianChessState(boardWhereCaptureCanBeDone, 0);
 
         // When doing this capture
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 3), new Coord(2, 4)).get();
 
         // Then the captured piece should have been added
-        const expectedBoard: Table<MartianChessPiece> = [
-            [A, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, A, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, A],
-        ];
         const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
         captured.set(Player.ZERO, capturedPawn);
         captured.set(Player.ONE, noCapture);
-        const expectedState: MartianChessState = new MartianChessState(expectedBoard,
+        const expectedState: MartianChessState = new MartianChessState(expectedBoardAfterCapture,
                                                                        1,
                                                                        MGPOptional.of(move),
                                                                        MGPOptional.empty(),
@@ -347,20 +278,10 @@ describe('MartianChessRules', () => {
     });
     it('should add score when capturing again', () => {
         // Given a board where a capture can be done again
-        const board: Table<MartianChessPiece> = [
-            [A, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, _, _],
-            [_, _, A, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, A],
-        ];
         const capturedBefore: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
         capturedBefore.set(Player.ZERO, capturedPawn);
         capturedBefore.set(Player.ONE, noCapture);
-        const state: MartianChessState = new MartianChessState(board,
+        const state: MartianChessState = new MartianChessState(boardWhereCaptureCanBeDone,
                                                                0,
                                                                MGPOptional.empty(),
                                                                MGPOptional.empty(),
@@ -369,21 +290,11 @@ describe('MartianChessRules', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 3), new Coord(2, 4)).get();
 
         // Then the captured piece should have been added
-        const expectedBoard: Table<MartianChessPiece> = [
-            [A, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, A, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, A],
-        ];
         const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
         const capturedPawns: MartianChessCapture = MartianChessCapture.from([A, A]);
         captured.set(Player.ZERO, capturedPawns);
         captured.set(Player.ONE, noCapture);
-        const expectedState: MartianChessState = new MartianChessState(expectedBoard,
+        const expectedState: MartianChessState = new MartianChessState(expectedBoardAfterCapture,
                                                                        1,
                                                                        MGPOptional.of(move),
                                                                        MGPOptional.empty(),
@@ -445,15 +356,15 @@ describe('MartianChessRules', () => {
     });
     describe('field promotion', () => {
         it('should be legal to merge one pawn and one drone in one queen when no queen present', () => {
-            // Given the initial board
+            // Given a board where one pawn and one drone are neighbor and have no queen on their side of the board
             const board: Table<MartianChessPiece> = [
-                [C, C, B, _],
+                [A, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
-                [_, _, B, A],
+                [_, _, B, _],
                 [_, A, _, _],
             ];
             const state: MartianChessState = new MartianChessState(board, 1);
@@ -463,28 +374,28 @@ describe('MartianChessRules', () => {
 
             // Then the move should be legal and a queen created
             const expectedBoard: Table<MartianChessPiece> = [
-                [C, C, B, _],
+                [A, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
-                [_, _, C, A],
+                [_, _, C, _],
                 [_, _, _, _],
             ];
             const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should be legal to merge two pawn in drone when no drone present', () => {
-            // Given the initial board
+        it('should be legal to merge two pawns in drone when no drone present', () => {
+            // Given a board where two pawns are neighbors and have no drone on their side of the board
             const board: Table<MartianChessPiece> = [
-                [C, C, B, _],
+                [A, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
-                [_, _, B, A],
+                [_, _, A, _],
                 [_, A, _, _],
             ];
             const state: MartianChessState = new MartianChessState(board, 1);
@@ -494,22 +405,22 @@ describe('MartianChessRules', () => {
 
             // Then the move should be legal and a queen created
             const expectedBoard: Table<MartianChessPiece> = [
-                [C, C, B, _],
+                [A, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
-                [_, _, C, A],
+                [_, _, B, _],
                 [_, _, _, _],
             ];
             const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should be illegal to merge one pawn and one drone in one queen when a queen is present', () => {
-            // Given a board with queen on the board
+            // Given a board with queen on the board, a pawn and a drone being neibhors
             const board: Table<MartianChessPiece> = [
-                [C, C, B, _],
+                [A, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
@@ -527,10 +438,10 @@ describe('MartianChessRules', () => {
             const reason: string = MartianChessRulesFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('should be illegal to merge two pawn in a drone when a drone is present', () => {
-            // Given a board with queen on the board
+        it('should be illegal to merge two pawns in a drone when a drone is present', () => {
+            // Given a with two neighbor pawns with a drone on their half of the board
             const board: Table<MartianChessPiece> = [
-                [C, C, B, _],
+                [A, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
@@ -663,14 +574,14 @@ describe('MartianChessRules', () => {
                 const state: MartianChessState = MartianChessState.getInitialState();
 
                 // When calling the clock
-                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3), true).get();
+                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 0), new Coord(3, 0), true).get();
 
                 // Then the move should be legal and a queen created
                 const expectedBoard: Table<MartianChessPiece> = [
-                    [C, C, B, _],
+                    [C, C, _, B],
                     [C, B, A, _],
-                    [B, A, _, _],
-                    [_, _, _, A],
+                    [B, A, A, _],
+                    [_, _, _, _],
                     [_, _, _, _],
                     [_, A, A, B],
                     [_, A, B, C],
@@ -692,14 +603,14 @@ describe('MartianChessRules', () => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
                 // When calling the clock once more
-                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3), true).get();
+                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 0), new Coord(3, 1), true).get();
 
                 // Then the move should throw, cause dev should not do that
                 const expectedBoard: Table<MartianChessPiece> = [
-                    [C, C, B, _],
-                    [C, B, A, _],
-                    [B, A, _, _],
-                    [_, _, _, A],
+                    [C, C, _, _],
+                    [C, B, A, B],
+                    [B, A, A, _],
+                    [_, _, _, _],
                     [_, _, _, _],
                     [_, A, A, B],
                     [_, A, B, C],
@@ -720,14 +631,14 @@ describe('MartianChessRules', () => {
                                                                        MartianChessRules.STARTING_COUNT_DOWN);
 
                 // When doing a move
-                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
+                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 1), new Coord(3, 0)).get();
 
                 // Then the count down should ... be counting down !
                 const expectedBoard: Table<MartianChessPiece> = [
-                    [C, C, B, _],
-                    [C, B, A, _],
-                    [B, A, _, _],
-                    [_, _, _, A],
+                    [C, C, B, A],
+                    [C, B, _, _],
+                    [B, A, A, _],
+                    [_, _, _, _],
                     [_, _, _, _],
                     [_, A, A, B],
                     [_, A, B, C],
@@ -792,14 +703,14 @@ describe('MartianChessRules', () => {
                                                                        captured);
 
                 // When doing the last move
-                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
+                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 1), new Coord(3, 2)).get();
 
                 // Then the count down should reach zero and the game should have ended; Zero winning 1-0
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
-                    [C, B, A, _],
-                    [B, A, _, _],
-                    [_, _, _, A],
+                    [C, B, _, _],
+                    [B, A, A, A],
+                    [_, _, _, _],
                     [_, _, _, _],
                     [_, A, A, B],
                     [_, A, B, C],
@@ -827,14 +738,14 @@ describe('MartianChessRules', () => {
                                                                        captured);
 
                 // When doing the last move
-                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
+                const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 1)).get();
 
                 // Then the count down should reach zero and the game should have ended; One winning 1-0
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
-                    [C, B, A, _],
+                    [C, B, A, A],
                     [B, A, _, _],
-                    [_, _, _, A],
+                    [_, _, _, _],
                     [_, _, _, _],
                     [_, A, A, B],
                     [_, A, B, C],

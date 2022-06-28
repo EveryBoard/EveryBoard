@@ -39,15 +39,16 @@ describe('MartianChessDummyMinimax', () => {
         // When asking the list of moves
         const moves: MartianChessMove[] = minimax.getListMoves(node);
 
-        // Then half the moves should include call the clock
+        // Then there should be a total of 13 moves, all, not calling the clock
         const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock === false);
         expect(notCalled.length).toBe(13);
+        expect(moves.length).toBe(13);
 
-        // and each of those half should contain 7 pawn moves
+        // 7 pawn moves
         const pawnWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isPawnMove(m, state));
         expect(pawnWithoutClock.length).toBe(7);
 
-        // and each of those halves should contain 6 drone move
+        // and 6 drone moves
         const droneWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isDroneMove(m, state));
         expect(droneWithoutClock.length).toBe(6);
     });
