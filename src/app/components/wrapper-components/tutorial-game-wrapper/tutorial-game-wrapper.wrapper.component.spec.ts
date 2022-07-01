@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
-import { TutorialStep } from './TutorialStep';
+import { Click, TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -44,6 +44,9 @@ import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
+import { LodestoneMove } from 'src/app/games/lodestone/LodestoneMove';
+import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
+import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
 import { PentagoState } from 'src/app/games/pentago/PentagoState';
 import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
@@ -340,7 +343,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
         it('Should allow to skip step', fakeAsync(async() => {
-            // Given a TutorialStep with one clic
+            // Given a TutorialStep with one click
             wrapper.steps = [
                 TutorialStep.forClick(
                     'title',
@@ -674,10 +677,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     [new QuartoMove(3, 3, QuartoPiece.BBBB)],
                     'Bravo !',
@@ -728,10 +731,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], stepInitialTurn, QuartoPiece.ABBA),
                     [awaitedMove],
                     'Bravo !',
@@ -791,8 +794,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
-    describe('TutorialStep awaiting a click (deprecated)', () => {
-        it('Should show success message after step success (one of several clics)', fakeAsync(async() => {
+    describe('TutorialStep awaiting a click', () => {
+        it('should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -815,7 +818,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('Should show failure message after step failure (one of several clics)', fakeAsync(async() => {
+        it('should show failure message after step failure (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -838,17 +841,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('When unwanted click, and no move done, restart should not be needed', fakeAsync(async() => {
+        it('should show restart button (with possibility of seeing solution) when unwanted click with no move is done', fakeAsync(async() => {
             // Given a TutorialStep with possible invalid clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     ['#chooseCoord_3_3'],
                     'Bravo !',
@@ -860,7 +863,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When doing invalid click
             await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
 
-            // expect to see cancelMove reason as message
+            // Then the failure reason should be shown
             const expectedMessage: string = 'Perdu.';
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -868,8 +871,35 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
-            // expect click to be still possible
-            expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+            // And then solution button should be shown too
+            componentTestUtils.expectElementToExist('#showSolutionButton');
+        }));
+        it('should show solution when asking for it', fakeAsync(async() => {
+            // Given a TutorialStep for clicks, for which the user clicked wrongly
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'Click on (0, 0)',
+                    QuartoState.getInitialState(),
+                    ['#chooseCoord_0_0'],
+                    'Bravo !',
+                    'Perdu.',
+                ),
+            ];
+            wrapper.startTutorial(tutorial);
+            // This click is legal, however it is not the one expected by the tutorial!
+            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+
+            // When clicking on 'see solution'
+            await componentTestUtils.clickElement('#showSolutionButton');
+            componentTestUtils.detectChanges();
+
+            // Then the actual click is performed and the solution message is shown
+            componentTestUtils.expectElementToExist('#highlight');
+            const expectedMessage: string = 'Bravo !';
+            const currentMessage: string =
+                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            expect(currentMessage).toBe(expectedMessage);
         }));
     });
     describe('Informational TutorialStep', () => {
@@ -1026,6 +1056,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
+            const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
@@ -1097,6 +1128,21 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[5],
+                    new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
+                    MGPValidation.failure(`You have not captured any of the opponent's pieces, try again!`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[6],
+                    new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
+                    MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble!`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[7],
+                    new LodestoneMove(new Coord(0, 1), 'push', 'orthogonal'),
+                    MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble a second time!`),
                 ], [
                     new PentagoRules(PentagoState),
                     pentagoTutorial[2],
@@ -1196,17 +1242,20 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.hasSolution()) {
-                        const moveResult: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
-                        if (moveResult.isSuccess()) {
-                            if (step.isPredicate()) {
-                                const state: GameState =
-                                    rules.applyLegalMove(step.getSolution(), step.state, moveResult.get());
-                                expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
-                                    .toEqual(MGPValidation.SUCCESS);
+                        const solution: Move | Click = step.getSolution();
+                        if (solution instanceof Move) {
+                            const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state);
+                            if (moveResult.isSuccess()) {
+                                if (step.isPredicate()) {
+                                    const state: GameState =
+                                        rules.applyLegalMove(solution, step.state, moveResult.get());
+                                    expect(Utils.getNonNullable(step.predicate)(solution, state))
+                                        .toEqual(MGPValidation.SUCCESS);
+                                }
+                            } else {
+                                const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
+                                expect(moveResult.getReason()).withContext(context).toBeNull();
                             }
-                        } else {
-                            const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
-                            expect(moveResult.getReason()).withContext(context).toBeNull();
                         }
                     }
                 }

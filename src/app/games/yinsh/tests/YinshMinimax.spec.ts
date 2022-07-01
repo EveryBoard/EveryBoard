@@ -10,7 +10,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 describe('YinshMinimax', () => {
 
     const _: YinshPiece = YinshPiece.EMPTY;
-    const N: YinshPiece = YinshPiece.NONE;
+    const N: YinshPiece = YinshPiece.UNREACHABLE;
     const a: YinshPiece = YinshPiece.MARKER_ZERO;
     const A: YinshPiece = YinshPiece.RING_ZERO;
     const B: YinshPiece = YinshPiece.RING_ONE;

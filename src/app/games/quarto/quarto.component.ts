@@ -22,12 +22,12 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                                                               QuartoState,
                                                               QuartoPiece>
 {
-    public EMPTY: QuartoPiece = QuartoPiece.NONE;
+    public EMPTY: QuartoPiece = QuartoPiece.EMPTY;
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
-    public pieceInHand: QuartoPiece = QuartoPiece.NONE; // the piece that the current user must place on the board
-    public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
+    public pieceInHand: QuartoPiece = QuartoPiece.EMPTY; // the piece that the current user must place on the board
+    public pieceToGive: QuartoPiece = QuartoPiece.EMPTY; // the piece that the user wants to give to the opponent
     public victoriousCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -59,15 +59,15 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
-        if (this.board[y][x] === QuartoPiece.NONE) {
+        if (this.board[y][x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(x, y); // let's show the user his decision
             if (this.rules.node.gameState.turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
-                const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
+                const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.EMPTY);
                 return this.chooseMove(chosenMove, this.rules.node.gameState);
-            } else if (this.pieceToGive === QuartoPiece.NONE) {
+            } else if (this.pieceToGive === QuartoPiece.EMPTY) {
                 return MGPValidation.SUCCESS; // the user has just chosen his coord
             } else {
                 // the user has already chosen his piece before his coord
@@ -102,7 +102,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public cancelMoveAttempt(): void {
         this.hideLastMove();
-        this.pieceToGive = QuartoPiece.NONE;
+        this.pieceToGive = QuartoPiece.EMPTY;
     }
     private showPieceInHandOnBoard(x: number, y: number): void {
         this.chosen = MGPOptional.of(new Coord(x, y));
@@ -134,6 +134,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
     public pieceHasDot(piece: number): boolean {
-        return piece !== QuartoPiece.NONE.value && (piece % 8 < 4);
+        return piece !== QuartoPiece.EMPTY.value && (piece % 8 < 4);
     }
 }

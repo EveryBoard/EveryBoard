@@ -14,7 +14,7 @@ describe('KamisadoMinimax', () => {
     let rules: KamisadoRules;
     let minimax: KamisadoMinimax;
 
-    const _: KamisadoPiece = KamisadoPiece.NONE;
+    const _: KamisadoPiece = KamisadoPiece.EMPTY;
     const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
     const b: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 

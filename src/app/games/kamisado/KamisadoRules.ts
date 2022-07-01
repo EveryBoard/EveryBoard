@@ -112,7 +112,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
         KamisadoBoard.allPieceCoords(state.board).forEach((c: Coord) => {
             const piece: KamisadoPiece = state.getPieceAt(c);
-            assert(piece !== KamisadoPiece.NONE, 'allPieceCoords failed to filter KamisadoPiece.NONE');
+            assert(piece !== KamisadoPiece.EMPTY, 'allPieceCoords failed to filter KamisadoPiece.EMPTY');
             if (piece.player === Player.ONE) { // player 1, top (0) to bottom (7) so we want the max
                 furthest1 = Math.max(furthest1, c.y);
             } else { // player 0, bottom (7) to top (0), so we want the min
@@ -201,7 +201,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
         const newBoard: KamisadoPiece[][] = state.getCopiedBoard();
         newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
-        newBoard[start.y][start.x] = KamisadoPiece.NONE; // becomes unoccupied
+        newBoard[start.y][start.x] = KamisadoPiece.EMPTY; // becomes unoccupied
         const newColorToPlay: KamisadoColor = KamisadoBoard.getColorAt(end.x, end.y);
 
         // Get the next piece that can move

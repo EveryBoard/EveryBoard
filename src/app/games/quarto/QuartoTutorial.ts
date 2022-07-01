@@ -15,7 +15,7 @@ const BBAA: QuartoPiece = QuartoPiece.BBAA;
 const BBAB: QuartoPiece = QuartoPiece.BBAB;
 const BBBA: QuartoPiece = QuartoPiece.BBBA;
 const BBBB: QuartoPiece = QuartoPiece.BBBB;
-const NONE: QuartoPiece = QuartoPiece.NONE;
+const EMPTY: QuartoPiece = QuartoPiece.EMPTY;
 
 export class QuartoTutorial {
 
@@ -33,9 +33,9 @@ export class QuartoTutorial {
         Here, we have a board with a victory by an alignment of dark pieces.`,
             new QuartoState([
                 [BBBA, BBAA, ABAA, AABA],
-                [NONE, NONE, NONE, NONE],
-                [NONE, NONE, NONE, NONE],
-                [NONE, NONE, NONE, NONE],
+                [EMPTY, EMPTY, EMPTY, EMPTY],
+                [EMPTY, EMPTY, EMPTY, EMPTY],
+                [EMPTY, EMPTY, EMPTY, EMPTY],
             ], 7, QuartoPiece.ABAB),
         ),
         TutorialStep.anyMove(
@@ -46,10 +46,10 @@ export class QuartoTutorial {
         Keep in mind that the second click confirms the move.<br/><br/>
         Make a move.`,
             new QuartoState([
-                [BBBA, AABB, ABBA, NONE],
-                [NONE, NONE, NONE, NONE],
-                [NONE, BAAA, NONE, NONE],
-                [NONE, NONE, NONE, NONE],
+                [BBBA, AABB, ABBA, EMPTY],
+                [EMPTY, EMPTY, EMPTY, EMPTY],
+                [EMPTY, BAAA, EMPTY, EMPTY],
+                [EMPTY, EMPTY, EMPTY, EMPTY],
             ], 7, QuartoPiece.ABAA),
             new QuartoMove(2, 2, QuartoPiece.BAAB),
             $localize`Perfect!`,
@@ -59,10 +59,10 @@ export class QuartoTutorial {
             $localize`We have here a tricky situation.<br/><br/>
         Analyze the board and play your move, carefully paying attention not to let the opponent win on the next move.`,
             new QuartoState([
-                [BBBB, BBBA, BBAB, NONE],
-                [ABAA, BABB, BBAA, NONE],
-                [ABAB, BAAA, BAAB, NONE],
-                [NONE, NONE, NONE, NONE],
+                [BBBB, BBBA, BBAB, EMPTY],
+                [ABAA, BABB, BBAA, EMPTY],
+                [ABAB, BAAA, BAAB, EMPTY],
+                [EMPTY, EMPTY, EMPTY, EMPTY],
             ], 7, QuartoPiece.AABA),
             [new QuartoMove(3, 3, QuartoPiece.AABB)],
             $localize`Well done!`,

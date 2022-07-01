@@ -16,7 +16,7 @@ import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from '../Abalon
 describe('AbaloneRules', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
@@ -314,7 +314,7 @@ describe('AbaloneRules', () => {
         // Then the move should be forbidden
         RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES());
     });
-    it('Should push on NONE the same way as outside the array board', () => {
+    it('Should push on UNREACHABLE the same way as outside the array board', () => {
         // given the initial state
         const state: AbaloneState = AbaloneState.getInitialState();
 
@@ -336,8 +336,8 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should do sidestep landing on NONE the same way as outside the array board', () => {
-        // given a state allowing to translate two piece, one of them going to NONE
+    it('Should do sidestep landing on UNREACHABLE the same way as outside the array board', () => {
+        // given a state allowing to translate two piece, one of them going to UNREACHABLE
         const board: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],

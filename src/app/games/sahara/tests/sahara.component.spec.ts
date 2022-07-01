@@ -13,7 +13,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 describe('SaharaComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<SaharaComponent>;
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     const _: FourStatePiece = FourStatePiece.EMPTY;

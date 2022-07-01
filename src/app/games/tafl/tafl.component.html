@@ -13,7 +13,7 @@
                   [ngClass]="getRectClasses(x, y)"
                   class="base"
             />
-            <g *ngIf="board[y][x] === NONE && isThrone(x, y)">
+            <g *ngIf="board[y][x] === EMPTY && isThrone(x, y)">
                 <polyline  *ngIf="isCentralThrone(x, y) else cornerThrone"
                            points="15 15, 85 15, 85 85, 15 85, 15 15, 85 15"
                            [attr.transform]="'translate(' + (x * SPACE_SIZE) + ' ' + (y * SPACE_SIZE) + ')'"
@@ -26,7 +26,7 @@
                               class="base"/>
                 </ng-template>
             </g>
-            <g *ngIf="board[y][x] !== NONE">
+            <g *ngIf="board[y][x] !== EMPTY">
                 <circle (click)="onClick(x, y)"
                         [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
                         [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)"
