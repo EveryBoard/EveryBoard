@@ -59,7 +59,7 @@ describe('ChatService', () => {
             expect(service.isObserving()).toBe(true);
 
             // when the chat is updated
-            const messageId: string = await chatDAO.addMessage('id', MESSAGE);
+            const messageId: string = await service.addMessage('id', MESSAGE);
 
             // then the update has been observed by the callback
             const messageIds: string[] = await promise;
@@ -114,7 +114,7 @@ describe('ChatService', () => {
             expect(service.isObserving()).toBe(false);
 
             // when the chat is updated
-            await chatDAO.addMessage('id', MESSAGE);
+            await service.addMessage('id', MESSAGE);
 
             // then the update is not observed by the callback
             await expectAsync(promise).toBePending();
@@ -190,7 +190,7 @@ describe('ChatService', () => {
         }));
         it('should update the chat with the new message in the DAO', fakeAsync(async() => {
             spyOn(Date, 'now').and.returnValue(42);
-            spyOn(chatDAO, 'addMessage');
+            spyOn(service, 'addMessage');
             // given an empty chat that is observed
             await service.createNewChat('id');
             service.startObserving('id', new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {}));
@@ -200,7 +200,7 @@ describe('ChatService', () => {
             await service.sendMessage(sender, 'foo', 2);
 
             // then the chat should be updated with the new message
-            expect(chatDAO.addMessage).toHaveBeenCalledWith('id', MESSAGE);
+            expect(service.addMessage).toHaveBeenCalledWith('id', MESSAGE);
         }));
     });
     afterEach(() => {

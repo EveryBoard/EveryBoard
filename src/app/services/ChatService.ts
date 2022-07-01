@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ChatDAO } from '../dao/ChatDAO';
-import { Message } from '../domain/Message';
+import { Message, MessageDocument } from '../domain/Message';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { Localized } from '../utils/LocaleUtils';
@@ -30,6 +30,17 @@ export class ChatService implements OnDestroy {
     constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
+    public async addMessage(chatId: string, message: Message): Promise<string> {
+        return this.chatDAO.subCollectionDAO(chatId, 'messages').create(message);
+    }
+    public async getLastMessages(chatId: string, limit: number): Promise<MessageDocument[]> {
+        const ordering: string = 'postedTime';
+        return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').findWhere([], ordering, limit);
+    }
+    public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Unsubscribe {
+        return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
+    }
+
     public startObserving(chatId: string, callback: FirestoreCollectionObserver<Message>): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
@@ -37,7 +48,7 @@ export class ChatService implements OnDestroy {
             display(ChatService.VERBOSE, '[start watching chat ' + chatId);
 
             this.followedChatId = MGPOptional.of(chatId);
-            this.followedChatUnsubscribe = MGPOptional.of(this.chatDAO.subscribeToMessages(chatId, callback));
+            this.followedChatUnsubscribe = MGPOptional.of(this.subscribeToMessages(chatId, callback));
         } else if (this.followedChatId.equalsValue(chatId)) {
             ErrorLoggerService.logErrorAndFail('ChatService', 'Already observing same chat', { chatId });
         } else {
@@ -82,7 +93,7 @@ export class ChatService implements OnDestroy {
             postedTime: serverTimestamp(),
             currentTurn,
         };
-        await this.chatDAO.addMessage(chatId, newMessage);
+        await this.addMessage(chatId, newMessage);
         return MGPValidation.SUCCESS;
     }
     private userCanSendMessage(userName: string, _chatId: string): boolean {

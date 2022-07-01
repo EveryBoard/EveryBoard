@@ -31,7 +31,7 @@ describe('ChatComponent', () => {
     };
     async function addMessages(chatId: string, n: number): Promise<void> {
         for (let i: number = 0; i < n; i++) {
-            await chatDAO.addMessage(chatId, MSG);
+            await chatService.addMessage(chatId, MSG);
         }
     }
 
@@ -195,7 +195,7 @@ describe('ChatComponent', () => {
                 name: 'roger',
                 id: 'rogerId',
             };
-            await chatDAO.addMessage('fauxChat', { sender, content: 'Saluuuut', currentTurn: 0, postedTime: serverTimestamp() });
+            await chatService.addMessage('fauxChat', { sender, content: 'Saluuuut', currentTurn: 0, postedTime: serverTimestamp() });
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (1 new message)'.toUpperCase());
@@ -268,7 +268,7 @@ describe('ChatComponent', () => {
         it('should not do anything when a message is deleted', fakeAsync(async() => {
             // Given a chat with some messages
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            const messageId: string = await chatDAO.addMessage('fauxChat', MSG);
+            const messageId: string = await chatService.addMessage('fauxChat', MSG);
             testUtils.detectChanges();
 
             // when a message is deleted
