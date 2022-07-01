@@ -83,7 +83,7 @@ describe('Coord', () => {
             // When getting all coord from A until B
             const coords: Coord[] = A.getUntil(B);
 
-            // Then the list should have 3 elements, including B and not A
+            // Then the list should have 2 elements, including B and not A
             expect(coords.length).toBe(2);
             const AIncluded: boolean = coords.some((c: Coord) => c.equals(A));
             expect(AIncluded).toBeFalse();
