@@ -127,12 +127,13 @@ describe('ChatService', () => {
         }));
         it('should throw upon destruction if it is still observing a chat', fakeAsync(async() => {
             // Given a chat that we're observing
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             await service.createNewChat('id');
             service.startObserving('id', new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {}));
 
             // When the service is destroyed
             // Then it throws
-            expect(() => service.ngOnDestroy()).toThrowError('Assertion failure: ChatService should have unsubscribed before being destroyed (extra data: undefined)');
+            expect(() => service.ngOnDestroy()).toThrowError('Assertion failure: ChatService should have unsubscribed before being destroyed');
             destroyed = true;
         }));
     });
