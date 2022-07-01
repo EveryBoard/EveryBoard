@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { Database, ref, remove } from '@angular/fire/database';

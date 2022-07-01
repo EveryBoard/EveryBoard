@@ -276,7 +276,7 @@ export class ConnectedUserService implements OnDestroy {
         }
     }
     public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
-        return this.userObs.subscribe(callback)
+        return this.userObs.subscribe(callback);
     }
     public async setUsername(username: string): Promise<MGPValidation> {
         if (username === '') {

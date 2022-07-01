@@ -122,7 +122,7 @@ describe('ChatService', () => {
         it('should not do anything throw when stopObserving is called but no chat is observed', fakeAsync(async() => {
             // Given that no chat is observed
             // When calling stopObserving
-            service.stopObserving()
+            service.stopObserving();
             // Then nothing should happen (i.e., no error thrown)
         }));
         it('should throw upon destruction if it is still observing a chat', fakeAsync(async() => {
