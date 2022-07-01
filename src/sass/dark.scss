@@ -2,7 +2,6 @@
     --alt-alt-background-fill: #AAA;
     --alt-background-fill: #666;
     --alt-captured: #990000;
-    --background-color: #242424;
     --base-stroke: #444;
     --capturable: #990;
     --captured: red;
@@ -99,5 +98,4 @@ $red-invert: white;
 /* Show the page only after the CSS has been loaded */
 html, body {
     display: block;
-    background-color: var(--background-color);
 }

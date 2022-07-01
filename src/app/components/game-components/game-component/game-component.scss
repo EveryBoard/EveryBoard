@@ -29,8 +29,8 @@
 .background {
     fill: var(--spaces-fill);
 }
-.background-color {
-    fill: var(--background-color);
+.transparent {
+    opacity: 0;
 }
 .background2 {
     fill: var(--alt-background-fill);
@@ -142,7 +142,7 @@
 .normal-stroke {
     stroke-width: 8;
 }
-.transparent {
+.semi-transparent { // TODOTODO semi-transparent
     fill-opacity: 0.5;
     stroke-opacity: 0.5;
 }

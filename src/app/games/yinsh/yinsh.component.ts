@@ -377,11 +377,11 @@ export class YinshComponent
         }
     }
     private markRemovedMarker(coord: Coord, player: Player): void {
-        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'transparent';
+        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
         this.setMarkerInfo(coord, YinshPiece.MARKERS[player.value]);
     }
     private markRemovedRing(coord: Coord, player: Player): void {
-        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'transparent';
+        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
         this.setRingInfo(coord, YinshPiece.RINGS[player.value]);
     }
     private async selectRing(coord: Coord): Promise<MGPValidation> {
