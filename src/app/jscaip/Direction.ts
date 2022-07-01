@@ -147,7 +147,6 @@ export class Direction extends BaseDirection {
         Direction.DOWN_LEFT,
         Direction.UP_LEFT,
     ];
-
     public static readonly ORTHOGONALS: ReadonlyArray<Direction> = [
         Direction.UP,
         Direction.RIGHT,

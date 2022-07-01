@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
-import { TutorialStep } from './TutorialStep';
+import { Click, TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
