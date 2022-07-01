@@ -20,7 +20,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
 
-    public NONE: TaflPawn = TaflPawn.UNOCCUPIED;
+    public EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
     protected captureds: Coord[] = [];
 

@@ -4,7 +4,7 @@ import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spe
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameWrapper } from '../GameWrapper';
-import { TutorialStep } from './TutorialStep';
+import { Click, TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -43,6 +43,15 @@ import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 
+import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
+import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
+import { LodestoneMove } from 'src/app/games/lodestone/LodestoneMove';
+
+import { MartianChessTutorial, NOT_A_FIELD_PROMOTION } from 'src/app/games/martian-chess/MartianChessTutorial';
+import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
+import { MartianChessState } from 'src/app/games/martian-chess/MartianChessState';
+import { MartianChessMove } from 'src/app/games/martian-chess/MartianChessMove';
+
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
 import { PentagoState } from 'src/app/games/pentago/PentagoState';
 import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
@@ -68,10 +77,7 @@ import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
-import { MartianChessTutorial, NOT_A_FIELD_PROMOTION } from 'src/app/games/martian-chess/MartianChessTutorial';
-import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
-import { MartianChessState } from 'src/app/games/martian-chess/MartianChessState';
-import { MartianChessMove } from 'src/app/games/martian-chess/MartianChessMove';
+
 import { TutorialStepFailure } from './TutorialStepFailure';
 
 describe('TutorialGameWrapperComponent (games)', () => {
@@ -94,6 +100,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
+            const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
             const martianChessTutorial: TutorialStep[] = new MartianChessTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
@@ -161,6 +168,21 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[5],
+                    new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
+                    MGPValidation.failure(`You have not captured any of the opponent's pieces, try again!`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[6],
+                    new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
+                    MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble!`),
+                ], [
+                    LodestoneRules.get(),
+                    lodestoneTutorial[7],
+                    new LodestoneMove(new Coord(0, 1), 'push', 'orthogonal'),
+                    MGPValidation.failure(`You must capture and place your capture on the top pressure plate to make it crumble a second time!`),
                 ], [
                     new MartianChessRules(MartianChessState),
                     martianChessTutorial[2],
@@ -290,17 +312,20 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.hasSolution()) {
-                        const moveResult: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
-                        if (moveResult.isSuccess()) {
-                            if (step.isPredicate()) {
-                                const state: GameState =
-                                    rules.applyLegalMove(step.getSolution(), step.state, moveResult.get());
-                                expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
-                                    .toEqual(MGPValidation.SUCCESS);
+                        const solution: Move | Click = step.getSolution();
+                        if (solution instanceof Move) {
+                            const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state);
+                            if (moveResult.isSuccess()) {
+                                if (step.isPredicate()) {
+                                    const state: GameState =
+                                        rules.applyLegalMove(solution, step.state, moveResult.get());
+                                    expect(Utils.getNonNullable(step.predicate)(solution, state))
+                                        .toEqual(MGPValidation.SUCCESS);
+                                }
+                            } else {
+                                const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
+                                expect(moveResult.getReason()).withContext(context).toBeNull();
                             }
-                        } else {
-                            const context: string = 'Solution move should be legal but failed in "' + gameInfo.name + ': '+ step.title + '"';
-                            expect(moveResult.getReason()).withContext(context).toBeNull();
                         }
                     }
                 }

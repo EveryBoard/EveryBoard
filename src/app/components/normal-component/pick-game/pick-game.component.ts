@@ -13,6 +13,7 @@ import { GipfComponent } from 'src/app/games/gipf/gipf.component';
 import { GoComponent } from 'src/app/games/go/go.component';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
+import { LodestoneComponent } from 'src/app/games/lodestone/lodestone.component';
 import { MartianChessComponent } from 'src/app/games/martian-chess/martian-chess.component';
 import { MinimaxTestingComponent } from 'src/app/games/minimax-testing/minimax-testing.component';
 import { P4Component } from 'src/app/games/p4/p4.component';
@@ -58,6 +59,8 @@ class GameDescription {
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
     public static readonly LINES_OF_ACTION: Localized = () => $localize`Regroup your pieces to win. But your possible moves will often change!`;
+
+    public static readonly LODESTONE: Localized = () => $localize`Push and crush your opponent's pieces using magnetic forces!`;
 
     public static readonly MARTIAN_CHESS: Localized = () => $localize`Win points by capturing pieces, but you only control pieces on your side of the board!`;
 
@@ -119,6 +122,7 @@ export class GameInfo {
         new GameInfo($localize`Brandhub`, 'Brandhub', BrandhubComponent, new Date('2021-12-07'), GameDescription.BRANDHUB()), // 33 days after Apagos
         new GameInfo($localize`Conspirateurs`, 'Conspirateurs', ConspirateursComponent, new Date('2021-12-30'), GameDescription.CONSPIRATEURS()), // 30 days after Diam *Quentin
 
+        new GameInfo($localize`Lodestone`, 'Lodestone', LodestoneComponent, new Date('2022-06-24'), GameDescription.LODESTONE()),
         new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new Date('2022-12-31'), GameDescription.MARTIAN_CHESS()), // TODOTODO
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
@@ -139,10 +143,8 @@ export class GameInfo {
 })
 export class PickGameComponent {
 
-    public readonly gameNameList: ReadonlyArray<string> =
-        GameInfo.ALL_GAMES()
-            .filter((game: GameInfo) => game.display === true)
-            .map((game: GameInfo): string => game.urlName);
+    public readonly games: GameInfo[] =
+        GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true)
 
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 

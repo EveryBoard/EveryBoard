@@ -12,7 +12,6 @@ import { TutorialFailure } from './TutorialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Router } from '@angular/router';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
@@ -289,7 +288,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
         it('Should allow to skip step', fakeAsync(async() => {
-            // Given a TutorialStep with one clic
+            // Given a TutorialStep with one click
             wrapper.steps = [
                 TutorialStep.forClick(
                     'title',
@@ -623,10 +622,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     [new QuartoMove(3, 3, QuartoPiece.BBBB)],
                     'Congratulations!',
@@ -677,10 +676,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], stepInitialTurn, QuartoPiece.ABBA),
                     [awaitedMove],
                     'Congratulations!',
@@ -740,8 +739,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
-    describe('TutorialStep awaiting a click (deprecated)', () => {
-        it('Should show success message after step success (one of several clics)', fakeAsync(async() => {
+    describe('TutorialStep awaiting a click', () => {
+        it('should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -764,7 +763,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('Should show failure message after step failure (one of several clics)', fakeAsync(async() => {
+        it('should show failure message after step failure (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
@@ -787,17 +786,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('When unwanted click, and no move done, restart should not be needed', fakeAsync(async() => {
+        it('should show restart button (with possibility of seeing solution) when unwanted click with no move is done', fakeAsync(async() => {
             // Given a TutorialStep with possible invalid clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0.',
                     new QuartoState([
-                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     ['#chooseCoord_3_3'],
                     'Congratulations!',
@@ -809,7 +808,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When doing invalid click
             await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
 
-            // expect to see cancelMove reason as message
+            // Then the failure reason should be shown
             const expectedMessage: string = 'Perdu.';
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -817,8 +816,35 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
-            // expect click to be still possible
-            expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+            // And then solution button should be shown too
+            componentTestUtils.expectElementToExist('#showSolutionButton');
+        }));
+        it('should show solution when asking for it', fakeAsync(async() => {
+            // Given a TutorialStep for clicks, for which the user clicked wrongly
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'Click on (0, 0)',
+                    QuartoState.getInitialState(),
+                    ['#chooseCoord_0_0'],
+                    'Bravo !',
+                    'Perdu.',
+                ),
+            ];
+            wrapper.startTutorial(tutorial);
+            // This click is legal, however it is not the one expected by the tutorial!
+            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+
+            // When clicking on 'see solution'
+            await componentTestUtils.clickElement('#showSolutionButton');
+            componentTestUtils.detectChanges();
+
+            // Then the actual click is performed and the solution message is shown
+            componentTestUtils.expectElementToExist('#highlight');
+            const expectedMessage: string = 'Bravo !';
+            const currentMessage: string =
+                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            expect(currentMessage).toBe(expectedMessage);
         }));
     });
     describe('Informational TutorialStep', () => {

@@ -31,7 +31,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
         let score: number = 0;
-        for (const owner of [Player.ZERO, Player.ONE]) {
+        for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE;
@@ -67,7 +67,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
     : MGPMap<Coord, PieceThreat>
     {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
-        for (const player of [Player.ZERO, Player.ONE]) {
+        for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
                 const threat: MGPOptional<PieceThreat> = this.getThreat(piece, state);
                 if (threat.isPresent()) {

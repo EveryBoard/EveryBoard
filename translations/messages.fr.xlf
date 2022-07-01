@@ -186,6 +186,10 @@
         <source>Win points by capturing pieces, but you only control pieces on your side of the board!</source>
         <target>Gagnez des points en capturant des pièces, mais en ne contrôlant que celles dans votre camp!</target>
       </trans-unit>
+      <trans-unit id="8186407897395128360" datatype="html">
+        <source>Push and crush your opponent&apos;s pieces using magnetic forces!</source>
+        <target>Poussez et écrasez les pièces de votre adversaire en utilisant les forces magnétiques !</target>
+      </trans-unit>
       <trans-unit id="287142221400627248" datatype="html">
         <source>The classical 4 in a row game!</source>
         <target>Le classique Puissance 4 !</target>
@@ -333,6 +337,10 @@
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
         <target>Diam</target>
+      </trans-unit>
+      <trans-unit id="3008721792091269753" datatype="html">
+        <source>Lodestone</source>
+        <target>Lodestone</target>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -2499,7 +2507,7 @@
         <source>End by emptyness</source>
         <target>Fin par le vide</target>
       </trans-unit>
-      <trans-unit id="7627031314193688876" datatype="html">
+      <trans-unit id="7700786423442894185" datatype="html">
         <source>When a player&apos;s last piece is moved into the opponent territory, the game ends. If both players have the same number of points, the last player win!&lt;br/&gt;&lt;br/&gt;Light player can win this way, do it!</source>
         <target>Quand un joueur déplace sa dernière pièce dans le territoire adverse, la partie prend fin. Si les deux joueurs ont le même nombre de points, le dernier joueur gagne !&lt;br/&gt;&lt;br/&gt;Clair peut gagner de cette façon, faites-le !</target>
       </trans-unit>
@@ -2510,6 +2518,130 @@
       <trans-unit id="7020322239499292850" datatype="html">
         <source>Pawns must move one step diagonally.</source>
         <target>Les pions doivent se déplacer d'une case en diagonale.</target>
+      </trans-unit>
+      <trans-unit id="7419338702295170530" datatype="html">
+        <source>You must flip your lodestone before putting it back on the board.</source>
+        <target>Vous devez changer la face de votre pierre magnétique avant de la redéposer sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="8683881271933340082" datatype="html">
+        <source>As long as there are pressure plates, you must place all the pieces that you have captured on them.</source>
+        <target>Tant qu'il reste des plaques de pression, vous devez placer les pièces que vous avez capturé dessus.</target>
+      </trans-unit>
+      <trans-unit id="3917449010922856612" datatype="html">
+        <source>You must place your lodestone on a non-crumbled square!</source>
+        <target>Vous devez placer votre pierre magnétique sur une case qui ne s'est pas effondrée !</target>
+      </trans-unit>
+      <trans-unit id="2350186243435301157" datatype="html">
+        <source>You placed too many captures on the same pressure plate, which has not enough space left.</source>
+        <target>Vous avez placé trop de pièces sur la même plaque de pression, qui ne dispose pas d'assez d'espace.</target>
+      </trans-unit>
+      <trans-unit id="4296510202733075370" datatype="html">
+        <source>You must place your captures on the pressure plates, on the side of the board.</source>
+        <target>Vous devez placer vos captures sur les plaques de pression, situées autour du plateau.</target>
+      </trans-unit>
+      <trans-unit id="8506636863437595095" datatype="html">
+        <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
+        <target>Vous ne pouvez pas encore placer de captures, vous devez d'abord placer votre pierre magnétique sur le plateau !</target>
+      </trans-unit>
+      <trans-unit id="3233989185853354365" datatype="html">
+        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
+        <target>Lodestone se joue sur un plateau 8x8, qui contient ce qui s'appelle des &lt;i&gt;plaques de pression&lt;/i&gt; sur son pourtour, où les pièces capturées seront placées. Le plateau initial est montré ci-contre. Le but du jeu est d'être le seul joueur restant avec des pièces sur le plateau. Pour y arriver, vous allez devoir pousser les pièces de votre adversaire hors du plateau, ou les écraser avec vos pièces. Vous le ferez avec une pierre magnétique.</target>
+      </trans-unit>
+      <trans-unit id="2109934310949694886" datatype="html">
+        <source>Selecting a lodestone</source>
+        <target>Sélectionner une pierre magnétique</target>
+      </trans-unit>
+      <trans-unit id="2559162009573450567" datatype="html">
+        <source>To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: &lt;ul&gt;&lt;li&gt;its &lt;i&gt;repelling&lt;/i&gt; side with which it will repel the opponent&apos;s pieces (indicated by the outward triangles of your opponent&apos;s color on the lodestone), and&lt;/li&gt;&lt;li&gt;its &lt;i&gt;attracting&lt;/i&gt; side with which it will attract your pieces (indicated by the inward triangles of your color on the lodestone).&lt;/li&gt;&lt;/ul&gt;Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Select the lodestone that repels your opponent&apos;s pieces diagonally.</source>
+        <target>Afin d'effectuer un déplacement, vous devez placer votre pierre magnétique sur le plateau. Votre pierre magnétique dispose de deux faces: &lt;ul&gt;&lt;li&gt;sa face &lt;i&gt;répulsive&lt;/i&gt; qui poussera les pièces adverses (tel qu'indiqué par les triangles pointant vers d'extérieur, à la couleur de votre adversaire) ;&lt;/li&gt;&lt;li&gt;sa face &lt;i&gt;attractive&lt;/i&gt; qui attirera vos pièces (tel qu'indiqué par les triangles pointant vers l'intérieur, à votre couleur).&lt;/li&gt;&lt;/ul&gt;Votre pierre magnétique peut être disposée pour déplacer les pièces de façon orthogonale ou diagonale. Tous les côtés et orientations disponibles de votre pierre magnétique sont montrés en dessous du plateau.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Sélectionnez la pierre magnétique qui repousse les pièces de votre adversaire diagonalement.</target>
+      </trans-unit>
+      <trans-unit id="2963285511284379717" datatype="html">
+        <source>This is not the right lodestone, try again.</source>
+        <target>Ce n'est pas la bonne pierre magnétique, essayez à nouveau.</target>
+      </trans-unit>
+      <trans-unit id="7572976598676202841" datatype="html">
+        <source>The repelling lodestone</source>
+        <target>La pierre magnétique répulsive</target>
+      </trans-unit>
+      <trans-unit id="3639714905640085837" datatype="html">
+        <source>Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the repelling lodestone acts on the pieces. All the opponent&apos;s pieces aligned with the lodestone, as indicated by the triangles&apos; orientations, will be pushed one square away from the lodestone. An opponent&apos;s piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent&apos;s piece falls out of the board, it is captured.</source>
+        <target>Lorsque vous placez une pierre magnétique sur le plateau, elle déplacera toutes les pièces sur lesquelles elle agit (en fonction de sa direction et de son orientation) simultanément. Voyons d'abord comment la pierre magnétique répulsive agit sur les pièces. Toutes les pièces de l'adversaire qui sont alignées avec la pierre magnétique, tel qu'indiqué par l'orientation des triangles, seront éloignées d'une case depuis la pierre magnétique. Une pièce de l'adversaire est bloquée si elle croise le chemin d'une de vos pièces, d'une pierre magnétique, ou d'une autre pièce bloquée. Finalement, si une pièce de l'adversaire tombe du plateau, elle est considérée comme capturée.</target>
+      </trans-unit>
+      <trans-unit id="609421287344629004" datatype="html">
+        <source>The attracting lodestone</source>
+        <target>La pierre magnétique attractive</target>
+      </trans-unit>
+      <trans-unit id="1840990354301535750" datatype="html">
+        <source>When the lodestone is on its attracting side it will pull your pieces one square towards it. In case one of your pieces encounters a lodestone on its way or another blocked piece, it is blocked. However, if it encounter an opponent&apos;s piece, it will capture it.</source>
+        <target>Quand la pierre magnétique est placée sur sa face attractive, elle attirera vos pièces d'une case dans sa direction. Si une de vos pièce croise le chemin d'une pierre magnétique ou d'une pièce bloquée, elle sera elle-même bloquée. Si elle croise le chemin d'une pièce adverse, celle-ci sera capturée.</target>
+      </trans-unit>
+      <trans-unit id="5747624424535894902" datatype="html">
+        <source>Flipping the lodestone</source>
+        <target>Retourner la pierre magnétique</target>
+      </trans-unit>
+      <trans-unit id="6611993830828980213" datatype="html">
+        <source>Note that, after every move, you must flip your lodestone: if it was on its repelling side, you must use it on its attracting side, and vice versa. Also, you are allowed to place your lodestone on the same location as it was on your previous turn.</source>
+        <target>Notez qu'après chaque mouvement vous devez retourner votre pierre magnétique : si elle était sur sa face répulsive, vous devez l'utiliser sur sa face attractive, et inversément. Aussi, vous pouvez placer votre pierre magnétique sur la même case qu'à son tour précédent.</target>
+      </trans-unit>
+      <trans-unit id="1164074897639591703" datatype="html">
+        <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a repelling lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with an attracting lodestone, by moving your pieces on your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on a piece you just put on a pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
+        <target>En résumé, il est possible de capturer les pièces de l'adversaire de deux façons :&lt;ul&gt;&lt;li&gt;avec une pierre magnétique sur sa face répulsive, en poussant les pièces adverses hors du plateau ;&lt;/li&gt;&lt;li&gt;avec une pierre magnétique sur sa face attractive, en attirant vos pièces pour qu'elles écrasent les pièces adverses.&lt;/li&gt;&lt;/ul&gt;Une fois qu'une pierre magnétique est placée et que les pièces ont été déplacées et/ou capturées, si des pièces adverses ont été capturées, vous devez les placer sur les &lt;i&gt;plaques de pressions&lt;/i&gt;, situées autour du plateau. Pour ce faire, cliquez sur un espace libre de la plaque de pression de votre choix pour chaque capture. Vous pouvez annuler ce placement en cliquant sur une pièce récemment placée sur plaque de pression.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un mouvement qui capture au moins une pièce adverse, et placez vos captures sur des plaques de pression.</target>
+      </trans-unit>
+      <trans-unit id="575124313782539246" datatype="html">
+        <source>You have not captured any of the opponent&apos;s pieces, try again!</source>
+        <target>Vous n'avez capturé aucune pièce adverse, rééssayez !</target>
+      </trans-unit>
+      <trans-unit id="443433725102640869" datatype="html">
+        <source>Crumbling a first pressure plate</source>
+        <target>Premier effondrement d'une plaque de pression</target>
+      </trans-unit>
+      <trans-unit id="7283094782812908030" datatype="html">
+        <source>When a pressure plate is full, it will crumble and take a full row or column of the board with it! All pieces that are on the crumbled squares are considered lost, but will not have to be placed on pressure plates. You have here a board with a pressure plate that only requires one more piece to crumble.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a move that captures at least one piece, and fill that pressure plate to make it crumble.</source>
+        <target>Quand une plaque de pression est complète, elle s'effondrera et prendra avec elle une ligne ou une colonne entière du plateau ! Toutes les pièces qui étaient sur les cases correspondantes sont considérées perdues, mais ne seront pas placées sur les plaques de pression. Vous avez ici un plateau avec une plaque de pression qui nécéssite une pièce supplémentaire pour s'effondrer.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un mouvement qui capture au moins une pièce, et remplissez la plaque de pression pour qu'elle s'effondre.</target>
+      </trans-unit>
+      <trans-unit id="3196264140433706433" datatype="html">
+        <source>You must capture and place your capture on the top pressure plate to make it crumble!</source>
+        <target>Vous devez effectuer une capture et la placer sur la plaque de pression au dessus du plateau pour qu'elle s'effondre !</target>
+      </trans-unit>
+      <trans-unit id="5914083969570610852" datatype="html">
+        <source>Crumbling a second pressure plate</source>
+        <target>Second effondrement d'une plaque de pression</target>
+      </trans-unit>
+      <trans-unit id="1857692339690561929" datatype="html">
+        <source>Once a pressure plate has crumbled, a shorter pressure plate takes it place. It is the case here, where only 3 spots are available on the top pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a move that captures enough pieces to fill the top pressure plate, and make it crumble.</source>
+        <target>Une fois qu'une plaque de pression s'est effondrée, une seconde plaque de pression, plus petite, prend sa place. C'est le cas ici, où seulement 3 cases sont disponibles sur la plaque de pression supérieure.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un mouvement qui capture au moins une pièce, et remplissez la plaque de pression supérieure pour qu'elle s'effondre.</target>
+      </trans-unit>
+      <trans-unit id="3910287826025606484" datatype="html">
+        <source>You must capture and place your capture on the top pressure plate to make it crumble a second time!</source>
+        <target>Vous devez effectuer une capture et la placer sur la plaque de pression supérieure pour qu'elle s'effondre une deuxième fois !</target>
+      </trans-unit>
+      <trans-unit id="6264951416361363939" datatype="html">
+        <source>Minimal board</source>
+        <target>Plateau minimal</target>
+      </trans-unit>
+      <trans-unit id="4748774984823369879" datatype="html">
+        <source>After a pressure plate has crumbled for a second time, there is no more pressure plate available on that side. In case all pressure plates have crumbled, the board is reduced to a 4x4 board.</source>
+        <target>Après deux effondrements d'une plaque de pression, il n'y a plus de plaque de pression disponible sur ce côté. Si toutes les plaques de pressions se sont effondrées, le plateau est réduit à un plateau 4x4.</target>
+      </trans-unit>
+      <trans-unit id="3538909383339704235" datatype="html">
+        <source>Making the lodestone fall</source>
+        <target>Faire tomber une pierre magnétique</target>
+      </trans-unit>
+      <trans-unit id="2420281248578493085" datatype="html">
+        <source>If, at any point during the game, your lodestone is situated on a square that crumbles with a pressure plate, you will be allowed to select any lodestone side on your next turn.&lt;br/&gt;&lt;br/&gt;In this board, playing Dark, you can place your lodestone and make a pressure plate crumble so that your lodestone falls too, allowing to choose more freely its side on your next turn. Do it!</source>
+        <target>À tout moment durant le jeu, si votre pierre magnétique se trouve sur une case qui s'effondre avec une plaque de pression, vous pourrez sélectionner n'importe quelle face de votre pierre magnétique lors de votre prochain tour.&lt;br/&gt;&lt;br/&gt;Sur ce plateau, en jouant Foncé, vous pouvez placer votre pierre magnétique et faire s'effondre une plaque de pression de façon à ce que votre pierre magnétique tombe également. Cela vous permettra de choisir plus librement le côté de votre pierre magnétique lors de votre prochain tour. Faites-le !</target>
+      </trans-unit>
+      <trans-unit id="387688094870283606" datatype="html">
+        <source>Congratulations! At your next turn, you will be allowed to place your lodestone on any side.</source>
+        <target>Bravo ! Lors de votre prochain tour, vous pourrez placer votre pierre magnétique sur n'importe quel côté.</target>
+      </trans-unit>
+      <trans-unit id="99397540840628948" datatype="html">
+        <source>In order to win, you must take out all of your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;Here, you can win in a single move, do it!</source>
+        <target>Pour être vainqueur, vous devez éliminer toutes les pièces adverses.&lt;br/&gt;&lt;br/&gt;Ici, vous pouvez gagner en un seul mouvement, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="1645842992024065193" datatype="html">
+        <source>This is not the winning move. Try again.</source>
+        <target>Ce n'est pas le mouvement gagnant. Essayez encore.</target>
       </trans-unit>
       <trans-unit id="6266016430504496647" datatype="html">
         <source>Please put your piece in an incomplete column.</source>
@@ -3601,6 +3733,10 @@
       </trans-unit>
       <trans-unit id="7236012742212037533" datatype="html">
         <source>You must click on an empty space.</source>
+        <target>Vous devez cliquer sur une case vide.</target>
+      </trans-unit>
+      <trans-unit id="8686180677883367844" datatype="html">
+        <source>You must click on an empty square.</source>
         <target>Vous devez cliquer sur une case vide.</target>
       </trans-unit>
       <trans-unit id="8905154297816550312" datatype="html">

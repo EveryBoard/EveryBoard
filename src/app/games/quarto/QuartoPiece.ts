@@ -19,7 +19,7 @@ export class QuartoPiece implements ComparableObject {
     public static readonly BBBA: QuartoPiece = new QuartoPiece(14);
     public static readonly BBBB: QuartoPiece = new QuartoPiece(15);
 
-    public static readonly NONE: QuartoPiece = new QuartoPiece(16);
+    public static readonly EMPTY: QuartoPiece = new QuartoPiece(16);
 
     public static readonly pieces: ReadonlyArray<QuartoPiece> = [
         QuartoPiece.AAAA,
@@ -43,7 +43,7 @@ export class QuartoPiece implements ComparableObject {
         if (0 <= piece && piece <= 15) {
             return QuartoPiece.pieces[piece];
         } else if ( piece === 16) {
-            return QuartoPiece.NONE;
+            return QuartoPiece.EMPTY;
         } else {
             throw new Error('Invalid piece (' + piece + ')');
         }

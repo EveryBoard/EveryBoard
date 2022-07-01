@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -17,7 +17,7 @@ export class JoinerService {
 
     public static VERBOSE: boolean = false;
 
-    private observedJoinerId: string;
+    private observedJoinerId: string | null;
 
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
@@ -106,13 +106,13 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
         const update: Partial<Joiner> = { candidates };
-        return this.joinerDAO.update(this.observedJoinerId, update);
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), update);
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerService.VERBOSE,
                 'JoinerService.deleteJoiner(); this.observedJoinerId = ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        return this.joinerDAO.delete(this.observedJoinerId);
+        return this.joinerDAO.delete(Utils.getNonNullable(this.observedJoinerId));
     }
     public async proposeConfig(chosenOpponent: MinimalUser,
                                partType: PartType,
@@ -126,7 +126,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             chosenOpponent: chosenOpponent,
             partType: partType.value,
@@ -139,7 +139,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, `JoinerService.setChosenOpponent(${chosenOpponent.name})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             chosenOpponent: chosenOpponent,
         });
     }
@@ -147,7 +147,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
@@ -155,7 +155,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.PART_CREATED.value,
             candidates,
             chosenOpponent: null,
@@ -165,7 +165,8 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.acceptConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId),
+                                     { partStatus: PartStatus.PART_STARTED.value });
     }
     public async createJoiner(joiner: Joiner): Promise<string> {
         display(JoinerService.VERBOSE, 'JoinerService.create(' + JSON.stringify(joiner) + ')');
