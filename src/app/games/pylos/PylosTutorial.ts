@@ -1,3 +1,4 @@
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
@@ -132,7 +133,7 @@ export class PylosTutorial {
                 if (move.firstCapture.isPresent()) {
                     return MGPValidation.failure($localize`Failed, you only captured one piece.`);
                 }
-                return MGPValidation.failure($localize`Failed, you did not capture any piece.`);
+                return MGPValidation.failure(TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE());
             },
             $localize`Congratulations, you have saved up two pieces.`,
         ),

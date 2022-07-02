@@ -27,8 +27,8 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public callbacks: [FirestoreCondition[], FirestoreCollectionObserver<T>][] = [];
     private readonly subDAOs: MGPMap<string, IFirestoreDAO<FirestoreJSONObject>> = new MGPMap();
     constructor(public readonly collectionName: string,
-                public VERBOSE: boolean,
-    ) {
+                public VERBOSE: boolean)
+    {
         this.reset();
     }
     public abstract getStaticDB(): MGPMap<string, DocumentSubject<T>>;

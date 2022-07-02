@@ -681,16 +681,16 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_3', move, undefined, [0, 0]); // move end
 
             testUtils.expectElementToExist('#marker_3_3');
-            testUtils.expectElementToHaveClass('#pieceGroup_3_3', 'transparent');
+            testUtils.expectElementToHaveClass('#pieceGroup_3_3', 'semi-transparent');
             testUtils.expectElementToExist('#ring_3_2');
-            testUtils.expectElementToHaveClass('#pieceGroup_3_2', 'transparent');
+            testUtils.expectElementToHaveClass('#pieceGroup_3_2', 'semi-transparent');
 
             await testUtils.expectClickSuccess('#click_5_2'); // move start, other player
 
             testUtils.expectElementNotToExist('#marker_3_3');
-            testUtils.expectElementNotToHaveClass('#pieceGroup_3_3', 'transparent');
+            testUtils.expectElementNotToHaveClass('#pieceGroup_3_3', 'semi-transparent');
             testUtils.expectElementNotToExist('#ring_3_2');
-            testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'transparent');
+            testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'semi-transparent');
 
         }));
     });

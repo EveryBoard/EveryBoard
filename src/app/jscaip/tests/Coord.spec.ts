@@ -74,4 +74,21 @@ describe('Coord', () => {
             expect(() => center.getDirectionToward(lowRight).get()).toThrow();
         });
     });
+    describe('getUntil', () => {
+        it('should include all coord between A and B, A and B excluded', () => {
+            // Given a coord B that is 3 steps after A
+            const A: Coord = new Coord(0, 0);
+            const B: Coord = new Coord(3, 0);
+
+            // When getting all coord from A until B
+            const coords: Coord[] = A.getUntil(B);
+
+            // Then the list should have 2 elements, including B and not A
+            expect(coords.length).toBe(2);
+            const AIncluded: boolean = coords.some((c: Coord) => c.equals(A));
+            expect(AIncluded).toBeFalse();
+            const BIncluded: boolean = coords.some((c: Coord) => c.equals(B));
+            expect(BIncluded).toBeFalse();
+        });
+    });
 });

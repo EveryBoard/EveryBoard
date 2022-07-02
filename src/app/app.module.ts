@@ -57,6 +57,10 @@ import { GoComponent } from './games/go/go.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
+import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
+import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
+import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
+import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
 import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
@@ -198,6 +202,7 @@ export class FirebaseProviders {
         KamisadoComponent,
         LinesOfActionComponent,
         LodestoneComponent,
+        MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,
         MinimaxTestingComponent,
         P4Component,
         PentagoComponent,
