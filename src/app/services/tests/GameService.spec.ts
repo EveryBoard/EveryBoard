@@ -25,12 +25,14 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { PartService } from '../PartService';
 
 describe('GameService', () => {
 
     let service: GameService;
 
     let partDAO: PartDAO;
+    let partService: PartService;
 
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
@@ -54,6 +56,7 @@ describe('GameService', () => {
         }).compileComponents();
         service = TestBed.inject(GameService);
         partDAO = TestBed.inject(PartDAO);
+        partService = TestBed.inject(PartService);
     }));
     it('should create', () => {
         expect(service).toBeTruthy();
@@ -298,7 +301,7 @@ describe('GameService', () => {
         beforeEach(() => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
-            spyOn(partDAO, 'updateAndBumpIndex').and.callThrough();
+            spyOn(partService, 'updateAndBumpIndex').and.callThrough();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // when updating the board with scores
@@ -313,7 +316,7 @@ describe('GameService', () => {
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
-            expect(partDAO.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
+            expect(partService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
             // when updating the board to notify of a draw

@@ -14,6 +14,7 @@ import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Subscription } from 'rxjs';
+import { UserService } from './UserService';
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -98,6 +99,7 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userObs: Observable<AuthUser>;
 
     constructor(private readonly userDAO: UserDAO,
+                private readonly userService: UserService,
                 private readonly auth: FireAuth.Auth,
                 private readonly connectivityDAO: ConnectivityDAO)
     {
@@ -127,7 +129,7 @@ export class ConnectedUserService implements OnDestroy {
                                 if (userHasFinalizedVerification === true && doc.get().verified === false) {
                                     // The user has finalized verification but isn't yet marked as so in the DB.
                                     // So we mark it, and we'll get notified when the user is marked.
-                                    return this.userDAO.markVerified(user.uid);
+                                    return this.userService.markVerified(user.uid);
                                 }
                                 const authUser: AuthUser = new AuthUser(user.uid,
                                                                         MGPOptional.ofNullable(user.email),
@@ -158,7 +160,7 @@ export class ConnectedUserService implements OnDestroy {
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
         display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doRegister(' + email + ')');
-        if (await this.userDAO.usernameIsAvailable(username)) {
+        if (await this.userService.usernameIsAvailable(username)) {
             return this.registerAfterUsernameCheck(username, email, password);
         } else {
             return MGPFallible.failure($localize`This username is already in use.`);
@@ -283,15 +285,15 @@ export class ConnectedUserService implements OnDestroy {
             return MGPValidation.failure($localize`Your username may not be empty.`);
         }
         try {
-            const available: boolean = await this.userDAO.usernameIsAvailable(username);
+            const available: boolean = await this.userService.usernameIsAvailable(username);
             if (available === false) {
                 return MGPValidation.failure($localize`This username is already in use, please select a different one.`);
             }
             const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
             await Auth.updateProfile(currentUser, { displayName: username });
-            await this.userDAO.setUsername(currentUser.uid, username);
+            await this.userService.setUsername(currentUser.uid, username);
             // Only gmail accounts can set their username, and they become finalized once they do
-            await this.userDAO.markVerified(currentUser.uid);
+            await this.userService.markVerified(currentUser.uid);
             // Reload the user to notify listeners that the user has changed
             await this.reloadUser();
             return MGPValidation.SUCCESS;
@@ -323,7 +325,7 @@ export class ConnectedUserService implements OnDestroy {
     }
     public sendPresenceToken(): Promise<void> {
         assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
-        return this.userDAO.updatePresenceToken(this.user.get().id);
+        return this.userService.updatePresenceToken(this.user.get().id);
     }
     public ngOnDestroy(): void {
         if (this.userUnsubscribe.isPresent()) {

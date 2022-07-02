@@ -55,7 +55,10 @@ export class ActiveUsersService implements OnDestroy {
         };
         const usersObserver: FirestoreCollectionObserver<User> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        this.unsubscribe = MGPOptional.of(this.userDAO.observeActiveUsers(usersObserver));
+        this.unsubscribe = MGPOptional.of(this.observeActiveUsers(usersObserver));
+    }
+    public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
+        return this.userDAO.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
     public stopObserving(): void {
         if (this.unsubscribe.isPresent()) {

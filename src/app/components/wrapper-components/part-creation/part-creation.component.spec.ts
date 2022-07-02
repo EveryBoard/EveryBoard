@@ -25,6 +25,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirestoreTime, Time } from 'src/app/domain/Time';
+import { UserService } from 'src/app/services/UserService';
 
 describe('PartCreationComponent', () => {
 
@@ -35,6 +36,7 @@ describe('PartCreationComponent', () => {
     let partDAO: PartDAO;
     let userDAO: UserDAO;
     let chatDAO: ChatDAO;
+    let userService: UserService;
     let joinerService: JoinerService;
     let gameService: GameService;
     let chatService: ChatService;
@@ -90,6 +92,7 @@ describe('PartCreationComponent', () => {
         partDAO = TestBed.inject(PartDAO);
         joinerDAO = TestBed.inject(JoinerDAO);
         userDAO = TestBed.inject(UserDAO);
+        userService = TestBed.inject(UserService);
         joinerService = TestBed.inject(JoinerService);
         gameService = TestBed.inject(GameService);
         chatService = TestBed.inject(ChatService);
@@ -221,7 +224,8 @@ describe('PartCreationComponent', () => {
                 spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
                 // When the candidate token become too old
-                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id); // Creator update his last presence
+                // Creator updates its last presence
+                await userService.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
                 // but chosenOpponent don't
                 tick(PartCreationComponent.TOKEN_TIMEOUT); // two token time pass and reactive the timeout
 
@@ -240,7 +244,8 @@ describe('PartCreationComponent', () => {
                 spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
                 // When the candidate stop sending token
-                await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id); // Creator update his last presence
+                // Creator updates its last presence
+                await userService.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
                 // but candidate don't
                 tick(PartCreationComponent.TOKEN_TIMEOUT); // two token time pass and reactive the timeout
 

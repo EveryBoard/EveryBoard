@@ -1,12 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { Part, PartDocument } from '../domain/Part';
+import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { Unsubscribe } from '@angular/fire/firestore';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService
@@ -59,7 +60,7 @@ export class ActivePartsService implements OnDestroy {
         };
         const partObserver: FirestoreCollectionObserver<Part> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        this.unsubscribe = MGPOptional.of(this.partDAO.observeActiveParts(partObserver));
+        this.unsubscribe = MGPOptional.of(this.observeActiveParts(partObserver));
     }
     public stopObserving(): void {
         if (this.unsubscribe.isPresent()) {
@@ -70,5 +71,18 @@ export class ActivePartsService implements OnDestroy {
     }
     public ngOnDestroy(): void {
         assert(this.unsubscribe.isAbsent(), 'ActivePartsService should have unsubscribed before being destroyed');
+    }
+    public observeActiveParts(callback: FirestoreCollectionObserver<Part>): () => void {
+        return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
+    }
+    public async userHasActivePart(username: string): Promise<boolean> {
+        // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
+        const userIsFirstPlayer: FirestoreDocument<Part>[] = await this.partDAO.findWhere([
+            ['playerZero', '==', username],
+            ['result', '==', MGPResult.UNACHIEVED.value]]);
+        const userIsSecondPlayer: FirestoreDocument<Part>[] = await this.partDAO.findWhere([
+            ['playerOne', '==', username],
+            ['result', '==', MGPResult.UNACHIEVED.value]]);
+        return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;
     }
 }

@@ -6,6 +6,8 @@ import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver'
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { serverTimestamp } from 'firebase/firestore';
 
 /**
   * The aim of this service is to:
@@ -22,9 +24,23 @@ export class UserService {
 
     constructor(private readonly userDAO: UserDAO) {
     }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): Unsubscribe {
-        // the callback will be called on the foundUser
-        return this.userDAO.observeUserByUsername(username, callback);
+    public async usernameIsAvailable(username: string): Promise<boolean> {
+        const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);
+        return usersWithSameUsername.length === 0;
+    }
+    public async setUsername(uid: string, username: string): Promise<void> {
+        await this.userDAO.update(uid, { username: username });
+    }
+    public async markVerified(uid: string): Promise<void> {
+        await this.userDAO.update(uid, { verified: true });
+    }
+    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
+        return this.userDAO.observingWhere([['username', '==', username]], callback);
+    }
+    public updatePresenceToken(userId: string): Promise<void> {
+        return this.userDAO.update(userId, {
+            last_changed: serverTimestamp(),
+        });
     }
     public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
         return this.userDAO.subscribeToChanges(userId, callback);

@@ -27,31 +27,4 @@ export class PartDAOMock extends FirestoreDAOMock<Part> {
     public resetStaticDB(): void {
         PartDAOMock.partDB = new MGPMap();
     }
-    public async updateAndBumpIndex(id: string,
-                                    user: Player,
-                                    lastIndex: number,
-                                    update: Partial<Part>)
-    : Promise<void>
-    {
-        update = {
-            ...update,
-            lastUpdate: {
-                index: lastIndex + 1,
-                player: user.value,
-            },
-        };
-        return this.update(id, update);
-    }
-    public observeActiveParts(callback: FirestoreCollectionObserver<Part>): () => void {
-        return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
-    }
-    public async userHasActivePart(username: string): Promise<boolean> {
-        const partsAsPlayerZero: FirestoreDocument<Part>[] = await this.findWhere([
-            ['playerZero', '==', username],
-            ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const partsAsPlayerOne: FirestoreDocument<Part>[] = await this.findWhere([
-            ['playerOne', '==', username],
-            ['result', '==', MGPResult.UNACHIEVED.value]]);
-        return partsAsPlayerZero.length > 0 || partsAsPlayerOne.length > 0;
-    }
 }

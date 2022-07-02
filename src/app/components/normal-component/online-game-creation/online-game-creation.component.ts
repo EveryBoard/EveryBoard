@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PartDAO } from 'src/app/dao/PartDAO';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -11,6 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { ActivePartsService } from 'src/app/services/ActivePartsService';
 
 export class OnlineGameCreationMessages {
     public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;
@@ -26,7 +26,7 @@ export class OnlineGameCreationComponent implements OnInit {
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer,
-                       private readonly partDAO: PartDAO,
+                       private readonly activePartsService: ActivePartsService,
                        private readonly gameService: GameService) {
     }
     public async ngOnInit(): Promise<void> {
@@ -60,7 +60,7 @@ export class OnlineGameCreationComponent implements OnInit {
         return gameInfo.isPresent();
     }
     private async canCreateOnlineGame(username: string): Promise<boolean> {
-        const hasActivePart: boolean = await this.partDAO.userHasActivePart(username);
+        const hasActivePart: boolean = await this.activePartsService.userHasActivePart(username);
         return hasActivePart === false;
     }
 }

@@ -35,6 +35,7 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { PartService } from 'src/app/services/PartService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -56,6 +57,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     let joinerDAO: JoinerDAO;
     let partDAO: PartDAO;
+    let partService: PartService;
     let userDAO: UserDAO;
     let chatDAO: ChatDAO;
 
@@ -87,6 +89,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         joinerDAO = TestBed.inject(JoinerDAO);
         userDAO = TestBed.inject(UserDAO);
         chatDAO = TestBed.inject(ChatDAO);
+        partService = TestBed.inject(PartService);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
@@ -145,7 +148,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             beginning: serverTimestamp(),
         };
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-        await partDAO.updateAndBumpIndex('joinerId', observerRoleAsPlayer, 0, update);
+        await partService.updateAndBumpIndex('joinerId', observerRoleAsPlayer, 0, update);
         componentTestUtils.detectChanges();
         return Promise.resolve();
     }
@@ -176,7 +179,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
     async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number): Promise<void> {
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-        await partDAO.updateAndBumpIndex('joinerId', observerRoleAsPlayer, lastIndex, update);
+        await partService.updateAndBumpIndex('joinerId', observerRoleAsPlayer, lastIndex, update);
         componentTestUtils.detectChanges();
         tick(1);
     }

@@ -20,6 +20,7 @@ import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { User } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
+import { UserService } from '../UserService';
 
 @Injectable()
 export class ConnectedUserServiceMock {
@@ -149,8 +150,8 @@ describe('ConnectedUserService', () => {
         expect(service).toBeTruthy();
     }));
     it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
-        const userDAO: UserDAO = TestBed.inject(UserDAO);
-        spyOn(userDAO, 'markVerified');
+        const userService: UserService = TestBed.inject(UserService);
+        spyOn(userService, 'markVerified');
 
         // given a registered user that has finalized all steps to verify its account
         const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
@@ -172,7 +173,7 @@ describe('ConnectedUserService', () => {
         await userHasUpdated;
 
         // then its status is set to verified
-        expect(userDAO.markVerified).toHaveBeenCalledWith(uid);
+        expect(userService.markVerified).toHaveBeenCalledWith(uid);
 
         subscription.unsubscribe();
     });
@@ -512,9 +513,9 @@ describe('ConnectedUserService', () => {
             expect(result.getReason()).toEqual(`Your username may not be empty.`);
         });
         it('should reject existing usernames', async() => {
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            const userService: UserService = TestBed.inject(UserService);
             // when the username is set to an username that is not available
-            spyOn(userDAO, 'usernameIsAvailable').and.resolveTo(false);
+            spyOn(userService, 'usernameIsAvailable').and.resolveTo(false);
             const result: MGPValidation = await service.setUsername('not-available');
 
             // then it fails

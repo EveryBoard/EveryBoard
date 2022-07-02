@@ -3,15 +3,28 @@ import { ActiveUsersService } from '../ActiveUsersService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { User, UserDocument } from 'src/app/domain/User';
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
+import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
+import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ActiveUsersService', () => {
 
     let service: ActiveUsersService;
 
-    beforeEach(() => {
-        service = new ActiveUsersService(new UserDAOMock() as unknown as UserDAO);
-    });
+    let userDAO: UserDAO;
+
+    beforeEach(fakeAsync(async() => {
+        await TestBed.configureTestingModule({
+            imports: [],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                { provide: UserDAO, useClass: UserDAOMock },
+            ],
+        }).compileComponents();
+        userDAO = TestBed.inject(UserDAO);
+        service = TestBed.inject(ActiveUsersService);
+    }));
     it('should create', () => {
         expect(service).toBeTruthy();
     });
@@ -75,5 +88,21 @@ describe('ActiveUsersService', () => {
         ];
         const orderedUserDocs: UserDocument[] = service.sort(userDocs);
         expect(expectedOrder).toEqual(orderedUserDocs);
+    });
+    describe('observeActiveUsers', () => {
+        it('should call observingWhere with the right condition', () => {
+            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
+                () => void { },
+                () => void { },
+                () => void { },
+            );
+            spyOn(userDAO, 'observingWhere');
+            service.observeActiveUsers(callback);
+            const parameters: FirestoreCondition[] = [
+                ['state', '==', 'online'],
+                ['verified', '==', true],
+            ];
+            expect(userDAO.observingWhere).toHaveBeenCalledWith(parameters, callback);
+        });
     });
 });

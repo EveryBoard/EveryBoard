@@ -2,11 +2,14 @@
 import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { Part, PartDocument } from 'src/app/domain/Part';
+import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
 import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
+import { createConnectedGoogleUser } from './ConnectedUserService.spec';
+import * as FireAuth from '@angular/fire/auth';
 
 describe('ActivePartsService', () => {
 
@@ -25,7 +28,7 @@ describe('ActivePartsService', () => {
             ],
         }).compileComponents();
         partDAO = TestBed.inject(PartDAO);
-        service = new ActivePartsService(partDAO);
+        service = TestBed.inject(ActivePartsService);
         service.startObserving();
         stoppedObserving = false;
     }));
@@ -217,6 +220,64 @@ describe('ActivePartsService', () => {
 
             activePartsSub.unsubscribe();
         }));
+    });
+    describe('observeActiveParts', () => {
+        it('should call observingWhere with the right condition', () => {
+            const callback: FirestoreCollectionObserver<Part> = new FirestoreCollectionObserver<Part>(
+                () => void { },
+                () => void { },
+                () => void { },
+            );
+            spyOn(partDAO, 'observingWhere');
+            service.observeActiveParts(callback);
+            expect(partDAO.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
+        });
+    });
+    describe('userHasActivePart', () => {
+        const part: Part = {
+            lastUpdate: {
+                index: 0,
+                player: 0,
+            },
+            typeGame: 'P4',
+            playerZero: 'foo',
+            turn: 0,
+            result: MGPResult.UNACHIEVED.value,
+            listMoves: [],
+        };
+        const username: string = 'jeanjaja';
+        beforeEach(async() => {
+            // These tests need a logged in user to create documents
+            await createConnectedGoogleUser(false);
+        });
+        it('should return true when user has an active part as player zero', async() => {
+            // Given a part where user is player zero
+            await partDAO.create({ ...part, playerZero: username });
+            // When checking if the user has an active part
+            const result: boolean = await service.userHasActivePart(username);
+            // Then it should return true
+            expect(result).toBeTrue();
+        });
+        it('should return true when user has an active part as player one', async() => {
+            // Given a part where user is player zero
+            await partDAO.create({ ...part, playerOne: username });
+            // When checking if the user has an active part
+            const result: boolean = await service.userHasActivePart(username);
+            // Then it should return true
+            expect(result).toBeTrue();
+        });
+        it('should return false when the user has no active part', async() => {
+            // Given a part where the user is not active
+            await partDAO.create(part);
+            // When checking if the user has an active part
+            const result: boolean = await service.userHasActivePart(username);
+            // Then it should return false
+            expect(result).toBeFalse();
+
+        });
+        afterEach(async() => {
+            await TestBed.inject(FireAuth.Auth).signOut();
+        });
     });
     afterEach(() => {
         if (stoppedObserving === false) {
