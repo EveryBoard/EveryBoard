@@ -13,6 +13,7 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { Vector } from 'src/app/jscaip/Direction';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
@@ -34,8 +35,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE;
+                    console.log(coord.toString(), owner.getScoreModifier(), CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE)
                 } else {
                     score += owner.getScoreModifier() * CoerceoPiecesThreatTilesMinimax.SCORE_BY_SAFE_PIECE;
+                    console.log(coord.toString(), owner.getScoreModifier(), CoerceoPiecesThreatTilesMinimax.SCORE_BY_SAFE_PIECE)
                 }
             }
         }
@@ -81,7 +84,8 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
         const OPPONENT: Player = threatenerPlayer.getOpponent();
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
-        const directThreats: Coord[] = [];
+        const emptyableTiles: Coord[] = [];
+        let directThreats: Coord[] = [];
         const neighbors: Coord[] = TriangularCheckerBoard
             .getNeighbors(coord)
             .filter((c: Coord) => c.isInRange(15, 10));
@@ -89,6 +93,9 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             const threat: FourStatePiece = state.getPieceAt(directThreat);
             if (threat.is(OPPONENT)) {
                 directThreats.push(directThreat);
+                if (this.tileCouldBeRemovedThisTurn(directThreat, state, OPPONENT)) {
+                    emptyableTiles.push(directThreat);
+                }
             } else if (threat === FourStatePiece.EMPTY) {
                 if (uniqueFreedom.isPresent()) {
                     // more than one freedom!
@@ -104,7 +111,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
                 if (movingThreat.isInRange(15, 10) &&
                     state.getPieceAt(movingThreat).is(OPPONENT) &&
-                    directThreats.every((coord: Coord) => coord.equals(movingThreat) === false))
+                    directThreats.some((coord: Coord) => coord.equals(movingThreat)) === false)
                 {
                     movingThreats.push(movingThreat);
                 }
@@ -113,9 +120,57 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 return MGPOptional.of(new PieceThreat(new CoordSet(directThreats), new CoordSet(movingThreats)));
             }
         }
+        if (emptyableTiles.length > 0) {
+            directThreats = directThreats.filter((c: Coord) => c.equals(emptyableTiles[0]));
+            return MGPOptional.of(new PieceThreat(new CoordSet(directThreats), new CoordSet([emptyableTiles[0]])));
+        }
         return MGPOptional.empty();
     }
-    public filterThreatMap(threatMap: MGPMap<Coord, PieceThreat>, state: CoerceoState): MGPMap<Coord, PieceThreat> {
+    private tileCouldBeRemovedThisTurn(coord: Coord, state: CoerceoState, OPPONENT: Player): boolean {
+        const PLAYER: Player = OPPONENT.getOpponent();
+        const isStateRemovable: boolean = state.isDeconnectable(coord);
+        if (isStateRemovable === false) {
+            return false;
+        }
+        let uniqueThreat: MGPOptional<Coord> = MGPOptional.empty();
+        // for all coord of the tiles
+        const tileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(coord);
+        for (let y: number = 0; y < 2; y++) {
+            for (let x: number = 0; x < 3; x++) {
+                const tileCoord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
+                if (state.getPieceAt(tileCoord).is(OPPONENT)) {
+                    if (this.pieceCouldLeaveTheTile(tileCoord)) {
+                        // then add it to the threat list
+                        if (uniqueThreat.isPresent()) {
+                            return false;
+                        } else {
+                            uniqueThreat = MGPOptional.of(tileCoord);
+                        }
+                    } else {
+                        return false;
+                    }
+                } else if (state.getPieceAt(tileCoord).is(PLAYER)) {
+                    return false;
+                }
+            }
+        }
+        return uniqueThreat.isPresent();
+    }
+    public pieceCouldLeaveTheTile(piece: Coord): boolean {
+        const startingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(piece);
+        for (const dir of CoerceoStep.STEPS) {
+            const landing: Coord = piece.getNext(dir.direction, 1);
+            const landingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(landing);
+            if (startingTileUpperLeft.equals(landingTileUpperLeft) === false) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public filterThreatMap(threatMap: MGPMap<Coord, PieceThreat>,
+                           state: CoerceoState)
+    : MGPMap<Coord, PieceThreat>
+    {
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         const threateneds: Coord[] = threatMap.listKeys();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {

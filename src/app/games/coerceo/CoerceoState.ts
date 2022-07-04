@@ -117,12 +117,12 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         newCaptures[this.getCurrentPlayer().value] += 1;
         return new CoerceoState(newBoard, this.turn, this.tiles, newCaptures);
     }
-    public removeTilesIfNeeded(tile: Coord, countTiles: boolean): CoerceoState {
+    public removeTilesIfNeeded(piece: Coord, countTiles: boolean): CoerceoState {
         display(CoerceoState.VERBOSE,
-                { coerceoState_removeTilesIfNeeded: { object: this, tile, countTiles } });
+                { coerceoState_removeTilesIfNeeded: { object: this, piece, countTiles } });
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
-        const currentTile: Coord = CoerceoState.getTilesUpperLeftCoord(tile);
+        const currentTile: Coord = CoerceoState.getTilesUpperLeftCoord(piece);
         if (this.isTileEmpty(currentTile) &&
             this.isDeconnectable(currentTile))
         {

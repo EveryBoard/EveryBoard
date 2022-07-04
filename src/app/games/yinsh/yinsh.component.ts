@@ -135,7 +135,7 @@ export class YinshComponent
             this.setRingInfo(coord, piece);
             this.setMarkerInfo(coord, piece);
         });
-        for (const player of [Player.ZERO, Player.ONE]) {
+        for (const player of [Player.ZERO, Player.ONE]) { // TODOTODO pull to get this good version
             this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
         }
         this.showCurrentMoveCaptures();
@@ -322,13 +322,10 @@ export class YinshComponent
                 this.viewInfo.selectableCoords.push(coord);
             }
         }
-        switch (this.movePhase) {
-            case 'INITIAL_CAPTURE_SELECT_FIRST':
-                this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';
-                break;
-            case 'FINAL_CAPTURE_SELECT_FIRST':
-                this.movePhase = 'FINAL_CAPTURE_SELECT_LAST';
-                break;
+        if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST') {
+            this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';
+        } else if (this.movePhase === 'FINAL_CAPTURE_SELECT_FIRST') {
+            this.movePhase = 'FINAL_CAPTURE_SELECT_LAST';
         }
     }
     private async selectCaptureLastCoord(coord: Coord): Promise<MGPValidation> {
@@ -353,15 +350,14 @@ export class YinshComponent
             this.constructedState.sideRings,
             this.constructedState.turn);
 
-        switch (this.movePhase) {
-            case 'INITIAL_CAPTURE_SELECT_FIRST':
-            case 'INITIAL_CAPTURE_SELECT_LAST':
-                this.movePhase = 'INITIAL_CAPTURE_SELECT_RING';
-                break;
-            case 'FINAL_CAPTURE_SELECT_FIRST':
-            case 'FINAL_CAPTURE_SELECT_LAST':
-                this.movePhase = 'FINAL_CAPTURE_SELECT_RING';
-                break;
+        if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST' ||
+            this.movePhase === 'INITIAL_CAPTURE_SELECT_LAST')
+        {
+            this.movePhase = 'INITIAL_CAPTURE_SELECT_RING';
+        } else if (this.movePhase === 'FINAL_CAPTURE_SELECT_FIRST' ||
+                   this.movePhase === 'FINAL_CAPTURE_SELECT_LAST')
+        {
+            this.movePhase = 'FINAL_CAPTURE_SELECT_RING';
         }
         this.updateViewInfo();
         return MGPValidation.SUCCESS;
@@ -377,11 +373,11 @@ export class YinshComponent
         }
     }
     private markRemovedMarker(coord: Coord, player: Player): void {
-        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'transparent';
+        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
         this.setMarkerInfo(coord, YinshPiece.MARKERS[player.value]);
     }
     private markRemovedRing(coord: Coord, player: Player): void {
-        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'transparent';
+        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
         this.setRingInfo(coord, YinshPiece.RINGS[player.value]);
     }
     private async selectRing(coord: Coord): Promise<MGPValidation> {
