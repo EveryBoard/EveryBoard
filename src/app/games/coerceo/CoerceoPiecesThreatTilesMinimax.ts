@@ -127,11 +127,13 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         return MGPOptional.empty();
     }
     private tileCouldBeRemovedThisTurn(coord: Coord, state: CoerceoState, OPPONENT: Player): boolean {
+        console.log(coord.toString())
         const PLAYER: Player = OPPONENT.getOpponent();
-        const isStateRemovable: boolean = state.isDeconnectable(coord);
-        if (isStateRemovable === false) {
+        const isTileRemovable: boolean = state.isDeconnectable(coord);
+        if (isTileRemovable === false) {
+            console.log(CoerceoState.getTilesUpperLeftCoord(coord).toString(), 'tile could not be removed')
             return false;
-        }
+        } else { console.log(CoerceoState.getTilesUpperLeftCoord(coord).toString(), 'tile could be removed')}
         let uniqueThreat: MGPOptional<Coord> = MGPOptional.empty();
         // for all coord of the tiles
         const tileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(coord);
@@ -139,30 +141,37 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             for (let x: number = 0; x < 3; x++) {
                 const tileCoord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
                 if (state.getPieceAt(tileCoord).is(OPPONENT)) {
-                    if (this.pieceCouldLeaveTheTile(tileCoord)) {
+                    if (this.pieceCouldLeaveTheTile(tileCoord, state)) {
                         // then add it to the threat list
-                        if (uniqueThreat.isPresent()) {
-                            return false;
-                        } else {
-                            uniqueThreat = MGPOptional.of(tileCoord);
-                        }
+                        uniqueThreat = MGPOptional.of(tileCoord);
                     } else {
+                        console.log(coord.toString(), 'piece could not leave the tile')
                         return false;
                     }
                 } else if (state.getPieceAt(tileCoord).is(PLAYER)) {
+                    console.log(coord.toString(), 'not an opponent but a player')
                     return false;
                 }
             }
         }
+        console.log(coord.toString(), 'fin')
         return uniqueThreat.isPresent();
     }
-    public pieceCouldLeaveTheTile(piece: Coord): boolean {
+    public pieceCouldLeaveTheTile(piece: Coord, state: CoerceoState): boolean {
+        console.log(piece.toString(), 'piiiiiiece', state.getPieceAt(piece))
         const startingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(piece);
         for (const dir of CoerceoStep.STEPS) {
             const landing: Coord = piece.getNext(dir.direction, 1);
             const landingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(landing);
             if (startingTileUpperLeft.equals(landingTileUpperLeft) === false) {
-                return true;
+                if (state.getPieceAt(landing) === FourStatePiece.EMPTY)
+                {
+                    console.log(piece.toString() + ' > ' + startingTileUpperLeft.toString(),
+                                landing.toString() + ' > ' + landingTileUpperLeft.toString(),
+                                startingTileUpperLeft.equals(landingTileUpperLeft) === false,
+                                state.getPieceAt(landing) === FourStatePiece.EMPTY)
+                    return true;
+                }
             }
         }
         return false;

@@ -410,6 +410,52 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             // Then the value should be correct
             expect(value).toEqual((3 * SAFE) - (2 * SAFE));
         });
+        it('should count "zero freedom" as safe when tile is not removable', () => {
+            // Given a piece of player Zero that has zero freedom
+            const board: Table<FourStatePiece> = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [_, _, _, N, N, N, N, N, N, N, N, N, N, N, N],
+                [_, O, _, _, _, _, N, N, N, N, N, N, N, N, N],
+                [N, N, N, _, O, X, O, X, _, N, N, N, N, N, N],
+                [N, N, N, _, _, _, X, _, _, N, N, N, N, N, N],
+                [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            ];
+            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+            const node: CoerceoNode = new CoerceoNode(state);
+
+            // When evaluating his value
+            const value: number = minimax.getBoardValue(node).value;
+
+            // Then the value should be correct
+            expect(value).toEqual((4 * SAFE) - (3 * SAFE));
+        });
+        it('should count "zero freedom" as safe when tile is removable but player cannot leave it', () => {
+            // Given a piece of player Zero that has zero freedom
+            const board: Table<FourStatePiece> = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
+                [N, N, N, _, _, X, O, X, _, N, N, N, N, N, N],
+                [N, N, N, _, X, _, X, _, _, N, N, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            ];
+            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+            const node: CoerceoNode = new CoerceoNode(state);
+
+            // When evaluating his value
+            const value: number = minimax.getBoardValue(node).value;
+
+            // Then the value should be correct
+            expect(value).toEqual((4 * SAFE) - (1 * SAFE));
+        });
         it('should count "zero freedom x leavable neighbor-tile" as threat', () => {
             // Given a piece of player Zero that has zero freedom
             // but one of its neighboring tile could be removed during the move
