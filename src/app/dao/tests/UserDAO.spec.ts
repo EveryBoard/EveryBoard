@@ -5,7 +5,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { User } from 'src/app/domain/User';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { UserDAO } from '../UserDAO';
-import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { FirestoreCondition } from '../FirestoreDAO';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -117,7 +117,7 @@ describe('UserDAO', () => {
             // When trying to set another user in the DB
             const result: Promise<void> = dao.set('some-other-uid', { verified: false });
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should authorize updating its username when not set', async() => {
             // Given an existing, logged in user, without username
@@ -133,7 +133,7 @@ describe('UserDAO', () => {
             // When trying to set the username
             const result: Promise<void> = dao.setUsername(user.uid, 'user!');
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should authorize setting the user to verified when it is', async() => {
             // Given a non-verified user, with a username
@@ -159,7 +159,7 @@ describe('UserDAO', () => {
             // When marking the user as verified
             const result: Promise<void> = dao.markAsVerified(credential.user.uid);
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid setting the user to verified if it has no verified email', async() => {
             // Given a email user that has not verified its email
@@ -172,7 +172,7 @@ describe('UserDAO', () => {
             // When marking the user as verified
             const result: Promise<void> = dao.markAsVerified(credential.user.uid);
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid to update the fields another user', async() => {
             // Given an existing user and a logged in user
@@ -181,7 +181,7 @@ describe('UserDAO', () => {
             // When trying to change a field of another user
             const result: Promise<void> = dao.update(other.uid, { username: 'jean? jaja!' });
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid to delete its own user', async() => {
             // Given a logged in user
@@ -189,7 +189,7 @@ describe('UserDAO', () => {
             // When trying to delete it
             const result: Promise<void> = dao.delete(user.uid);
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid to delete another user', async() => {
             // Given an existing user and a logged in user
@@ -198,7 +198,7 @@ describe('UserDAO', () => {
             // When trying to delete the other user
             const result: Promise<void> = dao.delete(other.uid);
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
     });
 });

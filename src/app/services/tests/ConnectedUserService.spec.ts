@@ -116,7 +116,7 @@ export async function createConnectedGoogleUser(email: string, username?: string
     return credential.user;
 }
 
-export async function createUser(email: string, username: string): Promise<MinimalUser> {
+export async function createConnectedUser(email: string, username: string): Promise<MinimalUser> {
     const user: FireAuth.User = await createConnectedGoogleUser(email, username);
     return { id: user.uid, name: username };
 }

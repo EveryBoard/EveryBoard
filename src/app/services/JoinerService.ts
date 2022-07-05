@@ -63,8 +63,7 @@ export class JoinerService {
                 }
                 callback(candidates);
             });
-        const subCollection: IFirestoreDAO<FirestoreJSONObject> =
-            this.joinerDAO.subCollectionDAO(joinerId, 'candidates');
+        const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.joinerDAO.subCollectionDAO(joinerId, 'candidates');
         this.candidatesUnsubscribe = MGPOptional.of(subCollection.observingWhere([], observer));
     }
     public unsubscribe(): void {

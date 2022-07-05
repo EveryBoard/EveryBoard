@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { expectFirebasePermissionDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { ChatDAO } from '../ChatDAO';
 import * as FireAuth from '@angular/fire/auth';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -14,7 +14,7 @@ import { JoinerDAO } from '../JoinerDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { IFirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { createUser } from 'src/app/services/tests/ConnectedUserService.spec';
+import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
 
 describe('ChatDAO', () => {
 
@@ -59,7 +59,7 @@ describe('ChatDAO', () => {
         let otherMessageId: string;
         beforeEach(async() => {
             // Given a user
-            otherUser = await createUser('foo@bar.com', 'other-user');
+            otherUser = await createConnectedUser('foo@bar.com', 'other-user');
             // and a chat (here the lobby, but this could be any chat)
             await chatDAO.set('lobby', {});
             // with a message from another user
@@ -71,7 +71,7 @@ describe('ChatDAO', () => {
             otherMessageId = await chatDAO.addMessage('lobby', message);
             await signOut();
             // and a message from the current user, who is able to add messages
-            myUser = await createUser('bar@bar.com', 'user');
+            myUser = await createConnectedUser('bar@bar.com', 'user');
             myMessageId = await chatDAO.addMessage('lobby', { ...message, sender: myUser });
         });
         it('should forbid disconnected users to read a chat', async() => {
@@ -80,7 +80,7 @@ describe('ChatDAO', () => {
             // When trying to read a chat
             const chatRead: Promise<MGPOptional<Chat>> = chatDAO.read('lobby');
             // Then it fails
-            await expectFirebasePermissionDenied(chatRead);
+            await expectPermissionToBeDenied(chatRead);
         });
         it('should forbid a user to post a message as another user', async() => {
             // When posting a message as another user
@@ -91,7 +91,7 @@ describe('ChatDAO', () => {
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid a user to post a message with the wrong username', async() => {
             // When posting a message with a different username
@@ -102,7 +102,7 @@ describe('ChatDAO', () => {
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should allow users to delete one of its messages', async() => {
             // When deleting one of the current user's message
@@ -116,7 +116,7 @@ describe('ChatDAO', () => {
             // When deleting the message of another user
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').delete(otherMessageId);
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should allow a user to change one of its messages', async() => {
             // When updating one of the current user's message
@@ -130,19 +130,19 @@ describe('ChatDAO', () => {
             // When updating one of the current user's message and changing its sender
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').update(myMessageId, { sender: 'bli' });
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid a user to change a message of another user', async() => {
             // When updating the message of another user
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').update(otherMessageId, { content: 'hullo' });
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
     });
     describe('on the lobby chat', () => {
         it('should allow a verified user to create the lobby chat', async() => {
             // Given a verified user
-            await createUser('foo@bar.com', 'foo');
+            await createConnectedUser('foo@bar.com', 'foo');
             // When creating the 'lobby' chat
             const chatCreation: Promise<void> = chatDAO.set('lobby', {});
             // Then it succeeds
@@ -155,11 +155,11 @@ describe('ChatDAO', () => {
             // When creating the 'lobby' chat
             const chatCreation: Promise<void> = chatDAO.set('lobby', {});
             // Then it fails
-            await expectFirebasePermissionDenied(chatCreation);
+            await expectPermissionToBeDenied(chatCreation);
         });
         it('should allow a verified user to post a message on the lobby chat', async() => {
             // Given a verified user
-            const myUser: MinimalUser = await createUser('foo@bar.com', 'myself');
+            const myUser: MinimalUser = await createConnectedUser('foo@bar.com', 'myself');
             // When posting in the lobby chat
             const message: Message = {
                 content: 'hello',
@@ -187,13 +187,13 @@ describe('ChatDAO', () => {
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
     });
     describe('on a part chat', () => {
         it('should allow a part owner to create the corresponding chat', async() => {
             // Given a verified user who is a part owner
-            const user: MinimalUser = await createUser('foo@bar.com', 'creator');
+            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
             const partId: string = await createPartAndJoiner(user);
             // When creating the corresponding chat
             const result: Promise<void> = chatDAO.set(partId, {});
@@ -202,7 +202,7 @@ describe('ChatDAO', () => {
         });
         it('should allow a part owner to delete the corresponding chat', async() => {
             // Given a verified user who is a part owner, and a chat
-            const user: MinimalUser = await createUser('foo@bar.com', 'creator');
+            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
             const partId: string = await createPartAndJoiner(user);
             await chatDAO.set(partId, {});
             // When deleting the chat
@@ -212,34 +212,34 @@ describe('ChatDAO', () => {
         });
         it('should forbid creating a chat if there is no corresponding part', async() => {
             // Given a verified user and no corresponding part
-            await createUser('foo@bar.com', 'creator');
+            await createConnectedUser('foo@bar.com', 'creator');
             // When creating a part chat
             const result: Promise<void> = chatDAO.set('unexisting-part-id', {});
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid a non-part owner to create the corresponding chat', async() => {
             // Given a part and verified user who is not a part owner
-            const user: MinimalUser = await createUser('foo@bar.com', 'creator');
+            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
             const partId: string = await createPartAndJoiner(user);
             await signOut();
-            await createUser('bar@bar.com', 'username');
+            await createConnectedUser('bar@bar.com', 'username');
             // When creating a part chat
             const result: Promise<void> = chatDAO.set(partId, {});
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid a non-part owner to delete the corresponding chat', async() => {
             // Given a part, a chat, and a non-part owner user
-            const user: MinimalUser = await createUser('foo@bar.com', 'creator');
+            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
             const partId: string = await createPartAndJoiner(user);
             await chatDAO.set(partId, {});
             await signOut();
-            await createUser('bar@bar.com', 'other');
+            await createConnectedUser('bar@bar.com', 'other');
             // When deleting the chat
             const result: Promise<void> = chatDAO.delete(partId);
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectPermissionToBeDenied(result);
         });
     });
 });
