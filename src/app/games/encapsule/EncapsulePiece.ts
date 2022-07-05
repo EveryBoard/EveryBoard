@@ -43,6 +43,7 @@ export class EncapsulePiece implements ComparableObject {
 
     private constructor(public readonly value: number) {
     }
+
     public getPlayer(): PlayerOrNone {
         switch (this) {
             case EncapsulePiece.SMALL_DARK:
@@ -89,7 +90,7 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.SMALL_LIGHT: return 'SMALL_LIGHT';
             default:
                 Utils.expectToBe(this, EncapsulePiece.NONE);
-                return 'NONE';
+                return 'EMPTY';
         }
     }
 }

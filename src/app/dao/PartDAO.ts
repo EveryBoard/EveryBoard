@@ -1,7 +1,7 @@
-import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
+import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
 import { MGPResult, Part } from '../domain/Part';
 import { Injectable } from '@angular/core';
-import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { Player } from '../jscaip/Player';
 import { Firestore } from '@angular/fire/firestore';
@@ -9,7 +9,7 @@ import { Firestore } from '@angular/fire/firestore';
 @Injectable({
     providedIn: 'root',
 })
-export class PartDAO extends FirebaseFirestoreDAO<Part> {
+export class PartDAO extends FirestoreDAO<Part> {
 
     public static VERBOSE: boolean = false;
 
@@ -32,15 +32,15 @@ export class PartDAO extends FirebaseFirestoreDAO<Part> {
         };
         return this.update(id, update);
     }
-    public observeActiveParts(callback: FirebaseCollectionObserver<Part>): () => void {
+    public observeActiveParts(callback: FirestoreCollectionObserver<Part>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
     public async userHasActivePart(username: string): Promise<boolean> {
         // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
-        const userIsFirstPlayer: FirebaseDocument<Part>[] = await this.findWhere([
+        const userIsFirstPlayer: FirestoreDocument<Part>[] = await this.findWhere([
             ['playerZero', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const userIsSecondPlayer: FirebaseDocument<Part>[] = await this.findWhere([
+        const userIsSecondPlayer: FirestoreDocument<Part>[] = await this.findWhere([
             ['playerOne', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
         return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;

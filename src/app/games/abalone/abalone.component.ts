@@ -200,7 +200,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return new Coord(firstCenter.x + halfDx, firstCenter.y + halfDy);
     }
     public isBoard(c: FourStatePiece): boolean {
-        return c !== FourStatePiece.NONE;
+        return c !== FourStatePiece.UNREACHABLE;
     }
     public isPiece(c: FourStatePiece): boolean {
         return c !== FourStatePiece.EMPTY;

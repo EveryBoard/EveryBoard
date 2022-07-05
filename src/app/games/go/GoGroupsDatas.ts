@@ -78,7 +78,6 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         wrapperSizes.set(GoPiece.DARK, this.darkCoords.length + this.deadLightCoords.length);
         wrapperSizes.set(GoPiece.LIGHT, this.lightCoords.length + this.deadDarkCoords.length);
         wrapperSizes.put(this.color.nonTerritory(), 0);
-
         const nonEmptyWrapper: MGPMap<GoPiece, number> =
             wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
         if (nonEmptyWrapper.size() === 1) {

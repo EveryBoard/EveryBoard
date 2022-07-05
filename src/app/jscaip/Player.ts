@@ -28,6 +28,7 @@ export class Player implements ComparableObject {
     });
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
+    public static readonly PLAYERS: Player[] = [Player.ZERO, Player.ONE];
 
     public static of(value: number): Player {
         switch (value) {

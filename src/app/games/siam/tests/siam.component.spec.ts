@@ -135,4 +135,11 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await componentTestUtils.expectMoveSuccess('#chooseDirection_DOWN', move);
     }));
+    it('should toast when clicking as first click on an empty square', fakeAsync(async() => {
+        // Given the initial board
+        // When clicking on an empty piece
+        // Then a toast should say it's forbidden
+        const reason: string = SiamFailure.MUST_INSERT_OR_CHOOSE_YOUR_PIECE();
+        await componentTestUtils.expectClickFailure('#insertAt_2_1', reason);
+    }));
 });

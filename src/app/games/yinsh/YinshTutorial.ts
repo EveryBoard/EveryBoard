@@ -9,7 +9,7 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 
 const _: YinshPiece = YinshPiece.EMPTY;
-const N: YinshPiece = YinshPiece.NONE;
+const N: YinshPiece = YinshPiece.UNREACHABLE;
 const a: YinshPiece = YinshPiece.MARKER_ZERO;
 const A: YinshPiece = YinshPiece.RING_ZERO;
 const b: YinshPiece = YinshPiece.MARKER_ONE;

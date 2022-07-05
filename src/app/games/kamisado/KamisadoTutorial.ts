@@ -6,7 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const __: KamisadoPiece = KamisadoPiece.NONE;
+const __: KamisadoPiece = KamisadoPiece.EMPTY;
 const or: KamisadoPiece = KamisadoPiece.ZERO.ORANGE;
 const Or: KamisadoPiece = KamisadoPiece.ONE.ORANGE;
 const bl: KamisadoPiece = KamisadoPiece.ZERO.BLUE;

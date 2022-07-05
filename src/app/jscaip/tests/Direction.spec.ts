@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from '../Coord';
-import { Direction, Orthogonal } from '../Direction';
+import { Direction, DirectionFailure, Orthogonal } from '../Direction';
 
 describe('Direction', () => {
 
@@ -40,7 +40,8 @@ describe('Direction', () => {
                 expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 0)).get()).toBe(Direction.RIGHT);
             });
             it('should not construct when the move does not correspond to a valid direction', () => {
-                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPFallible.failure('Invalid delta for direction: 5, 3'));
+                const failure: MGPFallible<void> = MGPFallible.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR());
+                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(failure);
             });
         });
         describe('fromString', () => {

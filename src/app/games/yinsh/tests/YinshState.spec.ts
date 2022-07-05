@@ -7,7 +7,7 @@ describe('YinshState', () => {
 
     describe('equals', () => {
         const _: YinshPiece = YinshPiece.EMPTY;
-        const N: YinshPiece = YinshPiece.NONE;
+        const N: YinshPiece = YinshPiece.UNREACHABLE;
         const A: YinshPiece = YinshPiece.RING_ZERO;
 
         const board: Table<YinshPiece> = [

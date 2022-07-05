@@ -47,7 +47,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public static getInitialState(): CoerceoState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
-        const N: FourStatePiece = FourStatePiece.NONE;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
         const board: Table<FourStatePiece> = [
@@ -142,7 +142,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return resultingState;
     }
     public isTileEmpty(tileUpperLeft: Coord): boolean {
-        assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.NONE,
+        assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
                'Should not call isTileEmpty on removed tile');
         for (let y: number = 0; y < 2; y++) {
             for (let x: number = 0; x < 3; x++) {
@@ -181,7 +181,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             const vector: Vector = CoerceoState.NEIGHBORS_TILES_DIRECTIONS[i];
             const neighborTile: Coord = tile.getNext(vector, 1);
             if (neighborTile.isInRange(15, 10) &&
-                this.getPieceAt(neighborTile) !== FourStatePiece.NONE)
+                this.getPieceAt(neighborTile) !== FourStatePiece.UNREACHABLE)
             {
                 if (firstIndex.isAbsent()) {
                     firstIndex = MGPOptional.of(i);
@@ -199,7 +199,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const y0: number = tileUpperLeft.y;
         for (let y: number = 0; y < 2; y++) {
             for (let x: number = 0; x < 3; x++) {
-                newBoard[y0 + y][x0 + x] = FourStatePiece.NONE;
+                newBoard[y0 + y][x0 + x] = FourStatePiece.UNREACHABLE;
             }
         }
         const newTiles: [number, number] = [this.tiles[0], this.tiles[1]];

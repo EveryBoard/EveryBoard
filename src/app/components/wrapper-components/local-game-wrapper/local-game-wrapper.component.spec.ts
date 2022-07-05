@@ -4,7 +4,7 @@ import { P4State } from 'src/app/games/p4/P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { DebugElement } from '@angular/core';
@@ -17,7 +17,30 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Router } from '@angular/router';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { GameWrapperMessages } from '../GameWrapper';
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
+
+describe('LocalGameWrapperComponent for non-existing game', () => {
+    it('should redirect to /notFound', fakeAsync(async() => {
+        // Given a game wrapper for a game that does not exist
+        const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        testUtils.prepareFixture(LocalGameWrapperComponent);
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When loading the wrapper
+        testUtils.detectChanges();
+        tick(3000);
+
+        // Then it goes to /notFound with the expected error message
+        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
+    }));
+});
 
 describe('LocalGameWrapperComponent', () => {
 
@@ -197,6 +220,7 @@ describe('LocalGameWrapperComponent', () => {
             await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
             expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(1);
 
+            // eslint-disable-next-line dot-notation
             tick(componentTestUtils.wrapper['botTimeOut']);
             expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(2);
 
@@ -251,6 +275,20 @@ describe('LocalGameWrapperComponent', () => {
 
             // then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
+        }));
+        it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {
+            // Given a game against an AI
+            const wrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
+            wrapper.players[0] = MGPOptional.of('P4Minimax');
+            wrapper.aiDepths[0] = '1';
+
+            // When receiveValidMove is called
+            const state: P4State = componentTestUtils.getComponent().rules.node.gameState;
+            const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
+
+            // Then it should display a message
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
         }));
     });
 });

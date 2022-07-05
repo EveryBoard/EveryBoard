@@ -20,8 +20,7 @@ describe('ConspirateursComponent', () => {
         testUtils = await ComponentTestUtils.forGame<ConspirateursComponent>('Conspirateurs');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('drop phase', () => {
         it('should allow drops at the beginning of the game with a simple click', fakeAsync(async() => {

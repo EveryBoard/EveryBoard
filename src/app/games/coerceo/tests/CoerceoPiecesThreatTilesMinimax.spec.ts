@@ -17,7 +17,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
     let minimax: CoerceoPiecesThreatTilesMinimax;
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
-    const N: FourStatePiece = FourStatePiece.NONE; // TODOTODO carefull, regression suck
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
 

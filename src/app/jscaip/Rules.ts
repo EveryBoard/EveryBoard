@@ -107,6 +107,7 @@ export abstract class Rules<M extends Move,
 
     public setInitialBoard(): void {
         if (this.node == null) {
+            // eslint-disable-next-line dot-notation
             const initialState: S = this.stateType['getInitialState']();
             MGPNode.ruler = this;
             this.node = new MGPNode(initialState);

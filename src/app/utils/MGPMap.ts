@@ -4,10 +4,20 @@ import { MGPSet } from './MGPSet';
 import { assert } from './assert';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
-    private map: {key: K, value: V}[] = [];
 
-    private isImmutable: boolean = false;
-
+    public static from<K extends string | number, V extends NonNullable<unknown>>(record: Record<K, V>)
+    : MGPMap<K, V>
+    {
+        const keys: K[] = Object.keys(record) as K[];
+        const map: MGPMap<K, V> = new MGPMap();
+        for (const key of keys) {
+            map.set(key, record[key]);
+        }
+        return map;
+    }
+    public constructor(private map: {key: K, value: V}[] = [],
+                       private isImmutable: boolean = false) {
+    }
     public makeImmutable(): void {
         this.isImmutable = true;
     }

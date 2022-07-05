@@ -17,14 +17,14 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
     return false;
 }
 
-export type FirebaseJSONPrimitive = JSONPrimitive | FieldValue;
-export type FirebaseJSONValue =
-    FirebaseJSONPrimitive |
-    FirebaseJSONObject |
-    Array<FirebaseJSONValueWithoutArray> |
-    ReadonlyArray<FirebaseJSONValueWithoutArray>;
-export type FirebaseJSONValueWithoutArray = FirebaseJSONPrimitive | FirebaseJSONObject
-export type FirebaseJSONObject = { [member: string]: FirebaseJSONValue };
+export type FirestoreJSONPrimitive = JSONPrimitive | FieldValue;
+export type FirestoreJSONValue =
+    FirestoreJSONPrimitive |
+    FirestoreJSONObject |
+    Array<FirestoreJSONValueWithoutArray> |
+    ReadonlyArray<FirestoreJSONValueWithoutArray>;
+export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJSONObject
+export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 
 export class Utils {
 

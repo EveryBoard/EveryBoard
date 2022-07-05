@@ -56,6 +56,11 @@ import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
+import { LodestoneComponent } from './games/lodestone/lodestone.component';
+import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
+import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
+import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
+import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
 import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
@@ -89,7 +94,7 @@ import { ThemeService } from './services/ThemeService';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
-import { FirebaseTimePipe } from './pipes-and-directives/firebase-time.pipe';
+import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 
 registerLocaleData(localeFr);
 
@@ -99,7 +104,7 @@ export const routes: Route[] = [
     { path: 'settings', component: SettingsComponent },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
-    { path: 'notFound', component: NotFoundComponent },
+    { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 
@@ -111,7 +116,7 @@ export const routes: Route[] = [
     { path: 'tutorial', component: TutorialGameCreationComponent },
     { path: 'tutorial/:compo', component: TutorialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
-    { path: '**', component: WelcomeComponent },
+    { path: '**', component: NotFoundComponent },
 ];
 
 export class FirebaseProviders {
@@ -126,6 +131,7 @@ export class FirebaseProviders {
     public static firestore(): ModuleWithProviders<Firestore.FirestoreModule> {
         return Firestore.provideFirestore(() => {
             const firestore: Firestore.Firestore = Firestore.getFirestore();
+            // eslint-disable-next-line dot-notation
             const host: string = firestore.toJSON()['settings'].host;
             if (environment.useEmulators && host !== 'localhost:8080') {
                 Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
@@ -137,6 +143,7 @@ export class FirebaseProviders {
         return Database.provideDatabase(() => {
             const database: Database.Database = Database.getDatabase();
 
+            // eslint-disable-next-line dot-notation
             if (environment.useEmulators && database['_instanceStarted'] === false) {
                 Database.connectDatabaseEmulator(database, 'localhost', 9000);
             }
@@ -146,6 +153,7 @@ export class FirebaseProviders {
     public static auth(): ModuleWithProviders<Auth.AuthModule> {
         return Auth.provideAuth(() => {
             const fireauth: Auth.Auth = Auth.getAuth();
+            // eslint-disable-next-line dot-notation
             if (environment.useEmulators && fireauth.config['emulator'] == null) {
                 Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
             }
@@ -193,6 +201,8 @@ export class FirebaseProviders {
         GoComponent,
         KamisadoComponent,
         LinesOfActionComponent,
+        LodestoneComponent,
+        MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,
         MinimaxTestingComponent,
         P4Component,
         PentagoComponent,
@@ -207,7 +217,7 @@ export class FirebaseProviders {
         YinshComponent,
 
         HumanDurationPipe,
-        FirebaseTimePipe,
+        FirestoreTimePipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
     ],

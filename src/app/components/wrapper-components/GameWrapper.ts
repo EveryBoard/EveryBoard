@@ -1,5 +1,5 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
@@ -13,12 +13,18 @@ import { AbstractGameComponent } from '../game-components/game-component/GameCom
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;
 
     public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
+
+    public static NO_MATCHING_GAME(gameName: string): string {
+        return $localize`This game (${gameName}) does not exist.`;
+    }
+
 }
 
 @Component({ template: '' })
@@ -40,31 +46,40 @@ export abstract class GameWrapper {
 
     public endGame: boolean = false;
 
-    constructor(protected componentFactoryResolver: ComponentFactoryResolver,
-                protected actRoute: ActivatedRoute,
-                protected connectedUserService: ConnectedUserService) {
+    constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
+                protected readonly actRoute: ActivatedRoute,
+                protected readonly connectedUserService: ConnectedUserService,
+                protected readonly router: Router,
+                protected readonly messageDisplayer: MessageDisplayer)
+    {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
-    public getMatchingComponent(gameName: string) : Type<AbstractGameComponent> {
+    public getMatchingComponent(gameName: string) : MGPOptional<Type<AbstractGameComponent>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
-        assert(gameInfo.isPresent(), 'Unknown Games are unwrappable');
-        return gameInfo.get().component;
+        return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
-    protected afterGameIncluderViewInit(): void {
+    protected async afterGameIncluderViewInit(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
-        this.createGameComponent();
-        this.gameComponent.rules.setInitialBoard();
+        const gameCreatedSuccessfully: boolean = await this.createGameComponent();
+        if (gameCreatedSuccessfully) {
+            this.gameComponent.rules.setInitialBoard();
+        }
+        return gameCreatedSuccessfully;
     }
-    protected createGameComponent(): void {
+    private async createGameComponent(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
-        assert(this.gameIncluder != null, 'GameIncluder should be present');
 
-        const compoString: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-        const component: Type<AbstractGameComponent> = this.getMatchingComponent(compoString);
+        const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
+        if (component.isAbsent()) {
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
+            return false;
+        }
+        assert(this.gameIncluder != null, 'GameIncluder should be present');
         const componentFactory: ComponentFactory<AbstractGameComponent> =
-            this.componentFactoryResolver.resolveComponentFactory(component);
+            this.componentFactoryResolver.resolveComponentFactory(component.get());
         const componentRef: ComponentRef<AbstractGameComponent> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
         this.gameComponent = componentRef.instance;
@@ -91,6 +106,7 @@ export abstract class GameWrapper {
 
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
+        return true;
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,

@@ -98,7 +98,7 @@ export class EncapsuleCase {
     public tryToSuperposePiece(piece: EncapsulePiece): MGPOptional<EncapsuleCase> {
         const biggestPresent: Size = this.getBiggest().getSize();
         if (piece === EncapsulePiece.NONE) {
-            throw new Error('Cannot move NONE on a space');
+            throw new Error('Cannot move EMPTY on a space');
         }
         if (piece.getSize() > biggestPresent) {
             return MGPOptional.of(this.put(piece));

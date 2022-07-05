@@ -1,15 +1,15 @@
-import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
+import { FirestoreDAO } from './FirestoreDAO';
 import { Injectable } from '@angular/core';
 import { display } from 'src/app/utils/utils';
 import { Message, MessageDocument } from '../domain/Message';
 import { Chat } from '../domain/Chat';
-import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { Firestore, Unsubscribe } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ChatDAO extends FirebaseFirestoreDAO<Chat> {
+export class ChatDAO extends FirestoreDAO<Chat> {
     public static VERBOSE: boolean = false;
 
     constructor(firestore: Firestore) {
@@ -23,7 +23,7 @@ export class ChatDAO extends FirebaseFirestoreDAO<Chat> {
         const ordering: string = 'postedTime';
         return this.subCollectionDAO<Message>(chatId, 'messages').findWhere([], ordering, limit);
     }
-    public subscribeToMessages(chatId: string, callback: FirebaseCollectionObserver<Message>): Unsubscribe {
+    public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Unsubscribe {
         return this.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
     }
 }

@@ -21,7 +21,7 @@ describe('DvonnRules:', () => {
 
     let minimaxes: Minimax<DvonnMove, DvonnState>[];
 
-    const N: DvonnPieceStack = DvonnPieceStack.NONE;
+    const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
     const S: DvonnPieceStack = DvonnPieceStack.SOURCE;
     const O: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;

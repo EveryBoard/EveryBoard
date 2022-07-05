@@ -32,7 +32,7 @@ describe('QuartoRules', () => {
         const state: QuartoState = QuartoState.getInitialState();
 
         // When giving no piece to next player
-        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.NONE);
+        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.EMPTY);
 
         // Then the move should be juged illegal
         const reason: string = 'You must give a piece.';
@@ -44,12 +44,12 @@ describe('QuartoRules', () => {
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
             [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
             [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
-            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
+            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
 
         // When giving no piece
-        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
 
         // Then the move should be deemed legal
         const expectedBoard: Table<QuartoPiece> = [
@@ -58,7 +58,7 @@ describe('QuartoRules', () => {
             [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.BAAB],
         ];
-        const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.NONE);
+        const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.EMPTY);
         const node: QuartoNode = new MGPNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeDraw(rules, node, minimaxes);
@@ -66,10 +66,10 @@ describe('QuartoRules', () => {
     it('Should forbid to give a piece already on the board', () => {
         // Given a board with AAAA on it
         const board: Table<QuartoPiece> = [
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AABA);
 
@@ -94,10 +94,10 @@ describe('QuartoRules', () => {
     it('Should forbid to play on occupied square', () => {
         // Given a board with occupied square
         const board: Table<QuartoPiece> = [
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AABA);
 
@@ -117,10 +117,10 @@ describe('QuartoRules', () => {
 
         // Then the move should be deemed legal
         const expectedBoard: Table<QuartoPiece> = [
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.AAAA, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.AAAA, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 1, QuartoPiece.AAAB);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -128,10 +128,10 @@ describe('QuartoRules', () => {
     it('Should consider Player.ZERO winner when doing a full line', () => {
         // Given a board with 3 piece aligned with common criterion
         const board: Table<QuartoPiece> = [
-            [QuartoPiece.BBBB, QuartoPiece.BBBA, QuartoPiece.BBAB, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.BBBB, QuartoPiece.BBBA, QuartoPiece.BBAB, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 4, QuartoPiece.BBAA);
 
@@ -141,9 +141,9 @@ describe('QuartoRules', () => {
         // Then the game should be a victory for Player.ZERO
         const expectedBoard: Table<QuartoPiece> = [
             [QuartoPiece.BBBB, QuartoPiece.BBBA, QuartoPiece.BBAB, QuartoPiece.BBAA],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
@@ -154,10 +154,10 @@ describe('QuartoRules', () => {
     it('Should consider Player.ONE winner when doing a full line', () => {
         // Given a board with 3 piece with common criterion aligned
         const board: Table<QuartoPiece> = [
-            [QuartoPiece.ABAB, QuartoPiece.NONE, QuartoPiece.AABB, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.AAAB, QuartoPiece.BABB, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.AAAA, QuartoPiece.BBAA, QuartoPiece.BBBA],
-            [QuartoPiece.ABBB, QuartoPiece.NONE, QuartoPiece.BAAB, QuartoPiece.NONE],
+            [QuartoPiece.ABAB, QuartoPiece.EMPTY, QuartoPiece.AABB, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.AAAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.AAAA, QuartoPiece.BBAA, QuartoPiece.BBBA],
+            [QuartoPiece.ABBB, QuartoPiece.EMPTY, QuartoPiece.BAAB, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BBAB);
 
@@ -166,10 +166,10 @@ describe('QuartoRules', () => {
 
         // Then it should be a victory for Player.ONE
         const expectedBoard: Table<QuartoPiece> = [
-            [QuartoPiece.ABAB, QuartoPiece.NONE, QuartoPiece.AABB, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.AAAB, QuartoPiece.BABB, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.AAAA, QuartoPiece.BBAA, QuartoPiece.BBBA],
-            [QuartoPiece.ABBB, QuartoPiece.NONE, QuartoPiece.BAAB, QuartoPiece.BBAB],
+            [QuartoPiece.ABAB, QuartoPiece.EMPTY, QuartoPiece.AABB, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.AAAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.AAAA, QuartoPiece.BBAA, QuartoPiece.BBBA],
+            [QuartoPiece.ABBB, QuartoPiece.EMPTY, QuartoPiece.BAAB, QuartoPiece.BBAB],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
@@ -180,10 +180,10 @@ describe('QuartoRules', () => {
     it('Should recognize ongoing games', () => {
         // Given an ongoing game
         const board: Table<QuartoPiece> = [
-            [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.ABBB, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.BBBB],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.AAAB],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.AAAB],
+            [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.ABBB, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.BBBB],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.AAAB],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.AAAB],
         ];
         const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BAAA);
         const node: QuartoNode = new MGPNode(state);
@@ -197,10 +197,10 @@ describe('QuartoRules', () => {
             // Given a board where 3 piece are aligned with a common criterion
             // and another line of 3 matching another criterion
             const board: Table<QuartoPiece> = [
-                [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.AAAB, QuartoPiece.NONE],
-                [QuartoPiece.BBBB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.NONE],
-                [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
-                [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.AAAB, QuartoPiece.EMPTY],
+                [QuartoPiece.BBBB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
             ];
             const state: QuartoState = new QuartoState(board, 10, QuartoPiece.BBBB);
 

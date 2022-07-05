@@ -15,7 +15,7 @@ export type Comparable = JSONPrimitive | ComparableObject | ComparableJSON;
 
 function comparableEqualsStrict<T extends Comparable>(a: T, b: T): boolean {
     if (a != null && b != null && typeof a === 'object') {
-        if (a['equals'] != null) {
+        if (a.equals != null) {
             const comparableValue: ComparableObject = a as ComparableObject;
             const otherComparable: ComparableObject = b as ComparableObject;
             return comparableValue.equals(otherComparable);
@@ -39,6 +39,7 @@ function comparableEqualsStrict<T extends Comparable>(a: T, b: T): boolean {
 }
 
 export function isComparableObject(value: unknown): value is ComparableObject {
+    // eslint-disable-next-line dot-notation
     return typeof value === 'object' && value != null && value['equals'] != null;
 }
 

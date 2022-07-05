@@ -21,7 +21,7 @@
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
                         [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
                         [attr.fill]="pieceColor(caseContent)"
-                        [attr.r]="SPACE_SIZE/3"
+                        [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                         class="base-no-fill"
                 />
                 <rect *ngIf="caseContent !== UNOCCUPIED"

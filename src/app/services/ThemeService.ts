@@ -42,7 +42,7 @@ export class ThemeService {
     private loadStyle(styleName: string): void {
         const head: HTMLHeadElement = this.document.getElementsByTagName('head')[0];
 
-        const themeLink: HTMLLinkElement | null = this.document.getElementById('theme') as HTMLLinkElement;
+        const themeLink: HTMLLinkElement | null = this.document.getElementById('theme') as HTMLLinkElement | null;
         if (themeLink != null) {
             themeLink.href = styleName;
         } else {
