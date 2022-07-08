@@ -25,7 +25,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                PlayerOrNone,
                                                                ReversiLegalityInformation>
 {
-    public NONE: PlayerOrNone = PlayerOrNone.NONE;
+    public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public lastMove: Coord = new Coord(-2, -2);
 
     private captureds: Coord[] = [];

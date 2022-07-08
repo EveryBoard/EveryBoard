@@ -14,7 +14,7 @@ export class YinshPiece implements ComparableObject {
                 return YinshPiece.of(fields[0], fields[1]);
             },
         );
-    public static NONE: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
+    public static UNREACHABLE: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
 
     public static EMPTY: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
 
@@ -51,7 +51,7 @@ export class YinshPiece implements ComparableObject {
     }
     public toString(): string {
         switch (this) {
-            case YinshPiece.NONE: return 'NONE';
+            case YinshPiece.UNREACHABLE: return 'NONE';
             case YinshPiece.EMPTY: return 'EMPTY';
             case YinshPiece.MARKER_ZERO: return 'MARKER_ZERO';
             case YinshPiece.MARKER_ONE: return 'MARKER_ONE';

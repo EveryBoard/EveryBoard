@@ -88,9 +88,10 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
     public getBoardValue(node: ConspirateursNode): NodeUnheritance {
         const state: ConspirateursState = node.gameState;
         let score: number = 0;
-        const piecesInShelters: MGPMap<Player, number> = new MGPMap();
-        piecesInShelters.set(Player.ZERO, 0);
-        piecesInShelters.set(Player.ONE, 0);
+        const piecesInShelters: MGPMap<Player, number> = new MGPMap([
+            { key: Player.ZERO, value: 0 },
+            { key: Player.ONE, value: 0 },
+        ]);
         for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);

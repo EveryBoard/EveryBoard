@@ -62,7 +62,7 @@ export class ConspirateursComponent
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
+        this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
         this.rules = ConspirateursRules.get();
         this.availableMinimaxes = [
             new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),

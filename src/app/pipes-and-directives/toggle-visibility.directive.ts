@@ -6,7 +6,7 @@ import { Directive, ElementRef } from '@angular/core';
 
 export class ToggleVisibilityDirective {
     private shown: boolean = false;
-    private input: HTMLElement;
+    private readonly input: HTMLElement;
 
     constructor(element: ElementRef) {
         this.input = element.nativeElement.parentNode.previousSibling;

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
+import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
@@ -19,7 +20,8 @@ describe('LinesOfActionMove', () => {
         expect(LinesOfActionMove.of(new Coord(7, 7), new Coord(9, 9))).toEqual(MGPFallible.failure('end coord is not in range'));
     });
     it('should not create a move with an invalid direction', () => {
-        expect(LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPFallible.failure('Invalid delta for direction: 1, 2'));
+        const error: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
+        expect(LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPFallible.failure(error));
     });
     describe('toString', () => {
         it('should be defined', () => {

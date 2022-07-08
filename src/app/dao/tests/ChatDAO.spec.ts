@@ -12,12 +12,12 @@ import { PartDAO } from '../PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { JoinerDAO } from '../JoinerDAO';
-import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { IFirestoreDAO } from '../FirestoreDAO';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirebaseError } from 'firebase/app';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
-async function expectFirebasePermissionDenied<T>(promise: Promise<T>): Promise<void> {
+async function expectFirestorePermissionDenied<T>(promise: Promise<T>): Promise<void> {
     await promise.then(() => {
         throw new Error('Expected a promise to be rejected but it was resolved');
     },
@@ -51,11 +51,11 @@ describe('ChatDAO', () => {
     describe('subscribeToMessages', () => {
         it('should rely on observingWhere of messages DAO and sort by postedTime', () => {
             // Given a chat DAO
-            const messagesDAO: IFirebaseFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
+            const messagesDAO: IFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
             spyOn(messagesDAO, 'observingWhere').and.returnValue(() => { });
             // When calling subscribeToMessages
-            const callback: FirebaseCollectionObserver<Message> =
-                new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {});
+            const callback: FirestoreCollectionObserver<Message> =
+                new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {});
             chatDAO.subscribeToMessages('chatId', callback);
             // Then it should call observingWhere and sort by postedTime
             expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');
@@ -97,7 +97,7 @@ describe('ChatDAO', () => {
             // When trying to read a chat
             const chatRead: Promise<MGPOptional<Chat>> = chatDAO.read('lobby');
             // Then it fails
-            await expectFirebasePermissionDenied(chatRead);
+            await expectFirestorePermissionDenied(chatRead);
         });
         it('should forbid a user to post a message as another user', async() => {
             // When posting a message as another user
@@ -108,7 +108,7 @@ describe('ChatDAO', () => {
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
         it('should forbid a user to post a message with the wrong username', async() => {
             // When posting a message with a different username
@@ -119,7 +119,7 @@ describe('ChatDAO', () => {
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
         it('should allow users to delete one of its messages', async() => {
             // When deleting one of the current user's message
@@ -147,13 +147,13 @@ describe('ChatDAO', () => {
             // When updating one of the current user's message and changing its sender
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').update(myMessageId, { sender: 'bli' });
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
         it('should forbid a user to change a message of another user', async() => {
             // When updating the message of another user
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').update(otherMessageId, { content: 'hullo' });
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
     });
     describe('on the lobby chat', () => {
@@ -172,7 +172,7 @@ describe('ChatDAO', () => {
             // When creating the 'lobby' chat
             const chatCreation: Promise<void> = chatDAO.set('lobby', {});
             // Then it fails
-            await expectFirebasePermissionDenied(chatCreation);
+            await expectFirestorePermissionDenied(chatCreation);
         });
         it('should allow a verified user to post a message on the lobby chat', async() => {
             // Given a verified user
@@ -208,7 +208,7 @@ describe('ChatDAO', () => {
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
             // Then it fails
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
     });
     describe('on a part chat', () => {
@@ -239,7 +239,7 @@ describe('ChatDAO', () => {
             // When creating a part chat
             const result: Promise<void> = chatDAO.set('unexisting-part-id', {});
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
         it('should forbid a non-part owner to create the corresponding chat', async() => {
             // Given a verified user who is not a part owner, and a part
@@ -248,7 +248,7 @@ describe('ChatDAO', () => {
             // When creating a part chat
             const result: Promise<void> = chatDAO.set(partId, {});
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
         it('should forbid a non-part owner to delete the corresponding chat', async() => {
             // Given a part, a chat, and a non-part owner user
@@ -261,7 +261,7 @@ describe('ChatDAO', () => {
             // When deleting the chat
             const result: Promise<void> = chatDAO.delete(partId);
             // Then it should fail
-            await expectFirebasePermissionDenied(result);
+            await expectFirestorePermissionDenied(result);
         });
     });
 });

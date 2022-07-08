@@ -6,6 +6,7 @@ import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 describe('MinimaxTestingRules', () => {
 
@@ -63,6 +64,21 @@ describe('MinimaxTestingRules', () => {
         expect(minimax.getBoardValue).toHaveBeenCalledTimes(68);
         expect(initialNode.countDescendants()).toBe(68);
         expect(minimax.getListMoves).toHaveBeenCalledTimes(49);
+    });
+    it('should cache board values', () => {
+        // Given a node of which we have already computed the board value
+        MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_0;
+        const node: MinimaxTestingNode = rules.node;
+        const value: NodeUnheritance = node.getOwnValue(minimax);
+
+        spyOn(minimax, 'getBoardValue').and.callThrough();
+
+        // When asking the node value a second time
+        const sameValue: NodeUnheritance = node.getOwnValue(minimax);
+
+        // Then getBoardValue is not called anymore and the value is the same
+        expect(minimax.getBoardValue).not.toHaveBeenCalled();
+        expect(sameValue).toBe(value);
     });
     describe('Should choose the first one to minimize calculation when all choice are the same value', () => {
         it('depth = 1', () => {

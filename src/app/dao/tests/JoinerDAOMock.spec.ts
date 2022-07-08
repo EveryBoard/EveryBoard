@@ -3,7 +3,7 @@ import { Joiner, JoinerDocument } from 'src/app/domain/Joiner';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { display } from 'src/app/utils/utils';
-import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
+import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,7 +12,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
-export class JoinerDAOMock extends FirebaseFirestoreDAOMock<Joiner> {
+export class JoinerDAOMock extends FirestoreDAOMock<Joiner> {
 
     public static VERBOSE: boolean = false;
 
@@ -53,7 +53,6 @@ describe('JoinerDAOMock', () => {
             callCount++;
             lastJoiner = joiner;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
-            // TODO: REDO
         });
 
         expect(callCount).toEqual(1);
@@ -73,7 +72,6 @@ describe('JoinerDAOMock', () => {
 
         const unsubscribe: Unsubscribe = joinerDAOMock.subscribeToChanges('joinerId', (joiner: MGPOptional<Joiner>) => {
             callCount++;
-            // TODO: REDO
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
             lastJoiner = joiner;
         });

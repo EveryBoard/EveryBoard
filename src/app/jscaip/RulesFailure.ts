@@ -6,6 +6,8 @@ export class RulesFailure {
 
     public static readonly MUST_CLICK_ON_EMPTY_SPACE: Localized = () => $localize`You must click on an empty space.`;
 
+    public static readonly MUST_CLICK_ON_EMPTY_SQUARE: Localized = () => $localize`You must click on an empty square.`;
+
     public static readonly CANNOT_SELF_CAPTURE: Localized = () => $localize`Your landing space should be empty or contain a piece of the opponent.`;
 
     public static readonly MUST_CHOOSE_PLAYER_PIECE: Localized = () => $localize`You must pick one of your pieces.`;
@@ -19,4 +21,6 @@ export class RulesFailure {
     public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: Localized = () => $localize`You have selected an empty space, you must select one of your own pieces.`;
 
     public static readonly MOVE_CANNOT_BE_STATIC: Localized = () => $localize`You must choose different starting and ending coordinates.`;
+
+    public static readonly SOMETHING_IN_THE_WAY: Localized = () => $localize`There is a piece between the piece you chose and its landing space.`;
 }

@@ -1,14 +1,14 @@
-import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
-import { FirebaseJSONObject } from '../utils/utils';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { FirestoreJSONObject } from '../utils/utils';
 import { MinimalUser } from './MinimalUser';
-import { FirebaseTime } from './Time';
+import { FirestoreTime } from './Time';
 
 // A chat message
-export interface Message extends FirebaseJSONObject {
+export interface Message extends FirestoreJSONObject {
     content: string; // the content of the message
     sender: MinimalUser, // the sender of the message
-    postedTime: FirebaseTime; // publication time
+    postedTime: FirestoreTime; // publication time
     currentTurn?: number; // number of the turn when this message was written
 }
 
-export type MessageDocument = FirebaseDocument<Message>
+export type MessageDocument = FirestoreDocument<Message>

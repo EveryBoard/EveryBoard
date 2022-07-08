@@ -10,8 +10,8 @@ import { CountDownComponent } from '../../normal-component/count-down/count-down
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { User, UserDocument } from '../../../domain/User';
 import { Request } from '../../../domain/Request';
-import { GameWrapper } from '../GameWrapper';
-import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
+import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
+import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { Joiner } from 'src/app/domain/Joiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -26,6 +26,14 @@ import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { Localized } from 'src/app/utils/LocaleUtils';
+
+export class OnlineGameWrapperMessages {
+
+    public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
+}
 
 export class UpdateType {
 
@@ -96,18 +104,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                protected connectedUserService: ConnectedUserService,
-                private readonly router: Router,
+                router: Router,
+                messageDisplayer: MessageDisplayer,
+                connectedUserService: ConnectedUserService,
                 private readonly userService: UserService,
                 private readonly gameService: GameService)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService);
+        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
     }
-    private extractGameTypeFromURL(): string {
+    private extractGameNameFromURL(): string {
         // url is ["play", "game-name", "part-id"]
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
@@ -127,20 +136,26 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private isOpponent(player: PlayerOrNone): boolean {
         return this.observerRole !== player.value;
     }
-    private async redirectIfPartIsInvalid(): Promise<void> {
-        const gameType: string = this.extractGameTypeFromURL();
-        const partValidity: MGPValidation =
-            await this.gameService.getPartValidity(this.currentPartId, gameType);
-        if (partValidity.isFailure()) {
-            // note, option if WRONG_GAME_TYPE to redirect to another page
-            const page: string = '/notFound';
+    private async redirectIfPartOrGameIsInvalid(): Promise<void> {
+        const gameURL: string = this.extractGameNameFromURL();
+        const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
+        if (gameExists) {
+            const partValidity: MGPValidation =
+                await this.gameService.getPartValidity(this.currentPartId, gameURL);
+            if (partValidity.isFailure()) {
+                this.routerEventsSub.unsubscribe();
+                const message: string = OnlineGameWrapperMessages.NO_MATCHING_PART();
+                await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
+            }
+        } else {
             this.routerEventsSub.unsubscribe();
-            await this.router.navigate([page]);
+            const message: string = GameWrapperMessages.NO_MATCHING_GAME(gameURL);
+            await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
         }
     }
     private setCurrentPartIdOrRedirect(): Promise<void> {
         this.currentPartId = this.extractPartIdFromURL();
-        return this.redirectIfPartIsInvalid();
+        return this.redirectIfPartOrGameIsInvalid();
     }
     public async ngOnInit(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
@@ -163,9 +178,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.joiner = iJoiner;
 
         this.gameStarted = true;
-        window.setTimeout(() => {
+        window.setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
-            this.afterGameIncluderViewInit();
+            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             this.startPart();
         }, 1);
     }
@@ -236,7 +252,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.DUPLICATE;
         }
         if (update.data.request) {
-            const lastMoveTimeIsRemoved: boolean = diff.removed['lastUpdateTime'] != null;
+            const lastMoveTimeIsRemoved: boolean = diff.removed.lastUpdateTime != null;
             if (update.data.request.code === 'TakeBackAccepted' && lastMoveTimeIsRemoved) {
                 return UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME;
             } else {
@@ -251,7 +267,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                     return UpdateType.MOVE;
                 }
             } else {
-                if (diff.modified['lastUpdateTime'] == null) {
+                if (diff.modified.lastUpdateTime == null) {
                     return UpdateType.MOVE_WITHOUT_TIME;
                 } else {
                     return UpdateType.MOVE;
@@ -262,8 +278,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.PRE_START_DOC;
         }
         if (update.data.result !== MGPResult.UNACHIEVED.value) {
-            const turnModified: boolean = diff.modified['turn'] != null;
-            const lastUpdateTimeMissing: boolean = diff.modified['lastUpdateTime'] == null;
+            const turnModified: boolean = diff.modified.turn != null;
+            const lastUpdateTimeMissing: boolean = diff.modified.lastUpdateTime == null;
             if (turnModified && lastUpdateTimeMissing) {
                 return UpdateType.END_GAME_WITHOUT_TIME;
             } else {
@@ -275,14 +291,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return UpdateType.STARTING_DOC;
     }
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
-        if (diff.modified['listMoves'] != null && diff.modified['turn'] != null) {
+        if (diff.modified.listMoves != null && diff.modified.turn != null) {
             const modifOnListMovesTurnAndLastUpdateFields: number = 3;
             const lastUpdateTimeModified: number = diff.isPresent('lastUpdateTime').present ? 1 : 0;
             const scoreZeroUpdated: number = diff.isPresent('scorePlayerZero').present ? 1 : 0;
             const scoreOneUpdated: number = diff.isPresent('scorePlayerOne').present ? 1 : 0;
             const remainingMsForZeroUpdated: number = diff.isPresent('remainingMsForZero').present ? 1 : 0;
             const remainingMsForOneUpdated: number = diff.isPresent('remainingMsForOne').present ? 1 : 0;
-            const requestRemoved: number = diff.removed['request'] == null ? 0 : 1;
+            const requestRemoved: number = diff.removed.request == null ? 0 : 1;
             const nbValidMoveDiffs: number = lastUpdateTimeModified +
                                              scoreZeroUpdated +
                                              scoreOneUpdated +
@@ -445,6 +461,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         } else if (this.currentPart.data.request &&
                    this.currentPart.data.request.code === 'TakeBackRefused' &&
+                   // eslint-disable-next-line dot-notation
                    this.currentPart.data.request.data['player'] === this.getPlayer().getOpponent().value)
         {
             return false;
@@ -536,11 +553,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 break;
             case 'AddTurnTime':
                 const addedTurnTime: number = 30 * 1000;
+                // eslint-disable-next-line dot-notation
                 const localPlayer: Player = Player.of(request.data['player']);
                 this.addTurnTimeTo(localPlayer, addedTurnTime);
                 break;
             case 'AddGlobalTime':
                 const addedGlobalTime: number = 5 * 60 * 1000;
+                // eslint-disable-next-line dot-notation
                 const globalPlayer: Player = Player.of(request.data['player']);
                 this.addGlobalTimeTo(globalPlayer, addedGlobalTime);
                 break;
@@ -588,12 +607,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             };
-            const callback: FirebaseCollectionObserver<User> =
-                new FirebaseCollectionObserver(onDocumentCreatedOrModified,
-                                               onDocumentCreatedOrModified,
-                                               onDocumentDeleted);
-            const subscription: () => void = this.userService.observeUserByUsername(opponentName.get(), callback);
-            this.opponentSubscription = MGPOptional.of(subscription);
+            const callback: FirestoreCollectionObserver<User> =
+                new FirestoreCollectionObserver(onDocumentCreatedOrModified,
+                                                onDocumentCreatedOrModified,
+                                                onDocumentDeleted);
+            this.opponentSubscription =
+                MGPOptional.of(this.userService.observeUserByUsername(opponentName.get(), callback));
         }
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {

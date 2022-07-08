@@ -1,15 +1,15 @@
-import { FirebaseJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { FirestoreJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from '../utils/assert';
 import { Request } from './Request';
-import { FirebaseTime } from './Time';
+import { FirestoreTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
-import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
 
-interface LastUpdateInfo extends FirebaseJSONObject {
+interface LastUpdateInfo extends FirestoreJSONObject {
     readonly index: number,
     readonly player: number,
 }
-export interface Part extends FirebaseJSONObject {
+export interface Part extends FirestoreJSONObject {
     readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
     readonly playerZero: string, // the id of the first player
@@ -21,8 +21,8 @@ export interface Part extends FirebaseJSONObject {
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
-    readonly beginning?: FirebaseTime,
-    readonly lastUpdateTime?: FirebaseTime,
+    readonly beginning?: FirestoreTime,
+    readonly lastUpdateTime?: FirestoreTime,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
     readonly winner?: string,
@@ -52,7 +52,7 @@ export class MGPResult {
     private constructor(public readonly value: IMGPResult) {}
 }
 
-export class PartDocument implements FirebaseDocument<Part> {
+export class PartDocument implements FirestoreDocument<Part> {
     public constructor(public readonly id: string,
                        public data: Part) {
     }

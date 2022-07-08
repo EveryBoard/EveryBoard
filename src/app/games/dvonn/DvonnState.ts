@@ -17,7 +17,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
      *   W D W B B W W W B
      */
     public static balancedBoard(): Table<DvonnPieceStack> {
-        const _: DvonnPieceStack = DvonnPieceStack.NONE;
+        const _: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
         const W: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
         const B: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
         const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
@@ -33,7 +33,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         if (coord.isNotInRange(DvonnState.WIDTH, DvonnState.HEIGHT)) {
             return false;
         }
-        return DvonnState.balancedBoard()[coord.y][coord.x] !== DvonnPieceStack.NONE;
+        return DvonnState.balancedBoard()[coord.y][coord.x] !== DvonnPieceStack.UNREACHABLE;
     }
     public static getInitialState(): DvonnState {
         return new DvonnState(DvonnState.balancedBoard(), 0, false);
@@ -71,6 +71,6 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }
-        return this.board[coord.y][coord.x] !== DvonnPieceStack.NONE;
+        return this.board[coord.y][coord.x] !== DvonnPieceStack.UNREACHABLE;
     }
 }

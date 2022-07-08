@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { serverTimestamp } from 'firebase/firestore';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { ErrorDAO, MGPError } from '../ErrorDAO';
-import { FirebaseDocument } from '../FirebaseFirestoreDAO';
+import { FirestoreDocument } from '../FirestoreDAO';
 
 describe('ErrorDAO', () => {
 
@@ -20,7 +20,7 @@ describe('ErrorDAO', () => {
         it('should return the empty list if there is no matching error', async() => {
             // Given no matching error
             // When looking for matching errors
-            const errors: FirebaseDocument<MGPError>[] = await dao.findErrors('test', '', 'dummy message');
+            const errors: FirestoreDocument<MGPError>[] = await dao.findErrors('test', '', 'dummy message');
             // Then no matching error should be found
             expect(errors.length).toBe(0);
         });
@@ -37,7 +37,7 @@ describe('ErrorDAO', () => {
             };
             const errorId: string = await dao.create(error);
             // When looking for matching errors
-            const errors: FirebaseDocument<MGPError>[] =
+            const errors: FirestoreDocument<MGPError>[] =
                 await dao.findErrors(error.component, error.route, error.message, error.data);
             // Then we should find the matching error
             expect(errors.length).toBe(1);
@@ -55,7 +55,7 @@ describe('ErrorDAO', () => {
             };
             const errorId: string = await dao.create(error);
             // When looking for matching errors (without data)
-            const errors: FirebaseDocument<MGPError>[] =
+            const errors: FirestoreDocument<MGPError>[] =
                 await dao.findErrors(error.component, error.route, error.message);
             // Then we should find the matching error
             expect(errors.length).toBe(1);

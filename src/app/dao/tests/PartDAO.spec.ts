@@ -5,7 +5,7 @@ import { Part, MGPResult } from 'src/app/domain/Part';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { PartDAO } from '../PartDAO';
 
 describe('PartDAO', () => {
@@ -21,7 +21,7 @@ describe('PartDAO', () => {
     });
     describe('observeActiveParts', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<Part> = new FirebaseCollectionObserver<Part>(
+            const callback: FirestoreCollectionObserver<Part> = new FirestoreCollectionObserver<Part>(
                 () => void { },
                 () => void { },
                 () => void { },

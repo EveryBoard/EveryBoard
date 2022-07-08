@@ -8,7 +8,7 @@ import { AccountGuard } from './account-guard';
 })
 export class NotConnectedGuard extends AccountGuard {
     constructor(authService: ConnectedUserService,
-                private router : Router) {
+                private readonly router : Router) {
         super(authService);
     }
     protected async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {

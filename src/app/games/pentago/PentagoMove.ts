@@ -12,8 +12,8 @@ export class PentagoMove extends MoveCoord {
                 coord: Coord.encoder.encode(move.coord),
             };
             if (move.blockTurned.isPresent()) {
-                encoded['blockTurned'] = move.blockTurned.get();
-                encoded['turnedClockwise'] = move.turnedClockwise;
+                encoded.blockTurned = move.blockTurned.get();
+                encoded.turnedClockwise = move.turnedClockwise;
             }
 
             return encoded;
@@ -21,10 +21,11 @@ export class PentagoMove extends MoveCoord {
         public decodeMove(encoded: JSONValueWithoutArray): PentagoMove {
             const casted: JSONObject = encoded as JSONObject;
 
-            const coord: Coord = Coord.encoder.decode(casted['coord']);
-            const nullableBlockTurned: MGPOptional<number> = MGPOptional.ofNullable(casted['blockTurned'] as number | null);
+            const coord: Coord = Coord.encoder.decode(casted.coord);
+            const nullableBlockTurned: MGPOptional<number> =
+                MGPOptional.ofNullable(casted.blockTurned as number | null);
             if (nullableBlockTurned.isPresent()) {
-                const turnedClockwise: boolean = casted['turnedClockwise'] as boolean;
+                const turnedClockwise: boolean = casted.turnedClockwise as boolean;
                 return PentagoMove.withRotation(coord.x,
                                                 coord.y,
                                                 nullableBlockTurned.get(),

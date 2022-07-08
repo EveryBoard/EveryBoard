@@ -1,9 +1,13 @@
 .base {
     stroke: var(--base-stroke);
     stroke-width: 8;
-    fill: var(--background-fill);
+    fill: var(--spaces-fill);
     stroke-linecap: butt;
     stroke-linejoin: round;
+}
+.base-no-stroke {
+    stroke: none;
+    fill: var(--base-stroke);
 }
 .base-no-fill {
     stroke: var(--base-stroke);
@@ -23,7 +27,10 @@
     stroke: white;
 }
 .background {
-    fill: var(--background-fill);
+    fill: var(--spaces-fill);
+}
+.transparent {
+    opacity: 0;
 }
 .background2 {
     fill: var(--alt-background-fill);
@@ -86,6 +93,9 @@
 .highlighted {
     stroke: var(--selectable);
 }
+.highlighted > .base-no-stroke {
+    fill: var(--selectable);
+}
 .last-move {
     stroke: var(--last-move);
 }
@@ -132,7 +142,7 @@
 .normal-stroke {
     stroke-width: 8;
 }
-.transparent {
+.semi-transparent { // TODOTODO semi-transparent
     fill-opacity: 0.5;
     stroke-opacity: 0.5;
 }
@@ -142,20 +152,22 @@
 .text-big {
     font: 50px sans-serif;
 }
+.text-giant {
+    font: 3.7rem sans-serif;
+    stroke-width: 0.37rem;
+    dominant-baseline: central;
+}
 .text-bold {
     font-weight: bold;
-}
-.text-big-vcenter {
-    dy: 17;
 }
 .text-medium {
     font: 35px sans-serif;
 }
-.text-small {
-    font: 20 sans-serif;
-}
 .text-center {
     text-anchor: middle;
+}
+.black-fill {
+    fill: black;
 }
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */

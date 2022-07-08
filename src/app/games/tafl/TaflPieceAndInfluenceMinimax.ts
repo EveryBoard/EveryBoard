@@ -43,7 +43,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
-        for (const owner of [Player.ZERO, Player.ONE]) {
+        for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * this.scoreByThreatenedPiece;
@@ -67,7 +67,6 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
     }
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
         const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
-        const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
         for (let y: number = 0; y < this.width; y++) {
@@ -84,8 +83,10 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 }
             }
         }
-        map.set(Player.ZERO, new CoordSet(zeroPieces));
-        map.set(Player.ONE, new CoordSet(onePieces));
+        const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap([
+            { key: Player.ZERO, value: new CoordSet(zeroPieces) },
+            { key: Player.ONE, value: new CoordSet(onePieces) },
+        ]);
         return map;
     }
     public getThreatMap(state: TaflState,
@@ -93,7 +94,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
-        for (const player of [Player.ZERO, Player.ONE]) {
+        for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
                 const threats: SandwichThreat[] = this.getThreats(piece, state);
                 if (this.isThreatReal(piece, state, threats)) {
