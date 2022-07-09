@@ -19,7 +19,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('LobbyComponent', () => {
+fdescribe('LobbyComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<LobbyComponent>;
     let component: LobbyComponent;
@@ -200,7 +200,7 @@ describe('LobbyComponent', () => {
                     typeGame: 'P4',
                 }));
             });
-            it('should forbid user to observe game while candidate to another one', fakeAsync((async() => {
+            it('should forbid user to observe game while candidate in another one', fakeAsync((async() => {
                 // And a lobby where another unstarted part not linked to user is present
                 setLobbyPartList([anotherUnstartedPartUserDidNotCreate]);
                 const router: Router = TestBed.inject(Router);
@@ -218,9 +218,30 @@ describe('LobbyComponent', () => {
             })));
         });
         describe('as chosen opponent', () => {
-            it('should be TODOTODO', () => {
-                expect('TODOTODO').toBe('TOBEDONE NIDOUNE');
+            beforeEach(() => {
+                // Given an user observing a part as a Candidate
+                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                    id: unstartedPartUserDidNotCreate.id,
+                    role: 'ChosenOpponent',
+                    typeGame: 'P4',
+                }));
             });
+            it('should forbid user to observe game while chosen opponent in another one', fakeAsync((async() => {
+                // And a lobby where another unstarted part not linked to user is present
+                setLobbyPartList([anotherUnstartedPartUserDidNotCreate]);
+                const router: Router = TestBed.inject(Router);
+                spyOn(router, 'navigate').and.resolveTo();
+                testUtils.detectChanges();
+
+                // When clicking on the part
+                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                await testUtils.clickElement('#part_0');
+                tick(3000); // 3 sec of toast display
+
+                // Then the refusal reason should be given
+                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
+                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+            })));
         });
     });
 

@@ -13,7 +13,7 @@ import { LobbyComponentFailure } from 'src/app/components/normal-component/lobby
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
-describe('VerifiedAndNotActiveGuard', () => {
+fdescribe('VerifiedAndNotActiveGuard', () => {
 
     let guard: VerifiedAndNotActiveGuard;
 

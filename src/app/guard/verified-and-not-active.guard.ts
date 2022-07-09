@@ -20,7 +20,8 @@ export class VerifiedAndNotActiveGuard extends VerifiedAccountGuard implements O
 
     constructor(authService: ConnectedUserService,
                 public readonly messageDisplayer: MessageDisplayer,
-                protected readonly router: Router) {
+                protected readonly router: Router)
+    {
         super(authService, router);
     }
     public async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
