@@ -245,7 +245,6 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const threats: MGPOptional<PieceThreat> = minimax.getThreat(threatenedCoord, state);
 
             // Then the piece mentionned upper should be included
-            console.log(threats)
             expect(threats.isPresent()).toBeTrue();
         });
     });
