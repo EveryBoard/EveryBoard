@@ -2,7 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UserDAO } from 'src/app/dao/UserDAO';
-import { ObservedPart } from 'src/app/domain/User';
+import { FocussedPart } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -37,7 +37,12 @@ describe('HeaderComponent', () => {
         it('should remove comment in header when disconnecting', fakeAsync(async() => {
             // Given a connected user that has a observedPart
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            const observedPart: ObservedPart = { id: '123', opponent: 'Jean-Jaja', typeGame: 'P4' };
+            const observedPart: FocussedPart = {
+                id: '123',
+                opponent: 'Jean-Jaja',
+                typeGame: 'P4',
+                role: 'Candidate',
+            };
             ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
@@ -71,7 +76,11 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become link to an observedPart
-            const observedPart: ObservedPart = { id: '123', typeGame: 'P4' };
+            const observedPart: FocussedPart = {
+                id: '123',
+                typeGame: 'P4',
+                role: 'Candidate',
+            };
             ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
@@ -88,7 +97,12 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become link to an observedPart
-            const observedPart: ObservedPart = { id: '123', opponent: 'Jean-Jaja', typeGame: 'P4' };
+            const observedPart: FocussedPart = {
+                id: '123',
+                opponent: 'Jean-Jaja',
+                typeGame: 'P4',
+                role: 'Candidate',
+            };
             ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ObservedPart } from 'src/app/domain/User';
+import { FocussedPart } from 'src/app/domain/User';
 
 @Component({
     selector: 'app-header',
@@ -22,14 +22,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public showMenu: boolean = false;
 
-    public observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
+    public observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
 
     constructor(public router: Router,
                 public connectedUserService: ConnectedUserService,
                 public userService: UserService) {
     }
     public ngOnInit(): void {
-        console.log('let us initialise!')
         this.userSub = this.connectedUserService.getUserObs().subscribe((user: AuthUser) => {
             if (user.username.isPresent()) {
                 this.username = user.username.get();
@@ -37,8 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.username = user.email.getOrElse('');
             }});
         this.observedPartSub =
-            this.connectedUserService.getObservedPartObs().subscribe((opo: MGPOptional<ObservedPart>) => {
-                console.log(opo)
+            this.connectedUserService.getObservedPartObs().subscribe((opo: MGPOptional<FocussedPart>) => {
                 this.observedPart = opo;
             });
     }

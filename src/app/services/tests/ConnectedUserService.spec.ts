@@ -17,7 +17,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { ObservedPart, User } from 'src/app/domain/User';
+import { FocussedPart, User } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
 
@@ -28,7 +28,7 @@ export class ConnectedUserServiceMock {
         (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
             .setUser(userId, user, notifyObservers);
     }
-    public static setObservedPart(observedPart: MGPOptional<ObservedPart>): void {
+    public static setObservedPart(observedPart: MGPOptional<FocussedPart>): void {
         (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
             .setObservedPart(observedPart);
     }
@@ -36,11 +36,11 @@ export class ConnectedUserServiceMock {
     public uid: MGPOptional<string> = MGPOptional.empty();
 
     private readonly userRS: ReplaySubject<AuthUser>;
-    private readonly observedPartRS: ReplaySubject<MGPOptional<ObservedPart>>;
+    private readonly observedPartRS: ReplaySubject<MGPOptional<FocussedPart>>;
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
-        this.observedPartRS = new ReplaySubject<MGPOptional<ObservedPart>>(1);
+        this.observedPartRS = new ReplaySubject<MGPOptional<FocussedPart>>(1);
     }
     public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {
         this.user = MGPOptional.of(user);
@@ -51,13 +51,13 @@ export class ConnectedUserServiceMock {
             this.userRS.next(user);
         }
     }
-    public setObservedPart(observedPart: MGPOptional<ObservedPart>): void {
+    public setObservedPart(observedPart: MGPOptional<FocussedPart>): void {
         this.observedPartRS.next(observedPart);
     }
     public getUserObs(): Observable<AuthUser> {
         return this.userRS.asObservable();
     }
-    public getObservedPartObs(): Observable<MGPOptional<ObservedPart>> {
+    public getObservedPartObs(): Observable<MGPOptional<FocussedPart>> {
         return this.observedPartRS.asObservable();
     }
     public async disconnect(): Promise<MGPValidation> {
@@ -449,9 +449,9 @@ describe('ConnectedUserService', () => {
             const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
                 resolvePromise = resolve;
             });
-            let observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
+            let observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                service.getObservedPartObs().subscribe((newValue: MGPOptional<ObservedPart>) => {
+                service.getObservedPartObs().subscribe((newValue: MGPOptional<FocussedPart>) => {
                     observedPart = newValue;
                     window.setTimeout(resolvePromise, 2000);
                 });
@@ -639,9 +639,9 @@ describe('ConnectedUserService', () => {
             const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
                 resolvePromise = resolve;
             });
-            let lastValue: MGPOptional<ObservedPart> = MGPOptional.empty();
+            let lastValue: MGPOptional<FocussedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                service.getObservedPartObs().subscribe((observedPart: MGPOptional<ObservedPart>) => {
+                service.getObservedPartObs().subscribe((observedPart: MGPOptional<FocussedPart>) => {
                     lastValue = observedPart;
                     window.setTimeout(resolvePromise, 2000);
                 });
@@ -655,10 +655,11 @@ describe('ConnectedUserService', () => {
             subscription.unsubscribe();
         });
         describe('updateObservedPart', () => {
-            const observedPart: ObservedPart = {
+            const observedPart: FocussedPart = {
                 id: 'some-part-doc-id',
                 opponent: 'whoever',
                 typeGame: 'le jeu',
+                role: 'Creator',
             };
             it('should throw when called while no user is logged', async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

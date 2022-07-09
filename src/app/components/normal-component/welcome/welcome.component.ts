@@ -20,7 +20,8 @@ export class WelcomeComponent {
     public gameInfoDetails: MGPOptional<GameInfo> = MGPOptional.empty();
 
     public constructor(private readonly router: Router,
-                       themeService: ThemeService) {
+                       themeService: ThemeService)
+    {
         this.theme = themeService.getTheme();
         const allGames: GameInfo[] = GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true);
         let column: number = 0;

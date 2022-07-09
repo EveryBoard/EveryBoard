@@ -19,7 +19,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { FirestoreTime, Time } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ObservedPart, User } from 'src/app/domain/User';
+import { FocussedPart, User } from 'src/app/domain/User';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -149,10 +149,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private updateUserDocWithObservedPart(): Promise<void> {
         display(PartCreationComponent.VERBOSE || true, `updateUserDocWithObservedPart of '` + this.partId + `'`);
-        const observedPart: ObservedPart = {
+        const observedPart: FocussedPart = {
             id: this.partId,
             opponent: this.getOpponent(),
             typeGame: Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo')),
+            role: 'Candidate', // TODOTODO: it's not always as candidate
         };
         return this.connectedUserService.updateObservedPart(observedPart);
     }

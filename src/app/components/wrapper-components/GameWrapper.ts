@@ -54,7 +54,7 @@ export abstract class GameWrapper {
     {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
-    public getMatchingComponent(gameName: string) : MGPOptional<Type<AbstractGameComponent>> {
+    public getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));

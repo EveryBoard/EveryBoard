@@ -26,7 +26,7 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirestoreTime, Time } from 'src/app/domain/Time';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ObservedPart } from 'src/app/domain/User';
+import { FocussedPart } from 'src/app/domain/User';
 
 describe('PartCreationComponent', () => {
 
@@ -128,14 +128,15 @@ describe('PartCreationComponent', () => {
                 // Given a partCreation
                 spyOn(connectedUserService, 'updateObservedPart').and.callFake(async() => {});
 
-                // When candidate arrives
+                // When the user, a candidate, arrives
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
-                const observedPart: ObservedPart = {
+                const observedPart: FocussedPart = {
                     id: 'joinerId',
                     opponent: null,
                     typeGame: 'JOSER',
+                    role: 'Candidate',
                 };
                 expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith(observedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -548,14 +549,15 @@ describe('PartCreationComponent', () => {
                 // Given a partCreation
                 spyOn(connectedUserService, 'updateObservedPart').and.callFake(async() => {});
 
-                // When candidate arrives
+                // When the user, a candidate, arrives
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
-                const observedPart: ObservedPart = {
+                const observedPart: FocussedPart = {
                     id: 'joinerId',
                     opponent: UserMocks.CREATOR_AUTH_USER.username.get(),
                     typeGame: 'JOSER',
+                    role: 'Candidate',
                 };
                 expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith(observedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -686,7 +688,7 @@ describe('PartCreationComponent', () => {
                 });
                 // and the part is set to starting
                 const currentPart: Part = (await partDAO.read('joinerId')).get();
-                const expectedPart: Part = { ...PartMocks.STARTING, beginning: currentPart.beginning };
+                const expectedPart: Part = { ...PartMocks.STARTED, beginning: currentPart.beginning };
                 expect(currentPart).toEqual(expectedPart);
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();

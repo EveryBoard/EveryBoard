@@ -15,6 +15,7 @@ export class OnlineGameSelectionComponent {
         this.selectedGame = pickedGame;
     }
     public async navigateToOnlineGameCreation(): Promise<void> {
+        // TODOTODO dire au frikin CanActivate thingy de bloquer en amont, car ici rien est bloqué hé !
         await this.router.navigate(['/play', this.selectedGame]);
     }
 }

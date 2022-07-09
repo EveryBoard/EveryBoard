@@ -5,7 +5,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
-import { ObservedPart, User } from '../domain/User';
+import { FocussedPart, User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
@@ -95,10 +95,10 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userRS: ReplaySubject<AuthUser>;
     private readonly userObs: Observable<AuthUser>;
 
-    private observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
+    private observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
 
-    private readonly observedPartRS: ReplaySubject<MGPOptional<ObservedPart>>;
-    private readonly observedPartObs: Observable<MGPOptional<ObservedPart>>;
+    private readonly observedPartRS: ReplaySubject<MGPOptional<FocussedPart>>;
+    private readonly observedPartObs: Observable<MGPOptional<FocussedPart>>;
 
     constructor(private readonly userDAO: UserDAO,
                 private readonly auth: FireAuth.Auth,
@@ -108,11 +108,10 @@ export class ConnectedUserService implements OnDestroy {
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.observedPartRS = new ReplaySubject<MGPOptional<ObservedPart>>(1);
+        this.observedPartRS = new ReplaySubject<MGPOptional<FocussedPart>>(1);
         this.observedPartObs = this.observedPartRS.asObservable();
         this.unsubscribeFromAuth =
             FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
-                console.log('new auth uodate')
                 if (user == null) { // user logged out
                     display(ConnectedUserService.VERBOSE, 'User is not connected');
                     if (this.userUnsubscribe.isPresent()) {
@@ -125,7 +124,6 @@ export class ConnectedUserService implements OnDestroy {
                     await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
                     this.userUnsubscribe = MGPOptional.of(
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
-                            console.log('new dao update')
                             if (doc.isPresent()) {
                                 const username: string | undefined = doc.get().username;
                                 display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
@@ -142,7 +140,6 @@ export class ConnectedUserService implements OnDestroy {
                                                                         userHasFinalizedVerification);
                                 this.user = MGPOptional.of(authUser);
                                 this.userRS.next(authUser);
-                                console.log('updating observedPart')
                                 this.observedPart = MGPOptional.ofNullable(doc.get().observedPart);
                                 this.observedPartRS.next(this.observedPart);
                             }
@@ -289,8 +286,7 @@ export class ConnectedUserService implements OnDestroy {
     public getUserObs(): Observable<AuthUser> {
         return this.userObs;
     }
-    public getObservedPartObs(): Observable<MGPOptional<ObservedPart>> {
-        console.log('CUS.getObservedPartObs')
+    public getObservedPartObs(): Observable<MGPOptional<FocussedPart>> {
         return this.observedPartObs;
     }
     public async setUsername(username: string): Promise<MGPValidation> {
@@ -328,7 +324,7 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
-    public updateObservedPart(observedPart: ObservedPart): Promise<void> {
+    public updateObservedPart(observedPart: FocussedPart): Promise<void> {
         assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
         return this.userDAO.update(this.user.get().id, { observedPart });
     }

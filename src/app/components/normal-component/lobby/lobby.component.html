@@ -3,7 +3,7 @@
         <li ngClass="if (currentTab === 'games') 'is-active'">
             <a id="tab-games" (click)="selectTab('games')" i18n>Games</a>
         </li>
-        <li ngClass="if (currentTab === 'create') 'is-active'">
+        <li [ngClass]="getCreateButtonClass()">
             <a id="tab-create" (click)="selectTab('create')" i18n>Create</a>
         </li>
         <li ngClass="if (currentTab === 'chat') 'is-active'">
@@ -49,6 +49,7 @@
      class="box">
     <app-online-game-selection id="online-game-selection"></app-online-game-selection>
 </div>
+
 <div *ngIf="currentTab === 'chat'"
      id="chatTab"
      class="columns">
