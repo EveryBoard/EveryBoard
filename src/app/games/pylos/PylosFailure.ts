@@ -6,6 +6,8 @@ export class PylosFailure {
 
     public static readonly SHOULD_HAVE_SUPPORTING_PIECES: Localized = () => $localize`Your piece must land on the board or on 4 other pieces.`;
 
+    public static readonly CANNOT_MOVE_SUPPORTING_PIECE: () => string = () => $localize`You cannot move supporting piece.`;
+
     public static readonly CANNOT_CAPTURE: Localized = () => $localize`You cannot capture.`;
 
     public static readonly INVALID_FIRST_CAPTURE: Localized = () => $localize`Your first capture is invalid.`;

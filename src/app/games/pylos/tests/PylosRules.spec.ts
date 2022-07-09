@@ -267,7 +267,7 @@ describe('PylosRules:', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
-        RulesUtils.expectMoveFailure(rules, state, move, PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
+        RulesUtils.expectMoveFailure(rules, state, move, PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
     });
     it('should allow legal capture to include piece supporting previously captured stone', () => {
         const board: PlayerOrNone[][][] = [

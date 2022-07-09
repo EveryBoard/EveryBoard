@@ -14,11 +14,6 @@ import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class PylosComponentFailure {
-
-    public static readonly CANNOT_CLICK_SUPPORTING_PIECE: () => string = () => $localize`You cannot choose supporting piece.`;
-}
-
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
@@ -88,7 +83,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         if (this.isSupporting(clickedCoord)) {
-            return this.cancelMove(PylosComponentFailure.CANNOT_CLICK_SUPPORTING_PIECE());
+            return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }
         if (this.chosenLandingCoord.isAbsent()) {
             return this.onClimbClick(clickedCoord);

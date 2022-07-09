@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { PylosComponent, PylosComponentFailure } from '../pylos.component';
+import { PylosComponent } from '../pylos.component';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosState } from 'src/app/games/pylos/PylosState';
@@ -303,7 +303,7 @@ describe('PylosComponent', () => {
 
         // When clicking on the supporting piece
         // Then the move should be cancelled
-        await componentTestUtils.expectClickFailure('#piece_0_0_0', PylosComponentFailure.CANNOT_CLICK_SUPPORTING_PIECE());
+        await componentTestUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
     }));
     it('should cancel move (during capture) when clicking on a non capturable piece', fakeAsync(async() => {
         // Given a board where a capture is ongoing
@@ -331,7 +331,7 @@ describe('PylosComponent', () => {
 
         // When clicking on a non capturable piece
         // Then the move should be illegal
-        await componentTestUtils.expectClickFailure('#piece_2_1_0', PylosComponentFailure.CANNOT_CLICK_SUPPORTING_PIECE());
+        await componentTestUtils.expectClickFailure('#piece_2_1_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
     }));
     it('should allow capturing piece supporting captured-piece', fakeAsync(async() => {
         // Given a board where a piece has been captured, so now the piece previously supporting it are now capturable

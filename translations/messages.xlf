@@ -2648,7 +2648,7 @@
         <source>Congratulations, you completed the tutorial.</source>
       </trans-unit>
       <trans-unit id="9045384613260924473" datatype="html">
-        <source>You cannot choose supporting piece.</source>
+        <source>You cannot move supporting piece.</source>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

@@ -156,8 +156,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
                 const stateWithLeftStartingCoord: PylosState = initialState.removeCoord(move.startingCoord.get());
                 return MGPFallible.success(stateWithLeftStartingCoord);
             } else {
-                // TODOTODO: cannot move supporting piece
-                return MGPFallible.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
+                return MGPFallible.failure(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
             }
         }
         return MGPFallible.success(initialState);
