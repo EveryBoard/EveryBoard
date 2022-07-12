@@ -7,7 +7,7 @@ import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { serverTimestamp } from 'firebase/firestore';
 
-import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
+import { Auth, ConnectedUserService, AuthUser, GameActionFailure } from '../ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
@@ -112,10 +112,36 @@ export class ConnectedUserServiceMock {
         return;
     }
     public canUserCreate(): MGPValidation {
-        if (this.observedPart.isAbsent()) { // TODOTODO UNIT TEST
+        if (this.observedPart.isAbsent()) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('pétasse en pénèsse!');
+            const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
+            return MGPValidation.failure(message);
+        }
+    }
+    public canUserJoin(partId: string): MGPValidation {
+        if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
+            // User is allowed to observe one part in any way
+            // or to do it twice with the same one
+            return MGPValidation.SUCCESS;
+        } else {
+            const observedPart: FocussedPart = this.observedPart.get();
+            switch (observedPart.role) {
+                case 'Creator':
+                    // Even if one player can be creator of one part that is started
+                    // It is here only used for non started game
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CREATING());
+                case 'Candidate':
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CANDIDATE());
+                case 'ChosenOpponent':
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT());
+                case 'Player':
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_PLAYING());
+                default:
+                    Utils.expectToBe(observedPart.role, 'Observer');
+                    return MGPValidation.SUCCESS;
+                    // It is allow to observe another game
+            }
         }
     }
 }

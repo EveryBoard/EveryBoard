@@ -7,7 +7,7 @@ import { DebugElement } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
-import { LobbyComponent, GameActionFailure } from './lobby.component';
+import { LobbyComponent } from './lobby.component';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -18,11 +18,11 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserService, GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
-fdescribe('LobbyComponent', () => {
+describe('LobbyComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<LobbyComponent>;
     let component: LobbyComponent;
@@ -134,13 +134,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow users to play their games from several tabs', fakeAsync(async() => {
                 // And a lobby where the part player plays is present
@@ -209,13 +209,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             }));
         });
         describe('as a candidate', () => {
@@ -235,13 +235,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             })));
         });
         describe('as chosen opponent', () => {
@@ -261,13 +261,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             })));
         });
     });
@@ -321,13 +321,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             }));
         });
         describe('as a creator', () => {
@@ -347,13 +347,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow user to have his created part in two tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already
@@ -386,13 +386,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow user to be candidate of the same part in several tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already
@@ -425,13 +425,13 @@ fdescribe('LobbyComponent', () => {
                 testUtils.detectChanges();
 
                 // When clicking on the part
-                spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
+                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
                 await testUtils.clickElement('#part_0');
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
+                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow user to have be candidate of the same part in two tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already

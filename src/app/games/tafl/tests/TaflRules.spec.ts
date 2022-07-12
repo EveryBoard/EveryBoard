@@ -96,7 +96,7 @@ describe('TaflRules', () => {
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 4));
 
         // Then the move should be illegal
-        const reason: string = TaflFailure.SOMETHING_IN_THE_WAY();
+        const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('Should consider defender winner when all invaders are dead', () => {

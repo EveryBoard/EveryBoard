@@ -3,90 +3,85 @@
      [attr.viewBox]="getViewBox()"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let c of line; index as x">
-            <rect id="click_{{ x }}_{{ y }}"
-                  (click)="onClick(x, y)"
-                  [attr.x]="SPACE_SIZE * x"
-                  [attr.y]="SPACE_SIZE * y"
+        <g *ngFor="let c of line; index as x"
+           id="click_{{ x }}_{{ y }}"
+           [attr.transform]="'translate(' + (SPACE_SIZE * x) + ', ' + (SPACE_SIZE * y) + ')'"
+           (click)="onClick(x, y)" >
+            <rect x="0"
+                  y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   [ngClass]="getRectClasses(x, y)"
                   class="base"
             />
-            <g *ngIf="board[y][x] === NONE && isThrone(x, y)">
-                <polyline  *ngIf="isCentralThrone(x, y) else cornerThrone"
-                           points="15 15, 85 15, 85 85, 15 85, 15 15, 85 15"
-                           [attr.transform]="'translate(' + (x * SPACE_SIZE) + ' ' + (y * SPACE_SIZE) + ')'"
-                           (click)="onClick(x, y)"
-                           class="base"/>
+            <g *ngIf="board[y][x] === EMPTY && isThrone(x, y)">
+                <polyline *ngIf="isCentralThrone(x, y) else cornerThrone"
+                          points="15 15, 85 15, 85 85, 15 85, 15 15, 85 15"
+                          class="base" />
                 <ng-template #cornerThrone>
                     <polyline points="10 20, 20 90, 80 90, 90 20, 65 60, 50 30, 35 60, 10 20"
-                              [attr.transform]="'translate(' + (x * SPACE_SIZE) + ' ' + (y * SPACE_SIZE) + ')'"
-                              (click)="onClick(x, y)"
                               class="base"/>
                 </ng-template>
             </g>
-            <g *ngIf="board[y][x] !== NONE">
-                <circle (click)="onClick(x, y)"
-                        [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-                        [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)"
-                        [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.50)"
-                        [ngClass]="getPieceClasses(x, y)"
+            <g *ngIf="board[y][x] !== EMPTY">
+                <circle [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                        [attr.cx]="SPACE_SIZE * 0.50"
+                        [attr.cy]="SPACE_SIZE * 0.50"
+                        [ngClass]="viewInfo.pieceClasses[y][x]"
                         class="base"
                 />
                 <g *ngIf="isInvader(x, y) else defender">
-                    <line (click)="onClick(x, y)"
-                          [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y1]="(SPACE_SIZE * y) + (0.04 * SPACE_SIZE)"
-                          [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.96)"
+                    <line [attr.x1]="SPACE_SIZE * 0.50" [attr.y1]="0.04 * SPACE_SIZE"
+                          [attr.x2]="SPACE_SIZE * 0.50" [attr.y2]="SPACE_SIZE * 0.96"
+                          [ngClass]="viewInfo.pieceClasses[y][x]"
                           class="base"
                     />
-                    <line (click)="onClick(x, y)"
-                          [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.20)"
-                          [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.05)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.65)"
+                    <line [attr.x1]="SPACE_SIZE * 0.50" [attr.y1]="SPACE_SIZE * 0.20"
+                          [attr.x2]="SPACE_SIZE * 0.10" [attr.y2]="SPACE_SIZE * 0.60"
+                          [ngClass]="viewInfo.pieceClasses[y][x]"
                           class="base"
                     />
-                    <line (click)="onClick(x, y)"
-                          [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.20)"
-                          [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.95)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.65)"
+                    <line [attr.x1]="SPACE_SIZE * 0.50" [attr.y1]="SPACE_SIZE * 0.20"
+                          [attr.x2]="SPACE_SIZE * 0.90" [attr.y2]="SPACE_SIZE * 0.60"
+                          [ngClass]="viewInfo.pieceClasses[y][x]"
                           class="base"
                     />
-                    <line (click)="onClick(x, y)"
-                          [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.40)"
-                          [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.15)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.75)"
+                    <line [attr.x1]="SPACE_SIZE * 0.50" [attr.y1]="SPACE_SIZE * 0.40"
+                          [attr.x2]="SPACE_SIZE * 0.15" [attr.y2]="SPACE_SIZE * 0.75"
+                          [ngClass]="viewInfo.pieceClasses[y][x]"
                           class="base"
                     />
-                    <line (click)="onClick(x, y)"
-                          [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.40)"
-                          [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.85)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.75)"
+                    <line [attr.x1]="SPACE_SIZE * 0.50" [attr.y1]="SPACE_SIZE * 0.40"
+                          [attr.x2]="SPACE_SIZE * 0.85" [attr.y2]="SPACE_SIZE * 0.75"
+                          [ngClass]="viewInfo.pieceClasses[y][x]"
                           class="base"
                     />
                 </g>
                 <ng-template #defender>
-                    <g *ngIf="isKing(x, y) else soldierDefender">
-                        <polyline (click)="onClick(x, y)"
-                                  [attr.points]="getKingPolyline(x, y)"
-                                  class="base no-fill"
-                        />
-                    </g>
+                    <polyline *ngIf="isKing(x, y) else soldierDefender"
+                              points="80 85, 32.5 37.5, 50 20, 67.5 37.5, 20 85"
+                              class="base no-fill"
+                              [ngClass]="viewInfo.pieceClasses[y][x]"
+                    />
                     <ng-template #soldierDefender>
-                        <line (click)="onClick(x, y)"
-                              [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.04)"
-                              [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.50)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.96)"
+                        <line [attr.x1]="SPACE_SIZE * 0.50" [attr.y1]="SPACE_SIZE * 0.04"
+                              [attr.x2]="SPACE_SIZE * 0.50" [attr.y2]="SPACE_SIZE * 0.96"
+                              [ngClass]="viewInfo.pieceClasses[y][x]"
                               class="base"
                         />
-                        <line (click)="onClick(x, y)"
-                              [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.04)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.50)"
-                              [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.96)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.50)"
+                        <line [attr.x1]="SPACE_SIZE * 0.04" [attr.y1]="SPACE_SIZE * 0.50"
+                              [attr.x2]="SPACE_SIZE * 0.96" [attr.y2]="SPACE_SIZE * 0.50"
+                              [ngClass]="viewInfo.pieceClasses[y][x]"
                               class="base"
                         />
-                        <line (click)="onClick(x, y)"
-                              [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.15)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.15)"
-                              [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.85)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.85)"
+                        <line [attr.x1]="SPACE_SIZE * 0.20" [attr.y1]="SPACE_SIZE * 0.20"
+                              [attr.x2]="SPACE_SIZE * 0.80" [attr.y2]="SPACE_SIZE * 0.80"
+                              [ngClass]="viewInfo.pieceClasses[y][x]"
                               class="base"
                         />
-                        <line (click)="onClick(x, y)"
-                              [attr.x1]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.85)" [attr.y1]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.15)"
-                              [attr.x2]="(SPACE_SIZE * x) + (SPACE_SIZE * 0.15)" [attr.y2]="(SPACE_SIZE * y) + (SPACE_SIZE * 0.85)"
+                        <line [attr.x1]="SPACE_SIZE * 0.80" [attr.y1]="SPACE_SIZE * 0.20"
+                              [attr.x2]="SPACE_SIZE * 0.20" [attr.y2]="SPACE_SIZE * 0.80"
+                              [ngClass]="viewInfo.pieceClasses[y][x]"
                               class="base"
                         />
                     </ng-template>

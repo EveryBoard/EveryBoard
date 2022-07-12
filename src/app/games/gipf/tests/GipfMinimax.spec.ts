@@ -11,7 +11,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('GipfMinimax', () => {
 
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const A: FourStatePiece = FourStatePiece.ZERO;
     const B: FourStatePiece = FourStatePiece.ONE;

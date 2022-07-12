@@ -23,9 +23,9 @@ module.exports = function(config) {
             ],
             check: {
                 global: {
-                    statements: 99.77,
-                    branches: 99.35, // always keep it 0.02% below local coverage
-                    functions: 99.78,
+                    statements: 99.78,
+                    branches: 99.37, // always keep it 0.02% below local coverage
+                    functions: 99.79,
                     lines: 99.78,
                 },
             },

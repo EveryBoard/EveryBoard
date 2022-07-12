@@ -8,11 +8,11 @@
       <trans-unit id="6005801113696805305" datatype="html">
         <source>The replay game is loading, please wait, it should not take long.</source>
       </trans-unit>
-      <trans-unit id="5120671221766405888" datatype="html">
-        <source>Game does not exist</source>
+      <trans-unit id="6595008830732269870" datatype="html">
+        <source>Not found</source>
       </trans-unit>
-      <trans-unit id="5769704000858519890" datatype="html">
-        <source>The game you tried to join does not exist anymore.</source>
+      <trans-unit id="4204327513039663989" datatype="html">
+        <source>This page does not exist.</source>
       </trans-unit>
       <trans-unit id="7016831866762941443" datatype="html">
         <source>Pick a game</source>
@@ -58,6 +58,12 @@
       </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
+      </trans-unit>
+      <trans-unit id="8186407897395128360" datatype="html">
+        <source>Push and crush your opponent&apos;s pieces using magnetic forces!</source>
+      </trans-unit>
+      <trans-unit id="8346622786152147853" datatype="html">
+        <source>Win points by capturing pieces, but you only control pieces on your side of the board!</source>
       </trans-unit>
       <trans-unit id="287142221400627248" datatype="html">
         <source>The classical 4 in a row game!</source>
@@ -167,6 +173,12 @@
       <trans-unit id="4214831981215024999" datatype="html">
         <source>Conspirateurs</source>
       </trans-unit>
+      <trans-unit id="3008721792091269753" datatype="html">
+        <source>Lodestone</source>
+      </trans-unit>
+      <trans-unit id="4371580300145721044" datatype="html">
+        <source>Martian Chess</source>
+      </trans-unit>
       <trans-unit id="6153797048311741939" datatype="html">
         <source>User settings</source>
       </trans-unit>
@@ -187,6 +199,9 @@
       </trans-unit>
       <trans-unit id="5395533573244657143" datatype="html">
         <source>This step is not expecting any move from your part.</source>
+      </trans-unit>
+      <trans-unit id="5608779123109622436" datatype="html">
+        <source>Failed, you did not capture any piece.</source>
       </trans-unit>
       <trans-unit id="6050846802280051862" datatype="html">
         <source>You cannot move more than 3 of your pieces!</source>
@@ -262,8 +277,8 @@
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
       </trans-unit>
-      <trans-unit id="5812794158768312814" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
+      <trans-unit id="3315005504406796815" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You&apos;re playing Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
@@ -1155,8 +1170,8 @@
       <trans-unit id="1376498600372177047" datatype="html">
         <source>This piece has no possible move, select another one.</source>
       </trans-unit>
-      <trans-unit id="1586272441819129629" datatype="html">
-        <source>A move must be orthogonal or diagonal</source>
+      <trans-unit id="2976242446104349974" datatype="html">
+        <source>A move must be orthogonal or diagonal.</source>
       </trans-unit>
       <trans-unit id="6241913890536717263" datatype="html">
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
@@ -1212,6 +1227,210 @@
         <source>In the special case where a move ends up connecting all pieces of both player, simultaneously,
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
+      </trans-unit>
+      <trans-unit id="7419338702295170530" datatype="html">
+        <source>You must flip your lodestone before putting it back on the board.</source>
+      </trans-unit>
+      <trans-unit id="8683881271933340082" datatype="html">
+        <source>As long as there are pressure plates, you must place all the pieces that you have captured on them.</source>
+      </trans-unit>
+      <trans-unit id="3917449010922856612" datatype="html">
+        <source>You must place your lodestone on a non-crumbled square!</source>
+      </trans-unit>
+      <trans-unit id="2350186243435301157" datatype="html">
+        <source>You placed too many captures on the same pressure plate, which has not enough space left.</source>
+      </trans-unit>
+      <trans-unit id="4296510202733075370" datatype="html">
+        <source>You must place your captures on the pressure plates, on the side of the board.</source>
+      </trans-unit>
+      <trans-unit id="8506636863437595095" datatype="html">
+        <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
+      </trans-unit>
+      <trans-unit id="3233989185853354365" datatype="html">
+        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
+      </trans-unit>
+      <trans-unit id="2109934310949694886" datatype="html">
+        <source>Selecting a lodestone</source>
+      </trans-unit>
+      <trans-unit id="2559162009573450567" datatype="html">
+        <source>To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: &lt;ul&gt;&lt;li&gt;its &lt;i&gt;repelling&lt;/i&gt; side with which it will repel the opponent&apos;s pieces (indicated by the outward triangles of your opponent&apos;s color on the lodestone), and&lt;/li&gt;&lt;li&gt;its &lt;i&gt;attracting&lt;/i&gt; side with which it will attract your pieces (indicated by the inward triangles of your color on the lodestone).&lt;/li&gt;&lt;/ul&gt;Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Select the lodestone that repels your opponent&apos;s pieces diagonally.</source>
+      </trans-unit>
+      <trans-unit id="2963285511284379717" datatype="html">
+        <source>This is not the right lodestone, try again.</source>
+      </trans-unit>
+      <trans-unit id="7572976598676202841" datatype="html">
+        <source>The repelling lodestone</source>
+      </trans-unit>
+      <trans-unit id="3639714905640085837" datatype="html">
+        <source>Upon placing a lodestone on the board, it will move all pieces it acts upon (according to its direction and orientation) simultaneously. Let us first see how the repelling lodestone acts on the pieces. All the opponent&apos;s pieces aligned with the lodestone, as indicated by the triangles&apos; orientations, will be pushed one square away from the lodestone. An opponent&apos;s piece will be blocked in case it encounters on its way either one of your piece, a lodestone, or another blocked piece. Finally, if an opponent&apos;s piece falls out of the board, it is captured.</source>
+      </trans-unit>
+      <trans-unit id="609421287344629004" datatype="html">
+        <source>The attracting lodestone</source>
+      </trans-unit>
+      <trans-unit id="1840990354301535750" datatype="html">
+        <source>When the lodestone is on its attracting side it will pull your pieces one square towards it. In case one of your pieces encounters a lodestone on its way or another blocked piece, it is blocked. However, if it encounter an opponent&apos;s piece, it will capture it.</source>
+      </trans-unit>
+      <trans-unit id="5747624424535894902" datatype="html">
+        <source>Flipping the lodestone</source>
+      </trans-unit>
+      <trans-unit id="6611993830828980213" datatype="html">
+        <source>Note that, after every move, you must flip your lodestone: if it was on its repelling side, you must use it on its attracting side, and vice versa. Also, you are allowed to place your lodestone on the same location as it was on your previous turn.</source>
+      </trans-unit>
+      <trans-unit id="1164074897639591703" datatype="html">
+        <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a repelling lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with an attracting lodestone, by moving your pieces on your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on a piece you just put on a pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
+      </trans-unit>
+      <trans-unit id="575124313782539246" datatype="html">
+        <source>You have not captured any of the opponent&apos;s pieces, try again!</source>
+      </trans-unit>
+      <trans-unit id="443433725102640869" datatype="html">
+        <source>Crumbling a first pressure plate</source>
+      </trans-unit>
+      <trans-unit id="7283094782812908030" datatype="html">
+        <source>When a pressure plate is full, it will crumble and take a full row or column of the board with it! All pieces that are on the crumbled squares are considered lost, but will not have to be placed on pressure plates. You have here a board with a pressure plate that only requires one more piece to crumble.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a move that captures at least one piece, and fill that pressure plate to make it crumble.</source>
+      </trans-unit>
+      <trans-unit id="3196264140433706433" datatype="html">
+        <source>You must capture and place your capture on the top pressure plate to make it crumble!</source>
+      </trans-unit>
+      <trans-unit id="5914083969570610852" datatype="html">
+        <source>Crumbling a second pressure plate</source>
+      </trans-unit>
+      <trans-unit id="1857692339690561929" datatype="html">
+        <source>Once a pressure plate has crumbled, a shorter pressure plate takes it place. It is the case here, where only 3 spots are available on the top pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a move that captures enough pieces to fill the top pressure plate, and make it crumble.</source>
+      </trans-unit>
+      <trans-unit id="3910287826025606484" datatype="html">
+        <source>You must capture and place your capture on the top pressure plate to make it crumble a second time!</source>
+      </trans-unit>
+      <trans-unit id="6264951416361363939" datatype="html">
+        <source>Minimal board</source>
+      </trans-unit>
+      <trans-unit id="4748774984823369879" datatype="html">
+        <source>After a pressure plate has crumbled for a second time, there is no more pressure plate available on that side. In case all pressure plates have crumbled, the board is reduced to a 4x4 board.</source>
+      </trans-unit>
+      <trans-unit id="3538909383339704235" datatype="html">
+        <source>Making the lodestone fall</source>
+      </trans-unit>
+      <trans-unit id="2420281248578493085" datatype="html">
+        <source>If, at any point during the game, your lodestone is situated on a square that crumbles with a pressure plate, you will be allowed to select any lodestone side on your next turn.&lt;br/&gt;&lt;br/&gt;In this board, playing Dark, you can place your lodestone and make a pressure plate crumble so that your lodestone falls too, allowing to choose more freely its side on your next turn. Do it!</source>
+      </trans-unit>
+      <trans-unit id="387688094870283606" datatype="html">
+        <source>Congratulations! At your next turn, you will be allowed to place your lodestone on any side.</source>
+      </trans-unit>
+      <trans-unit id="99397540840628948" datatype="html">
+        <source>In order to win, you must take out all of your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;Here, you can win in a single move, do it!</source>
+      </trans-unit>
+      <trans-unit id="1645842992024065193" datatype="html">
+        <source>This is not the winning move. Try again.</source>
+      </trans-unit>
+      <trans-unit id="4594736386763524275" datatype="html">
+        <source>Start coord cannot be out of range</source>
+      </trans-unit>
+      <trans-unit id="8024507002452740554" datatype="html">
+        <source>End coord cannot be out of range</source>
+      </trans-unit>
+      <trans-unit id="7020322239499292850" datatype="html">
+        <source>Pawns must move one step diagonally.</source>
+      </trans-unit>
+      <trans-unit id="4409865504289904426" datatype="html">
+        <source>Drones must move one or two steps in any direction.</source>
+      </trans-unit>
+      <trans-unit id="4174188766565583979" datatype="html">
+        <source>You must pick a piece from your side of the board in order to move it.</source>
+      </trans-unit>
+      <trans-unit id="4126120518252508337" datatype="html">
+        <source>This is not a valid promotion nor a valid capture.</source>
+      </trans-unit>
+      <trans-unit id="820589591452307194" datatype="html">
+        <source>You cannot perform a move that is the reverse of the previous one.</source>
+      </trans-unit>
+      <trans-unit id="8941261285468529448" datatype="html">
+        <source>This is not a field promotion!</source>
+      </trans-unit>
+      <trans-unit id="101461993624237538" datatype="html">
+        <source>At Martian Chess, the goal is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
+      </trans-unit>
+      <trans-unit id="8633649754808970040" datatype="html">
+        <source>The pieces</source>
+      </trans-unit>
+      <trans-unit id="4066930341904859929" datatype="html">
+        <source>The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: &lt;ul&gt;&lt;li&gt;The Queens: represented as circles with 3 dots.&lt;/li&gt;&lt;li&gt;The Drones: represented as circles with 2 dots.&lt;/li&gt;&lt;li&gt;The Pawns: represented as circles with one dot.&lt;/li&gt;&lt;/ul&gt;</source>
+      </trans-unit>
+      <trans-unit id="2033063585111632444" datatype="html">
+        <source>Moving pawns</source>
+      </trans-unit>
+      <trans-unit id="4687071087997357225" datatype="html">
+        <source>Pawns are worth one point. They can move one step diagonally.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a pawn.</source>
+      </trans-unit>
+      <trans-unit id="5961522758680599293" datatype="html">
+        <source>This is not a pawn!</source>
+      </trans-unit>
+      <trans-unit id="6187825194726438285" datatype="html">
+        <source>Moving drones</source>
+      </trans-unit>
+      <trans-unit id="4279721125731228701" datatype="html">
+        <source>Drones are worth two points. They can move one or two steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a drone.</source>
+      </trans-unit>
+      <trans-unit id="412189766091253797" datatype="html">
+        <source>This is not a drone!</source>
+      </trans-unit>
+      <trans-unit id="731242877035493751" datatype="html">
+        <source>Moving queens</source>
+      </trans-unit>
+      <trans-unit id="246448750813949151" datatype="html">
+        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
+      </trans-unit>
+      <trans-unit id="3206825395681468712" datatype="html">
+        <source>This is not a queen!</source>
+      </trans-unit>
+      <trans-unit id="3324500494494988533" datatype="html">
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
+      </trans-unit>
+      <trans-unit id="6741042150149637612" datatype="html">
+        <source>Congratulations! By capturing that pawn, you won one point.</source>
+      </trans-unit>
+      <trans-unit id="7827243981380355367" datatype="html">
+        <source>Field Promotion (1/2)</source>
+      </trans-unit>
+      <trans-unit id="8675845222727327919" datatype="html">
+        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="5120415661423244234" datatype="html">
+        <source>Field Promotion (2/2)</source>
+      </trans-unit>
+      <trans-unit id="1012300757521682008" datatype="html">
+        <source>The other kind of field promotion is to merge a drone and a pawn to obtain a queen.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
+      </trans-unit>
+      <trans-unit id="304909585169663876" datatype="html">
+        <source>Call the clock</source>
+      </trans-unit>
+      <trans-unit id="8898741439943904413" datatype="html">
+        <source>When the game seems to be going nowhere, you can &quot;call the clock&quot; during your turn. To do so, click on the clock symbol on the right, then perform your move. Once the clock is called, seven more turn will be played.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Call the clock and perform a move.</source>
+      </trans-unit>
+      <trans-unit id="6784225180868580907" datatype="html">
+        <source>You did not call the clock!</source>
+      </trans-unit>
+      <trans-unit id="976279093722548167" datatype="html">
+        <source>Restarting the clock</source>
+      </trans-unit>
+      <trans-unit id="1506256477130467669" datatype="html">
+        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture to restart the countdown.</source>
+      </trans-unit>
+      <trans-unit id="7392280182595989107" datatype="html">
+        <source>This is not a capture, the game is now over, please retry!</source>
+      </trans-unit>
+      <trans-unit id="4805475752093007535" datatype="html">
+        <source>End game (by clock)</source>
+      </trans-unit>
+      <trans-unit id="8197598020273984721" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
+      </trans-unit>
+      <trans-unit id="1679797944253761486" datatype="html">
+        <source>End by emptyness</source>
+      </trans-unit>
+      <trans-unit id="7700786423442894185" datatype="html">
+        <source>When a player&apos;s last piece is moved into the opponent territory, the game ends. If both players have the same number of points, the last player win!&lt;br/&gt;&lt;br/&gt;Light player can win this way, do it!</source>
+      </trans-unit>
+      <trans-unit id="5831506127438574716" datatype="html">
+        <source>Your piece is still in you territory!</source>
       </trans-unit>
       <trans-unit id="6266016430504496647" datatype="html">
         <source>Please put your piece in an incomplete column.</source>
@@ -1360,9 +1579,6 @@
       </trans-unit>
       <trans-unit id="8313533670567464817" datatype="html">
         <source>Failed, you only captured one piece.</source>
-      </trans-unit>
-      <trans-unit id="5608779123109622436" datatype="html">
-        <source>Failed, you did not capture any piece.</source>
       </trans-unit>
       <trans-unit id="3455768301736755830" datatype="html">
         <source>Congratulations, you have saved up two pieces.</source>
@@ -1561,6 +1777,9 @@
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
       </trans-unit>
+      <trans-unit id="5868009287424458246" datatype="html">
+        <source>You should insert or choose one of your pieces!</source>
+      </trans-unit>
       <trans-unit id="4223815631577991732" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
@@ -1735,9 +1954,6 @@
       </trans-unit>
       <trans-unit id="1513340614663053294" datatype="html">
         <source>Soldiers cannot sit on the throne.</source>
-      </trans-unit>
-      <trans-unit id="5525790446318724698" datatype="html">
-        <source>Something is in the way.</source>
       </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
@@ -1915,11 +2131,17 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
       </trans-unit>
+      <trans-unit id="7542102025019708759" datatype="html">
+        <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
+      </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>
       </trans-unit>
       <trans-unit id="7236012742212037533" datatype="html">
         <source>You must click on an empty space.</source>
+      </trans-unit>
+      <trans-unit id="8686180677883367844" datatype="html">
+        <source>You must click on an empty square.</source>
       </trans-unit>
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
@@ -1941,6 +2163,9 @@
       </trans-unit>
       <trans-unit id="1153768241274180865" datatype="html">
         <source>You must choose different starting and ending coordinates.</source>
+      </trans-unit>
+      <trans-unit id="4065705313723361978" datatype="html">
+        <source>There is a piece between the piece you chose and its landing space.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>
@@ -2170,6 +2395,9 @@
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
       </trans-unit>
+      <trans-unit id="443650994975920138" datatype="html">
+        <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
+      </trans-unit>
       <trans-unit id="3568920234618711065" datatype="html">
         <source>The game has ended.</source>
       </trans-unit>
@@ -2280,6 +2508,9 @@
       </trans-unit>
       <trans-unit id="4237132455292972929" datatype="html">
         <source>Accept to play again</source>
+      </trans-unit>
+      <trans-unit id="777716481777788338" datatype="html">
+        <source>The game you tried to join does not exist.</source>
       </trans-unit>
       <trans-unit id="1487672983218679675" datatype="html">
         <source>5 minutes</source>

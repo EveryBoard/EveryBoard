@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Localized } from '../utils/LocaleUtils';
 
 @Injectable({
     providedIn: 'root',
@@ -16,12 +17,12 @@ export class JoinerService {
 
     public static VERBOSE: boolean = false;
 
-    private observedJoinerId: string;
+    private observedJoinerId: string | null;
 
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
-    public static readonly USER_ALREADY_IN_THIS_GAME: () => string = () => $localize`You cannot join this game because you are already in another one.`; // TODOTODO changer de traduction
-    public static readonly GAME_DOES_NOT_EXIST: () => string = () => $localize`Game does not exist`;
+    public static readonly USER_ALREADY_IN_GAME: Localized = () => $localize`You cannot join this game because you are already in another one.`;
+    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
 
     constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
@@ -59,7 +60,7 @@ export class JoinerService {
         }
         const joinerList: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.some((minimalUser: MinimalUser) => minimalUser.id === user.id)) {
-            return MGPValidation.failure(JoinerService.USER_ALREADY_IN_THIS_GAME());
+            return MGPValidation.failure(JoinerService.USER_ALREADY_IN_GAME());
         } else if (user.id === joiner.get().creator.id) {
             return MGPValidation.SUCCESS;
         } else {
@@ -105,13 +106,13 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
         const update: Partial<Joiner> = { candidates };
-        return this.joinerDAO.update(this.observedJoinerId, update);
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), update);
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerService.VERBOSE,
                 'JoinerService.deleteJoiner(); this.observedJoinerId = ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        return this.joinerDAO.delete(this.observedJoinerId);
+        return this.joinerDAO.delete(Utils.getNonNullable(this.observedJoinerId));
     }
     public async proposeConfig(chosenOpponent: MinimalUser,
                                partType: PartType,
@@ -125,7 +126,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             chosenOpponent: chosenOpponent,
             partType: partType.value,
@@ -138,7 +139,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, `JoinerService.setChosenOpponent(${chosenOpponent.name})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             chosenOpponent: chosenOpponent,
         });
     }
@@ -146,7 +147,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
@@ -154,7 +155,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, {
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId), {
             partStatus: PartStatus.PART_CREATED.value,
             candidates,
             chosenOpponent: null,
@@ -164,7 +165,8 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.acceptConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDAO.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
+        return this.joinerDAO.update(Utils.getNonNullable(this.observedJoinerId),
+                                     { partStatus: PartStatus.PART_STARTED.value });
     }
     public async createJoiner(joiner: Joiner): Promise<string> {
         display(JoinerService.VERBOSE, 'JoinerService.create(' + JSON.stringify(joiner) + ')');

@@ -504,7 +504,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When doing drawing move
             spyOn(partDAO, 'update').and.callThrough();
-            const drawingMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+            const drawingMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
             await doMove(drawingMove, true);
 
             // Then the game should be a draw
@@ -553,7 +553,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When doing drawing move
             const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
             spyOn(connectedUserService, 'removeObservedPart').and.callThrough();
-            const drawingMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+            const drawingMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
             await doMove(drawingMove, true);
 
             // Then removeObservedPart should have been called

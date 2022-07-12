@@ -12,7 +12,7 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
-fdescribe('VerifiedAndNotActiveGuard', () => {
+describe('VerifiedAndNotActiveGuard', () => {
 
     let guard: VerifiedAndNotActiveGuard;
 

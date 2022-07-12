@@ -96,7 +96,13 @@ export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    public static roleToMessage: MGPMap<UserRoleInPart, Localized> = MGPMap;
+    public static roleToMessage: MGPMap<UserRoleInPart, Localized> = new MGPMap([
+        { key: 'Candidate', value: GameActionFailure.YOU_ARE_ALREADY_CANDIDATE },
+        { key: 'ChosenOpponent', value: GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT },
+        { key: 'Creator', value: GameActionFailure.YOU_ARE_ALREADY_CREATING },
+        { key: 'Player', value: GameActionFailure.YOU_ARE_ALREADY_PLAYING },
+        { key: 'Observer', value: GameActionFailure.YOU_ARE_ALREADY_OBSERVING },
+    ]);
     public unsubscribeFromAuth!: Unsubscribe; // public for testing purposes only
 
     /**
@@ -355,7 +361,8 @@ export class ConnectedUserService implements OnDestroy {
         if (this.observedPart.isAbsent()) { // TODOTODO UNIT TEST
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('chaussettes en bite!');
+            const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
+            return MGPValidation.failure(message);
         }
     }
     public canUserJoin(partId: string): MGPValidation {

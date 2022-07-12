@@ -4,6 +4,8 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 
+export type Click = string
+
 export abstract class TutorialStep {
     public static fromMove(title: string,
                            instruction: string,
@@ -85,16 +87,13 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
     public constructor(title: string,
                        instruction: string,
                        state: GameState,
-                       private readonly solution: Move,
                        private readonly successMessage: string) {
         super(title, instruction, state);
     }
     public hasSolution(): this is TutorialStepWithSolution {
         return true;
     }
-    public getSolution(): Move {
-        return this.solution;
-    }
+    public abstract getSolution(): Move | Click
     public getSuccessMessage(): string {
         return this.successMessage;
     }
@@ -106,12 +105,15 @@ export class TutorialStepMove extends TutorialStepWithSolution {
                        state: GameState,
                        public readonly acceptedMoves: ReadonlyArray<Move>,
                        successMessage: string,
-                       public readonly failureMessage: string) {
-        super(title, instruction, state, acceptedMoves[0], successMessage);
+                       private readonly failureMessage: string) {
+        super(title, instruction, state, successMessage);
         assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
     }
     public isMove(): this is TutorialStepMove {
         return true;
+    }
+    public getSolution(): Move | Click {
+        return this.acceptedMoves[0];
     }
     public getFailureMessage(): string {
         return this.failureMessage;
@@ -122,29 +124,32 @@ export class TutorialStepAnyMove extends TutorialStepWithSolution {
     public constructor(title: string,
                        instruction: string,
                        state: GameState,
-                       solutionMove: Move,
+                       private readonly solutionMove: Move,
                        successMessage: string) {
-        super(title, instruction, state, solutionMove, successMessage);
+        super(title, instruction, state, successMessage);
+    }
+    public getSolution(): Move | Click {
+        return this.solutionMove;
     }
     public isAnyMove(): this is TutorialStepAnyMove {
         return true;
     }
 }
 
-export class TutorialStepClick extends TutorialStep {
+export class TutorialStepClick extends TutorialStepWithSolution {
     public constructor(title: string,
                        instruction: string,
                        state: GameState,
                        public readonly acceptedClicks: ReadonlyArray<string>,
-                       public readonly successMessage: string,
-                       public readonly failureMessage: string) {
-        super(title, instruction, state);
+                       successMessage: string,
+                       private readonly failureMessage: string) {
+        super(title, instruction, state, successMessage);
     }
     public isClick(): this is TutorialStepClick {
         return true;
     }
-    public getSuccessMessage(): string {
-        return this.successMessage;
+    public getSolution(): Move | Click {
+        return this.acceptedClicks[0];
     }
     public getFailureMessage(): string {
         return this.failureMessage;
@@ -155,10 +160,13 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
     public constructor(title: string,
                        instruction: string,
                        state: GameState,
-                       solutionMove: Move,
+                       private readonly solutionMove: Move,
                        public readonly predicate: (move: Move, resultingState: GameState) => MGPValidation,
                        successMessage: string) {
-        super(title, instruction, state, solutionMove, successMessage);
+        super(title, instruction, state, successMessage);
+    }
+    public getSolution(): Move | Click {
+        return this.solutionMove;
     }
     public isPredicate(): this is TutorialStepPredicate {
         return true;

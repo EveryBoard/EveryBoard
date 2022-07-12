@@ -7,12 +7,12 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { TutorialGameWrapperComponent } from '../../wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { LobbyComponent, GameActionFailure } from '../lobby/lobby.component';
+import { LobbyComponent } from '../lobby/lobby.component';
 import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';
 import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
 import { WelcomeComponent } from './welcome.component';
 
-fdescribe('WelcomeComponent', () => {
+describe('WelcomeComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<WelcomeComponent>;
 

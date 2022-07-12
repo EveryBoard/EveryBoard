@@ -11,7 +11,7 @@ import { assert } from '../utils/assert';
 
 /**
   * The aim of this service is to:
-  *     A. subscribe to other users to see if they are online in thoses contexts:
+  *     A. subscribe to other users to see if they are online in those contexts:
   *         1. The candidates when you are creator in PartCreation
   *         2. The creator when you are candidate in PartCreation
   *         3. Your opponent when you are playing

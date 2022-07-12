@@ -1,4 +1,5 @@
 import { ArrayUtils, Table } from '../utils/ArrayUtils';
+import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 
@@ -12,6 +13,13 @@ export abstract class GameStateWithTable<P> extends GameState {
             return this.board[coord.y][coord.x];
         } else {
             throw new Error('Accessing coord not on board ' + coord + '.');
+        }
+    }
+    public tryToGetPieceAt(coord: Coord): MGPOptional<P> {
+        if (this.isOnBoard(coord)) {
+            return MGPOptional.of(this.board[coord.y][coord.x]);
+        } else {
+            return MGPOptional.empty();
         }
     }
     public isOnBoard(coord: Coord): boolean {

@@ -17,7 +17,7 @@ describe('GipfComponent', () => {
     let componentTestUtils: ComponentTestUtils<GipfComponent>;
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
-    const N: FourStatePiece = FourStatePiece.NONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const A: FourStatePiece = FourStatePiece.ZERO;
     const B: FourStatePiece = FourStatePiece.ONE;
     const P0Turn: number = 6;

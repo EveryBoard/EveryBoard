@@ -53,7 +53,6 @@ describe('JoinerDAOMock', () => {
             callCount++;
             lastJoiner = joiner;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
-            // TODO: REDO
         });
 
         expect(callCount).toEqual(1);
@@ -73,7 +72,6 @@ describe('JoinerDAOMock', () => {
 
         const unsubscribe: Unsubscribe = joinerDAOMock.subscribeToChanges('joinerId', (joiner: MGPOptional<Joiner>) => {
             callCount++;
-            // TODO: REDO
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
             lastJoiner = joiner;
         });
