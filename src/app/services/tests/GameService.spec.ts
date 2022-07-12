@@ -102,7 +102,7 @@ describe('GameService', () => {
     it('should forbid to accept a take back that the players proposed themselves', fakeAsync(async() => {
         spyOn(ErrorLoggerService, 'logError');
         const error: string = 'Illegal to accept your own request';
-        for (const player of [Player.ZERO, Player.ONE]) {
+        for (const player of Player.PLAYERS) {
             const part: PartDocument = new PartDocument('joinerId', {
                 lastUpdate: {
                     index: 0,
@@ -327,7 +327,7 @@ describe('GameService', () => {
         }));
     });
     describe('acceptDraw', () => {
-        for (const player of [Player.ZERO, Player.ONE]) {
+        for (const player of Player.PLAYERS) {
             it('should send AGREED_DRAW_BY_ZERO/ONE when call as ZERO/ONE', async() => {
                 // Given any state of service
                 spyOn(partDAO, 'update');

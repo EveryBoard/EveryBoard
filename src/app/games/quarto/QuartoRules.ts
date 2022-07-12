@@ -147,7 +147,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
     private static isOccupied(square: QuartoPiece): boolean {
-        return (square !== QuartoPiece.NONE);
+        return (square !== QuartoPiece.EMPTY);
     }
     private static isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         /**
@@ -163,7 +163,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // we can't play on an occupied square
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        if (pieceToGive === QuartoPiece.NONE) {
+        if (pieceToGive === QuartoPiece.EMPTY) {
             if (state.turn === 15) {
                 // we must give a piece, except on the last turn
                 return MGPValidation.SUCCESS;
@@ -269,7 +269,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         for (let i: number = 0; i < 4; i++) {
             const c: QuartoPiece = state.getPieceAt(coord);
             // we look through the entire line
-            if (c === QuartoPiece.NONE) {
+            if (c === QuartoPiece.EMPTY) {
                 // if c is unoccupied
                 if (sensitiveCoord.isAbsent()) {
                     sensitiveCoord = MGPOptional.of(coord);

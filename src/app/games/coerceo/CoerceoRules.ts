@@ -78,7 +78,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return MGPFallible.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
         }
         const captured: FourStatePiece = state.getPieceAt(move.capture.get());
-        if (captured === FourStatePiece.NONE ||
+        if (captured === FourStatePiece.UNREACHABLE ||
             captured === FourStatePiece.EMPTY)
         {
             return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
@@ -89,11 +89,11 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return MGPFallible.success(undefined);
     }
     public isLegalMovement(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
-        if (state.getPieceAt(move.start.get()) === FourStatePiece.NONE) {
+        if (state.getPieceAt(move.start.get()) === FourStatePiece.UNREACHABLE) {
             const reason: string = 'Cannot start with a coord outside the board ' + move.start.get().toString() + '.';
             return MGPFallible.failure(reason);
         }
-        if (state.getPieceAt(move.landingCoord.get()) === FourStatePiece.NONE) {
+        if (state.getPieceAt(move.landingCoord.get()) === FourStatePiece.UNREACHABLE) {
             const reason: string =
                 'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.';
             return MGPFallible.failure(reason);

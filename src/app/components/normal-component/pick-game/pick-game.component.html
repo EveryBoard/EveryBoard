@@ -3,7 +3,7 @@
         <option value=""
                 selected
                 i18n>Pick a game</option>
-        <option *ngFor="let gameName of gameNameList"
-                [value]="gameName">{{ gameName }}</option>
+        <option *ngFor="let game of games"
+                [value]="game.urlName">{{ game.name }}</option>
     </select>
 </div>

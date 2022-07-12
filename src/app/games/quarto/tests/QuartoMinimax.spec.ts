@@ -13,7 +13,7 @@ describe('QuartoMinimax:', () => {
     let rules: QuartoRules;
     let minimaxes: QuartoMinimax[];
 
-    const NULL: QuartoPiece = QuartoPiece.NONE;
+    const NULL: QuartoPiece = QuartoPiece.EMPTY;
     const AAAA: QuartoPiece = QuartoPiece.AAAA;
     const AAAB: QuartoPiece = QuartoPiece.AAAB;
     const AABB: QuartoPiece = QuartoPiece.AABB;
@@ -44,11 +44,11 @@ describe('QuartoMinimax:', () => {
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
             [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
             [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
-            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
+            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
         rules.node = new QuartoNode(state);
-        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
         for (const minimax of minimaxes) {
             // When getting the list of moves
             const possiblesMoves: QuartoMove[] = minimax.getListMoves(rules.node);

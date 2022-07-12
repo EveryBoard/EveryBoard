@@ -25,7 +25,7 @@ describe('LocaleUtils', () => {
 
             // then it should use the one from the navigator
             expect(locale).toEqual('en');
-            expect(LocaleUtils.getNavigatorLanguage).toHaveBeenCalled();
+            expect(LocaleUtils.getNavigatorLanguage).toHaveBeenCalledOnceWith();
         });
         it('should default to the fr locale', () => {
             // given that the localStorage is empty and that the navigator language is not set

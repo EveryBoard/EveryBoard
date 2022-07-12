@@ -16,7 +16,7 @@ describe('KamisadoComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<KamisadoComponent>;
 
-    const _: KamisadoPiece = KamisadoPiece.NONE;
+    const _: KamisadoPiece = KamisadoPiece.EMPTY;
     const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
     const G: KamisadoPiece = KamisadoPiece.ZERO.GREEN;
     const r: KamisadoPiece = KamisadoPiece.ONE.RED;

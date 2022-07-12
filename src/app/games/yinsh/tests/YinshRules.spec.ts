@@ -16,7 +16,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 describe('YinshRules', () => {
 
     const _: YinshPiece = YinshPiece.EMPTY;
-    const N: YinshPiece = YinshPiece.NONE;
+    const N: YinshPiece = YinshPiece.UNREACHABLE;
     const a: YinshPiece = YinshPiece.MARKER_ZERO;
     const A: YinshPiece = YinshPiece.RING_ZERO;
     const b: YinshPiece = YinshPiece.MARKER_ONE;
@@ -442,8 +442,7 @@ describe('YinshRules', () => {
 
             RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
         });
-        it('should not allow making moves once victory has been reached', () => {
-        });
+        it('should not allow making moves once victory has been reached');
     });
     describe('getPossibleCaptures', () => {
         it('should not consider rings as capturable pieces', () => {
