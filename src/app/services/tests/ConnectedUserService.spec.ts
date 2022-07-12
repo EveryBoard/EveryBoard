@@ -36,7 +36,9 @@ export class ConnectedUserServiceMock {
     public uid: MGPOptional<string> = MGPOptional.empty();
 
     private readonly userRS: ReplaySubject<AuthUser>;
+
     private readonly observedPartRS: ReplaySubject<MGPOptional<FocussedPart>>;
+    private observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
@@ -52,6 +54,7 @@ export class ConnectedUserServiceMock {
         }
     }
     public setObservedPart(observedPart: MGPOptional<FocussedPart>): void {
+        this.observedPart = observedPart;
         this.observedPartRS.next(observedPart);
     }
     public getUserObs(): Observable<AuthUser> {
@@ -107,6 +110,13 @@ export class ConnectedUserServiceMock {
     }
     public async removeObservedPart(observedPart: string): Promise<void> {
         return;
+    }
+    public canUserCreate(): MGPValidation {
+        if (this.observedPart.isAbsent()) { // TODOTODO UNIT TEST
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('pétasse en pénèsse!');
+        }
     }
 }
 

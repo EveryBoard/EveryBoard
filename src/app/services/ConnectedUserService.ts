@@ -5,7 +5,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
-import { FocussedPart, User } from '../domain/User';
+import { FocussedPart, User, UserRoleInPart } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
@@ -13,6 +13,21 @@ import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Localized } from '../utils/LocaleUtils';
+import { MGPMap } from '../utils/MGPMap';
+
+export class GameActionFailure {
+
+    public static YOU_ARE_ALREADY_PLAYING: Localized = () => $localize`You are already playing in another game.`;
+
+    public static YOU_ARE_ALREADY_CREATING: Localized = () => $localize`You are already the creator of another game.`;
+
+    public static YOU_ARE_ALREADY_CHOSEN_OPPONENT: Localized = () => $localize`You are already the chosen opponent in another game.`;
+
+    public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
+
+    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observer in another game.`;
+}
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -81,6 +96,7 @@ export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
+    public static roleToMessage: MGPMap<UserRoleInPart, Localized> = MGPMap;
     public unsubscribeFromAuth!: Unsubscribe; // public for testing purposes only
 
     /**
@@ -95,10 +111,9 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userRS: ReplaySubject<AuthUser>;
     private readonly userObs: Observable<AuthUser>;
 
-    private observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
-
     private readonly observedPartRS: ReplaySubject<MGPOptional<FocussedPart>>;
     private readonly observedPartObs: Observable<MGPOptional<FocussedPart>>;
+    private observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
 
     constructor(private readonly userDAO: UserDAO,
                 private readonly auth: FireAuth.Auth,
@@ -335,6 +350,38 @@ export class ConnectedUserService implements OnDestroy {
     public sendPresenceToken(): Promise<void> {
         assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
         return this.userDAO.updatePresenceToken(this.user.get().id);
+    }
+    public canUserCreate(): MGPValidation {
+        if (this.observedPart.isAbsent()) { // TODOTODO UNIT TEST
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('chaussettes en bite!');
+        }
+    }
+    public canUserJoin(partId: string): MGPValidation {
+        if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
+            // User is allowed to observe one part in any way
+            // or to do it twice with the same one
+            return MGPValidation.SUCCESS;
+        } else {
+            const observedPart: FocussedPart = this.observedPart.get();
+            switch (observedPart.role) {
+                case 'Creator':
+                    // Even if one player can be creator of one part that is started
+                    // It is here only used for non started game
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CREATING());
+                case 'Candidate':
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CANDIDATE());
+                case 'ChosenOpponent':
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT());
+                case 'Player':
+                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_PLAYING());
+                default:
+                    Utils.expectToBe(observedPart.role, 'Observer');
+                    return MGPValidation.SUCCESS;
+                    // It is allow to observe another game
+            }
+        }
     }
     public ngOnDestroy(): void {
         if (this.userUnsubscribe.isPresent()) {

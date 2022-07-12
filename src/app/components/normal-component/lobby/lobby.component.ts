@@ -2,30 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../../services/UserService';
-import { display, Utils } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
 import { FocussedPart, UserDocument } from 'src/app/domain/User';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 type Tab = 'games' | 'create' | 'chat';
 
-
-export class LobbyComponentFailure {
-
-    public static YOU_ARE_ALREADY_PLAYING: Localized = () => $localize`You are already playing in another game.`;
-
-    public static YOU_ARE_ALREADY_CREATING: Localized = () => $localize`You are already the creator of another game.`;
-
-    public static YOU_ARE_ALREADY_CHOSEN_OPPONENT: Localized = () => $localize`You are already the chosen opponent in another game.`;
-
-    public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
-
-    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observer in another game.`;
-}
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
@@ -77,28 +64,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.observedPartSub.unsubscribe();
     }
     public async joinGame(partId: string, typeGame: string): Promise<void> {
-        if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
-            // User is allowed to observe one part in any way
-            // or to do it twice with the same one
+        const canUserJoin: MGPValidation = this.connectedUserService.canUserJoin(partId);
+        if (canUserJoin.isSuccess()) {
             await this.router.navigate(['/play', typeGame, partId]);
         } else {
-            const observedPart: FocussedPart = this.observedPart.get();
-            switch (observedPart.role) {
-                case 'Creator':
-                    // Even if one player can be creator of one part that is started
-                    // It is here only used for non started game
-                    return this.messageDisplayer.infoMessage(LobbyComponentFailure.YOU_ARE_ALREADY_CREATING());
-                case 'Candidate':
-                    return this.messageDisplayer.infoMessage(LobbyComponentFailure.YOU_ARE_ALREADY_CANDIDATE());
-                case 'ChosenOpponent':
-                    return this.messageDisplayer.infoMessage(LobbyComponentFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT());
-                case 'Player':
-                    return this.messageDisplayer.infoMessage(LobbyComponentFailure.YOU_ARE_ALREADY_PLAYING());
-                default:
-                    Utils.expectToBe(observedPart.role, 'Observer');
-                    await this.router.navigate(['/play', typeGame, partId]);
-                    // It is allow to observe another game
-            }
+            this.messageDisplayer.criticalMessage(canUserJoin.getReason());
         }
     }
     public getCreateButtonClass(): string[] {
@@ -106,18 +76,15 @@ export class LobbyComponent implements OnInit, OnDestroy {
         if (this.currentTab === 'create') {
             classes.push('is-active');
         }
-        if (this.canUserCreate() === false) {
-            classes.push('is-disabled'); // TODOTODO check its face and UNIT TEST
-        }
         return classes;
-    }
-    private canUserCreate(): boolean {
-        return this.observedPart.isAbsent(); // TODOTODO UNIT TEST
     }
     public selectTab(tab: Tab): void {
         if (tab ==='create') {
-            if (this.canUserCreate()) {
+            const canUserCreate: MGPValidation = this.connectedUserService.canUserCreate();
+            if (canUserCreate.isSuccess()) {
                 this.currentTab = tab;
+            } else {
+                this.messageDisplayer.criticalMessage(canUserCreate.getReason());
             }
         } else {
             this.currentTab = tab;

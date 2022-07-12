@@ -4,6 +4,7 @@ import { MGPSet } from './MGPSet';
 import { assert } from './assert';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
+
     private map: {key: K, value: V}[] = [];
 
     private isImmutable: boolean = false;

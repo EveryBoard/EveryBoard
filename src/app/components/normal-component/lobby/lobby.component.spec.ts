@@ -7,7 +7,7 @@ import { DebugElement } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
-import { LobbyComponent, LobbyComponentFailure } from './lobby.component';
+import { LobbyComponent, GameActionFailure } from './lobby.component';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -18,6 +18,9 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 fdescribe('LobbyComponent', () => {
 
@@ -35,17 +38,41 @@ fdescribe('LobbyComponent', () => {
         component.ngOnInit();
     }));
 
-    it('should display online-game-selection component when clicking on tab-create element', fakeAsync(async() => {
-        // Given a server page
-        testUtils.detectChanges();
+    describe('tab-create element', () => {
+        it('should display online-game-selection component when clicking on it when allowed by connectedUserService', fakeAsync(async() => {
+            // Given a server page
+            testUtils.detectChanges();
+            // where you are allowed by connectedUserService
+            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+            spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
 
-        // When clicking on the 'create game' tab
-        await testUtils.clickElement('#tab-create');
-        await testUtils.whenStable();
+            // When clicking on the 'create game' tab
+            await testUtils.clickElement('#tab-create');
+            await testUtils.whenStable();
 
-        // Then online-game-selection component is on the page
-        testUtils.expectElementToExist('#online-game-selection');
-    }));
+            // Then online-game-selection component is on the page
+            testUtils.expectElementToExist('#online-game-selection');
+        }));
+        it('should refuse to change page when clicking on it while not allowed by connectedUserService, and toast the reason', fakeAsync(async() => {
+            // Given a server page
+            testUtils.detectChanges();
+            // where you are allowed by connectedUserService
+            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+            spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
+            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+            const error: string = `Si je dit non, c'est non!!!`;
+            spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+
+            // When clicking on the 'create game' tab
+            await testUtils.clickElement('#tab-create');
+            await testUtils.whenStable();
+            tick(3000);
+
+            // Then online-game-selection component is on the page
+            testUtils.expectElementNotToExist('#online-game-selection');
+            expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
+        }));
+    });
 
     function setLobbyPartList(list: PartDocument[]): void {
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
@@ -112,7 +139,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_PLAYING();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow users to play their games from several tabs', fakeAsync(async() => {
@@ -187,7 +214,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_CREATING();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             }));
         });
@@ -213,7 +240,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_CANDIDATE();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             })));
         });
@@ -239,7 +266,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             })));
         });
@@ -299,7 +326,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_PLAYING();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             }));
         });
@@ -325,7 +352,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_CREATING();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow user to have his created part in two tabs', fakeAsync(async() => {
@@ -364,7 +391,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow user to be candidate of the same part in several tabs', fakeAsync(async() => {
@@ -403,7 +430,7 @@ fdescribe('LobbyComponent', () => {
                 tick(3000); // 3 sec of toast display
 
                 // Then the refusal reason should be given
-                const reason: string = LobbyComponentFailure.YOU_ARE_ALREADY_CANDIDATE();
+                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(reason);
             }));
             it('should allow user to have be candidate of the same part in two tabs', fakeAsync(async() => {

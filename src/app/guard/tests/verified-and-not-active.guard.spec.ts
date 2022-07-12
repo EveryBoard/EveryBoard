@@ -9,7 +9,6 @@ import { VerifiedAndNotActiveGuard } from '../verified-and-not-active.guard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PartDocument } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { LobbyComponentFailure } from 'src/app/components/normal-component/lobby/lobby.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
@@ -62,12 +61,9 @@ fdescribe('VerifiedAndNotActiveGuard', () => {
             typeGame: 'P4',
         }));
         // When asking if user can go to this page
-        // Then a refusal should be toasted
-        const expectedError: string = LobbyComponentFailure.YOU_ARE_ALREADY_PLAYING();
-        spyOn(guard.messageDisplayer, 'criticalMessage').and.callThrough();
+        // Then it should be refused
         await expectAsync(guard.canActivate()).toBeResolvedTo(false);
         tick(3000);
-        expect(guard.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(expectedError);
     }));
     it('should refuse to go to creation component when you are already creator', fakeAsync(async() => {
         // Given a connected user service indicating user is already creator
@@ -77,12 +73,9 @@ fdescribe('VerifiedAndNotActiveGuard', () => {
             typeGame: 'P4',
         }));
         // When asking if user can go to this page
-        // Then a refusal should be toasted
-        const expectedError: string = LobbyComponentFailure.YOU_ARE_ALREADY_CREATING();
-        spyOn(guard.messageDisplayer, 'criticalMessage').and.callThrough();
+        // Then it should be refused
         await expectAsync(guard.canActivate()).toBeResolvedTo(false);
         tick(3000);
-        expect(guard.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(expectedError);
     }));
     it('should refuse to go to creation component when you are already observer', fakeAsync(async() => {
         // Given a connected user service indicating user is already observer
@@ -92,12 +85,9 @@ fdescribe('VerifiedAndNotActiveGuard', () => {
             typeGame: 'P4',
         }));
         // When asking if user can go to this page
-        // Then a refusal should be toasted
-        const expectedError: string = LobbyComponentFailure.YOU_ARE_ALREADY_OBSERVING();
-        spyOn(guard.messageDisplayer, 'criticalMessage').and.callThrough();
+        // Then it should be refused
         await expectAsync(guard.canActivate()).toBeResolvedTo(false);
         tick(3000);
-        expect(guard.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(expectedError);
     }));
     it('should refuse to go to creation component when you are already candidate', fakeAsync(async() => {
         // Given a connected user service indicating user is already candidate
@@ -107,12 +97,9 @@ fdescribe('VerifiedAndNotActiveGuard', () => {
             typeGame: 'P4',
         }));
         // When asking if user can go to this page
-        // Then a refusal should be toasted
-        const expectedError: string = LobbyComponentFailure.YOU_ARE_ALREADY_CANDIDATE();
-        spyOn(guard.messageDisplayer, 'criticalMessage').and.callThrough();
+        // Then it should be refused
         await expectAsync(guard.canActivate()).toBeResolvedTo(false);
         tick(3000);
-        expect(guard.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(expectedError);
     }));
     it('should refuse to go to creation component when you are already chosen opponent', fakeAsync(async() => {
         // Given a connected user service indicating user is already chosen opponent
@@ -122,12 +109,9 @@ fdescribe('VerifiedAndNotActiveGuard', () => {
             typeGame: 'P4',
         }));
         // When asking if user can go to this page
-        // Then a refusal should be toasted
-        const expectedError: string = LobbyComponentFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
-        spyOn(guard.messageDisplayer, 'criticalMessage').and.callThrough();
+        // Then it should be refused
         await expectAsync(guard.canActivate()).toBeResolvedTo(false);
         tick(3000);
-        expect(guard.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(expectedError);
     }));
     it('shoud allow to go to this component when you are not doing anything', async() => {
         // Given a connected user not observing any part
