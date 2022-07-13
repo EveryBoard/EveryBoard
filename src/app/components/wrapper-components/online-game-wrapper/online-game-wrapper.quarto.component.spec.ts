@@ -35,6 +35,7 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -1873,7 +1874,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
-            spyOn(ErrorLoggerService, 'logError');
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
@@ -1893,7 +1894,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     expect(error.message).toBe('Assertion failure: ' + expectedError);
                     failed = true;
                 }
-                expect(failed).toBeTrue();
+                expect(failed).toBeTrue(); // TODO FOR REVIEW: this one is the last remaining monster!
                 expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', expectedError);
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);

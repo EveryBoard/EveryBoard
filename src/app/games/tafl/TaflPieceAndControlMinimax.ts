@@ -36,8 +36,8 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
         const state: TaflState = node.gameState;
-        const WIDTH: number = this.ruler.config.WIDTH;
-        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
+        const width: number = this.ruler.config.WIDTH;
+        const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
@@ -52,8 +52,8 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
                     score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_SAFE_PIECE;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(WIDTH, WIDTH) &&
-                               state.getPieceAt(testedCoord) === EMPTY)
+                        while (testedCoord.isInRange(width, width) &&
+                               state.getPieceAt(testedCoord) === empty)
                         {
                             controlledSquares.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);

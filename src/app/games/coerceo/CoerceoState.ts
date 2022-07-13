@@ -92,13 +92,13 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return resultingState;
     }
     public getCapturedNeighbors(coord: Coord): Coord[] {
-        const OPPONENT: Player = this.getCurrentOpponent();
+        const opponent: Player = this.getCurrentOpponent();
         const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord);
         return neighbors.filter((neighbor: Coord) => {
             if (neighbor.isNotInRange(15, 10)) {
                 return false;
             }
-            if (this.getPieceAt(neighbor).is(OPPONENT)) {
+            if (this.getPieceAt(neighbor).is(opponent)) {
                 return this.isSurrounded(neighbor);
             }
             return false;

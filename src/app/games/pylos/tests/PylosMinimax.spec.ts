@@ -24,7 +24,7 @@ describe('PylosMinimax:', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(16);
     });
     it('Should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {
-        // Given a board on which all kind of moves is possible
+        // Given a board on which all kind of moves are possible
         const board: PlayerOrNone[][][] = [
             [
                 [X, O, O, _],

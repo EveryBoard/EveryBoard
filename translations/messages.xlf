@@ -1505,6 +1505,9 @@
       <trans-unit id="2162535855239454361" datatype="html">
         <source>Your piece must land on the board or on 4 other pieces.</source>
       </trans-unit>
+      <trans-unit id="2201596715619103633" datatype="html">
+        <source>You cannot move a supporting piece.</source>
+      </trans-unit>
       <trans-unit id="70110199629015603" datatype="html">
         <source>You cannot capture.</source>
       </trans-unit>
@@ -2646,9 +2649,6 @@
       </trans-unit>
       <trans-unit id="7583363829279229518" datatype="html">
         <source>Congratulations, you completed the tutorial.</source>
-      </trans-unit>
-      <trans-unit id="9045384613260924473" datatype="html">
-        <source>You cannot move supporting piece.</source>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

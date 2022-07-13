@@ -141,11 +141,11 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return MGPFallible.success(undefined);
     }
     private isLegalStartingCoord(move: PylosMove, initialState: PylosState): MGPFallible<PylosState> {
-        const OPPONENT: Player = initialState.getCurrentOpponent();
+        const opponent: Player = initialState.getCurrentOpponent();
         if (move.startingCoord.isPresent()) {
             const startingCoord: PylosCoord = move.startingCoord.get();
             const startingPiece: PlayerOrNone = initialState.getPieceAt(startingCoord);
-            if (startingPiece === OPPONENT) {
+            if (startingPiece === opponent) {
                 return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
             } else if (startingPiece === PlayerOrNone.NONE) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());

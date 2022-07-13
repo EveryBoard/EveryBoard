@@ -354,7 +354,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating his value
+            // When evaluating its value
             const value: number = minimax.getBoardValue(node).value;
 
             // Then the value should be the vone attributed to one safe piece
@@ -378,7 +378,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating his value
+            // When evaluating its value
             const value: number = minimax.getBoardValue(node).value;
 
             // Then the value should be correct
@@ -403,7 +403,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating his value
+            // When evaluating its value
             const value: number = minimax.getBoardValue(node).value;
 
             // Then the value should be correct
@@ -426,7 +426,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating his value
+            // When evaluating its value
             const value: number = minimax.getBoardValue(node).value;
 
             // Then the value should be correct
@@ -449,7 +449,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating his value
+            // When evaluating its value
             const value: number = minimax.getBoardValue(node).value;
 
             // Then the value should be correct
@@ -474,7 +474,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating his value
+            // When evaluating its value
             const value: number = minimax.getBoardValue(node).value;
 
             // Then the value should be correct

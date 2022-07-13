@@ -78,7 +78,7 @@ describe('MartianChessRules', () => {
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('should be illegal to move a pawn not on one of the 4 diagonal neighboor', () => {
+    it('should be illegal to move a pawn not on one of the 4 diagonal neighbors', () => {
         // Given any board
         const state: MartianChessState = MartianChessState.getInitialState();
 
@@ -133,7 +133,7 @@ describe('MartianChessRules', () => {
         const reason: string = MartianChessMoveFailure.PAWN_MUST_MOVE_ONE_DIAGONAL_STEP();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('should be legal to move a pawn on one of the 4 diagonal neighboor', () => {
+    it('should be legal to move a pawn on one of the 4 diagonal neighbors', () => {
         // Given the initial board
         const state: MartianChessState = MartianChessState.getInitialState();
 
