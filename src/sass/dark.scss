@@ -3,11 +3,12 @@
     --alt-background-fill: #666;
     --alt-captured: #990000;
     --base-stroke: #444;
+    --background-color: black;
     --background-fill: #888;
     --capturable: #990;
     --captured: red;
     --clickable: #990;
-    --disabled-tab-color: grey; //TODOTODO check that its usefull !
+    --disabled-tab-color: grey;
     --indicator: #990;
     --last-move: #AA8;
     --moved: #AAA;
@@ -21,6 +22,7 @@
     --selectable: #990;
     --selected: #99E;
     --spaces-fill: #888;
+    --tab-highlight-on-hover: #4a4a4a;
     --victory: green;
 }
 

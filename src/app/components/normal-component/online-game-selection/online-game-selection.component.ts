@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 @Component({
     selector: 'app-online-game-selection',
@@ -9,13 +12,19 @@ export class OnlineGameSelectionComponent {
 
     public selectedGame: string;
 
-    public constructor(private readonly router: Router) {
+    public constructor(private readonly router: Router,
+                       private readonly connectedUserService: ConnectedUserService,
+                       private readonly messageDisplayer: MessageDisplayer) {
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
     public async navigateToOnlineGameCreation(): Promise<void> {
-        // TODOTODO dire au frikin CanActivate thingy de bloquer en amont, car ici rien est bloqué hé !
-        await this.router.navigate(['/play', this.selectedGame]);
+        const canUserJoin: MGPValidation = this.connectedUserService.canUserCreate();
+        if (canUserJoin.isSuccess()) {
+            await this.router.navigate(['/play', this.selectedGame]);
+        } else {
+            this.messageDisplayer.criticalMessage(canUserJoin.getReason());
+        }
     }
 }

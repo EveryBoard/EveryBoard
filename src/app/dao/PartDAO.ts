@@ -35,7 +35,7 @@ export class PartDAO extends FirestoreDAO<Part> {
     public observeActiveParts(callback: FirestoreCollectionObserver<Part>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
-    public async userHasActivePart(username: string): Promise<boolean> {
+    public async userHasActivePart(username: string): Promise<boolean> { // TODOTODO this should not be needed
         // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
         const userIsFirstPlayer: FirestoreDocument<Part>[] = await this.findWhere([
             ['playerZero', '==', username],

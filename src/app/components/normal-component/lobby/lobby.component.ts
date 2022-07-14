@@ -25,13 +25,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public activeParts: PartDocument[] = [];
 
-    public observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
+    public observedPartSub: Subscription;
 
     private activeUsersSub: Subscription;
     private activePartsSub: Subscription;
-    private observedPartSub: Subscription;
 
     public currentTab: Tab = 'games';
+    public createTabClasses: string[] = [];
 
     constructor(public readonly router: Router,
                 public readonly messageDisplayer: MessageDisplayer,
@@ -50,10 +50,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
             .subscribe((activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
-        this.observedPartSub = this.connectedUserService.getObservedPartObs()
-            .subscribe((observedPart: MGPOptional<FocussedPart>) => {
-                this.observedPart = observedPart;
-            });
+        this.connectedUserService.getObservedPartObs().subscribe((observed: MGPOptional<FocussedPart>) => {
+            this.createTabClasses = [];
+            if (observed.isPresent()) {
+                this.createTabClasses = ['disabled-tab']; // TODOTODO CSS IS GOING UNDER, DAS VRONGUE
+            }
+        });
     }
     public ngOnDestroy(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
@@ -61,7 +63,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.activePartsService.stopObserving();
         this.activePartsSub.unsubscribe();
         this.userService.unSubFromActiveUsersObs();
-        this.observedPartSub.unsubscribe();
     }
     public async joinGame(partId: string, typeGame: string): Promise<void> {
         const canUserJoin: MGPValidation = this.connectedUserService.canUserJoin(partId);
@@ -70,13 +71,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
         } else {
             this.messageDisplayer.criticalMessage(canUserJoin.getReason());
         }
-    }
-    public getCreateButtonClass(): string[] {
-        const classes: string[] = [];
-        if (this.currentTab === 'create') {
-            classes.push('is-active');
-        }
-        return classes;
     }
     public selectTab(tab: Tab): void {
         if (tab ==='create') {

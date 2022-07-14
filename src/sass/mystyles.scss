@@ -48,6 +48,13 @@ html {
     -webkit-text-stroke-color: black;
 }
 
-.disabled-tab {
-    color: --disabled-tab-color
+.tabs .disabled-tab {
+    color: var(--disabled-tab-color);
+}
+.tabs .disabled-tab:hover {
+    color: grey;
+    cursor: none;
+    background-color: var(--background-color) !important;
+    border-color: var(--tab-highlight-on-hover) !important;
+    // z-index: 0 !important;
 }

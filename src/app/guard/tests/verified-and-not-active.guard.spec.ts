@@ -20,11 +20,7 @@ describe('VerifiedAndNotActiveGuard', () => {
 
     let router: Router;
 
-    const unstartedPartUserCreated: PartDocument = new PartDocument('I-create', PartMocks.INITIAL);
-    const unstartedPartUserDidNotCreate: PartDocument = new PartDocument('I-did-not-create', PartMocks.ANOTHER_UNSTARTED);
-
     const startedPartUserPlay: PartDocument = new PartDocument('I-play', PartMocks.STARTED);
-    const startedPartUserDoNotPlay: PartDocument = new PartDocument('I-do-not-play', PartMocks.OTHER_STARTED);
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -53,7 +49,7 @@ describe('VerifiedAndNotActiveGuard', () => {
         await guard.canActivate();
         expect('TODOTODO: check the best way to test that its indeed sharing rules with mother').toBe('donydone');
     }));
-    it('should refuse to go to creation component when you are already player', fakeAsync(async() => {
+    it('should refuse to go to creation component when you have any observed part and redirect to it', fakeAsync(async() => {
         // Given a connected user service indicating user is already player
         ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
             id: startedPartUserPlay.id,
@@ -62,55 +58,7 @@ describe('VerifiedAndNotActiveGuard', () => {
         }));
         // When asking if user can go to this page
         // Then it should be refused
-        await expectAsync(guard.canActivate()).toBeResolvedTo(false);
-        tick(3000);
-    }));
-    it('should refuse to go to creation component when you are already creator', fakeAsync(async() => {
-        // Given a connected user service indicating user is already creator
-        ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
-            id: unstartedPartUserCreated.id,
-            role: 'Creator',
-            typeGame: 'P4',
-        }));
-        // When asking if user can go to this page
-        // Then it should be refused
-        await expectAsync(guard.canActivate()).toBeResolvedTo(false);
-        tick(3000);
-    }));
-    it('should refuse to go to creation component when you are already observer', fakeAsync(async() => {
-        // Given a connected user service indicating user is already observer
-        ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
-            id: startedPartUserDoNotPlay.id,
-            role: 'Observer',
-            typeGame: 'P4',
-        }));
-        // When asking if user can go to this page
-        // Then it should be refused
-        await expectAsync(guard.canActivate()).toBeResolvedTo(false);
-        tick(3000);
-    }));
-    it('should refuse to go to creation component when you are already candidate', fakeAsync(async() => {
-        // Given a connected user service indicating user is already candidate
-        ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
-            id: unstartedPartUserDidNotCreate.id,
-            role: 'Candidate',
-            typeGame: 'P4',
-        }));
-        // When asking if user can go to this page
-        // Then it should be refused
-        await expectAsync(guard.canActivate()).toBeResolvedTo(false);
-        tick(3000);
-    }));
-    it('should refuse to go to creation component when you are already chosen opponent', fakeAsync(async() => {
-        // Given a connected user service indicating user is already chosen opponent
-        ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
-            id: unstartedPartUserDidNotCreate.id,
-            role: 'ChosenOpponent',
-            typeGame: 'P4',
-        }));
-        // When asking if user can go to this page
-        // Then it should be refused
-        await expectAsync(guard.canActivate()).toBeResolvedTo(false);
+        await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
         tick(3000);
     }));
     it('shoud allow to go to this component when you are not doing anything', async() => {

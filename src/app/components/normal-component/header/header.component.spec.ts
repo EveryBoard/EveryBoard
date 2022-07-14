@@ -75,7 +75,7 @@ describe('HeaderComponent', () => {
             tick();
             testUtils.expectElementNotToExist('#observedPartLink');
 
-            // When user become link to an observedPart
+            // When user become linked to an observedPart
             const observedPart: FocussedPart = {
                 id: '123',
                 typeGame: 'P4',
@@ -85,7 +85,7 @@ describe('HeaderComponent', () => {
             testUtils.detectChanges();
             tick();
 
-            // Then "P4 against Jean-Jaja" should be displayed
+            // Then "P4 (waiting for opponent)" should be displayed
             const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
             expect(observedPartLink.nativeElement.innerText).toEqual('P4 (waiting for opponent)');
         }));
@@ -96,7 +96,7 @@ describe('HeaderComponent', () => {
             tick();
             testUtils.expectElementNotToExist('#observedPartLink');
 
-            // When user become link to an observedPart
+            // When user become linked to an observedPart
             const observedPart: FocussedPart = {
                 id: '123',
                 opponent: 'Jean-Jaja',
