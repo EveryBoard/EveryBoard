@@ -64,7 +64,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         let inspectedCoord: Coord = move.coord.getNext(dir);
         for (let i: number = 1; i < dist; i++) {
             if (state.getPieceAt(inspectedCoord) !== TaflPawn.UNOCCUPIED) {
-                return MGPValidation.failure(TaflFailure.SOMETHING_IN_THE_WAY());
+                return MGPValidation.failure(RulesFailure.SOMETHING_IN_THE_WAY());
             }
             inspectedCoord = inspectedCoord.getNext(dir);
         }

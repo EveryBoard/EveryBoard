@@ -117,7 +117,13 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         if (this.chosenCoord.isPresent()) {
             return this.cancelMove(SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
         } else {
-            this.chosenCoord = MGPOptional.of(new Coord(x, y));
+            const clickedCoord: Coord = new Coord(x, y);
+            if (this.getState().isOnBoard(clickedCoord) &&
+                this.getState().getPieceAtXY(x, y).isEmptyOrMountain())
+            {
+                return this.cancelMove(SiamFailure.MUST_INSERT_OR_CHOOSE_YOUR_PIECE());
+            }
+            this.chosenCoord = MGPOptional.of(clickedCoord);
             const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gameState);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = MGPOptional.of(this.chosenCoord.get().getNext(dir));

@@ -15,9 +15,9 @@
             />
             <circle *ngIf="board[y][x] !== NONE"
                     (click)="onClick(x, y)"
-                    [attr.r]="(SPACE_SIZE - (2 * STROKE_WIDTH)) * 0.5"
                     [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
                     [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                    [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                     [ngClass]="getPieceClasses(x, y)"
                     class="base"
             />

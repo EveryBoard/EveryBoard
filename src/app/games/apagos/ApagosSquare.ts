@@ -8,10 +8,11 @@ export class ApagosSquare {
         if (nbZero + nbOne > nbTotal) {
             return MGPFallible.failure('invalid starting space');
         }
-        const containing: MGPMap<PlayerOrNone, number> = new MGPMap();
-        containing.set(Player.ZERO, nbZero);
-        containing.set(Player.ONE, nbOne);
-        containing.set(PlayerOrNone.NONE, nbTotal);
+        const containing: MGPMap<PlayerOrNone, number> = new MGPMap([
+            { key: Player.ZERO, value: nbZero },
+            { key: Player.ONE, value: nbOne },
+            { key: PlayerOrNone.NONE, value: nbTotal },
+        ]);
         containing.makeImmutable();
         const validSquare: ApagosSquare = new ApagosSquare(containing);
         return MGPFallible.success(validSquare);

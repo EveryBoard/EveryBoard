@@ -8,6 +8,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Localized } from '../utils/LocaleUtils';
 
 @Injectable({
     providedIn: 'root',
@@ -20,8 +21,8 @@ export class JoinerService implements OnDestroy {
 
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
-    public static readonly USER_ALREADY_IN_GAME: () => string = () => $localize`You cannot join this game because you are already in another one.`;
-    public static readonly GAME_DOES_NOT_EXIST: () => string = () => $localize`Game does not exist`;
+    public static readonly USER_ALREADY_IN_GAME: Localized = () => $localize`You cannot join this game because you are already in another one.`;
+    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
 
     constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');

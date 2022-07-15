@@ -8,5 +8,5 @@ export class LinesOfActionFailure {
 
     public static readonly PIECE_CANNOT_MOVE: Localized = () => $localize`This piece has no possible move, select another one.`;
 
-    public static readonly INVALID_DIRECTION: Localized = () => $localize`A move must be orthogonal or diagonal`;
+    public static readonly INVALID_DIRECTION: Localized = () => $localize`A move must be orthogonal or diagonal.`;
 }

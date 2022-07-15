@@ -23,7 +23,6 @@ describe('GameComponent', () => {
     beforeEach(fakeAsync(async() => {
         await ComponentTestUtils.configureTestModule(activatedRouteStub);
     }));
-
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
         // given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
@@ -81,6 +80,10 @@ describe('GameComponent', () => {
                 selectLodestone: ['push', false],
                 selectPressurePlate: ['top', 1],
                 deselectPressurePlate: ['top', 1],
+            },
+            MartianChess: {
+                onClick: [0, 0],
+                onClockClick: [],
             },
             MinimaxTesting: {
                 chooseRight: [],

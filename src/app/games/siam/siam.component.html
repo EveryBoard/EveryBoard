@@ -29,26 +29,25 @@
                   class="base"
             />
             <g *ngIf="c.isPiece()">
-                <use xlink:href="#arrow"
-                     id="clickPiece_{{x}}_{{y}}"
-                     (click)="clickPiece(x, y)"
-                     [attr.transform]="getPieceTransform(x, y)"
-                     [ngClass]="getPieceClasses(c)"
+                <use id="clickPiece_{{x}}_{{y}}"
                      class="base mid-stroke"
-            />
+                     [ngClass]="getPieceClasses(c)"
+                     (click)="clickPiece(x, y)"
+                     xlink:href="#arrow"
+                     [attr.transform]="getPieceTransform(x, y)"/>
                 <g *ngIf="choosingDirection(x, y)">
                     <circle id="chooseDirection_"
+                            class="arrow selected-fill no-stroke"
                             (click)="chooseDirection('')"
                             [attr.cx]="((x+1) * SPACE_SIZE) + SPACE_SIZE/2"
                             [attr.cy]="((y+1) * SPACE_SIZE) + SPACE_SIZE/2"
-                            class="arrow selected-fill no-stroke"
                             r="8"/>
                     <use *ngFor="let direction of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
-                         xlink:href="#triangle"
                          id="chooseDirection_{{direction}}"
+                         class="arrow selected-fill no-stroke"
                          (click)="chooseDirection(direction)"
-                         [attr.transform]="getArrowTransform(x+1, y+1, direction)"
-                         class="arrow selected-fill no-stroke" />
+                         xlink:href="#triangle"
+                         [attr.transform]="getArrowTransform(x+1, y+1, direction)"/>
                 </g>
             </g>
             <use *ngIf="isMountain(c)"
@@ -57,11 +56,11 @@
                  fill="brown" />
             <g *ngIf="choosingOrientation(x, y)">
                 <use *ngFor="let orientation of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
-                     xlink:href="#triangle"
-                     id="chooseOrientation_{{orientation}}"
+                     id="chooseOrientation_{{ orientation }}"
+                     class="arrow selected-fill no-stroke"
                      (click)="chooseOrientation(orientation)"
-                     [attr.transform]="getArrowTransform(x+1, y+1, orientation)"
-                     class="arrow selected-fill no-stroke" />
+                     xlink:href="#triangle"
+                     [attr.transform]="getArrowTransform(x+1, y+1, orientation)" />
             </g>
         </g>
     </g>

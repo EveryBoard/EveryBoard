@@ -478,7 +478,7 @@ export class LodestoneComponent
                         plateInfo.coords[i].squareClasses.push('moved');
                         plateInfo.coords[i].temporary = temporary;
                         if (temporary) {
-                            plateInfo.coords[i].pieceClasses.push('transparent');
+                            plateInfo.coords[i].pieceClasses.push('semi-transparent');
                         }
                     }
                 }

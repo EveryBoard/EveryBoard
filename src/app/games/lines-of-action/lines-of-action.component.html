@@ -18,7 +18,7 @@
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
                         [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
                         [ngClass]="getPieceClasses(x, y)"
-                        r="40"
+                        [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                         class="base"/>
             </g>
         </g>

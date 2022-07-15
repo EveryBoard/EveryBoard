@@ -4,6 +4,7 @@ import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Encoder } from './Encoder';
+import { Localized } from '../utils/LocaleUtils';
 
 export class Vector implements ComparableObject {
     public equals(other: Vector): boolean {
@@ -69,7 +70,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
-        return MGPFallible.failure(`Invalid delta for direction: ${dx}, ${dy}`);
+        return MGPFallible.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR());
     }
     public fromMove(start: Coord, end: Coord): MGPFallible<T> {
         return this.fromDelta(end.x - start.x, end.y - start.y);
@@ -115,6 +116,7 @@ export class DirectionEncoder extends Encoder<Direction> {
 }
 
 export class Direction extends BaseDirection {
+
     public static readonly UP: Direction = new Direction(0, -1);
     public static readonly UP_RIGHT: Direction = new Direction(1, -1);
     public static readonly RIGHT: Direction = new Direction(1, 0);
@@ -136,7 +138,9 @@ export class Direction extends BaseDirection {
                 Direction.UP_LEFT,
             ];
         };
+
     public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
+
     public static readonly DIAGONALS: ReadonlyArray<Direction> = [
         Direction.UP_RIGHT,
         Direction.DOWN_RIGHT,
@@ -207,4 +211,9 @@ export class Orthogonal extends BaseDirection {
         const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
         return opposite.get();
     }
+}
+
+export class DirectionFailure {
+
+    public static readonly DIRECTION_MUST_BE_LINEAR: Localized = () => $localize`You must move in a straight line! You can only move orthogonally or diagonally!`
 }
