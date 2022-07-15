@@ -246,38 +246,30 @@ describe('ActivePartsService', () => {
             listMoves: [],
         };
         const username: string = 'jeanjaja';
-        beforeEach(async() => {
-            // These tests need a logged in user to create documents
-            await createConnectedGoogleUser(false);
-        });
-        it('should return true when user has an active part as player zero', async() => {
+        it('should return true when user has an active part as player zero', fakeAsync(async() => {
             // Given a part where user is player zero
             await partDAO.create({ ...part, playerZero: username });
             // When checking if the user has an active part
             const result: boolean = await service.userHasActivePart(username);
             // Then it should return true
             expect(result).toBeTrue();
-        });
-        it('should return true when user has an active part as player one', async() => {
+        }));
+        it('should return true when user has an active part as player one', fakeAsync(async() => {
             // Given a part where user is player zero
             await partDAO.create({ ...part, playerOne: username });
             // When checking if the user has an active part
             const result: boolean = await service.userHasActivePart(username);
             // Then it should return true
             expect(result).toBeTrue();
-        });
-        it('should return false when the user has no active part', async() => {
+        }));
+        it('should return false when the user has no active part', fakeAsync(async() => {
             // Given a part where the user is not active
             await partDAO.create(part);
             // When checking if the user has an active part
             const result: boolean = await service.userHasActivePart(username);
             // Then it should return false
             expect(result).toBeFalse();
-
-        });
-        afterEach(async() => {
-            await TestBed.inject(FireAuth.Auth).signOut();
-        });
+        }));
     });
     afterEach(() => {
         if (stoppedObserving === false) {
