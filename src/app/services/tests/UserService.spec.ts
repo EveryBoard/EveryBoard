@@ -2,9 +2,7 @@
 import { UserService } from '../UserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { serverTimestamp } from 'firebase/firestore';
-import * as FireAuth from '@angular/fire/auth';
 import { User } from 'src/app/domain/User';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
@@ -48,25 +46,19 @@ describe('UserService', () => {
     });
     describe('setUsername', () => {
         it('should change the username of a user', async() => {
-            // TODOTODO: replace with checking that update is correctly called
-            // given a google user
-            const user: FireAuth.User = await createConnectedGoogleUser(true);
-            const uid: string = user.uid;
+            spyOn(userDAO, 'update').and.resolveTo();
 
-            // when its username is set
-            await service.setUsername(uid, 'foo');
+            // When the username of a user set
+            await service.setUsername('uid', 'foo');
 
-            // then its username has changed
-            const userWithUsername: User = (await userDAO.read(uid)).get();
-            expect(userWithUsername.username).toEqual('foo');
-
-            await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
+            // Then the username is updated through the DAO
+            expect(userDAO.update).toHaveBeenCalledWith('uid', { username: 'foo' });
         });
     });
     describe('updatePresenceToken', () => {
         it('should delegate to update', async() => {
             // Given any situation
-            spyOn(userDAO, 'update');
+            spyOn(userDAO, 'update').and.resolveTo();
 
             // When calling updatePresenceToken
             await service.updatePresenceToken('joserId');

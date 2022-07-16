@@ -1,11 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { PartDAO } from 'src/app/dao/PartDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { PartService } from 'src/app/services/PartService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';

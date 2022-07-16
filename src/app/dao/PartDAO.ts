@@ -2,7 +2,6 @@ import { FirestoreDAO } from './FirestoreDAO';
 import { Part } from '../domain/Part';
 import { Injectable } from '@angular/core';
 import { display } from 'src/app/utils/utils';
-import { Player } from '../jscaip/Player';
 import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({

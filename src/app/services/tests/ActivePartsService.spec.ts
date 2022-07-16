@@ -8,8 +8,6 @@ import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
-import { createConnectedGoogleUser } from './ConnectedUserService.spec';
-import * as FireAuth from '@angular/fire/auth';
 
 describe('ActivePartsService', () => {
 
