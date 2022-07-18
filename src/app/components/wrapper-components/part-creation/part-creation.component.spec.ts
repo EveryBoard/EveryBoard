@@ -161,6 +161,7 @@ describe('PartCreationComponent', () => {
                 // When the candidate user's document changes
                 // eslint-disable-next-line camelcase
                 const last_changed: FirestoreTime = { seconds: 500, nanoseconds: 0 };
+                // eslint-disable-next-line camelcase
                 await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { last_changed });
                 tick(PartCreationComponent.TOKEN_INTERVAL);
 
