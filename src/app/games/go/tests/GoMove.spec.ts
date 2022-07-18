@@ -3,7 +3,7 @@ import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoState } from '../GoState';
 import { GoMove } from '../GoMove';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('GoMove', () => {
 

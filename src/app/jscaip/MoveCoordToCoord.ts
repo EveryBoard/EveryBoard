@@ -1,9 +1,9 @@
 import { MoveCoord } from './MoveCoord';
 import { Coord } from './Coord';
-import { NumberEncoder } from './Encoder';
 import { Direction } from './Direction';
 import { MGPFallible } from '../utils/MGPFallible';
 import { RulesFailure } from './RulesFailure';
+import { NumberEncoder } from '../utils/Encoder';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
     public static getEncoder<T extends MoveCoordToCoord>(width: number, height: number,

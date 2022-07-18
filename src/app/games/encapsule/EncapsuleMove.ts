@@ -2,7 +2,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsulePiece } from './EncapsulePiece';
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 
 export class EncapsuleMove extends Move {
     public static encoder: NumberEncoder<EncapsuleMove> = new class extends NumberEncoder<EncapsuleMove> {
