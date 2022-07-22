@@ -212,6 +212,7 @@ export class GameService {
         return this.sendRequest(partDocument.id, user, lastIndex, Request.rematchAccepted(part.typeGame, rematchId));
     }
     public askTakeBack(partId: string, lastIndex: number, player: Player): Promise<void> {
+        console.log('GameService.askTakeBack')
         return this.sendRequest(partId, player, lastIndex, Request.takeBackAsked(player));
     }
     public async acceptTakeBack(id: string, part: PartDocument, observerRole: Player, msToSubstract: [number, number])

@@ -120,4 +120,8 @@ export class ObjectDifference {
         }
         return { state: null, present: false };
     }
+    public isFullyCreated(): boolean {
+        return Object.keys(this.modified).length === 0 &&
+               Object.keys(this.removed).length === 0;
+    }
 }

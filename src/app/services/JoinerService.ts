@@ -60,7 +60,8 @@ export class JoinerService {
         }
         const joinerList: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.some((minimalUser: MinimalUser) => minimalUser.id === user.id)) {
-            return MGPValidation.failure(JoinerService.USER_ALREADY_IN_GAME());
+            // return MGPValidation.failure(JoinerService.USER_ALREADY_IN_GAME()); // PEUT ETRE PAS NEEDED ?
+            return MGPValidation.SUCCESS;
         } else if (user.id === joiner.get().creator.id) {
             return MGPValidation.SUCCESS;
         } else {

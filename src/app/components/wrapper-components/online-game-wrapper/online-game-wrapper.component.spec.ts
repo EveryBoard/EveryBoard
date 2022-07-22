@@ -21,7 +21,9 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
 
 describe('OnlineGameWrapper for non-existing game', () => {
+
     let testUtils: ComponentTestUtils<AbstractGameComponent>;
+
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         testUtils = await ComponentTestUtils.basic('invalid-game');

@@ -27,9 +27,9 @@ export class VerifiedAndNotActiveGuard extends VerifiedAccountGuard implements O
         if (isVerified !== true) {
             return isVerified;
         }
-        return this.evaluateUserPermissionBasedOnHisObservedPart(user);
+        return this.evaluateUserPermissionBasedOnHisObservedPart();
     }
-    protected async evaluateUserPermissionBasedOnHisObservedPart(user: AuthUser): Promise<boolean | UrlTree> {
+    protected async evaluateUserPermissionBasedOnHisObservedPart(): Promise<boolean | UrlTree> {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
             const subscription: Subscription = this.authService
                 .getObservedPartObs()
