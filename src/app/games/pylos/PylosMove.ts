@@ -1,7 +1,7 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Move } from 'src/app/jscaip/Move';
 import { PylosCoord } from './PylosCoord';
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 
 export class PylosMove extends Move {
     public static encoder: NumberEncoder<PylosMove> = new class extends NumberEncoder<PylosMove> {

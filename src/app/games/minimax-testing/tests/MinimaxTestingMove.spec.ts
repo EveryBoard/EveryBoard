@@ -3,7 +3,7 @@ import { MinimaxTestingRules } from '../MinimaxTestingRules';
 import { MinimaxTestingMove } from '../MinimaxTestingMove';
 import { MinimaxTestingState } from '../MinimaxTestingState';
 import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('MinimaxTestingMove', () => {
 
