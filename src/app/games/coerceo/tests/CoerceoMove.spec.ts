@@ -5,7 +5,7 @@ import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('CoerceoMove', () => {
 

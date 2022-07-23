@@ -6,7 +6,7 @@ import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 

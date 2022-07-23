@@ -5,7 +5,7 @@ import { EncapsuleState } from '../EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('EncapsuleMove', () => {
 
