@@ -1,4 +1,4 @@
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';

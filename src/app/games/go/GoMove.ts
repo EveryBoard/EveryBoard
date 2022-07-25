@@ -1,4 +1,4 @@
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class GoMove extends MoveCoord {

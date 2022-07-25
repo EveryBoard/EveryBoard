@@ -2,7 +2,7 @@ import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
-import { NumberEncoder } from './Encoder';
+import { NumberEncoder } from '../utils/Encoder';
 
 class HexaDirectionEncoder extends NumberEncoder<HexaDirection> {
     public maxValue(): number {

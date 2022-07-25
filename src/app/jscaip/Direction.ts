@@ -3,8 +3,8 @@ import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
-import { Encoder } from './Encoder';
 import { Localized } from '../utils/LocaleUtils';
+import { Encoder } from '../utils/Encoder';
 
 export class Vector implements ComparableObject {
     public equals(other: Vector): boolean {

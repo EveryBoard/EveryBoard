@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { JSONValue } from 'src/app/utils/utils';
 import { Encoder, NumberEncoder } from '../Encoder';
-import { Player, PlayerOrNone } from '../Player';
 
 export class EncoderTestUtils {
     public static expectToBeCorrect<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {

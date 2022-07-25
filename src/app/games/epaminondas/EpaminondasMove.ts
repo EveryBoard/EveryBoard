@@ -1,5 +1,5 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 

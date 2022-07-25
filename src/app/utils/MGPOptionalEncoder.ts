@@ -1,4 +1,4 @@
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { Encoder } from './Encoder';
 import { MGPOptional } from './MGPOptional';
 import { JSONValue } from './utils';
 

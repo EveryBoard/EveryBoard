@@ -1,5 +1,5 @@
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Coord } from '../Coord';
-import { NumberEncoder } from '../Encoder';
 import { MoveCoord, MoveCoordEncoder } from '../MoveCoord';
 
 class MyMoveCoord extends MoveCoord {

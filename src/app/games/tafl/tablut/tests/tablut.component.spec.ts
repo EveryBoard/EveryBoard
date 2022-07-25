@@ -10,9 +10,9 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutRules } from '../TablutRules';
-import { MoveEncoder, NumberEncoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder, NumberEncoder } from 'src/app/utils/Encoder';
 import { TaflMinimax } from '../../TaflMinimax';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { TaflFailure } from '../../TaflFailure';
 
 describe('TablutComponent', () => {

@@ -1,6 +1,6 @@
 import { Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { NumberEncoder } from './Encoder';
+import { NumberEncoder } from '../utils/Encoder';
 
 class PlayerNone implements ComparableObject {
     public static NONE: PlayerNone = new PlayerNone();
