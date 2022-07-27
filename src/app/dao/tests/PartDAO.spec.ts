@@ -179,6 +179,7 @@ describe('PartDAO', () => {
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
             // eslint-disable-next-line camelcase
             const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+            // eslint-disable-next-line camelcase
             await userDAO.update(creator.id, { observedPart: null, last_changed });
             await signOut();
 
@@ -218,6 +219,7 @@ describe('PartDAO', () => {
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
             // eslint-disable-next-line camelcase
             const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+            // eslint-disable-next-line camelcase
             await userDAO.update(creator.id, { observedPart: partId, last_changed });
             await signOut();
 
