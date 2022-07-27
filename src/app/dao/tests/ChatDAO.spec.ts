@@ -26,7 +26,7 @@ describe('ChatDAO', () => {
         return TestBed.inject(FireAuth.Auth).signOut();
     }
     async function createPartAndJoiner(creator: MinimalUser): Promise<string> {
-        const id: string = await partDAO.create(PartMocks.INITIAL);
+        const id: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
         await joinerDAO.set(id, { ...JoinerMocks.INITIAL, creator });
         return id;
     }

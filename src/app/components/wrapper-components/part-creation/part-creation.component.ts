@@ -295,11 +295,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.chatService.deleteChat(this.partId);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat deleted');
 
-        await this.joinerService.deleteJoiner(this.candidates);
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat and joiner deleted');
-
         await this.gameService.deletePart(this.partId);
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat, joiner, and part deleted');
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat and part deleted');
+
+        await this.joinerService.deleteJoiner(this.candidates);
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat, part, and joiner deleted');
 
         return;
     }
@@ -461,7 +461,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: there is no part here');
             return;
-        } else if (authUser.id === this.currentJoiner.creator.id) {
+        } else if (authUser.id === this.currentJoiner.creator.id && this.allDocDeleted === false) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: you(creator) about to cancel creation.');
             await this.cancelGameCreation();

@@ -201,10 +201,10 @@ export class JoinerService {
             partStatus: PartStatus.PART_STARTED.value,
         });
     }
-    public async createJoiner(joiner: Joiner): Promise<string> {
+    public async createJoiner(partId: string, joiner: Joiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.create(' + JSON.stringify(joiner) + ')');
 
-        return this.joinerDAO.create(joiner);
+        return this.joinerDAO.set(partId, joiner);
     }
     public async readJoinerById(partId: string): Promise<Joiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');

@@ -7,7 +7,6 @@ service cloud.firestore {
             allow read, write: if true;
         }
         // From here, the rest of the file matches with firestore.rules
-        // Unfortunately, firebase does not support imports so we have to copy it manually
         match /{document=**} {
             // by default, nothing can be read or written unless explicitly authorized
             allow read, write: if false;
@@ -67,11 +66,11 @@ service cloud.firestore {
                 request.auth.uid == userId;
         }
         function doesNotModifyUsernameIfSet() {
-            let usernameNotYetSet = hasField(resource.data, 'username') == false;
+            let usernameAlreadySet = hasField(resource.data, 'username');
             let usernameBeingSet = hasField(request.resource.data, 'username');
             // It sometimes happens that firebase sends the username as part as updates, even though it is not actually updated. Hence, we accept usernames as part of updates, only if it doesn't change.
-            let doesNotChange = hasField(resource.data, 'username') && hasField(request.resource.data, 'username') && resource.data['username'] == request.resource.data['username'];
-            return usernameNotYetSet || usernameBeingSet == false || doesNotChange;
+            let doesNotChange = usernameAlreadySet && usernameBeingSet && resource.data['username'] == request.resource.data['username'];
+            return usernameAlreadySet == false || usernameBeingSet == false || doesNotChange;
         }
         function onlyModifiesVerifiedFieldIfUserIsVerified() {
             let verifiedKeptSameValue = (resource.data.verified == request.resource.data.verified);
@@ -79,33 +78,43 @@ service cloud.firestore {
             return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
         match /parts/{id} {
-            // Anybody can create a part
-            allow create: if userIsVerified();
+            // Any verified user can create a part with the proper fields set, and has to be the creator
+            allow create: if userIsVerified() &&
+                             // turn can be -1 in case of a new part, 0 in case of a rematch
+                             (request.resource.data.turn == -1 || request.resource.data.turn == 0) &&
+                             hasField(request.resource.data, 'typeGame') &&
+                             request.resource.data.listMoves == [] &&
+                             // creator must be one of the players (could be playerOne in case of rematch)
+                             (request.auth.uid == request.resource.data.playerZero.id ||
+                              hasField(request.resource.data, 'playerOne') && request.auth.uid == request.resource.data.playerOne.id);
             // The owner of a part can delete it, if it has not started
             allow delete: if userIsVerified() &&
                              creatorOf(id).id == request.auth.uid &&
-                             partHasNotStarted(resource.data);
+                             partHasStarted(resource.data) == false;
             // Anyone can delete a part if the owner has timed out and the part has not started
             allow delete: if userIsVerified() &&
                              hasTimedOut(creatorOf(id)) &&
-                             partHasNotStarted(resource.data);
-            // A number of fields are readonly:
-            // - typeGame
-            // - playerZero/playerOne once the part has started
-            // - beginning once the part has started
-            // the part is considered to be started as soon as beginning is set
-            // For any other fields, both players can modify them, with some restrictions:
+                             partHasStarted(resource.data) == false;
+            // A verified user who is the chosen opponent can start the part
+            allow update: if userIsVerified() &&
+                             partHasStarted(resource.data) == false &&
+                             partHasStarted(request.resource.data) &&
+                             preservesField('typeGame') &&
+                             safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate) &&
+                             userIsChosenOpponentInJoiner(id);
+            // A player can update the part as long as it preserves the right fields
+            // (typeGame, playerZero, playerOne, beginning) and performs safe updates:
             // - lastUpdate must be updated monotonously by the corresponding player
             // - turn can only be made +1 (usual turn), -1 (take back), or -2 (take back)
             allow update: if userIsVerified() &&
+                             partHasStarted(resource.data) &&
+                             userIsPlayer(resource.data) &&
                              preservesField('typeGame') &&
-                             (preservesField('playerZero') || partHasNotStarted(resource.data)) &&
-                             (preservesField('playerOne') || partHasNotStarted(resource.data)) &&
-                             (preservesField('beginning') || partHasNotStarted(resource.data)) &&
+                             preservesField('playerZero') &&
+                             preservesField('playerOne') &&
+                             preservesField('beginning') &&
                              (preservesField('turn') || safeTurnUpdate(resource.data.turn, request.resource.data.turn)) &&
-                             (safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate)) &&
-                             (userIsPlayer(resource.data) || (partHasNotStarted(resource.data) && userIsChosenOpponentInJoiner(id)));
-
+                             (safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate));
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
         }
@@ -125,18 +134,19 @@ service cloud.firestore {
             let legitimatePlayerZeroUpdate = newLastUpdate.player == 0 && resource.data.playerZero.id == request.auth.uid;
             let legitimatePlayerOneUpdate = hasField(resource.data, 'playerOne') && newLastUpdate.player == 1 && resource.data.playerOne.id == request.auth.uid;
             let indexIncremented = newLastUpdate.index == oldLastUpdate.index + 1;
-            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate || partHasNotStarted(resource.data)) && indexIncremented;
+            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate || partHasStarted(resource.data) == false) && indexIncremented;
         }
-        function partHasNotStarted(part) {
-            return hasField(part, 'beginning') == false;
+        function partHasStarted(part) {
+            // A part is started when the beginning field is set
+            return hasField(part, 'beginning');
         }
-        function hasTimedOut(creator) {
-            let creatorUser =  get(/databases/$(database)/documents/users/$(creator.id)).data;
-            let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(creatorUser.last_changed.seconds, 's') + duration.value(10, 's');
+        function hasTimedOut(user) {
+            let userDoc =  get(/databases/$(database)/documents/users/$(user.id)).data;
+            let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(userDoc.last_changed.seconds, 's') + duration.value(10, 's');
             return timedOut;
         }
         match /joiners/{partId} {
-            // Anybody can create a joiner as long as they are themselves creator and if the corresponding part exists
+            // Any verified user can create a joiner as long as they are themselves creator and if the corresponding part exists
             allow create: if userIsVerified() &&
                              userIsCreatorWithValidName(request.resource.data) &&
                              exists(/databases/$(database)/documents/parts/$(partId));
@@ -158,20 +168,26 @@ service cloud.firestore {
                              preservesField('totalPartDuration') &&
                              preservesField('chosenOpponent')
             // For anybody else:
-            //   - the chosen opponent can remove itself from the corresponding field
             //   - the chosen opponent can change the config from PROPOSED to STARTED
-            allow update: if userIsVerified() && !userIsCreator(resource.data) &&
-                             userIsChosenOpponent() &&
-                             preservesField('creator') &&
-                             preservesField('firstPlayer') &&
-                             preservesField('partType') &&
-                             preservesField('maximalMoveDuration') &&
-                             preservesField('totalPartDuration') &&
-                             (preservesField('partStatus') || acceptsConfig()) &&
-                             (preservesField('chosenOpponent') || removesOneSelfFromChosenOpponent());
-
+            allow update: if validJoinerUpdate() &&
+                             preservesField('chosenOpponent') &&
+                             acceptsConfig()
+            //   - the chosen opponent can remove itself from the corresponding field
+            allow update: if validJoinerUpdate() &&
+                             preservesField('partStatus') &&
+                             removesOneSelfFromChosenOpponent();
             // Any verified user can read a joiner
             allow read: if userIsVerified();
+        }
+        function validJoinerUpdate() {
+            return userIsVerified() &&
+                userIsCreator(resource.data) == false &&
+                userIsChosenOpponent() &&
+                preservesField('creator') &&
+                preservesField('firstPlayer') &&
+                preservesField('partType') &&
+                preservesField('maximalMoveDuration') &&
+                preservesField('totalPartDuration');
         }
         function joinerHasNotStarted(joiner) {
             return joiner.partStatus < 3;

@@ -10,7 +10,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/Request';
-import { Joiner, PartType } from 'src/app/domain/Joiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -130,6 +130,52 @@ describe('GameService', () => {
         await service.acceptConfig('partId', joiner);
 
         expect(joinerService.acceptConfig).toHaveBeenCalledOnceWith();
+    }));
+    it('createPartJoinerAndChat should create in this order: part, joiner, and then chat', fakeAsync(async() => {
+        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+        const joinerDAO: JoinerDAO = TestBed.inject(JoinerDAO);
+        const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
+        // Install some mocks to check what we need
+        // (we can't rely on toHaveBeenCalled for some strange reason, so we model this manually)
+        let chatCreated: boolean = false;
+        let joinerCreated: boolean = false;
+        spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
+            chatCreated = true;
+        });
+        spyOn(joinerDAO, 'set').and.callFake(async(): Promise<void> => {
+            expect(chatCreated).withContext('joiner should be created before the chat').toBeFalse();
+            joinerCreated = true;
+        });
+        spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
+            expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
+            expect(joinerCreated).withContext('part should be created before the joiner').toBeFalse();
+            return 'partId';
+        });
+
+        // When calling createPartJoinerAndChat
+        await service.createPartJoinerAndChat('P4');
+        // Then, the order of the creations must be part, joiner, chat (as checked by the mocks)
+        // Moreover, everything needs to have been called eventually
+        const part: Part = {
+            lastUpdate: { index: 0, player: 0 },
+            typeGame: 'P4',
+            playerZero: UserMocks.CREATOR_MINIMAL_USER,
+            turn: -1,
+            result: MGPResult.UNACHIEVED.value,
+            listMoves: [],
+        };
+        const joiner: Joiner = {
+            chosenOpponent: null,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
+            partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+            totalPartDuration: PartType.NORMAL_PART_DURATION,
+            creator: UserMocks.CREATOR_MINIMAL_USER,
+        };
+        expect(partDAO.create).toHaveBeenCalledOnceWith(part);
+        expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
+        expect(joinerDAO.set).toHaveBeenCalledOnceWith('partId', joiner);
     }));
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
@@ -272,6 +318,86 @@ describe('GameService', () => {
 
             // then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
+        }));
+        it('should create elements in this order: part, joiner, and then chat', fakeAsync(async() => {
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+            const joinerDAO: JoinerDAO = TestBed.inject(JoinerDAO);
+            const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
+            // Given a part that will be replayed
+            const lastPart: PartDocument = new PartDocument('partId', {
+                lastUpdate: {
+                    index: 4,
+                    player: 0,
+                },
+                listMoves: [MOVE_1, MOVE_2],
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                result: MGPResult.VICTORY.value,
+                turn: 2,
+                typeGame: 'laMarelle',
+                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
+                lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
+                loser: 'creator',
+                winner: 'joiner',
+                request: Request.rematchProposed(Player.ZERO),
+            });
+            const lastGameJoiner: Joiner = {
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
+                firstPlayer: FirstPlayer.CREATOR.value,
+                maximalMoveDuration: 10,
+                partStatus: 3,
+                partType: PartType.BLITZ.value,
+                totalPartDuration: 25,
+            };
+            spyOn(service, 'sendRequest').and.resolveTo();
+            spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
+
+            // Install some mocks to check what we need
+            // (we can't rely on toHaveBeenCalled for some strange reason, so we model this manually)
+            let chatCreated: boolean = false;
+            let joinerCreated: boolean = false;
+            spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
+                chatCreated = true;
+            });
+            spyOn(joinerDAO, 'set').and.callFake(async(): Promise<void> => {
+                expect(chatCreated).withContext('joiner should be created before the chat').toBeFalse();
+                joinerCreated = true;
+            });
+            spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
+                expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
+                expect(joinerCreated).withContext('part should be created before the joiner').toBeFalse();
+                return 'partId';
+            });
+
+            // When accepting the rematch
+            await service.acceptRematch(lastPart, 5, Player.ONE);
+            // Then, the order of the creations must be part, joiner, chat (as checked by the mocks)
+            // Moreover, everything needs to have been called eventually
+            const part: Part = {
+                lastUpdate: { index: 0, player: 1 },
+                typeGame: 'laMarelle',
+                playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOne: UserMocks.CREATOR_MINIMAL_USER,
+                turn: 0,
+                result: MGPResult.UNACHIEVED.value,
+                listMoves: [],
+                beginning: serverTimestamp(),
+                remainingMsForZero: 25000,
+                remainingMsForOne: 25000,
+            };
+            const joiner: Joiner = {
+                chosenOpponent: UserMocks.CREATOR_MINIMAL_USER,
+                creator: UserMocks.OPPONENT_MINIMAL_USER,
+                firstPlayer: FirstPlayer.CREATOR.value,
+                partType: PartType.BLITZ.value,
+                partStatus: PartStatus.PART_STARTED.value,
+                maximalMoveDuration: 10,
+                totalPartDuration: 25,
+            };
+            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
+            expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
+            expect(joinerDAO.set).toHaveBeenCalledOnceWith('partId', joiner);
         }));
     });
     describe('updateDBBoard', () => {

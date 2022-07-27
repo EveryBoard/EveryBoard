@@ -465,10 +465,28 @@ describe('PartCreationComponent', () => {
                 tick();
 
                 // Then game, joiner, and chat are deleted
-                expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith([]);
-                expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
+                expect(gameService.deletePart).toHaveBeenCalledOnceWith('joinerId');
+                expect(joinerService.deleteJoiner).toHaveBeenCalledOnceWith([]);
+                expect(chatService.deleteChat).toHaveBeenCalledOnceWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+            it('should not cancel game if it has been cancelled already', fakeAsync(async() => {
+                // Given a part creation where the part has been cancelled
+                awaitComponentInitialisation();
+                clickElement('#cancel');
+                tick();
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+
+                spyOn(component, 'cancelGameCreation');
+
+                // When the component is destroyed
+                testUtils.destroy();
+                tick(3000);
+                await testUtils.whenStable();
+                destroyed = true;
+
+                // Then it should not delete anything
+                expect(component.cancelGameCreation).not.toHaveBeenCalled();
             }));
             it('should ask AuthService to remove observedPart', fakeAsync(async() => {
                 // Given any part with a non started game

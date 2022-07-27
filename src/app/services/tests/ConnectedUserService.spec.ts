@@ -399,7 +399,7 @@ describe('ConnectedUserService', () => {
             // when the user connects with google
             const result: MGPValidation = await service.doGoogleLogin();
 
-            // then it succeeded
+            // then it should have succeeded
             expect(result.isSuccess()).toBeTrue();
             const provider: FireAuth.GoogleAuthProvider = new FireAuth.GoogleAuthProvider();
             provider.addScope('profile');

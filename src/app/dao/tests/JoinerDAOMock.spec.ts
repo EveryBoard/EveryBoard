@@ -85,7 +85,6 @@ describe('JoinerDAOMock', () => {
             callCount++;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
             lastJoiner = joiner;
-            expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
         });
 
         expect(callCount).toEqual(1);

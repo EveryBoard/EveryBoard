@@ -189,17 +189,17 @@ export class GameService {
         const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
         let firstPlayer: FirstPlayer;
         if (part.playerZero.id === iJoiner.creator.id) {
-            firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
+            firstPlayer = FirstPlayer.CREATOR; // so they won't start this one
         } else {
-            firstPlayer = FirstPlayer.CREATOR;
+            firstPlayer = FirstPlayer.CHOSEN_PLAYER;
         }
         const newJoiner: Joiner = {
-            ...iJoiner, // 5 attributes unchanged
-            candidates: [], // they'll join again when the component reload
-            firstPlayer: firstPlayer.value, // first player changed so the other one starts
+            ...iJoiner, // unchanged attributes
+            firstPlayer: firstPlayer.value,
+            creator: Utils.getNonNullable(iJoiner.chosenOpponent), // switch creator and opponent
+            chosenOpponent: iJoiner.creator,
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
-        const rematchId: string = await this.joinerService.createJoiner(newJoiner);
         const startingConfig: StartingPartConfig = this.getStartingConfig(newJoiner);
         const newPart: Part = {
             lastUpdate: {
@@ -211,7 +211,9 @@ export class GameService {
             listMoves: [],
             ...startingConfig,
         };
-        await this.partDAO.set(rematchId, newPart);
+
+        const rematchId: string = await this.partDAO.create(newPart);
+        await this.joinerService.createJoiner(rematchId, newJoiner);
         await this.createChat(rematchId);
         return this.sendRequest(partDocument.id, user, lastIndex, Request.rematchAccepted(part.typeGame, rematchId));
     }

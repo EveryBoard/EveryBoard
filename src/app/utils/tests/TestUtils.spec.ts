@@ -560,8 +560,6 @@ export function expectValidRoutingLink(element: DebugElement, fullPath: string, 
  * Useful to test that permissions on firestore work as expected.
  */
 export async function expectPermissionToBeDenied<T>(promise: Promise<T>): Promise<void> {
-    await promise.then(() => {
-        throw new Error('Expected a promise to be rejected but it was resolved');
-    },
+    await promise.then(() => {throw new Error('Expected a promise to be rejected but it was resolved');},
                        (actualValue: FirebaseError) => expect(actualValue.code).toBe('permission-denied'));
 }
