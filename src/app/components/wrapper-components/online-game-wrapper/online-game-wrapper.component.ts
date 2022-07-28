@@ -202,14 +202,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (attempt === 0) {
                 throw new Error(`C'est la merde enfant d'cul putain d'la race en crasse !!! 5 sec de suite`);
             } else {
-                console.log('..... ATTEMPTING LATER, NOW ' + Date.now() + ' and ' + attempt)
                 window.setTimeout(async() => await this.onCurrentPartUpdate(update, attempt), 1000);
                 return;
             }
         } else {
             this.updateProcessingTime = MGPOptional.of(Date.now());
         }
-        console.log('<<<< receiving an update at ' + this.updateProcessingTime.get() + ' AND REMAINING ATTEMPT ' + attempt)
         const part: PartDocument = new PartDocument(this.currentPartId, update);
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
@@ -227,14 +225,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         const oldPart: PartDocument = this.currentPart;
         this.currentPart = part;
-        console.log('==== currentPart set to ', part)
 
         for (const updateType of updatesTypes) {
-            console.log('<<<<.<<<< ' + updateType.value + ' START', { current: this.currentPart })
             await this.applyUpdate(updateType, part, oldPart);
-            console.log('>>>>.>>>> ' + updateType.value + ' END', { current: this.currentPart })
         }
-        console.log('>>>> all updates done correctly')
         this.updateProcessingTime = MGPOptional.empty();
     }
     private async applyUpdate(updateType: UpdateType, part: PartDocument, oldPart: PartDocument): Promise<void> {
@@ -255,18 +249,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             case UpdateType.END_GAME:
                 return this.applyEndGame();
             case UpdateType.MOVE_WITHOUT_TIME:
-                console.log('MOVE_WITHOUT_TIME: ', this.currentPart, oldPart)
                 this.currentPart.data = {
                     ...this.currentPart.data,
                     turn: this.currentPart.data.turn - 1, // TODOTODO oldPart.data.turn ?
                     lastUpdate: oldPart.data.lastUpdate,
+                    lastUpdateTime: oldPart.data.lastUpdateTime,
                     // TODOTODO oldPart.data.listMoves ?
                     listMoves: this.currentPart.data.listMoves.slice(0, this.currentPart.data.listMoves.length - 1),
                 }; // TODOTODO: only remove the move
-                console.log('this.currentPart set to ', this.currentPart, ' in MOVE_WITHOUT_TIME')
+                console.log('rema rema rema MOVE_WITHOUT_TIME this.currentPart set to ', this.currentPart, oldPart)
                 return;
             case UpdateType.MOVE:
                 this.msToSubstract = this.getLastUpdateTime(oldPart, part, updateType);
+                console.log('rema rema rema called after MOVE', oldPart, part, this.currentPart)
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 const oldPartHadNoBeginningTime: boolean = oldPart == null || oldPart.data.beginning == null;
@@ -283,13 +278,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private startCountDown(part: PartDocument): void {
         this.setChronos();
         this.setPlayersDatas(part);
-        console.log('set players data went well')
         if (part.data.listMoves.length === 0) {
             this.startCountDownFor(Player.ZERO);
         } else {
             this.startCountDownFor(Player.fromTurn(part.data.turn - 1));
         }
-        console.log('startCountDownFor bien fini')
     }
     public getUpdatesTypes(update: PartDocument): UpdateType[] {
         // TODOTODO throw if lastUpdate is missing, there should always be a increment ?
@@ -359,7 +352,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (previousTurn === -1 && newTurn === 0) {
             return false;
         } else {
-            console.log('FANPETENKOEK', previousTurn, newTurn)
             return previousTurn < newTurn;
         }
     }
@@ -368,13 +360,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return [0, 0]; // TODOTODO
         }
         const oldTime: Time | null = this.getMoreRecentTime(oldPart);
+        console.log('rema rema rema, ', oldTime, 'comes from', oldPart)
         const updateTime: Time | null= this.getMoreRecentTime(update);
         assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
         assert(updateTime != null, 'TODO UPDATE_TIME WAS NULL, UNDO COMMENT AND TEST!');
         const last: Player = Player.fromTurn(oldPart.data.turn);
         return this.getTimeUsedForLastTurn(Utils.getNonNullable(oldTime),
                                            Utils.getNonNullable(updateTime),
-                                           type,
                                            last);
     }
     private getMoreRecentTime(part: PartDocument): Time | null {
@@ -386,7 +378,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     private getTimeUsedForLastTurn(oldTime: Time,
                                    updateTime: Time,
-                                   _type: UpdateType,
                                    last: Player)
     : [number, number]
     {
@@ -423,7 +414,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2].get();
         this.gameComponent.updateBoard();
-        console.log('>>>> NEW MOVE DONE')
     }
     public switchPlayer(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer at turn ' + this.currentPart.data.turn);
@@ -455,7 +445,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.HARD_DRAW];
         const finalUpdateIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.data.result);
         if (finalUpdateIsMove) {
-            console.log('SKIPPING NEW MOVES CAUSE FINAL_UPDATE_IS_ONE at ' + currentPart.data.turn)
             // this.doNewMoves(this.currentPart);
             // TODOTODO put all those endgame in the else and unified ifelse ?
         } else {
@@ -681,6 +670,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
         } else {
+            console.log('about to call OGWC.updateDBBoard with', this.msToSubstract)
             return this.updateDBBoard(move, this.msToSubstract, scores);
         }
     }
@@ -759,7 +749,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return this.gameService.refuseDraw(this.currentPartId, this.getLastIndex(), this.getPlayer());
     }
     public askTakeBack(): Promise<void> {
-        console.log('OGWC.askTakeBack')
         return this.gameService.askTakeBack(this.currentPartId, this.getLastIndex(), this.getPlayer());
     }
     public async acceptTakeBack(): Promise<void> {

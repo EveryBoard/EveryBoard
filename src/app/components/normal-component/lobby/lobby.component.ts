@@ -53,7 +53,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.connectedUserService.getObservedPartObs().subscribe((observed: MGPOptional<FocussedPart>) => {
             this.createTabClasses = [];
             if (observed.isPresent()) {
-                this.createTabClasses = ['disabled-tab']; // TODOTODO CSS IS GOING UNDER, DAS VRONGUE
+                this.createTabClasses = ['disabled-tab'];
             }
         });
     }

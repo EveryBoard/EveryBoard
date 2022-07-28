@@ -25,7 +25,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { FirestoreTime, Time } from 'src/app/domain/Time';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { FocussedPart } from 'src/app/domain/User';
 
 describe('PartCreationComponent', () => {
@@ -718,12 +717,12 @@ describe('PartCreationComponent', () => {
                 const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
                 spyOn(authService, 'removeObservedPart').and.callThrough();
                 spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
-                spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
+                spyOn(joinerService, 'cancelJoining').and.callFake(async() => {});
                 await component.ngOnDestroy();
                 destroyed = true;
 
                 // Then joinerService.cancelJoining should have been called
-                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER);
+                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith();
                 expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
             }));
         });

@@ -198,6 +198,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                    remainingMsForOne: number)
     : Promise<void>
     {
+        console.log('rema receiveNewMoves test', { remainingMsForZero, remainingMsForOne, turn: moves.length })
         const update: Partial<Part> = {
             listMoves: ArrayUtils.copyImmutableArray(moves),
             turn: moves.length,
@@ -320,6 +321,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(componentTestUtils.wrapper.gameComponent.getState().turn).toBe(2);
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
+    it('Should allow user to arrive late on the game (not on his turn)', fakeAsync(async() => {
+        // Given a part that has already started (moves have been done)
+        await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED]);
+
+        // When arriving and playing
+        tick(1);
+
+        // Then the new move should be done
+        expect(componentTestUtils.wrapper.gameComponent.getState().turn).toBe(3);
+        tick(wrapper.joiner.maximalMoveDuration * 1000);
+    }));
     it('should show player names', fakeAsync(async() => {
         // Given a started game
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
@@ -423,7 +435,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(lastUpdateTime === null ||lastUpdateTime === undefined).toBeTrue();
         const currentPartExceptLastUpdateTime: Part = {
             ...CURRENT_PART.data,
-            lastUpdateTime: null, // TODOTODO check if we could do without this awefullness
+            lastUpdateTime: undefined, // TODOTODO check if we could do without this awefullness
         };
         expect(wrapper.currentPart.data).toEqual(currentPartExceptLastUpdateTime);
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -710,12 +722,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
+                console.log('>>>>>>>>>>>>>>> rema should not have removed time yet')
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
+                console.log('>>>>>>>>>>>>>>> rema should have removed 1ms to zero')
                 await askTakeBack();
+                console.log('>>>>>>>>>>>>>>> rema should not have removed that much more time')
 
                 // When doing move while waiting for answer
                 spyOn(partDAO, 'update').and.callThrough();
                 await doMove(THIRD_MOVE, true);
+                console.log('>>>>>>>>>>>>>>> rema should not have removed that much more time')
 
                 // Then update should remove request
                 expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
@@ -725,7 +741,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     },
                     listMoves: [FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED],
                     turn: 3,
-                    remainingMsForOne: 1799998, // TODOTODO pourquoi l'autre joueur a pas perdu de temps ??
+                    remainingMsForOne: 1799999,
                     request: null,
                     lastUpdateTime: serverTimestamp(),
                 });
@@ -827,7 +843,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [],
                     turn: 0,
                     remainingMsForZero: 1799999,
-                    remainingMsForOne: 1799998, // TODOTODO check time in tst
+                    remainingMsForOne: 1799999,
                     lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -963,7 +979,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     },
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
-                    remainingMsForOne: 1799997, // TODOTODO why that, fix time in tests !
+                    remainingMsForOne: 1799998,
                     request: null,
                     lastUpdateTime: serverTimestamp(),
                 });
@@ -1916,7 +1932,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.getUpdatesTypes(update)).toEqual([UpdateType.REQUEST]);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
-        it('should, yes', () => {
+        it('TODOTODO should, yes', () => {
             expect('TODOTODO: when you load you part with a request and move, execute both').toBe('DONE');
         }); // TODOTODO somewhere else: once opponent chosen, I should not see "waiting for opponent"
     });

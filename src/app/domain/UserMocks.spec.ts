@@ -5,6 +5,11 @@ import { User } from './User';
 
 export class UserMocks {
 
+    public static readonly USER_WITHOUT_EMAIL: AuthUser = new AuthUser('jeanlinconnu8012',
+                                                                       MGPOptional.empty(),
+                                                                       MGPOptional.empty(),
+                                                                       false);
+
     public static readonly CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jeanjaja123',
                                                                          MGPOptional.of('jean@jaja.europe'),
                                                                          MGPOptional.of('Jean Jaja'),
@@ -19,6 +24,11 @@ export class UserMocks {
                                                                        MGPOptional.of('opp@nante'),
                                                                        MGPOptional.of('firstCandidate'),
                                                                        true);
+
+    public static readonly OTHER_OPPONENT_AUTH_USER: AuthUser = new AuthUser('whoever88',
+                                                                             MGPOptional.of('forgotten@everywhere'),
+                                                                             MGPOptional.of('ForeverAlone'),
+                                                                             true);
 
     public static readonly CANDIDATE_AUTH_USER: AuthUser = new AuthUser('candidateDocId',
                                                                         MGPOptional.of('candi@ate'),
@@ -52,8 +62,6 @@ export class UserMocks {
 
     public static readonly CANDIDATE_MINIMAL_USER: MinimalUser = UserMocks.CANDIDATE_AUTH_USER.toMinimalUser();
 
-    public static readonly OTHER_OPPONENT_MINIMAL_USER: MinimalUser = {
-        id: 'secondCandidate-user-doc-id',
-        name: 'secondCandidate',
-    };
+    public static readonly OTHER_OPPONENT_MINIMAL_USER: MinimalUser =
+        UserMocks.OTHER_OPPONENT_AUTH_USER.toMinimalUser();
 }

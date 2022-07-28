@@ -48,7 +48,9 @@ export class JoinerMocks {
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
     public static readonly WITH_ANOTHER_CHOSEN_OPPONENT: Joiner = {
-        candidates: [UserMocks.OPPONENT_MINIMAL_USER, UserMocks.OTHER_OPPONENT_MINIMAL_USER],
+        candidates: [
+            UserMocks.OPPONENT_MINIMAL_USER,
+            UserMocks.OTHER_OPPONENT_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenOpponent: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,

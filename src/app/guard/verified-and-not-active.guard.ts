@@ -16,11 +16,11 @@ export class VerifiedAndNotActiveGuard extends VerifiedAccountGuard implements O
 
     protected observedPartSub: MGPOptional<Subscription> = MGPOptional.empty();
 
-    constructor(authService: ConnectedUserService,
+    constructor(connectedUserService: ConnectedUserService,
                 public readonly messageDisplayer: MessageDisplayer,
                 protected readonly router: Router)
     {
-        super(authService, router);
+        super(connectedUserService, router);
     }
     public async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
         const isVerified: boolean | UrlTree = await super.evaluateUserPermission(user);
@@ -29,7 +29,7 @@ export class VerifiedAndNotActiveGuard extends VerifiedAccountGuard implements O
         }
         return this.evaluateUserPermissionBasedOnHisObservedPart();
     }
-    protected async evaluateUserPermissionBasedOnHisObservedPart(): Promise<boolean | UrlTree> {
+    public async evaluateUserPermissionBasedOnHisObservedPart(): Promise<boolean | UrlTree> {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
             const subscription: Subscription = this.authService
                 .getObservedPartObs()

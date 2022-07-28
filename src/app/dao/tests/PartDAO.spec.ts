@@ -70,7 +70,7 @@ describe('PartDAO', () => {
             // These tests need a logged in user to create documents
             await createConnectedGoogleUser(false);
         });
-        it('should return true when user has an active part as player zero', async() => {
+        it('TODOTODO should return true when user has an active part as player zero', async() => {
             // Given a part where user is player zero
             await dao.create({ ...part, playerZero: username });
             // When checking if the user has an active part

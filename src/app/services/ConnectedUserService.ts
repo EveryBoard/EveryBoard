@@ -79,7 +79,7 @@ export class AuthUser {
                 public verified: boolean) {
     }
     public isConnected(): boolean {
-        return this.email.isPresent();
+        return this.email.isPresent(); // TODO FOR REVIEW: AH !
     }
     public toMinimalUser(): MinimalUser {
         return {
@@ -358,7 +358,7 @@ export class ConnectedUserService implements OnDestroy {
         return this.userDAO.updatePresenceToken(this.user.get().id);
     }
     public canUserCreate(): MGPValidation {
-        if (this.observedPart.isAbsent()) { // TODOTODO UNIT TEST
+        if (this.observedPart.isAbsent()) {
             return MGPValidation.SUCCESS;
         } else {
             const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
@@ -371,23 +371,8 @@ export class ConnectedUserService implements OnDestroy {
             // or to do it twice with the same one
             return MGPValidation.SUCCESS;
         } else {
-            const observedPart: FocussedPart = this.observedPart.get();
-            switch (observedPart.role) {
-                case 'Creator':
-                    // Even if one player can be creator of one part that is started
-                    // It is here only used for non started game
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CREATING());
-                case 'Candidate':
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CANDIDATE());
-                case 'ChosenOpponent':
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT());
-                case 'Player':
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_PLAYING());
-                default:
-                    Utils.expectToBe(observedPart.role, 'Observer');
-                    return MGPValidation.SUCCESS;
-                    // It is allow to observe another game
-            }
+            const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
+            return MGPValidation.failure(message);
         }
     }
     public ngOnDestroy(): void {

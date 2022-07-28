@@ -70,7 +70,7 @@ describe('UserDAO', () => {
     describe('updatePresenceToken', () => {
         it('should delegate to update', async() => {
             // Given any situation
-            spyOn(dao, 'update');
+            spyOn(dao, 'update').and.resolveTo();
 
             // When calling updatePresenceToken
             await dao.updatePresenceToken('joserId');

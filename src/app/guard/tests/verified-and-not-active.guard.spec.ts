@@ -69,4 +69,34 @@ describe('VerifiedAndNotActiveGuard', () => {
         // Then it should be accepted
         await expectAsync(guard.canActivate()).toBeResolvedTo(true);
     });
+    it('should unsubscribe from userSub upon destruction (where observed part was unnecessary)', fakeAsync(async() => {
+        // Given a guard that has resolved
+        ConnectedUserServiceMock.setUser(UserMocks.USER_WITHOUT_EMAIL);
+        spyOn(guard, 'evaluateUserPermissionBasedOnHisObservedPart').and.resolveTo(true);
+        await guard.canActivate();
+        // eslint-disable-next-line dot-notation
+        spyOn(guard['userSub'], 'unsubscribe');
+
+        // When destroying the guard
+        guard.ngOnDestroy();
+
+        // Then unsubscribe is called
+        // eslint-disable-next-line dot-notation
+        expect(guard['userSub'].unsubscribe).toHaveBeenCalledWith();
+    }));
+    it('should unsubscribe from userSub upon destruction (based on observed part)', fakeAsync(async() => {
+        // Given a guard that has resolved
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        ConnectedUserServiceMock.setObservedPart(MGPOptional.empty());
+        await guard.canActivate();
+        // eslint-disable-next-line dot-notation
+        spyOn(guard['userSub'], 'unsubscribe');
+
+        // When destroying the guard
+        guard.ngOnDestroy();
+
+        // Then unsubscribe is called
+        // eslint-disable-next-line dot-notation
+        expect(guard['userSub'].unsubscribe).toHaveBeenCalledWith();
+    }));
 });

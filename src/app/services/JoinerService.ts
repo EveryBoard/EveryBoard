@@ -9,6 +9,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Localized } from '../utils/LocaleUtils';
+import { ConnectedUserService } from './ConnectedUserService';
 
 @Injectable({
     providedIn: 'root',
@@ -21,10 +22,11 @@ export class JoinerService {
 
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
-    public static readonly USER_ALREADY_IN_GAME: Localized = () => $localize`You cannot join this game because you are already in another one.`;
     public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
 
-    constructor(private readonly joinerDAO: JoinerDAO) {
+    constructor(private readonly joinerDAO: JoinerDAO,
+                private readonly connectedUserService: ConnectedUserService)
+    {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
     public subscribeToChanges(joinerId: string, callback: (doc: MGPOptional<Joiner>) => void): void {
@@ -51,28 +53,28 @@ export class JoinerService {
         };
         return this.set(joinerId, newJoiner);
     }
-    public async joinGame(partId: string, user: MinimalUser): Promise<MGPValidation> {
-        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + user.id + ')');
+    public async joinGame(partId: string): Promise<MGPValidation> {
+        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ')');
 
+        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
             return MGPValidation.failure(JoinerService.GAME_DOES_NOT_EXIST());
         }
-        const joinerList: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
-        if (joinerList.some((minimalUser: MinimalUser) => minimalUser.id === user.id)) {
-            // return MGPValidation.failure(JoinerService.USER_ALREADY_IN_GAME()); // PEUT ETRE PAS NEEDED ?
-            return MGPValidation.SUCCESS;
-        } else if (user.id === joiner.get().creator.id) {
+        const candidates: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
+        if (candidates.some((minimalUser: MinimalUser) => minimalUser.id === user.id) ||
+            user.id === joiner.get().creator.id)
+        {
             return MGPValidation.SUCCESS;
         } else {
-            joinerList[joinerList.length] = user;
-            await this.joinerDAO.update(partId, { candidates: joinerList });
+            candidates[candidates.length] = user;
+            await this.joinerDAO.update(partId, { candidates: candidates });
             return MGPValidation.SUCCESS;
         }
     }
-    public async cancelJoining(user: MinimalUser): Promise<void> {
+    public async cancelJoining(): Promise<void> {
         display(JoinerService.VERBOSE,
-                'JoinerService.cancelJoining(' + user.name + '); this.observedJoinerId = ' + this.observedJoinerId);
+                'JoinerService.cancelJoining(); this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
@@ -84,17 +86,17 @@ export class JoinerService {
         } else {
             const joiner: Joiner = joinerOpt.get();
             const candidates: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.candidates);
+            const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
             const indexLeaver: number = candidates.findIndex((u: MinimalUser) => u.id === user.id);
+            assert(indexLeaver >= 0, 'someone that was not candidate (probably creator) just left the chat: ' + user.name);
             let chosenOpponent: MinimalUser | null = joiner.chosenOpponent;
             let partStatus: number = joiner.partStatus;
-            candidates.splice(indexLeaver, 1); // remove player from candidates list
             if (chosenOpponent?.id === user.id) {
                 // if the ChosenOpponent left, we're back to initial part creation
                 chosenOpponent = null;
                 partStatus = PartStatus.PART_CREATED.value;
-            } else if (indexLeaver === -1) {
-                throw new Error('someone that was not candidate nor ChosenOpponent just left the chat: ' + user.name);
             }
+            candidates.splice(indexLeaver, 1); // remove player from candidates list
             const update: Partial<Joiner> = {
                 chosenOpponent: chosenOpponent,
                 partStatus,
