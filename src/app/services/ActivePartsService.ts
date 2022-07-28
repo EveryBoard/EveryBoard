@@ -69,9 +69,6 @@ export class ActivePartsService implements OnDestroy {
             this.activePartsBS.next([]);
         }
     }
-    public ngOnDestroy(): void {
-        assert(this.unsubscribe.isAbsent(), 'ActivePartsService should have unsubscribed before being destroyed');
-    }
     public observeActiveParts(callback: FirestoreCollectionObserver<Part>): () => void {
         return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
@@ -84,5 +81,8 @@ export class ActivePartsService implements OnDestroy {
             ['playerOne', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
         return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;
+    }
+    public ngOnDestroy(): void {
+        assert(this.unsubscribe.isAbsent(), 'ActivePartsService should have unsubscribed before being destroyed');
     }
 }

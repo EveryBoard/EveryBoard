@@ -470,9 +470,9 @@ describe('PartCreationComponent', () => {
                 tick();
 
                 // Then game, joiner, and chat are deleted
-                expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith('joinerId');
-                expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
+                expect(gameService.deletePart).toHaveBeenCalledOnceWith('joinerId');
+                expect(joinerService.deleteJoiner).toHaveBeenCalledOnceWith('joinerId');
+                expect(chatService.deleteChat).toHaveBeenCalledOnceWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should ask AuthService to remove observedPart', fakeAsync(async() => {
@@ -571,9 +571,9 @@ describe('PartCreationComponent', () => {
                 tick(3000);
 
                 // Then the part and all its related data should be removed
-                expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith('joinerId');
-                expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
+                expect(gameService.deletePart).toHaveBeenCalledOnceWith('joinerId');
+                expect(joinerService.deleteJoiner).toHaveBeenCalledOnceWith('joinerId');
+                expect(chatService.deleteChat).toHaveBeenCalledOnceWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
