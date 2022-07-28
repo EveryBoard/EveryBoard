@@ -144,7 +144,7 @@ export class GameInfo {
 export class PickGameComponent {
 
     public readonly games: GameInfo[] =
-        GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true)
+        GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true);
 
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 

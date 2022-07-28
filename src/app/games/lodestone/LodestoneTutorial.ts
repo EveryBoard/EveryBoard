@@ -186,5 +186,5 @@ export class LodestoneTutorial {
             $localize`Congratulations, you won!`,
             $localize`This is not the winning move. Try again.`,
         ),
-    ]
+    ];
 }

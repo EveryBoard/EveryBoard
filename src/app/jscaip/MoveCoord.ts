@@ -1,6 +1,6 @@
 import { Move } from './Move';
 import { Coord } from './Coord';
-import { NumberEncoder } from './Encoder';
+import { NumberEncoder } from '../utils/Encoder';
 
 export abstract class MoveCoord extends Move {
 

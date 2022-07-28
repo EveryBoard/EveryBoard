@@ -1,7 +1,7 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 
 export class SiamMove extends MoveCoord {
     public static encoder: NumberEncoder<SiamMove> = new class extends NumberEncoder<SiamMove> {

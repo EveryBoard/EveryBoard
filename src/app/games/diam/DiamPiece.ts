@@ -1,4 +1,4 @@
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class DiamPiece {

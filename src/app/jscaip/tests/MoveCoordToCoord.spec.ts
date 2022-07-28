@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { Move } from '../Move';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
-import { NumberEncoderTestUtils } from './Encoder.spec';
 
 class NonAbstractMoveCoordToCoord extends MoveCoordToCoord {
     public toString(): string {
