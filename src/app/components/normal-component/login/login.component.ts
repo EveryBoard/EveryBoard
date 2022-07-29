@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
     public faEye: IconDefinition = faEye;
 
@@ -20,11 +21,13 @@ export class LoginComponent implements OnInit {
         password: new FormControl(),
     });
 
+    private subscription!: Subscription;
+
     constructor(public router: Router,
                 public connectedUserService: ConnectedUserService) {
     }
     public ngOnInit(): void {
-        this.connectedUserService.getUserObs()
+        this.subscription = this.connectedUserService.getUserObs()
             .subscribe(async(user: AuthUser) => {
                 if (user !== AuthUser.NOT_CONNECTED) {
                     await this.redirect();
@@ -53,5 +56,8 @@ export class LoginComponent implements OnInit {
             return false;
         }
         return true;
+    }
+    public ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }
