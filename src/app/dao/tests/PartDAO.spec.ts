@@ -8,7 +8,7 @@ import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { PartDAO } from '../PartDAO';
 import { UserDAO } from '../UserDAO';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { Request } from 'src/app/domain/Request';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { JoinerDAO } from '../JoinerDAO';
@@ -172,13 +172,13 @@ describe('PartDAO', () => {
                 await expectPermissionToBeDenied(result);
             }
         });
-        it('should forbid deleting part even if owner is not observing anymore', async() => {
+        it('should forbid deleting part if owner has not timed out, even if they are not observing anymore', async() => {
             // Given a part with its owner not observing this part
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
             // eslint-disable-next-line camelcase
-            const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+            const last_changed: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
             // eslint-disable-next-line camelcase
             await userDAO.update(creator.id, { observedPart: null, last_changed });
             await signOut();
@@ -198,7 +198,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
             // eslint-disable-next-line camelcase
-            const last_changed: Time = { seconds: 0, nanoseconds: 0 }; // owner is stuck in 1970
+            const last_changed: Timestamp = new Timestamp(0, 0); // owner is stuck in 1970
             // eslint-disable-next-line camelcase
             await userDAO.update(creator.id, { observedPart: partId, last_changed });
             await signOut();
@@ -218,7 +218,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
             // eslint-disable-next-line camelcase
-            const last_changed: Time = { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 };
+            const last_changed: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
             // eslint-disable-next-line camelcase
             await userDAO.update(creator.id, { observedPart: partId, last_changed });
             await signOut();

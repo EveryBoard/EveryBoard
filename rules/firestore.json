@@ -14,8 +14,10 @@ service cloud.firestore {
         match /chats/lobby {
             allow create: if userIsVerified();
         }
-        match /chats/{chatId} {
-            allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(chatId);
+        match /chats/{id} {
+            allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
+            // Anyone can delete the chat in case the creator timed out
+            allow delete: if userIsVerified() && hasTimedOut(creatorOf(id));
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
@@ -136,8 +138,8 @@ service cloud.firestore {
         }
         function hasTimedOut(user) {
             let userDoc =  get(/databases/$(database)/documents/users/$(user.id)).data;
-            let timedOut = duration.value(request.time.toMillis(), 'ms') > duration.value(userDoc.last_changed.seconds, 's') + duration.value(10, 's');
-            return timedOut;
+            let timedOut = duration.value(request.time.seconds(), 's') > duration.value(userDoc.last_changed.seconds(), 's') + duration.value(10, 's');
+            return debug(timedOut);
         }
         match /joiners/{partId} {
             // Any verified user can create a joiner as long as they are themselves creator and if the corresponding part exists
@@ -188,14 +190,13 @@ service cloud.firestore {
         }
         match /joiners/{partId}/candidates/{userId} {
             // Users can only add themselves to the candidate list if they are not the creator and if they use the right username
-            allow create: if userIsVerified() && userId == request.auth.uid &&
+            // We also allow updates in this way, in case someone tries to join the part twice
+            allow create, update: if userIsVerified() && userId == request.auth.uid &&
                              request.auth.uid != creatorOf(partId).id &&
                              request.resource.data.name == usernameOf(request.auth.uid) &&
                              request.resource.data.id == request.auth.uid;
             // Users can only delete themselves
             allow delete: if userIsVerified() && userId == request.auth.uid;
-            // No updates can be made
-            allow update: if false;
             // Any verified user can read the candidate list
             allow read: if userIsVerified();
         }

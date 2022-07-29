@@ -187,17 +187,22 @@ export class GameService {
         const part: Part = Utils.getNonNullable(partDocument.data);
 
         const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
-        let firstPlayer: FirstPlayer;
-        if (part.playerZero.id === iJoiner.creator.id) {
-            firstPlayer = FirstPlayer.CREATOR; // so they won't start this one
-        } else {
+        let firstPlayer: FirstPlayer; // firstPlayer will be switched across rematches
+        // creator is the one who accepts the rematch
+        const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+        let chosenOpponent: MinimalUser;
+        if (part.playerZero.id === creator.id) {
+            chosenOpponent = Utils.getNonNullable(part.playerOne);
             firstPlayer = FirstPlayer.CHOSEN_PLAYER;
+        } else {
+            chosenOpponent = part.playerZero;
+            firstPlayer = FirstPlayer.CREATOR;
         }
         const newJoiner: Joiner = {
             ...iJoiner, // unchanged attributes
             firstPlayer: firstPlayer.value,
-            creator: Utils.getNonNullable(iJoiner.chosenOpponent), // switch creator and opponent
-            chosenOpponent: iJoiner.creator,
+            creator,
+            chosenOpponent,
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
         const startingConfig: StartingPartConfig = this.getStartingConfig(newJoiner);

@@ -51,6 +51,7 @@ describe('GameService', () => {
         }).compileComponents();
         service = TestBed.inject(GameService);
         partDAO = TestBed.inject(PartDAO);
+        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
     it('should create', () => {
         expect(service).toBeTruthy();
@@ -132,7 +133,6 @@ describe('GameService', () => {
         expect(joinerService.acceptConfig).toHaveBeenCalledOnceWith();
     }));
     it('createPartJoinerAndChat should create in this order: part, joiner, and then chat', fakeAsync(async() => {
-        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
         const joinerDAO: JoinerDAO = TestBed.inject(JoinerDAO);
         const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
         // Install some mocks to check what we need
@@ -320,7 +320,6 @@ describe('GameService', () => {
             expect(called).toBeTrue();
         }));
         it('should create elements in this order: part, joiner, and then chat', fakeAsync(async() => {
-            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
             const joinerDAO: JoinerDAO = TestBed.inject(JoinerDAO);
             const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
             // Given a part that will be replayed
@@ -370,7 +369,7 @@ describe('GameService', () => {
                 return 'partId';
             });
 
-            // When accepting the rematch
+            // When creator accepts the rematch
             await service.acceptRematch(lastPart, 5, Player.ONE);
             // Then, the order of the creations must be part, joiner, chat (as checked by the mocks)
             // Moreover, everything needs to have been called eventually
@@ -387,9 +386,9 @@ describe('GameService', () => {
                 remainingMsForOne: 25000,
             };
             const joiner: Joiner = {
-                chosenOpponent: UserMocks.CREATOR_MINIMAL_USER,
-                creator: UserMocks.OPPONENT_MINIMAL_USER,
-                firstPlayer: FirstPlayer.CREATOR.value,
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
+                firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
                 partType: PartType.BLITZ.value,
                 partStatus: PartStatus.PART_STARTED.value,
                 maximalMoveDuration: 10,

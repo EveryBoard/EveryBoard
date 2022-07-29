@@ -5,7 +5,7 @@ import { ChatDAO } from '../ChatDAO';
 import * as FireAuth from '@angular/fire/auth';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Chat } from 'src/app/domain/Chat';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { Message, MessageDocument } from 'src/app/domain/Message';
 import { PartDAO } from '../PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -15,12 +15,14 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { IFirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
+import { UserDAO } from '../UserDAO';
 
 describe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let partDAO: PartDAO;
     let joinerDAO: JoinerDAO;
+    let userDAO: UserDAO;
 
     function signOut(): Promise<void> {
         return TestBed.inject(FireAuth.Auth).signOut();
@@ -35,6 +37,7 @@ describe('ChatDAO', () => {
         chatDAO = TestBed.inject(ChatDAO);
         partDAO = TestBed.inject(PartDAO);
         joinerDAO = TestBed.inject(JoinerDAO);
+        userDAO = TestBed.inject(UserDAO);
     });
     it('should be created', () => {
         expect(chatDAO).toBeTruthy();
@@ -236,10 +239,23 @@ describe('ChatDAO', () => {
             await chatDAO.set(partId, {});
             await signOut();
             await createConnectedUser('bar@bar.com', 'other');
-            // When deleting the chat
+            // When deleting the chat as the non-owner
             const result: Promise<void> = chatDAO.delete(partId);
             // Then it should fail
             await expectPermissionToBeDenied(result);
+        });
+        it('should allow non-part owner to delete the corresponding chat if owner has timed out', async() => {
+            // Given a part (whose owner has timed out), a chat, and another user
+            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
+            const partId: string = await createPartAndJoiner(user);
+            await chatDAO.set(partId, {});
+            await userDAO.update(user.id, { last_changed: new Timestamp(0, 0) });
+            await signOut();
+            await createConnectedUser('bar@bar.com', 'other');
+            // When deleting the chat as the non-owner
+            const result: Promise<void> = chatDAO.delete(partId);
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
         });
     });
 });

@@ -189,6 +189,22 @@ describe('JoinerDAO', () => {
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
+        it('should allow to add themself twice to the candidates', async() => {
+            // Given a part and joiner, and a verified user that is already candidate
+            const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
+            const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            await expectAsync(joinerDAO.addCandidate(partId, candidate)).toBeResolvedTo();
+
+            // When the user adds themself to the list of candidates a second time
+            // (for example, because they closed their tab and open it again)
+            const result: Promise<void> = joinerDAO.addCandidate(partId, candidate);
+
+            // Then it should succeed
+            // And there should be only one candidate document for the user
+            await expectAsync(result).toBeResolvedTo();
+            const matchingDocs: unknown[] = await joinerDAO.subCollectionDAO(partId, 'candidates').findWhere([['id', '==', candidate.id]]);
+            expect(matchingDocs.length).toBe(1);
+        });
         it('should forbid to remove someone else from the candidates', async() => {
             // Given a part and joiner, with another user as candidate, and a malicious user
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
