@@ -199,12 +199,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
         if (this.updateProcessingTime.isPresent()) {
             attempt -= 1;
-            if (attempt === 0) {
-                throw new Error(`C'est la merde enfant d'cul putain d'la race en crasse !!! 5 sec de suite`);
-            } else {
-                window.setTimeout(async() => await this.onCurrentPartUpdate(update, attempt), 1000);
-                return;
-            }
+            assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
+            window.setTimeout(async() => await this.onCurrentPartUpdate(update, attempt), 1000);
+            return;
         } else {
             this.updateProcessingTime = MGPOptional.of(Date.now());
         }
@@ -264,11 +261,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 console.log('rema rema rema called after MOVE', oldPart, part, this.currentPart)
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
-                const oldPartHadNoBeginningTime: boolean = oldPart == null || oldPart.data.beginning == null;
-                const newPartHasBeginningTime: boolean = this.currentPart == null ||
-                                                         this.currentPart.data.beginning != null;
-                // Assert from ~September 2021, could be removed if it is never encountered
-                assert(oldPartHadNoBeginningTime || newPartHasBeginningTime, 'old part had no beginning time or new part has, we did not expect this!');
                 return;
             default:
                 assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);
@@ -349,11 +341,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public updateHasMoves(previousTurn: number, newTurn: number, listMoves: readonly JSONValueWithoutArray[]): boolean {
         assert(listMoves.length === newTurn, 'ListMoves size and newTurn do not match, it is impossible!');
-        if (previousTurn === -1 && newTurn === 0) {
-            return false;
-        } else {
-            return previousTurn < newTurn;
-        }
+        return previousTurn < newTurn;
     }
     public getLastUpdateTime(oldPart: PartDocument | null, update: PartDocument, type: UpdateType): [number, number] {
         if (oldPart == null) {
@@ -421,9 +409,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const currentPlayer: Player = Player.fromTurn(part.data.turn);
         this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2].get();
         const currentOpponent: Player = currentPlayer.getOpponent();
-        if (this.didUserPlay(currentOpponent)) {
-            this.pauseCountDownsFor(currentOpponent);
-        }
+        // if (this.didUserPlay(currentOpponent)) {
+        this.pauseCountDownsFor(currentOpponent);
+        // }
         if (this.didUserPlay(currentPlayer)) {
             display(OnlineGameWrapperComponent.VERBOSE,
                     'OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player');
@@ -505,9 +493,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public canAskTakeBack(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
-        if (this.currentPart == null) {
-            return false;
-        } else if (this.currentPart.data.turn <= this.observerRole) {
+        assert(this.currentPart != null, 'should not call canAskTakeBack when currentPart is not defined yet');
+        if (this.currentPart.data.turn <= this.observerRole) {
             return false;
         } else if (this.currentPart.data.request &&
                    this.currentPart.data.request.code === 'TakeBackRefused' &&
@@ -530,9 +517,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     private getTakeBackRequester(): PlayerOrNone {
-        if (this.currentPart == null) {
-            return PlayerOrNone.NONE;
-        }
         const request: Request | null | undefined = this.currentPart.data.request;
         if (request && request.code === 'TakeBackAsked') {
             return Request.getPlayer(request);
@@ -543,8 +527,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public canProposeDraw(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
         if (this.endGame) {
-            return false;
-        } else if (this.currentPart == null) {
             return false;
         } else if (this.currentPart.data.request &&
                    this.currentPart.data.request.code === 'DrawRefused' &&
@@ -565,9 +547,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return this.isOpponent(drawRequester);
     }
     private getDrawRequester(): PlayerOrNone {
-        if (this.currentPart == null) {
-            return PlayerOrNone.NONE;
-        }
         const request: Request | null | undefined = this.currentPart.data.request;
         if (request && request.code === 'DrawProposed') {
             return Request.getPlayer(request);

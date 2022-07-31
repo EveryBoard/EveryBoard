@@ -12,9 +12,9 @@ export class OnlineGameSelectionComponent {
 
     public selectedGame: string;
 
-    public constructor(private readonly router: Router,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly messageDisplayer: MessageDisplayer) {
+    public constructor(public readonly router: Router,
+                       public readonly connectedUserService: ConnectedUserService,
+                       public readonly messageDisplayer: MessageDisplayer) {
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;

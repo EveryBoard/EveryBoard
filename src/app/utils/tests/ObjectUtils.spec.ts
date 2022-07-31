@@ -200,4 +200,21 @@ describe('ObjectDifference', () => {
         };
         expect(() => ObjectDifference.from(before, after)).toThrowError('Thing should not change type');
     });
+    describe('isPresent', () => {
+        it('should know when a field has been removed', () => {
+            const before: FirestoreJSONObject = {
+                someKey: 5,
+                survivorKey: 'yes',
+            };
+            const after: FirestoreJSONObject = {
+                survivorKey: 'yes',
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+            const expectedIsPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } = {
+                state: 'removed',
+                present: true,
+            };
+            expect(diff.isPresent('someKey')).toEqual(expectedIsPresent);
+        });
+    });
 });

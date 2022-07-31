@@ -35,6 +35,7 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -457,7 +458,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     describe('Move victory', () => {
-        it('should notifyVictory when one player win', fakeAsync(async() => {
+        it('should notifyVictory when active player win', fakeAsync(async() => {
             //  Given a board on which user can win
             const move0: QuartoMove = new QuartoMove(0, 3, QuartoPiece.AAAB);
             const move1: QuartoMove = new QuartoMove(1, 3, QuartoPiece.AABA);
@@ -490,6 +491,40 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             componentTestUtils.fixture.detectChanges();
             componentTestUtils.expectElementToExist('#youWonIndicator');
+            expectGameToBeOver();
+        }));
+        it('should notifyVictory when active player loose', fakeAsync(async() => {
+            //  Given a board on which user can loose on his turn
+            const move0: QuartoMove = new QuartoMove(2, 2, QuartoPiece.BBAA);
+            const move1: QuartoMove = new QuartoMove(0, 3, QuartoPiece.AAAB);
+            await prepareBoard([move0, move1]);
+            componentTestUtils.expectElementNotToExist('#youLostIndicator');
+
+            // When doing loosing move
+            spyOn(partDAO, 'update').and.callThrough();
+            spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.ONE_WON);
+            const loosing: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
+            await doMove(loosing, true);
+            tick(1000); // second update in queue for some reason ?
+
+            // Then the game should be a victory
+            expect(wrapper.gameComponent.rules.node.move.get()).toEqual(loosing);
+            expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                lastUpdate: {
+                    index: 4,
+                    player: observerRole.value,
+                },
+                listMoves: [move0, move1, loosing].map(QuartoMove.encoder.encodeNumber),
+                turn: 3,
+                // remainingTimes are not present on the first move of a current board
+                request: null,
+                lastUpdateTime: serverTimestamp(),
+                winner: 'firstCandidate',
+                loser: 'creator',
+                result: MGPResult.VICTORY.value,
+            });
+            componentTestUtils.fixture.detectChanges();
+            componentTestUtils.expectElementToExist('#youLostIndicator');
             expectGameToBeOver();
         }));
         it('should removeObservedPart when one player win', fakeAsync(async() => {

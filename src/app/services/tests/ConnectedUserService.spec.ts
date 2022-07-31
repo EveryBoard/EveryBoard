@@ -20,7 +20,6 @@ import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { FocussedPart, User } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
-import { UserCredential } from '@angular/fire/auth';
 
 @Injectable()
 export class ConnectedUserServiceMock {
@@ -922,7 +921,6 @@ describe('ConnectedUserService', () => {
             // Then it's should be refused
             expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_OBSERVING());
         }));
-
     });
     afterEach(async() => {
         if (alreadyDestroyed === false) {

@@ -43,7 +43,7 @@ export class OnlineGameCreationComponent implements OnInit {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
-        if (await this.canCreateOnlineGame(user.name)) { // TODOTODO use the other way with observedPart
+        if (await this.canCreateOnlineGame()) {
             const gameId: string = await this.gameService.createPartJoinerAndChat(user, game);
             // create Part and Joiner
             await this.router.navigate(['/play', game, gameId]);
@@ -59,8 +59,7 @@ export class OnlineGameCreationComponent implements OnInit {
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.isPresent();
     }
-    private async canCreateOnlineGame(username: string): Promise<boolean> {
-        const hasActivePart: boolean = await this.partDAO.userHasActivePart(username);
-        return hasActivePart === false;
+    private canCreateOnlineGame(): boolean {
+        return this.connectedUserService.canUserCreate().isSuccess();
     }
 }
