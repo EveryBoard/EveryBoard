@@ -223,8 +223,8 @@ describe('PartCreationComponent', () => {
                 // Creator update his last presence
                 await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
                 // but chosenOpponent does not
+                // enough time passes to activate the timeout
                 tick(PartCreationComponent.TOKEN_TIMEOUT);
-                // two 'token time' pass, which reactivates the timeout
 
                 // Then there is no longer any candidate nor chosen opponent in the room
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);

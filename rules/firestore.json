@@ -17,7 +17,7 @@ service cloud.firestore {
         match /chats/{id} {
             allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
             // Anyone can delete the chat in case the creator timed out
-            allow delete: if userIsVerified() && hasTimedOut(creatorOf(id));
+            allow delete: if userIsVerified() && debug(hasTimedOut(debug(creatorOf(id))));
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
@@ -138,7 +138,7 @@ service cloud.firestore {
         }
         function hasTimedOut(user) {
             let userDoc =  get(/databases/$(database)/documents/users/$(user.id)).data;
-            let timedOut = duration.value(request.time.seconds(), 's') > duration.value(userDoc.last_changed.seconds(), 's') + duration.value(10, 's');
+            let timedOut = debug(request.time.time()) > debug(userDoc.last_changed.time()) + duration.value(10, 's');
             return debug(timedOut);
         }
         match /joiners/{partId} {
