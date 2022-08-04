@@ -188,6 +188,8 @@ describe('JoinerDAO', () => {
 
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
+            const matchingDocs: unknown[] = await joinerDAO.subCollectionDAO(partId, 'candidates').findWhere([['id', '==', candidate.id]]);
+            expect(matchingDocs.length).toBe(1);
         });
         it('should allow to add themself twice to the candidates', async() => {
             // Given a part and joiner, and a verified user that is already candidate
@@ -239,22 +241,8 @@ describe('JoinerDAO', () => {
 
             // When creating the corresponding joiner, with the user as creator but with a fake username
             const fakeCreator: MinimalUser = { id: createdPart.creator.id, name: 'fake-jeanjaja' };
-            const result: Promise<void> = joinerDAO.set(createdPart.partId, { ...JoinerMocks.INITIAL, fakeCreator });
-
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
-        });
-        it('should forbid non-verified user to create a joiner', async() => {
-            // Given an existing part.
-            // (Note that the non-verified user in practice can never have created the corresponding part,
-            // but this is an extra check just in case)
-            const partId: string = (await createPart({ signOut: true })).partId;
-
-            // and a non-verified user
-            const nonVerifiedUser: MinimalUser = await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-
-            // When the user tries to create the joiner
-            const result: Promise<void> = joinerDAO.set(partId, { ...JoinerMocks.INITIAL, nonVerifiedUser });
+            const result: Promise<void> = joinerDAO.set(createdPart.partId,
+                                                        { ...JoinerMocks.INITIAL, creator: fakeCreator });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -263,7 +251,7 @@ describe('JoinerDAO', () => {
             // Given a part and joiner, with the current user being the creator
             const createdPart: CreatedPart = await createPart({ createJoiner: true });
 
-            // When trying to add itself to the candidates
+            // When trying to add themself to the candidates
             const result: Promise<void> = joinerDAO.addCandidate(createdPart.partId, createdPart.creator);
 
             // Then it should fail
@@ -295,8 +283,7 @@ describe('JoinerDAO', () => {
                 // Given a part that is started
 
                 // Creator creates the joiner
-                const createdPartId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
-                partId = createdPartId;
+                partId = (await createPart({ createJoiner: true, signOut: true })).partId;
 
                 // A candidate adds themself to the candidates list
                 const candidate: MinimalUser = await addCandidate(partId);
@@ -399,8 +386,7 @@ describe('JoinerDAO', () => {
 
             // We have to follow a realistic workflow to achieve that
             // The part is first created
-            const createdPartId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
-            partId = createdPartId;
+            partId = (await createPart({ createJoiner: true, signOut: true })).partId;
 
             // A candidate adds themself to the candidates list
             const candidate: MinimalUser = await addCandidate(partId);
