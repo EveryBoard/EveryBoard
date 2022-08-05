@@ -199,7 +199,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                    remainingMsForOne: number)
     : Promise<void>
     {
-        console.log('rema receiveNewMoves test', { remainingMsForZero, remainingMsForOne, turn: moves.length })
         const update: Partial<Part> = {
             listMoves: ArrayUtils.copyImmutableArray(moves),
             turn: moves.length,
@@ -310,7 +309,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.currentPart.data.listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
-    it('should TODOTODO tell user that he lost/won/drawed during his absence when he arrive on the lobby');
     it('Should allow user to arrive late on the game', fakeAsync(async() => {
         // Given a part that has already started (moves have been done)
         await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED]);
@@ -436,7 +434,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(lastUpdateTime === null ||lastUpdateTime === undefined).toBeTrue();
         const currentPartExceptLastUpdateTime: Part = {
             ...CURRENT_PART.data,
-            lastUpdateTime: undefined, // TODOTODO check if we could do without this awefullness
+            lastUpdateTime: undefined,
         };
         expect(wrapper.currentPart.data).toEqual(currentPartExceptLastUpdateTime);
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -679,17 +677,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
                 // When receiving a new move, it should still not be showed nor possible
-                // TODOTODO check why this order is claimed by player 1 (index 2 in lastUpdate)
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
                 componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
                 // When doing the first move, it should become possible, but only once
-                // TODOTODO: check why lastUpdateTime don't get updated after
                 await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA), true);
-                // TODOTODO or perhaps see to add that to doMove !
-                const oldSec: number = Utils.getNonNullable(wrapper.currentPart.data.lastUpdateTime as Time).seconds;
-                const lastUpdateTime: Time = { seconds: oldSec + 1, nanoseconds: 0 };
-                await receivePartDAOUpdate({ lastUpdateTime }, 2);
                 await askTakeBack();
                 componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
@@ -757,16 +749,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
-                console.log('>>>>>>>>>>>>>>> rema should not have removed time yet')
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
-                console.log('>>>>>>>>>>>>>>> rema should have removed 1ms to zero')
                 await askTakeBack();
-                console.log('>>>>>>>>>>>>>>> rema should not have removed that much more time')
 
                 // When doing move while waiting for answer
                 spyOn(partDAO, 'update').and.callThrough();
                 await doMove(THIRD_MOVE, true);
-                console.log('>>>>>>>>>>>>>>> rema should not have removed that much more time')
 
                 // Then update should remove request
                 expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
@@ -1532,7 +1520,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When attempting a move
             spyOn(partDAO, 'update').and.callThrough();
-            console.log('>>>>>UpdateType will receives a DONE MOVE')
             await doMove(SECOND_MOVE, false);
 
             // Then it should be refused
@@ -1600,7 +1587,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
                 lastUpdateTime: { seconds: 333, nanoseconds: 333000000 },
-                // request: Request.takeBackAccepted(Player.ZERO), // TODOTODO: check duplicata with request
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
@@ -1969,7 +1955,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('TODOTODO should, yes', () => {
             expect('TODOTODO: when you load you part with a request and move, execute both').toBe('DONE');
-        }); // TODOTODO somewhere else: once opponent chosen, I should not see "waiting for opponent"
+        });
     });
     describe('rematch', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
@@ -2084,9 +2070,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part that the two player agreed to draw
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
-            console.log('DRAW (about to be) PROPOSED, with time or not ????')
             await receiveRequest(Request.drawProposed(Player.ONE), 1);
-            console.log('DRAW (about to be) ACCEPTED')
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ZERO.value,
                 request: null,

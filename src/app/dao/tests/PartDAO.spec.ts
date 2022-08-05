@@ -1,9 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { Auth, signOut } from '@angular/fire/auth';
 import { Part, MGPResult } from 'src/app/domain/Part';
 import { Player } from 'src/app/jscaip/Player';
-import { createConnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { PartDAO } from '../PartDAO';
@@ -51,52 +49,6 @@ describe('PartDAO', () => {
                 turn: 42,
             };
             expect(dao.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
-        });
-    });
-    describe('userHasActivePart', () => {
-        const part: Part = {
-            lastUpdate: {
-                index: 0,
-                player: 0,
-            },
-            typeGame: 'P4',
-            playerZero: 'foo',
-            turn: 0,
-            result: MGPResult.UNACHIEVED.value,
-            listMoves: [],
-        };
-        const username: string = 'jeanjaja';
-        beforeEach(async() => {
-            // These tests need a logged in user to create documents
-            await createConnectedGoogleUser(false);
-        });
-        it('TODOTODO should return true when user has an active part as player zero', async() => {
-            // Given a part where user is player zero
-            await dao.create({ ...part, playerZero: username });
-            // When checking if the user has an active part
-            const result: boolean = await dao.userHasActivePart(username);
-            // Then it should return true
-            expect(result).toBeTrue();
-        });
-        it('should return true when user has an active part as player one', async() => {
-            // Given a part where user is player zero
-            await dao.create({ ...part, playerOne: username });
-            // When checking if the user has an active part
-            const result: boolean = await dao.userHasActivePart(username);
-            // Then it should return true
-            expect(result).toBeTrue();
-        });
-        it('should return false when the user has no active part', async() => {
-            // Given a part where the user is not active
-            await dao.create(part);
-            // When checking if the user has an active part
-            const result: boolean = await dao.userHasActivePart(username);
-            // Then it should return false
-            expect(result).toBeFalse();
-
-        });
-        afterEach(async() => {
-            await signOut(TestBed.inject(Auth));
         });
     });
 });

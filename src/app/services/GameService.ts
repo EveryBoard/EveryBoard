@@ -212,7 +212,6 @@ export class GameService {
         return this.sendRequest(partDocument.id, user, lastIndex, Request.rematchAccepted(part.typeGame, rematchId));
     }
     public askTakeBack(partId: string, lastIndex: number, player: Player): Promise<void> {
-        console.log('GameService.askTakeBack')
         return this.sendRequest(partId, player, lastIndex, Request.takeBackAsked(player));
     }
     public async acceptTakeBack(id: string, part: PartDocument, observerRole: Player, msToSubstract: [number, number])
@@ -227,7 +226,6 @@ export class GameService {
             // Deleting a second move
             listMoves = listMoves.slice(0, listMoves.length - 1);
         }
-        console.log('rema acceptTakeBack', { msToSubstract, zero: part.data.remainingMsForZero, one: part.data.remainingMsForOne })
         const update: Partial<Part> = {
             request,
             listMoves,
@@ -284,7 +282,6 @@ export class GameService {
                                loser?: string)
     : Promise<void>
     {
-        console.log('rema gs.updateDBBoard', { msToSubstract } )
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
@@ -327,7 +324,6 @@ export class GameService {
         return update;
     }
     private substractMs(update: Partial<Part>, part: Partial<Part>, msToSubstract: [number, number]): Partial<Part> {
-        console.log('GameService.substractMs', { msToSubstract, zero: part.remainingMsForZero, one: part.remainingMsForOne, turn: update.listMoves })
         if (msToSubstract[0] > 0) {
             return {
                 ...update,

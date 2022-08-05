@@ -28,7 +28,7 @@ describe('OnlineGameSelectionComponent', () => {
         // Then the user is redirected to the game
         expectValidRouting(router, ['/play', 'whateverGame'], OnlineGameCreationComponent);
     }));
-    it('should display refusal reason whn user cannot join game', fakeAsync(async() => {
+    it('should display refusal reason when user cannot join game', fakeAsync(async() => {
         // Given a chosen game and a user that cannot join game
         const component: OnlineGameSelectionComponent = testUtils.getComponent();
         testUtils.getComponent().pickGame('whateverGame');

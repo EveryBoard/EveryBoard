@@ -5,6 +5,5 @@ export function getMilliseconds(time: Time): number {
 }
 
 export function getMillisecondsDifference(first: Time, second: Time): number {
-    console.log('rema rema rema rema', getMilliseconds(first), getMilliseconds(second))
     return getMilliseconds(second) - getMilliseconds(first);
 }

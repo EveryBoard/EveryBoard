@@ -11,6 +11,7 @@ import { PartDocument } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { VerifiedAccountGuard } from '../verified-account.guard';
 
 describe('VerifiedAndNotActiveGuard', () => {
 
@@ -45,9 +46,9 @@ describe('VerifiedAndNotActiveGuard', () => {
     });
     it('should delegate the first part of evaluate to mother class', fakeAsync(async() => {
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
-        spyOn(guard, 'evaluateUserPermission').and.callThrough();
+        spyOn(VerifiedAccountGuard, 'evaluateUserPermission').and.callThrough();
         await guard.canActivate();
-        expect('TODOTODO: check the best way to test that its indeed sharing rules with mother').toBe('donydone');
+        expect(VerifiedAccountGuard.evaluateUserPermission).toHaveBeenCalledOnceWith(router, AuthUser.NOT_CONNECTED);
     }));
     it('should refuse to go to creation component when you have any observed part and redirect to it', fakeAsync(async() => {
         // Given a connected user service indicating user is already player

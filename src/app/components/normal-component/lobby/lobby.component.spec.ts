@@ -1,5 +1,3 @@
-/* eslint-disable jasmine/no-spec-dupes */ // TODOTODO: make it bettar
-/* eslint-disable jasmine/no-suite-dupes */ // TODOTODO: make it bettar
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';

@@ -25,7 +25,7 @@ describe('WelcomeComponent', () => {
     });
     it('should redirect to online game creation when clicking on the corresponding button', fakeAsync(async() => {
         // Given a welcome component
-        // where ConnectedUserService tell us user cannot join a game
+        // where ConnectedUserService tell us user can join a game
         const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
         spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
         const router: Router = TestBed.inject(Router);

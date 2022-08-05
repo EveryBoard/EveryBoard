@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PartDAO } from 'src/app/dao/PartDAO';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -11,6 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 export class OnlineGameCreationMessages {
     public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;
@@ -26,7 +26,6 @@ export class OnlineGameCreationComponent implements OnInit {
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer,
-                       private readonly partDAO: PartDAO,
                        private readonly gameService: GameService) {
     }
     public async ngOnInit(): Promise<void> {
@@ -43,13 +42,14 @@ export class OnlineGameCreationComponent implements OnInit {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
-        if (await this.canCreateOnlineGame()) {
+        const canCreateOnlineGame: MGPValidation = this.connectedUserService.canUserCreate();
+        if (canCreateOnlineGame.isSuccess()) {
             const gameId: string = await this.gameService.createPartJoinerAndChat(user, game);
             // create Part and Joiner
             await this.router.navigate(['/play', game, gameId]);
             return true;
         } else {
-            this.messageDisplayer.infoMessage(OnlineGameCreationMessages.ALREADY_INGAME());
+            this.messageDisplayer.infoMessage(canCreateOnlineGame.getReason());
             await this.router.navigate(['/lobby']);
             return false;
         }
@@ -58,8 +58,5 @@ export class OnlineGameCreationComponent implements OnInit {
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.isPresent();
-    }
-    private canCreateOnlineGame(): boolean {
-        return this.connectedUserService.canUserCreate().isSuccess();
     }
 }

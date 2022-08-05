@@ -345,7 +345,8 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
-    public updateObservedPart(observedPart: FocussedPart): Promise<void> {
+    public updateObservedPart(observedPart: Partial<FocussedPart>): Promise<void> {
+        console.log('CONNECTED USER SERVICE. updateObservedPart', observedPart)
         assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
         return this.userDAO.update(this.user.get().id, { observedPart });
     }

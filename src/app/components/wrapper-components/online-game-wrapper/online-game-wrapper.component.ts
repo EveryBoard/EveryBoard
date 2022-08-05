@@ -229,36 +229,30 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.updateProcessingTime = MGPOptional.empty();
     }
     private async applyUpdate(updateType: UpdateType, part: PartDocument, oldPart: PartDocument): Promise<void> {
-        console.log('applyUpdate', updateType, part, oldPart)
         switch (updateType) {
             case UpdateType.REQUEST:
                 return await this.onRequest(Utils.getNonNullable(part.data.request), oldPart);
             case UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME:
-                this.currentPart = oldPart; // TODOTODO: only remove the take-back
-                console.log('this.currentPart set to ', oldPart, ' in applyUpdate ACCEPT_TAKE_BACK_WITHOUT_TIME ')
+                this.currentPart = oldPart;
                 return;
             case UpdateType.DUPLICATE:
                 return;
             case UpdateType.END_GAME_WITHOUT_TIME:
-                this.currentPart = oldPart; // TODOTODO: only remove the end-game
-                console.log('this.currentPart set to ', oldPart, ' in applyUpdate END_GAME_WITHOUT_TIME ')
+                this.currentPart = oldPart;
                 return;
             case UpdateType.END_GAME:
                 return this.applyEndGame();
             case UpdateType.MOVE_WITHOUT_TIME:
                 this.currentPart.data = {
                     ...this.currentPart.data,
-                    turn: this.currentPart.data.turn - 1, // TODOTODO oldPart.data.turn ?
+                    turn: this.currentPart.data.turn - 1,
                     lastUpdate: oldPart.data.lastUpdate,
                     lastUpdateTime: oldPart.data.lastUpdateTime,
-                    // TODOTODO oldPart.data.listMoves ?
                     listMoves: this.currentPart.data.listMoves.slice(0, this.currentPart.data.listMoves.length - 1),
-                }; // TODOTODO: only remove the move
-                console.log('rema rema rema MOVE_WITHOUT_TIME this.currentPart set to ', this.currentPart, oldPart)
+                };
                 return;
             case UpdateType.MOVE:
                 this.msToSubstract = this.getLastUpdateTime(oldPart, part, updateType);
-                console.log('rema rema rema called after MOVE', oldPart, part, this.currentPart)
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 return;
@@ -277,7 +271,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public getUpdatesTypes(update: PartDocument): UpdateType[] {
-        // TODOTODO throw if lastUpdate is missing, there should always be a increment ?
         const currentPartDoc: Part | null = this.currentPart != null ? this.currentPart.data : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.data);
         const updatesTypes: UpdateType[] = [];
@@ -318,10 +311,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 updatesTypes.push(UpdateType.END_GAME);
             }
         }
-        // assert(update.data.beginning != null && update.data.listMoves.length === 0,
-        //    'Unexpected update: ' + JSON.stringify(diff));
-        // updatesTypes.push(UpdateType.STARTING_DOC); // TODOTODO refactor le cul
-        console.log(updatesTypes)
         return updatesTypes;
     }
     private getMoveUpdateType(update: PartDocument, diff: ObjectDifference): UpdateType {
@@ -348,7 +337,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return [0, 0]; // TODOTODO
         }
         const oldTime: Time | null = this.getMoreRecentTime(oldPart);
-        console.log('rema rema rema, ', oldTime, 'comes from', oldPart)
         const updateTime: Time | null= this.getMoreRecentTime(update);
         assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
         assert(updateTime != null, 'TODO UPDATE_TIME WAS NULL, UNDO COMMENT AND TEST!');
@@ -432,10 +420,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.endGame = true;
         const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.HARD_DRAW];
         const finalUpdateIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.data.result);
-        if (finalUpdateIsMove) {
-            // this.doNewMoves(this.currentPart);
-            // TODOTODO put all those endgame in the else and unified ifelse ?
-        } else {
+        if (finalUpdateIsMove === false) {
             const endGameResults: MGPResult[] = [
                 MGPResult.RESIGN,
                 MGPResult.TIMEOUT,
@@ -649,7 +634,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
         } else {
-            console.log('about to call OGWC.updateDBBoard with', this.msToSubstract)
             return this.updateDBBoard(move, this.msToSubstract, scores);
         }
     }

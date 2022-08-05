@@ -47,7 +47,7 @@ export class WelcomeComponent {
                 return this.router.navigate(['/play', game]);
             }
         } else {
-            this.messageDisplayer.criticalMessage(canCreateGame.getReason()); // TODOTODO UT
+            this.messageDisplayer.criticalMessage(canCreateGame.getReason());
             return false;
         }
     }
