@@ -17,9 +17,10 @@ import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserSe
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
-import { FirestoreTime, Time } from 'src/app/domain/Time';
+import { FirestoreTime } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { User } from 'src/app/domain/User';
+import { Timestamp } from 'firebase/firestore';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -94,7 +95,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
     private allUserInterval: MGPOptional<number> = MGPOptional.empty();
     private ownTokenInterval: MGPOptional<number> = MGPOptional.empty();
-    private lastToken: Time;
+    private lastToken: Timestamp;
     private selfSubscription: () => void = () => {};
 
     public configFormGroup: FormGroup;
@@ -361,7 +362,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const currentUserId: string = this.connectedUserService.user.get().id;
         this.allUserInterval = MGPOptional.of(window.setInterval(async() => {
             const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
-            const currentTime: Time = this.lastToken;
+            const currentTime: Timestamp = this.lastToken;
             if (currentUserId === joiner.creator.id) {
                 await this.checkCandidatesTokensFreshness(currentTime);
             } else {
@@ -369,7 +370,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }, PartCreationComponent.TOKEN_INTERVAL));
     }
-    private async checkCreatorTokenFreshness(currentTime: Time): Promise<void> {
+    private async checkCreatorTokenFreshness(currentTime: Timestamp): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         if (await this.didUserTimeout(joiner.creator.id, currentTime)) {
             await this.destroyDocIfPartDidNotStart();
@@ -382,22 +383,22 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         assert(this.allDocDeleted === false, 'Should not delete doc twice');
         await this.cancelGameCreation();
     }
-    private async checkCandidatesTokensFreshness(currentTime: Time): Promise<void> {
+    private async checkCandidatesTokensFreshness(currentTime: Timestamp): Promise<void> {
         for (const candidate of this.candidates) {
             if (await this.didUserTimeout(candidate.id, currentTime)) {
                 await this.removeCandidateFromLobby(candidate);
             }
         }
     }
-    private async didUserTimeout(id: string, currentTime: Time): Promise<boolean> {
-        const lastChangedOpt: MGPOptional<FirestoreTime> = await this.userService.getUserLastChanged(id);
+    private async didUserTimeout(id: string, currentTime: Timestamp): Promise<boolean> {
+        const lastChangedOpt: MGPOptional<FirestoreTime> = await this.userService.getUserLastUpdateTime(id);
         if (lastChangedOpt.isAbsent()) {
             const error: string = 'found no user while observing ' + id + ' !';
             ErrorLoggerService.logError('PartCreationComponent', error);
             return true;
         }
-        const lastChanged: Time = lastChangedOpt.get() as Time;
-        const diff: number = getMillisecondsDifference(lastChanged, currentTime);
+        const lastUpdateTime: Timestamp = lastChangedOpt.get() as Timestamp;
+        const diff: number = getMillisecondsDifference(lastUpdateTime, currentTime);
         return diff > PartCreationComponent.TOKEN_TIMEOUT;
     }
     private async removeCandidateFromLobby(user: MinimalUser): Promise<void> {
@@ -420,8 +421,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.selfSubscription = this.userService.observeUser(userId, (userOpt: MGPOptional<User>) => {
             assert(userOpt.isPresent(), 'connected user should exist');
             const user: User = userOpt.get();
-            if (user.last_changed != null) {
-                this.lastToken = user.last_changed as Time;
+            if (user.lastUpdateTime != null) {
+                this.lastToken = user.lastUpdateTime as Timestamp;
             }
         });
     }

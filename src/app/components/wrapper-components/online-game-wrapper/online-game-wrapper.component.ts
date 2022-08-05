@@ -21,7 +21,6 @@ import { assert } from 'src/app/utils/assert';
 import { ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -29,6 +28,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { Timestamp } from 'firebase/firestore';
 
 export class OnlineGameWrapperMessages {
 
@@ -312,8 +312,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public getLastUpdateTime(oldPart: PartDocument, update: PartDocument, type: UpdateType): [number, number] {
-        const oldTime: Time | null = this.getMoreRecentTime(oldPart);
-        const updateTime: Time | null= this.getMoreRecentTime(update);
+        const oldTime: Timestamp | null = this.getMoreRecentTime(oldPart);
+        const updateTime: Timestamp | null= this.getMoreRecentTime(update);
         assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
         assert(updateTime != null, 'TODO UPDATE_TIME WAS NULL, UNDO COMMENT AND TEST!');
         const last: Player = Player.fromTurn(oldPart.data.turn);
@@ -321,15 +321,15 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                            Utils.getNonNullable(updateTime),
                                            type, last);
     }
-    private getMoreRecentTime(part: PartDocument): Time | null {
+    private getMoreRecentTime(part: PartDocument): Timestamp | null {
         if (part.data.lastUpdateTime == null) {
-            return part.data.beginning as Time;
+            return part.data.beginning as Timestamp;
         } else {
-            return part.data.lastUpdateTime as Time;
+            return part.data.lastUpdateTime as Timestamp;
         }
     }
-    private getTimeUsedForLastTurn(oldTime: Time,
-                                   updateTime: Time,
+    private getTimeUsedForLastTurn(oldTime: Timestamp,
+                                   updateTime: Timestamp,
                                    _type: UpdateType,
                                    last: Player)
     : [number, number]

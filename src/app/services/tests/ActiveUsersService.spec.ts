@@ -4,6 +4,7 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { User, UserDocument } from 'src/app/domain/User';
 import { fakeAsync } from '@angular/core/testing';
+import { Timestamp } from 'firebase/firestore';
 
 describe('ActiveUsersService', () => {
 
@@ -44,22 +45,22 @@ describe('ActiveUsersService', () => {
         const FIRST_USER: User = {
             username: 'first',
             verified: true,
-            last_changed: { seconds: 1, nanoseconds: 3000000 },
+            lastUpdateTime: new Timestamp(1, 3000000),
         };
         const SECOND_USER: User = {
             username: 'second',
             verified: true,
-            last_changed: { seconds: 2, nanoseconds: 3000000 },
+            lastUpdateTime: new Timestamp(2, 3000000),
         };
         const THIRD_USER: User = {
             username: 'third',
             verified: true,
-            last_changed: { seconds: 3, nanoseconds: 3000000 },
+            lastUpdateTime: new Timestamp(3, 3000000),
         };
         const FOURTH_USER: User = {
             username: 'fourth',
             verified: true,
-            last_changed: { seconds: 4, nanoseconds: 3000000 },
+            lastUpdateTime: new Timestamp(4, 3000000),
         };
         const userDocs: UserDocument[] = [
             { id: 'second', data: SECOND_USER },

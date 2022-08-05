@@ -2,7 +2,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
@@ -24,7 +24,6 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
-import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -61,10 +60,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const OBSERVER: User = {
         username: 'jeanJaja',
-        last_changed: {
-            seconds: Date.now() / 1000,
-            nanoseconds: Date.now() % 1000,
-        },
+        lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
         state: 'online',
         verified: true,
     };
@@ -72,7 +68,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                                  MGPOptional.ofNullable(OBSERVER.username),
                                                  MGPOptional.of('observer@home'),
                                                  true);
-    const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
+    const FAKE_MOMENT: Timestamp = new Timestamp(123, 456000000);
 
     const BASE_TAKE_BACK_REQUEST: Partial<Part> = {
         request: Request.takeBackAccepted(Player.ONE),
@@ -778,8 +774,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
                 spyOn(partDAO, 'update').and.callThrough();
 
-                const beginningTime: Time = wrapper.currentPart.data.beginning as Time;
-                const lastUpdateTime: Time = wrapper.currentPart.data.lastUpdateTime as Time;
+                const beginningTime: Timestamp = wrapper.currentPart.data.beginning as Timestamp;
+                const lastUpdateTime: Timestamp = wrapper.currentPart.data.lastUpdateTime as Timestamp;
                 const usedTimeOfFirstTurn: number = getMillisecondsDifference(beginningTime, lastUpdateTime);
                 const remainingMsForZero: number = (1800 * 1000) - usedTimeOfFirstTurn;
                 await acceptTakeBack();
@@ -1150,8 +1146,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
             tick(1);
             await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
-            const beginning: Time = wrapper.currentPart.data.beginning as Time;
-            const firstMoveTime: Time = wrapper.currentPart.data.lastUpdateTime as Time;
+            const beginning: Timestamp = wrapper.currentPart.data.beginning as Timestamp;
+            const firstMoveTime: Timestamp = wrapper.currentPart.data.lastUpdateTime as Timestamp;
             const msUsedForFirstMove: number = getMillisecondsDifference(beginning, firstMoveTime);
 
             // When doing the next move
@@ -1420,7 +1416,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 333, nanoseconds: 333000000 },
+                lastUpdateTime: new Timestamp(333, 333000000),
                 request: Request.takeBackAccepted(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1449,7 +1445,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 333, nanoseconds: 333000000 },
+                lastUpdateTime: new Timestamp(333, 333000000),
                 request: Request.takeBackAccepted(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1463,7 +1459,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 turn: 4,
                 listMoves: [1, 2, 3, 4],
-                lastUpdateTime: { seconds: 444, nanoseconds: 444000000 },
+                lastUpdateTime: new Timestamp(444, 444000000),
                 // And obviously, no longer the previous request code
                 request: null,
             });
@@ -1504,7 +1500,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // And obviously, the added score and time
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
-                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: new Timestamp(1111, 111000000),
             });
 
             // Then the update should be seen as a move
@@ -1528,7 +1524,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: new Timestamp(1111, 111000000),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
@@ -1542,7 +1538,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 1,
                 listMoves: [1],
                 // And obviously, the modified time
-                lastUpdateTime: { seconds: 2222, nanoseconds: 222000000 },
+                lastUpdateTime: new Timestamp(2222, 222000000),
             });
 
             // Then the update should be seen as a Move
@@ -1566,7 +1562,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: new Timestamp(1111, 111000000),
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             };
@@ -1581,7 +1577,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 turn: 2,
                 listMoves: [1, 2],
-                lastUpdateTime: { seconds: 2222, nanoseconds: 222000000 },
+                lastUpdateTime: new Timestamp(2222, 222000000),
                 scorePlayerZero: 1,
                 // And obviously, the score update and time added
                 scorePlayerOne: 4,
@@ -1608,7 +1604,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: new Timestamp(1111, 111000000),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
@@ -1648,7 +1644,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: new Timestamp(1111, 111000000),
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             };
@@ -1689,7 +1685,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 125, nanoseconds: 456000000 },
+                lastUpdateTime: new Timestamp(125, 456000000),
                 request: Request.takeBackAsked(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1728,7 +1724,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 125, nanoseconds: 456000000 },
+                lastUpdateTime: new Timestamp(125, 456000000),
                 request: Request.takeBackAsked(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1741,7 +1737,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     player: 1,
                 },
                 // but
-                lastUpdateTime: { seconds: 127, nanoseconds: 456000000 },
+                lastUpdateTime: new Timestamp(127, 456000000),
                 request: Request.takeBackAccepted(Player.ONE),
             });
 
@@ -1766,7 +1762,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastUpdateTime: { seconds: 125, nanoseconds: 456000000 },
+                lastUpdateTime: new Timestamp(125, 456000000),
                 request: Request.takeBackAsked(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1781,7 +1777,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // but
                 request: Request.addGlobalTime(Player.ZERO),
                 remainingMsForZero: (1800 * 1000) + (5 * 60 * 1000),
-                lastUpdateTime: { seconds: 127, nanoseconds: 456000000 },
+                lastUpdateTime: new Timestamp(127, 456000000),
             });
 
             // Then the update should be seen as a request

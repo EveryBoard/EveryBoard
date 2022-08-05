@@ -51,7 +51,7 @@ describe('JoinerDAOMock', () => {
         lastJoiner = MGPOptional.empty();
     });
     it('Total update should update', fakeAsync(async() => {
-        // Given an initial joiner to which we subscribed to the changes
+        // Given an initial joiner to which we subscribed
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
 
         expect(lastJoiner).toEqual(MGPOptional.empty());
@@ -75,7 +75,7 @@ describe('JoinerDAOMock', () => {
         unsubscribe();
     }));
     it('Partial update should update', fakeAsync(async() => {
-        // Given an initial joiner to which we subscribed to the changes
+        // Given an initial joiner to which we subscribed
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
 
         expect(callCount).toEqual(0);

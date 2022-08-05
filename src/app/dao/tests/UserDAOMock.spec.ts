@@ -35,7 +35,7 @@ export class UserDAOMock extends FirestoreDAOMock<User> {
     }
     public updatePresenceToken(userId: string): Promise<void> {
         return this.update(userId, {
-            last_changed: serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         });
     }
 }

@@ -75,7 +75,7 @@ describe('UserDAO', () => {
             await dao.updatePresenceToken('joserId');
 
             // Then update should be called
-            expect(dao.update).toHaveBeenCalledOnceWith('joserId', { last_changed: serverTimestamp() });
+            expect(dao.update).toHaveBeenCalledOnceWith('joserId', { lastUpdateTime: serverTimestamp() });
         });
     });
     describe('security', () => {

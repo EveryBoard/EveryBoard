@@ -10,18 +10,18 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { Time } from '../domain/Time';
 import { MGPOptional } from '../utils/MGPOptional';
-import { FieldValue, Unsubscribe } from '@angular/fire/firestore';
+import { Unsubscribe } from '@angular/fire/firestore';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
+import { FirestoreTime } from '../domain/Time';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
     playerOne: MinimalUser,
     turn: number,
-    beginning?: FieldValue | Time,
+    beginning?: FirestoreTime,
 }
 
 @Injectable({

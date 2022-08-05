@@ -193,10 +193,8 @@ describe('PartDAO', () => {
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
-            // eslint-disable-next-line camelcase
-            const last_changed: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            // eslint-disable-next-line camelcase
-            await userDAO.update(creator.id, { observedPart: null, last_changed });
+            const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
+            await userDAO.update(creator.id, { observedPart: null, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -213,10 +211,8 @@ describe('PartDAO', () => {
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
-            // eslint-disable-next-line camelcase
-            const last_changed: Timestamp = new Timestamp(0, 0); // owner is stuck in 1970
-            // eslint-disable-next-line camelcase
-            await userDAO.update(creator.id, { observedPart: partId, last_changed });
+            const lastUpdateTime: Timestamp = new Timestamp(0, 0); // owner is stuck in 1970
+            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -233,10 +229,8 @@ describe('PartDAO', () => {
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
-            // eslint-disable-next-line camelcase
-            const last_changed: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            // eslint-disable-next-line camelcase
-            await userDAO.update(creator.id, { observedPart: partId, last_changed });
+            const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
+            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -528,49 +522,49 @@ describe('PartDAO', () => {
                 await expectPermissionToBeDenied(result);
             }
         }
-        fit('should allow decreasing its own time (as playerZero)', async() => {
+        it('should allow decreasing its own time (as playerZero)', async() => {
             await checkTimeUpdate(Player.ZERO,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForZero: zero - 1000 };
                                   }, true);
         });
-        fit('should forbid decreasing the time of the opponent (as playerZero)', async() => {
+        it('should forbid decreasing the time of the opponent (as playerZero)', async() => {
             await checkTimeUpdate(Player.ZERO,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForOne: one - 1000 };
                                   }, false);
         });
-        fit('should allow increasing the time of the opponent (as playerZero)', async() => {
+        it('should allow increasing the time of the opponent (as playerZero)', async() => {
             await checkTimeUpdate(Player.ZERO,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForOne: one + 1000 };
                                   }, true);
         });
-        fit('should forbid increasing its own time (as playerZero)', async() => {
+        it('should forbid increasing its own time (as playerZero)', async() => {
             await checkTimeUpdate(Player.ZERO,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForZero: zero + 1000 };
                                   }, false);
         });
-        fit('should allow decreasing its own time (as playerOne)', async() => {
+        it('should allow decreasing its own time (as playerOne)', async() => {
             await checkTimeUpdate(Player.ONE,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForOne: one - 1000 };
                                   }, true);
         });
-        fit('should forbid decreasing the time of the opponent (as playerOne)', async() => {
+        it('should forbid decreasing the time of the opponent (as playerOne)', async() => {
             await checkTimeUpdate(Player.ONE,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForZero: zero - 1000 };
                                   }, false);
         });
-        fit('should allow increasing the time of the opponent (as playerOne)', async() => {
+        it('should allow increasing the time of the opponent (as playerOne)', async() => {
             await checkTimeUpdate(Player.ONE,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForZero: zero + 1000 };
                                   }, true);
         });
-        fit('should forbid increasing its own time (as playerOne)', async() => {
+        it('should forbid increasing its own time (as playerOne)', async() => {
             await checkTimeUpdate(Player.ONE,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForOne: one + 1000 };

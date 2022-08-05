@@ -249,7 +249,7 @@ describe('ChatDAO', () => {
             const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
             const partId: string = await createPartAndJoiner(user);
             await chatDAO.set(partId, {});
-            await userDAO.update(user.id, { last_changed: new Timestamp(0, 0) });
+            await userDAO.update(user.id, { lastUpdateTime: new Timestamp(0, 0) });
             await signOut();
             await createConnectedUser('bar@bar.com', 'other');
             // When deleting the chat as the non-owner

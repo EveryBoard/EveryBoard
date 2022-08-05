@@ -22,7 +22,7 @@ import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 
 describe('GameService', () => {
@@ -246,8 +246,8 @@ describe('GameService', () => {
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
-                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
+                beginning: new Timestamp(1700102, 680000000),
+                lastUpdateTime: new Timestamp(2, 3000000),
                 loser: 'creator',
                 winner: 'joiner',
                 request: Request.rematchProposed(Player.ZERO),
@@ -289,8 +289,8 @@ describe('GameService', () => {
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
-                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
+                beginning: new Timestamp(1700102, 680000000),
+                lastUpdateTime: new Timestamp(2, 3000000),
                 loser: 'creator',
                 winner: 'joiner',
                 request: Request.rematchProposed(Player.ZERO),
@@ -334,8 +334,8 @@ describe('GameService', () => {
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
-                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
+                beginning: new Timestamp(1700102, 680000000),
+                lastUpdateTime: new Timestamp(2, 3000000),
                 loser: 'creator',
                 winner: 'joiner',
                 request: Request.rematchProposed(Player.ZERO),

@@ -24,7 +24,8 @@ import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { FirestoreTime, Time } from 'src/app/domain/Time';
+import { FirestoreTime } from 'src/app/domain/Time';
+import { Timestamp } from 'firebase/firestore';
 
 describe('PartCreationComponent', () => {
 
@@ -42,9 +43,9 @@ describe('PartCreationComponent', () => {
 
     let destroyed: boolean;
 
-    async function mockCandidateArrival(lastChanged?: Time): Promise<void> {
-        if (lastChanged) {
-            await userDAO.update(UserMocks.OPPONENT_MINIMAL_USER.id, { last_changed: lastChanged });
+    async function mockCandidateArrival(lastUpdateTime?: Timestamp): Promise<void> {
+        if (lastUpdateTime) {
+            await userDAO.update(UserMocks.OPPONENT_MINIMAL_USER.id, { lastUpdateTime });
         }
         return joinerDAO.addCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
     }
@@ -158,10 +159,8 @@ describe('PartCreationComponent', () => {
                 expectElementToExist('#candidate_firstCandidate');
 
                 // When the candidate user's document changes
-                // eslint-disable-next-line camelcase
-                const last_changed: FirestoreTime = { seconds: 500, nanoseconds: 0 };
-                // eslint-disable-next-line camelcase
-                await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { last_changed });
+                const lastUpdateTime: FirestoreTime = new Timestamp(500, 0);
+                await userDAO.update(UserMocks.OPPONENT_AUTH_USER.id, { lastUpdateTime });
                 tick(PartCreationComponent.TOKEN_INTERVAL);
 
                 // Then it is in the list of candidates
@@ -214,7 +213,7 @@ describe('PartCreationComponent', () => {
             it('should go back to start when ChosenOpponent token is too old', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate that has joined and that has been chosen as opponent
                 awaitComponentInitialisation();
-                await mockCandidateArrival({ seconds: 123, nanoseconds: 456000000 });
+                await mockCandidateArrival(new Timestamp(123, 456000000));
                 chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
                 spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
@@ -236,7 +235,7 @@ describe('PartCreationComponent', () => {
             it('should remove candidates from the list when they stop sending token', fakeAsync(async() => {
                 // Given a component that is loaded and there is a non-chosen candidate
                 awaitComponentInitialisation();
-                await mockCandidateArrival({ seconds: 123, nanoseconds: 456000000 });
+                await mockCandidateArrival(new Timestamp(123, 456000000));
                 expectElementToExist('#candidate_firstCandidate');
                 spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
@@ -573,8 +572,8 @@ describe('PartCreationComponent', () => {
                 spyOn(chatService, 'deleteChat').and.callThrough();
 
                 // Given a component where creator has an out of date token
-                const creatorLastChange: Time = { seconds: - PartCreationComponent.TOKEN_TIMEOUT, nanoseconds: 0 };
-                await userDAO.update(UserMocks.CREATOR_AUTH_USER.id, { last_changed: creatorLastChange });
+                const lastUpdateTime: Timestamp = new Timestamp(- PartCreationComponent.TOKEN_TIMEOUT, 0);
+                await userDAO.update(UserMocks.CREATOR_AUTH_USER.id, { lastUpdateTime });
                 await partDAO.set('joinerId', PartMocks.INITIAL);
 
                 // When arriving on that component

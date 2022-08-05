@@ -665,7 +665,7 @@ describe('ConnectedUserService', () => {
 
             // Then the userDAO should update the connected user doc
             const userDocId: string = UserMocks.CREATOR_MINIMAL_USER.id;
-            expect(userDAO.update).toHaveBeenCalledOnceWith(userDocId, { last_changed: serverTimestamp() });
+            expect(userDAO.update).toHaveBeenCalledOnceWith(userDocId, { lastUpdateTime: serverTimestamp() });
         });
     });
     afterEach(async() => {

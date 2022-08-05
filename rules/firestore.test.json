@@ -76,7 +76,7 @@ service cloud.firestore {
         }
         function onlyModifiesVerifiedFieldIfUserIsVerified() {
             let verifiedKeptSameValue = (resource.data.verified == request.resource.data.verified);
-            let verifiedSetToTrueAfterVerification =  (resource.data.verified == false && userIsVerified() && resource.data.username != null);
+            let verifiedSetToTrueAfterVerification = (resource.data.verified == false && userIsVerified() && resource.data.username != null);
             return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
         match /parts/{id} {
@@ -174,7 +174,7 @@ service cloud.firestore {
         }
         function hasTimedOut(user) {
             let userDoc = get(/databases/$(database)/documents/users/$(user.id)).data;
-            let timedOut = request.time.time() > userDoc.last_changed.time() + duration.value(10, 's');
+            let timedOut = request.time.time() > userDoc.lastUpdateTime.time() + duration.value(10, 's');
             return timedOut;
         }
         match /joiners/{partId} {
@@ -186,8 +186,9 @@ service cloud.firestore {
             allow delete: if userIsVerified() && userIsCreator(resource.data) && joinerHasNotStarted(resource.data);
             // Anybody else can delete a joiner only if the creator has timed out and the part has not started
             allow delete: if userIsVerified() && hasTimedOut(creatorOf(partId)) && joinerHasNotStarted(resource.data);
-            // The creator can change all fields except changing partStatus to STARTED (3), until the part starts
+            // The creator can change all fields except 'creator', or changing partStatus to STARTED (3) or FINISHED (4), until the part starts
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
+                             preservesField('creator') &&
                              resource.data.partStatus < 3 && request.resource.data.partStatus != 3;
             // The creator can only change partStatus (to finished) once the part has been started
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
