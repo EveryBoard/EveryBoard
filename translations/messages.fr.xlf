@@ -2,6 +2,10 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="fr">
     <body>
+      <trans-unit id="4199955661915036727" datatype="html">
+        <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, star us on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/EveryBoard/EveryBoard&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</source>
+        <target>Si vous aimez <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, mettez-nous une étoile sur <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/EveryBoard/EveryBoard&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> !</target>
+      </trans-unit>
       <trans-unit id="8403075591877274055" datatype="html">
         <source>Type your message here</source>
         <target>Entrez votre message ici</target>
