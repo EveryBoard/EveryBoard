@@ -192,13 +192,13 @@ describe('PartDAO', () => {
                 await expectPermissionToBeDenied(result);
             }
         });
-        it('should forbid deleting non-started part if owner has not timed out, even if they are not observing anymore', async() => {
-            // Given a part with its owner not observing this part
+        it('should forbid deleting non-started part if owner has not timed out', async() => {
+            // Given a non-started part and its owner that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            await userDAO.update(creator.id, { observedPart: null, lastUpdateTime });
+            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -228,12 +228,30 @@ describe('PartDAO', () => {
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
-        it('should forbid deleting a non-started part if owner is still observing it and has not timed out', async() => {
-            // Given a part with its owner
+        it('should forbid deleting a started part if the owner has timed out', async() => {
+            // Given a started part and its owner that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
+            const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero: creator });
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
+            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
+            await signOut();
+
+            // and given another user
+            await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+
+            // When the other user deletes the part
+            const result: Promise<void> = partDAO.delete(partId);
+
+            // Then it should fail
+            await expectPermissionToBeDenied(result);
+        });
+        it('should forbid deleting a started part if the owner has not timed out', async() => {
+            // Given a started part and its owner that has timed out
+            const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero: creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+            const lastUpdateTime: Timestamp = new Timestamp(0, 0); // owner is stuck in 1970
             await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
             await signOut();
 
