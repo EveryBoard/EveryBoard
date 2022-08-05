@@ -320,7 +320,7 @@ describe('ConfigRoomDAO', () => {
             it('should allow to change partStatus to FINISHED after it is STARTED', async() => {
                 // When changing partStatus to FINISHED
                 const result: Promise<void> = configRoomDAO.update(partId, {
-                    partStatus: PartStatus.PART_FINISHED.value
+                    partStatus: PartStatus.PART_FINISHED.value,
                 });
 
                 // Then it should succeed
