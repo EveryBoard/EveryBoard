@@ -18,9 +18,9 @@ import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserServ
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { ChatDAO } from '../../dao/ChatDAO';
-import { JoinerDAOMock } from '../../dao/tests/JoinerDAOMock.spec';
+import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
 import { PartDAO } from '../../dao/PartDAO';
-import { JoinerDAO } from '../../dao/JoinerDAO';
+import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
@@ -101,7 +101,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
@@ -198,7 +198,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
     public static async basic<T extends AbstractGameComponent>(game?: string, configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
-        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
+        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestModule) {
             await ComponentTestUtils.configureTestModule(activatedRouteStub);
         }
@@ -219,7 +219,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],

@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { JoinerService } from '../JoinerService';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { Joiner, PartStatus } from 'src/app/domain/Joiner';
-import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { ConfigRoomService } from '../ConfigRoomService';
+import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
+import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
+import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -15,11 +15,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('JoinerService', () => {
+describe('ConfigRoomService', () => {
 
-    let dao: JoinerDAO;
+    let dao: ConfigRoomDAO;
 
-    let service: JoinerService;
+    let service: ConfigRoomService;
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -31,103 +31,103 @@ describe('JoinerService', () => {
             ],
             providers: [
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
 
             ],
         }).compileComponents();
-        dao = TestBed.inject(JoinerDAO);
-        service = TestBed.inject(JoinerService);
+        dao = TestBed.inject(ConfigRoomDAO);
+        service = TestBed.inject(ConfigRoomService);
     }));
     it('should create', fakeAsync(() => {
         expect(service).toBeTruthy();
     }));
-    it('read should be delegated to JoinerDAO', fakeAsync(async() => {
-        // Given a JoinerService
-        spyOn(dao, 'read').and.resolveTo(MGPOptional.of(JoinerMocks.INITIAL));
-        // When reading a joiner
-        await service.readJoinerById('myJoinerId');
+    it('read should be delegated to ConfigRoomDAO', fakeAsync(async() => {
+        // Given a ConfigRoomService
+        spyOn(dao, 'read').and.resolveTo(MGPOptional.of(ConfigRoomMocks.INITIAL));
+        // When reading a config Room
+        await service.readConfigRoomById('myConfigRoomId');
         // Then it should delegate to the DAO
-        expect(dao.read).toHaveBeenCalledOnceWith('myJoinerId');
+        expect(dao.read).toHaveBeenCalledOnceWith('myConfigRoomId');
     }));
-    it('set should be delegated to JoinerDAO', fakeAsync(async() => {
-        // Given a JoinerService
+    it('set should be delegated to ConfigRoomDAO', fakeAsync(async() => {
+        // Given a ConfigRoomService
         spyOn(dao, 'set').and.resolveTo();
-        // When setting the joiner
-        await service.set('partId', JoinerMocks.INITIAL);
+        // When setting the configRoom
+        await service.set('partId', ConfigRoomMocks.INITIAL);
         // Then it should delegate to the DAO
-        expect(dao.set).toHaveBeenCalledOnceWith('partId', JoinerMocks.INITIAL);
+        expect(dao.set).toHaveBeenCalledOnceWith('partId', ConfigRoomMocks.INITIAL);
     }));
-    it('update should delegated to JoinerDAO', fakeAsync(async() => {
-        // Given a JoinerService
+    it('update should delegated to ConfigRoomDAO', fakeAsync(async() => {
+        // Given a ConfigRoomService
         spyOn(dao, 'update').and.resolveTo();
-        // When updating a joiner
-        await service.updateJoinerById('partId', JoinerMocks.INITIAL);
+        // When updating a configRoom
+        await service.updateConfigRoomById('partId', ConfigRoomMocks.INITIAL);
         // Then it should delegate to the DAO
-        expect(dao.update).toHaveBeenCalledOnceWith('partId', JoinerMocks.INITIAL);
+        expect(dao.update).toHaveBeenCalledOnceWith('partId', ConfigRoomMocks.INITIAL);
     }));
-    it('createInitialJoiner should delegate to the DAO set method', fakeAsync(async() => {
-        // Given a JoinerService
+    it('createInitialConfigRoom should delegate to the DAO set method', fakeAsync(async() => {
+        // Given a ConfigRoomService
         spyOn(dao, 'set').and.resolveTo();
         TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
-        // When creating the initial joiner
-        await service.createInitialJoiner('id');
+        // When creating the initial configRoom
+        await service.createInitialConfigRoom('id');
 
-        // Then it should delegate to the DAO and create the initial joiner
-        expect(dao.set).toHaveBeenCalledOnceWith('id', JoinerMocks.INITIAL);
+        // Then it should delegate to the DAO and create the initial configRoom
+        expect(dao.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL);
     }));
     describe('joinGame', () => {
-        it('should not update joiner when called by the creator', fakeAsync(async() => {
-            // Given a joiner where we are the creator
+        it('should not update configRoom when called by the creator', fakeAsync(async() => {
+            // Given a configRoom where we are the creator
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
-            await dao.set('joinerId', JoinerMocks.INITIAL);
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
             spyOn(dao, 'update').and.callThrough();
             expect(dao.update).not.toHaveBeenCalled();
 
             // When joining it
-            await service.joinGame('joinerId');
+            await service.joinGame('configRoomId');
 
-            // Then it should not update the joiner, and the joiner is still the initial one
+            // Then it should not update the configRoom, and the configRoom is still the initial one
             expect(dao.update).not.toHaveBeenCalled();
-            const resultingJoiner: Joiner = (await dao.read('joinerId')).get();
-            expect(resultingJoiner).toEqual(JoinerMocks.INITIAL);
+            const resultingConfigRoom: ConfigRoom = (await dao.read('configRoomId')).get();
+            expect(resultingConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
         }));
-        it('should be delegated to JoinerDAO', fakeAsync(async() => {
-            // Given a joiner
+        it('should be delegated to ConfigRoomDAO', fakeAsync(async() => {
+            // Given a configRoom
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            await dao.set('joinerId', JoinerMocks.INITIAL);
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
             spyOn(dao, 'addCandidate').and.callThrough();
 
             // When joining it
-            await service.joinGame('joinerId');
+            await service.joinGame('configRoomId');
 
             // We should be added to the candidate list
-            expect(dao.addCandidate).toHaveBeenCalledOnceWith('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            expect(dao.addCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
-        it('should fail when joining an unexisting joiner', fakeAsync(async() => {
+        it('should fail when joining an unexisting configRoom', fakeAsync(async() => {
             spyOn(dao, 'read').and.resolveTo(MGPOptional.empty());
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            // When trying to join an invalid joiner
-            const result: Promise<MGPValidation> = service.joinGame('unexistingJoinerId');
+            // When trying to join an invalid configRoom
+            const result: Promise<MGPValidation> = service.joinGame('unexistingConfigRoomId');
             // Then it should fail
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure('Game does not exist'));
         }));
     });
     describe('cancelJoining', () => {
-        it('cancelJoining should throw when there was no observed joiner', fakeAsync(async() => {
+        it('cancelJoining should throw when there was no observed configRoom', fakeAsync(async() => {
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            // When cancelling on an invalid joiner
+            // When cancelling on an invalid configRoom
             const result: Promise<void> = service.cancelJoining();
             // Then it should throw
-            const expectedError: string = 'cannot cancel joining when not observing a joiner';
+            const expectedError: string = 'cannot cancel joining when not observing a configRoom';
             await expectAsync(result).toBeRejectedWithError(expectedError);
         }));
         it('should delegate update to DAO', fakeAsync(async() => {
-            // Given a joiner that we are observing and that we joined
+            // Given a configRoom that we are observing and that we joined
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
-            await service.joinGame('joinerId');
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
+            service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
+            await service.joinGame('configRoomId');
 
             spyOn(dao, 'removeCandidate').and.resolveTo();
 
@@ -135,57 +135,57 @@ describe('JoinerService', () => {
             await service.cancelJoining();
 
             // Then we are removed from the list
-            expect(dao.removeCandidate).toHaveBeenCalledOnceWith('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            expect(dao.removeCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
         it('should start as new when chosen opponent leaves', fakeAsync(async() => {
-            // Given a joiner that we are observing, with a chosen opponent
+            // Given a configRoom that we are observing, with a chosen opponent
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
-            await dao.addCandidate('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
+            await dao.set('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+            await dao.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+            service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             // When the chosen opponent leaves
             await service.cancelJoining();
 
-            // Then the joiner is back to the initial one
-            const currentJoiner: MGPOptional<Joiner> = await dao.read('joinerId');
-            expect(currentJoiner.get()).withContext('should be as new').toEqual(JoinerMocks.INITIAL);
+            // Then the configRoom is back to the initial one
+            const currentConfigRoom: MGPOptional<ConfigRoom> = await dao.read('configRoomId');
+            expect(currentConfigRoom.get()).withContext('should be as new').toEqual(ConfigRoomMocks.INITIAL);
         }));
     });
-    describe('deleteJoiner', () => {
+    describe('deleteConfigRoom', () => {
         it('should delegate deletion to DAO', fakeAsync(async() => {
-            // Given a joiner that we are observing
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
+            // Given a configRoom that we are observing
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
+            service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(dao, 'delete').and.resolveTo();
 
             // When we delete it
-            await service.deleteJoiner([]);
+            await service.deleteConfigRoom([]);
 
             // Then it is deleted in the DAO
-            expect(dao.delete).toHaveBeenCalledOnceWith('joinerId');
+            expect(dao.delete).toHaveBeenCalledOnceWith('configRoomId');
         }));
         it('should delete candidates as well', fakeAsync(async() => {
-            // Given a joiner that we are observing, which has candidates
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
+            // Given a configRoom that we are observing, which has candidates
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
+            service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
             await dao.addCandidate('partId', UserMocks.CANDIDATE_MINIMAL_USER);
 
             spyOn(dao, 'removeCandidate').and.resolveTo();
 
             // When we delete it
-            await service.deleteJoiner([UserMocks.CANDIDATE_MINIMAL_USER]);
+            await service.deleteConfigRoom([UserMocks.CANDIDATE_MINIMAL_USER]);
 
             // Then the candidate docs are also deleted in the DAO
-            expect(dao.removeCandidate).toHaveBeenCalledOnceWith('joinerId', UserMocks.CANDIDATE_MINIMAL_USER);
+            expect(dao.removeCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
     });
     describe('reviewConfig', () => {
         it('should change part status with DAO', fakeAsync(async() => {
-            // Given a joiner that we are observing
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
+            // Given a configRoom that we are observing
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
+            service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(dao, 'update').and.resolveTo();
 
@@ -193,16 +193,16 @@ describe('JoinerService', () => {
             await service.reviewConfig();
 
             // Then the part goes back to creation status
-            expect(dao.update).toHaveBeenCalledOnceWith('joinerId', {
+            expect(dao.update).toHaveBeenCalledOnceWith('configRoomId', {
                 partStatus: PartStatus.PART_CREATED.value,
             });
         }));
     });
     describe('reviewConfigAndRemoveChosenOpponent', () => {
         it('should change part status and chosen opponent with DAO', fakeAsync(async() => {
-            // Given a joiner that we are observing
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
+            // Given a configRoom that we are observing
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
+            service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(dao, 'update').and.resolveTo();
 
@@ -210,7 +210,7 @@ describe('JoinerService', () => {
             await service.reviewConfigAndRemoveChosenOpponent();
 
             // Then the part is updated accordingly
-            expect(dao.update).toHaveBeenCalledOnceWith('joinerId', {
+            expect(dao.update).toHaveBeenCalledOnceWith('configRoomId', {
                 partStatus: PartStatus.PART_CREATED.value,
                 chosenOpponent: null,
             });
@@ -218,9 +218,9 @@ describe('JoinerService', () => {
     });
     describe('acceptConfig', () => {
         it('should change part status with DAO to start it', fakeAsync(async() => {
-            // Given a joiner that we are observing
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
+            // Given a configRoom that we are observing
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
+            service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(dao, 'update').and.resolveTo();
 
@@ -228,7 +228,7 @@ describe('JoinerService', () => {
             await service.acceptConfig();
 
             // Then the part is updated to the STARTED status
-            expect(dao.update).toHaveBeenCalledOnceWith('joinerId', {
+            expect(dao.update).toHaveBeenCalledOnceWith('configRoomId', {
                 partStatus: PartStatus.PART_STARTED.value,
             });
         }));
@@ -236,24 +236,24 @@ describe('JoinerService', () => {
     describe('subscribeToCandidates', () => {
         let candidates: MinimalUser[] = [];
         beforeEach(fakeAsync(async() => {
-            // Given a joiner for which we are observing the candidates
-            await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.subscribeToChanges('joinerId', () => {});
-            service.subscribeToCandidates('joinerId', (newCandidates: MinimalUser[]) => {
+            // Given a configRoom for which we are observing the candidates
+            await dao.set('configRoomId', ConfigRoomMocks.INITIAL);
+            service.subscribeToChanges('configRoomId', () => {});
+            service.subscribeToCandidates('configRoomId', (newCandidates: MinimalUser[]) => {
                 candidates = newCandidates;
             });
         }));
         it('should see new candidates appear', fakeAsync(async() => {
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             // When a candidate is added
-            await service.joinGame('joinerId');
+            await service.joinGame('configRoomId');
             // Then the candidate has been seen
             expect(candidates).toEqual([UserMocks.CANDIDATE_MINIMAL_USER]);
         }));
         it('should see removed candidates disappear', fakeAsync(async() => {
             // and given an existing candidate
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            await service.joinGame('joinerId');
+            await service.joinGame('configRoomId');
             // When a candidate is removed
             await service.removeCandidate(UserMocks.CANDIDATE_MINIMAL_USER);
             // Then the candidate has been seen
@@ -262,13 +262,13 @@ describe('JoinerService', () => {
         it('should see modified candidates correctly modified', fakeAsync(async() => {
             // and given some existing candidates
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            await service.joinGame('joinerId');
+            await service.joinGame('configRoomId');
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            await service.joinGame('joinerId');
+            await service.joinGame('configRoomId');
 
             // When a candidate is modified
             // (This should never happen in practice, but we still want the correct behavior just in case)
-            await dao.subCollectionDAO('joinerId', 'candidates').update(UserMocks.CANDIDATE_MINIMAL_USER.id, { name: 'foo' });
+            await dao.subCollectionDAO('configRoomId', 'candidates').update(UserMocks.CANDIDATE_MINIMAL_USER.id, { name: 'foo' });
             expect(candidates).toEqual([{ ...UserMocks.CANDIDATE_MINIMAL_USER, name: 'foo' }, UserMocks.OPPONENT_MINIMAL_USER]);
 
         }));

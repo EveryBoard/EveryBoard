@@ -14,7 +14,7 @@ import { ChatService } from './services/ChatService';
 import { UserService } from './services/UserService';
 import { ConnectedUserService } from './services/ConnectedUserService';
 import { GameService } from './services/GameService';
-import { JoinerService } from './services/JoinerService';
+import { ConfigRoomService } from './services/ConfigRoomService';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
@@ -221,7 +221,7 @@ export class FirebaseProviders {
     providers: [
         ConnectedUserService,
         GameService,
-        JoinerService,
+        ConfigRoomService,
         UserService,
         ChatService,
         PartDAO,

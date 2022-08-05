@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
-import { FirstPlayer, Joiner, PartStatus } from '../domain/Joiner';
-import { JoinerService } from './JoinerService';
+import { FirstPlayer, ConfigRoom, PartStatus } from '../domain/ConfigRoom';
+import { ConfigRoomService } from './ConfigRoomService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/Request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -37,7 +37,7 @@ export class GameService {
 
     constructor(private readonly partDAO: PartDAO,
                 private readonly connectedUserService: ConnectedUserService,
-                private readonly joinerService: JoinerService,
+                private readonly configRoomService: ConfigRoomService,
                 private readonly chatService: ChatService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');
@@ -77,22 +77,24 @@ export class GameService {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(typeGame: string): Promise<string> {
+    public async createPartConfigRoomAndChat(typeGame: string): Promise<string> {
         display(GameService.VERBOSE, `GameService.createGame(${typeGame})`);
 
         const gameId: string = await this.createUnstartedPart(typeGame);
-        await this.joinerService.createInitialJoiner(gameId);
+        await this.configRoomService.createInitialConfigRoom(gameId);
         await this.createChat(gameId);
         return gameId;
     }
-    private startGameWithConfig(partId: string, user: Player, lastIndex: number, joiner: Joiner): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
-        const update: StartingPartConfig = this.getStartingConfig(joiner);
+    private startGameWithConfig(partId: string, user: Player, lastIndex: number, configRoom: ConfigRoom)
+    : Promise<void>
+    {
+        display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(configRoom));
+        const update: StartingPartConfig = this.getStartingConfig(configRoom);
         return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, update);
     }
-    public getStartingConfig(joiner: Joiner): StartingPartConfig
+    public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig
     {
-        let whoStarts: FirstPlayer = FirstPlayer.of(joiner.firstPlayer);
+        let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
         if (whoStarts === FirstPlayer.RANDOM) {
             if (Math.random() < 0.5) {
                 whoStarts = FirstPlayer.CREATOR;
@@ -103,30 +105,30 @@ export class GameService {
         let playerZero: MinimalUser;
         let playerOne: MinimalUser;
         if (whoStarts === FirstPlayer.CREATOR) {
-            playerZero = joiner.creator;
-            playerOne = Utils.getNonNullable(joiner.chosenOpponent);
+            playerZero = configRoom.creator;
+            playerOne = Utils.getNonNullable(configRoom.chosenOpponent);
         } else {
-            playerZero = Utils.getNonNullable(joiner.chosenOpponent);
-            playerOne = joiner.creator;
+            playerZero = Utils.getNonNullable(configRoom.chosenOpponent);
+            playerOne = configRoom.creator;
         }
         return {
             playerZero,
             playerOne,
             turn: 0,
             beginning: serverTimestamp(),
-            remainingMsForZero: joiner.totalPartDuration * 1000,
-            remainingMsForOne: joiner.totalPartDuration * 1000,
+            remainingMsForZero: configRoom.totalPartDuration * 1000,
+            remainingMsForOne: configRoom.totalPartDuration * 1000,
         };
     }
     public deletePart(partId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
         return this.partDAO.delete(partId);
     }
-    public async acceptConfig(partId: string, joiner: Joiner): Promise<void> {
-        display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
+    public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
+        display(GameService.VERBOSE, { gameService_acceptConfig: { partId, configRoom } });
 
-        await this.joinerService.acceptConfig();
-        return this.startGameWithConfig(partId, Player.ONE, 0, joiner);
+        await this.configRoomService.acceptConfig();
+        return this.startGameWithConfig(partId, Player.ONE, 0, configRoom);
     }
     public startObserving(partId: string, callback: (part: MGPOptional<Part>) => void): void {
         if (this.followedPartId.isAbsent()) {
@@ -186,7 +188,7 @@ export class GameService {
         display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', partDocument });
         const part: Part = Utils.getNonNullable(partDocument.data);
 
-        const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
+        const iConfigRoom: ConfigRoom = await this.configRoomService.readConfigRoomById(partDocument.id);
         let firstPlayer: FirstPlayer; // firstPlayer will be switched across rematches
         // creator is the one who accepts the rematch
         const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
@@ -198,14 +200,14 @@ export class GameService {
             chosenOpponent = part.playerZero;
             firstPlayer = FirstPlayer.CREATOR;
         }
-        const newJoiner: Joiner = {
-            ...iJoiner, // unchanged attributes
+        const newConfigRoom: ConfigRoom = {
+            ...iConfigRoom, // unchanged attributes
             firstPlayer: firstPlayer.value,
             creator,
             chosenOpponent,
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
-        const startingConfig: StartingPartConfig = this.getStartingConfig(newJoiner);
+        const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
         const newPart: Part = {
             lastUpdate: {
                 index: 0,
@@ -218,7 +220,7 @@ export class GameService {
         };
 
         const rematchId: string = await this.partDAO.create(newPart);
-        await this.joinerService.createJoiner(rematchId, newJoiner);
+        await this.configRoomService.createConfigRoom(rematchId, newConfigRoom);
         await this.createChat(rematchId);
         return this.sendRequest(partDocument.id, user, lastIndex, Request.rematchAccepted(part.typeGame, rematchId));
     }

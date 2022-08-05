@@ -44,8 +44,8 @@ export class OnlineGameCreationComponent implements OnInit {
             return false;
         }
         if (await this.canCreateOnlineGame(user)) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(game);
-            // create Part and Joiner
+            const gameId: string = await this.gameService.createPartConfigRoomAndChat(game);
+            // create part and config room
             await this.router.navigate(['/play', game, gameId]);
             return true;
         } else {

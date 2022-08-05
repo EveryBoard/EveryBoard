@@ -12,7 +12,7 @@ import { User, UserDocument } from '../../../domain/User';
 import { Request } from '../../../domain/Request';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
-import { Joiner } from 'src/app/domain/Joiner';
+import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -88,7 +88,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public rematchProposed: boolean = false;
     public opponentProposedRematch: boolean = false;
 
-    public joiner: Joiner;
+    public configRoom: ConfigRoom;
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
@@ -171,11 +171,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         });
         await this.setCurrentPartIdOrRedirect();
     }
-    public async startGame(iJoiner: Joiner): Promise<void> {
+    public async startGame(iConfigRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         assert(this.gameStarted === false, 'Should not start already started game');
-        this.joiner = iJoiner;
+        this.configRoom = iConfigRoom;
 
         this.gameStarted = true;
         window.setTimeout(async() => {
@@ -341,11 +341,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public setChronos(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');
-        this.chronoZeroGlobal.setDuration(this.joiner.totalPartDuration * 1000);
-        this.chronoOneGlobal.setDuration(this.joiner.totalPartDuration * 1000);
+        this.chronoZeroGlobal.setDuration(this.configRoom.totalPartDuration * 1000);
+        this.chronoOneGlobal.setDuration(this.configRoom.totalPartDuration * 1000);
 
-        this.chronoZeroTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
-        this.chronoOneTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
+        this.chronoZeroTurn.setDuration(this.configRoom.maximalMoveDuration * 1000);
+        this.chronoOneTurn.setDuration(this.configRoom.maximalMoveDuration * 1000);
     }
     private didUserPlay(player: Player): boolean {
         return this.hasUserPlayed[player.value];
@@ -738,7 +738,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
 
         if (resetTurn) {
-            turnChrono.setDuration(this.joiner.maximalMoveDuration * 1000);
+            turnChrono.setDuration(this.configRoom.maximalMoveDuration * 1000);
             turnChrono.start();
         } else {
             turnChrono.resume();

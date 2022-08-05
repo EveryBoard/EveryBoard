@@ -11,11 +11,11 @@ import { UserDAO } from '../UserDAO';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { Request } from 'src/app/domain/Request';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { JoinerDAO } from '../JoinerDAO';
+import { ConfigRoomDAO } from '../ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { Joiner, PartStatus } from 'src/app/domain/Joiner';
+import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { Utils } from 'src/app/utils/utils';
 
 type PartInfo = {
@@ -28,7 +28,7 @@ describe('PartDAO', () => {
 
     let partDAO: PartDAO;
     let userDAO: UserDAO;
-    let joinerDAO: JoinerDAO;
+    let configRoomDAO: ConfigRoomDAO;
 
     const CREATOR_EMAIL: string = UserMocks.CREATOR_AUTH_USER.email.get();
     const CREATOR_NAME: string = UserMocks.CREATOR_AUTH_USER.username.get();
@@ -44,7 +44,7 @@ describe('PartDAO', () => {
         await setupEmulators();
         partDAO = TestBed.inject(PartDAO);
         userDAO = TestBed.inject(UserDAO);
-        joinerDAO = TestBed.inject(JoinerDAO);
+        configRoomDAO = TestBed.inject(ConfigRoomDAO);
     });
     it('should be created', () => {
         expect(partDAO).toBeTruthy();
@@ -196,7 +196,7 @@ describe('PartDAO', () => {
             // Given a part with its owner not observing this part
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
             await userDAO.update(creator.id, { observedPart: null, lastUpdateTime });
             await signOut();
@@ -214,7 +214,7 @@ describe('PartDAO', () => {
             // Given a non-started part with its owner who has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // owner is stuck in 1970
             await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
             await signOut();
@@ -232,7 +232,7 @@ describe('PartDAO', () => {
             // Given a part with its owner
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
             await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
             await signOut();
@@ -248,19 +248,19 @@ describe('PartDAO', () => {
         });
         async function addCandidate(partId: string, signOutUser: boolean = true): Promise<MinimalUser> {
             const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
-            await joinerDAO.addCandidate(partId, candidate);
+            await configRoomDAO.addCandidate(partId, candidate);
             if (signOutUser) {
                 await signOut();
             }
             return candidate;
         }
         async function preparePart(): Promise<PartInfo> {
-            // Given a part, an accepted config, and a user who is the chosen opponent in the joiner
-            // Creator creates the joiner
+            // Given a part, an accepted config, and a user who is the chosen opponent in the configRoom
+            // Creator creates the configRoom
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const part: Part = { ...PartMocks.INITIAL, playerZero: creator };
             const partId: string = await partDAO.create(part);
-            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             await signOut();
 
             // A candidate adds themself to the candidates list
@@ -268,16 +268,16 @@ describe('PartDAO', () => {
 
             // The creator then selects candidates as the chosen opponent and proposes the config
             await reconnectUser(CREATOR_EMAIL);
-            const update: Partial<Joiner> = {
+            const update: Partial<ConfigRoom> = {
                 chosenOpponent: candidate,
                 partStatus: PartStatus.CONFIG_PROPOSED.value,
             };
-            await expectAsync(joinerDAO.update(partId, update)).toBeResolvedTo();
+            await expectAsync(configRoomDAO.update(partId, update)).toBeResolvedTo();
             await signOut();
 
             // And the candidate accepts the config
             await reconnectUser(CANDIDATE_EMAIL);
-            await joinerDAO.update(partId, { partStatus: PartStatus.PART_STARTED.value });
+            await configRoomDAO.update(partId, { partStatus: PartStatus.PART_STARTED.value });
 
             return { id: partId, part, creator, candidate };
         }
@@ -285,7 +285,7 @@ describe('PartDAO', () => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document
-            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
+            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -305,7 +305,7 @@ describe('PartDAO', () => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but puts another user as playerOne
-            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
+            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -321,11 +321,11 @@ describe('PartDAO', () => {
             // Then it should faile
             await expectPermissionToBeDenied(result);
         });
-        it('should forbid starting a part when setting incorrect remainingMs field for player zero', async() => {
+        it('should forbid starting a part when setting incorrect remainingMs field for player one', async() => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but puts another user as playerOne
-            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
+            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -345,7 +345,7 @@ describe('PartDAO', () => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but puts another user as playerOne
-            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
+            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -365,7 +365,7 @@ describe('PartDAO', () => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but puts another user as playerOne
-            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
+            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -430,10 +430,10 @@ describe('PartDAO', () => {
             }
         });
         it('should allow deleting part if it has not started', async() => {
-            // Given a non-started part and its owner (as defined in the joiner)
+            // Given a non-started part and its owner (as defined in the configRoom)
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
 
             // When deleting the part
             const result: Promise<void> = partDAO.delete(partId);
@@ -442,14 +442,14 @@ describe('PartDAO', () => {
             await expectAsync(result).toBeResolvedTo();
         });
         it('should forbid deleting part after it has started', async() => {
-            // Given a started part and its owner (as defined in the joiner)
+            // Given a started part and its owner (as defined in the configRoom)
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({
                 ...PartMocks.INITIAL,
                 playerZero: creator,
                 beginning: serverTimestamp(),
             });
-            await joinerDAO.set(partId, { ...JoinerMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
 
             // When deleting the part
             const result: Promise<void> = partDAO.delete(partId);

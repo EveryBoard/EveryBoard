@@ -9,8 +9,8 @@ import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { Message, MessageDocument } from 'src/app/domain/Message';
 import { PartDAO } from '../PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
-import { JoinerDAO } from '../JoinerDAO';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
+import { ConfigRoomDAO } from '../ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { IFirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
@@ -21,22 +21,22 @@ describe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let partDAO: PartDAO;
-    let joinerDAO: JoinerDAO;
+    let configRoomDAO: ConfigRoomDAO;
     let userDAO: UserDAO;
 
     function signOut(): Promise<void> {
         return TestBed.inject(FireAuth.Auth).signOut();
     }
-    async function createPartAndJoiner(creator: MinimalUser): Promise<string> {
+    async function createPartAndConfigRoom(creator: MinimalUser): Promise<string> {
         const id: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-        await joinerDAO.set(id, { ...JoinerMocks.INITIAL, creator });
+        await configRoomDAO.set(id, { ...ConfigRoomMocks.INITIAL, creator });
         return id;
     }
     beforeEach(async() => {
         await setupEmulators();
         chatDAO = TestBed.inject(ChatDAO);
         partDAO = TestBed.inject(PartDAO);
-        joinerDAO = TestBed.inject(JoinerDAO);
+        configRoomDAO = TestBed.inject(ConfigRoomDAO);
         userDAO = TestBed.inject(UserDAO);
     });
     it('should be created', () => {
@@ -197,7 +197,7 @@ describe('ChatDAO', () => {
         it('should allow a part owner to create the corresponding chat', async() => {
             // Given a verified user who is a part owner
             const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndJoiner(user);
+            const partId: string = await createPartAndConfigRoom(user);
             // When creating the corresponding chat
             const result: Promise<void> = chatDAO.set(partId, {});
             // Then it should succeed
@@ -206,7 +206,7 @@ describe('ChatDAO', () => {
         it('should allow a part owner to delete the corresponding chat', async() => {
             // Given a verified user who is a part owner, and a chat
             const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndJoiner(user);
+            const partId: string = await createPartAndConfigRoom(user);
             await chatDAO.set(partId, {});
             // When deleting the chat
             const result: Promise<void> = chatDAO.delete(partId);
@@ -224,7 +224,7 @@ describe('ChatDAO', () => {
         it('should forbid a non-part owner to create the corresponding chat', async() => {
             // Given a part and verified user who is not a part owner
             const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndJoiner(user);
+            const partId: string = await createPartAndConfigRoom(user);
             await signOut();
             await createConnectedUser('bar@bar.com', 'username');
             // When creating a part chat
@@ -235,7 +235,7 @@ describe('ChatDAO', () => {
         it('should forbid a non-part owner to delete the corresponding chat', async() => {
             // Given a part, a chat, and a non-part owner user
             const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndJoiner(user);
+            const partId: string = await createPartAndConfigRoom(user);
             await chatDAO.set(partId, {});
             await signOut();
             await createConnectedUser('bar@bar.com', 'other');
@@ -247,7 +247,7 @@ describe('ChatDAO', () => {
         it('should allow non-part owner to delete the corresponding chat if owner has timed out', async() => {
             // Given a part (whose owner has timed out), a chat, and another user
             const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndJoiner(user);
+            const partId: string = await createPartAndConfigRoom(user);
             await chatDAO.set(partId, {});
             await userDAO.update(user.id, { lastUpdateTime: new Timestamp(0, 0) });
             await signOut();

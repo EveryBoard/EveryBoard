@@ -31,7 +31,6 @@ export class PartDAO extends FirestoreDAO<Part> {
                 player: user.value,
             },
         };
-        console.log(update)
         return this.update(id, update);
     }
     public observeActiveParts(callback: FirestoreCollectionObserver<Part>): () => void {

@@ -26,8 +26,8 @@ service cloud.firestore {
             allow delete: if userIsVerified() && hasTimedOut(debug(creatorOf(id)));
         }
         function partExistsAndOwnedByCurrentUser(partId) {
-            let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
-            return joiner != null && joiner.creator.id == request.auth.uid;
+            let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
+            return configRoom != null && configRoom.creator.id == request.auth.uid;
         }
         match /chats/{chatId}/messages/{messageId} {
             allow create: if userIsVerified() && isValidMessage(request.resource.data);
@@ -88,7 +88,7 @@ service cloud.firestore {
                              request.resource.data.listMoves == [] &&
                              // creator must be one of the players (could be playerOne in case of rematch)
                              (request.auth.uid == request.resource.data.playerZero.id ||
-                              hasField(request.resource.data, 'playerOne') && request.auth.uid == request.resource.data.playerOne.id);
+                              (hasField(request.resource.data, 'playerOne') && request.auth.uid == request.resource.data.playerOne.id));
             // The owner of a part can delete it, if it has not started
             allow delete: if userIsVerified() &&
                              creatorOf(id).id == request.auth.uid &&
@@ -138,17 +138,17 @@ service cloud.firestore {
                 preservesField('beginning');
         }
         function chosenOpponentStartsPart(partId) {
-            let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
+            let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
             return userIsVerified() &&
                 partHasStarted(resource.data) == false &&
                 partHasStarted(request.resource.data) &&
                 preservesField('typeGame') &&
                 safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate) &&
-                userIsChosenOpponentInJoiner(joiner) &&
-                validPlayerSelection(joiner, request.resource.data) &&
-                // The time is set using the values from the joiner
-                request.resource.data.remainingMsForZero == joiner.totalPartDuration * 1000 &&
-                request.resource.data.remainingMsForOne == joiner.totalPartDuration * 1000;
+                userIsChosenOpponentInConfigRoom(configRoom) &&
+                validPlayerSelection(configRoom, request.resource.data) &&
+                // The time is set using the values from the config room
+                request.resource.data.remainingMsForZero == configRoom.totalPartDuration * 1000 &&
+                request.resource.data.remainingMsForOne == configRoom.totalPartDuration * 1000;
         }
         function safeTimeUpdate(player, remainingMsFieldName) {
             let timeUnchanged = preservesField(remainingMsFieldName);
@@ -166,18 +166,18 @@ service cloud.firestore {
             let isNotOwnTime = request.auth.uid != player.id;
             return timeIncreased && isNotOwnTime;
         }
-        function validPlayerSelection(joiner, partUpdate) {
-            let playerZeroIsCreator = playerEquals(partUpdate.playerZero, joiner.creator);
-            let playerZeroIsChosenOpponent = playerEquals(partUpdate.playerZero, joiner.chosenOpponent);
-            let playerOneIsCreator = playerEquals(partUpdate.playerOne, joiner.creator);
-            let playerOneIsChosenOpponent = playerEquals(partUpdate.playerOne, joiner.chosenOpponent);
+        function validPlayerSelection(configRoom, partUpdate) {
+            let playerZeroIsCreator = playerEquals(partUpdate.playerZero, configRoom.creator);
+            let playerZeroIsChosenOpponent = playerEquals(partUpdate.playerZero, configRoom.chosenOpponent);
+            let playerOneIsCreator = playerEquals(partUpdate.playerOne, configRoom.creator);
+            let playerOneIsChosenOpponent = playerEquals(partUpdate.playerOne, configRoom.chosenOpponent);
             return (playerZeroIsCreator || playerZeroIsChosenOpponent) && (playerOneIsCreator || playerOneIsChosenOpponent);
         }
         function playerEquals(player, otherPlayer) {
             return player.id == otherPlayer.id && player.name == otherPlayer.name;
         }
-        function userIsChosenOpponentInJoiner(joiner) {
-            return hasField(joiner, 'chosenOpponent') && joiner.chosenOpponent.id == request.auth.uid;
+        function userIsChosenOpponentInConfigRoom(configRoom) {
+            return hasField(configRoom, 'chosenOpponent') && configRoom.chosenOpponent.id == request.auth.uid;
         }
         function userIsPlayer(part) {
             return userIsPlayerZero(part) || userIsPlayerOne(part);
@@ -209,15 +209,15 @@ service cloud.firestore {
             let timedOut = request.time.time() > userDoc.lastUpdateTime.time() + duration.value(10, 's');
             return timedOut;
         }
-        match /joiners/{partId} {
-            // Any verified user can create a joiner as long as they are themselves creator and a corresponding part exists
+        match /config-room/{partId} {
+            // Any verified user can create a configRoom as long as they are themselves creator and a corresponding part exists
             allow create: if userIsVerified() &&
                              userIsCreatorWithValidName(request.resource.data) &&
                              exists(/databases/$(database)/documents/parts/$(partId));
-            // The creator can delete a joiner if the part has not started
-            allow delete: if userIsVerified() && userIsCreator(resource.data) && joinerHasNotStarted(resource.data);
-            // Anybody else can delete a joiner only if the creator has timed out and the part has not started
-            allow delete: if userIsVerified() && hasTimedOut(creatorOf(partId)) && joinerHasNotStarted(resource.data);
+            // The creator can delete a config room if the part has not started
+            allow delete: if userIsVerified() && userIsCreator(resource.data) && configRoomHasNotStarted(resource.data);
+            // Anybody else can delete a config room only if the creator has timed out and the part has not started
+            allow delete: if userIsVerified() && hasTimedOut(creatorOf(partId)) && configRoomHasNotStarted(resource.data);
             // The creator can change all fields except 'creator', or changing partStatus to STARTED (3) or FINISHED (4), until the part starts
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
                              preservesField('creator') &&
@@ -226,37 +226,36 @@ service cloud.firestore {
             allow update: if userIsVerified() && userIsCreator(resource.data) &&
                              resource.data.partStatus == 3 &&
                              request.resource.data.partStatus == 4 &&
-                             preservesField('creator') &&
-                             preservesField('firstPlayer') &&
-                             preservesField('partType') &&
-                             preservesField('maximalMoveDuration') &&
-                             preservesField('totalPartDuration') &&
-                             preservesField('chosenOpponent')
+                             constantPartFieldsDoNotChange() &&
+                             preservesField('chosenOpponent');
             // For anybody else:
             //   - the chosen opponent can change the config from PROPOSED to STARTED
-            allow update: if validChosenOpponentJoinerUpdate() &&
+            allow update: if validChosenOpponentConfigRoomUpdate() &&
                              preservesField('chosenOpponent') &&
-                             acceptsConfig()
+                             acceptsConfig();
             //   - the chosen opponent can remove itself from the corresponding field
-            allow update: if validChosenOpponentJoinerUpdate() &&
+            allow update: if validChosenOpponentConfigRoomUpdate() &&
                              preservesField('partStatus') &&
                              removesOneSelfFromChosenOpponent();
-            // Any verified user can read a joiner
+            // Any verified user can read a config room
             allow read: if userIsVerified();
         }
-        function validChosenOpponentJoinerUpdate() {
+        function validChosenOpponentConfigRoomUpdate() {
             return userIsVerified() &&
-                userIsChosenOpponentInJoiner(resource.data) &&
-                preservesField('creator') &&
+                userIsChosenOpponentInConfigRoom(resource.data) &&
+                constantPartFieldsDoNotChange();
+        }
+        function constantPartFieldsDoNotChange() {
+            return preservesField('creator') &&
                 preservesField('firstPlayer') &&
                 preservesField('partType') &&
                 preservesField('maximalMoveDuration') &&
                 preservesField('totalPartDuration');
         }
-        function joinerHasNotStarted(joiner) {
-            return joiner.partStatus < 3;
+        function configRoomHasNotStarted(configRoom) {
+            return configRoom.partStatus < 3;
         }
-        match /joiners/{partId}/candidates/{userId} {
+        match /config-room/{partId}/candidates/{userId} {
             // Users can only add themselves to the candidate list if they are not the creator and if they use the right username
             // We also allow updates in this way, in case someone tries to join the part twice
             allow create, update: if userIsVerified() && userId == request.auth.uid &&
@@ -269,7 +268,7 @@ service cloud.firestore {
             allow read: if userIsVerified();
         }
         function creatorOf(partId) {
-            return get(/databases/$(database)/documents/joiners/$(partId)).data.creator;
+            return get(/databases/$(database)/documents/config-room/$(partId)).data.creator;
         }
         function userIsVerified() {
             return request != null &&
@@ -277,12 +276,12 @@ service cloud.firestore {
                    request.auth.uid != null &&
                    request.auth.token.email_verified == true;
         }
-        function userIsCreator(joiner) {
-            return joiner.creator.id == request.auth.uid;
+        function userIsCreator(configRoom) {
+            return configRoom.creator.id == request.auth.uid;
         }
-        function userIsCreatorWithValidName(joiner) {
-            return userIsCreator(joiner) &&
-                   joiner.creator.name == usernameOf(request.auth.uid);
+        function userIsCreatorWithValidName(configRoom) {
+            return userIsCreator(configRoom) &&
+                   configRoom.creator.name == usernameOf(request.auth.uid);
         }
         function preservesField(fieldName) {
             // A field is preserved if it is not part of the update
