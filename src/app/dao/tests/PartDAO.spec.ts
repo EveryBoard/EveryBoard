@@ -165,9 +165,13 @@ describe('PartDAO', () => {
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
             await signOut();
-            await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+            const user: MinimalUser = await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
             const updates: Partial<Part>[] = [
+                { typeGame: 'Quarto' },
+                { playerZero: user },
+                { playerOne: user },
+                { beginning: serverTimestamp() },
                 { lastUpdate: { index: 1, player: 0 } },
                 { turn: 42 },
                 { result: 3 },
@@ -188,7 +192,7 @@ describe('PartDAO', () => {
                 await expectPermissionToBeDenied(result);
             }
         });
-        it('should forbid deleting part if owner has not timed out, even if they are not observing anymore', async() => {
+        it('should forbid deleting non-started part if owner has not timed out, even if they are not observing anymore', async() => {
             // Given a part with its owner not observing this part
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
@@ -242,6 +246,14 @@ describe('PartDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
+        async function addCandidate(partId: string, signOutUser: boolean = true): Promise<MinimalUser> {
+            const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            await joinerDAO.addCandidate(partId, candidate);
+            if (signOutUser) {
+                await signOut();
+            }
+            return candidate;
+        }
         async function preparePart(): Promise<PartInfo> {
             // Given a part, an accepted config, and a user who is the chosen opponent in the joiner
             // Creator creates the joiner
@@ -252,9 +264,7 @@ describe('PartDAO', () => {
             await signOut();
 
             // A candidate adds themself to the candidates list
-            const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
-            await expectAsync(joinerDAO.addCandidate(partId, candidate)).toBeResolvedTo();
-            await signOut();
+            const candidate: MinimalUser = await addCandidate(partId);
 
             // The creator then selects candidates as the chosen opponent and proposes the config
             await reconnectUser(CREATOR_EMAIL);
@@ -275,6 +285,7 @@ describe('PartDAO', () => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document
+            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -283,17 +294,18 @@ describe('PartDAO', () => {
                                                                          playerOne: partInfo.candidate,
                                                                          turn: 0,
                                                                          beginning: serverTimestamp(),
-                                                                         remainingMsForZero: 1000,
-                                                                         remainingMsForOne: 1000,
+                                                                         remainingMsForZero: remainingMs,
+                                                                         remainingMsForOne: remainingMs,
                                                                      });
 
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
-        it('should forbid starting a part when setting the non-chosenOpponent/non-creator playerZero', async() => {
+        it('should forbid starting a part when setting incorrect remainingMs field for player zero', async() => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but puts another user as playerOne
+            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -302,8 +314,48 @@ describe('PartDAO', () => {
                                                                          playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                                                                          turn: 0,
                                                                          beginning: serverTimestamp(),
-                                                                         remainingMsForZero: 1000,
-                                                                         remainingMsForOne: 1000,
+                                                                         remainingMsForZero: 42,
+                                                                         remainingMsForOne: remainingMs,
+                                                                     });
+
+            // Then it should faile
+            await expectPermissionToBeDenied(result);
+        });
+        it('should forbid starting a part when setting incorrect remainingMs field for player zero', async() => {
+            // Given a part ready to be started
+            const partInfo: PartInfo = await preparePart();
+            // When chosen opponents updates the part document but puts another user as playerOne
+            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
+                                                                     Player.ONE,
+                                                                     partInfo.part.lastUpdate.index,
+                                                                     {
+                                                                         playerZero: partInfo.creator,
+                                                                         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                                                                         turn: 0,
+                                                                         beginning: serverTimestamp(),
+                                                                         remainingMsForZero: remainingMs,
+                                                                         remainingMsForOne: 42,
+                                                                     });
+
+            // Then it should faile
+            await expectPermissionToBeDenied(result);
+        });
+        it('should forbid starting a part when setting the non-chosenOpponent/non-creator playerZero', async() => {
+            // Given a part ready to be started
+            const partInfo: PartInfo = await preparePart();
+            // When chosen opponents updates the part document but puts another user as playerOne
+            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
+                                                                     Player.ONE,
+                                                                     partInfo.part.lastUpdate.index,
+                                                                     {
+                                                                         playerZero: partInfo.creator,
+                                                                         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                                                                         turn: 0,
+                                                                         beginning: serverTimestamp(),
+                                                                         remainingMsForZero: remainingMs,
+                                                                         remainingMsForOne: remainingMs,
                                                                      });
 
             // Then it should faile
@@ -313,6 +365,7 @@ describe('PartDAO', () => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but puts another user as playerOne
+            const remainingMs: number = JoinerMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
                                                                      Player.ONE,
                                                                      partInfo.part.lastUpdate.index,
@@ -321,8 +374,8 @@ describe('PartDAO', () => {
                                                                          playerOne: partInfo.candidate,
                                                                          turn: 0,
                                                                          beginning: serverTimestamp(),
-                                                                         remainingMsForZero: 1000,
-                                                                         remainingMsForOne: 1000,
+                                                                         remainingMsForZero: remainingMs,
+                                                                         remainingMsForOne: remainingMs,
                                                                      });
 
             // Then it should faile
@@ -352,7 +405,7 @@ describe('PartDAO', () => {
         });
     });
     describe('for creator', () => {
-        it('should forbid creator to change playerZero/playerOne/beginning once a part has started', async() => {
+        it('should forbid creator to change typeGame/playerZero/playerOne/beginning once a part has started', async() => {
             // Given a part that has started (i.e., beginning is set), and a player (here creator)
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({
@@ -363,6 +416,7 @@ describe('PartDAO', () => {
             });
 
             const updates: Partial<Part>[] = [
+                { typeGame: 'P4' },
                 { playerZero: UserMocks.OPPONENT_MINIMAL_USER },
                 { playerOne: creator },
                 { beginning: serverTimestamp() },
@@ -411,12 +465,17 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
 
             // When trying to change the game type
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, { typeGame: 'P4' });
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId,
+                                                                     Player.ZERO,
+                                                                     PartMocks.INITIAL.lastUpdate.index,
+                                                                     { typeGame: 'P4' });
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
         it('should allow to increment turn and decrement it for take backs', async() => {
-            // Given a player (here, creator)
+            // Given two players
+            const playerOne: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            await signOut();
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
             const turnDeltas: number[] = [
@@ -426,19 +485,31 @@ describe('PartDAO', () => {
             ];
             for (const turnDelta of turnDeltas) {
                 // Given a part in the middle of being played
-                const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero });
+                const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero, playerOne });
+                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForZero);
+                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1 });
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 2, { turn: 2 });
+                remainingMsForZero -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1, remainingMsForZero });
+                await signOut();
+                await reconnectUser(CANDIDATE_EMAIL);
+                remainingMsForOne -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2, { turn: 2, remainingMsForOne });
+                await signOut();
+                await reconnectUser(CREATOR_EMAIL);
                 // When updating turns with a legitimate increase/decrease
                 const turn: number = 2 + turnDelta;
-                const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, 3, { turn });
+                remainingMsForZero -= 10;
+                const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, 3,
+                                                                         { turn, remainingMsForZero });
                 // Then it should succeed
                 await expectAsync(result).toBeResolvedTo();
             }
         });
         it('should forbid to increment or decrement the turn too much', async() => {
-            // Given a player (here, creator)
+            // Given two players
+            const playerOne: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            await signOut();
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
             const turnDeltas: number[] = [
@@ -447,16 +518,33 @@ describe('PartDAO', () => {
             ];
             for (const turnDelta of turnDeltas) {
                 // Given a part in the middle of being played
-                const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero });
+                const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero, playerOne });
+                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForZero);
+                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1 });
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 2, { turn: 2 });
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 3, { turn: 3 });
+                remainingMsForZero -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1, remainingMsForZero });
+                await signOut();
+                await reconnectUser(CANDIDATE_EMAIL);
+                remainingMsForOne -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2, { turn: 2, remainingMsForOne });
+                await signOut();
+                await reconnectUser(CREATOR_EMAIL);
+                remainingMsForZero -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 3, { turn: 3, remainingMsForZero });
+                await signOut();
+                await reconnectUser(CANDIDATE_EMAIL);
                 // When updating turns with an illegal increase/decrease
                 const turn: number = 3 + turnDelta;
-                const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, 4, { turn });
+                remainingMsForOne -= 10;
+                const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, 4,
+                                                                         { turn, remainingMsForOne });
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
+
+                // Need to reconnect creator for the next iteration
+                await signOut();
+                await reconnectUser(CREATOR_EMAIL);
             }
         });
         it('should allow updates to lastUpdate if it is a +1 increment and matches the player', async() => {

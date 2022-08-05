@@ -23,7 +23,7 @@ service cloud.firestore {
         match /chats/{id} {
             allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
             // Anyone can delete the chat in case the creator timed out
-            allow delete: if userIsVerified() && debug(hasTimedOut(debug(creatorOf(id))));
+            allow delete: if userIsVerified() && hasTimedOut(debug(creatorOf(id)));
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
@@ -39,14 +39,14 @@ service cloud.firestore {
             return hasField(message, 'content') &&
                    hasField(message, 'sender') &&
                    isMessageAuthor(message) &&
-                   usernameOf(message.sender.id) == message.sender.name &&
                    hasField(message, 'postedTime');
         }
         function hasField(data, field) {
             return field in data && data[field] != null;
         }
         function isMessageAuthor(message) {
-            return request.auth.uid == message.sender.id
+            return request.auth.uid == message.sender.id &&
+                   usernameOf(message.sender.id) == message.sender.name;
         }
         function usernameOf(uid) {
             return get(/databases/$(database)/documents/users/$(uid)).data.username
@@ -98,30 +98,57 @@ service cloud.firestore {
                              hasTimedOut(creatorOf(id)) &&
                              partHasStarted(resource.data) == false;
             // A verified user who is the chosen opponent can start the part
-            allow update: if userIsVerified() &&
-                             partHasStarted(resource.data) == false &&
-                             partHasStarted(request.resource.data) &&
-                             preservesField('typeGame') &&
-                             safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate) &&
-                             userIsChosenOpponentInJoiner(id) &&
-                             validPlayerSelection(id, request.resource.data);
-            // A player can update the part as long as it preserves the right fields
-            // (typeGame, playerZero, playerOne, beginning) and performs safe updates:
-            // - lastUpdate must be updated monotonously by the corresponding player
-            // - turn can only be made +1 (usual turn), -1 (take back), or -2 (take back)
-            allow update: if userIsVerified() &&
-                             partHasStarted(resource.data) &&
-                             userIsPlayer(resource.data) &&
-                             preservesField('typeGame') &&
-                             preservesField('playerZero') &&
-                             preservesField('playerOne') &&
-                             preservesField('beginning') &&
-                             safeTimeUpdate(resource.data.playerZero, 'remainingMsForZero') &&
-                             safeTimeUpdate(resource.data.playerOne, 'remainingMsForOne') &&
-                             (preservesField('turn') || safeTurnUpdate(resource.data.turn, request.resource.data.turn)) &&
-                             (safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate));
+            allow update: if chosenOpponentStartsPart(id);
+            // A player can perform a move
+            allow update: if isValidMovePartUpdate();
+            // A player can do other requests such as take backs, etc. if there is no move done
+            allow update: if isValidPartUpdateWithoutMove();
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
+        }
+        function isValidMovePartUpdate() {
+            let decreasesPlayerZeroTime = safeTimeDecrease(resource.data.playerZero, 'remainingMsForZero');
+            let preservesPlayerZeroTime = preservesField('remainingMsForZero');
+            let decreasesPlayerOneTime = safeTimeDecrease(resource.data.playerOne, 'remainingMsForOne');
+            let preservesPlayerOneTime = preservesField('remainingMsForOne');
+            let safeTimeDecrease = (decreasesPlayerZeroTime && preservesPlayerOneTime) ||
+                (preservesPlayerZeroTime && decreasesPlayerOneTime);
+            let isUserTurn = (resource.data.turn % 2 == 0 && userIsPlayerZero(resource.data)) ||
+                (resource.data.turn % 2 == 1 && userIsPlayerOne(resource.data));
+            return isValidPartUpdateDuringGame() &&
+                safeTimeDecrease &&
+                safeTurnIncrease(resource.data.turn, request.resource.data.turn) &&
+                safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate) &&
+                isUserTurn;
+        }
+        function isValidPartUpdateWithoutMove() {
+            return isValidPartUpdateDuringGame() &&
+                safeTimeUpdate(resource.data.playerZero, 'remainingMsForZero') &&
+                safeTimeUpdate(resource.data.playerOne, 'remainingMsForOne') &&
+                (preservesField('turn') || safeTurnDecrease(resource.data.turn, request.resource.data.turn)) &&
+                safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate);
+        }
+        function isValidPartUpdateDuringGame() {
+            return userIsVerified() &&
+                partHasStarted(resource.data) &&
+                userIsPlayer(resource.data) &&
+                preservesField('typeGame') &&
+                preservesField('playerZero') &&
+                preservesField('playerOne') &&
+                preservesField('beginning');
+        }
+        function chosenOpponentStartsPart(partId) {
+            let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
+            return userIsVerified() &&
+                partHasStarted(resource.data) == false &&
+                partHasStarted(request.resource.data) &&
+                preservesField('typeGame') &&
+                safeLastUpdate(resource.data.lastUpdate, request.resource.data.lastUpdate) &&
+                userIsChosenOpponentInJoiner(joiner) &&
+                validPlayerSelection(joiner, request.resource.data) &&
+                // The time is set using the values from the joiner
+                request.resource.data.remainingMsForZero == joiner.totalPartDuration * 1000 &&
+                request.resource.data.remainingMsForOne == joiner.totalPartDuration * 1000;
         }
         function safeTimeUpdate(player, remainingMsFieldName) {
             let timeUnchanged = preservesField(remainingMsFieldName);
@@ -139,8 +166,7 @@ service cloud.firestore {
             let isNotOwnTime = request.auth.uid != player.id;
             return timeIncreased && isNotOwnTime;
         }
-        function validPlayerSelection(partId, partUpdate) {
-            let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
+        function validPlayerSelection(joiner, partUpdate) {
             let playerZeroIsCreator = playerEquals(partUpdate.playerZero, joiner.creator);
             let playerZeroIsChosenOpponent = playerEquals(partUpdate.playerZero, joiner.chosenOpponent);
             let playerOneIsCreator = playerEquals(partUpdate.playerOne, joiner.creator);
@@ -150,17 +176,23 @@ service cloud.firestore {
         function playerEquals(player, otherPlayer) {
             return player.id == otherPlayer.id && player.name == otherPlayer.name;
         }
-        function userIsChosenOpponentInJoiner(partId) {
-            let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
+        function userIsChosenOpponentInJoiner(joiner) {
             return hasField(joiner, 'chosenOpponent') && joiner.chosenOpponent.id == request.auth.uid;
         }
         function userIsPlayer(part) {
-            let userIsPlayerZero = part.playerZero.id == request.auth.uid;
-            let userIsPlayerOne = hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;
-            return userIsPlayerZero || userIsPlayerOne;
+            return userIsPlayerZero(part) || userIsPlayerOne(part);
         }
-        function safeTurnUpdate(oldTurn, newTurn) {
-            return (newTurn == oldTurn + 1) || (newTurn == oldTurn - 1) || (newTurn == oldTurn - 2);
+        function userIsPlayerZero(part) {
+            return part.playerZero.id == request.auth.uid;
+        }
+        function userIsPlayerOne(part) {
+            return hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;
+        }
+        function safeTurnIncrease(oldTurn, newTurn) {
+            return newTurn == oldTurn + 1;
+        }
+        function safeTurnDecrease(oldTurn, newTurn) {
+            return (newTurn == oldTurn - 1) || (newTurn == oldTurn - 2);
         }
         function safeLastUpdate(oldLastUpdate, newLastUpdate) {
             let legitimatePlayerZeroUpdate = newLastUpdate.player == 0 && resource.data.playerZero.id == request.auth.uid;
@@ -178,7 +210,7 @@ service cloud.firestore {
             return timedOut;
         }
         match /joiners/{partId} {
-            // Any verified user can create a joiner as long as they are themselves creator and if the corresponding part exists
+            // Any verified user can create a joiner as long as they are themselves creator and a corresponding part exists
             allow create: if userIsVerified() &&
                              userIsCreatorWithValidName(request.resource.data) &&
                              exists(/databases/$(database)/documents/parts/$(partId));
@@ -202,19 +234,19 @@ service cloud.firestore {
                              preservesField('chosenOpponent')
             // For anybody else:
             //   - the chosen opponent can change the config from PROPOSED to STARTED
-            allow update: if validJoinerUpdate() &&
+            allow update: if validChosenOpponentJoinerUpdate() &&
                              preservesField('chosenOpponent') &&
                              acceptsConfig()
             //   - the chosen opponent can remove itself from the corresponding field
-            allow update: if validJoinerUpdate() &&
+            allow update: if validChosenOpponentJoinerUpdate() &&
                              preservesField('partStatus') &&
                              removesOneSelfFromChosenOpponent();
             // Any verified user can read a joiner
             allow read: if userIsVerified();
         }
-        function validJoinerUpdate() {
+        function validChosenOpponentJoinerUpdate() {
             return userIsVerified() &&
-                userIsChosenOpponent() &&
+                userIsChosenOpponentInJoiner(resource.data) &&
                 preservesField('creator') &&
                 preservesField('firstPlayer') &&
                 preservesField('partType') &&
@@ -246,8 +278,7 @@ service cloud.firestore {
                    request.auth.token.email_verified == true;
         }
         function userIsCreator(joiner) {
-            return joiner.creator != null &&
-                   joiner.creator.id == request.auth.uid;
+            return joiner.creator.id == request.auth.uid;
         }
         function userIsCreatorWithValidName(joiner) {
             return userIsCreator(joiner) &&
@@ -257,10 +288,6 @@ service cloud.firestore {
             // A field is preserved if it is not part of the update
             // or if the same value is given in the update
             return !(fieldName in request.resource.data) || (request.resource.data[fieldName] == resource.data[fieldName]);
-        }
-        function userIsChosenOpponent() {
-            let uid = request.auth.uid;
-            return hasField(resource.data, 'chosenOpponent') && resource.data.chosenOpponent.id == uid;
         }
         function acceptsConfig() {
             return resource.data.partStatus == 2 && // CONFIG_PROPOSED

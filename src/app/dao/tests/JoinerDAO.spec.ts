@@ -85,7 +85,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid to add themselves to the candidates', async() => {
-            // Given a part, and a non-verified user
+            // Given a part with a joiner, and a non-verified user
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
 
             const nonVerifiedUser: MinimalUser = await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
@@ -96,7 +96,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid to read the joiner', async() => {
-            // Given a part, and a non-verified user
+            // Given a part with a joiner, and a non-verified user
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
 
             await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
@@ -121,7 +121,7 @@ describe('JoinerDAO', () => {
             await expectAsync(result).toBeResolved();
         });
         it('should allow to create a joiner if there is a corresponding part', async() => {
-            // Given a verified user and an existing part
+            // Given a verified user and an existing part without a joiner
             const createdPart: CreatedPart = await createPart({ createJoiner: false, signOut: true });
             await reconnectUser(CREATOR_EMAIL);
 
@@ -143,7 +143,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid creating a joiner on behalf of another user', async() => {
-            // Given two users, including a malicious verified one, and an existing part
+            // Given two users, including a malicious verified one, and an existing part without a joiner
             const createdPart: CreatedPart = await createPart({ createJoiner: false, signOut: true });
             await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
@@ -155,7 +155,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid a to use a fake name in the list of candidates', async() => {
-            // Given a part and joiner, and a verified user
+            // Given a part with a joiner, and a verified user
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const candidate: MinimalUser = await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
@@ -166,7 +166,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid a to add anyone else to the candidates', async() => {
-            // Given a part and joiner, and two verified users
+            // Given a part with a joiner, and two verified users
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const attackedCandidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
             await signOut();
@@ -179,7 +179,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should allow to add themself to the candidates', async() => {
-            // Given a part and joiner, and a verified user
+            // Given a part with a joiner, and a verified user
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
 
@@ -192,7 +192,7 @@ describe('JoinerDAO', () => {
             expect(matchingDocs.length).toBe(1);
         });
         it('should allow to add themself twice to the candidates', async() => {
-            // Given a part and joiner, and a verified user that is already candidate
+            // Given a part with a joiner, and a verified user that is already candidate
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
             await expectAsync(joinerDAO.addCandidate(partId, candidate)).toBeResolvedTo();
@@ -208,7 +208,7 @@ describe('JoinerDAO', () => {
             expect(matchingDocs.length).toBe(1);
         });
         it('should forbid to remove someone else from the candidates', async() => {
-            // Given a part and joiner, with another user as candidate, and a malicious user
+            // Given a part with a joiner, with another user as candidate, and a malicious user
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const candidate: MinimalUser = await addCandidate(partId);
             await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
@@ -220,7 +220,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid changing the fields of another candidate', async() => {
-            // Given a part and joiner, with another user as candidate, and a malicious user
+            // Given a part with a joiner, with another user as candidate, and a malicious user
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const candidate: MinimalUser = await addCandidate(partId);
 
@@ -236,7 +236,7 @@ describe('JoinerDAO', () => {
     });
     describe('for creator', () => {
         it('should forbid setting a fake username as a creator', async() => {
-            // Given a verified user and an existing part
+            // Given a verified user and an existing part without a joiner
             const createdPart: CreatedPart = await createPart();
 
             // When creating the corresponding joiner, with the user as creator but with a fake username
@@ -248,7 +248,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid to add themself to the candidates', async() => {
-            // Given a part and joiner, with the current user being the creator
+            // Given a part with a joiner, with the current user being the creator
             const createdPart: CreatedPart = await createPart({ createJoiner: true });
 
             // When trying to add themself to the candidates
@@ -258,7 +258,7 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should allow to change other fields than candidates and partStatus to STARTED', async() => {
-            // Given a user that created a (non-started) part and joiner
+            // Given a user that created a (non-started) part with a joiner
             const partId: string = (await createPart({ createJoiner: true })).partId;
 
             const updates: Partial<Joiner>[] = [
@@ -279,11 +279,14 @@ describe('JoinerDAO', () => {
         });
         describe('on started part', () => {
             let partId: string;
+            let creator: MinimalUser
             beforeEach(async() => {
                 // Given a part that is started
 
-                // Creator creates the joiner
-                partId = (await createPart({ createJoiner: true, signOut: true })).partId;
+                // Creator creates the part and joiner
+                const createdPart: CreatedPart = await createPart({ createJoiner: true, signOut: true });
+                partId = createdPart.partId;
+                creator = createdPart.creator;
 
                 // A candidate adds themself to the candidates list
                 const candidate: MinimalUser = await addCandidate(partId);
@@ -314,6 +317,7 @@ describe('JoinerDAO', () => {
             });
             it('should forbid to change fields after part has started', async() => {
                 const updates: Partial<Joiner>[] = [
+                    { creator },
                     { chosenOpponent: UserMocks.CANDIDATE_MINIMAL_USER },
                     { partStatus: PartStatus.CONFIG_PROPOSED.value },
                     { firstPlayer: FirstPlayer.CHOSEN_PLAYER.value },
@@ -333,7 +337,7 @@ describe('JoinerDAO', () => {
     });
     describe('for non-chosen candidate', () => {
         it('should allow to remove themself from the candidates', async() => {
-            // Given a part and joiner, and a candidate
+            // Given a part with a joiner, and a candidate
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const candidate: MinimalUser = await addCandidate(partId, false);
 
@@ -344,7 +348,7 @@ describe('JoinerDAO', () => {
             await expectAsync(result).toBeResolvedTo();
         });
         it('should forbid changing its own candidate fields', async() => {
-            // Given a part and joiner, with a candidate
+            // Given a part with a joiner, with a candidate
             const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
             const candidate: MinimalUser = await addCandidate(partId);
 
@@ -358,11 +362,14 @@ describe('JoinerDAO', () => {
             await expectPermissionToBeDenied(result);
         });
         it('should forbid to change fields', async() => {
-            // Given a part, and a candidate (that is not the creator)
-            const partId: string = (await createPart({ createJoiner: true, signOut: true })).partId;
+            // Given a part with a joiner, and a candidate
+            const createdPart: CreatedPart = await createPart({ createJoiner: true, signOut: true });
+            const partId: string = createdPart.partId;
+            const creator: MinimalUser = createdPart.creator;
             const candidate: MinimalUser = await addCandidate(partId, false);
 
             const updates: Partial<Joiner>[] = [
+                { creator },
                 { chosenOpponent: candidate },
                 { partStatus: PartStatus.CONFIG_PROPOSED.value },
                 { firstPlayer: FirstPlayer.CHOSEN_PLAYER.value },
@@ -385,7 +392,7 @@ describe('JoinerDAO', () => {
             // Given a joiner where the current user is set as chosen opponent
 
             // We have to follow a realistic workflow to achieve that
-            // The part is first created
+            // The part and joiner are first created
             partId = (await createPart({ createJoiner: true, signOut: true })).partId;
 
             // A candidate adds themself to the candidates list

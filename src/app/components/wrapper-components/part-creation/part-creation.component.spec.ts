@@ -530,7 +530,7 @@ describe('PartCreationComponent', () => {
             await joinerDAO.set('joinerId', JoinerMocks.INITIAL);
         }));
         describe('Arrival', () => {
-            it('should add user to joiner', fakeAsync(() => {
+            it('should add user to joiner candidates with DAO', fakeAsync(() => {
                 spyOn(joinerDAO, 'addCandidate').and.callThrough();
 
                 // When candidate arrives
@@ -539,7 +539,6 @@ describe('PartCreationComponent', () => {
                 // Then the candidate is added to the joiner and the joiner is updated
                 expect(joinerDAO.addCandidate).toHaveBeenCalledOnceWith('joinerId', UserMocks.OPPONENT_MINIMAL_USER);
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
-                // tick(PartCreationComponent.TOKEN_INTERVAL);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should add observedPart to user doc', fakeAsync(() => {
