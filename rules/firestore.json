@@ -101,11 +101,12 @@ service cloud.firestore {
             allow read: if userIsVerified();
         }
         function isValidMovePartUpdate() {
-            let decreasesPlayerZeroTime = safeTimeDecrease(resource.data.playerZero, 'remainingMsForZero');
-            let preservesPlayerZeroTime = preservesField('remainingMsForZero');
-            let decreasesPlayerOneTime = safeTimeDecrease(resource.data.playerOne, 'remainingMsForOne');
-            let preservesPlayerOneTime = preservesField('remainingMsForOne');
-            let safeTimeDecrease = (decreasesPlayerZeroTime && preservesPlayerOneTime) ||
+            let decreasesPlayerZeroTime = debug(safeTimeDecrease(resource.data.playerZero, 'remainingMsForZero'));
+            let preservesPlayerZeroTime = debug(preservesField('remainingMsForZero'));
+            let decreasesPlayerOneTime = debug(safeTimeDecrease(resource.data.playerOne, 'remainingMsForOne'));
+            let preservesPlayerOneTime = debug(preservesField('remainingMsForOne'));
+            let safeTimeDecrease = (resource.data.turn == 0 && preservesPlayerOneTime && preservesPlayerZeroTime) ||
+                (decreasesPlayerZeroTime && preservesPlayerOneTime) ||
                 (preservesPlayerZeroTime && decreasesPlayerOneTime);
             let isUserTurn = (resource.data.turn % 2 == 0 && userIsPlayerZero(resource.data)) ||
                 (resource.data.turn % 2 == 1 && userIsPlayerOne(resource.data));
@@ -151,9 +152,9 @@ service cloud.firestore {
                    safeTimeIncrease(player, remainingMsFieldName);
         }
         function safeTimeDecrease(player, remainingMsFieldName) {
-            let timeDecreased = request.resource.data[remainingMsFieldName] < resource.data[remainingMsFieldName];
-            let isOwnTime = request.auth.uid == player.id;
-            return timeDecreased && isOwnTime;
+            let timeDecreased = debug(request.resource.data[remainingMsFieldName]) < debug(resource.data[remainingMsFieldName]);
+            let isNotOwnTime = request.auth.uid != player.id;
+            return timeDecreased && isNotOwnTime;
         }
         function safeTimeIncrease(player, remainingMsFieldName) {
             let timeIncreased = request.resource.data[remainingMsFieldName] > resource.data[remainingMsFieldName];

@@ -507,19 +507,18 @@ describe('PartDAO', () => {
                 let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForZero);
                 let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
-                remainingMsForZero -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1, remainingMsForZero });
+                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1 });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
-                remainingMsForOne -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2, { turn: 2, remainingMsForOne });
+                remainingMsForZero -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2, { turn: 2, remainingMsForZero });
                 await signOut();
                 await reconnectUser(CREATOR_EMAIL);
                 // When updating turns with a legitimate increase/decrease
                 const turn: number = 2 + turnDelta;
-                remainingMsForZero -= 10;
+                remainingMsForOne -= 10;
                 const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, 3,
-                                                                         { turn, remainingMsForZero });
+                                                                         { turn, remainingMsForOne });
                 // Then it should succeed
                 await expectAsync(result).toBeResolvedTo();
             }
@@ -540,23 +539,22 @@ describe('PartDAO', () => {
                 let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForZero);
                 let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
-                remainingMsForZero -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1, remainingMsForZero });
+                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1, { turn: 1 });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
-                remainingMsForOne -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2, { turn: 2, remainingMsForOne });
+                remainingMsForZero -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2, { turn: 2, remainingMsForZero });
                 await signOut();
                 await reconnectUser(CREATOR_EMAIL);
-                remainingMsForZero -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 3, { turn: 3, remainingMsForZero });
+                remainingMsForOne -= 10;
+                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 3, { turn: 3, remainingMsForOne });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
                 // When updating turns with an illegal increase/decrease
                 const turn: number = 3 + turnDelta;
-                remainingMsForOne -= 10;
+                remainingMsForZero -= 10;
                 const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, 4,
-                                                                         { turn, remainingMsForOne });
+                                                                         { turn, remainingMsForZero });
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
 
@@ -628,17 +626,17 @@ describe('PartDAO', () => {
                 await expectPermissionToBeDenied(result);
             }
         }
-        it('should allow decreasing its own time (as playerZero)', async() => {
+        it('should forbid decreasing its own time (as playerZero)', async() => {
             await checkTimeUpdate(Player.ZERO,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForZero: zero - 1000 };
-                                  }, true);
+                                  }, false);
         });
-        it('should forbid decreasing the time of the opponent (as playerZero)', async() => {
+        it('should allow decreasing the time of the opponent (as playerZero)', async() => {
             await checkTimeUpdate(Player.ZERO,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForOne: one - 1000 };
-                                  }, false);
+                                  }, true);
         });
         it('should allow increasing the time of the opponent (as playerZero)', async() => {
             await checkTimeUpdate(Player.ZERO,
@@ -652,17 +650,17 @@ describe('PartDAO', () => {
                                       return { remainingMsForZero: zero + 1000 };
                                   }, false);
         });
-        it('should allow decreasing its own time (as playerOne)', async() => {
+        it('should forbid decreasing its own time (as playerOne)', async() => {
             await checkTimeUpdate(Player.ONE,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForOne: one - 1000 };
-                                  }, true);
+                                  }, false);
         });
-        it('should forbid decreasing the time of the opponent (as playerOne)', async() => {
+        it('should allow decreasing the time of the opponent (as playerOne)', async() => {
             await checkTimeUpdate(Player.ONE,
                                   (zero: number, one: number): Partial<Part> => {
                                       return { remainingMsForZero: zero - 1000 };
-                                  }, false);
+                                  }, true);
         });
         it('should allow increasing the time of the opponent (as playerOne)', async() => {
             await checkTimeUpdate(Player.ONE,
