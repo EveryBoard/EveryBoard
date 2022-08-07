@@ -11,8 +11,10 @@ export class UserDAO extends FirestoreDAO<User> {
 
     public static VERBOSE: boolean = false;
 
+    public static COLLECTION_NAME: string = 'users';
+
     constructor(firestore: Firestore) {
-        super('joueurs', firestore);
+        super(this.COLLECTION_NAME, firestore);
         display(UserDAO.VERBOSE, 'UserDAO.constructor');
     }
 }

@@ -12,7 +12,7 @@ import { User, UserDocument } from '../../../domain/User';
 import { Request } from '../../../domain/Request';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
-import { Joiner } from 'src/app/domain/Joiner';
+import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -21,7 +21,6 @@ import { assert } from 'src/app/utils/assert';
 import { ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -29,6 +28,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { Timestamp } from 'firebase/firestore';
 
 export class OnlineGameWrapperMessages {
 
@@ -88,7 +88,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public rematchProposed: boolean = false;
     public opponentProposedRematch: boolean = false;
 
-    public joiner: Joiner;
+    public configRoom: ConfigRoom;
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
@@ -171,11 +171,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         });
         await this.setCurrentPartIdOrRedirect();
     }
-    public async startGame(iJoiner: Joiner): Promise<void> {
+    public async startGame(iConfigRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         assert(this.gameStarted === false, 'Should not start already started game');
-        this.joiner = iJoiner;
+        this.configRoom = iConfigRoom;
 
         this.gameStarted = true;
         window.setTimeout(async() => {
@@ -312,8 +312,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public getLastUpdateTime(oldPart: PartDocument, update: PartDocument, type: UpdateType): [number, number] {
-        const oldTime: Time | null = this.getMoreRecentTime(oldPart);
-        const updateTime: Time | null= this.getMoreRecentTime(update);
+        const oldTime: Timestamp | null = this.getMoreRecentTime(oldPart);
+        const updateTime: Timestamp | null= this.getMoreRecentTime(update);
         assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
         assert(updateTime != null, 'TODO UPDATE_TIME WAS NULL, UNDO COMMENT AND TEST!');
         const last: Player = Player.fromTurn(oldPart.data.turn);
@@ -321,15 +321,15 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                            Utils.getNonNullable(updateTime),
                                            type, last);
     }
-    private getMoreRecentTime(part: PartDocument): Time | null {
+    private getMoreRecentTime(part: PartDocument): Timestamp | null {
         if (part.data.lastUpdateTime == null) {
-            return part.data.beginning as Time;
+            return part.data.beginning as Timestamp;
         } else {
-            return part.data.lastUpdateTime as Time;
+            return part.data.lastUpdateTime as Timestamp;
         }
     }
-    private getTimeUsedForLastTurn(oldTime: Time,
-                                   updateTime: Time,
+    private getTimeUsedForLastTurn(oldTime: Timestamp,
+                                   updateTime: Timestamp,
                                    _type: UpdateType,
                                    last: Player)
     : [number, number]
@@ -341,11 +341,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public setChronos(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');
-        this.chronoZeroGlobal.setDuration(this.joiner.totalPartDuration * 1000);
-        this.chronoOneGlobal.setDuration(this.joiner.totalPartDuration * 1000);
+        this.chronoZeroGlobal.setDuration(this.configRoom.totalPartDuration * 1000);
+        this.chronoOneGlobal.setDuration(this.configRoom.totalPartDuration * 1000);
 
-        this.chronoZeroTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
-        this.chronoOneTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
+        this.chronoZeroTurn.setDuration(this.configRoom.maximalMoveDuration * 1000);
+        this.chronoOneTurn.setDuration(this.configRoom.maximalMoveDuration * 1000);
     }
     private didUserPlay(player: Player): boolean {
         return this.hasUserPlayed[player.value];
@@ -584,8 +584,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public setPlayersDatas(updatedICurrentPart: PartDocument): void {
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
         this.players = [
-            MGPOptional.of(updatedICurrentPart.data.playerZero),
-            MGPOptional.ofNullable(updatedICurrentPart.data.playerOne),
+            MGPOptional.of(updatedICurrentPart.data.playerZero.name),
+            MGPOptional.ofNullable(updatedICurrentPart.data.playerOne?.name),
         ];
         assert(updatedICurrentPart.data.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();
@@ -738,7 +738,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
 
         if (resetTurn) {
-            turnChrono.setDuration(this.joiner.maximalMoveDuration * 1000);
+            turnChrono.setDuration(this.configRoom.maximalMoveDuration * 1000);
             turnChrono.start();
         } else {
             turnChrono.resume();

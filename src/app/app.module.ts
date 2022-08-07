@@ -12,7 +12,7 @@ import { ChatService } from './services/ChatService';
 import { UserService } from './services/UserService';
 import { ConnectedUserService } from './services/ConnectedUserService';
 import { GameService } from './services/GameService';
-import { JoinerService } from './services/JoinerService';
+import { ConfigRoomService } from './services/ConfigRoomService';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
@@ -86,7 +86,6 @@ import { OnlineGameCreationComponent } from './components/normal-component/onlin
 
 import * as Firebase from '@angular/fire/app';
 import * as Firestore from '@angular/fire/firestore';
-import * as Database from '@angular/fire/database';
 import * as Auth from '@angular/fire/auth';
 import { ThemeService } from './services/ThemeService';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
@@ -120,9 +119,6 @@ export const routes: Route[] = [
 export class FirebaseProviders {
     public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
         return Firebase.provideFirebaseApp(() => {
-            if (environment.useEmulators) {
-                environment.firebaseConfig.databaseURL = 'http://localhost:9000?ns=default';
-            }
             return Firebase.initializeApp(environment.firebaseConfig);
         });
     }
@@ -135,17 +131,6 @@ export class FirebaseProviders {
                 Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
             }
             return firestore;
-        });
-    }
-    public static database(): ModuleWithProviders<Database.DatabaseModule> {
-        return Database.provideDatabase(() => {
-            const database: Database.Database = Database.getDatabase();
-
-            // eslint-disable-next-line dot-notation
-            if (environment.useEmulators && database['_instanceStarted'] === false) {
-                Database.connectDatabaseEmulator(database, 'localhost', 9000);
-            }
-            return database;
         });
     }
     public static auth(): ModuleWithProviders<Auth.AuthModule> {
@@ -223,7 +208,6 @@ export class FirebaseProviders {
         FirebaseProviders.app(),
         FirebaseProviders.firestore(),
         FirebaseProviders.auth(),
-        FirebaseProviders.database(),
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(routes, { useHash: false }),
@@ -235,7 +219,7 @@ export class FirebaseProviders {
     providers: [
         ConnectedUserService,
         GameService,
-        JoinerService,
+        ConfigRoomService,
         UserService,
         ChatService,
         ThemeService,
