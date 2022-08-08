@@ -43,9 +43,9 @@ export class OnlineGameCreationComponent implements OnInit {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
-        if (await this.canCreateOnlineGame(user.name)) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(user, game);
-            // create Part and Joiner
+        if (await this.canCreateOnlineGame(user)) {
+            const gameId: string = await this.gameService.createPartConfigRoomAndChat(game);
+            // create part and config room
             await this.router.navigate(['/play', game, gameId]);
             return true;
         } else {
