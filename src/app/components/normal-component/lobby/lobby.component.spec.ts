@@ -3,12 +3,11 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
 
 import { LobbyComponent } from './lobby.component';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
@@ -17,6 +16,7 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
+import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
 
 describe('LobbyComponent', () => {
 
@@ -33,7 +33,7 @@ describe('LobbyComponent', () => {
         component.ngOnInit();
     }));
     it('should display online-game-selection component when clicking on tab-create element', fakeAsync(async() => {
-        // Given a server page
+        // Given a lobby
         testUtils.detectChanges();
 
         // When clicking on the 'create game' tab
@@ -44,12 +44,14 @@ describe('LobbyComponent', () => {
         testUtils.expectElementToExist('#online-game-selection');
     }));
     it('Should redirect to /play when clicking a game', fakeAsync(async() => {
-        // Given a server with one active part
+        // Given a lobby with one active part
         const activePart: PartDocument = new PartDocument('some-part-id', PartMocks.INITIAL);
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
         spyOn(activePartsService, 'subscribeToActiveParts').and.callFake(
-            (callback: (parts: PartDocument[]) => void) =>
-                new BehaviorSubject([activePart]).asObservable().subscribe(callback));
+            (callback: (parts: PartDocument[]) => void) => {
+                callback([activePart]);
+                return () => {};
+            });
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
         testUtils.detectChanges();
@@ -60,22 +62,26 @@ describe('LobbyComponent', () => {
         // Then the component should navigate to the part
         expectValidRouting(router, ['/play', 'Quarto', 'some-part-id'], OnlineGameWrapperComponent);
     }));
-    it('should stop watching current part observable and part list when destroying component', fakeAsync(async() => {
-        // Given a server page
+    it('should unsubscribe from active parts when destroying component', fakeAsync(async() => {
+        // Given the lobby
+        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(ActivePartsService), 'subscribeToActiveParts');
         testUtils.detectChanges();
-        // eslint-disable-next-line dot-notation
-        spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
-        const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-        spyOn(activePartsService, 'stopObserving').and.callThrough();
 
-        // When destroying the component
+        // When it is destroyed
         component.ngOnDestroy();
 
-        // Then the router active part observer should have been unsubscribed
-        // eslint-disable-next-line dot-notation
-        expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
-        // and ActivePartsService should have been told to stop observing
-        expect(activePartsService.stopObserving).toHaveBeenCalledOnceWith();
+        // Then it should have unsubscrbed from active parts
+        check();
+    }));
+    it('should unsubscribe from active users when destroying component', fakeAsync(async() => {
+        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(ActiveUsersService), 'subscribeToActiveUsers');
+        testUtils.detectChanges();
+
+        // When it is destroyed
+        component.ngOnDestroy();
+
+        // Then it should have unsubscrbed from active users
+        check();
     }));
     it('should display firebase time HH:mm:ss', fakeAsync(() => {
         // Given a lobby in which we observe tab chat, and where one user is here

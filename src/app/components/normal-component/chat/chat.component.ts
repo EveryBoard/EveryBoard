@@ -7,6 +7,7 @@ import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { Unsubscribe } from 'firebase/firestore';
 
 @Component({
     selector: 'app-chat',
@@ -31,6 +32,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     private isNearBottom: boolean = true;
     private notYetScrolled: boolean = true;
+
+    private chatUnsubscribe!: Unsubscribe; // initialized in ngOnInit
 
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
@@ -63,7 +66,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             () => {
                 // We don't care about deleted messages
             });
-        this.chatService.startObserving(this.chatId, callback);
+        this.chatUnsubscribe = this.chatService.subscribeToMessages(this.chatId, callback);
     }
     public updateMessages(newMessages: Message[]): void {
         this.chat = this.chat.concat(newMessages);
@@ -124,10 +127,10 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
         const sender: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        await this.chatService.sendMessage(sender, content, this.turn);
+        await this.chatService.sendMessage(this.chatId, sender, content, this.turn);
     }
     public ngOnDestroy(): void {
-        this.chatService.stopObserving();
+        this.chatUnsubscribe();
     }
     public switchChatVisibility(): void {
         if (this.visible === true) {

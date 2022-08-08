@@ -16,6 +16,7 @@ import { IFirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserDAO } from '../UserDAO';
+import { ChatService } from 'src/app/services/ChatService';
 
 describe('ChatDAO', () => {
 
@@ -77,7 +78,7 @@ describe('ChatDAO', () => {
             await signOut();
             // and a message from the current user, who is able to add messages
             myUser = await createConnectedUser('bar@bar.com', 'user');
-            myMessageId = await chatDAO.addMessage('lobby', { ...message, sender: myUser });
+            myMessageId = await chatService.addMessage('lobby', { ...message, sender: myUser });
         });
         it('should forbid disconnected users to read a chat', async() => {
             // Given a disconnected user

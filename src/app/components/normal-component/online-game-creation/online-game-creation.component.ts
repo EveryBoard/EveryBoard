@@ -59,8 +59,8 @@ export class OnlineGameCreationComponent implements OnInit {
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.isPresent();
     }
-    private async canCreateOnlineGame(username: string): Promise<boolean> {
-        const hasActivePart: boolean = await this.activePartsService.userHasActivePart(username);
+    private async canCreateOnlineGame(user: MinimalUser): Promise<boolean> {
+        const hasActivePart: boolean = await this.activePartsService.userHasActivePart(user);
         return hasActivePart === false;
     }
 }

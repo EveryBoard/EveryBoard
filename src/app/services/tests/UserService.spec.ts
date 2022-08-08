@@ -64,7 +64,7 @@ describe('UserService', () => {
             await service.updatePresenceToken('joserId');
 
             // Then update should be called
-            expect(userDAO.update).toHaveBeenCalledOnceWith('joserId', { last_changed: serverTimestamp() });
+            expect(userDAO.update).toHaveBeenCalledOnceWith('joserId', { lastUpdateTime: serverTimestamp() });
         });
     });
 });

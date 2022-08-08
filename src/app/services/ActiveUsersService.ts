@@ -1,43 +1,31 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';
-import { Subscription } from 'rxjs';
-import { MGPOptional } from '../utils/MGPOptional';
-import { assert } from '../utils/assert';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { Timestamp } from 'firebase/firestore';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ActiveUsersService implements OnDestroy {
+export class ActiveUsersService {
 
     public static VERBOSE: boolean = false;
 
-    private readonly activeUsersBS: BehaviorSubject<UserDocument[]> = new BehaviorSubject<UserDocument[]>([]);
-
-    private readonly activeUsersObs!: Observable<UserDocument[]>;
-
-    private unsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
+    private activeUsers: UserDocument[] = [];
 
     constructor(public userDAO: UserDAO) {
-        this.activeUsersObs = this.activeUsersBS.asObservable();
     }
-    public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {
-        return this.activeUsersObs.subscribe(callback);
-    }
-    public startObserving(): void {
-        display(ActiveUsersService.VERBOSE, 'ActiveUsersService.startObservingActiveUsers');
+    public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Unsubscribe {
+        display(ActiveUsersService.VERBOSE, 'ActiveUsersService.subscribeToActiveUsers');
         const onDocumentCreated: (newUsers: UserDocument[]) => void = (newUsers: UserDocument[]) => {
             display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
-            const newUsersList: UserDocument[] = this.activeUsersBS.value.concat(...newUsers);
-            this.activeUsersBS.next(this.sort(newUsersList));
+            this.activeUsers = this.sort(this.activeUsers.concat(...newUsers));
+            callback(this.activeUsers);
         };
         const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
-            let updatedUsers: UserDocument[] = this.activeUsersBS.value;
+            let updatedUsers: UserDocument[] = this.activeUsers;
             display(ActiveUsersService.VERBOSE, 'our DAO updated ' + modifiedUsers.length + ' user(s)');
             for (const u of modifiedUsers) {
                 updatedUsers.forEach((user: UserDocument) => {
@@ -45,27 +33,22 @@ export class ActiveUsersService implements OnDestroy {
                 });
                 updatedUsers = this.sort(updatedUsers);
             }
-            this.activeUsersBS.next(updatedUsers);
+            this.activeUsers = updatedUsers;
+            callback(this.activeUsers);
         };
         const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {
-            const newUsersList: UserDocument[] =
-                this.activeUsersBS.value.filter((u: UserDocument) =>
+            // No need to sort again upon deletion
+            this.activeUsers =
+                this.activeUsers.filter((u: UserDocument) =>
                     !deletedUsers.some((user: UserDocument) => user.id === u.id));
-            this.activeUsersBS.next(this.sort(newUsersList));
+            callback(this.activeUsers);
         };
         const usersObserver: FirestoreCollectionObserver<User> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        this.unsubscribe = MGPOptional.of(this.observeActiveUsers(usersObserver));
+        return this.observeActiveUsers(usersObserver);
     }
     public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
         return this.userDAO.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
-    }
-    public stopObserving(): void {
-        if (this.unsubscribe.isPresent()) {
-            this.unsubscribe.get()();
-            this.unsubscribe = MGPOptional.empty();
-            this.activeUsersBS.next([]);
-        }
     }
     public sort(users: UserDocument[]): UserDocument[] {
         return users.sort((first: UserDocument, second: UserDocument) => {
@@ -75,8 +58,5 @@ export class ActiveUsersService implements OnDestroy {
             const secondTimestamp: number = Utils.getNonNullable(secondData).seconds;
             return firstTimestamp - secondTimestamp;
         });
-    }
-    public ngOnDestroy(): void {
-        assert(this.unsubscribe.isAbsent(), 'ActiveUsersService should have unsubscribed before being destroyed');
     }
 }

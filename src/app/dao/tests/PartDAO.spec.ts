@@ -1,11 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { Part, MGPResult } from 'src/app/domain/Part';
+import { Part } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { PartDAO } from '../PartDAO';
 import { UserDAO } from '../UserDAO';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
@@ -17,6 +16,7 @@ import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { Utils } from 'src/app/utils/utils';
+import { PartService } from 'src/app/services/PartService';
 
 type PartInfo = {
     id: string,
@@ -306,17 +306,18 @@ describe('PartDAO', () => {
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but puts another user as playerOne
             const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
-            const result: Promise<void> = partService.updateAndBumpIndex(partInfo.id,
-                                                                         Player.ONE,
-                                                                         partInfo.part.lastUpdate.index,
-                                                                         {
-                                                                             playerZero: UserMocks.OPPONENT_MINIMAL_USER,
-                                                                             playerOne: partInfo.candidate,
-                                                                             turn: 0,
-                                                                             beginning: serverTimestamp(),
-                                                                             remainingMsForZero: remainingMs,
-                                                                             remainingMsForOne: remainingMs,
-                                                                         });
+            const result: Promise<void> = partService.updateAndBumpIndex(
+                partInfo.id,
+                Player.ONE,
+                partInfo.part.lastUpdate.index,
+                {
+                    playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+                    playerOne: partInfo.candidate,
+                    turn: 0,
+                    beginning: serverTimestamp(),
+                    remainingMsForZero: remainingMs,
+                    remainingMsForOne: remainingMs,
+                });
 
             // Then it should faile
             await expectPermissionToBeDenied(result);
@@ -440,7 +441,7 @@ describe('PartDAO', () => {
                 const turn: number = 2 + turnDelta;
                 remainingMsForOne -= 10;
                 const result: Promise<void> = partService.updateAndBumpIndex(partId, Player.ZERO, 3,
-                                                                         { turn, remainingMsForOne });
+                                                                             { turn, remainingMsForOne });
                 // Then it should succeed
                 await expectAsync(result).toBeResolvedTo();
             }

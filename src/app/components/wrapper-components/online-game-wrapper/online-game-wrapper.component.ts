@@ -28,7 +28,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp, Unsubscribe } from 'firebase/firestore';
 
 export class OnlineGameWrapperMessages {
 
@@ -101,6 +101,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     public readonly globalTimeMessage: string = $localize`5 minutes`;
     public readonly turnTimeMessage: string = $localize`30 seconds`;
+
+    private partUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
@@ -189,10 +191,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
         // TODO: don't start count down for Observer.
-        this.gameService.startObserving(this.currentPartId, async(part: MGPOptional<Part>) => {
-            assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
-            await this.onCurrentPartUpdate(part.get());
-        });
+        this.partUnsubscribe =
+            MGPOptional.of(this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
+                assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
+                await this.onCurrentPartUpdate(part.get());
+            }));
     }
     private async onCurrentPartUpdate(update: Part): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
@@ -845,7 +848,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (this.opponentSubscription.isPresent()) {
                 this.opponentSubscription.get()();
             }
-            this.gameService.stopObserving();
+            // Unsubscribe from the part
+            this.partUnsubscribe.get()();
         }
     }
 }

@@ -12,7 +12,7 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { Part } from 'src/app/domain/Part';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
@@ -469,9 +469,9 @@ describe('PartCreationComponent', () => {
                 clickElement('#cancel');
                 tick();
 
-                // Then game, joiner, and chat are deleted
+                // Then game, config room, and chat are deleted
                 expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
-                expect(joinerService.deleteConfigRoom).toHaveBeenCalledOnceWith('configRoomId', []);
+                expect(configRoomService.deleteConfigRoom).toHaveBeenCalledOnceWith('configRoomId', []);
                 expect(chatService.deleteChat).toHaveBeenCalledOnceWith('configRoomId');
 
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -511,21 +511,21 @@ describe('PartCreationComponent', () => {
                 await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
                 await chatDAO.set('configRoomId', { messages: [], status: 'dummy status' });
             }));
-            it('should unsubscribe from configRoom service upon destruction', fakeAsync(async() => {
+            it('should unsubscribe from configRoom upon destruction', fakeAsync(async() => {
                 // Given a component that is loaded by anyone (here, the creator)
+                const configRoomCheck: () => void = prepareUnsubscribeCheck(configRoomService, 'subscribeToChanges');
+                const candidatesCheck: () => void = prepareUnsubscribeCheck(configRoomService, 'subscribeToCandidates');
                 awaitComponentInitialisation();
-                spyOn(configRoomService, 'unsubscribe').and.callThrough();
                 spyOn(component, 'cancelGameCreation').and.resolveTo(); // spied in order to avoid calling it
 
                 // When the component is destroyed
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 destroyed = true;
                 await component.ngOnDestroy();
-                tick(3000);
-                await testUtils.whenStable();
 
-                // Then the component unsubscribes from the configRoom service
-                expect(configRoomService.unsubscribe).toHaveBeenCalledWith();
+                // Then the component unsubscribes from the configRoom subscriptions
+                configRoomCheck();
+                candidatesCheck();
             }));
         });
     });
@@ -588,7 +588,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the part and all its related data should be removed
                 expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
-                expect(configRoomService.deleteJoiner).toHaveBeenCalledOnceWith('configRoomId', [UserMocks.OPPONENT_MINIMAL_USER]);
+                expect(configRoomService.deleteConfigRoom).toHaveBeenCalledOnceWith('configRoomId', [UserMocks.OPPONENT_MINIMAL_USER]);
                 expect(chatService.deleteChat).toHaveBeenCalledOnceWith('configRoomId');
 
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -715,7 +715,6 @@ describe('PartCreationComponent', () => {
                 // When leaving the page (tested here by calling ngOnDestroy)
                 const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
                 spyOn(authService, 'removeObservedPart').and.callThrough();
-                spyOn(configRoomService, 'unsubscribe').and.callThrough();
                 spyOn(configRoomService, 'cancelJoining').and.callThrough();
                 testUtils.destroy();
                 tick(3000);
@@ -723,7 +722,7 @@ describe('PartCreationComponent', () => {
                 destroyed = true;
 
                 // Then configRoomService.cancelJoining should have been called
-                expect(configRoomService.cancelJoining).toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                expect(configRoomService.cancelJoining).toHaveBeenCalledOnceWith('configRoomId');
                 expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
             }));
         });

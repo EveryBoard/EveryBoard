@@ -32,10 +32,6 @@ export class GameService {
 
     public static VERBOSE: boolean = false;
 
-    private followedPartId: MGPOptional<string> = MGPOptional.empty();
-
-    private followedPartUnsubscribe: Unsubscribe;
-
     constructor(private readonly partDAO: PartDAO,
                 private readonly partService: PartService,
                 private readonly connectedUserService: ConnectedUserService,
@@ -129,18 +125,11 @@ export class GameService {
     public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, configRoom } });
 
-        await this.configRoomService.acceptConfig();
+        await this.configRoomService.acceptConfig(partId);
         return this.startGameWithConfig(partId, Player.ONE, 0, configRoom);
     }
-    public startObserving(partId: string, callback: (part: MGPOptional<Part>) => void): void {
-        if (this.followedPartId.isAbsent()) {
-            display(GameService.VERBOSE, '[start watching part ' + partId);
-
-            this.followedPartId = MGPOptional.of(partId);
-            this.followedPartUnsubscribe = this.partDAO.subscribeToChanges(partId, callback);
-        } else {
-            throw new Error('GameService.startObserving should not be called while already observing a game');
-        }
+    public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Unsubscribe {
+        return this.partDAO.subscribeToChanges(partId, callback);
     }
     public resign(partId: string, lastIndex: number, user: Player, winner: string, loser: string): Promise<void> {
         const update: Partial<Part> = {
@@ -281,11 +270,6 @@ export class GameService {
     public async addTurnTime(observerRole: Player, lastIndex: number, id: string): Promise<void> {
         const update: Partial<Part> = { request: Request.addTurnTime(observerRole.getOpponent()) };
         return await this.partService.updateAndBumpIndex(id, observerRole, lastIndex, update);
-    }
-    public stopObserving(): void {
-        display(GameService.VERBOSE, 'GameService.stopObserving();');
-        this.followedPartId = MGPOptional.empty();
-        this.followedPartUnsubscribe();
     }
     public async updateDBBoard(partId: string,
                                user: Player,

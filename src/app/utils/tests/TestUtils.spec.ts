@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, OnDestroy, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -567,4 +567,15 @@ export async function expectPermissionToBeDenied<T>(promise: Promise<T>): Promis
         expect(actualValue.code).toBe('permission-denied');
     };
     await promise.then(throwIfFulfilled, checkErrorCode);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): () => void {
+    let unsubscribed: boolean = false;
+    spyOn(service, subscribeMethod).and.returnValue(() => {
+        unsubscribed = true;
+    });
+    return () => {
+        expect(unsubscribed).toBeTrue();
+    };
 }

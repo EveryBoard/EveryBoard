@@ -1,16 +1,13 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ChatDAO } from '../dao/ChatDAO';
 import { Message, MessageDocument } from '../domain/Message';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { Localized } from '../utils/LocaleUtils';
-import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
-import { ErrorLoggerService } from './ErrorLoggerService';
 import { serverTimestamp } from 'firebase/firestore';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MinimalUser } from '../domain/MinimalUser';
-import { assert } from '../utils/assert';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
@@ -20,12 +17,8 @@ export class ChatMessages {
 @Injectable({
     providedIn: 'root',
 })
-export class ChatService implements OnDestroy {
+export class ChatService {
     public static VERBOSE: boolean = false;
-
-    private followedChatId: MGPOptional<string> = MGPOptional.empty();
-
-    private followedChatUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
@@ -40,47 +33,15 @@ export class ChatService implements OnDestroy {
     public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Unsubscribe {
         return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
     }
-
-    public startObserving(chatId: string, callback: FirestoreCollectionObserver<Message>): void {
-        display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
-
-        if (this.followedChatId.isAbsent()) {
-            display(ChatService.VERBOSE, '[start watching chat ' + chatId);
-
-            this.followedChatId = MGPOptional.of(chatId);
-            this.followedChatUnsubscribe = MGPOptional.of(this.subscribeToMessages(chatId, callback));
-        } else if (this.followedChatId.equalsValue(chatId)) {
-            ErrorLoggerService.logErrorAndFail('ChatService', 'Already observing same chat', { chatId });
-        } else {
-            ErrorLoggerService.logErrorAndFail('ChatService',
-                                               'Already observing another chat',
-                                               { chatId, followedChatId: this.followedChatId.get() });
-        }
-    }
-    public stopObserving(): void {
-        display(ChatService.VERBOSE, 'stopped watching chat ' + this.followedChatId + ']');
-        if (this.followedChatUnsubscribe.isPresent()) {
-            this.followedChatId = MGPOptional.empty();
-            this.followedChatUnsubscribe.get()();
-            this.followedChatUnsubscribe = MGPOptional.empty();
-        }
-    }
-    public isObserving(): boolean {
-        return this.followedChatId.isPresent();
-    }
     public async deleteChat(chatId: string): Promise<void> {
         display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
         return this.chatDAO.delete(chatId);
     }
-    public async createNewChat(id: string): Promise<void> {
-        return this.chatDAO.set(id, {});
+    public async createNewChat(chatId: string): Promise<void> {
+        return this.chatDAO.set(chatId, {});
     }
-    public async sendMessage(sender: MinimalUser, content: string, currentTurn?: number)
+    public async sendMessage(chatId: string, sender: MinimalUser, content: string, currentTurn?: number)
     : Promise<MGPValidation> {
-        if (this.followedChatId.isAbsent()) {
-            return MGPValidation.failure('Cannot send message if not observing chat');
-        }
-        const chatId: string = this.followedChatId.get();
         if (this.userCanSendMessage(sender.name, chatId) === false) {
             return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE());
         }
@@ -101,8 +62,5 @@ export class ChatService implements OnDestroy {
     }
     private isForbiddenMessage(message: string): boolean {
         return (message === '');
-    }
-    public ngOnDestroy(): void {
-        assert(this.followedChatUnsubscribe.isAbsent(), 'ChatService should have unsubscribed before being destroyed');
     }
 }

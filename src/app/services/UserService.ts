@@ -31,7 +31,7 @@ export class UserService {
     public async setUsername(uid: string, username: string): Promise<void> {
         await this.userDAO.update(uid, { username: username });
     }
-    public async markVerified(uid: string): Promise<void> {
+    public async markAsVerified(uid: string): Promise<void> {
         await this.userDAO.update(uid, { verified: true });
     }
     public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
@@ -39,7 +39,7 @@ export class UserService {
     }
     public updatePresenceToken(userId: string): Promise<void> {
         return this.userDAO.update(userId, {
-            last_changed: serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         });
     }
     public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {

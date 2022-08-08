@@ -14,7 +14,7 @@ export class UserDAO extends FirestoreDAO<User> {
     public static COLLECTION_NAME: string = 'users';
 
     constructor(firestore: Firestore) {
-        super(this.COLLECTION_NAME, firestore);
+        super(UserDAO.COLLECTION_NAME, firestore);
         display(UserDAO.VERBOSE, 'UserDAO.constructor');
     }
 }

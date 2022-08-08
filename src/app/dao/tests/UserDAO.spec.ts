@@ -1,24 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { UserDAO } from '../UserDAO';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import * as FireAuth from '@angular/fire/auth';
-import { serverTimestamp } from 'firebase/firestore';
 import { User } from 'src/app/domain/User';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { FirestoreCondition } from '../FirestoreDAO';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { UserService } from 'src/app/services/UserService';
 
 describe('UserDAO', () => {
 
     let dao: UserDAO;
+    let service: UserService;
 
     beforeEach(async() => {
         await setupEmulators();
         dao = TestBed.inject(UserDAO);
+        service = TestBed.inject(UserService);
     });
     it('should be created', () => {
         expect(dao).toBeTruthy();
@@ -68,7 +66,7 @@ describe('UserDAO', () => {
             // Given an existing, logged in user, without username
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com');
             // When trying to set the username
-            const result: Promise<void> = dao.setUsername(user.uid, 'user');
+            const result: Promise<void> = service.setUsername(user.uid, 'user');
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -76,7 +74,7 @@ describe('UserDAO', () => {
             // Given an existing, logged in user, with a username
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set the username
-            const result: Promise<void> = dao.setUsername(user.uid, 'user!');
+            const result: Promise<void> = service.setUsername(user.uid, 'user!');
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -89,7 +87,7 @@ describe('UserDAO', () => {
             await dao.set(credential.user.uid, { verified: false, username: 'user' });
 
             // When marking the user as verified
-            const result: Promise<void> = dao.markAsVerified(credential.user.uid);
+            const result: Promise<void> = service.markAsVerified(credential.user.uid);
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -102,7 +100,7 @@ describe('UserDAO', () => {
             await dao.set(credential.user.uid, { verified: false });
 
             // When marking the user as verified
-            const result: Promise<void> = dao.markAsVerified(credential.user.uid);
+            const result: Promise<void> = service.markAsVerified(credential.user.uid);
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -115,7 +113,7 @@ describe('UserDAO', () => {
             await dao.set(credential.user.uid, { verified: false, username: 'foo' });
 
             // When marking the user as verified
-            const result: Promise<void> = dao.markAsVerified(credential.user.uid);
+            const result: Promise<void> = service.markAsVerified(credential.user.uid);
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });

@@ -5,7 +5,7 @@ import { ChatService } from 'src/app/services/ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { DebugElement } from '@angular/core';
 
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Message } from 'src/app/domain/Message';
 import { serverTimestamp } from 'firebase/firestore';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -43,7 +43,6 @@ describe('ChatComponent', () => {
         chatService = TestBed.inject(ChatService);
         chatDAO = TestBed.inject(ChatDAO);
         await chatDAO.set('fauxChat', {});
-        spyOn(chatService, 'stopObserving').and.callThrough();
     }));
     it('should create', fakeAsync(async() => {
         // wait for the chat to be initialized (without it, ngOnInit will not be called)
@@ -228,7 +227,7 @@ describe('ChatComponent', () => {
 
             // then the message is sent
             const user: MinimalUser = UserMocks.CONNECTED_MINIMAL_USER;
-            expect(chatService.sendMessage).toHaveBeenCalledWith(user, 'hello', 2);
+            expect(chatService.sendMessage).toHaveBeenCalledWith('fauxChat', user, 'hello', 2);
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));
@@ -273,15 +272,24 @@ describe('ChatComponent', () => {
 
             // when a message is deleted
             await chatDAO.subCollectionDAO('fauxChat', 'messages').delete(messageId);
-            testUtils.detectChanges();
 
             // Then no error must have been encountered
+            expect(() =>testUtils.detectChanges()).not.toThrowError();
+        }));
+        it('should unsubscribe from the chat when destroying component', fakeAsync(async() => {
+            // Given a chat
+            const check: () => void = prepareUnsubscribeCheck(chatService, 'subscribeToMessages');
+            testUtils.detectChanges();
+
+            // When it is destroyed
+            component.ngOnDestroy();
+
+            // Then it should have unsubscrbed from active users
+            check();
         }));
         afterEach(fakeAsync(async() => {
             component.ngOnDestroy();
             await testUtils.whenStable();
-            // For the connected chat, the subscription need to be properly closed
-            expect(chatService.stopObserving).toHaveBeenCalledOnceWith();
         }));
     });
 });

@@ -10,7 +10,7 @@ import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
@@ -248,6 +248,26 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(3000); // Since a criticalToast will pop
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
+    }));
+    xit('should unsubscribe from the part upon destruction', fakeAsync(async() => {
+        // Given a started part
+        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(ConfigRoomService), 'subscribeToChanges');
+        testUtils = await ComponentTestUtils.basic('P4');
+        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
+
+        testUtils.prepareFixture(OnlineGameWrapperComponent);
+        wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+
+        await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
+        testUtils.detectChanges();
+        tick();
+        testUtils.detectChanges();
+
+        // When the component is destroyed
+        wrapper.ngOnDestroy();
+
+        // Then it unsubscribed from the part
+        check();
     }));
 });
 

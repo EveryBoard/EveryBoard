@@ -7,7 +7,6 @@ import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/Request';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
@@ -22,9 +21,8 @@ import { Utils } from 'src/app/utils/utils';
 import { ConfigRoomService } from '../ConfigRoomService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp, Unsubscribe } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { PartService } from '../PartService';
 
 describe('GameService', () => {
@@ -60,7 +58,7 @@ describe('GameService', () => {
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    it('startObserving should delegate callback to partDAO', fakeAsync(async() => {
+    it('subscribeToChanges should delegate callback to partDAO', fakeAsync(async() => {
         // Given an existing part
         const part: Part = {
             lastUpdate: {
@@ -85,19 +83,13 @@ describe('GameService', () => {
         spyOn(partDAO, 'subscribeToChanges').and.callThrough();
 
         // When observing the part
-        service.startObserving('partId', myCallback);
+        const unsubscribe: Unsubscribe = service.subscribeToChanges('partId', myCallback);
 
-        // Then subscribeToChanges should be called and the part should be observed
+        // Then subscribeToChanges should be called on the DAO and the part should be observed
         expect(partDAO.subscribeToChanges).toHaveBeenCalledWith('partId', myCallback);
         expect(calledCallback).toBeTrue();
-    }));
-    it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
-        await partDAO.set('myConfigRoomId', PartMocks.INITIAL);
 
-        expect(() => {
-            service.startObserving('myConfigRoomId', (_part: MGPOptional<Part>) => {});
-            service.startObserving('myConfigRoomId', (_part: MGPOptional<Part>) => {});
-        }).toThrowError('GameService.startObserving should not be called while already observing a game');
+        unsubscribe();
     }));
     it('should delegate delete to PartDAO', fakeAsync(async() => {
         spyOn(partDAO, 'delete');
@@ -134,7 +126,7 @@ describe('GameService', () => {
 
         await service.acceptConfig('partId', configRoom);
 
-        expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith();
+        expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
     }));
     it('createPartConfigRoomAndChat should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
         const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);

@@ -169,7 +169,7 @@ describe('ConnectedUserService', () => {
     }));
     it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
         const userService: UserService = TestBed.inject(UserService);
-        spyOn(userService, 'markVerified');
+        spyOn(userService, 'markAsVerified');
 
         // given a registered user that has finalized all steps to verify its account
         const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
@@ -191,7 +191,7 @@ describe('ConnectedUserService', () => {
         await userHasUpdated;
 
         // then its status is set to verified
-        expect(userService.markVerified).toHaveBeenCalledWith(uid);
+        expect(userService.markAsVerified).toHaveBeenCalledWith(uid);
 
         subscription.unsubscribe();
     });
