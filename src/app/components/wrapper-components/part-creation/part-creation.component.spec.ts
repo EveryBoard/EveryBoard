@@ -706,6 +706,7 @@ describe('PartCreationComponent', () => {
                 // Given a partCreation where user is candidate
                 awaitComponentInitialisation();
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.candidates).toEqual([UserMocks.OPPONENT_MINIMAL_USER]);
 
                 // When leaving the page (tested here by calling ngOnDestroy)
                 const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);

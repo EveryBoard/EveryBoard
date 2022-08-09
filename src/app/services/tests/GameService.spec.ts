@@ -136,7 +136,7 @@ describe('GameService', () => {
         const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
         const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
         // Install some mocks to check what we need
-        // (we can't rely on toHaveBeenCalled for some strange reason, so we model this manually)
+        // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
         let chatCreated: boolean = false;
         let configRoomCreated: boolean = false;
         spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
@@ -353,7 +353,7 @@ describe('GameService', () => {
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
 
             // Install some mocks to check what we need
-            // (we can't rely on toHaveBeenCalled for some strange reason, so we model this manually)
+            // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
             let chatCreated: boolean = false;
             let configRoomCreated: boolean = false;
             spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
