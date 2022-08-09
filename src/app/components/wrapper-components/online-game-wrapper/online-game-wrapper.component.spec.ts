@@ -19,6 +19,7 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
+import { GameService } from 'src/app/services/GameService';
 
 describe('OnlineGameWrapper for non-existing game', () => {
     let testUtils: ComponentTestUtils<AbstractGameComponent>;
@@ -249,11 +250,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
-    xit('should unsubscribe from the part upon destruction', fakeAsync(async() => {
+    it('should unsubscribe from the part upon destruction', fakeAsync(async() => {
         // Given a started part
-        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(ConfigRoomService), 'subscribeToChanges');
         testUtils = await ComponentTestUtils.basic('P4');
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
+        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
 
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
@@ -262,6 +263,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         testUtils.detectChanges();
         tick();
         testUtils.detectChanges();
+        tick(1); // Need to wait for startPart to be called
 
         // When the component is destroyed
         wrapper.ngOnDestroy();
@@ -270,4 +272,3 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         check();
     }));
 });
-
