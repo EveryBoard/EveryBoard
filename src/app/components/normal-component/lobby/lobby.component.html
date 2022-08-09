@@ -52,12 +52,12 @@
 <div *ngIf="currentTab === 'chat'"
      id="chatTab"
      class="columns">
-    <div id="chatContainerDiv" class="column is-9">
+    <div id="chatContainerDiv" class="column is-12">
         <div id="chat" class="box">
             <app-chat chatId="server" [turn]="-1"></app-chat>
         </div>
     </div>
-    <div class="column is-3">
+    <div class="column is-3 is-hidden">
         <div id="onlineUsers" class="box">
             <p i18n>Connected users:</p>
             <ul id="activeUsersList">
