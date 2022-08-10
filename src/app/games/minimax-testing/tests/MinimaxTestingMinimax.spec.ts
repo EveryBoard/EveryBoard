@@ -12,7 +12,7 @@ describe('MinimaxTestingMinimax', () => {
         rules = new MinimaxTestingRules(MinimaxTestingState);
         minimax = new MinimaxTestingMinimax(rules, 'Minimax Testing Minimax');
     });
-    it('IA should avoid losing 4 moves in a row', () => {
+    it('AI should avoid losing 4 moves in a row', () => {
         MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_1;
         let bestMove: MinimaxTestingMove;
         for (let i: number = 1; i < 5; i++) {
@@ -29,7 +29,7 @@ describe('MinimaxTestingMinimax', () => {
         expect(rules.node.getHopedValue(minimax)).toEqual(Number.MIN_SAFE_INTEGER);
         expect(rules.node.countDescendants()).toEqual(10);
     });
-    it('IA(depth=1) should create exactly 2 child at each turn before reaching the border', () => {
+    it('AI(depth=1) should create exactly 2 child at each turn before reaching the border', () => {
         MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_0;
         const initialNode: MinimaxTestingNode = rules.node;
         let bestMove: MinimaxTestingMove;

@@ -1878,23 +1878,21 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
-            const forbiddenFunctionNames: string[] = [
-                'canProposeDraw', // non async
-                'canAskTakeBack', // non async
-                'acceptRematch',
-                'proposeRematch',
-                'canResign', // non async
+            const forbiddenFunctions: { name: string, isAsync: boolean } [] = [
+                { name: 'canProposeDraw', isAsync: false },
+                { name: 'canAskTakeBack', isAsync: false },
+                { name: 'acceptRematch', isAsync: true },
+                { name: 'proposeRematch', isAsync: true },
+                { name: 'canResign', isAsync: false },
             ];
-            for (const name of forbiddenFunctionNames) {
-                let failed: boolean = false;
-                const expectedError: string = 'Non playing should not call ' + name;
-                try {
-                    await wrapper[name]();
-                } catch (error) {
-                    expect(error.message).toBe('Assertion failure: ' + expectedError);
-                    failed = true;
+            for (const forbiddenFunction of forbiddenFunctions) {
+                const expectedError: string = 'Non playing should not call ' + forbiddenFunction.name;
+                const expectedMessage: string = 'Assertion failure: ' + expectedError;
+                if (forbiddenFunction.isAsync) {
+                    await expectAsync(wrapper[forbiddenFunction.name]()).toBeRejectedWithError(expectedMessage);
+                } else {
+                    expect(() => wrapper[forbiddenFunction.name]()).toThrowError(expectedMessage);
                 }
-                expect(failed).toBeTrue(); // TODO FOR REVIEW: this one is the last remaining monster!
                 expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', expectedError);
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);

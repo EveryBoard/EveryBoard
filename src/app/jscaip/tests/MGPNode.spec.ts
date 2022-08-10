@@ -13,27 +13,29 @@ class GameStateMock extends GameState {
     }
 }
 class MoveMock extends Move {
+
     public toString(): string {
-        throw new Error('g Method not implemented.');
+        throw new Error('MoveMock.toString method not implemented.');
     }
     public equals(o: this): boolean {
-        throw new Error('f Method not implemented.');
+        throw new Error('MoveMock.equals method not implemented.');
     }
 }
 class RulesMock extends Rules<MoveMock, GameStateMock> {
+
     public applyLegalMove(move: MoveMock, state: GameStateMock, info: void): GameStateMock {
-        throw new Error('e Method not implemented.');
+        throw new Error('RulesMock.applyLegalMove method not implemented.');
     }
     public isLegal(move: MoveMock, state: GameStateMock): MGPFallible<void> {
-        throw new Error('d Method not implemented.');
+        throw new Error('RulesMock.isLegal method not implemented.');
     }
     public getGameStatus(node: MGPNode<RulesMock, MoveMock, GameStateMock>): GameStatus {
-        throw new Error('c Method not implemented.');
+        throw new Error('RulesMock.getGameStatus method not implemented.');
     }
 }
 class MockMinimax extends Minimax<MoveMock, GameStateMock> {
     public getListMoves(node: MGPNode<RulesMock, MoveMock, GameStateMock>): MoveMock[] {
-        throw new Error('b Method not implemented.');
+        throw new Error('MockMinimax.getListMoves method not implemented.');
     }
     public getBoardValue(node: MGPNode<RulesMock, MoveMock, GameStateMock>): NodeUnheritance {
         return new NodeUnheritance(0);
