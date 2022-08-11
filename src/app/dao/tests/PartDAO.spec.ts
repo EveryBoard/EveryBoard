@@ -726,23 +726,23 @@ describe('PartDAO', () => {
             }
         }
         describe('decreasing time', () => {
-            it('should forbid decreasing its own time (no move, as playerZero)', async() => {
+            it('should allow decreasing its own time outside of move (as playerZero)', async() => {
                 await checkTimeUpdate(Player.ZERO,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForZero: zero - 1000 };
-                                      }, false);
+                                      }, true);
             });
-            it('should forbid decreasing its own time (move, as playerZero)', async() => {
+            it('should forbid decreasing its own time during move (as playerZero)', async() => {
                 await checkTimeUpdate(Player.ZERO,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForZero: zero - 1000, turn: 1, listMoves: [1] };
                                       }, false);
             });
-            it('should forbid decreasing the time of the opponent outside of move (as playerZero)', async() => {
+            it('should allow decreasing the time of the opponent outside of move (as playerZero)', async() => {
                 await checkTimeUpdate(Player.ZERO,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForOne: one - 1000 };
-                                      }, false);
+                                      }, true);
             });
             it('should allow decreasing the time of the opponent during move (as playerZero)', async() => {
                 await checkTimeUpdate(Player.ZERO,
@@ -750,23 +750,23 @@ describe('PartDAO', () => {
                                           return { remainingMsForOne: one - 1000, turn: 1, listMoves: [1] };
                                       }, true);
             });
-            it('should forbid decreasing its own time (no move, as playerOne)', async() => {
+            it('should allow decreasing its own time outside of move (as playerOne)', async() => {
                 await checkTimeUpdate(Player.ONE,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForOne: one - 1000 };
-                                      }, false);
+                                      }, true);
             });
-            it('should forbid decreasing its own time (move, as playerOne)', async() => {
+            it('should forbid decreasing its own time during move (as playerOne)', async() => {
                 await checkTimeUpdate(Player.ONE,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForOne: one - 1000, turn: 2, listMoves: [1, 2] };
                                       }, false);
             });
-            it('should forbid decreasing the time of the opponent outside of move (as playerOne)', async() => {
+            it('should allow decreasing the time of the opponent outside of move (as playerOne)', async() => {
                 await checkTimeUpdate(Player.ONE,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForZero: zero - 1000 };
-                                      }, false);
+                                      }, true);
             });
             it('should allow decreasing the time of the opponent during move (as playerOne)', async() => {
                 await checkTimeUpdate(Player.ONE,
