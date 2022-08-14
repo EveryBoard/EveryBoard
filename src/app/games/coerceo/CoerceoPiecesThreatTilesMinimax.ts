@@ -14,7 +14,6 @@ import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Vector } from 'src/app/jscaip/Direction';
-import { assert } from 'src/app/utils/assert';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
