@@ -3,7 +3,7 @@ import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/util
 import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder, NumberEncoder } from './Encoder';
+import { Encoder, NumberEncoder } from '../utils/Encoder';
 
 export class Coord implements ComparableObject {
 

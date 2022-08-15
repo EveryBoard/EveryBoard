@@ -4,7 +4,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('EpaminondasMove: ', () => {
 
@@ -35,13 +35,13 @@ describe('EpaminondasMove: ', () => {
     });
     it('Should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
-        const neighboor: EpaminondasMove = new EpaminondasMove(0, 0, 2, 1, Direction.UP);
+        const neighbor: EpaminondasMove = new EpaminondasMove(0, 0, 2, 1, Direction.UP);
         const twin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
         const firstCousin: EpaminondasMove = new EpaminondasMove(4, 3, 1, 1, Direction.UP);
         const secondCousin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 2, Direction.UP);
         const thirdCousin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.LEFT);
         expect(move.equals(move)).toBeTrue();
-        expect(move.equals(neighboor)).toBeFalse();
+        expect(move.equals(neighbor)).toBeFalse();
         expect(move.equals(firstCousin)).toBeFalse();
         expect(move.equals(secondCousin)).toBeFalse();
         expect(move.equals(thirdCousin)).toBeFalse();

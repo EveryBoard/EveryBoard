@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PentagoMinimax } from '../PentagoMinimax';
@@ -12,8 +12,8 @@ describe('PentagoMinimax', () => {
     let rules: PentagoRules;
     let minimax: PentagoMinimax;
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = Player.ZERO;
-    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = new PentagoRules(PentagoState);

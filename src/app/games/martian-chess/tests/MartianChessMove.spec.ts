@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { EncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';

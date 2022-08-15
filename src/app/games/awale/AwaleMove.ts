@@ -1,4 +1,4 @@
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { assert } from 'src/app/utils/assert';
 

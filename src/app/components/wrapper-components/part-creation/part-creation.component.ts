@@ -93,7 +93,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
     private allUserInterval: MGPOptional<number> = MGPOptional.empty();
     private ownTokenInterval: MGPOptional<number> = MGPOptional.empty();
-    private lastToken: Time
+    private lastToken: Time;
     private selfSubscription: () => void = () => {};
 
     public configFormGroup: FormGroup;

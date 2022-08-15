@@ -5,7 +5,8 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 export class PieceThreat implements ComparableObject {
 
     public constructor(public readonly directThreats: MGPSet<Coord>,
-                       public readonly mover: MGPSet<Coord>) { }
+                       public readonly mover: MGPSet<Coord>) {
+    }
 
     public equals(o: PieceThreat): boolean {
         return o.directThreats.equals(this.directThreats) &&

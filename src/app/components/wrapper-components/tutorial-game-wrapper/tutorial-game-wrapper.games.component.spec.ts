@@ -146,7 +146,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new EncapsuleRules(EncapsuleState),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromDrop(EncapsulePiece.BIG_BLACK, new Coord(0, 2)),
+                    EncapsuleMove.fromDrop(EncapsulePiece.BIG_DARK, new Coord(0, 2)),
                     MGPValidation.failure(`You won, but the exercise is to win while moving a piece!`),
                 ], [
                     new EncapsuleRules(EncapsuleState),

@@ -17,8 +17,8 @@ describe('SiamComponent', () => {
 
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
-    const U: SiamPiece = SiamPiece.WHITE_UP;
-    const u: SiamPiece = SiamPiece.BLACK_UP;
+    const U: SiamPiece = SiamPiece.LIGHT_UP;
+    const u: SiamPiece = SiamPiece.DARK_UP;
 
     async function expectMoveLegality(move: SiamMove): Promise<void> {
         if (move.isInsertion()) {

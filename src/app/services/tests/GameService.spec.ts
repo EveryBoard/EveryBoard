@@ -25,6 +25,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 
 describe('GameService', () => {
 
@@ -103,7 +104,7 @@ describe('GameService', () => {
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     }));
     it('should forbid to accept a take back that the players proposed themselves', fakeAsync(async() => {
-        spyOn(ErrorLoggerService, 'logError');
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         const error: string = 'Illegal to accept your own request';
         for (const player of Player.PLAYERS) {
             const part: PartDocument = new PartDocument('joinerId', {

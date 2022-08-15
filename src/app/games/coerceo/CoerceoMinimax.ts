@@ -38,11 +38,11 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
     public getListMovement(node: CoerceoNode): CoerceoMove[] {
         const movements: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
-        const PLAYER: Player = state.getCurrentPlayer();
+        const player: Player = state.getCurrentPlayer();
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const start: Coord = new Coord(x, y);
-                if (state.getPieceAt(start).is(PLAYER)) {
+                if (state.getPieceAt(start).is(player)) {
                     const legalLandings: Coord[] = state.getLegalLandings(start);
                     for (const end of legalLandings) {
                         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);

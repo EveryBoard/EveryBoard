@@ -6,16 +6,16 @@ import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 export abstract class TriangularGameState<T> extends GameStateWithTable<T> {
 
     public static getEmptyNeighbors<T>(board: Table<T>, coord: Coord, empty: T): Coord[] {
-        const neighboors: Coord[] = [];
-        for (const neighboor of TriangularCheckerBoard.getNeighbors(coord)) {
-            if (neighboor.isInRange(board[0].length, board.length) &&
-                (board[neighboor.y][neighboor.x] === empty)) {
-                neighboors.push(neighboor);
+        const neighbors: Coord[] = [];
+        for (const neighbor of TriangularCheckerBoard.getNeighbors(coord)) {
+            if (neighbor.isInRange(board[0].length, board.length) &&
+                (board[neighbor.y][neighbor.x] === empty)) {
+                neighbors.push(neighbor);
             }
         }
-        return neighboors;
+        return neighbors;
     }
-    public getEmptyNeighboors(coord: Coord, empty: T): Coord[] {
+    public getEmptyNeighbors(coord: Coord, empty: T): Coord[] {
         return TriangularGameState.getEmptyNeighbors(this.board, coord, empty);
     }
 }

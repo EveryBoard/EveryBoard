@@ -1,6 +1,6 @@
 import { GipfCapture } from 'src/app/games/gipf/GipfMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder, MoveEncoder } from 'src/app/jscaip/Encoder';
+import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';

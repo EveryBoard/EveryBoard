@@ -2,7 +2,7 @@
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasComponent } from '../epaminondas.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -16,8 +16,8 @@ describe('EpaminondasComponent', () => {
     let componentTestUtils: ComponentTestUtils<EpaminondasComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     function expectClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
@@ -181,7 +181,7 @@ describe('EpaminondasComponent', () => {
         expectClickable(0, 10);
         expectNotClickable(0, 11);
     }));
-    it('Should change first piece coord when clicked and last piece is neighboors', fakeAsync(async() => {
+    it('Should change first piece coord when clicked and last piece is neighbors', fakeAsync(async() => {
         const initialBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -200,7 +200,7 @@ describe('EpaminondasComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
-        await componentTestUtils.expectClickSuccess('#click_0_10'); // select last piece neighboor
+        await componentTestUtils.expectClickSuccess('#click_0_10'); // select last piece neighbor
         await componentTestUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
@@ -214,7 +214,7 @@ describe('EpaminondasComponent', () => {
         expectClickable(1, 10);
         expectClickable(1, 11);
     }));
-    it('Should change first piece coord when clicked and last piece exist but is not neighboors', fakeAsync(async() => {
+    it('Should change first piece coord when clicked and last piece exist but is not neighbors', fakeAsync(async() => {
         const initialBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -233,7 +233,7 @@ describe('EpaminondasComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
-        await componentTestUtils.expectClickSuccess('#click_0_9'); // select last piece neighboor
+        await componentTestUtils.expectClickSuccess('#click_0_9'); // select last piece neighbor
         await componentTestUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
@@ -244,7 +244,7 @@ describe('EpaminondasComponent', () => {
         expectNotClickable(0, 10);
         expectClickable(0, 11);
     }));
-    it('Should change last piece coord when clicked and first piece is neighboors', fakeAsync(async() => {
+    it('Should change last piece coord when clicked and first piece is neighbors', fakeAsync(async() => {
         const initialBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -263,7 +263,7 @@ describe('EpaminondasComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
-        await componentTestUtils.expectClickSuccess('#click_0_10'); // select last piece neighboor
+        await componentTestUtils.expectClickSuccess('#click_0_10'); // select last piece neighbor
 
         await componentTestUtils.expectClickSuccess('#click_0_10'); // deselect last piece
 
@@ -276,7 +276,7 @@ describe('EpaminondasComponent', () => {
         expectClickable(1, 10);
         expectClickable(1, 11);
     }));
-    it('Should change last piece coord when clicked but first piece is not neighboors', fakeAsync(async() => {
+    it('Should change last piece coord when clicked but first piece is not neighbors', fakeAsync(async() => {
         const initialBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -295,7 +295,7 @@ describe('EpaminondasComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
-        await componentTestUtils.expectClickSuccess('#click_0_8'); // select last piece neighboor
+        await componentTestUtils.expectClickSuccess('#click_0_8'); // select last piece neighbor
 
         await componentTestUtils.expectClickSuccess('#click_0_8'); // deselect last piece
 

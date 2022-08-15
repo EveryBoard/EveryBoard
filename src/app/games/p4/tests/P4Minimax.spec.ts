@@ -12,9 +12,9 @@ describe('P4Minimax', () => {
 
     let minimax: P4Minimax;
     let rules: P4Rules;
-    const O: PlayerOrNone = Player.ZERO;
-    const X: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = new P4Rules(P4State);
@@ -58,7 +58,7 @@ describe('P4Minimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ZERO);
     });
-    it('First choice should be center at all IA depths', () => {
+    it('First choice should be center at all AI depths', () => {
         const initialState: P4State = P4State.getInitialState();
         for (let depth: number = 1; depth < 6; depth ++) {
             const node: P4Node = new P4Node(initialState);
