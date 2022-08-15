@@ -57,10 +57,10 @@ describe('KamisadoRules:', () => {
             const state: KamisadoState =
                 new KamisadoState(0, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
-            // when moving one piece up vertically
+            // When moving one piece up vertically
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
 
-            // then the move should be legal
+            // Then the move should be legal
             const expectedBoard: Table<KamisadoPiece> = [
                 [_, o, p, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -90,7 +90,7 @@ describe('KamisadoRules:', () => {
             const state: KamisadoState =
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
-            // When moving diagonaly without obstacles
+            // When moving diagonally without obstacles
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
 
             // Then the move should be deemed legal
@@ -308,7 +308,7 @@ describe('KamisadoRules:', () => {
             // When moving a piece not lineary
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(3, 5));
 
-            // Then the move should be juged illegal
+            // Then the move should be illegal
             const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -330,7 +330,7 @@ describe('KamisadoRules:', () => {
             // When moving opponent's piece
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
 
-            // Then move should be juged illegal
+            // Then move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });

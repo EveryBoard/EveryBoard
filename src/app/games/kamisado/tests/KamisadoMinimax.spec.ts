@@ -26,10 +26,15 @@ describe('KamisadoMinimax', () => {
         // Each piece on the side can do 6 vertical moves and 6 diagonal ones = 12 moves per piece * 2 side pieces
         // Other pieces  can do 6 vertical and 7 diagonal = 13 moves per piece * 6 pieces
         // In total, that makes 102 possible moves
+
+        // Given the initial board
+        // When computing all moves
         const firstTurnMoves: KamisadoMove[] = minimax.getListMoves(rules.node);
+        // Then there should be exactly 102 moves
         expect(firstTurnMoves.length).toEqual(102);
     });
     it('should assign board values based on positions', () => {
+        // Given a board with one piece for each player, where zero is closer to its goal than one
         const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -43,6 +48,8 @@ describe('KamisadoMinimax', () => {
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const node: KamisadoNode = new KamisadoNode(state);
+        // When computing the board value
+        // Then the score should be the advantage of zero over one
         expect(minimax.getBoardValue(node).value).toEqual(2);
     });
 });

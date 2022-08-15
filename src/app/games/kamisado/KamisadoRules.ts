@@ -130,10 +130,6 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return this.isLegalPass(state);
         }
 
-        if (KamisadoRules.isVictory(state)) {
-            return MGPFallible.failure('You should never see this message');
-        }
-
         // A move is legal if:
         //   - the move is within the board (this has been checked when constructing the move)
         //   - start piece should be owned by the current player
@@ -176,10 +172,6 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         } else {
             return MGPFallible.failure(RulesFailure.CANNOT_PASS());
         }
-    }
-    private static isVictory(state: KamisadoState): boolean {
-        const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(state);
-        return furthest0 === 0 || furthest1 === 7;
     }
     // Returns the next coord that plays
     public nextCoordToPlay(state: KamisadoState, colorToPlay: KamisadoColor): MGPOptional<Coord> {

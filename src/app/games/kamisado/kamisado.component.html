@@ -1,6 +1,6 @@
 <svg  xmlns="http://www.w3.org/2000/svg"
       width="100%" height="auto"
-      [attr.viewBox]="'-4 -4 ' + (8 * SPACE_SIZE) + ' ' + (8 + 8 * SPACE_SIZE)"
+      [attr.viewBox]="'-4 -4 ' + (8 + 8 * SPACE_SIZE) + ' ' + (8 + 8 * SPACE_SIZE)"
       preserveAspectRatio="xMidYMid meet"
 >
     <g *ngFor="let line of board; index as y">
@@ -20,7 +20,7 @@
                 <circle *ngIf="caseContent !== UNOCCUPIED"
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
                         [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
-                        [attr.fill]="pieceColor(caseContent)"
+                        [ngClass]="piecePlayerClass(caseContent)"
                         [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                         class="base-no-fill"
                 />
@@ -31,7 +31,7 @@
                       [attr.ry]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
                       [attr.width]="SPACE_SIZE/4"
                       [attr.height]="SPACE_SIZE/4"
-                      [ngClass]="piecePlayerClass(caseContent)"
+                      [attr.fill]="pieceColor(caseContent)"
                       class="no-stroke"
                 />
             </g>
@@ -54,6 +54,6 @@
     <circle *ngIf="chosen.isPresent()"
             [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
             [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
-            r="30"
+            [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
             class="base mid-stroke no-fill highlighted"/>
 </svg>

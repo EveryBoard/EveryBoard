@@ -7,7 +7,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
 
     public static WIDTH: number = 11;
     public static HEIGHT: number = 5;
-    public static EXCLUDED_CASES: ReadonlyArray<number> = [2, 1];
+    public static EXCLUDED_SPACES: ReadonlyArray<number> = [2, 1];
 
     /* Returns the following board:
      *   W B B B W W B D B
@@ -43,7 +43,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
                        // Did a PASS move have been performed on the last turn?
                        public readonly alreadyPassed: boolean)
     {
-        super(turn, board, DvonnState.WIDTH, DvonnState.HEIGHT, DvonnState.EXCLUDED_CASES, DvonnPieceStack.EMPTY);
+        super(turn, board, DvonnState.WIDTH, DvonnState.HEIGHT, DvonnState.EXCLUDED_SPACES, DvonnPieceStack.EMPTY);
     }
     public getAllPieces(): Coord[] {
         const pieces: Coord[] = [];

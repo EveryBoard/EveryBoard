@@ -89,11 +89,12 @@ export class LinesOfActionTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing`,
-            $localize`If a move ends on an opponent's pieces, this one is captured and removed from the board.
+            $localize`If a move ends on an opponent's piece, it is captured and removed from the board.
         However, a move cannot end on one of the player's pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
         If a player has only one piece, that player wins the game.<br/><br/>
         On the following board, try to capture one piece with Dark.`,
+            // TODO TODO: use predicate (add previousState) ');
             new LinesOfActionState([
                 [_, O, _, O, O, O, O, _],
                 [X, _, _, _, _, _, _, X],
@@ -106,7 +107,7 @@ export class LinesOfActionTutorial {
             ], 0),
             [LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get()],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed!`
         ),
         TutorialStep.fromMove(
             $localize`Tie`,
