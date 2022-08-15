@@ -25,7 +25,7 @@ export class UserMocks {
                                                                        MGPOptional.of('firstCandidate'),
                                                                        true);
 
-    public static readonly OTHER_OPPONENT_AUTH_USER: AuthUser = new AuthUser('whoever88',
+    public static readonly OTHER_OPPONENT_AUTH_USER: AuthUser = new AuthUser('whoever73',
                                                                              MGPOptional.of('forgotten@everywhere'),
                                                                              MGPOptional.of('ForeverAlone'),
                                                                              true);

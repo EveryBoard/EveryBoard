@@ -615,6 +615,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         if (opponentName.isPresent()) {
             const onDocumentCreatedOrModified: (f: UserDocument[]) => void = (user: UserDocument[]) => {
+                assert(user.length === 1, 'List of opponent should only have one element!');
                 this.opponent = user[0].data;
             };
             const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {

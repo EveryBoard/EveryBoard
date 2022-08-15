@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { serverTimestamp } from 'firebase/firestore';
 import * as FireAuth from '@angular/fire/auth';
 import { User } from 'src/app/domain/User';
@@ -52,7 +52,7 @@ describe('UserDAO', () => {
         });
     });
     describe('setUsername', () => {
-        it('should change the username of a user', async() => {
+        it('should change the username of a user', fakeAsync(async() => {
             // given a google user
             const user: FireAuth.User = await createConnectedGoogleUser(true);
             const uid: string = user.uid;
@@ -65,7 +65,7 @@ describe('UserDAO', () => {
             expect(userWithUsername.username).toEqual('foo');
 
             await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
-        });
+        }));
     });
     describe('updatePresenceToken', () => {
         it('should delegate to update', async() => {

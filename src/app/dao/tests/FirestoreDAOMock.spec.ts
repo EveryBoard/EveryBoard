@@ -117,7 +117,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             const serverData: UpdateData<T> =
                 this.updateFieldValueWith(data, FirestoreDAOMock.mockServerTime());
             // We do not await here to simulate the fact that the server will take some time to send us the update
-            void this.internalUpdate(id, serverData);
+            await this.internalUpdate(id, serverData);
         }
     }
     public async internalSet(id: string, data: T): Promise<void> {

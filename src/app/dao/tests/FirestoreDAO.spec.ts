@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
 import { FirestoreJSONObject } from 'src/app/utils/utils';

@@ -249,10 +249,10 @@ describe('ChatComponent', () => {
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
         }));
-        it('should not loadChatContent when user is online, then updated but still online', fakeAsync(() => {
+        it('should not loadChatContent when user is online, then updated but still online', fakeAsync(async() => {
             // Given a chat component
             const userDAO: UserDAO = TestBed.inject(UserDAO);
-            void userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
+            await userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
             tick();
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             testUtils.detectChanges();

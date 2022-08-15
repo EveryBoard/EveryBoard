@@ -1,5 +1,6 @@
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { FirestoreJSONObject } from '../utils/utils';
+import { MinimalUser } from './MinimalUser';
 import { FirestoreTime } from './Time';
 
 export type UserDocument = FirestoreDocument<User>
@@ -17,6 +18,6 @@ export interface User extends FirestoreJSONObject {
 export interface FocussedPart extends FirestoreJSONObject {
     id: string,
     typeGame: string,
-    opponentId?: string
+    opponent?: MinimalUser,
     role: UserRoleInPart,
 }

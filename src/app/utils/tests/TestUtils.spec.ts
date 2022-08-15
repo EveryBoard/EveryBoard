@@ -98,11 +98,11 @@ export class SimpleComponentTestUtils<T> {
             ],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
@@ -114,14 +114,16 @@ export class SimpleComponentTestUtils<T> {
     }
     private constructor() {}
 
-    public async clickElement(elementName: string): Promise<void> {
+    public async clickElement(elementName: string, awaitStability: boolean = true): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
             return;
         }
         element.triggerEventHandler('click', null);
-        await this.fixture.whenStable();
+        if (awaitStability) {
+            await this.fixture.whenStable();
+        }
         this.detectChanges();
     }
     public getComponent(): T {

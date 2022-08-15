@@ -29,7 +29,7 @@ describe('HeaderComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             spyOn(testUtils.getComponent().connectedUserService, 'disconnect');
-            void testUtils.clickElement('#logout');
+            await testUtils.clickElement('#logout');
             tick();
             const component: HeaderComponent = testUtils.getComponent();
             expect(component.connectedUserService.disconnect).toHaveBeenCalledTimes(1);
@@ -39,7 +39,7 @@ describe('HeaderComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             const observedPart: FocussedPart = {
                 id: '123',
-                opponent: 'Jean-Jaja',
+                opponent: { id: 'jeanjajar', name: 'Jean-Jaja' },
                 typeGame: 'P4',
                 role: 'Candidate',
             };
@@ -99,7 +99,7 @@ describe('HeaderComponent', () => {
             // When user become linked to an observedPart
             const observedPart: FocussedPart = {
                 id: '123',
-                opponent: 'Jean-Jaja',
+                opponent: { id: 'jjj', name: 'Jean-Jaja' },
                 typeGame: 'P4',
                 role: 'Candidate',
             };

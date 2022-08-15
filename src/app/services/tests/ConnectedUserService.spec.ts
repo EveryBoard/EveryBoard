@@ -693,7 +693,7 @@ describe('ConnectedUserService', () => {
         describe('updateObservedPart', () => {
             const observedPart: FocussedPart = {
                 id: 'some-part-doc-id',
-                opponent: 'whoever',
+                opponent: { id: '123quatre', name: 'Jean Jaja Del Jaaj' },
                 typeGame: 'le jeu',
                 role: 'Creator',
             };

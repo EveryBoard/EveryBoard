@@ -33,7 +33,7 @@
         <div class="navbar-end">
             <a *ngIf="observedPart.isPresent()" id="observedPartLink" class="navbar-item"
             ><ng-container *ngIf="observedPart.get().opponent else waitingForOpponent" i18n
-            >{{ observedPart.get().typeGame }} against {{ observedPart.get().opponent }}</ng-container><ng-template #waitingForOpponent><ng-container i18n>{{ observedPart.get().typeGame }} (waiting for opponent)</ng-container></ng-template></a>
+            >{{ observedPart.get().typeGame }} against {{ observedPart.get().opponent.name }}</ng-container><ng-template #waitingForOpponent><ng-container i18n>{{ observedPart.get().typeGame }} (waiting for opponent)</ng-container></ng-template></a>
 
             <a class="navbar-item" [routerLink]="['/settings']" i18n-data-tooltip data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
 

@@ -465,7 +465,7 @@ describe('LobbyComponent', () => {
         expect(activePartsService.stopObserving).toHaveBeenCalledOnceWith();
     }));
 
-    it('should display firebase time HH:mm:ss', fakeAsync(() => {
+    it('should display firebase time HH:mm:ss', fakeAsync(async() => {
         // Given a lobby in which we observe tab chat, and where one user is here
         const HH: number = 11 * 3600;
         const mm: number = 34 * 60;
@@ -475,9 +475,9 @@ describe('LobbyComponent', () => {
             ...UserMocks.CREATOR,
             last_changed: { seconds: timeStampInSecond, nanoseconds: 0 },
         };
-        void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.id, userWithLastChange);
+        await TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.id, userWithLastChange);
         tick();
-        void testUtils.clickElement('#tab-chat');
+        await testUtils.clickElement('#tab-chat');
         tick();
 
         // When rendering it
