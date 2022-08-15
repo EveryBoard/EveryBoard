@@ -153,7 +153,6 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-
     it('Should prefer current player to be falsely threatened than really threatened (direct threat is fake)', () => {
         // Given a weakBoard where current player is really threatened
         const weakBoard: Table<FourStatePiece> = [

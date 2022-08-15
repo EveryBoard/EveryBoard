@@ -237,7 +237,7 @@ describe('LocalGameWrapperComponent', () => {
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
             spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            // given a board on which some illegal move are possible from the IA
+            // given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
             spyOn(componentTestUtils.getComponent().rules, 'choose').and.returnValue(false);
             spyOn(componentTestUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);

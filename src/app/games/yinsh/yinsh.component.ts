@@ -326,7 +326,7 @@ export class YinshComponent
         if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST') {
             this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';
         } else {
-            assert(this.movePhase === 'FINAL_CAPTURE_SELECT_FIRST', 'moveToCaptureSelectLast did not expect to be called in movePhase' + this.movePhase);
+            Utils.expectToBe(this.movePhase, 'FINAL_CAPTURE_SELECT_FIRST', 'moveToCaptureSelectLast did not expect to be called in movePhase' + this.movePhase);
             this.movePhase = 'FINAL_CAPTURE_SELECT_LAST';
         }
     }

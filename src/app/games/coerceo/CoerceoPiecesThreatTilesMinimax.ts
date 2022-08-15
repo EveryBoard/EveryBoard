@@ -81,7 +81,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
         const opponent: Player = threatenerPlayer.getOpponent();
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
-        const emptiableTiles: Coord[] = [];
+        let emptiableNeighborTile: MGPOptional<Coord> = MGPOptional.empty();
         let directThreats: Coord[] = [];
         const neighbors: Coord[] = TriangularCheckerBoard
             .getNeighbors(coord)
@@ -91,7 +91,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             if (threat.is(opponent)) {
                 directThreats.push(directThreat);
                 if (this.tileCouldBeRemovedThisTurn(directThreat, state, opponent)) {
-                    emptiableTiles.push(directThreat);
+                    emptiableNeighborTile = MGPOptional.of(directThreat);
                 }
             } else if (threat === FourStatePiece.EMPTY) {
                 if (uniqueFreedom.isPresent()) {
@@ -117,9 +117,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 return MGPOptional.of(new PieceThreat(new CoordSet(directThreats), new CoordSet(movingThreats)));
             }
         }
-        if (emptiableTiles.length > 0) {
-            directThreats = directThreats.filter((c: Coord) => c.equals(emptiableTiles[0]));
-            return MGPOptional.of(new PieceThreat(new CoordSet(directThreats), new CoordSet([emptiableTiles[0]])));
+        if (emptiableNeighborTile.isPresent()) {
+            directThreats = directThreats.filter((c: Coord) => c.equals(emptiableNeighborTile.get()));
+            const directThreatsSet: CoordSet = new CoordSet(directThreats);
+            return MGPOptional.of(new PieceThreat(directThreatsSet, new CoordSet([emptiableNeighborTile.get()])));
         }
         return MGPOptional.empty();
     }
