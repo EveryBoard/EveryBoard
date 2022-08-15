@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { YinshPiece } from '../YinshPiece';

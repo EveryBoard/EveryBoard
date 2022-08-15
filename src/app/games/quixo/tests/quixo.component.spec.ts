@@ -7,7 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -17,8 +17,8 @@ describe('QuixoComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuixoComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<QuixoComponent>('Quixo');

@@ -29,16 +29,16 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                                                   SixNodeUnheritance>
 {
 
-    private static INSTANCE: SixMinimax;
+    private static singleton: MGPOptional<SixMinimax> = MGPOptional.empty();
 
     public VERBOSE: boolean = false;
 
     public static get(): SixMinimax {
-        if (SixMinimax.INSTANCE == null) {
+        if (SixMinimax.singleton.isAbsent()) {
             const rules: SixRules = new SixRules(SixState);
-            SixMinimax.INSTANCE = new SixMinimax(rules, 'SixMinimax');
+            SixMinimax.singleton = MGPOptional.of(new SixMinimax(rules, 'SixMinimax'));
         }
-        return SixMinimax.INSTANCE;
+        return SixMinimax.singleton.get();
     }
     private currentVictorySource: SixVictorySource;
 

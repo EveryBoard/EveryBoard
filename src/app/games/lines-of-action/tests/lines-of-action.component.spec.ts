@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LinesOfActionComponent } from '../lines-of-action.component';
 import { LinesOfActionMove } from '../LinesOfActionMove';
@@ -13,9 +13,9 @@ import { Table } from 'src/app/utils/ArrayUtils';
 describe('LinesOfActionComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<LinesOfActionComponent>;
-    const X: PlayerOrNone = Player.ZERO;
-    const O: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
@@ -35,14 +35,14 @@ describe('LinesOfActionComponent', () => {
     }));
     it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
-            [O, X, X, X, X, X, X, _],
-            [X, X, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, _, X, X, X, X, _],
+            [X, O, O, O, O, O, O, _],
+            [O, O, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         componentTestUtils.setupState(state);
@@ -74,14 +74,14 @@ describe('LinesOfActionComponent', () => {
     }));
     it('should show captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
-            [O, X, X, X, X, X, X, X],
-            [_, _, _, _, _, _, _, O],
-            [_, _, O, _, _, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, _, X, X, X, X, _],
+            [X, O, O, O, O, O, O, O],
+            [_, _, _, _, _, _, _, X],
+            [_, _, X, _, _, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         componentTestUtils.setupState(state);

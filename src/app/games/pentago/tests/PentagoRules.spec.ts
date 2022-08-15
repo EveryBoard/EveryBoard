@@ -16,8 +16,8 @@ describe('PentagoRules', () => {
     let rules: PentagoRules;
     let minimaxes: Minimax<PentagoMove, PentagoState>[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = Player.ZERO;
-    const X: PlayerOrNone = Player.ONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = new PentagoRules(PentagoState);

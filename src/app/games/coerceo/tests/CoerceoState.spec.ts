@@ -7,44 +7,44 @@ describe('CoerceoState', () => {
 
     describe('isDeconnectable', () => {
         const dummyCoord: Coord = new Coord(-1, -1);
-        it('Should not deconnect tile with more than 3 neighboor (v _ _ v v v)', () => {
+        it('Should not deconnect tile with more than 3 neighbor (v _ _ v v v)', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 1, 2, 3, 4, 5]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0, 1, 2, 3, 4, 5]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
-        it('Should deconnect when 3 adjacent neighboor (v v v _ _ _ )', () => {
+        it('Should deconnect when 3 adjacent neighbor (v v v _ _ _ )', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 1, 2]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0, 1, 2]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
-        it('Should not deconnect when 3 splitted neighboor (v v _ v _ _)', () => {
+        it('Should not deconnect when 3 splitted neighbor (v v _ v _ _)', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 1, 3]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0, 1, 3]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
-        it('Should not deconnect when 3 splitted neighboor (v _ v v _ _)', () => {
+        it('Should not deconnect when 3 splitted neighbor (v _ v v _ _)', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 2, 3]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0, 2, 3]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
-        it('Should deconnect when 2 adjacent neighboor (v v _ _ _ _)', () => {
+        it('Should deconnect when 2 adjacent neighbor (v v _ _ _ _)', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 1]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0, 1]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
-        it('Should deconnect when 2 adjacent neighboor (v _ _ _ _ v)', () => {
+        it('Should deconnect when 2 adjacent neighbor (v _ _ _ _ v)', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 5]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0, 5]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
-        it('Should not deconnect when 2 non adjacent neighboor (v _ v _ _ _)', () => {
+        it('Should not deconnect when 2 non adjacent neighbor (v _ v _ _ _)', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 2]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0, 2]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
-        it('Should deconnect when only one neighboor', () => {
+        it('Should deconnect when only one neighbor', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);
-            spyOn(state, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0]);
+            spyOn(state, 'getPresentNeighborTilesRelativeIndexes').and.returnValue([0]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
     });

@@ -9,35 +9,35 @@ export class SiamPiece {
 
     public static readonly EMPTY: SiamPiece = new SiamPiece(0);
 
-    public static readonly WHITE_UP: SiamPiece = new SiamPiece(1);
+    public static readonly LIGHT_UP: SiamPiece = new SiamPiece(1);
 
-    public static readonly WHITE_RIGHT: SiamPiece = new SiamPiece(2);
+    public static readonly LIGHT_RIGHT: SiamPiece = new SiamPiece(2);
 
-    public static readonly WHITE_DOWN: SiamPiece = new SiamPiece(3);
+    public static readonly LIGHT_DOWN: SiamPiece = new SiamPiece(3);
 
-    public static readonly WHITE_LEFT: SiamPiece = new SiamPiece(4);
+    public static readonly LIGHT_LEFT: SiamPiece = new SiamPiece(4);
 
-    public static readonly BLACK_UP: SiamPiece = new SiamPiece(5);
+    public static readonly DARK_UP: SiamPiece = new SiamPiece(5);
 
-    public static readonly BLACK_RIGHT: SiamPiece = new SiamPiece(6);
+    public static readonly DARK_RIGHT: SiamPiece = new SiamPiece(6);
 
-    public static readonly BLACK_DOWN: SiamPiece = new SiamPiece(7);
+    public static readonly DARK_DOWN: SiamPiece = new SiamPiece(7);
 
-    public static readonly BLACK_LEFT: SiamPiece = new SiamPiece(8);
+    public static readonly DARK_LEFT: SiamPiece = new SiamPiece(8);
 
     public static readonly MOUNTAIN: SiamPiece = new SiamPiece(9);
 
     public static decode(value: SiamPieceValue): SiamPiece {
         switch (value) {
             case 0: return SiamPiece.EMPTY;
-            case 1: return SiamPiece.WHITE_UP;
-            case 2: return SiamPiece.WHITE_RIGHT;
-            case 3: return SiamPiece.WHITE_DOWN;
-            case 4: return SiamPiece.WHITE_LEFT;
-            case 5: return SiamPiece.BLACK_UP;
-            case 6: return SiamPiece.BLACK_RIGHT;
-            case 7: return SiamPiece.BLACK_DOWN;
-            case 8: return SiamPiece.BLACK_LEFT;
+            case 1: return SiamPiece.LIGHT_UP;
+            case 2: return SiamPiece.LIGHT_RIGHT;
+            case 3: return SiamPiece.LIGHT_DOWN;
+            case 4: return SiamPiece.LIGHT_LEFT;
+            case 5: return SiamPiece.DARK_UP;
+            case 6: return SiamPiece.DARK_RIGHT;
+            case 7: return SiamPiece.DARK_DOWN;
+            case 8: return SiamPiece.DARK_LEFT;
             case 9: return SiamPiece.MOUNTAIN;
         }
     }
@@ -78,15 +78,15 @@ export class SiamPiece {
     }
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
         if (player === Player.ZERO) {
-            if (orientation === Orthogonal.UP) return SiamPiece.WHITE_UP;
-            if (orientation === Orthogonal.RIGHT) return SiamPiece.WHITE_RIGHT;
-            if (orientation === Orthogonal.DOWN) return SiamPiece.WHITE_DOWN;
-            return SiamPiece.WHITE_LEFT;
+            if (orientation === Orthogonal.UP) return SiamPiece.LIGHT_UP;
+            if (orientation === Orthogonal.RIGHT) return SiamPiece.LIGHT_RIGHT;
+            if (orientation === Orthogonal.DOWN) return SiamPiece.LIGHT_DOWN;
+            return SiamPiece.LIGHT_LEFT;
         } else {
-            if (orientation === Orthogonal.UP) return SiamPiece.BLACK_UP;
-            if (orientation === Orthogonal.RIGHT) return SiamPiece.BLACK_RIGHT;
-            if (orientation === Orthogonal.DOWN) return SiamPiece.BLACK_DOWN;
-            return SiamPiece.BLACK_LEFT;
+            if (orientation === Orthogonal.UP) return SiamPiece.DARK_UP;
+            if (orientation === Orthogonal.RIGHT) return SiamPiece.DARK_RIGHT;
+            if (orientation === Orthogonal.DOWN) return SiamPiece.DARK_DOWN;
+            return SiamPiece.DARK_LEFT;
         }
     }
     private constructor(public readonly value: number) {}
@@ -97,14 +97,14 @@ export class SiamPiece {
     public toString(): string {
         switch (this.value) {
             case 0: return 'EMPTY';
-            case 1: return 'WHITE_UP';
-            case 2: return 'WHITE_RIGHT';
-            case 3: return 'WHITE_DOWN';
-            case 4: return 'WHITE_LEFT';
-            case 5: return 'BLACK_UP';
-            case 6: return 'BLACK_RIGHT';
-            case 7: return 'BLACK_DOWN';
-            case 8: return 'BLACK_LEFT';
+            case 1: return 'LIGHT_UP';
+            case 2: return 'LIGHT_RIGHT';
+            case 3: return 'LIGHT_DOWN';
+            case 4: return 'LIGHT_LEFT';
+            case 5: return 'DARK_UP';
+            case 6: return 'DARK_RIGHT';
+            case 7: return 'DARK_DOWN';
+            case 8: return 'DARK_LEFT';
             default:
                 // must be 9, according to this.value's type
                 Utils.expectToBe(this.value, 9);

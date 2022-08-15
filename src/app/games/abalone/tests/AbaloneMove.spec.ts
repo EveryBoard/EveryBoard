@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
 import { AbaloneState } from '../AbaloneState';

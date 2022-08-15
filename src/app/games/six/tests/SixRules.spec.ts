@@ -168,7 +168,7 @@ describe('SixRules', () => {
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should refuse dropping piece where its only neighboor is herself last turn', () => {
+        it('Should refuse dropping piece where its only neighbor is herself last turn', () => {
             // Given a board in phase 2
             const board: NumberTable = [
                 [_, _, O],
@@ -285,6 +285,26 @@ describe('SixRules', () => {
         });
     });
     describe('victories', () => {
+        describe('pre-victories', () => {
+            it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
+                const state: SixState = SixState.fromRepresentation([
+                    [X, X, X, X, X],
+                ], 2);
+                const previousMove: SixMove = SixMove.fromDrop(new Coord(0, 0));
+                RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimaxes);
+            });
+            it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
+                const state: SixState = SixState.fromRepresentation([
+                    [_, O, O, O],
+                    [O, O, O, X],
+                    [O, X, X, X],
+                    [O, X, X, _],
+
+                ], 2);
+                const previousMove: SixMove = SixMove.fromDrop(new Coord(2, 2));
+                RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimaxes);
+            });
+        });
         describe('Shape Victories', () => {
             it('Should consider winner player who align 6 pieces (playing on border)', () => {
                 // Given a board in pre-victory

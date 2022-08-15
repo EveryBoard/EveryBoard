@@ -24,14 +24,14 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn+1);
     }
-    public applyCaptures(state: YinshState, captures: ReadonlyArray<YinshCapture>): YinshState {
+    public applyCaptures(captures: ReadonlyArray<YinshCapture>, state: YinshState): YinshState {
         let computedState: YinshState = state;
         captures.forEach((capture: YinshCapture) => {
-            computedState = this.applyCapture(computedState, capture);
+            computedState = this.applyCapture(capture, computedState);
         });
         return computedState;
     }
-    public applyCapture(state: YinshState, capture: YinshCapture): YinshState {
+    public applyCapture(capture: YinshCapture, state: YinshState): YinshState {
         const board: Table<YinshPiece> = this.applyCaptureWithoutTakingRing(state, capture);
         return this.takeRing(new YinshState(board, state.sideRings, state.turn), capture.ringTaken.get());
     }
@@ -57,7 +57,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING());
         }
     }
-    public applyRingMoveAndFlip(state: YinshState, start: Coord, end: Coord): YinshState {
+    public applyRingMoveAndFlip(start: Coord, end: Coord, state: YinshState): YinshState {
         const player: number = state.getCurrentPlayer().value;
         // Move ring from start (only the marker remains) to
         // end (only the ring can be there, as it must land on an empty space)
@@ -86,7 +86,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         if (initialCapturesValidity.isFailure()) {
             return initialCapturesValidity.toFailedFallible();
         }
-        const stateAfterInitialCaptures: YinshState = this.applyCaptures(state, move.initialCaptures);
+        const stateAfterInitialCaptures: YinshState = this.applyCaptures(move.initialCaptures, state);
 
         const moveValidity: MGPValidation =
             this.moveValidity(stateAfterInitialCaptures, move.start, move.end.get());
@@ -94,13 +94,13 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             return moveValidity.toFailedFallible();
         }
         const stateAfterRingMove: YinshState =
-            this.applyRingMoveAndFlip(stateAfterInitialCaptures, move.start, move.end.get());
+            this.applyRingMoveAndFlip(move.start, move.end.get(), stateAfterInitialCaptures);
 
         const finalCapturesValidity: MGPValidation = this.capturesValidity(stateAfterRingMove, move.finalCaptures);
         if (finalCapturesValidity.isFailure()) {
             return finalCapturesValidity.toFailedFallible();
         }
-        const stateAfterFinalCaptures: YinshState = this.applyCaptures(stateAfterRingMove, move.finalCaptures);
+        const stateAfterFinalCaptures: YinshState = this.applyCaptures(move.finalCaptures, stateAfterRingMove);
 
         const noMoreCapturesValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCapturesValidity.isFailure()) {
@@ -173,7 +173,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             if (validity.isFailure()) {
                 return validity;
             }
-            updatedState = this.applyCapture(updatedState, capture);
+            updatedState = this.applyCapture(capture, updatedState);
         }
         return MGPValidation.SUCCESS;
     }

@@ -53,24 +53,6 @@ describe('SixMinimax', () => {
             expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
             expect(rules.node.countDescendants()).toBe(1);
         });
-        it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
-            const state: SixState = SixState.fromRepresentation([
-                [X, X, X, X, X],
-            ], 2);
-            const previousMove: SixMove = SixMove.fromDrop(new Coord(0, 0));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [minimax]);
-        });
-        it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
-            const state: SixState = SixState.fromRepresentation([
-                [_, O, O, O],
-                [O, O, O, X],
-                [O, X, X, X],
-                [O, X, X, _],
-
-            ], 2);
-            const previousMove: SixMove = SixMove.fromDrop(new Coord(2, 2));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [minimax]);
-        });
         it('should only count one preVictory when one coord is a forcing move for two lines', () => {
             const board: number[][] = [
                 [_, _, X, _, _, X],

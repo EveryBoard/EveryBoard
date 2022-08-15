@@ -38,21 +38,26 @@
             <a class="navbar-item" [routerLink]="['/settings']" i18n-data-tooltip data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
 
             <div class="navbar-item">
-                <ng-container *ngIf="username else connect">
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a id="connectedUserName" class="navbar-link">{{ username }}</a>
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
-                        </div>
-                    </div>
+                <ng-container *ngIf="loading else showUsernameOrLogin">
+                    <fa-icon [icon]="faSpinner" class="navbar-item fa-spin"></fa-icon>
                 </ng-container>
-                <ng-template #connect>
-                    <div class="buttons">
-                        <a class="button is-primary" [routerLink]="['/register']">
-                            <strong i18n>Register</strong>
-                        </a>
-                        <a class="button is-light" [routerLink]="['/login']" i18n>Log in</a>
-                    </div>
+                <ng-template #showUsernameOrLogin>
+                    <ng-container *ngIf="username.isPresent() else connect">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">{{username.get()}}</a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #connect>
+                        <div class="buttons">
+                            <a class="button is-primary" [routerLink]="['/register']">
+                                <strong i18n>Register</strong>
+                            </a>
+                            <a class="button is-light" [routerLink]="['/login']" i18n>Log in</a>
+                        </div>
+                    </ng-template>
                 </ng-template>
             </div>
         </div>

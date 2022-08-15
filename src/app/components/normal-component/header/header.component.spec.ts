@@ -59,13 +59,13 @@ describe('HeaderComponent', () => {
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.detectChanges();
         tick();
-        expect(testUtils.getComponent().username).toEqual('');
+        expect(testUtils.getComponent().username).toEqual(MGPOptional.empty());
     }));
     it('should show user email if the user has not set its username yet', fakeAsync(async() => {
         const email: string = 'jean@jaja.us';
         ConnectedUserServiceMock.setUser(new AuthUser('id', MGPOptional.of(email), MGPOptional.empty(), false));
         testUtils.detectChanges();
-        expect(testUtils.getComponent().username).toEqual(email);
+        expect(testUtils.getComponent().username).toEqual(MGPOptional.of(email));
     }));
     describe('observedPart', () => {
         it('should display information about current part of connection player', fakeAsync(async() => {

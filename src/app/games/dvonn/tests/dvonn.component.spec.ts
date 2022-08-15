@@ -57,7 +57,7 @@ describe('DvonnComponent', () => {
         await componentTestUtils.expectPassSuccess(move);
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
-        // select black piece (but white plays first)
+        // select dark piece (but light plays first)
         await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE());
     }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {

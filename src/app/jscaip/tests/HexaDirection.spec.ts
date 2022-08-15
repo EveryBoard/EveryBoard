@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { HexaDirection } from '../HexaDirection';
-import { NumberEncoderTestUtils } from './Encoder.spec';
 
 describe('HexaDirection', () => {
 

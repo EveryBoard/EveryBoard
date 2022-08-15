@@ -65,8 +65,8 @@ describe('PylosCoord:', () => {
         const downRight: PylosCoord = new PylosCoord(1, 1, 1);
         const expectedLowerPieces: PylosCoord[] = [upLeft, upRight, downLeft, downRight];
         const piece: PylosCoord = new PylosCoord(1, 1, 0);
-        const lowerPieces: PylosCoord[] = piece.getHigherPieces();
-        expect(() => topPiece.getHigherPieces()).toThrowError(`Top piece don't have lower pieces.`);
+        const lowerPieces: PylosCoord[] = piece.getHigherCoords();
+        expect(() => topPiece.getHigherCoords()).toThrowError(`Top piece don't have lower pieces.`);
         expect(lowerPieces).toEqual(expectedLowerPieces);
     });
 

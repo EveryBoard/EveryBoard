@@ -150,18 +150,13 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         resultingBoard[coord.y][coord.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
-    public applyLegalMove(_move: SiamMove,
-                          state: SiamState,
-                          status: SiamLegalityInformation)
-    : SiamState
-    {
+    public applyLegalMove(_move: SiamMove, state: SiamState, status: SiamLegalityInformation): SiamState {
         const newBoard: Table<SiamPiece> = ArrayUtils.copyBiArray(status.resultingBoard);
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
     }
-    public static getBoardValueInfo(move: MGPOptional<SiamMove>,
-                                    state: SiamState)
+    public static getBoardValueInfo(move: MGPOptional<SiamMove>, state: SiamState)
     : { shortestZero: number, shortestOne: number, boardValue: number }
     {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
@@ -170,8 +165,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const mountainsColumn: number[] = mountainsInfo.columns;
 
         const winner: PlayerOrNone = SiamRules.getWinner(state, move, mountainsInfo.nbMountain);
-        if (winner.isPlayer()) {
-            // 1. victories
+        if (winner.isPlayer()) { // 1. victories
             if (winner === Player.ZERO) {
                 return {
                     shortestZero: 0,
@@ -207,9 +201,8 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                     }
                 }
             }
-            const boardValue: number = SiamRules.getScoreFromShortestDistances(zeroShortestDistance,
-                                                                               oneShortestDistance,
-                                                                               currentPlayer);
+            const boardValue: number =
+                SiamRules.getScoreFromShortestDistances(zeroShortestDistance, oneShortestDistance, currentPlayer);
             return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
         }
     }

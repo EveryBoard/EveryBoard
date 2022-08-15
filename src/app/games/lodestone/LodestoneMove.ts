@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { assert } from 'src/app/utils/assert';
 import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';

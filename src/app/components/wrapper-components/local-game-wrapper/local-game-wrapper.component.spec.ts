@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
@@ -45,9 +45,9 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 describe('LocalGameWrapperComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<P4Component>;
-    const O: PlayerOrNone = Player.ZERO;
-    const X: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
@@ -237,7 +237,7 @@ describe('LocalGameWrapperComponent', () => {
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
             spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            // given a board on which some illegal move are possible from the IA
+            // given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
             spyOn(componentTestUtils.getComponent().rules, 'choose').and.returnValue(false);
             spyOn(componentTestUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);

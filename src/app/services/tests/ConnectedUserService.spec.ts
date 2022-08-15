@@ -681,12 +681,11 @@ describe('ConnectedUserService', () => {
                     lastValue = observedPart;
                     window.setTimeout(resolvePromise, 2000);
                 });
-
             // When the UserDAO modify observedPart in the user document
             await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
             await userHasUpdated;
 
-            // Then the observable should have updated its valuer
+            // Then the observable should have updated its value
             expect(lastValue).toEqual(MGPOptional.of({ id: '1234', typeGame: 'P4' }));
             subscription.unsubscribe();
         });
@@ -708,6 +707,10 @@ describe('ConnectedUserService', () => {
                     failed = true;
                 }
                 expect(failed).toBeTrue();
+                // OLDLY LOOKING LIKE THIS GOOD LINES:
+                // spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                // const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
+                // expect(() => service.updateObservedPart('some-part-doc-id')).toThrowError(expectedError);
             });
             it('should delegate to userDAO', async() => {
                 // Given a service observing an user
@@ -734,6 +737,10 @@ describe('ConnectedUserService', () => {
                     failed = true;
                 }
                 expect(failed).toBeTrue();
+                // Clean version would be this
+                // spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                // const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
+                // expect(() => service.removeObservedPart()).toThrowError(expectedError);
             });
             it('should delegate removal to userDAO', async() => {
                 // Given a service observing an user
@@ -751,18 +758,11 @@ describe('ConnectedUserService', () => {
         });
     });
     describe('sendPresenceToken', () => {
-        it('should throw when asking to send presence token while no user is logged', async() => {
+        it('should throw when asking to send presence token while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call sendPresenceToken when not connected';
-            let failed: boolean = false;
-            try {
-                await service.sendPresenceToken();
-            } catch (error) {
-                expect(error.message).toBe(expectedError);
-                failed = true;
-            }
-            expect(failed).toBeTrue();
-        });
+            expect(() => service.sendPresenceToken()).toThrowError(expectedError);
+        }));
         it('should delegate presence token sending to userDAO', async() => {
             // Given a service observing an user
             service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);

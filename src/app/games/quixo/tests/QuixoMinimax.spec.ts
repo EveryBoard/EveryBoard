@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoMinimax } from '../QuixoMinimax';
@@ -12,8 +12,8 @@ describe('QuixoMinimax:', () => {
 
     let minimax: QuixoMinimax;
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         const rules: QuixoRules = new QuixoRules(QuixoState);

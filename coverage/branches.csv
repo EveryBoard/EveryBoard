@@ -1,9 +1,6 @@
 ActiveUsersService.ts,1
 app.module.ts,1
 AttackEpaminondasMinimax.ts,1
-CoerceoPiecesThreatTilesMinimax.ts,3
-GoGroupsDatas.ts,5
 LinesOfActionRules.ts,1
 online-game-wrapper.component.ts,3
 PositionalEpaminondasMinimax.ts,1
-PylosState.ts,1

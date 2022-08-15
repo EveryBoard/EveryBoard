@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { Subscription } from 'rxjs';
-import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FocussedPart } from 'src/app/domain/User';
@@ -13,9 +13,11 @@ import { FocussedPart } from 'src/app/domain/User';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-    public username: string = 'connecting...';
+    public loading: boolean = true;
+    public username: MGPOptional<string> = MGPOptional.empty();
 
     public faCog: IconDefinition = faCog;
+    public faSpinner: IconDefinition = faSpinner;
 
     private userSub: Subscription;
     private observedPartSub: Subscription;
@@ -30,10 +32,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     public ngOnInit(): void {
         this.userSub = this.connectedUserService.getUserObs().subscribe((user: AuthUser) => {
+            this.loading = false;
             if (user.username.isPresent()) {
-                this.username = user.username.get();
+                this.username = user.username;
             } else {
-                this.username = user.email.getOrElse('');
+                this.username = user.email;
             }});
         this.observedPartSub =
             this.connectedUserService.getObservedPartObs().subscribe((opo: MGPOptional<FocussedPart>) => {

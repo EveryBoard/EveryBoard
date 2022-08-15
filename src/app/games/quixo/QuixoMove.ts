@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { QuixoFailure } from './QuixoFailure';

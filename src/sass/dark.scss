@@ -30,10 +30,11 @@ $primary: #994d00;
 $yellow: #b38f00;
 $red: darkred;
 $red-invert: white;
+$footer-padding:1rem;
 @import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
-@import '~bulma-slider';
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./mystyles.scss";
+
 
 .hero {
     background-color: #000;

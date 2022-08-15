@@ -108,7 +108,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
-        assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
+        assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const turn: number = ruler.node.gameState.turn % 2;
         const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
         const aiMove: Move = ruler.node.findBestMove(currentAiDepth, playingMinimax, true);

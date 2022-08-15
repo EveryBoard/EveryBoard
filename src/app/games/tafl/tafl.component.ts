@@ -51,11 +51,11 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     private showPreviousMove(): void {
         const previousState: S = this.rules.node.mother.get().gameState;
-        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
+        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.get().end.getNext(orthogonal, 1);
             if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
-                const previousOwner: RelativePlayer = previousState.getRelativeOwner(OPPONENT, captured);
+                const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
                 const currentPiece: TaflPawn = this.rules.node.gameState.getPieceAt(captured);
                 const isEmpty: boolean = currentPiece === TaflPawn.UNOCCUPIED;

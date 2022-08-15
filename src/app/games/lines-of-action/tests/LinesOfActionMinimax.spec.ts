@@ -6,16 +6,14 @@ import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionMinimax', () => {
 
-    let rules: LinesOfActionRules;
     let minimax: LinesOfActionMinimax;
-
-    const X: PlayerOrNone = PlayerOrNone.ZERO;
-    const O: PlayerOrNone = PlayerOrNone.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new LinesOfActionRules(LinesOfActionState);
-        minimax = new LinesOfActionMinimax(rules, 'LinesOfActionMinimax');
+        const rules: LinesOfActionRules = new LinesOfActionRules(LinesOfActionState);
+        minimax = new LinesOfActionMinimax(rules, 'Lines Of Action Minimax');
     });
     it('should have 36 moves on the initial state', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
@@ -25,9 +23,9 @@ describe('LinesOfActionMinimax', () => {
     it('should have 0 moves on a victory state', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
-            [O, _, _, _, X, _, _, O],
-            [_, _, X, X, O, _, _, _],
-            [_, _, _, X, _, _, _, _],
+            [X, _, _, _, O, _, _, X],
+            [_, _, O, O, X, _, _, _],
+            [_, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
