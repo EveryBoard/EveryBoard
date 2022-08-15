@@ -14,7 +14,7 @@ describe('SiamMove', () => {
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
 
-    const D: SiamPiece = SiamPiece.WHITE_DOWN;
+    const D: SiamPiece = SiamPiece.LIGHT_DOWN;
 
     it('SiamMove.encoder should be correct', () => {
         const board: Table<SiamPiece> = [
@@ -55,12 +55,12 @@ describe('SiamMove', () => {
     it('Should override correctly equality', () => {
         const moveA: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
         const twin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
-        const neighboor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
+        const neighbor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
         const cousin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.DOWN), Orthogonal.RIGHT);
         const stranger: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
         expect(moveA.equals(moveA)).toBeTrue();
         expect(moveA.equals(twin)).toBeTrue();
-        expect(moveA.equals(neighboor)).toBeFalse();
+        expect(moveA.equals(neighbor)).toBeFalse();
         expect(moveA.equals(cousin)).toBeFalse();
         expect(moveA.equals(stranger)).toBeFalse();
     });

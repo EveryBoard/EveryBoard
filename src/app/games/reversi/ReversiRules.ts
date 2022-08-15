@@ -138,9 +138,9 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
                     // For each empty cases
                     nextBoard = state.getCopiedBoard();
-                    const opponentNeighboors: Coord[] = ReversiState.getNeighbooringPawnLike(nextBoard, opponent, x, y);
-                    if (opponentNeighboors.length > 0) {
-                        // if one of the 8 neighbooring space is an opponent then, there could be a switch,
+                    const opponentNeighbors: Coord[] = ReversiState.getNeighboringPawnLike(nextBoard, opponent, x, y);
+                    if (opponentNeighbors.length > 0) {
+                        // if one of the 8 neighboring space is an opponent then, there could be a switch,
                         // and hence a legal move
                         const move: ReversiMove = new ReversiMove(x, y);
                         const result: Coord[] = ReversiRules.getAllSwitcheds(move, player, nextBoard);

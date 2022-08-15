@@ -28,16 +28,16 @@ export class EncapsuleTutorial {
                 [_, m, _],
                 [_, _, b],
             ], 0, [
-                EncapsulePiece.SMALL_BLACK, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.BIG_BLACK,
-                EncapsulePiece.SMALL_WHITE, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
-                EncapsulePiece.BIG_WHITE,
+                EncapsulePiece.SMALL_DARK, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.BIG_DARK,
+                EncapsulePiece.SMALL_LIGHT, EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT,
+                EncapsulePiece.BIG_LIGHT,
             ])),
         TutorialStep.anyMove(
             $localize`Putting a piece`,
             $localize`This is the initial board. You're playing Dark.<br/><br/>
         Pick one of your piece on the side of the board and put it on the board.`,
             EncapsuleState.getInitialState(),
-            EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
+            EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
             $localize`Congratulations!`),
         TutorialStep.fromMove(
             $localize`Moving`,
@@ -74,8 +74,8 @@ export class EncapsuleTutorial {
                 [sm, B, B],
                 [_, _, _],
             ], 0, [
-                EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.BIG_BLACK,
-                EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
+                EncapsulePiece.MEDIUM_DARK, EncapsulePiece.BIG_DARK,
+                EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT,
             ]),
             EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
             (move: EncapsuleMove, _: EncapsuleState) => {

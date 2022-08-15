@@ -30,11 +30,11 @@ describe('KamisadoMove', () => {
     it('should override correctly equality', () => {
         const move: KamisadoMove = KamisadoMove.of(new Coord(2, 2), new Coord(3, 3));
         const sameMove: KamisadoMove = KamisadoMove.of(new Coord(2, 2), new Coord(3, 3));
-        const neighboor: KamisadoMove = KamisadoMove.of(new Coord(3, 3), new Coord(2, 2));
+        const neighbor: KamisadoMove = KamisadoMove.of(new Coord(3, 3), new Coord(2, 2));
         const stranger: KamisadoMove = KamisadoMove.of(new Coord(5, 5), new Coord(6, 5));
         expect(move.equals(move)).toBeTrue();
         expect(move.equals(sameMove)).toBeTrue();
-        expect(move.equals(neighboor)).toBeFalse();
+        expect(move.equals(neighbor)).toBeFalse();
         expect(move.equals(stranger)).toBeFalse();
     });
 });

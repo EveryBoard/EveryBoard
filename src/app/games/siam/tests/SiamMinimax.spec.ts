@@ -18,14 +18,14 @@ describe('SiamMinimax:', () => {
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
 
-    const U: SiamPiece = SiamPiece.WHITE_UP;
-    const L: SiamPiece = SiamPiece.WHITE_LEFT;
-    const R: SiamPiece = SiamPiece.WHITE_RIGHT;
+    const U: SiamPiece = SiamPiece.LIGHT_UP;
+    const L: SiamPiece = SiamPiece.LIGHT_LEFT;
+    const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
 
-    const u: SiamPiece = SiamPiece.BLACK_UP;
-    const l: SiamPiece = SiamPiece.BLACK_LEFT;
-    const r: SiamPiece = SiamPiece.BLACK_RIGHT;
-    const d: SiamPiece = SiamPiece.BLACK_DOWN;
+    const u: SiamPiece = SiamPiece.DARK_UP;
+    const l: SiamPiece = SiamPiece.DARK_LEFT;
+    const r: SiamPiece = SiamPiece.DARK_RIGHT;
+    const d: SiamPiece = SiamPiece.DARK_DOWN;
 
     beforeEach(() => {
         rules = new SiamRules(SiamState);

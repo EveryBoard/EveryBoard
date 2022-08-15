@@ -77,16 +77,15 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
     }
     public getCorrectBoard(currentState: GoState): GoState {
         const markAsDead: (pawn: GoPiece) => GoPiece = (pawn: GoPiece) => {
-            if (pawn === GoPiece.BLACK) return GoPiece.DEAD_BLACK;
-            if (pawn === GoPiece.WHITE) return GoPiece.DEAD_WHITE;
+            if (pawn === GoPiece.DARK) return GoPiece.DEAD_DARK;
+            if (pawn === GoPiece.LIGHT) return GoPiece.DEAD_LIGHT;
             if (pawn.isTerritory()) {
                 return GoPiece.EMPTY;
             } else {
                 return pawn;
             }
         };
-        const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(),
-                                                        markAsDead);
+        const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(), markAsDead);
         const allDeadState: GoState = new GoState(allDeadBoard,
                                                   currentState.getCapturedCopy(),
                                                   currentState.turn,
@@ -111,7 +110,7 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
         let resultingState: GoState = allDeadState.copy();
         let aliveCoords: Coord[];
         for (const monoWrappedEmptyGroup of monoWrappedEmptyGroups) {
-            aliveCoords = monoWrappedEmptyGroup.deadBlackCoords.concat(monoWrappedEmptyGroup.deadWhiteCoords);
+            aliveCoords = monoWrappedEmptyGroup.deadDarkCoords.concat(monoWrappedEmptyGroup.deadLightCoords);
             for (const aliveCoord of aliveCoords) {
                 if (resultingState.isDead(aliveCoord)) {
                     resultingState = GoRules.switchAliveness(aliveCoord, resultingState);

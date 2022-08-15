@@ -47,7 +47,7 @@
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
-                        [attr.class]="caseContent === GoPiece.WHITE_TERRITORY ? 'player1' : 'player0'"
+                        [attr.class]="caseContent === GoPiece.LIGHT_TERRITORY ? 'player1' : 'player0'"
                         (click)="onClick(x, y)"
                 />
             </ng-template>
