@@ -283,24 +283,8 @@ describe('EpaminondasRules:', () => {
     });
     describe('Victories', () => {
         it('should declare first player winner if their pawn survives one turn on last line', () => {
-            // Given a board with one piece of each player
-//            const board: Table<PlayerOrNone> = [
-//                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//            ];
-//            const state: EpaminondasState = new EpaminondasState(board, 1);
-            const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Direction.DOWN);
-            const expectedBoard: Table<PlayerOrNone> = [
+            // Given a board where first player wins
+            const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -314,65 +298,17 @@ describe('EpaminondasRules:', () => {
                 [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 2);
-//            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: EpaminondasNode = new EpaminondasNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const state: EpaminondasState = new EpaminondasState(board, 2);
+            const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Direction.DOWN);
+            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            // Then it should be a victory for 0
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should declare second player winner if his pawn survive one turn on first line', () => {
+            // Given a board where second player wins
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ];
-            const expectedBoard: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ];
-            const state: EpaminondasState = new EpaminondasState(board, 0);
-            const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Direction.UP);
-            const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: EpaminondasNode = new EpaminondasNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
-        });
-        it('should not consider first player winner if both player have one piece on their landing line', () => {
-            const board: Table<PlayerOrNone> = [
-                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ];
-            const expectedBoard: Table<PlayerOrNone> = [
-                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -385,28 +321,36 @@ describe('EpaminondasRules:', () => {
                 [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 1);
+            const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Direction.UP);
+            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            // Then it should be a victory for player 1
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        });
+        it('should not consider first player winner if both player have one piece on their landing line', () => {
+            // Given a board where both players have a piece on the landing line
+            const board: Table<PlayerOrNone> = [
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
-            const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: EpaminondasNode = new EpaminondasNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            // Then it should not be a win for anyone
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should declare player zero winner when last soldier of opponent has been captured', () => {
+            // Given a board with only pieces from player zero
             const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [X, O, O, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ];
-            const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -420,29 +364,15 @@ describe('EpaminondasRules:', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const state: EpaminondasState = new EpaminondasState(board, 0);
+            const state: EpaminondasState = new EpaminondasState(board, 1);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
-            const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: EpaminondasNode = new EpaminondasNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            // Then it should be a win for player zero
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should declare player one winner when last soldier of opponent has been captured', () => {
+            // Given a board with only pieces from player one
             const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [O, X, X, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ];
-            const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -456,11 +386,10 @@ describe('EpaminondasRules:', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const state: EpaminondasState = new EpaminondasState(board, 1);
+            const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
-            const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: EpaminondasNode = new EpaminondasNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            // Then it should be a win for player one
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
     });
