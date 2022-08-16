@@ -13,9 +13,9 @@ describe('P4Rules', () => {
 
     let rules: P4Rules;
     let minimaxes: Minimax<P4Move, P4State>[];
-    const O: PlayerOrNone = Player.ZERO;
-    const X: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = new P4Rules(P4State);

@@ -12,8 +12,8 @@ import { Table } from 'src/app/utils/ArrayUtils';
 describe('ReversiRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ReversiRules;
     let minimaxes: Minimax<ReversiMove, ReversiState, ReversiLegalityInformation>[];

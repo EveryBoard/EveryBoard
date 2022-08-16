@@ -691,7 +691,6 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToHaveClass('#pieceGroup_3_3', 'semi-transparent');
             testUtils.expectElementNotToExist('#ring_3_2');
             testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'semi-transparent');
-
         }));
     });
 });

@@ -148,7 +148,7 @@ export class GipfComponent
         const capture: GipfCapture = captures[0];
 
         // Capture validity is not checked because by construction the user can only select valid captures
-        this.constructedState = GipfRules.applyCapture(this.constructedState, capture);
+        this.constructedState = GipfRules.applyCapture(capture, this.constructedState);
         this.markCapture(capture);
         this.possibleCaptures = GipfRules.getPossibleCaptures(this.constructedState);
         switch (this.movePhase) {
@@ -227,7 +227,7 @@ export class GipfComponent
             return this.cancelMove(validity.getReason());
         }
         this.arrows = [];
-        this.constructedState = GipfRules.applyPlacement(this.constructedState, this.placement.get());
+        this.constructedState = GipfRules.applyPlacement(this.placement.get(), this.constructedState);
         return this.moveToFinalCapturePhaseOrTryMove();
     }
     private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,

@@ -9,19 +9,19 @@ import { assert } from 'src/app/utils/assert';
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 export class GoPiece implements ComparableObject {
 
-    public static BLACK: GoPiece = new GoPiece(Player.ZERO, 'alive');
+    public static DARK: GoPiece = new GoPiece(Player.ZERO, 'alive');
 
-    public static WHITE: GoPiece = new GoPiece(Player.ONE, 'alive');
+    public static LIGHT: GoPiece = new GoPiece(Player.ONE, 'alive');
 
     public static EMPTY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'empty');
 
-    public static DEAD_BLACK: GoPiece = new GoPiece(Player.ZERO, 'dead');
+    public static DEAD_DARK: GoPiece = new GoPiece(Player.ZERO, 'dead');
 
-    public static DEAD_WHITE: GoPiece = new GoPiece(Player.ONE, 'dead');
+    public static DEAD_LIGHT: GoPiece = new GoPiece(Player.ONE, 'dead');
 
-    public static BLACK_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
+    public static DARK_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
 
-    public static WHITE_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
+    public static LIGHT_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
 
     private constructor(readonly player: PlayerOrNone, readonly type: PieceType) {}
 
@@ -30,41 +30,41 @@ export class GoPiece implements ComparableObject {
     }
     public toString(): string {
         switch (this) {
-            case GoPiece.BLACK:
-                return 'GoPiece.BLACK';
-            case GoPiece.WHITE:
-                return 'GoPiece.WHITE';
+            case GoPiece.DARK:
+                return 'GoPiece.DARK';
+            case GoPiece.LIGHT:
+                return 'GoPiece.LIGHT';
             case GoPiece.EMPTY:
                 return 'GoPiece.EMPTY';
-            case GoPiece.DEAD_BLACK:
-                return 'GoPiece.DEAD_BLACK';
-            case GoPiece.DEAD_WHITE:
-                return 'GoPiece.DEAD_WHITE';
-            case GoPiece.BLACK_TERRITORY:
-                return 'GoPiece.BLACK_TERRITORY';
+            case GoPiece.DEAD_DARK:
+                return 'GoPiece.DEAD_DARK';
+            case GoPiece.DEAD_LIGHT:
+                return 'GoPiece.DEAD_LIGHT';
+            case GoPiece.DARK_TERRITORY:
+                return 'GoPiece.DARK_TERRITORY';
             default:
-                assert(this === GoPiece.WHITE_TERRITORY, 'Unexisting GoPiece');
-                return 'GoPiece.WHITE_TERRITORY';
+                assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
+                return 'GoPiece.LIGHT_TERRITORY';
         }
     }
     public static pieceBelongTo(piece: GoPiece, owner: Player): boolean {
         return owner === piece.player && piece.type !== 'territory';
     }
     public static ofPlayer(player: Player): GoPiece {
-        if (player === Player.ZERO) return GoPiece.BLACK;
-        else return GoPiece.WHITE;
+        if (player === Player.ZERO) return GoPiece.DARK;
+        else return GoPiece.LIGHT;
     }
     public isOccupied(): boolean {
-        return [GoPiece.BLACK, GoPiece.WHITE, GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);
+        return [GoPiece.DARK, GoPiece.LIGHT, GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
     }
     public isEmpty(): boolean {
-        return [GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY, GoPiece.EMPTY].includes(this);
+        return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY, GoPiece.EMPTY].includes(this);
     }
     public isDead(): boolean {
-        return [GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);
+        return [GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
     }
     public isTerritory(): boolean {
-        return [GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY].includes(this);
+        return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY].includes(this);
     }
     public getOwner(): PlayerOrNone {
         return this.player;

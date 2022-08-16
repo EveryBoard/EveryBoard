@@ -34,6 +34,7 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -1869,27 +1870,25 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
-            spyOn(ErrorLoggerService, 'logError');
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
-            const forbiddenFunctionNames: string[] = [
-                'canProposeDraw', // non async
-                'canAskTakeBack', // non async
-                'acceptRematch',
-                'proposeRematch',
-                'canResign', // non async
+            const forbiddenFunctions: { name: string, isAsync: boolean } [] = [
+                { name: 'canProposeDraw', isAsync: false },
+                { name: 'canAskTakeBack', isAsync: false },
+                { name: 'acceptRematch', isAsync: true },
+                { name: 'proposeRematch', isAsync: true },
+                { name: 'canResign', isAsync: false },
             ];
-            for (const name of forbiddenFunctionNames) {
-                let failed: boolean = false;
-                const expectedError: string = 'Non playing should not call ' + name;
-                try {
-                    await wrapper[name]();
-                } catch (error) {
-                    expect(error.message).toBe('Assertion failure: ' + expectedError);
-                    failed = true;
+            for (const forbiddenFunction of forbiddenFunctions) {
+                const expectedError: string = 'Non playing should not call ' + forbiddenFunction.name;
+                const expectedMessage: string = 'Assertion failure: ' + expectedError;
+                if (forbiddenFunction.isAsync) {
+                    await expectAsync(wrapper[forbiddenFunction.name]()).toBeRejectedWithError(expectedMessage);
+                } else {
+                    expect(() => wrapper[forbiddenFunction.name]()).toThrowError(expectedMessage);
                 }
-                expect(failed).toBeTrue();
                 expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', expectedError);
             }
             tick(wrapper.configRoom.maximalMoveDuration * 1000);

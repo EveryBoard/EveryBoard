@@ -10,17 +10,18 @@ describe('GoMinimax', () => {
 
     let minimax: GoMinimax;
 
-    const X: GoPiece = GoPiece.WHITE;
-    const O: GoPiece = GoPiece.BLACK;
-    const u: GoPiece = GoPiece.DEAD_BLACK;
-    const w: GoPiece = GoPiece.WHITE_TERRITORY;
+    const X: GoPiece = GoPiece.LIGHT;
+    const O: GoPiece = GoPiece.DARK;
+    const u: GoPiece = GoPiece.DEAD_DARK;
+    const k: GoPiece = GoPiece.DEAD_LIGHT;
+    const w: GoPiece = GoPiece.LIGHT_TERRITORY;
+    const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
     beforeEach(() => {
         const rules: GoRules = new GoRules(GoState);
         minimax = new GoMinimax(rules, 'Dummy');
     });
-
     describe('getListMove', () => {
         it('should count as many move as empty space in Phase.PLAYING turn, + PASS', () => {
             const board: Table<GoPiece> = [
@@ -59,7 +60,7 @@ describe('GoMinimax', () => {
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
-        it('should want to switch dead piece when it consider those pieces alive', () => {
+        it('should switch dead piece when it consider those pieces alive (Player.ZERO)', () => {
             const board: Table<GoPiece> = [
                 [u, w, w, X, w],
                 [X, X, X, X, X],
@@ -68,6 +69,20 @@ describe('GoMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
+            const initialNode: GoNode = new GoNode(state);
+            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            expect(moves.length).toBe(1);
+            expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
+        });
+        it('should switch dead piece when it consider those pieces alive (Player.ONE)', () => {
+            const board: Table<GoPiece> = [
+                [k, b, b, O, b],
+                [O, O, O, O, O],
+                [_, _, _, _, _],
+                [_, _, _, X, _],
+                [_, _, _, _, _],
+            ];
+            const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves.length).toBe(1);
