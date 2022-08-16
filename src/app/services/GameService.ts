@@ -140,20 +140,26 @@ export class GameService {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
     }
-    public resign(partId: string, lastIndex: number, user: Player, winner: string, loser: string): Promise<void> {
+    public resign(partId: string,
+                  lastIndex: number,
+                  user: Player,
+                  winner: MinimalUser,
+                  loser: MinimalUser)
+    : Promise<void>
+    {
         const update: Partial<Part> = {
             winner,
             loser,
             result: MGPResult.RESIGN.value,
             request: null,
         };
-        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, update); // resign
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public notifyTimeout(partId: string,
                          user: Player,
                          lastIndex: number,
-                         winner: string,
-                         loser: string)
+                         winner: MinimalUser,
+                         loser: MinimalUser)
     : Promise<void>
     {
         const update: Partial<Part> = {
@@ -291,8 +297,8 @@ export class GameService {
                                msToSubstract: [number, number],
                                scores?: [number, number],
                                notifyDraw?: boolean,
-                               winner?: string,
-                               loser?: string)
+                               winner?: MinimalUser,
+                               loser?: MinimalUser)
     : Promise<void>
     {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {

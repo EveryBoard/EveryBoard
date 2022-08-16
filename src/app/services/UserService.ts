@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
 import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
-import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
@@ -31,10 +30,6 @@ export class UserService {
     }
     public unSubFromActiveUsersObs(): void {
         this.activeUsersService.stopObserving();
-    }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
-        // the callback will be called on the foundUser
-        return this.userDAO.observeUserByUsername(username, callback);
     }
     public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
         return this.userDAO.subscribeToChanges(userId, callback);

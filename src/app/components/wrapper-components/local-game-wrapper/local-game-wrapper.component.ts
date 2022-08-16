@@ -40,7 +40,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 public cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
-        this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
+        this.players = [
+            MGPOptional.of({ id: 'unused', name: this.playerSelection[0] }),
+            MGPOptional.of({ id: 'unused', name: this.playerSelection[1] })];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
@@ -59,7 +61,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }, 1);
     }
     public updatePlayer(player: 0|1): void {
-        this.players[player] = MGPOptional.of(this.playerSelection[player]);
+        this.players[player] = MGPOptional.of({ id: 'unused', name: this.playerSelection[player] });
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
@@ -101,7 +103,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }
         return MGPOptional.ofNullable(
             this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
-                return this.players[playerIndex].equalsValue(a.name);
+                return this.players[playerIndex].isPresent() && this.players[playerIndex].get().name === a.name;
             }));
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {

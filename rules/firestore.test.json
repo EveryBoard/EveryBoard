@@ -33,7 +33,7 @@ service cloud.firestore {
         match /chats/{id} {
             allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
             // Anyone can delete the chat in case the creator timed out
-            allow delete: if userIsVerified() && hasTimedOut(creatorOf(id));
+            allow delete: if userIsVerified() && hasTimedOut(creatorOf(id).id);
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
@@ -82,31 +82,29 @@ service cloud.firestore {
         }
         function authenticatedUserCreatesUnverifiedUser(userId, update) {
             // Only an authenticated account can create its own user, and they cannot directly be verified
-            return isAuthenticated() && isOwner(userId) && update.verified == false;
+            return isAuthenticated() && request.auth.uid == userId && update.verified == false;
         }
         function isAuthenticated() {
             return request != null && request.auth != null;
         }
-        function isOwner(userId) {
-            return request.auth.uid == userId;
-        }
+
         function authenticatedUserUpdatesUser(userId, user, update) {
             // Only the user can change its fields
             // Moreover, the username cannot be changed once set
             // And the verified field can only be changed to true if the user has a username and has its email verified
             return isAuthenticated() &&
-                isOwner(userId) &&
+                request.auth.uid == userId &&
                 doesNotModifyUsernameIfSet(user, update) &&
                 onlyModifiesVerifiedFieldIfUserIsVerified(user, update);
         }
         function doesNotModifyUsernameIfSet(user, update) {
-            let usernameAbsent = hasField(user, 'username') == false;
-            let usernameUnchanged = hasField(update, 'username') == false;
+            let usernameWasAbsent = hasField(user, 'username') == false;
+            let usernameIsAbsentFromRequest = hasField(update, 'username') == false;
             // It sometimes happens that firebase sends the username as part as updates,
             // even though it is not actually updated.
             // Hence, we accept usernames as part of updates, only if it doesn't change.
-            let doesNotChange = preservesField('username');
-            return usernameAbsent || usernameUnchanged || doesNotChange;
+            let usernameIsNotChanged = preservesField('username');
+            return usernameWasAbsent || usernameIsAbsentFromRequest || usernameIsNotChanged;
         }
         function onlyModifiesVerifiedFieldIfUserIsVerified(user, update) {
             let verifiedKeptSameValue = user.verified == update.verified;
@@ -114,7 +112,7 @@ service cloud.firestore {
             return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
         match /parts/{id} {
-            allow create: if creatorCreatesPart(request.resource.data);
+            allow create: if verifiedUserCreatesPart(request.resource.data);
             allow delete: if creatorDeletesUnstartedPart(id, resource.data);
             allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);
             allow update: if chosenOpponentStartsPart(id, resource.data, request.resource.data);
@@ -123,7 +121,7 @@ service cloud.firestore {
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
         }
-        function creatorCreatesPart(part) {
+        function verifiedUserCreatesPart(part) {
             // Any verified user can create a part with the proper fields set, and has to be the creator
             // turn can be -1 in case of a new part, 0 in case of a rematch
             let turnForNewPartOrRematch = part.turn == -1 || part.turn == 0;
@@ -135,19 +133,21 @@ service cloud.firestore {
             return userIsVerified() &&
                 turnForNewPartOrRematch &&
                 hasField(part, 'typeGame') &&
+                hasField(part, 'winner') == false &&
+                hasField(part, 'loser') == false &&
                 part.listMoves == [] &&
                 creatorIsPlayer;
         }
-        function creatorDeletesUnstartedPart(id, part) {
+        function creatorDeletesUnstartedPart(partId, part) {
             // The owner of a part can delete it, if it has not started
             return userIsVerified() &&
-                creatorOf(id).id == request.auth.uid &&
+                creatorOf(partId).id == request.auth.uid &&
                 partHasStarted(part) == false;
         }
         function verifiedUserDeletesPartAfterCreatorTimeout(id, part) {
             // Anyone can delete a part if the owner has timed out and the part has not started
             return userIsVerified() &&
-                hasTimedOut(creatorOf(id)) &&
+                hasTimedOut(creatorOf(id).id) &&
                 partHasStarted(part) == false;
         }
         function playerPerformsMove(part, update) {
@@ -183,17 +183,36 @@ service cloud.firestore {
                 safeTimeManagement &&
                 (preservesField('turn') || safeTurnDecrease(part.turn, update.turn)) &&
                 onlyAcceptsDrawIfProposed(part, update) &&
+//                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
+                onlyResignsInTheirName(part, update) &&
                 safeLastUpdate(part, update);
         }
         function onlyAcceptsDrawIfProposed(part, update) {
             // 6 = draw agreed by zero
             // 7 = draw agreed by one
-            let acceptsDraw = hasField(update, 'result') &&
+            let updateAcceptsDraw = hasField(update, 'result') &&
                 ((userIsPlayerZero(part) && part.result != 6 && update.result == 6) ||
                  (userIsPlayerOne(part) && part.result != 7 && update.result == 7));
             let drawWasProposed = hasField(part, 'request') && part.request.code == 'DrawProposed';
-            return acceptsDraw == false ||
-                (acceptsDraw && drawWasProposed);
+            return updateAcceptsDraw == false ||
+                (updateAcceptsDraw && drawWasProposed);
+        }
+        function onlyAcceptsOrRefusesTakeBackIfAsked(part, update) {
+            let takeBackWasProposed = hasField(part, 'request') && part.request.code == 'TakeBackAsked';
+            let updateAnswersToTakeBack = hasField(update, 'request') &&
+                (part.request.code == 'TakeBackAccepted' || part.request.code == 'TakeBackRefused');
+            let updateFromDifferentPlayer = hasField(part, 'request') && hasField(update, 'request') &&
+                part.request.player != update.request.player;
+            return takeBackWasProposed == false ||
+                (takeBackWasProposed && updateAnswersToTakeBack && updateFromDifferentPlayer);
+        }
+        function onlyResignsInTheirName(part, update) {
+            let playerResigns = update.result == 1; // 1 = resign
+            let resignerIsLoser = update.loser.id == request.auth.uid;
+            let otherPlayerIsWinner = update.winner.id != request.auth.uid &&
+                (update.winner.id == part.playerZero.id || update.winner.id == part.playerOne.id);
+            return playerResigns == false ||
+                (playerResigns && resignerIsLoser && otherPlayerIsWinner);
         }
         function isValidPartUpdateDuringGame(part) {
             return userIsVerified() &&
@@ -272,14 +291,14 @@ service cloud.firestore {
                 update.lastUpdate.player == 1 &&
                 part.playerOne.id == request.auth.uid;
             let indexIncremented = update.lastUpdate.index == part.lastUpdate.index + 1;
-            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate || partHasStarted(part) == false) && indexIncremented;
+            return (legitimatePlayerZeroUpdate || debug(legitimatePlayerOneUpdate) || debug(partHasStarted(part) == false)) && debug(indexIncremented);
         }
         function partHasStarted(part) {
             // A part is started when the beginning field is set
             return hasField(part, 'beginning');
         }
-        function hasTimedOut(user) {
-            let userDoc = get(/databases/$(database)/documents/users/$(user.id)).data;
+        function hasTimedOut(userId) {
+            let userDoc = get(/databases/$(database)/documents/users/$(userId)).data;
             let timedOut = request.time.time() > userDoc.lastUpdateTime.time() + duration.value(10, 's');
             return timedOut;
         }
@@ -288,7 +307,6 @@ service cloud.firestore {
             allow delete: if creatorDeletesConfigRoom(resource.data);
             allow delete: if observerDeletesConfigRoom(partId, resource.data);
             allow update: if creatorUpdatesPartInCreation(resource.data, request.resource.data);
-            allow update: if creatorChangesPartStatusToFinished(resource.data, request.resource.data);
             allow update: if chosenOpponentAcceptsConfig(resource.data, request.resource.data);
             allow update: if chosenOpponentLeaves(resource.data, request.resource.data)
             // Any verified user can read a config room
@@ -306,7 +324,7 @@ service cloud.firestore {
         }
         function observerDeletesConfigRoom(partId, configRoom) {
             // Anybody else can delete a config room only if the creator has timed out and the part has not started
-            return userIsVerified() && hasTimedOut(creatorOf(partId)) && configStillOngoing(configRoom);
+            return userIsVerified() && hasTimedOut(creatorOf(partId).id) && configStillOngoing(configRoom);
         }
         function creatorUpdatesPartInCreation(configRoom, update) {
             // The creator can change all fields except 'creator', or changing partStatus to STARTED (3) or FINISHED (4), until the part starts
@@ -314,22 +332,15 @@ service cloud.firestore {
                 preservesField('creator') &&
                 configRoom.partStatus < 3 && update.partStatus != 3;
         }
-        function creatorChangesPartStatusToFinished(oldConfigRoom, newConfigRoom) {
-            // The creator can only change partStatus (to finished) once the part has been started
-            return userIsVerified() && userIsCreator(oldConfigRoom) &&
-                oldConfigRoom.partStatus == 3 &&
-                newConfigRoom.partStatus == 4 &&
-                preservesCreationOnlyFields() &&
-                preservesField('chosenOpponent');
-        }
         function chosenOpponentAcceptsConfig(configRoom, update) {
             //  The chosen opponent can change the config from PROPOSED to STARTED
             return validChosenOpponentConfigRoomUpdate(configRoom) &&
+                preservesCreatorOnlyFields() &&
                 preservesField('chosenOpponent') &&
                 acceptsConfig(configRoom, update);
         }
         function chosenOpponentLeaves(configRoom, update) {
-            //   - the chosen opponent can remove itself from the corresponding field
+            // The chosen opponent can remove itself from the corresponding field
             return validChosenOpponentConfigRoomUpdate(configRoom) &&
                 preservesField('partStatus') &&
                 removesOneSelfFromChosenOpponent(configRoom, update);
@@ -337,9 +348,9 @@ service cloud.firestore {
         function validChosenOpponentConfigRoomUpdate(configRoom) {
             return userIsVerified() &&
                 userIsChosenOpponentInConfigRoom(configRoom) &&
-                preservesCreationOnlyFields();
+                preservesCreatorOnlyFields();
         }
-        function preservesCreationOnlyFields() {
+        function preservesCreatorOnlyFields() {
             return preservesField('creator') &&
                 preservesField('firstPlayer') &&
                 preservesField('partType') &&

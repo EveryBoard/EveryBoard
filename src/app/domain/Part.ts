@@ -26,8 +26,8 @@ export interface Part extends FirestoreJSONObject {
     readonly lastUpdateTime?: FirestoreTime,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
-    readonly winner?: string,
-    readonly loser?: string,
+    readonly winner?: MinimalUser,
+    readonly loser?: MinimalUser,
     readonly scorePlayerZero?: number,
     readonly scorePlayerOne?: number,
     readonly request?: Request | null, // can be null because we should be able to remove a request
@@ -84,13 +84,13 @@ export class PartDocument implements FirestoreDocument<Part> {
     public isResign(): boolean {
         return this.data.result === MGPResult.RESIGN.value;
     }
-    public getWinner(): MGPOptional<string> {
+    public getWinner(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.winner);
     }
-    public getLoser(): MGPOptional<string> {
+    public getLoser(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.loser);
     }
-    public setWinnerAndLoser(winner: string, loser: string): PartDocument {
+    public setWinnerAndLoser(winner: MinimalUser, loser: MinimalUser): PartDocument {
         return new PartDocument(this.id, { ...this.data, winner, loser });
     }
 }

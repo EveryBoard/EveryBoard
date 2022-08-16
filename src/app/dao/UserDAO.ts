@@ -29,9 +29,6 @@ export class UserDAO extends FirestoreDAO<User> {
     public async markAsVerified(uid: string): Promise<void> {
         await this.update(uid, { verified: true });
     }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
-        return this.observingWhere([['username', '==', username]], callback);
-    }
     public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }

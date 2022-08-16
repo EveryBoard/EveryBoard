@@ -35,6 +35,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -254,7 +255,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         expect(wrapper.currentPart.data.listMoves).toEqual([]);
         expect(wrapper.currentPart.data.listMoves).toEqual([]);
-        expect(wrapper.currentPlayer).toEqual('creator');
+        expect(wrapper.currentPlayer.name).toEqual('creator');
         wrapper.pauseCountDownsFor(Player.ZERO);
     }));
     it('Should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
@@ -448,8 +449,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // remainingTimes are not present on the first move of a current board
                 request: null,
                 lastUpdateTime: serverTimestamp(),
-                winner: 'creator',
-                loser: UserMocks.OPPONENT_MINIMAL_USER.name,
+                winner: UserMocks.CREATOR_MINIMAL_USER,
+                loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
             });
             componentTestUtils.expectElementToExist('#youWonIndicator');
@@ -1138,9 +1139,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it shoud be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
-            const winner: string = UserMocks.CREATOR_AUTH_USER.username.get();
-            const looser: string = UserMocks.OPPONENT_AUTH_USER.username.get();
-            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, Player.ZERO, 1, looser);
+            const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
+            const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
+            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, Player.ZERO, 1, loser);
         }));
         it(`should send opponent his remainingTime after first move`, fakeAsync(async() => {
             // Given a board where a first move has been made
@@ -1355,8 +1356,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     index: 3,
                     player: Player.ZERO.value,
                 },
-                winner: UserMocks.OPPONENT_MINIMAL_USER.name,
-                loser: 'creator',
+                winner: UserMocks.OPPONENT_MINIMAL_USER,
+                loser: UserMocks.CREATOR_MINIMAL_USER,
                 request: null,
                 result: MGPResult.RESIGN.value,
             });
@@ -1385,8 +1386,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
             await receivePartDAOUpdate({
-                winner: 'creator',
-                loser: UserMocks.OPPONENT_MINIMAL_USER.name,
+                winner: UserMocks.CREATOR_MINIMAL_USER,
+                loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
                 request: null,
             }, 3);

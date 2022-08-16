@@ -168,7 +168,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
-            wrapper.players[0] = MGPOptional.of('P4Minimax');
+            wrapper.players[0] = MGPOptional.of({ id: 'unused', name: 'P4Minimax' });
             wrapper.aiDepths[0] = '1';
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
@@ -279,7 +279,7 @@ describe('LocalGameWrapperComponent', () => {
         it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
             const wrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
-            wrapper.players[0] = MGPOptional.of('P4Minimax');
+            wrapper.players[0] = MGPOptional.of({ id: 'unused', name: 'P4Minimax' });
             wrapper.aiDepths[0] = '1';
 
             // When receiveValidMove is called

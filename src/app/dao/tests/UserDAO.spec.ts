@@ -21,21 +21,6 @@ describe('UserDAO', () => {
     it('should be created', () => {
         expect(dao).toBeTruthy();
     });
-    describe('observeUserByUsername', () => {
-        it('should call observingWhere with the right condition', () => {
-            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
-                () => void { },
-                () => void { },
-                () => void { },
-            );
-            spyOn(dao, 'observingWhere');
-            dao.observeUserByUsername('jeanjaja', callback);
-            const parameters: FirestoreCondition[] = [
-                ['username', '==', 'jeanjaja'],
-            ];
-            expect(dao.observingWhere).toHaveBeenCalledWith(parameters, callback);
-        });
-    });
     describe('observeActiveUsers', () => {
         it('should call observingWhere with the right condition', () => {
             const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(

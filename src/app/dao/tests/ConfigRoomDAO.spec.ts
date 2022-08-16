@@ -90,7 +90,7 @@ describe('ConfigRoomDAO', () => {
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
 
             const nonVerifiedUser: MinimalUser = await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-            // When the user adds joins the list of candidates
+            // When the user joins the list of candidates
             const result: Promise<void> = configRoomDAO.addCandidate(partId, nonVerifiedUser);
 
             // Then it should fail
@@ -329,15 +329,6 @@ describe('ConfigRoomDAO', () => {
                 // And we act as the creator
                 await reconnectUser(CREATOR_EMAIL);
             });
-            it('should allow to change partStatus to FINISHED after it is STARTED', async() => {
-                // When changing partStatus to FINISHED
-                const result: Promise<void> = configRoomDAO.update(partId, {
-                    partStatus: PartStatus.PART_FINISHED.value,
-                });
-
-                // Then it should succeed
-                await expectAsync(result).toBeResolvedTo();
-            });
             it('should forbid to change fields after part has started', async() => {
                 const updates: Partial<ConfigRoom>[] = [
                     { creator },
@@ -373,13 +364,11 @@ describe('ConfigRoomDAO', () => {
         it('should forbid changing its own candidate fields', async() => {
             // Given a part with a configRoom, with a candidate
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
-            const candidate: MinimalUser = await addCandidate(partId);
-
-            await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+            const malicious: MinimalUser = await addCandidate(partId);
 
             // When the malicious user tries to change one of its own candidate's fields
             const update: Partial<MinimalUser> = { name: 'foo' };
-            const result: Promise<void> = configRoomDAO.subCollectionDAO(partId, 'candidates').update(candidate.id, update);
+            const result: Promise<void> = configRoomDAO.subCollectionDAO(partId, 'candidates').update(malicious.id, update);
 
             // Then it should fail
             await expectPermissionToBeDenied(result);

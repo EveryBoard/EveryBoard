@@ -143,7 +143,7 @@ export class ConfigRoomService {
         const configRoomId: string = Utils.getNonNullable(this.observedConfigRoomId);
         for (const candidate of candidates) {
             // Need to delete the candidates before the actual configRoom,
-            // for the security rules to check that we are allowed to do it
+            // for the security rules to check that we are allowed to delete the configRoom
             await this.configRoomDAO.removeCandidate(configRoomId, candidate);
         }
         await this.configRoomDAO.delete(configRoomId);

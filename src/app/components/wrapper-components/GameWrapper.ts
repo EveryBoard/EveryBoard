@@ -14,6 +14,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 export class GameWrapperMessages {
 
@@ -38,7 +39,7 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent;
 
-    public players: MGPOptional<string>[] = [MGPOptional.empty(), MGPOptional.empty()];
+    public players: MGPOptional<MinimalUser>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
     public observerRole: number;
 
@@ -164,11 +165,11 @@ export abstract class GameWrapper {
             players: this.players,
             username,
             observer: this.observerRole,
-            areYouPlayer: (this.players[indexPlayer].equalsValue(username)),
+            areYouPlayer: (this.players[indexPlayer].isPresent() && this.players[indexPlayer].get().name === username),
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer].isPresent()) {
-            return this.players[indexPlayer].equalsValue(username);
+            return this.players[indexPlayer].get().name === username;
         } else {
             return true;
         }
