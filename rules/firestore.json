@@ -147,7 +147,7 @@ service cloud.firestore {
             // A player can perform a move
             let isUserTurn = (part.turn % 2 == 0 && userIsPlayerZero(part)) ||
                 (part.turn % 2 == 1 && userIsPlayerOne(part));
-            return part.listMoves != update.listMoves) &&
+            return part.listMoves != update.listMoves &&
                 isValidPartUpdateDuringGame(part) &&
                 safeTurnIncrease(part.turn, update.turn) &&
                 safeLastUpdate(part, update) &&
@@ -182,15 +182,15 @@ service cloud.firestore {
             return updateAcceptsDraw == false ||
                 (updateAcceptsDraw && drawWasProposed);
         }
-        function onlyAcceptsOrRefusesTakeBackIfAsked(part, update) {
-            let takeBackWasProposed = hasField(part, 'request') && part.request.code == 'TakeBackAsked';
-            let updateAnswersToTakeBack = hasField(update, 'request') &&
-                (part.request.code == 'TakeBackAccepted' || part.request.code == 'TakeBackRefused');
-            let updateFromDifferentPlayer = hasField(part, 'request') && hasField(update, 'request') &&
-                part.request.player != update.request.player;
-            return takeBackWasProposed == false ||
-                (takeBackWasProposed && updateAnswersToTakeBack && updateFromDifferentPlayer);
-        }
+//        function onlyAcceptsOrRefusesTakeBackIfAsked(part, update) {
+//            let takeBackWasProposed = hasField(part, 'request') && part.request.code == 'TakeBackAsked';
+//            let updateAnswersToTakeBack = hasField(update, 'request') &&
+//                (part.request.code == 'TakeBackAccepted' || part.request.code == 'TakeBackRefused');
+//            let updateFromDifferentPlayer = hasField(part, 'request') && hasField(update, 'request') &&
+//                part.request.player != update.request.player;
+//            return takeBackWasProposed == false ||
+//                (takeBackWasProposed && updateAnswersToTakeBack && updateFromDifferentPlayer);
+//        }
         function onlyResignsInTheirName(part, update) {
             let playerResigns = update.result == 1; // 1 = resign
             let resignerIsLoser = update.loser.id == request.auth.uid;
