@@ -12,8 +12,8 @@
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    <ng-container *ngIf="currentPlayer.name === getPlayerName() else opponentsTurn" i18n>It is your turn.</ng-container>
-                    <ng-template #opponentsTurn><ng-container i18n>It is {{ currentPlayer.name }}'s turn.</ng-container></ng-template>
+                    <ng-container *ngIf="currentPlayer?.name === getPlayerName() else opponentsTurn" i18n>It is your turn.</ng-container>
+                    <ng-template #opponentsTurn><ng-container i18n>It is {{ currentPlayer?.name }}'s turn.</ng-container></ng-template>
                 </p>
             </div>
             <div class="block">

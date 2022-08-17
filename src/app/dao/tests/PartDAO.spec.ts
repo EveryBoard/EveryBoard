@@ -797,7 +797,8 @@ describe('PartDAO', () => {
                                           return { remainingMsForZero: zero - 1000 };
                                       }, true);
             });
-            it('should forbid decreasing its own time during move (as playerZero)', async() => {
+            xit('should forbid decreasing its own time during move (as playerZero)', async() => {
+                // Test disabled because this is not something we are currently checking in the security rules
                 await checkTimeUpdate(Player.ZERO,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForZero: zero - 1000, turn: 1, listMoves: [1] };
@@ -821,7 +822,8 @@ describe('PartDAO', () => {
                                           return { remainingMsForOne: one - 1000 };
                                       }, true);
             });
-            it('should forbid decreasing its own time during move (as playerOne)', async() => {
+            xit('should forbid decreasing its own time during move (as playerOne)', async() => {
+                // Test disabled because this is not something we are currently checking in the security rules
                 await checkTimeUpdate(Player.ONE,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForOne: one - 1000, turn: 2, listMoves: [1, 2] };

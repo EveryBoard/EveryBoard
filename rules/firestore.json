@@ -145,18 +145,10 @@ service cloud.firestore {
         }
         function playerPerformsMove(part, update) {
             // A player can perform a move
-            let decreasesPlayerZeroTime = safeTimeDecrease(part.playerZero, 'remainingMsForZero', part, update);
-            let preservesPlayerZeroTime = preservesField('remainingMsForZero');
-            let decreasesPlayerOneTime = safeTimeDecrease(part.playerOne, 'remainingMsForOne', part, update);
-            let preservesPlayerOneTime = preservesField('remainingMsForOne');
-            let safeTimeDecrease = (part.turn == 0 && preservesPlayerOneTime && preservesPlayerZeroTime) ||
-                (userIsPlayerOne(part) && decreasesPlayerZeroTime && preservesPlayerOneTime) ||
-                (userIsPlayerZero(part) && preservesPlayerZeroTime && decreasesPlayerOneTime);
             let isUserTurn = (part.turn % 2 == 0 && userIsPlayerZero(part)) ||
                 (part.turn % 2 == 1 && userIsPlayerOne(part));
-            return isValidPartUpdateDuringGame(part) &&
-                part.listMoves != update.listMoves &&
-                safeTimeDecrease &&
+            return part.listMoves != update.listMoves) &&
+                isValidPartUpdateDuringGame(part) &&
                 safeTurnIncrease(part.turn, update.turn) &&
                 safeLastUpdate(part, update) &&
                 isUserTurn;
@@ -284,7 +276,7 @@ service cloud.firestore {
                 update.lastUpdate.player == 1 &&
                 part.playerOne.id == request.auth.uid;
             let indexIncremented = update.lastUpdate.index == part.lastUpdate.index + 1;
-            return (legitimatePlayerZeroUpdate || debug(legitimatePlayerOneUpdate) || debug(partHasStarted(part) == false)) && debug(indexIncremented);
+            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate || partHasStarted(part) == false) && indexIncremented;
         }
         function partHasStarted(part) {
             // A part is started when the beginning field is set
