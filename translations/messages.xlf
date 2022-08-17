@@ -444,7 +444,7 @@
         <source>It is your turn.</source>
       </trans-unit>
       <trans-unit id="3724541577412345595" datatype="html">
-        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer.name }}"/>&apos;s turn.</source>
+        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer?.name }}"/>&apos;s turn.</source>
       </trans-unit>
       <trans-unit id="715032829765584790" datatype="html">
         <source>vs.</source>
