@@ -34,7 +34,7 @@ describe('SiamPiece:', () => {
         expect(names).toEqual(expectedNames);
         expect(pieces).toEqual(expectedPieces);
     });
-    it('Should consider moutains as belonging to no player and pieces to their respective players', () => {
+    it('should consider moutains as belonging to no player and pieces to their respective players', () => {
         expect(SiamPiece.MOUNTAIN.belongTo(Player.ONE)).toBeFalse();
         expect(SiamPiece.MOUNTAIN.belongTo(Player.ZERO)).toBeFalse();
         expect(SiamPiece.DARK_DOWN.belongTo(Player.ZERO)).toBeFalse();

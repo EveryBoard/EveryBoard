@@ -5,6 +5,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 
 export type Click = string
+export type TutorialPredicate = (move: Move, previousState: GameState, resultingState: GameState) => MGPValidation
 
 export abstract class TutorialStep {
     public static fromMove(title: string,
@@ -40,7 +41,7 @@ export abstract class TutorialStep {
                                 instruction: string,
                                 state: GameState,
                                 solutionMove: Move,
-                                predicate: (move: Move, resultingState: GameState) => MGPValidation,
+                                predicate: TutorialPredicate,
                                 successMessage: string)
     : TutorialStep
     {
@@ -161,7 +162,7 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
                        instruction: string,
                        state: GameState,
                        private readonly solutionMove: Move,
-                       public readonly predicate: (move: Move, resultingState: GameState) => MGPValidation,
+                       public readonly predicate: TutorialPredicate,
                        successMessage: string) {
         super(title, instruction, state, successMessage);
     }
