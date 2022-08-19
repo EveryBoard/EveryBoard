@@ -264,7 +264,7 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
             // When trying to move over all groups of markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 8)), []);
-            // Then it should ail
+            // Then it should fail
             const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_SPACE_AFTER_MARKERS();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });

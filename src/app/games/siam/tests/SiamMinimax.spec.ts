@@ -404,7 +404,7 @@ describe('SiamMinimax:', () => {
         it('Should not count unpushable mountains', () => {
             // Given a board with unpushable mountains, such as the initial board
             const state: SiamState = SiamState.getInitialState();
-            // When computing the closest pusher horizontally
+            // When computing the closest pusher horizontally
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
                 SiamRules.getLineClosestPusher(state, new Coord(4, 2), Orthogonal.RIGHT);
             // Then it should not find any

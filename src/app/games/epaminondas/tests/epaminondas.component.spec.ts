@@ -295,7 +295,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_10'); // select last piece neighbor
 
-            // When deselecting the last piece
+        // When deselecting the last piece
         await testUtils.expectClickSuccess('#click_0_10'); // deselect last piece
 
         // Then it should change the last piece

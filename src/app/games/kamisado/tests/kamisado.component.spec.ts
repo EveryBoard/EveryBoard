@@ -97,7 +97,7 @@ describe('KamisadoComponent', () => {
         componentTestUtils.setupState(state);
 
         // When clicking anywhere
-        // Thne it should fail and say that player must pass
+        // Then it should fail and say that player must pass
         await componentTestUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS());
     }));
     it('should forbid de-selecting a piece that is pre-selected', fakeAsync(async() => {

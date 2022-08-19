@@ -1,8 +1,6 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { DvonnMinimax } from '../DvonnMinimax';
-import { DvonnMove } from '../DvonnMove';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnState } from '../DvonnState';

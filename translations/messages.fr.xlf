@@ -2354,8 +2354,8 @@
         <source>Capturing</source>
         <target>Captures</target>
       </trans-unit>
-      <trans-unit id="8651686499168234683" datatype="html">
-        <source>If a move ends on an opponent&apos;s pieces, this one is captured and removed from the board.
+      <trans-unit id="5036745511795758114" datatype="html">
+        <source>If a move ends on an opponent&apos;s piece, it is captured and removed from the board.
         However, a move cannot end on one of the player&apos;s pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
         If a player has only one piece, that player wins the game.&lt;br/&gt;&lt;br/&gt;

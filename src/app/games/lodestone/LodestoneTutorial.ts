@@ -111,7 +111,7 @@ export class LodestoneTutorial {
                 top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ONE, 2),
             }),
             new LodestoneMove(new Coord(3, 5), 'pull', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 }),
-            (_: LodestoneMove, _previosu: LodestoneState, result: LodestoneState) => {
+            (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
                 if (result.pressurePlates.top.isPresent()) {
                     return MGPValidation.failure($localize`You must capture and place your capture on the top pressure plate to make it crumble a second time!`);
                 }

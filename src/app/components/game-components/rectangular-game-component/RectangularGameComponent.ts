@@ -17,4 +17,11 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
 {
 
     public board: Table<P>;
+
+    public getViewBox(): string {
+        return (-0.5 * this.STROKE_WIDTH) + ' ' +
+            (-0.5 * this.STROKE_WIDTH) + ' ' +
+            (this.board.length * this.SPACE_SIZE + this.STROKE_WIDTH) + ' ' +
+            (this.board[0].length * this.SPACE_SIZE + this.STROKE_WIDTH);
+    }
 }
