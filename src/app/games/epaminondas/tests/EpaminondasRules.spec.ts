@@ -304,7 +304,7 @@ describe('EpaminondasRules:', () => {
             // Then it should be a victory for 0
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
-        it('should declare second player winner if his pawn survive one turn on first line', () => {
+        it('should declare second player winner if their pawn survive one turn on first line', () => {
             // Given a board where second player wins
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -326,7 +326,7 @@ describe('EpaminondasRules:', () => {
             // Then it should be a victory for player 1
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
-        it('should not consider first player winner if both player have one piece on their landing line', () => {
+        it('should not consider first player winner if both players have one piece on their landing line', () => {
             // Given a board where both players have a piece on the landing line
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _, _, _, _, _, _, _, _, _],

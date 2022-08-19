@@ -51,7 +51,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
      * differents scenarios
      */
 
-    let componentTestUtils: ComponentTestUtils<QuartoComponent>;
+    let testUtils: ComponentTestUtils<QuartoComponent>;
 
     let wrapper: OnlineGameWrapperComponent;
 
@@ -106,28 +106,28 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         } else {
             observerRole = PlayerOrNone.NONE;
         }
-        componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
-        wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-        componentTestUtils.detectChanges();
+        testUtils.prepareFixture(OnlineGameWrapperComponent);
+        wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+        testUtils.detectChanges();
         tick(1);
-        componentTestUtils.bindGameComponent();
+        testUtils.bindGameComponent();
 
-        const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
+        const partCreationId: DebugElement = testUtils.findElement('#partCreation');
         let context: string = 'partCreation id should be present after ngOnInit';
         expect(partCreationId).withContext(context).toBeTruthy();
         context = 'partCreation field should also be present';
         expect(wrapper.partCreation).withContext(context).toBeTruthy();
         await joinerDAO.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
         await joinerDAO.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
         // TODO: replace by a click on the component to really simulate it "end2end"
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
         if (observerRole === Player.ZERO) { // Creator
             await wrapper.partCreation.proposeConfig();
         } else {
             await joinerDAO.update('joinerId', JoinerMocks.WITH_PROPOSED_CONFIG);
         }
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
         if (shorterGlobalChrono != null) {
             await joinerDAO.update('joinerId', {
                 partStatus: PartStatus.PART_STARTED.value,
@@ -147,7 +147,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         };
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
         await partDAO.updateAndBumpIndex('joinerId', observerRoleAsPlayer, 0, update);
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
         return Promise.resolve();
     }
     const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BABB);
@@ -168,7 +168,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(result.isSuccess())
             .withContext('move ' + move.toString() + ' should be legal but failed because: ' + result.reason)
             .toEqual(legal);
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
         tick(1);
         return result;
     }
@@ -178,17 +178,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number): Promise<void> {
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
         await partDAO.updateAndBumpIndex('joinerId', observerRoleAsPlayer, lastIndex, update);
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
         tick(1);
     }
     async function askTakeBack(): Promise<void> {
-        return await componentTestUtils.clickElement('#askTakeBackButton');
+        return await testUtils.clickElement('#askTakeBackButton');
     }
     async function acceptTakeBack(): Promise<void> {
-        return await componentTestUtils.clickElement('#acceptTakeBackButton');
+        return await testUtils.clickElement('#acceptTakeBackButton');
     }
     async function refuseTakeBack(): Promise<void> {
-        return await componentTestUtils.clickElement('#refuseTakeBackButton');
+        return await testUtils.clickElement('#refuseTakeBackButton');
     }
     async function receiveNewMoves(moves: number[],
                                    lastIndex: number,
@@ -248,7 +248,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.endGame).toBeTrue();
     }
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame('Quarto');
+        testUtils = await ComponentTestUtils.forGame('Quarto');
     }));
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
@@ -263,8 +263,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-        const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
-        let quartoTag: DebugElement = componentTestUtils.querySelector('app-quarto');
+        const partCreationId: DebugElement = testUtils.findElement('#partCreation');
+        let quartoTag: DebugElement = testUtils.querySelector('app-quarto');
         expect(partCreationId)
             .withContext('partCreation id should be absent after config accepted')
             .toBeFalsy();
@@ -274,12 +274,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.partCreation)
             .withContext('partCreation field should be absent after config accepted')
             .toBeFalsy();
-        expect(componentTestUtils.getComponent())
+        expect(testUtils.getComponent())
             .withContext('gameComponent field should be absent after config accepted and async ms finished')
             .toBeFalsy();
         tick(1);
 
-        quartoTag = componentTestUtils.querySelector('app-quarto');
+        quartoTag = testUtils.querySelector('app-quarto');
         expect(quartoTag)
             .withContext('quarto tag should be present after config accepted and async millisec finished')
             .toBeTruthy();
@@ -310,12 +310,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Given a started game
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
         tick(1);
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
 
         // Then the usernames should be shown
-        const playerIndicator: HTMLElement = componentTestUtils.findElement('#playerZeroIndicator').nativeElement;
+        const playerIndicator: HTMLElement = testUtils.findElement('#playerZeroIndicator').nativeElement;
         expect(playerIndicator.innerText).toBe(UserMocks.CREATOR_AUTH_USER.username.get());
-        const opponentIndicator: HTMLElement = componentTestUtils.findElement('#playerOneIndicator').nativeElement;
+        const opponentIndicator: HTMLElement = testUtils.findElement('#playerOneIndicator').nativeElement;
         expect(opponentIndicator.innerText).toBe(UserMocks.OPPONENT_AUTH_USER.username.get());
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -372,7 +372,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
 
         // Then the player cannot play
-        await componentTestUtils.clickElement('#chooseCoord_0_0');
+        await testUtils.clickElement('#chooseCoord_0_0');
         expect(messageDisplayer.gameMessage).toHaveBeenCalledWith(GameWrapperMessages.NOT_YOUR_TURN());
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -380,15 +380,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
         tick(1);
-        componentTestUtils.expectElementNotToExist('#passButton');
+        testUtils.expectElementNotToExist('#passButton');
 
         wrapper.gameComponent.canPass = true;
         wrapper.gameComponent.pass = async() => {
             return MGPValidation.SUCCESS;
         };
-        componentTestUtils.detectChanges();
+        testUtils.detectChanges();
 
-        await componentTestUtils.clickElement('#passButton');
+        await testUtils.clickElement('#passButton');
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
@@ -433,7 +433,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
             const move3: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AABB);
             await prepareBoard([move0, move1, move2, move3]);
-            componentTestUtils.expectElementNotToExist('#winnerIndicator');
+            testUtils.expectElementNotToExist('#winnerIndicator');
 
             // When doing winning move
             spyOn(partDAO, 'update').and.callThrough();
@@ -456,7 +456,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 loser: 'firstCandidate',
                 result: MGPResult.VICTORY.value,
             });
-            componentTestUtils.expectElementToExist('#youWonIndicator');
+            testUtils.expectElementToExist('#youWonIndicator');
             expectGameToBeOver();
         }));
         it('Draw move from player should notifyDraw', fakeAsync(async() => {
@@ -482,7 +482,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 new QuartoMove(3, 2, QuartoPiece.BBBB),
             ];
             await prepareBoard(moves, Player.ONE);
-            componentTestUtils.expectElementNotToExist('#winnerIndicator');
+            testUtils.expectElementNotToExist('#winnerIndicator');
 
             // When doing winning move
             spyOn(partDAO, 'update').and.callThrough();
@@ -504,7 +504,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastUpdateTime: serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             });
-            componentTestUtils.expectElementToExist('#hardDrawIndicator');
+            testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();
         }));
     });
@@ -533,11 +533,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
                 tick(1);
-                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementNotToExist('#askTakeBackButton');
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack();
-                componentTestUtils.detectChanges();
-                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.detectChanges();
+                testUtils.expectElementNotToExist('#askTakeBackButton');
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -547,16 +547,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
 
                 // When asking take back, the button should not be here
-                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementNotToExist('#askTakeBackButton');
 
                 // When receiving a new move, it should still not be showed nor possible
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
-                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementNotToExist('#askTakeBackButton');
 
                 // When doing the first move, it should become possible, but only once
                 await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA), true);
                 await askTakeBack();
-                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementNotToExist('#askTakeBackButton');
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -568,7 +568,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
 
                 // accepting take back should not be proposed
-                componentTestUtils.expectElementNotToExist('#acceptTakeBackButton');
+                testUtils.expectElementNotToExist('#acceptTakeBackButton');
                 await receiveRequest(Request.takeBackAsked(Player.ONE), 3);
 
                 // Then should allow it after proposing sent
@@ -576,7 +576,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await acceptTakeBack();
 
                 // and then again not allowing it
-                componentTestUtils.expectElementNotToExist('#acceptTakeBackButton');
+                testUtils.expectElementNotToExist('#acceptTakeBackButton');
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
             it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
@@ -585,7 +585,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
-                componentTestUtils.expectElementNotToExist('#refuseTakeBackButton');
+                testUtils.expectElementNotToExist('#refuseTakeBackButton');
                 await receiveRequest(Request.takeBackAsked(Player.ONE), 3);
                 spyOn(partDAO, 'update').and.callThrough();
 
@@ -593,7 +593,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await refuseTakeBack();
 
                 // Then a TakeBackRefused request should have been sent
-                componentTestUtils.expectElementNotToExist('#refuseTakeBackButton');
+                testUtils.expectElementNotToExist('#refuseTakeBackButton');
                 expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
                     lastUpdate: {
                         index: 5,
@@ -651,7 +651,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await askTakeBack();
                 await receiveRequest(Request.takeBackRefused(Player.ONE), 3);
 
-                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementNotToExist('#askTakeBackButton');
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -693,7 +693,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await acceptTakeBack();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
-                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
                 expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(0);
@@ -760,7 +760,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await acceptTakeBack();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
-                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
                 expect(wrapper.switchPlayer).toHaveBeenCalledOnceWith();
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(0);
@@ -820,7 +820,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     ...BASE_TAKE_BACK_REQUEST,
                     remainingMsForOne: 1799999,
                 }, 4);
-                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
 
                 // Then turn should be changed to 0 and resumeCountDown be called
@@ -895,7 +895,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // When opponent accept user's take back
                 await receivePartDAOUpdate(BASE_TAKE_BACK_REQUEST, 3);
-                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
 
                 // Then turn should be changed to 0 and resumeCountDown be called
@@ -954,7 +954,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         async function setup() {
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
+            testUtils.detectChanges();
         }
         it('should send draw request when player asks to', fakeAsync(async() => {
             // Given any board
@@ -962,7 +962,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(partDAO, 'update').and.callThrough();
 
             // When clicking the propose draw button
-            await componentTestUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDrawButton');
 
             // Then a request of draw proposition should have been sent
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
@@ -976,18 +976,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
             await setup();
-            await componentTestUtils.clickElement('#proposeDrawButton');
-            componentTestUtils.expectElementNotToExist('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDrawButton');
+            testUtils.expectElementNotToExist('#proposeDrawButton');
 
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
             await setup();
-            await componentTestUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDrawButton');
             await receiveRequest(Request.drawRefused(Player.ONE), 1);
 
             tick(1);
-            componentTestUtils.expectElementNotToExist('#proposeDrawButton');
+            testUtils.expectElementNotToExist('#proposeDrawButton');
 
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
@@ -998,7 +998,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(partDAO, 'update').and.callThrough();
 
             // When accepting the drawn
-            await componentTestUtils.clickElement('#acceptDrawButton');
+            await testUtils.clickElement('#acceptDrawButton');
             tick(1);
 
             // Then a request indicating game is an agreed draw should be sent
@@ -1010,14 +1010,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.AGREED_DRAW_BY_ZERO.value,
                 request: null,
             });
-            componentTestUtils.expectElementToExist('#youAgreedToDrawIndicator');
+            testUtils.expectElementToExist('#youAgreedToDrawIndicator');
             expectGameToBeOver();
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
             // Given a gameComponent where draw has been proposed
             await setup();
-            await componentTestUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDrawButton');
 
             // When draw is accepted
             spyOn(partDAO, 'update').and.callThrough();
@@ -1028,7 +1028,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then game should be over
             expectGameToBeOver();
-            componentTestUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
+            testUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
             expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
         it('should send refusal when player asks to', fakeAsync(async() => {
@@ -1037,7 +1037,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             spyOn(partDAO, 'update').and.callThrough();
 
-            await componentTestUtils.clickElement('#refuseDrawButton');
+            await testUtils.clickElement('#refuseDrawButton');
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
                 lastUpdate: {
                     index: 3,
@@ -1050,12 +1050,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should only propose to accept/refuse draw when asked', fakeAsync(async() => {
             await setup();
-            componentTestUtils.expectElementNotToExist('#acceptDrawButton');
-            componentTestUtils.expectElementNotToExist('#refuseDrawButton');
+            testUtils.expectElementNotToExist('#acceptDrawButton');
+            testUtils.expectElementNotToExist('#refuseDrawButton');
             await receiveRequest(Request.drawProposed(Player.ONE), 1);
 
-            componentTestUtils.expectElementToExist('#acceptDrawButton');
-            componentTestUtils.expectElementToExist('#refuseDrawButton');
+            testUtils.expectElementToExist('#acceptDrawButton');
+            testUtils.expectElementToExist('#refuseDrawButton');
 
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
@@ -1305,11 +1305,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // When receiving a addTurnTime request
                 await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
-                componentTestUtils.detectChanges();
+                testUtils.detectChanges();
 
                 // Then game should end by timeout only after new time has run out
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
-                expect(componentTestUtils.wrapper.endGame).withContext('game should not be finished yet').toBeFalse();
+                expect(testUtils.wrapper.endGame).withContext('game should not be finished yet').toBeFalse();
                 tick(30 * 1000);
                 expectGameToBeOver();
             }));
@@ -1351,7 +1351,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When clicking on resign button
             spyOn(partDAO, 'update').and.callThrough();
-            await componentTestUtils.clickElement('#resignButton');
+            await testUtils.clickElement('#resignButton');
 
             // Then the game should be ended
             expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
@@ -1372,7 +1372,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
-            await componentTestUtils.clickElement('#resignButton');
+            await testUtils.clickElement('#resignButton');
 
             // When attempting a move
             spyOn(partDAO, 'update').and.callThrough();
@@ -1396,7 +1396,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }, 3);
 
             // When checking "victory text"
-            const resignText: string = componentTestUtils.findElement('#resignIndicator').nativeElement.innerText;
+            const resignText: string = testUtils.findElement('#resignIndicator').nativeElement.innerText;
 
             // Then we should see "opponent has resign"
             expect(resignText).toBe(`firstCandidate has resigned.`);
@@ -1795,28 +1795,28 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a game that is not finished
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
-            componentTestUtils.expectElementNotToExist('#proposeRematchButton');
+            testUtils.detectChanges();
+            testUtils.expectElementNotToExist('#proposeRematchButton');
 
             // When it is finished
-            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
 
             // Then it should allow to propose rematch
-            componentTestUtils.expectElementToExist('#proposeRematchButton');
+            testUtils.expectElementToExist('#proposeRematchButton');
         }));
         it('should sent proposal request when proposing', fakeAsync(async() => {
             const gameService: GameService = TestBed.inject(GameService);
             // Given an ended game
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
-            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            testUtils.detectChanges();
+            await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
 
             // When the propose rematch button is clicked
             spyOn(gameService, 'proposeRematch').and.callThrough();
-            await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
+            await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // Then the gameService must be called
             expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('joinerId', 2, Player.ZERO);
@@ -1825,30 +1825,30 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an ended game
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
-            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            testUtils.detectChanges();
+            await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
 
             // When request is received
-            componentTestUtils.expectElementNotToExist('#acceptRematchButton');
+            testUtils.expectElementNotToExist('#acceptRematchButton');
             await receiveRequest(Request.rematchProposed(Player.ONE), 2);
 
             // Then accept/refuse buttons must be shown
-            componentTestUtils.expectElementToExist('#acceptRematchButton');
+            testUtils.expectElementToExist('#acceptRematchButton');
         }));
         it('should sent accepting request when user accept rematch', fakeAsync(async() => {
             const gameService: GameService = TestBed.inject(GameService);
             // give a part with rematch request send by opponent
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
-            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            testUtils.detectChanges();
+            await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
             await receiveRequest(Request.rematchProposed(Player.ONE), 2);
 
             // When accepting it
             spyOn(gameService, 'acceptRematch').and.callThrough();
-            await componentTestUtils.expectInterfaceClickSuccess('#acceptRematchButton');
+            await testUtils.expectInterfaceClickSuccess('#acceptRematchButton');
 
             // Then it should have called acceptRematch
             expect(gameService.acceptRematch).toHaveBeenCalledTimes(1);
@@ -1858,10 +1858,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part lost with rematch request send by user
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
-            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            testUtils.detectChanges();
+            await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
-            await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
+            await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // When opponent accept it
             spyOn(router, 'navigate');
@@ -1909,7 +1909,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When displaying the board
             // Then the text should indicate players have agreed to draw
-            componentTestUtils.expectElementToExist('#playersAgreedToDraw');
+            testUtils.expectElementToExist('#playersAgreedToDraw');
             expectGameToBeOver();
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
@@ -1921,36 +1921,36 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When the game is displayed
             tick(1);
-            componentTestUtils.detectChanges();
+            testUtils.detectChanges();
 
             // Then it should highlight the player's names
-            componentTestUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg');
-            componentTestUtils.expectElementToHaveClass('#playerOneIndicator', 'player1-bg');
+            testUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg');
+            testUtils.expectElementToHaveClass('#playerOneIndicator', 'player1-bg');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
             // Given a game that has been started
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
+            testUtils.detectChanges();
 
             // When it is the current player's turn
 
             // Then it should highlight the board with its color
-            componentTestUtils.expectElementToHaveClass('#board-tile', 'player0-bg');
+            testUtils.expectElementToHaveClass('#board-tile', 'player0-bg');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should highlight the board in grey when game is over', fakeAsync(async() => {
             // Given a game that has been started
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             tick(1);
-            componentTestUtils.detectChanges();
+            testUtils.detectChanges();
 
             // When the game is over
-            await componentTestUtils.clickElement('#resignButton');
+            await testUtils.clickElement('#resignButton');
 
             // Then it should highlight the board with its color
-            componentTestUtils.expectElementToHaveClass('#board-tile', 'endgame-bg');
+            testUtils.expectElementToHaveClass('#board-tile', 'endgame-bg');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should not highlight the board when it is the turn of the opponent', fakeAsync(async() => {
@@ -1960,10 +1960,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When it is not the current player's turn
             await doMove(FIRST_MOVE, true);
-            componentTestUtils.detectChanges();
+            testUtils.detectChanges();
 
             // Then it should not highlight the board
-            componentTestUtils.expectElementNotToHaveClass('#board-tile', 'player1-bg');
+            testUtils.expectElementNotToHaveClass('#board-tile', 'player1-bg');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
     });
