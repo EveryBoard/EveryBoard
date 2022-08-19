@@ -2241,9 +2241,7 @@
       </trans-unit>
       <trans-unit id="8029874053731693714" datatype="html">
         <source>Victory by blocking</source>
-        <target>Foncé s&apos;est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
-        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
-        Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.</target>
+        <target>Victoire par blocage</target>
       </trans-unit>
       <trans-unit id="5546725507412628775" datatype="html">
         <source>At any time, if a player blocks the entire game, that player loses.

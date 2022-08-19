@@ -12,7 +12,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('SiamRules:', () => {
 

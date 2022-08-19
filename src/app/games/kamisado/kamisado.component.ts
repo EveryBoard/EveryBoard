@@ -58,7 +58,11 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public updateBoard(): void {
         const state: KamisadoState = this.rules.node.gameState;
         this.board = state.getCopiedBoard();
-        this.lastMove = this.rules.node.move;
+        if (this.rules.node.move.isPresent() && this.rules.node.move.get().isPieceMove()) {
+            this.lastMove = this.rules.node.move;
+        } else {
+            this.lastMove = MGPOptional.empty();
+        }
 
         this.canPass = KamisadoRules.mustPass(state);
         if (this.canPass || state.coordToPlay.isAbsent()) {

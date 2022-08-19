@@ -122,49 +122,49 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         return [furthest0, furthest1];
     }
     public static isLegal(move: KamisadoMove, state: KamisadoState): MGPFallible<void> {
-        const start: Coord = move.coord;
-        const end: Coord = move.end;
-        const colorToPlay: KamisadoColor = state.colorToPlay;
+        if (move.isPieceMove()) {
+            const start: Coord = move.coord;
+            const end: Coord = move.end;
+            const colorToPlay: KamisadoColor = state.colorToPlay;
 
-        if (move === KamisadoMove.PASS) {
+            // A move is legal if:
+            //   - the move is within the board (this has been checked when constructing the move)
+            //   - start piece should be owned by the current player
+            const piece: KamisadoPiece = state.getPieceAt(start);
+            if (!piece.belongsTo(state.getCurrentPlayer())) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            }
+            //  - start space should contain a piece of the right color (or any color can be played)
+            if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
+                return MGPFallible.failure(KamisadoFailure.NOT_RIGHT_COLOR());
+            }
+            //  - end space should be empty
+            const endPiece: KamisadoPiece = state.getPieceAt(end);
+            if (!endPiece.isEmpty()) {
+                return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            }
+            //  - move direction is linear
+            const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
+            if (directionOptional.isFailure()) {
+                return MGPFallible.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
+            }
+            //  - move direction is toward the opponent's line
+            const dir: Direction = directionOptional.get();
+            if (!KamisadoRules.directionAllowedForPlayer(dir, state.getCurrentPlayer())) {
+                return MGPFallible.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
+            }
+            //  - there is no piece between starting and landing coord
+            let currentCoord: Coord = start;
+            while (!currentCoord.equals(end)) {
+                currentCoord = currentCoord.getNext(dir);
+                if (!state.getPieceAt(currentCoord).isEmpty()) {
+                    return MGPFallible.failure(KamisadoFailure.MOVE_BLOCKED());
+                }
+            }
+            return MGPFallible.success(undefined);
+        } else {
             return this.isLegalPass(state);
         }
-
-        // A move is legal if:
-        //   - the move is within the board (this has been checked when constructing the move)
-        //   - start piece should be owned by the current player
-        const piece: KamisadoPiece = state.getPieceAt(start);
-        if (!piece.belongsTo(state.getCurrentPlayer())) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
-        }
-        //  - start space should contain a piece of the right color (or any color can be played)
-        if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
-            return MGPFallible.failure(KamisadoFailure.NOT_RIGHT_COLOR());
-        }
-        //  - end space should be empty
-        const endPiece: KamisadoPiece = state.getPieceAt(end);
-        if (!endPiece.isEmpty()) {
-            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
-        }
-        //  - move direction is linear
-        const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
-        if (directionOptional.isFailure()) {
-            return MGPFallible.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
-        }
-        //  - move direction is toward the opponent's line
-        const dir: Direction = directionOptional.get();
-        if (!KamisadoRules.directionAllowedForPlayer(dir, state.getCurrentPlayer())) {
-            return MGPFallible.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
-        }
-        //  - there is no piece between starting and landing coord
-        let currentCoord: Coord = start;
-        while (!currentCoord.equals(end)) {
-            currentCoord = currentCoord.getNext(dir);
-            if (!state.getPieceAt(currentCoord).isEmpty()) {
-                return MGPFallible.failure(KamisadoFailure.MOVE_BLOCKED());
-            }
-        }
-        return MGPFallible.success(undefined);
     }
     private static isLegalPass(state: KamisadoState): MGPFallible<void> {
         if (this.mustPass(state) && !state.alreadyPassed) {
@@ -182,28 +182,29 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
     // Apply the move by only relying on tryMove
     public applyLegalMove(move: KamisadoMove, state: KamisadoState, _status: void): KamisadoState {
-        if (move === KamisadoMove.PASS) {
+        if (move.isPieceMove()) {
+            const start: Coord = move.coord;
+            const end: Coord = move.end;
+
+            const newBoard: KamisadoPiece[][] = state.getCopiedBoard();
+            newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
+            newBoard[start.y][start.x] = KamisadoPiece.EMPTY; // becomes unoccupied
+            const newColorToPlay: KamisadoColor = KamisadoBoard.getColorAt(end.x, end.y);
+
+            // Get the next piece that can move
+            const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(state, newColorToPlay);
+
+            // Construct the next state
+            const resultingState: KamisadoState =
+                new KamisadoState(state.turn + 1, newColorToPlay, nextCoord, false, newBoard);
+
+            return resultingState;
+        } else {
             const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(state, state.colorToPlay);
             const resultingState: KamisadoState =
                 new KamisadoState(state.turn + 1, state.colorToPlay, nextCoord, true, state.board);
             return resultingState;
         }
-        const start: Coord = move.coord;
-        const end: Coord = move.end;
-
-        const newBoard: KamisadoPiece[][] = state.getCopiedBoard();
-        newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
-        newBoard[start.y][start.x] = KamisadoPiece.EMPTY; // becomes unoccupied
-        const newColorToPlay: KamisadoColor = KamisadoBoard.getColorAt(end.x, end.y);
-
-        // Get the next piece that can move
-        const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(state, newColorToPlay);
-
-        // Construct the next state
-        const resultingState: KamisadoState =
-            new KamisadoState(state.turn + 1, newColorToPlay, nextCoord, false, newBoard);
-
-        return resultingState;
     }
     public isLegal(move: KamisadoMove, state: KamisadoState): MGPFallible<void> {
         return KamisadoRules.isLegal(move, state);

@@ -9,10 +9,10 @@ describe('DvonnMinimax', () => {
     let rules: DvonnRules;
     let minimax: DvonnMinimax;
 
-    const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
-    const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
-    const O: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
-    const XX: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
+    const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
+    const D1: DvonnPieceStack = DvonnPieceStack.SOURCE;
+    const O1: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
+    const X2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 
     beforeEach(() => {
         rules = new DvonnRules(DvonnState);
@@ -24,11 +24,11 @@ describe('DvonnMinimax', () => {
     it('should compute board value as the score difference', () => {
         // Given a board
         const board: Table<DvonnPieceStack> = [
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, XX, D, O, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, X2, D1, O1, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
 

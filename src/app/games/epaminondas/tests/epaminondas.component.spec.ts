@@ -196,7 +196,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_7');
         await testUtils.expectClickSuccess('#click_0_5');
 
-        // Then only valid extensions and captures are clickable
+        // Then only valid extensions and captures should be clickable
         expectNotClickable(0, 2);
         expectClickable(0, 3);
         expectClickable(0, 4);
