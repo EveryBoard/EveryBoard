@@ -173,6 +173,7 @@ service cloud.firestore {
                 (playerOneTimeUnchanged || safeTimeIncreasePlayerOne || playerOneTimeDecreased);
             return isValidPartUpdateDuringGame(part) &&
                 safeTimeManagement &&
+                preservesField('winner') && preservesField('loser') &&
                 (preservesField('turn') || safeTurnDecrease(part.turn, update.turn)) &&
                 onlyAcceptsDrawIfProposed(part, update) &&
 //                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
@@ -297,7 +298,7 @@ service cloud.firestore {
         match /config-room/{partId} {
             allow create: if creatorCreatesConfigRoom(partId, request.resource.data);
             allow delete: if creatorDeletesConfigRoom(resource.data);
-            allow delete: if observerDeletesConfigRoom(partId, resource.data);
+            allow delete: if verifiedUserDeletesConfigRoom(partId, resource.data);
             allow update: if creatorUpdatesPartInCreation(resource.data, request.resource.data);
             allow update: if chosenOpponentAcceptsConfig(resource.data, request.resource.data);
             allow update: if chosenOpponentLeaves(resource.data, request.resource.data)
@@ -314,7 +315,7 @@ service cloud.firestore {
             // The creator can delete a config room if the part has not started
             return userIsVerified() && userIsCreator(configRoom) && configStillOngoing(configRoom);
         }
-        function observerDeletesConfigRoom(partId, configRoom) {
+        function verifiedUserDeletesConfigRoom(partId, configRoom) {
             // Anybody else can delete a config room only if the creator has timed out and the part has not started
             return userIsVerified() && hasTimedOut(creatorOf(partId).id) && configStillOngoing(configRoom);
         }
@@ -327,7 +328,6 @@ service cloud.firestore {
         function chosenOpponentAcceptsConfig(configRoom, update) {
             //  The chosen opponent can change the config from PROPOSED to STARTED
             return validChosenOpponentConfigRoomUpdate(configRoom) &&
-                preservesCreatorOnlyFields() &&
                 preservesField('chosenOpponent') &&
                 acceptsConfig(configRoom, update);
         }

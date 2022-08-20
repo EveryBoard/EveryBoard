@@ -121,6 +121,12 @@ export async function createConnectedUser(email: string, username: string): Prom
     return { id: user.uid, name: username };
 }
 
+export async function createDisconnectedUser(email: string, username: string): Promise<MinimalUser> {
+    const user: FireAuth.User = await createConnectedGoogleUser(email, username);
+    await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
+    return { id: user.uid, name: username };
+}
+
 export async function reconnectUser(email: string): Promise<void> {
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
