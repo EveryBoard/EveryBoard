@@ -18,6 +18,6 @@ export interface User extends FirestoreJSONObject {
 export interface FocussedPart extends FirestoreJSONObject {
     id: string,
     typeGame: string,
-    opponent?: MinimalUser,
+    opponent?: MinimalUser | null,
     role: UserRoleInPart,
 }

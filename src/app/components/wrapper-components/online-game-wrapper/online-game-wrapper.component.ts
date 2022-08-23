@@ -8,7 +8,7 @@ import { Move } from '../../../jscaip/Move';
 import { Part, MGPResult, PartDocument } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { User, UserDocument } from '../../../domain/User';
+import { FocussedPart, User, UserDocument } from '../../../domain/User';
 import { Request } from '../../../domain/Request';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
@@ -87,14 +87,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     public rematchProposed: boolean = false;
     public opponentProposedRematch: boolean = false;
+    private userLinkedToThisPart: boolean = true;
 
     public joiner: Joiner;
+    public observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
 
     protected routerEventsSub!: Subscription; // Initialized in ngOnInit
     protected userSub!: Subscription; // Initialized in ngOnInit
+    protected observedPartSub!: Subscription; // Initialized in ngOnInit
     protected opponentSubscription: MGPOptional<() => void> = MGPOptional.empty();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
@@ -172,6 +175,24 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.authUser = user;
         });
         await this.setCurrentPartIdOrRedirect();
+        // onObservedPartUpdate need to access to currentPartId, so it must after setCurrentPartIdOrRedirect
+        this.observedPartSub = this.connectedUserService.getObservedPartObs()
+            .subscribe(async(part: MGPOptional<FocussedPart>) => {
+                await this.onObservedPartUpdate(part);
+            });
+    }
+    private async onObservedPartUpdate(part: MGPOptional<FocussedPart>): Promise<void> {
+        if (part.isPresent()) {
+            const newPart: FocussedPart = part.get();
+            if (newPart.role !== 'Observer' && newPart.id !== this.currentPartId) {
+                console.log('user not linked to this part')
+                this.userLinkedToThisPart = false;
+                await this.router.navigate(['/lobby']);
+                return;
+            }
+        }
+        this.observedPart = part;
+        return;
     }
     public async startGame(iJoiner: Joiner): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
@@ -252,7 +273,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 };
                 return;
             case UpdateType.MOVE:
-                this.msToSubstract = this.getLastUpdateTime(oldPart, part, updateType);
+                this.msToSubstract = this.getLastUpdateTime(oldPart, part);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 return;
@@ -261,9 +282,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 return this.startCountDown(part);
         }
     }
-    private startCountDown(part: PartDocument): void {
+    private async startCountDown(part: PartDocument): Promise<void> {
         this.setChronos();
-        this.setPlayersDatas(part);
+        await this.setPlayersDatas(part);
         if (part.data.listMoves.length === 0) {
             this.startCountDownFor(Player.ZERO);
         } else {
@@ -332,7 +353,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         assert(listMoves.length === newTurn, 'ListMoves size and newTurn do not match, it is impossible!');
         return previousTurn < newTurn;
     }
-    public getLastUpdateTime(oldPart: PartDocument | null, update: PartDocument, type: UpdateType): [number, number] {
+    public getLastUpdateTime(oldPart: PartDocument | null, update: PartDocument): [number, number] {
         if (oldPart == null) {
             return [0, 0]; // TODOTODO
         }
@@ -595,7 +616,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         this.gameComponent.updateBoard();
     }
-    public setPlayersDatas(updatedICurrentPart: PartDocument): void {
+    public async setPlayersDatas(updatedICurrentPart: PartDocument): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
         this.players = [
             MGPOptional.of(updatedICurrentPart.data.playerZero),
@@ -603,16 +624,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         ];
         assert(updatedICurrentPart.data.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();
-        let opponentName: MGPOptional<string> = MGPOptional.empty();
-        if (this.players[0].equalsValue(this.getPlayerName())) {
-            this.observerRole = Player.ZERO.value;
-            opponentName = this.players[1];
-        } else if (this.players[1].equalsValue(this.getPlayerName())) {
-            this.observerRole = Player.ONE.value;
-            opponentName = this.players[0];
-        } else {
-            this.observerRole = PlayerOrNone.NONE.value;
-        }
+        const opponentName: MGPOptional<string> = await this.updateObserverRole();
         if (opponentName.isPresent()) {
             const onDocumentCreatedOrModified: (f: UserDocument[]) => void = (user: UserDocument[]) => {
                 assert(user.length === 1, 'List of opponent should only have one element!');
@@ -629,6 +641,26 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.opponentSubscription =
                 MGPOptional.of(this.userService.observeUserByUsername(opponentName.get(), callback));
         }
+    }
+    public async updateObserverRole(): Promise<MGPOptional<string>> {
+        let opponentName: MGPOptional<string> = MGPOptional.empty();
+        const oldObserverRole: number = this.observerRole;
+        if (this.players[0].equalsValue(this.getPlayerName())) {
+            this.observerRole = Player.ZERO.value;
+            opponentName = this.players[1];
+        } else if (this.players[1].equalsValue(this.getPlayerName())) {
+            this.observerRole = Player.ONE.value;
+            opponentName = this.players[0];
+        } else {
+            this.observerRole = PlayerOrNone.NONE.value;
+        }
+        if (oldObserverRole !== this.observerRole) {
+            await this.connectedUserService.updateObservedPart({
+                // ...this.observedPart,
+                role: this.observerRole === PlayerOrNone.NONE.value ? 'Observer' : 'Player',
+            });
+        }
+        return opponentName;
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'dans OnlineGameWrapperComponent.onLegalUserMove');
@@ -676,9 +708,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public async reachedOutOfTime(player: 0 | 1): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         const lastIndex: number = this.getLastIndex();
-        const user: Player = this.getPlayer();
         this.stopCountdownsFor(Player.of(player));
+        if (this.isPlaying() === false) {
+            return;
+        }
         const opponent: User = Utils.getNonNullable(this.opponent);
+        const user: Player = this.getPlayer();
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
             const victoriousPlayer: string = Utils.getNonNullable(opponent.username);
@@ -853,9 +888,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.chronoOneGlobal.changeDuration(currentDuration + addedMs);
         }
     }
-    public ngOnDestroy(): void {
+    public async ngOnDestroy(): Promise<void> {
+        console.log('in ngOnDestroy')
         this.routerEventsSub.unsubscribe();
         this.userSub.unsubscribe();
+        this.observedPartSub.unsubscribe();
+        if (this.isPlaying() === false && this.userLinkedToThisPart) {
+            await this.connectedUserService.removeObservedPart();
+        }
         if (this.gameStarted === true) {
             if (this.opponentSubscription.isPresent()) {
                 this.opponentSubscription.get()();

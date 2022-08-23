@@ -27,7 +27,7 @@ describe('KamisadoMove', () => {
         expect(() => KamisadoMove.of(new Coord(0, 0), new Coord(9, 9))).toThrowError();
         expect(() => KamisadoMove.of(new Coord(8, 5), new Coord(5, 5))).toThrowError();
     });
-    it('should override correctly equality', () => {
+    it('should override equals correctly', () => {
         const move: KamisadoMove = KamisadoMove.of(new Coord(2, 2), new Coord(3, 3));
         const sameMove: KamisadoMove = KamisadoMove.of(new Coord(2, 2), new Coord(3, 3));
         const neighbor: KamisadoMove = KamisadoMove.of(new Coord(3, 3), new Coord(2, 2));

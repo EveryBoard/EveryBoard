@@ -13,7 +13,7 @@ type PartOS = ObservableSubject<MGPOptional<PartDocument>>
 
 export class PartDAOMock extends FirestoreDAOMock<Part> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     private static partDB: MGPMap<string, PartOS>;
 

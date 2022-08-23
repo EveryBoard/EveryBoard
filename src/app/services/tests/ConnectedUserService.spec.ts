@@ -699,18 +699,7 @@ describe('ConnectedUserService', () => {
             it('should throw when called while no user is logged', async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
-                let failed: boolean = false;
-                try {
-                    await service.updateObservedPart(observedPart);
-                } catch (error) {
-                    expect(error.message).toBe(expectedError);
-                    failed = true;
-                }
-                expect(failed).toBeTrue();
-                // OLDLY LOOKING LIKE THIS GOOD LINES:
-                // spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-                // const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
-                // expect(() => service.updateObservedPart('some-part-doc-id')).toThrowError(expectedError);
+                expect(() => service.updateObservedPart({ id: 'some-part-doc-id' })).toThrowError(expectedError);
             });
             it('should delegate to userDAO', async() => {
                 // Given a service observing an user
@@ -729,18 +718,7 @@ describe('ConnectedUserService', () => {
             it('should throw when asking to remove while no user is logged', async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
-                let failed: boolean = false;
-                try {
-                    await service.removeObservedPart();
-                } catch (error) {
-                    expect(error.message).toBe(expectedError);
-                    failed = true;
-                }
-                expect(failed).toBeTrue();
-                // Clean version would be this
-                // spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-                // const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
-                // expect(() => service.removeObservedPart()).toThrowError(expectedError);
+                expect(() => service.removeObservedPart()).toThrowError(expectedError);
             });
             it('should delegate removal to userDAO', async() => {
                 // Given a service observing an user
@@ -799,7 +777,7 @@ describe('ConnectedUserService', () => {
             // Then it's should be refused
             expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_PLAYING());
         }));
-        it('should refuse for a player already creator', fakeAsync(async() => {
+        it('should refuse for a player already creator', fakeAsync(async() => { // UNSTABLE: last failed 2022-08-18
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser(true)).uid;
             await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Creator' } });
@@ -866,7 +844,7 @@ describe('ConnectedUserService', () => {
             // Then it's should be authorised
             expect(validation.isSuccess()).toBeTrue();
         }));
-        it('should refuse for a player already playing', fakeAsync(async() => {
+        it('should refuse for a player already playing', fakeAsync(async() => { // TODOTODO check for instability (last failed, 2022/08/17 - 06:49)
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser(true)).uid;
             await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
@@ -888,7 +866,7 @@ describe('ConnectedUserService', () => {
             // Then it's should be refused
             expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_CREATING());
         }));
-        it('should refuse for a player already candidate', fakeAsync(async() => {
+        it('should refuse for a player already candidate', fakeAsync(async() => { // Instable: last failed 2022-08-18
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser(true)).uid;
             await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Candidate' } });

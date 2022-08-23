@@ -136,7 +136,7 @@ describe('PartCreationComponent', () => {
                 // Then observedPart in user doc should be set
                 const expectedObservedPart: FocussedPart = {
                     id: 'joinerId',
-                    opponent: undefined,
+                    opponent: null,
                     typeGame: 'JOSER',
                     role: 'Creator',
                 };
@@ -214,7 +214,7 @@ describe('PartCreationComponent', () => {
                 const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
                 // And component should update the observedPart
-                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: undefined });
+                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: null });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should deselect non chosen candidate when they leaves', fakeAsync(async() => {
@@ -258,7 +258,7 @@ describe('PartCreationComponent', () => {
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
                 // And component should update the observedPart
-                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: undefined });
+                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: null });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should remove candidates from the list when they stop sending token', fakeAsync(async() => {
@@ -752,11 +752,14 @@ describe('PartCreationComponent', () => {
                     typeGame: 'JOSER',
                     opponent: UserMocks.CREATOR_MINIMAL_USER,
                     role: 'ChosenOpponent',
-                    // TODOTODO after that code a test that change "ConfigRoom"roles to "StartedPart"roles
+                    // TODOTODO after that, code a test that change "ConfigRoom"roles to "StartedPart"roles
                 });
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+        });
+        describe('Someone else is chosen', () => {
+            it('should update');
         });
         describe('Leaving', () => {
             it('should remove yourself when leaving the room and empty user.observedPart', fakeAsync(async() => {
@@ -788,7 +791,7 @@ describe('PartCreationComponent', () => {
 });
 
 describe('PartType', () => {
-    it('Should map correctly with PartType.of', () => {
+    it('should map correctly with PartType.of', () => {
         expect(PartType.of('STANDARD').value).toBe('STANDARD');
         expect(PartType.of('BLITZ').value).toBe('BLITZ');
         expect(PartType.of('CUSTOM').value).toBe('CUSTOM');

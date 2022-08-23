@@ -130,6 +130,7 @@ export class ConnectedUserService implements OnDestroy {
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.observedPartRS = new ReplaySubject<MGPOptional<FocussedPart>>(1);
+        this.observedPartRS.next(MGPOptional.empty());
         this.observedPartObs = this.observedPartRS.asObservable();
         this.unsubscribeFromAuth =
             FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
@@ -161,12 +162,22 @@ export class ConnectedUserService implements OnDestroy {
                                                                         userHasFinalizedVerification);
                                 this.user = MGPOptional.of(authUser);
                                 this.userRS.next(authUser);
-                                this.observedPart = MGPOptional.ofNullable(doc.get().observedPart);
-                                this.observedPartRS.next(this.observedPart);
+                                this.updateObservedPartWithDoc(doc.get().observedPart);
                             }
                         }));
                 }
             });
+    }
+    private updateObservedPartWithDoc(newObservedPart: FocussedPart | null | undefined): void {
+        const previousObservedPart: MGPOptional<FocussedPart> = this.observedPart;
+        const stayedNull: boolean = newObservedPart == null && previousObservedPart.isAbsent();
+        const stayedItselfAsNonNull: boolean = newObservedPart != null &&
+                                               previousObservedPart.equalsValue(newObservedPart);
+        const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
+        if (valueChanged) {
+            this.observedPart = MGPOptional.ofNullable(newObservedPart);
+            this.observedPartRS.next(this.observedPart);
+        }
     }
     public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
@@ -346,9 +357,11 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.reload();
     }
     public updateObservedPart(observedPart: Partial<FocussedPart>): Promise<void> {
-        console.log('CONNECTED USER SERVICE. updateObservedPart', observedPart)
+        // TODOTODO should we assert that observedPart (the update) is not partial if this.observedPart (the current value) is not set ?
+        const oldObservedPart: FocussedPart = this.observedPart.getOrElse(observedPart as FocussedPart);
+        const mergedObservedPart: FocussedPart = { ...oldObservedPart, ...observedPart };
         assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
-        return this.userDAO.update(this.user.get().id, { observedPart });
+        return this.userDAO.update(this.user.get().id, { observedPart: mergedObservedPart });
     }
     public removeObservedPart(): Promise<void> {
         assert(this.user.isPresent(), 'Should not call removeObservedPart when not connected');

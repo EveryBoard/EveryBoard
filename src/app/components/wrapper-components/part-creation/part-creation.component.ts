@@ -147,7 +147,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         });
     }
     private updateUserDocWithObservedPart(joiner: Joiner): Promise<void> {
-        display(PartCreationComponent.VERBOSE, `updateUserDocWithObservedPart of '` + this.partId + `'`);
+        display(PartCreationComponent.VERBOSE, `recei ! updateUserDocWithObservedPart of '` + this.partId + `'`);
         const role: UserRoleInPart = this.getUserRoleInPart(joiner);
         const observedPart: FocussedPart = {
             id: this.partId,
@@ -167,12 +167,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return 'Candidate';
         }
     }
-    private getOpponent(): MinimalUser | undefined {
-        let userOrUndefined: MinimalUser | undefined = undefined;
+    private getOpponent(): MinimalUser | null {
+        let userOrUndefined: MinimalUser | null = null;
         if (this.connectedUserService.user.get().id === this.currentJoiner?.creator.id) {
-            userOrUndefined = this.currentJoiner.chosenOpponent ?? undefined;
+            userOrUndefined = this.currentJoiner.chosenOpponent;
         } else {
-            userOrUndefined = this.currentJoiner?.creator ?? undefined;
+            userOrUndefined = this.currentJoiner?.creator ?? null;
         }
         return userOrUndefined;
     }
@@ -284,20 +284,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.getForm('partType').setValue(partType);
     }
     public async selectOpponent(opponentName: string): Promise<void> {
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.setChosenOpponent(' + opponentName + ')');
+        display(PartCreationComponent.VERBOSE, 'recei: PartCreationComponent.setChosenOpponent(' + opponentName + ')');
         const opponent: MinimalUser = this.getUserFromName(opponentName);
-        console.log('LE DEBUT')
-        /*
-        await this.connectedUserService.updateObservedPart({ opponent: opponent.id });
-        console.log('LE MILIEU')
-        await this.joinerService.setChosenOpponent(opponent);
-        return;*/
-
         await Promise.all([
             this.connectedUserService.updateObservedPart({ opponent }),
             this.joinerService.setChosenOpponent(opponent),
         ]);
-        console.log('LA FIN');
         return;
     }
     private getUserFromName(username: string): MinimalUser {
@@ -352,7 +344,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 const currentJoiner: Joiner = Utils.getNonNullable(this.currentJoiner);
                 const userName: string = Utils.getNonNullable(currentJoiner.chosenOpponent).name;
                 this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
-                await this.connectedUserService.updateObservedPart({ opponent: undefined });
+                await this.connectedUserService.updateObservedPart({ opponent: null });
             }
             let observedPartUpdated: boolean = false;
             if (this.userJustChosenAsOpponent(joiner.get())) {
@@ -367,13 +359,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 await this.observeNeededPlayers();
             }
             this.updateViewInfo();
-            if (this.isGameStarted()) {
+            if (this.isGameStarted(this.currentJoiner)) {
                 display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: the game has started');
                 this.onGameStarted();
             }
         }
     }
     private userJustChosenAsOpponent(joiner: Joiner): boolean {
+        if (this.isGameStarted(joiner)) return false;
         const currentUserId: string = this.connectedUserService.user.get().id;
         const userWasNotChosenOpponent: boolean = this.currentJoiner?.chosenOpponent?.id !== currentUserId;
         const userIsChosenOpponent: boolean = joiner.chosenOpponent?.id === currentUserId;
@@ -391,9 +384,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
         await this.router.navigate(['/lobby']);
     }
-    private isGameStarted(): boolean {
-        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
-        return joiner.partStatus === PartStatus.PART_STARTED.value;
+    private isGameStarted(joiner: Joiner | null): boolean {
+        assert(joiner != null, 'joiner should not be null (isGameStarted)');
+        return Utils.getNonNullable(joiner).partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted() {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
@@ -427,8 +420,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private async destroyDocIfPartDidNotStart(): Promise<void> {
-        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
-        const partStarted: boolean = joiner.partStatus === PartStatus.PART_STARTED.value;
+        const partStarted: boolean = this.isGameStarted(this.currentJoiner);
         assert(partStarted === false, 'Should not try to cancelGameCreation when part started!');
         assert(this.allDocDeleted === false, 'Should not delete doc twice');
         await this.cancelGameCreation();

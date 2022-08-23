@@ -33,7 +33,7 @@ describe('EpaminondasMove: ', () => {
     it('Should forbid non integer number to decode', () => {
         expect(() => EpaminondasMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
     });
-    it('Should override correctly equals and toString', () => {
+    it('Should override equals and toString correctly', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
         const neighbor: EpaminondasMove = new EpaminondasMove(0, 0, 2, 1, Direction.UP);
         const twin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);

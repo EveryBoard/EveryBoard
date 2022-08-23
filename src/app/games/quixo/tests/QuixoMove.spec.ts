@@ -51,7 +51,7 @@ describe('QuixoMove:', () => {
             NumberEncoderTestUtils.expectToBeCorrect(QuixoMove.encoder, move);
         }
     });
-    it('Should override correctly equals and toString', () => {
+    it('Should override equals and toString correctly', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
         const neighbor: QuixoMove = new QuixoMove(0, 1, Orthogonal.RIGHT);
         const twin: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);

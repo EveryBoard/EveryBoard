@@ -30,13 +30,13 @@ describe('MartianChessMove', () => {
         const expectedResult: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
         expect(move.getReasonOr('')).toBe(expectedResult);
     });
-    it('should overwrite correctly toString', () => {
+    it('should override toString correctly', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(1, 1)).get();
         expect(move.toString()).toBe('MartianChessMove((0, 0) -> (1, 1))');
         const moveWithCall: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(1, 1), true).get();
         expect(moveWithCall.toString()).toBe('MartianChessMove((0, 0) -> (1, 1), CALL_THE_CLOCK)');
     });
-    it('should overwrite correctly equals', () => {
+    it('should override equals correctly', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(1, 1)).get();
         const moveWithDifferntStart: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get();
         const moveWithDifferntEnd: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(2, 2)).get();
