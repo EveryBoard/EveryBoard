@@ -49,7 +49,7 @@ export class GipfComponent
     private finalCaptures: GipfCapture[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [

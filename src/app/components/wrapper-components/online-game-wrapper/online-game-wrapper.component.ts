@@ -365,6 +365,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             rules.choose(chosenMove);
         }
         this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2].get();
+        if (this.gameComponent.mustRotateBoard) {
+            this.gameComponent.rotation = 'rotate(' + this.observerRole * 180 + ')';
+        }
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {

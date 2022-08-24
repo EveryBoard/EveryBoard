@@ -47,7 +47,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private captureds: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, true);
         this.rules = new EpaminondasRules(EpaminondasState);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),

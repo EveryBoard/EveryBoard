@@ -61,7 +61,7 @@ export class ConspirateursComponent
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
         this.rules = ConspirateursRules.get();
         this.availableMinimaxes = [

@@ -100,7 +100,7 @@ export class LodestoneComponent
     private captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
         this.rules = LodestoneRules.get();
         this.tutorial = new LodestoneTutorial().tutorial;
         this.availableMinimaxes = [

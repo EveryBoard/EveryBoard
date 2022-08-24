@@ -94,7 +94,7 @@ export class YinshComponent
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new YinshRules(YinshState);
         this.availableMinimaxes = [

@@ -1,6 +1,6 @@
 import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -44,6 +44,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public imagesLocation: string = 'assets/images/';
 
+    public rotation: string = '';
+
     public tutorial: TutorialStep[];
 
     public isPlayerTurn: () => boolean;
@@ -63,7 +65,9 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
      *      - if it's offline, he'll tell the game-component what the bot have done
      */
 
-    constructor(public readonly messageDisplayer: MessageDisplayer) {
+    constructor(public readonly messageDisplayer: MessageDisplayer,
+                @Inject(Boolean) public readonly mustRotateBoard: boolean)
+    {
     }
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
@@ -121,7 +125,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, unknown>,
                                                                   Move,
-                                                                  GameState, unknown>
+                                                                  GameState,
+                                                                  unknown>
 {
 }
 

@@ -48,7 +48,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
 
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
         this.rules = new AbaloneRules(AbaloneState);
         this.availableMinimaxes = [
             new AbaloneDummyMinimax(this.rules, 'Dummy'),

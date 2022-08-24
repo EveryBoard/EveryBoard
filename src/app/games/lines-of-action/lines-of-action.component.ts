@@ -33,7 +33,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
         this.rules = new LinesOfActionRules(LinesOfActionState);
         this.availableMinimaxes = [
             new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),

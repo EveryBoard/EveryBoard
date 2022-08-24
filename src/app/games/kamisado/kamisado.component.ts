@@ -33,7 +33,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosenAutomatically: boolean = false;
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, true);
         this.rules = new KamisadoRules(KamisadoState);
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),

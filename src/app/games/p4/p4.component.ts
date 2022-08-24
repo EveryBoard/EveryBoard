@@ -25,7 +25,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public victoryCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
         this.rules = new P4Rules(P4State);
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),

@@ -32,7 +32,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                        public VERBOSE: boolean,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(messageDisplayer);
+        super(messageDisplayer, false);
     }
     public getViewBox(): string {
         const begin: number = - this.STROKE_WIDTH;
