@@ -12,7 +12,7 @@
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    <ng-container *ngIf="currentPlayer?.name === getPlayerName() else opponentsTurn" i18n>It is your turn.</ng-container>
+                    <ng-container *ngIf="currentPlayer?.name === getPlayer().name else opponentsTurn" i18n>It is your turn.</ng-container>
                     <ng-template #opponentsTurn><ng-container i18n>It is {{ currentPlayer?.name }}'s turn.</ng-container></ng-template>
                 </p>
             </div>
@@ -25,7 +25,7 @@
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
-                                [canAddTime]='observerRole === 1 && endGame === false'
+                                [canAddTime]='observerRole.value === 1 && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
@@ -35,7 +35,7 @@
                 <app-count-down #chronoZeroTurn
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
-                                [canAddTime]='observerRole === 1 && endGame === false'
+                                [canAddTime]='observerRole.value === 1 && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ZERO Turn"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
@@ -53,7 +53,7 @@
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
-                                [canAddTime]='observerRole === 0 && endGame === false'
+                                [canAddTime]='observerRole.value === 0 && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ONE Global"
                                 (outOfTimeAction)="reachedOutOfTime(1)"
@@ -63,7 +63,7 @@
                 <app-count-down #chronoOneTurn
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
-                                [canAddTime]='observerRole === 0 && endGame === false'
+                                [canAddTime]='observerRole.value === 0 && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ONE Turn"
                                 (outOfTimeAction)="reachedOutOfTime(1)"
@@ -98,7 +98,7 @@
                         i18n
                 >Reject draw</button>
                 <button class="button is-fullwidth mb-1"
-                        *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer.name === getPlayerName())"
+                        *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer?.name === getPlayer().name)"
                         id="passButton"
                         (click)="gameComponent.pass()"
                         i18n
@@ -129,25 +129,25 @@
                     <p class="title" id="hardDrawIndicator" i18n>Draw</p>
                 </div>
                 <div *ngIf="currentPart.isAgreedDraw()">
-                    <p class="title" id="youAgreedToDrawIndicator" *ngIf="currentPart.getDrawAccepter().name === getPlayerName()" i18n>You agreed to draw.</p>
-                    <p class="title" id="yourOpponentAgreedToDrawIndicator" *ngIf="(currentPart.getDrawAccepter().name !== getPlayerName()) && isPlaying()" i18n>Your draw proposal has been accepted.</p>
+                    <p class="title" id="youAgreedToDrawIndicator" *ngIf="currentPart.getDrawAccepter().name === getPlayer().name" i18n>You agreed to draw.</p>
+                    <p class="title" id="yourOpponentAgreedToDrawIndicator" *ngIf="(currentPart.getDrawAccepter().name !== getPlayer().name) && isPlaying()" i18n>Your draw proposal has been accepted.</p>
                     <p class="title" id="playersAgreedToDraw" *ngIf="isPlaying() === false" i18n>Players agreed to draw.</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
-                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get().name === getPlayerName()" i18n>You won.</p>
-                    <p class="title" *ngIf="(currentPart.getWinner().get().name !== getPlayerName()) && isPlaying()" i18n>You lost.</p>
+                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get().name === getPlayer().name" i18n>You won.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner().get().name !== getPlayer().name) && isPlaying()" i18n>You lost.</p>
                     <p class="title" *ngIf="isPlaying() === false" i18n>{{ currentPart.getWinner().get().name }} won.</p>
                 </div>
                 <div *ngIf="currentPart.isTimeout()">
-                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get().name === getPlayerName()" i18n>{{ currentPart.getLoser().get().name }} has reached their time limit. You won.</p>
-                    <p class="title" *ngIf="(currentPart.getWinner().get().name !== getPlayerName()) && isPlaying()" i18n>You reached your time limit.</p>
+                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get().name === getPlayer().name" i18n>{{ currentPart.getLoser().get().name }} has reached their time limit. You won.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner().get().name !== getPlayer().name) && isPlaying()" i18n>You reached your time limit.</p>
                     <p class="title" *ngIf="isPlaying() === false" i18n>{{ currentPart.getLoser().get().name }} has reached their time limit.</p>
                 </div>
                 <div *ngIf="currentPart.isResign()">
                     <p class="title" id="resignIndicator"
-                       *ngIf="(currentPart.getWinner().get().name !== getPlayerName()) && isPlaying()" i18n>You resigned.</p>
+                       *ngIf="(currentPart.getWinner().get().name !== getPlayer().name) && isPlaying()" i18n>You resigned.</p>
                     <p class="title" id="resignIndicator"
-                       *ngIf="isPlaying() === false || currentPart.getWinner().get().name === getPlayerName()" i18n>{{ currentPart.getLoser().get().name }} has resigned.</p>
+                       *ngIf="isPlaying() === false || currentPart.getWinner().get().name === getPlayer().name" i18n>{{ currentPart.getLoser().get().name }} has resigned.</p>
                 </div>
 
             </div>

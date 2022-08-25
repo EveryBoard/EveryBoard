@@ -19,9 +19,10 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('OnlineGameWrapper for non-existing game', () => {
-    let testUtils: ComponentTestUtils<AbstractGameComponent>;
+    let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         testUtils = await ComponentTestUtils.basic('invalid-game');
@@ -60,7 +61,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
      * stage 3: P4Component appear
      * differents scenarios
      */
-    let testUtils: ComponentTestUtils<P4Component>;
+    let testUtils: ComponentTestUtils<P4Component, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
     let configRoomDAO: ConfigRoomDAO;
 

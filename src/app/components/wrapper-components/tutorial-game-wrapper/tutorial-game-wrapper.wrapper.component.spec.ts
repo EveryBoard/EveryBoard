@@ -21,7 +21,7 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
-        const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
+        const testUtils: ComponentTestUtils<AbstractGameComponent, void> = await ComponentTestUtils.basic('invalid-game', true);
         testUtils.prepareFixture(TutorialGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -37,19 +37,19 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
-    let componentTestUtils: ComponentTestUtils<QuartoComponent>;
+    let testUtils: ComponentTestUtils<QuartoComponent, void>;
     let wrapper: TutorialGameWrapperComponent;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils =
-            await ComponentTestUtils.forGame<QuartoComponent>('Quarto', TutorialGameWrapperComponent);
-        wrapper = componentTestUtils.wrapper as TutorialGameWrapperComponent;
+        testUtils =
+            await ComponentTestUtils.forGameWithWrapper<QuartoComponent, void>('Quarto', TutorialGameWrapperComponent);
+        wrapper = testUtils.wrapper as TutorialGameWrapperComponent;
     }));
     describe('Common behavior', () => {
         // ///////////////////////// BEFORE ///////////////////////////////////////
         it('should create', () => {
-            expect(componentTestUtils.wrapper).toBeTruthy();
-            expect(componentTestUtils.getComponent()).toBeTruthy();
+            expect(testUtils.wrapper).toBeTruthy();
+            expect(testUtils.getComponent()).toBeTruthy();
         });
         it('Should show informations bellow/beside the board', fakeAsync(async() => {
             // Given a certain TutorialStep
@@ -74,9 +74,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // expect to see step instruction on component
             const expectedMessage: string = 'instruction';
-            const currentMessage: string = componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualState: QuartoState = componentTestUtils.getComponent().rules.node.gameState;
+            const actualState: QuartoState = testUtils.getComponent().rules.node.gameState;
             expect(actualState).toEqual(state);
         }));
         it('Should show previousMove when set', fakeAsync(async() => {
@@ -129,10 +129,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // expect to see three "li" with step title
             let expectedTitle: string = 'title 0';
-            let currentTitle: string = componentTestUtils.findElement('#step_0').nativeElement.innerHTML;
+            let currentTitle: string = testUtils.findElement('#step_0').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
             expectedTitle = 'title 1';
-            currentTitle = componentTestUtils.findElement('#step_1').nativeElement.innerHTML;
+            currentTitle = testUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
         }));
         // ///////////////////////// ATTEMPTING ///////////////////////////////////
@@ -158,14 +158,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when selecting a step
-            const stepSelection: HTMLSelectElement = componentTestUtils.findElement('#steps').nativeElement;
+            const stepSelection: HTMLSelectElement = testUtils.findElement('#steps').nativeElement;
             stepSelection.value = stepSelection.options[2].value;
             stepSelection.dispatchEvent(new Event('change'));
-            componentTestUtils.detectChanges();
+            testUtils.detectChanges();
 
             // expect to have the step 2 shown
             const expectedMessage: string = 'instruction 2';
-            const currentMessage: string = componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
@@ -182,20 +182,20 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickSuccess('#choosePiece_8');
+            await testUtils.expectClickSuccess('#choosePiece_8');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
-            await componentTestUtils.expectMoveSuccess('#chooseCoord_1_1', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#chooseCoord_1_1', move, QuartoState.getInitialState());
             tick(10);
 
             // when clicking retry
-            await componentTestUtils.clickElement('#retryButton');
+            await testUtils.clickElement('#retryButton');
 
             // expect to see steps instruction message on component and board restarted
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(componentTestUtils.getComponent().rules.node.gameState)
+            expect(testUtils.getComponent().rules.node.gameState)
                 .toEqual(QuartoState.getInitialState());
         }));
         it('Should start step again after clicking "retry" on step success', fakeAsync(async() => {
@@ -212,18 +212,18 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
             // when doing another move, then clicking retry
-            await componentTestUtils.expectClickSuccess('#choosePiece_15');
+            await testUtils.expectClickSuccess('#choosePiece_15');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#chooseCoord_0_0', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#chooseCoord_0_0', move, QuartoState.getInitialState());
             tick(10);
-            await componentTestUtils.clickElement('#retryButton');
+            await testUtils.clickElement('#retryButton');
 
             // expect to see steps instruction message on component and board restarted
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(componentTestUtils.getComponent().rules.node.gameState)
+            expect(testUtils.getComponent().rules.node.gameState)
                 .toEqual(QuartoState.getInitialState());
         }));
         it('Should forbid clicking again on the board after success', fakeAsync(async() => {
@@ -245,20 +245,20 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // when clicking again
-            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.STEP_FINISHED());
+            await testUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.STEP_FINISHED());
             tick(10);
 
             // expect to see still the steps success message on component
             const expectedMessage: string = 'Congratulations!';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('Should allow clicking again after restarting succeeded steps', fakeAsync(async() => {
@@ -273,17 +273,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Perdu.',
                 ),
             ];
-            await componentTestUtils.expectClickSuccess('#choosePiece_15');
-            await componentTestUtils.clickElement('#retryButton');
+            await testUtils.expectClickSuccess('#choosePiece_15');
+            await testUtils.clickElement('#retryButton');
 
             // When trying again
-            await componentTestUtils.expectClickSuccess('#choosePiece_15');
+            await testUtils.expectClickSuccess('#choosePiece_15');
 
             // expect to see success message again
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
-            expect(componentTestUtils.getComponent().rules.node.gameState)
+            expect(testUtils.getComponent().rules.node.gameState)
                 .toEqual(QuartoState.getInitialState());
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
@@ -308,12 +308,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             // when clicking "Skip"
-            await componentTestUtils.clickElement('#nextButton');
+            await testUtils.clickElement('#nextButton');
 
             // expect to see next step on component
             const expectedMessage: string = 'Following Following Following.';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             expect(wrapper.stepFinished[0]).toBeFalse();
         }));
@@ -346,17 +346,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.clickElement('#nextButton');
-            await componentTestUtils.clickElement('#nextButton');
-            await componentTestUtils.expectClickSuccess('#chooseCoord_2_2');
+            await testUtils.clickElement('#nextButton');
+            await testUtils.clickElement('#nextButton');
+            await testUtils.expectClickSuccess('#chooseCoord_2_2');
 
             // When clicking next
-            await componentTestUtils.clickElement('#nextButton');
+            await testUtils.clickElement('#nextButton');
 
             // expect to be back at first step
             const expectedMessage: string = 'instruction 0';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('Should move to the first unfinished step when all next steps are finished', fakeAsync(async() => {
@@ -388,18 +388,18 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.clickElement('#nextButton'); // Go to 1
-            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1'); // Do 1
-            await componentTestUtils.clickElement('#nextButton'); // Go to 2
-            await componentTestUtils.clickElement('#nextButton'); // Go to 0
+            await testUtils.clickElement('#nextButton'); // Go to 1
+            await testUtils.expectClickSuccess('#chooseCoord_1_1'); // Do 1
+            await testUtils.clickElement('#nextButton'); // Go to 2
+            await testUtils.clickElement('#nextButton'); // Go to 0
 
             // When clicking next
-            await componentTestUtils.clickElement('#nextButton'); // Should go to 2
+            await testUtils.clickElement('#nextButton'); // Should go to 2
 
             // expect to be back at first step
             const expectedMessage: string = 'instruction 2';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('Should show congratulation and play buttons at the end of the tutorial, hide next button', fakeAsync(async() => {
@@ -415,23 +415,23 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // when clicking next button
-            await componentTestUtils.clickElement('#nextButton');
+            await testUtils.clickElement('#nextButton');
 
             // expect to see end tutorial congratulations
             const expectedMessage: string = wrapper.COMPLETED_TUTORIAL_MESSAGE;
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(wrapper.successfulSteps).toBe(1);
             expect(currentMessage).toBe(expectedMessage);
             // expect next button to be hidden
-            componentTestUtils.expectElementNotToExist('#nextButton');
+            testUtils.expectElementNotToExist('#nextButton');
             // expect retry button to be hidden
-            componentTestUtils.expectElementNotToExist('#retryButton');
+            testUtils.expectElementNotToExist('#retryButton');
             // expect restart button to be here
-            await componentTestUtils.clickElement('#restartButton');
+            await testUtils.clickElement('#restartButton');
             expect(wrapper.successfulSteps).toBe(0);
         }));
         it('Should allow to restart the whole tutorial when finished', fakeAsync(async() => {
@@ -443,14 +443,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     QuartoState.getInitialState(),
                 ),
             ]);
-            await componentTestUtils.clickElement('#nextButton');
+            await testUtils.clickElement('#nextButton');
 
             // when clicking restart
-            await componentTestUtils.clickElement('#restartButton');
+            await testUtils.clickElement('#restartButton');
 
             // expect to be back on first step
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(wrapper.steps[0].instruction);
             expect(wrapper.stepFinished.every((v: boolean) => v === false)).toBeTrue();
             expect(wrapper.stepIndex).toEqual(0);
@@ -465,12 +465,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     QuartoState.getInitialState(),
                 ),
             ]);
-            componentTestUtils.expectElementNotToExist('#playLocallyButton');
-            await componentTestUtils.clickElement('#nextButton');
+            testUtils.expectElementNotToExist('#playLocallyButton');
+            await testUtils.clickElement('#nextButton');
 
             // when clicking play locally
             spyOn(router, 'navigate').and.callThrough();
-            await componentTestUtils.clickElement('#playLocallyButton');
+            await testUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
             expectValidRouting(router, ['/local', 'Quarto'], LocalGameWrapperComponent);
@@ -484,13 +484,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     QuartoState.getInitialState(),
                 ),
             ]);
-            componentTestUtils.expectElementNotToExist('#playOnlineButton');
-            await componentTestUtils.clickElement('#nextButton');
+            testUtils.expectElementNotToExist('#playOnlineButton');
+            await testUtils.clickElement('#nextButton');
 
             // when clicking play locally
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate');
-            await componentTestUtils.clickElement('#playOnlineButton');
+            await testUtils.clickElement('#playOnlineButton');
 
             // expect navigator to have been called
             expectValidRouting(router, ['/play', 'Quarto'], OnlineGameCreationComponent);
@@ -517,11 +517,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing that move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_3_3');
+            await testUtils.expectClickSuccess('#chooseCoord_3_3');
             tick(11);
 
             // expect highlight to be present
-            componentTestUtils.expectElementToExist('#highlight');
+            testUtils.expectElementToExist('#highlight');
         }));
         it('Should show success message after step success', fakeAsync(async() => {
             // Given a TutorialStep with several moves
@@ -543,16 +543,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing that move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
             const expectedMessage: string = 'Congratulations!';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('Should show failure message after step failure', fakeAsync(async() => {
@@ -575,16 +575,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing another move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#chooseCoord_1_1');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
             const expectedReason: string = 'Perdu.';
             const currentReason: string =
-                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+                testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
         }));
         it('When illegal move is done, toast message should be shown and restart not needed', fakeAsync(async() => {
@@ -603,16 +603,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // when doing a (virtually) illegal move
             const error: string = 'some error message...';
             spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue(MGPFallible.failure(error));
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveFailure('#choosePiece_15', error, move);
+            await testUtils.expectMoveFailure('#choosePiece_15', error, move);
             tick(10);
 
             // expect to see message error
             const expectedReason: string = error;
             const currentReason: string =
-                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+                testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
         }));
         it('When illegal click is tried, toast message should be shown and restart not needed', fakeAsync(async() => {
@@ -633,19 +633,19 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             tick(10);
 
             // expect to see cancelMove reason as message
             const expectedMessage: string = 'instruction 0.';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
-                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+                testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             // expect click to be still possible
-            expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+            expect(testUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
         }));
         it('should not show error if cancelMove is called with no specified reason', fakeAsync(async() => {
@@ -665,7 +665,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.gameComponent.cancelMove();
 
             // then no error is shown
-            componentTestUtils.expectElementNotToExist('#currentReason');
+            testUtils.expectElementNotToExist('#currentReason');
         }));
         it('Should propose to see the solution when move attempt done', fakeAsync(async() => {
             // Given a tutorial on which a non-awaited move has been done
@@ -687,24 +687,24 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#chooseCoord_1_1');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_8', move);
+            await testUtils.expectMoveSuccess('#choosePiece_8', move);
             tick(10);
             expect(wrapper.moveAttemptMade).toBeTrue();
             expect(wrapper.stepFinished[wrapper.stepIndex])
                 .toBeFalse();
 
             // When clicking "Show Solution"
-            await componentTestUtils.clickElement('#showSolutionButton');
+            await testUtils.clickElement('#showSolutionButton');
 
             // Expect the first awaited move to have been done
-            expect(componentTestUtils.getComponent().rules.node.move.get()).toEqual(awaitedMove);
-            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toEqual(stepInitialTurn + 1);
+            expect(testUtils.getComponent().rules.node.move.get()).toEqual(awaitedMove);
+            expect(testUtils.getComponent().rules.node.gameState.turn).toEqual(stepInitialTurn + 1);
             // expect 'solution' message to be shown
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
             // expect step not to be considered a success
             expect(wrapper.stepFinished[wrapper.stepIndex])
@@ -726,16 +726,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing any move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
             const expectedMessage: string = 'Congratulations!';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
@@ -755,12 +755,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing that move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // expect to see steps success message on component
             const expectedMessage: string = 'Congratulations!';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('should show failure message after step failure (one of several clics)', fakeAsync(async() => {
@@ -778,12 +778,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing another move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#chooseCoord_1_1');
 
             // expect to see steps success message on component
             const expectedMessage: string = 'Perdu.';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('should show restart button (with possibility of seeing solution) when unwanted click with no move is done', fakeAsync(async() => {
@@ -806,18 +806,18 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // When doing invalid click
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
 
             // Then the failure reason should be shown
             const expectedMessage: string = 'Perdu.';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
-                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+                testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             // And then solution button should be shown too
-            componentTestUtils.expectElementToExist('#showSolutionButton');
+            testUtils.expectElementToExist('#showSolutionButton');
         }));
         it('should show solution when asking for it', fakeAsync(async() => {
             // Given a TutorialStep for clicks, for which the user clicked wrongly
@@ -833,17 +833,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
             // This click is legal, however it is not the one expected by the tutorial!
-            await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#chooseCoord_1_1');
 
             // When clicking on 'see solution'
-            await componentTestUtils.clickElement('#showSolutionButton');
-            componentTestUtils.detectChanges();
+            await testUtils.clickElement('#showSolutionButton');
+            testUtils.detectChanges();
 
             // Then the actual click is performed and the solution message is shown
-            componentTestUtils.expectElementToExist('#highlight');
+            testUtils.expectElementToExist('#highlight');
             const expectedMessage: string = 'Bravo !';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
@@ -860,12 +860,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when clicking
-            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.INFORMATIONAL_STEP());
+            await testUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.INFORMATIONAL_STEP());
 
             // expect to see still the steps success message on component
             const expectedMessage: string = 'instruction 0';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('Should mark step as finished when skipped', fakeAsync(async() => {
@@ -885,14 +885,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
             // when clicking "Next Button"
             const nextButtonMessage: string =
-                componentTestUtils.findElement('#nextButton').nativeElement.textContent;
+                testUtils.findElement('#nextButton').nativeElement.textContent;
             expect(nextButtonMessage).toBe('Ok');
-            await componentTestUtils.clickElement('#nextButton');
+            await testUtils.clickElement('#nextButton');
 
             // expect to see next step on component
             const expectedMessage: string = 'Suite suite.';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             expect(wrapper.stepFinished[0]).toBeTrue();
         }));
@@ -915,16 +915,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing a move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
             const expectedReason: string = 'chocolatine';
             const currentReason: string =
-                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+                testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
         }));
         it('Should display successMessage when predicate return MGPValidation.SUCCESS', fakeAsync(async() => {
@@ -944,16 +944,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing a move
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
             const expectedMessage: string = 'Congratulations!';
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
@@ -974,21 +974,21 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const proposedMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', proposedMove, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', proposedMove, QuartoState.getInitialState());
             tick(10);
 
             // When clicking "Show Solution"
-            await componentTestUtils.clickElement('#showSolutionButton');
+            await testUtils.clickElement('#showSolutionButton');
 
             // Expect the step proposed move to have been done
-            expect(componentTestUtils.getComponent().rules.node.move.get()).toEqual(solutionMove);
-            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toEqual(1);
+            expect(testUtils.getComponent().rules.node.move.get()).toEqual(solutionMove);
+            expect(testUtils.getComponent().rules.node.gameState.turn).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
             // expect step not to be considered a success
             expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();

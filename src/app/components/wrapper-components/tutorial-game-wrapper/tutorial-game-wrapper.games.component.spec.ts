@@ -86,8 +86,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
         for (const game of GameInfo.ALL_GAMES()) {
             if (game.display) {
                 it(game.urlName, fakeAsync(async() => {
-                    const wrapper: GameWrapper =
-                        (await ComponentTestUtils.forGame(game.urlName, TutorialGameWrapperComponent)).wrapper;
+                    const wrapper: GameWrapper<void> =
+                        (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
+                            .wrapper;
                     expect(wrapper).toBeTruthy();
                 }));
             }

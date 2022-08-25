@@ -14,7 +14,6 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 export class GameWrapperMessages {
 
@@ -29,7 +28,7 @@ export class GameWrapperMessages {
 }
 
 @Component({ template: '' })
-export abstract class GameWrapper {
+export abstract class GameWrapper<P> {
 
     public static VERBOSE: boolean = false;
 
@@ -39,9 +38,9 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent;
 
-    public players: MGPOptional<MinimalUser>[] = [MGPOptional.empty(), MGPOptional.empty()];
+    public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
-    public observerRole: number;
+    public observerRole: PlayerOrNone = PlayerOrNone.NONE;
 
     public canPass: boolean;
 
@@ -105,7 +104,7 @@ export abstract class GameWrapper {
                 this.onCancelMove(reason);
             };
 
-        this.gameComponent.observerRole = this.observerRole;
+        this.gameComponent.observerRole = this.observerRole.value;
         this.canPass = this.gameComponent.canPass;
         return true;
     }
@@ -136,7 +135,7 @@ export abstract class GameWrapper {
 
     public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract
-        if (this.observerRole === PlayerOrNone.NONE.value) {
+        if (this.observerRole === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
         }
@@ -150,7 +149,7 @@ export abstract class GameWrapper {
         // Not needed by default'
     }
     public isPlayerTurn(): boolean {
-        if (this.observerRole === PlayerOrNone.NONE.value) {
+        if (this.observerRole === PlayerOrNone.NONE) {
             return false;
         }
         if (this.gameComponent == null) {
@@ -159,22 +158,24 @@ export abstract class GameWrapper {
         }
         const turn: number = this.gameComponent.rules.node.gameState.turn;
         const indexPlayer: number = turn % 2;
-        const username: string = this.getPlayerName();
+        const player: P = this.getPlayer();
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
             turn,
             players: this.players,
-            username,
+            player,
             observer: this.observerRole,
-            areYouPlayer: (this.players[indexPlayer].isPresent() && this.players[indexPlayer].get().name === username),
+            areYouPlayer: this.players[indexPlayer].isPresent() &&
+                this.playerEquals(this.players[indexPlayer].get(), player),
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer].isPresent()) {
-            return this.players[indexPlayer].get().name === username;
+            return this.playerEquals(this.players[indexPlayer].get(), player);
         } else {
             return true;
         }
     }
-    public abstract getPlayerName(): string
+    public abstract getPlayer(): P
+    public abstract playerEquals(player1: P, player2: P): boolean
 
     public getBoardHighlight(): string[] {
         if (this.endGame) {

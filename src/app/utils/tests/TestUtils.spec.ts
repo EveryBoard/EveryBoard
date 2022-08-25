@@ -169,9 +169,10 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent> {
-    public fixture: ComponentFixture<GameWrapper>;
-    public wrapper: GameWrapper;
+export class ComponentTestUtils<T extends AbstractGameComponent, P = string> {
+
+    public fixture: ComponentFixture<GameWrapper<P>>;
+    public wrapper: GameWrapper<P>;
     private debugElement: DebugElement;
     private gameComponent: AbstractGameComponent;
 
@@ -182,12 +183,23 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
 
     public static async forGame<T extends AbstractGameComponent>(
         game: string,
-        wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
         configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
-        const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
-        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        return ComponentTestUtils.forGameWithWrapper(game,
+                                                     LocalGameWrapperComponent,
+                                                     AuthUser.NOT_CONNECTED,
+                                                     configureTestModule);
+    }
+    public static async forGameWithWrapper<T extends AbstractGameComponent, P>(
+        game: string,
+        wrapperKind: Type<GameWrapper<P>>,
+        user: AuthUser = AuthUser.NOT_CONNECTED,
+        configureTestModule: boolean = true)
+    : Promise<ComponentTestUtils<T, P>>
+    {
+        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestModule);
+        ConnectedUserServiceMock.setUser(user);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1);
@@ -195,14 +207,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends AbstractGameComponent>(game?: string, configureTestModule: boolean = true)
-    : Promise<ComponentTestUtils<T>>
+    public static async basic<T extends AbstractGameComponent, P>(game?: string, configureTestModule: boolean = true)
+    : Promise<ComponentTestUtils<T, P>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestModule) {
             await ComponentTestUtils.configureTestModule(activatedRouteStub);
         }
-        return new ComponentTestUtils<T>(activatedRouteStub);
+        return new ComponentTestUtils<T, P>(activatedRouteStub);
     }
     public static async configureTestModule(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
@@ -228,7 +240,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
 
     public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
-    public prepareFixture(wrapperKind: Type<GameWrapper>): void {
+    public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
         this.wrapper = this.fixture.debugElement.componentInstance;
         this.debugElement = this.fixture.debugElement;

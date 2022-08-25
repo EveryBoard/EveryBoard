@@ -10,6 +10,8 @@ import { FirstPlayer, ConfigRoom, PartStatus, PartType } from 'src/app/domain/Co
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { createUnverifiedUser, createConnectedUser, reconnectUser, signOut } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { UserDAO } from '../UserDAO';
+import { Timestamp } from 'firebase/firestore';
 
 interface TestOptions {
     signOut?: boolean,
@@ -34,6 +36,10 @@ describe('ConfigRoomDAO', () => {
 
     const MALICIOUS_EMAIL: string = 'm@licio.us';
     const MALICIOUS_NAME: string = 'malicious';
+
+    const OTHER_USER_EMAIL: string = 'other@us.er';
+    const OTHER_USER_NAME: string = 'other';
+
 
     beforeEach(async() => {
         await setupEmulators();
@@ -212,7 +218,7 @@ describe('ConfigRoomDAO', () => {
             const matchingDocs: unknown[] = await configRoomDAO.subCollectionDAO(partId, 'candidates').findWhere([['id', '==', candidate.id]]);
             expect(matchingDocs.length).toBe(1);
         });
-        it('should forbid to remove someone else from the candidates', async() => {
+        it('should forbid to remove someone else from the candidates if creator did not time out', async() => {
             // Given a part with a configRoom, with another user as candidate, and a malicious user
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
             const candidate: MinimalUser = await addCandidate(partId);
@@ -224,6 +230,21 @@ describe('ConfigRoomDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
+        it('should allow to remove someone else from the candidates if creator timed out', async() => {
+            // Given a part with a configRoom, with another user as candidate, and with a timed out creator
+            const createdPart: CreatedPart = await createPart({ createConfigRoom: true, signOut: false });
+            await TestBed.inject(UserDAO).update(createdPart.creator.id, { lastUpdateTime: new Timestamp(0, 0) });
+            await signOut();
+            const candidate: MinimalUser = await addCandidate(createdPart.partId);
+            await createConnectedUser(OTHER_USER_EMAIL, OTHER_USER_NAME);
+
+            // When verified user tries to remove another candidate
+            const result: Promise<void> = configRoomDAO.removeCandidate(createdPart.partId, candidate);
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+
         it('should forbid changing the fields of another candidate', async() => {
             // Given a part with a configRoom, with another user as candidate, and a malicious user
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;

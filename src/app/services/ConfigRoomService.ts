@@ -141,11 +141,10 @@ export class ConfigRoomService {
                 'ConfigRoomService.deleteConfigRoom(); this.observedConfigRoomId = ' + this.observedConfigRoomId);
         assert(this.observedConfigRoomId != null, 'ConfigRoomService is not observing a configRoom');
         const configRoomId: string = Utils.getNonNullable(this.observedConfigRoomId);
-        for (const candidate of candidates) {
-            // Need to delete the candidates before the actual configRoom,
-            // for the security rules to check that we are allowed to delete the configRoom
-            await this.configRoomDAO.removeCandidate(configRoomId, candidate);
-        }
+        // We need to delete the candidates before the actual configRoom,
+        // for the security rules to check that we are allowed to delete the configRoom
+        await Promise.all(candidates.map((candidate: MinimalUser): Promise<void> =>
+            this.configRoomDAO.removeCandidate(configRoomId, candidate)));
         await this.configRoomDAO.delete(configRoomId);
     }
     public async proposeConfig(chosenOpponent: MinimalUser,
