@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
 
@@ -76,6 +77,26 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
         return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
+    }
+    public getLandingsCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
+        const isInBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
+            return coord.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT) &&
+                   board[coord.y][coord.x] === FourStatePiece.EMPTY;
+        };
+        const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord).filter(isInBoardAndEmpty);
+        console.log(neighbors)
+        if (TriangularCheckerBoard.isSpaceDark(coord)) {
+            return neighbors;
+        } else {
+            const twoStepJump: Coord[] = [];
+            for (const neighbor of neighbors) {
+                const secondStepNeighbors: Coord[] =
+                    TriangularCheckerBoard.getNeighbors(neighbor).filter(isInBoardAndEmpty);
+                twoStepJump.push(...secondStepNeighbors);
+            }
+            console.log(twoStepJump.concat(neighbors))
+            return twoStepJump.concat(neighbors);
+        }
     }
     public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
         if (zeroFreedoms[0] === 0) {

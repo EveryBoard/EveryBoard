@@ -34,6 +34,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
+    public possibleLandings: Coord[] = [];
+
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new SaharaRules(SaharaState);
@@ -45,6 +47,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.updateBoard();
     }
     public cancelMoveAttempt(): void {
+        this.possibleLandings = [];
         this.chosenCoord = MGPOptional.empty();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -62,7 +65,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         if (this.board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
         } else if (this.board[y][x].value === this.getTurn() % 2) { // selected his own pyramid
-            this.chosenCoord = MGPOptional.of(new Coord(x, y));
+            const coord: Coord = new Coord(x, y);
+            this.chosenCoord = MGPOptional.of(coord);
+            this.possibleLandings = this.rules.getLandingsCoords(this.board, coord);
             return MGPValidation.SUCCESS;
         } else { // Selected opponent pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
