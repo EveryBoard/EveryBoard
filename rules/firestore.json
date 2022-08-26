@@ -151,7 +151,14 @@ service cloud.firestore {
                 isValidPartUpdateDuringGame(part) &&
                 safeTurnIncrease(part.turn, update.turn) &&
                 safeLastUpdate(part, update) &&
+                setsWinnerIfVictory(part, update) &&
                 isUserTurn;
+        }
+        function setsWinnerIfVictory(part, update) {
+            let isVictory = update.result == 3; // 3 = victory
+            let playerZeroWinsAndOneLoses = update.loser.id == part.playerZero.id && update.winner.id == part.playerOne.id;
+            let playerOneWinsAndZeroLoses =  update.loser.id == part.playerOne.id && update.winner.id == part.playerZero.id;
+            return isVictory == false || playerZeroWinsAndOneLoses || playerOneWinsAndZeroLoses;
         }
         function playerPerformsNonMoveUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
@@ -192,11 +199,13 @@ service cloud.firestore {
 //                (takeBackWasProposed && updateAnswersToTakeBack && updateFromDifferentPlayer);
 //        }
         function onlyResignsInTheirName(part, update) {
-            let playerResigns = update.result == 1; // 1 = resign
+            let playerResigns = update.result == 1 && // 1 = resign
+                hasField(update, 'winner') &&
+                hasField(update, 'loser');
             let resignerIsLoser = update.loser.id == request.auth.uid;
             let otherPlayerIsWinner = update.winner.id != request.auth.uid &&
                 (update.winner.id == part.playerZero.id || update.winner.id == part.playerOne.id);
-            return playerResigns == false ||
+            return (playerResigns == false && preservesField('winner') && preservesField('loser')) ||
                 (playerResigns && resignerIsLoser && otherPlayerIsWinner);
         }
         function isValidPartUpdateDuringGame(part) {
@@ -290,7 +299,7 @@ service cloud.firestore {
         match /config-room/{partId} {
             allow create: if creatorCreatesConfigRoom(partId, request.resource.data);
             allow delete: if creatorDeletesConfigRoom(resource.data);
-            allow delete: if observerDeletesConfigRoom(partId, resource.data);
+            allow delete: if verifiedUserDeletesConfigRoom(partId, resource.data);
             allow update: if creatorUpdatesPartInCreation(resource.data, request.resource.data);
             allow update: if chosenOpponentAcceptsConfig(resource.data, request.resource.data);
             allow update: if chosenOpponentLeaves(resource.data, request.resource.data)
@@ -307,7 +316,7 @@ service cloud.firestore {
             // The creator can delete a config room if the part has not started
             return userIsVerified() && userIsCreator(configRoom) && configStillOngoing(configRoom);
         }
-        function observerDeletesConfigRoom(partId, configRoom) {
+        function verifiedUserDeletesConfigRoom(partId, configRoom) {
             // Anybody else can delete a config room only if the creator has timed out and the part has not started
             return userIsVerified() && hasTimedOut(creatorOf(partId).id) && configStillOngoing(configRoom);
         }
@@ -320,7 +329,6 @@ service cloud.firestore {
         function chosenOpponentAcceptsConfig(configRoom, update) {
             //  The chosen opponent can change the config from PROPOSED to STARTED
             return validChosenOpponentConfigRoomUpdate(configRoom) &&
-                preservesCreatorOnlyFields() &&
                 preservesField('chosenOpponent') &&
                 acceptsConfig(configRoom, update);
         }
@@ -349,6 +357,7 @@ service cloud.firestore {
             allow create, update: if candidateJoins(partId, userId, request.resource.data);
             allow delete: if candidateLeaves(userId);
             allow delete: if creatorKicksCandidate(partId);
+            allow delete: if verifiedUserDeletesCandidateOfTimedOutPart(partId);
             // Any verified user can read the candidate list
             allow read: if userIsVerified();
         }
@@ -369,6 +378,13 @@ service cloud.firestore {
             // Creator can remove any candidate
             return userIsVerified() &&
                 request.auth.uid == creatorOf(partId).id;
+        }
+        function verifiedUserDeletesCandidateOfTimedOutPart(partId) {
+            // A verified user can delete a candidate only if the creator has timed out
+            let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
+            return userIsVerified() &&
+                hasTimedOut(creatorOf(partId).id) &&
+                configStillOngoing(configRoom);
         }
         function creatorOf(partId) {
             return get(/databases/$(database)/documents/config-room/$(partId)).data.creator;

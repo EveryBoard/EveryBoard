@@ -261,7 +261,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         spyOn(wrapper, 'reachedOutOfTime').and.callFake(async() => {});
         // Should not even been called but:
         // reachedOutOfTime is called (in test) after tick(1) even though there is still remainingTime
-        tick(1);
         expect(wrapper.currentPart.data.listMoves).toEqual([]);
         expect(wrapper.currentPart.data.listMoves).toEqual([]);
         expect(wrapper.currentPlayer.name).toEqual('creator');
@@ -297,7 +296,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-
         await doMove(FIRST_MOVE, true);
 
         expect(wrapper.currentPart.data.listMoves).toEqual([FIRST_MOVE_ENCODED]);
@@ -315,8 +313,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('should show player names', fakeAsync(async() => {
         // Given a started game
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-        tick(1);
-        testUtils.detectChanges();
 
         // Then the usernames should be shown
         const playerIndicator: HTMLElement = testUtils.findElement('#playerZeroIndicator').nativeElement;
@@ -328,8 +324,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Prepared Game for configRoom should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-        tick(1);
-
         // Receive first move
         await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
 
@@ -347,7 +341,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Move should trigger db change', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-        tick(1);
         spyOn(partDAO, 'update').and.callThrough();
         await doMove(FIRST_MOVE, true);
         expect(wrapper.currentPart.data.listMoves).toEqual([QuartoMove.encoder.encodeNumber(FIRST_MOVE)]);
@@ -384,7 +377,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-        tick(1);
         testUtils.expectElementNotToExist('#passButton');
 
         wrapper.gameComponent.canPass = true;
@@ -400,7 +392,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should not update currentPart when receiving MOVE_WITHOUT_TIME update', fakeAsync(async() => {
         // Given a board where its the opponent's (first) turn
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-        tick(1);
         const CURRENT_PART: PartDocument = wrapper.currentPart;
 
         // When receiving a move time being null
@@ -416,9 +407,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should not do anything when receiving duplicate', fakeAsync(async() => {
         // Given a board where its the opponent's (first) turn
-
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-        tick(1);
         const CURRENT_PART: PartDocument = wrapper.currentPart;
 
         // When receiving the same move
@@ -519,7 +508,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('Should send take back request when player ask to', fakeAsync(async() => {
                 // Given a board where its the opponent's (first) turn
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
                 await doMove(FIRST_MOVE, true);
 
                 // When demanding to take back
@@ -550,7 +538,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
                 // Given a board where nobody already played
                 await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-                tick(1);
 
                 // When asking take back, the button should not be here
                 testUtils.expectElementNotToExist('#askTakeBackButton');
@@ -569,7 +556,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
                 // Given a board where opponent did not ask to take back and where both player could have ask
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
 
@@ -588,7 +574,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
                 // Given a board with previous move
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
                 testUtils.expectElementNotToExist('#refuseTakeBackButton');
@@ -612,7 +597,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
                 await receiveRequest(Request.takeBackAsked(Player.ONE), 3);
@@ -626,7 +610,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('Should cancel take back request when take back requester do a move', fakeAsync(async() => {
                 // Given an initial board where a take back request has been done by user
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
                 await askTakeBack();
@@ -652,7 +635,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack();
                 await receiveRequest(Request.takeBackRefused(Player.ONE), 3);
@@ -664,8 +646,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should ignore take back accepted request before they have time included', fakeAsync(async() => {
                 // Given an initial board where it's opponent's turn
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
-
                 await doMove(FIRST_MOVE, true);
 
                 // When opponent accepts take back but lastUpdateTime is not yet updated
@@ -687,8 +667,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should move board back two turn and call restartCountDown', fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
                 await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-                tick(1);
-
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
                 await doMove(SECOND_MOVE, true);
                 await receiveRequest(Request.takeBackAsked(Player.ZERO), 3);
@@ -708,8 +686,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it(`should reset opponents chronos to what it was at pre-take-back turn beginning`, fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
                 await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-                tick(1);
-
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
                 await doMove(SECOND_MOVE, true);
                 await receiveRequest(Request.takeBackAsked(Player.ZERO), 3);
@@ -754,7 +730,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should move board back one turn and call switchPlayer (for opponent)', fakeAsync(async() => {
                 // Given an initial board where it's user's (first) turn, and opponent asked for take back
                 await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
                 await receiveRequest(Request.takeBackAsked(Player.ZERO), 2);
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(1);
@@ -773,7 +748,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it(`Should resumeCountDown for opponent and reset user's time`, fakeAsync(async() => {
                 // Given an initial board where it's user's (first) turn, and opponent asked for take back
                 await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
                 await receiveRequest(Request.takeBackAsked(Player.ZERO), 2);
 
@@ -810,7 +784,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should move board back two turn and call resetChronoFor', fakeAsync(async() => {
                 // Given an initial board where it's user (second) turn, and user just asked for take back
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
                 await askTakeBack();
@@ -833,7 +806,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should reset user chronos to what it was at pre-take-back turn beginning', fakeAsync(async() => {
                 // Given an initial board where it's user second turn, and user just asked for take back
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
                 await askTakeBack();
@@ -886,7 +858,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should move board back one turn and call switchPlayer (for creator)', fakeAsync(async() => {
                 // Given an initial board where it's opponent's [second] turn, and user just asked for take back
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack();
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(1);
@@ -905,7 +876,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it(`should resumeCountDown for user without removing time of opponent`, fakeAsync(async() => {
                 // Given an initial board where it's opponent's [second] turn, and user just asked for take back
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-
                 await doMove(FIRST_MOVE, true);
                 spyOn(wrapper, 'resumeCountDownFor').and.callThrough();
                 spyOn(partDAO, 'update').and.callThrough();
@@ -950,7 +920,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Agreed Draw', () => {
         async function setup() {
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
         }
         it('should send draw request when player asks to', fakeAsync(async() => {
             // Given any board
@@ -1836,7 +1805,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
             // Given a part lost with rematch request send by user
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
 
             await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);

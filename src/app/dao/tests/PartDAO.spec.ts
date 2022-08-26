@@ -667,9 +667,8 @@ describe('PartDAO', () => {
         });
         it('should allow accepting a draw when it was proposed', async() => {
             // Given a part where one player proposes a draw
-            const playerZero: MinimalUser = await createDisconnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            await reconnectUser(CREATOR_EMAIL);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
             const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
@@ -691,9 +690,8 @@ describe('PartDAO', () => {
         });
         it('should forbid changing the status to draw if it was not proposed', async() => {
             // Given a part where one player did NOT propose a draw
-            const playerZero: MinimalUser = await createDisconnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            await reconnectUser(CREATOR_EMAIL);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
             const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
@@ -712,9 +710,8 @@ describe('PartDAO', () => {
         });
         it('should allow resigning', async() => {
             // Given an ongoing part
-            const playerZero: MinimalUser = await createDisconnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            await reconnectUser(CREATOR_EMAIL);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
             const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
@@ -731,9 +728,8 @@ describe('PartDAO', () => {
         });
         it('should forbid resigning in place of the other player', async() => {
             // Given an ongoing part
-            const playerZero: MinimalUser = await createDisconnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            await reconnectUser(CREATOR_EMAIL);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
             const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
@@ -767,6 +763,26 @@ describe('PartDAO', () => {
 
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
+        });
+        it('should forbid setting a player both as winner and loser', async() => {
+            // Given an ongoing part
+            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+
+            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const partId: string = await partDAO.create(part);
+
+            // When setting the winner and loser along with a move
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+                listMoves: [0],
+                turn: 1,
+                result: MGPResult.VICTORY.value,
+                winner: playerZero,
+                loser: playerZero,
+            });
+
+            // Then it should succeed
+            await expectPermissionToBeDenied(result);
         });
         it('should forbid setting winner that is not player', async() => {
             // Given an ongoing part

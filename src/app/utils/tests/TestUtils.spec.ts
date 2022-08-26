@@ -41,6 +41,7 @@ import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-v
 import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
+import { Comparable } from '../Comparable';
 
 @Component({})
 export class BlankComponent {}
@@ -169,7 +170,7 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent, P = string> {
+export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> {
 
     public fixture: ComponentFixture<GameWrapper<P>>;
     public wrapper: GameWrapper<P>;
@@ -191,7 +192,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P = string> {
                                                      AuthUser.NOT_CONNECTED,
                                                      configureTestModule);
     }
-    public static async forGameWithWrapper<T extends AbstractGameComponent, P>(
+    public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
         game: string,
         wrapperKind: Type<GameWrapper<P>>,
         user: AuthUser = AuthUser.NOT_CONNECTED,
@@ -207,7 +208,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P = string> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends AbstractGameComponent, P>(game?: string, configureTestModule: boolean = true)
+    public static async basic<T extends AbstractGameComponent, P extends Comparable>(
+        game?: string,
+        configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');

@@ -154,19 +154,18 @@ service cloud.firestore {
             // A player can perform a move
             let isUserTurn = (part.turn % 2 == 0 && userIsPlayerZero(part)) ||
                 (part.turn % 2 == 1 && userIsPlayerOne(part));
-            return debug(part.listMoves != update.listMoves) &&
-                debug(isValidPartUpdateDuringGame(part)) &&
-                debug(safeTurnIncrease(part.turn, update.turn)) &&
-                debug(safeLastUpdate(part, update)) &&
+            return part.listMoves != update.listMoves &&
+                isValidPartUpdateDuringGame(part) &&
+                safeTurnIncrease(part.turn, update.turn) &&
+                safeLastUpdate(part, update) &&
                 setsWinnerIfVictory(part, update) &&
-                debug(isUserTurn);
+                isUserTurn;
         }
         function setsWinnerIfVictory(part, update) {
             let isVictory = update.result == 3; // 3 = victory
-            let playerIsLoserOrWinner = update.loser.id == request.auth.uid || update.winner.id == request.auth.uid;
-            let otherPlayerIsLoserOrWinner = (update.winner.id == part.playerZero.id || update.winner.id == part.playerOne.id);
-            return isVictory == false ||
-                (playerIsLoserOrWinner && otherPlayerIsLoserOrWinner);
+            let playerZeroWinsAndOneLoses = update.loser.id == part.playerZero.id && update.winner.id == part.playerOne.id;
+            let playerOneWinsAndZeroLoses =  update.loser.id == part.playerOne.id && update.winner.id == part.playerZero.id;
+            return isVictory == false || playerZeroWinsAndOneLoses || playerOneWinsAndZeroLoses;
         }
         function playerPerformsNonMoveUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
@@ -365,7 +364,7 @@ service cloud.firestore {
             allow create, update: if candidateJoins(partId, userId, request.resource.data);
             allow delete: if candidateLeaves(userId);
             allow delete: if creatorKicksCandidate(partId);
-            allow delete: if verifiedUserDeletesCandidate(partId);
+            allow delete: if verifiedUserDeletesCandidateOfTimedOutPart(partId);
             // Any verified user can read the candidate list
             allow read: if userIsVerified();
         }
@@ -387,7 +386,7 @@ service cloud.firestore {
             return userIsVerified() &&
                 request.auth.uid == creatorOf(partId).id;
         }
-        function verifiedUserDeletesCandidate(partId) {
+        function verifiedUserDeletesCandidateOfTimedOutPart(partId) {
             // A verified user can delete a candidate only if the creator has timed out
             let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
             return userIsVerified() &&

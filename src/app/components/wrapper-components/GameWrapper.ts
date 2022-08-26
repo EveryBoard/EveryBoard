@@ -14,6 +14,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Comparable, comparableEquals } from 'src/app/utils/Comparable';
 
 export class GameWrapperMessages {
 
@@ -28,7 +29,7 @@ export class GameWrapperMessages {
 }
 
 @Component({ template: '' })
-export abstract class GameWrapper<P> {
+export abstract class GameWrapper<P extends Comparable> {
 
     public static VERBOSE: boolean = false;
 
@@ -104,7 +105,6 @@ export abstract class GameWrapper<P> {
                 this.onCancelMove(reason);
             };
 
-        this.gameComponent.observerRole = this.observerRole.value;
         this.canPass = this.gameComponent.canPass;
         return true;
     }
@@ -165,17 +165,16 @@ export abstract class GameWrapper<P> {
             player,
             observer: this.observerRole,
             areYouPlayer: this.players[indexPlayer].isPresent() &&
-                this.playerEquals(this.players[indexPlayer].get(), player),
+                comparableEquals(this.players[indexPlayer].get(), player),
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer].isPresent()) {
-            return this.playerEquals(this.players[indexPlayer].get(), player);
+            return comparableEquals(this.players[indexPlayer].get(), player);
         } else {
             return true;
         }
     }
     public abstract getPlayer(): P
-    public abstract playerEquals(player1: P, player2: P): boolean
 
     public getBoardHighlight(): string[] {
         if (this.endGame) {

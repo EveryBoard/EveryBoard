@@ -13,7 +13,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('YinshComponent', () => {
 
-    let testUtils: ComponentTestUtils<YinshComponent, string>;
+    let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;
     const N: YinshPiece = YinshPiece.UNREACHABLE;
     const a: YinshPiece = YinshPiece.MARKER_ZERO;

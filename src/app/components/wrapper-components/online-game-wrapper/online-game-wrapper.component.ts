@@ -71,6 +71,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     @ViewChild('chatComponent')
     public chatComponent: ChatComponent;
 
+    public Player: typeof Player = Player;
+
     // GameWrapping's Template
     @ViewChild('chronoZeroGlobal') public chronoZeroGlobal: CountDownComponent;
     @ViewChild('chronoOneGlobal') public chronoOneGlobal: CountDownComponent;
@@ -125,9 +127,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public getPlayer(): MinimalUser {
         return this.authUser.toMinimalUser();
-    }
-    public playerEquals(player1: MinimalUser, player2: MinimalUser): boolean {
-        return player1.id === player2.id;
     }
     private isPlayer(player: Player): boolean {
         return this.observerRole === player;

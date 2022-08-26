@@ -79,6 +79,7 @@ import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshT
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
 import { TutorialStepFailure } from './TutorialStepFailure';
+import { Comparable } from 'src/app/utils/Comparable';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -86,7 +87,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
         for (const game of GameInfo.ALL_GAMES()) {
             if (game.display) {
                 it(game.urlName, fakeAsync(async() => {
-                    const wrapper: GameWrapper<void> =
+                    const wrapper: GameWrapper<Comparable> =
                         (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
                             .wrapper;
                     expect(wrapper).toBeTruthy();

@@ -149,7 +149,4 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public getPlayer(): string {
         return 'human';
     }
-    public playerEquals(player1: string, player2: string): boolean {
-        return player1 === player2;
-    }
 }

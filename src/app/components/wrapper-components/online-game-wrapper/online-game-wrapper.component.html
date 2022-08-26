@@ -25,7 +25,7 @@
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
-                                [canAddTime]='observerRole.value === 1 && endGame === false'
+                                [canAddTime]='observerRole === Player.ONE && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
@@ -35,7 +35,7 @@
                 <app-count-down #chronoZeroTurn
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
-                                [canAddTime]='observerRole.value === 1 && endGame === false'
+                                [canAddTime]='observerRole === Player.ONE && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ZERO Turn"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
@@ -53,7 +53,7 @@
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
-                                [canAddTime]='observerRole.value === 0 && endGame === false'
+                                [canAddTime]='observerRole === Player.ZERO && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ONE Global"
                                 (outOfTimeAction)="reachedOutOfTime(1)"
@@ -63,7 +63,7 @@
                 <app-count-down #chronoOneTurn
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
-                                [canAddTime]='observerRole.value === 0 && endGame === false'
+                                [canAddTime]='observerRole === Player.ZERO && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ONE Turn"
                                 (outOfTimeAction)="reachedOutOfTime(1)"

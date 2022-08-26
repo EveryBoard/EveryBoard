@@ -16,12 +16,13 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 
+type TutorialPlayer = 'tutorial-player';
 @Component({
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TutorialGameWrapperComponent extends GameWrapper<void> implements AfterViewInit {
+export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
 
     public static VERBOSE: boolean = false;
 
@@ -232,10 +233,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<void> implements A
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         await this.router.navigate(['/play', game]);
     }
-    public getPlayer(): void {
-        return;
-    }
-    public playerEquals(player1: void, player2: void): boolean {
-        return false;
+    public getPlayer(): TutorialPlayer {
+        return 'tutorial-player';
     }
 }

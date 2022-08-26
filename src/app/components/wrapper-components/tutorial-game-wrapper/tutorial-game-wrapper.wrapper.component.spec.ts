@@ -17,11 +17,12 @@ import { OnlineGameCreationComponent } from '../../normal-component/online-game-
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { Comparable } from 'src/app/utils/Comparable';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
-        const testUtils: ComponentTestUtils<AbstractGameComponent, void> = await ComponentTestUtils.basic('invalid-game', true);
+        const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
         testUtils.prepareFixture(TutorialGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -37,12 +38,12 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
-    let testUtils: ComponentTestUtils<QuartoComponent, void>;
+    let testUtils: ComponentTestUtils<QuartoComponent, Comparable>;
     let wrapper: TutorialGameWrapperComponent;
 
     beforeEach(fakeAsync(async() => {
         testUtils =
-            await ComponentTestUtils.forGameWithWrapper<QuartoComponent, void>('Quarto', TutorialGameWrapperComponent);
+            await ComponentTestUtils.forGameWithWrapper<QuartoComponent, Comparable>('Quarto', TutorialGameWrapperComponent);
         wrapper = testUtils.wrapper as TutorialGameWrapperComponent;
     }));
     describe('Common behavior', () => {
