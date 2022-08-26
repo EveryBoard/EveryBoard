@@ -9,18 +9,19 @@
     </defs>
     <ng-container *ngIf="isPlayerTurn()">
         <g *ngFor="let n of [0, 1, 2, 3, 4]">
-            <use *ngFor="let orientation of [{ dir: 'DOWN', x: n, y: -1 }, { dir: 'UP', x: n, y: 5}, { dir: 'RIGHT', x: -1, y: n }, { dir: 'LEFT', x: 5, y: n }]"
+          <g *ngFor="let orientation of [{ dir: 'DOWN', x: n, y: -1 }, { dir: 'UP', x: n, y: 5}, { dir: 'RIGHT', x: -1, y: n }, { dir: 'LEFT', x: 5, y: n }]">
+            <use *ngIf="isInsertionSquareOccupied(orientation.x, orientation.y)"
                  xlink:href="#arrow"
-                 id="insertAt_{{orientation.x}}_{{orientation.y}}"
                  (click)="insertAt(orientation.x, orientation.y)"
                  [attr.transform]="getInsertionArrowTransform(orientation.x+1, orientation.y+1, orientation.dir)"
                  class="base mid-stroke"/>
+          </g>
         </g>
     </ng-container>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
-            <rect id="insertAt_{{ x }}_{{ y }}"
-                  (click)="insertAt(x, y)"
+            <rect id="square_{{ x }}_{{ y }}"
+                  (click)="squareClick(x, y)"
                   [attr.x]="SPACE_SIZE * (x + 1)"
                   [attr.y]="SPACE_SIZE * (y + 1)"
                   [attr.width]="SPACE_SIZE"
@@ -35,33 +36,21 @@
                      (click)="clickPiece(x, y)"
                      xlink:href="#arrow"
                      [attr.transform]="getPieceTransform(x, y)"/>
-                <g *ngIf="choosingDirection(x, y)">
-                    <circle id="chooseDirection_"
-                            class="arrow selected-fill no-stroke"
-                            (click)="chooseDirection('')"
-                            [attr.cx]="((x+1) * SPACE_SIZE) + SPACE_SIZE/2"
-                            [attr.cy]="((y+1) * SPACE_SIZE) + SPACE_SIZE/2"
-                            r="8"/>
-                    <use *ngFor="let direction of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
-                         id="chooseDirection_{{direction}}"
-                         class="arrow selected-fill no-stroke"
-                         (click)="chooseDirection(direction)"
-                         xlink:href="#triangle"
-                         [attr.transform]="getArrowTransform(x+1, y+1, direction)"/>
-                </g>
             </g>
             <use *ngIf="isMountain(c)"
                  xlink:href="#mountain"
                  [attr.transform]="'translate(' + ((x+1) * SPACE_SIZE) + ' ' + ((y+1) * SPACE_SIZE) + ')'"
                  fill="brown" />
-            <g *ngIf="choosingOrientation(x, y)">
-                <use *ngFor="let orientation of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
-                     id="chooseOrientation_{{ orientation }}"
-                     class="arrow selected-fill no-stroke"
-                     (click)="chooseOrientation(orientation)"
-                     xlink:href="#triangle"
-                     [attr.transform]="getArrowTransform(x+1, y+1, orientation)" />
-            </g>
         </g>
+    </g>
+    <g *ngIf="choosingOrientation()">
+      <g *ngFor="let arrow of availableDestinations()">
+        <use *ngFor="let orientation of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
+             id="chooseLanding_{{ arrow.x }}_{{ arrow.y }}_{{ arrow.orientation }}"
+             class="arrow selected-fill no-stroke"
+             (click)="chooseLanding(arrow.x, arrow.y, arrow.orientation)"
+             xlink:href="#triangle"
+             [attr.transform]="getArrowTransform(arrow.x+1, arrow.y+1, arrow.orientation)" />
+      </g>
     </g>
 </svg>

@@ -15,7 +15,12 @@ import { display } from 'src/app/utils/utils';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { SiamFailure } from './SiamFailure';
+
+type ArrowInfo = {
+    x: number,
+    y: number,
+    orientation: string,
+}
 
 @Component({
     selector: 'app-siam',
@@ -32,9 +37,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public lastMove: MGPOptional<SiamMove> = MGPOptional.empty();
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
-    public landingCoord: MGPOptional<Coord> = MGPOptional.empty();
-    public chosenDirection: MGPOptional<Orthogonal> = MGPOptional.empty();
-    public chosenOrientation: MGPOptional<Orthogonal> = MGPOptional.empty();
+    public insertionDirection: MGPOptional<Orthogonal> = MGPOptional.empty();
     public movedPieces: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -61,9 +64,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
-        this.chosenDirection = MGPOptional.empty();
-        this.landingCoord = MGPOptional.empty();
-        this.chosenOrientation = MGPOptional.empty();
+        this.insertionDirection = MGPOptional.empty();
     }
     public clickPiece(x: number, y: number): MGPValidation {
         const clickValidity: MGPValidation = this.canUserPlay('#clickPiece_' + x + '_' + y);
@@ -78,35 +79,12 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.chosenCoord = MGPOptional.of(new Coord(x, y));
         return MGPValidation.SUCCESS;
     }
-    public async chooseDirection(direction: string): Promise<MGPValidation> {
-        display(SiamComponent.VERBOSE, 'SiamComponent.chooseDirection(' + direction + ')');
-        const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction);
+    public async chooseLanding(x: number, y: number, orientation: string): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#chooseLanding_' + x + '_' + y + '_' + orientation);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (direction === '') {
-            this.chosenDirection = MGPOptional.empty();
-            this.landingCoord = this.chosenCoord;
-        } else {
-            const dir: Orthogonal = Orthogonal.factory.fromString(direction).get();
-            this.chosenDirection = MGPOptional.of(dir);
-            this.landingCoord = MGPOptional.of(this.chosenCoord.get().getNext(dir));
-            if (this.landingCoord.get().isNotInRange(5, 5)) {
-                display(SiamComponent.VERBOSE, 'orientation and direction should be the same: ' + dir);
-                this.chosenOrientation = MGPOptional.of(dir);
-                return await this.tryMove();
-            }
-        }
-        return MGPValidation.SUCCESS;
-    }
-    public async chooseOrientation(orientation: string): Promise<MGPValidation> {
-        display(SiamComponent.VERBOSE, 'SiamComponent.chooseOrientation(' + orientation + ')');
-        const clickValidity: MGPValidation = this.canUserPlay('#chooseOrientation_' + orientation);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        this.chosenOrientation = MGPOptional.of(Orthogonal.factory.fromString(orientation).get());
-        return await this.tryMove();
+        return await this.tryMove(x, y, orientation);
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, 'SiamComponent.insertAt(' + x + ', ' + y + ')');
@@ -114,56 +92,112 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.chosenCoord.isPresent()) {
-            return this.cancelMove(SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
-        } else {
+        const clickedCoord: Coord = new Coord(x, y);
+        this.chosenCoord = MGPOptional.of(clickedCoord);
+        const dir: Orthogonal = SiamRules.getCoordDirection(this.getState(), x, y);
+        this.insertionDirection = MGPOptional.of(dir);
+        return MGPValidation.SUCCESS;
+    }
+    public async squareClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#square_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+        console.log('square click')
+        const clickedPiece: SiamPiece = this.getState().getPieceAtXY(x, y);
+        if (clickedPiece === SiamPiece.EMPTY && this.isOnEdge(x, y)) {
+            // Click on an empty square on the edge, this starts a piece insertion
             const clickedCoord: Coord = new Coord(x, y);
-            if (this.getState().isOnBoard(clickedCoord) &&
-                this.getState().getPieceAtXY(x, y).isEmptyOrMountain())
-            {
-                return this.cancelMove(SiamFailure.MUST_INSERT_OR_CHOOSE_YOUR_PIECE());
-            }
-            this.chosenCoord = MGPOptional.of(clickedCoord);
-            const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gameState);
-            this.chosenDirection = MGPOptional.of(dir);
-            this.landingCoord = MGPOptional.of(this.chosenCoord.get().getNext(dir));
+            const dir: Orthogonal = SiamRules.getCoordDirection(this.getState(), x, y);
+            this.insertionDirection = MGPOptional.of(dir);
+            this.chosenCoord = MGPOptional.of(clickedCoord.getPrevious(dir));
             return MGPValidation.SUCCESS;
+        } else if (clickedPiece.isEmptyOrMountain() === false) {
+            // Click on a piece square: start a move, delegate to clickPiece
+            return this.clickPiece(x, y);
+        } else {
+            return MGPValidation.failure('TODO')
         }
     }
-    public async tryMove(): Promise<MGPValidation> {
+    private isOnEdge(x: number, y: number): boolean {
+        return x === 0 || x === 4 || y === 0 || y === 4;
+    }
+    private async tryMove(landingX: number, landingY: number, orientation: string): Promise<MGPValidation> {
         const chosenCoord: Coord = this.chosenCoord.get();
+        const direction: Orthogonal = SiamRules.getCoordDirection(this.getState(), landingX, landingY);
         const move: SiamMove = new SiamMove(chosenCoord.x,
                                             chosenCoord.y,
-                                            this.chosenDirection,
-                                            this.chosenOrientation.get());
+                                            MGPOptional.of(direction),
+                                            Orthogonal.factory.fromString(orientation).get());
         this.cancelMove();
         return await this.chooseMove(move, this.rules.node.gameState);
     }
     public isMountain(piece: SiamPiece): boolean {
         return piece === SiamPiece.MOUNTAIN;
     }
-    public choosingOrientation(x: number, y: number): boolean {
-        const coord: Coord = new Coord(x, y);
-        if (this.chosenCoord.isPresent() &&
-            this.landingCoord.equalsValue(coord) &&
-            this.chosenOrientation.isAbsent())
-        {
-            display(SiamComponent.VERBOSE, 'choosing orientation now');
-            return true;
-        }
-        return false;
+    public choosingOrientation(): boolean {
+        return this.chosenCoord.isPresent();
     }
-    public choosingDirection(x: number, y: number): boolean {
-        const coord: Coord = new Coord(x, y);
-        if (this.chosenCoord.equalsValue(coord) &&
-            this.chosenDirection.isAbsent() &&
-            this.landingCoord.isAbsent() &&
-            this.chosenOrientation.isAbsent())
-        {
-            display(SiamComponent.VERBOSE, 'choosing direction now');
-            return true;
+    public isInsertionSquareOccupied(x: number, y: number): boolean {
+        const dir: Orthogonal = SiamRules.getCoordDirection(this.rules.node.gameState, x, y);
+        const insertionCoord: Coord = new Coord(x, y);
+        const landingCoord: Coord = insertionCoord.getNext(dir);
+        console.log('already occupied?')
+        return this.getState().getPieceAt(landingCoord) !== SiamPiece.EMPTY;
+    }
+    public availableDestinations(): ArrowInfo[] {
+        const arrows: ArrowInfo[] = [];
+        if (this.chosenCoord.isPresent()) {
+            const state: SiamState = this.rules.node.gameState;
+            const chosenCoord: Coord = this.chosenCoord.get();
+            if (this.insertionDirection.isPresent()) {
+                console.log('insertion direction is present')
+                // This is an insertion
+                const direction: Orthogonal = this.insertionDirection.get();
+                console.log(direction)
+                const targetSquare: Coord = chosenCoord.getNext(direction);
+                console.log('target square is ' + targetSquare.toString());
+                if (state.getPieceAt(targetSquare) === SiamPiece.EMPTY) {
+                    // If the target is free, any orientation can be chosen
+                    for (const orientation of Orthogonal.ORTHOGONALS) {
+                        arrows.push({
+                            x: targetSquare.x,
+                            y: targetSquare.y,
+                            orientation: orientation.toString(),
+                        });
+                    }
+
+                } else {
+                    // Otherwise it is a push and it can only be done in one direction
+                    arrows.push({
+                        x: targetSquare.x,
+                        y: targetSquare.y,
+                        orientation: direction.toString(),
+                    });
+                }
+            } else {
+                // This is a move from a piece already on board
+                console.log('piece is already on board')
+                const piece: SiamPiece = state.getPieceAt(chosenCoord);
+                const moves: SiamMove[] =
+                    SiamRules.getMovesFrom(this.rules.node.gameState, piece, chosenCoord.x, chosenCoord.y);
+                for (const move of moves) {
+                    console.log(move.toString())
+                    let landingSquare: Coord;
+                    if (move.moveDirection.isPresent()) {
+                        landingSquare = move.coord.getNext(move.moveDirection.get());
+                    } else {
+                        landingSquare = move.coord;
+                    }
+                    arrows.push({
+                        x: landingSquare.x,
+                        y: landingSquare.y,
+                        orientation: move.landingOrientation.toString(),
+                    });
+                }
+            }
         }
-        return false;
+        return arrows;
     }
     public getInsertionArrowTransform(x: number, y: number, direction: string): string {
         const orientation: number = Orthogonal.factory.fromString(direction).get().toInt() - 2;
