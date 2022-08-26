@@ -526,7 +526,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
                 await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-                tick(1);
                 testUtils.expectElementNotToExist('#askTakeBackButton');
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack();
@@ -701,7 +700,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it(`Should reduce opponent's remainingTime, since opponent just played`, fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
                 await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
                 await doMove(SECOND_MOVE, true);
                 await receiveRequest(Request.takeBackAsked(Player.ZERO), 3);
@@ -1031,7 +1029,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop player's local chrono when global chrono reach end`, fakeAsync(async() => {
@@ -1039,7 +1037,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
             expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's global chrono when local reach end`, fakeAsync(async() => {
@@ -1053,7 +1051,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
             // Then it shoud be considered as a timeout
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's local chrono when global chrono reach end`, fakeAsync(async() => {
@@ -1067,7 +1065,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000); // TODO: maximalPartDuration, for this one!!
 
             // Then it shoud be considered as a timeout
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should not notifyTimeout for online opponent`, fakeAsync(async() => {
@@ -1082,7 +1080,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
             // Then it shoud be considered as a timeout
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
         }));
@@ -1099,7 +1097,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
             // Then it shoud be considered as a timeout
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
             const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
@@ -1746,7 +1744,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
             testUtils.expectElementNotToExist('#proposeRematchButton');
 
             // When it is finished
@@ -1759,10 +1756,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should send proposal request when proposing', fakeAsync(async() => {
             // Given an ended game
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            tick(1);
-            testUtils.detectChanges();
             await testUtils.expectInterfaceClickSuccess('#resignButton');
-            tick(1);
 
             // When the propose rematch button is clicked
             const gameService: GameService = TestBed.inject(GameService);
@@ -1775,7 +1769,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should show accept/refuse button when proposition has been sent', fakeAsync(async() => {
             // Given an ended game
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
             await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
 
@@ -1789,7 +1782,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should sent accepting request when user accept rematch', fakeAsync(async() => {
             // give a part with rematch request send by opponent
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
             await testUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
             await receiveRequest(Request.rematchProposed(Player.ONE), 2);
@@ -1807,7 +1799,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
 
             await testUtils.expectInterfaceClickSuccess('#resignButton');
-            tick(1);
             await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // When opponent accepts it
@@ -1868,7 +1859,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
 
             // When the game is displayed
-            testUtils.detectChanges();
 
             // Then it should highlight the player's names
             testUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg');
@@ -1877,10 +1867,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
             // Given a game that has been started
-            await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
+            await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER, false, false);
 
             // When it is the current player's turn
+            tick(1);
+            testUtils.detectChanges();
 
             // Then it should highlight the board with its color
             testUtils.expectElementToHaveClass('#board-tile', 'player0-bg');
@@ -1889,7 +1880,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should highlight the board in grey when game is over', fakeAsync(async() => {
             // Given a game that has been started
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
 
             // When the game is over
             await testUtils.clickElement('#resignButton');

@@ -18,7 +18,7 @@
             </div>
             <div class="block">
                 <p id="playerZeroIndicator"
-                   [ngClass]="getPlayerNameClass(0)"
+                   [ngClass]="getPlayerNameClass(Player.ZERO)"
                    class="player0-bg"
                    *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
                 <p id="scoreZeroIndicator" *ngIf="currentPart && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[0] }} points</p>
@@ -28,7 +28,7 @@
                                 [canAddTime]='observerRole === Player.ONE && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ZERO Global"
-                                (outOfTimeAction)="reachedOutOfTime(0)"
+                                (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addGlobalTime()"
                 >
                 </app-count-down>
@@ -38,7 +38,7 @@
                                 [canAddTime]='observerRole === Player.ONE && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ZERO Turn"
-                                (outOfTimeAction)="reachedOutOfTime(0)"
+                                (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addTurnTime()"
                 >
                 </app-count-down>
@@ -46,7 +46,7 @@
             <p class="is-size-3" i18n>vs.</p>
             <div class="block">
                 <p id="playerOneIndicator"
-                   [ngClass]="getPlayerNameClass(1)"
+                   [ngClass]="getPlayerNameClass(Player.ONE)"
                    class="player1-bg"
                    *ngIf="players[1].isPresent()">{{ players[1].get().name }}</p>
                 <p id="scoreOneIndicator" *ngIf="currentPart && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[1] }} points</p>
@@ -56,7 +56,7 @@
                                 [canAddTime]='observerRole === Player.ZERO && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ONE Global"
-                                (outOfTimeAction)="reachedOutOfTime(1)"
+                                (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addGlobalTime()"
                 >
                 </app-count-down>
@@ -66,7 +66,7 @@
                                 [canAddTime]='observerRole === Player.ZERO && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ONE Turn"
-                                (outOfTimeAction)="reachedOutOfTime(1)"
+                                (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addTurnTime()"
                 >
                 </app-count-down>

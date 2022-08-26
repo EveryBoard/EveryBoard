@@ -7,7 +7,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -46,6 +46,8 @@ export abstract class GameWrapper<P extends Comparable> {
     public canPass: boolean;
 
     public endGame: boolean = false;
+
+    public Player: typeof Player = Player;
 
     constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
                 protected readonly actRoute: ActivatedRoute,
@@ -169,7 +171,7 @@ export abstract class GameWrapper<P extends Comparable> {
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer].isPresent()) {
-            return comparableEquals(this.players[indexPlayer].get(), player);
+            return this.players[indexPlayer].equalsValue(player);
         } else {
             return true;
         }

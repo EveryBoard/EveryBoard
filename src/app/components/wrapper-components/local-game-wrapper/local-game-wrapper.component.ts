@@ -60,8 +60,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }
         }, 1);
     }
-    public updatePlayer(player: 0|1): void {
-        this.players[player] = MGPOptional.of(this.playerSelection[player]);
+    public updatePlayer(player: Player): void {
+        this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {

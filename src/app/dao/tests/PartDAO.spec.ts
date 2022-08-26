@@ -173,6 +173,20 @@ describe('PartDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
+        it('should forbid creating a part with the winner and loser already set', async() => {
+            // Given a creator
+            const otherUser: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+            // When creating a part where the loser is already set
+            const result: Promise<string> = partDAO.create({
+                ...PartMocks.INITIAL,
+                playerZero: creator,
+                loser: creator,
+                winner: otherUser,
+            });
+            // Then it should fail
+            await expectPermissionToBeDenied(result);
+        });
         it('should allow reading parts', async() => {
             // Given a part and a verified user
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
@@ -781,7 +795,7 @@ describe('PartDAO', () => {
                 loser: playerZero,
             });
 
-            // Then it should succeed
+            // Then it should fail
             await expectPermissionToBeDenied(result);
         });
         it('should forbid setting winner that is not player', async() => {

@@ -71,8 +71,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     @ViewChild('chatComponent')
     public chatComponent: ChatComponent;
 
-    public Player: typeof Player = Player;
-
     // GameWrapping's Template
     @ViewChild('chronoZeroGlobal') public chronoZeroGlobal: CountDownComponent;
     @ViewChild('chronoOneGlobal') public chronoOneGlobal: CountDownComponent;
@@ -648,19 +646,19 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.resign');
         const lastIndex: number = this.getLastIndex();
         const player: Player = this.observerRole as Player;
-        const resigner: MinimalUser = this.players[this.observerRole.value % 2].get();
+        const resigner: MinimalUser = this.getPlayer();
         const victoriousOpponent: MinimalUser = this.players[(this.observerRole.value + 1) % 2].get();
         await this.gameService.resign(this.currentPartId, lastIndex, player, victoriousOpponent, resigner);
     }
     private getLastIndex(): number {
         return this.currentPart.data.lastUpdate.index;
     }
-    public async reachedOutOfTime(player: 0 | 1): Promise<void> {
+    public async reachedOutOfTime(player: Player): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         const lastIndex: number = this.getLastIndex();
         const currentPlayer: Player = this.observerRole as Player;
-        this.stopCountdownsFor(Player.of(player));
-        if (player === this.observerRole.value) {
+        this.stopCountdownsFor(player);
+        if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
             const opponent: MinimalUser = Utils.getNonNullable(this.opponent);
             await this.notifyTimeoutVictory(opponent, currentPlayer, lastIndex, this.authUser.toMinimalUser());
@@ -668,7 +666,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             assert(this.endGame === false, 'time might be better handled in the future');
             if (this.opponentIsOffline()) { // the other player has timed out
                 const opponent: MinimalUser = Utils.getNonNullable(this.opponent);
-                await this.notifyTimeoutVictory(this.authUser.toMinimalUser(), currentPlayer, player, opponent);
+                await this.notifyTimeoutVictory(this.authUser.toMinimalUser(), currentPlayer, player.value, opponent);
                 this.endGame = true;
             }
         }
@@ -786,11 +784,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         }
     }
-    public getPlayerNameClass(player: number): string {
+    public getPlayerNameClass(player: Player): string {
         if (this.opponentIsOffline()) {
             return 'has-text-grey-light';
         } else {
-            if (player === 0) {
+            if (player === Player.ZERO) {
                 return 'has-text-white';
             } else {
                 return 'has-text-black';
