@@ -223,9 +223,11 @@ describe('SiamMinimax:', () => {
             const state: SiamState = SiamState.getInitialState();
             // When computing the pushers
             const pushers: { coord: Coord, distance: number }[] = SiamRules.getPushers(state, [1, 2, 3], [2]);
-            // Then it should ???? TODO TODO wtf is this test, the context do not correspond to what is tested!
-            expect(pushers.length).withContext('should not include horizontal push').toBe(6);
-            expect(pushers[0].distance).withContext('should all be to the same distance').toBe(5);
+            // Then it should compute 6 pushers to a distance of 5
+            expect(pushers.length).withContext('should find 6 pushers').toBe(6);
+            for (const pusher of pushers) {
+                expect(pusher.distance).withContext('should be at a distance of 5').toBe(5);
+            }
         });
         it('should know how far a mountain is from the border and who is the closest pusher', () => {
             // Given a state

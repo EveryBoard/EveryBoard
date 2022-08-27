@@ -41,7 +41,7 @@ describe('CoerceoComponent', () => {
     it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
         await testUtils.expectMoveFailure('#click_6_9', CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
-                                                   move, undefined, getScores());
+                                          move, undefined, getScores());
     }));
     it('Should show possibles destination after choosing your own piece', fakeAsync(async() => {
         await testUtils.expectClickSuccess('#click_6_2');

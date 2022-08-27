@@ -216,7 +216,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const zeroScore: number = 6 - zeroShortestDistance;
         const oneScore: number = 6 - oneShortestDistance;
         if (zeroScore === oneScore) {
-            // TODO TODO For Review: any idea what "think that correctly" means?
+            // TODO TODO For Review: any idea what "think that correctly" means? It should be ticketted or removed!
             return currentPlayer.getScoreModifier();
         } else if (zeroScore > oneScore) {
             return (-10 * (zeroScore + 1)) + (oneScore + 1);
@@ -275,7 +275,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             pushed = pushed.getNext(pushingDirection);
             const pushingPiece: SiamPiece = state.getPieceAt(pusher);
             // TODO: test when mountain amongst the pushers
-            // TODO TODO: clarify todo?
+            // TODO TODO: clarify todo (and ticket instead of keeping here!) 
             if (pushingPiece !== SiamPiece.MOUNTAIN && pushingPiece.getDirection() === pushingDirection) {
                 lastCorrectPusher = pusher;
             }

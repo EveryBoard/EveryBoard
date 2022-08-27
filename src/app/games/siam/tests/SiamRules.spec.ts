@@ -184,7 +184,7 @@ describe('SiamRules:', () => {
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('should forbid fake rotations', () => {
+    it('should forbid staying in the same orientation through a fake rotation', () => {
         // Given a board with a player piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -194,8 +194,7 @@ describe('SiamRules:', () => {
             [_, _, U, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        // When trying to perform a fake rotation
-        // TODO TODO FOR REVIEW: what is a fake rotation? The message says "you cannot push and rotate at the same time", but we don't push!
+        // When trying to perform a rotation that does not change the orientation
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.ILLEGAL_ROTATION());
