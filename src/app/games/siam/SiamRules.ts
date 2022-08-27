@@ -415,15 +415,22 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     public static getPushingInsertions(state: SiamState): SiamMove[] {
         const insertions: SiamMove[] = [];
         const currentPlayer: Player = state.getCurrentPlayer();
+        const newMoves: SiamMove[] = []; const insertedPieces: SiamPiece[] = [];
         for (let xOrY: number = 0; xOrY<5; xOrY++) {
-            for (const orientation of Orthogonal.ORTHOGONALS) {
-                const move: SiamMove = new SiamMove(-1, xOrY, MGPOptional.of(orientation), orientation);
-                const insertedPiece: SiamPiece = SiamPiece.of(orientation, currentPlayer);
-                const legality: MGPFallible<SiamLegalityInformation> =
-                    this.isLegalForwarding(move, state, insertedPiece);
-                if (legality.isSuccess()) {
-                    insertions.push(move);
-                }
+            newMoves.push(new SiamMove(-1, xOrY, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT));
+            insertedPieces.push(SiamPiece.of(Orthogonal.RIGHT, currentPlayer));
+            newMoves.push(new SiamMove(5, xOrY, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT));
+            insertedPieces.push(SiamPiece.of(Orthogonal.LEFT, currentPlayer));
+            newMoves.push(new SiamMove(xOrY, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN));
+            insertedPieces.push(SiamPiece.of(Orthogonal.DOWN, currentPlayer));
+            newMoves.push(new SiamMove(xOrY, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP));
+            insertedPieces.push(SiamPiece.of(Orthogonal.UP, currentPlayer));
+        }
+        for (let i: number = 0; i < newMoves.length; i++) {
+            const legality: MGPFallible<SiamLegalityInformation> =
+                this.isLegalForwarding(newMoves[i], state, insertedPieces[i]);
+            if (legality.isSuccess()) {
+                insertions.push(newMoves[i]);
             }
         }
         return insertions;
