@@ -38,14 +38,14 @@
         </g>
     </g>
     <!-- Highlight last move -->
-    <g *ngIf="lastMove.isPresent()">
-        <rect [attr.x]="lastMove.get().coord.x * SPACE_SIZE"
-              [attr.y]="lastMove.get().coord.y * SPACE_SIZE"
+    <g *ngIf="lastPieceMove.isPresent()">
+        <rect [attr.x]="lastPieceMove.get().coord.x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().coord.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
-        <rect [attr.x]="lastMove.get().end.x * SPACE_SIZE"
-              [attr.y]="lastMove.get().end.y * SPACE_SIZE"
+        <rect [attr.x]="lastPieceMove.get().end.x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().end.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
