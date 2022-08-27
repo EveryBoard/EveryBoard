@@ -275,7 +275,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             pushed = pushed.getNext(pushingDirection);
             const pushingPiece: SiamPiece = state.getPieceAt(pusher);
             // TODO: test when mountain amongst the pushers
-            // TODO TODO: clarify todo (and ticket instead of keeping here!) 
+            // TODO TODO: clarify todo (and ticket instead of keeping here!)
             if (pushingPiece !== SiamPiece.MOUNTAIN && pushingPiece.getDirection() === pushingDirection) {
                 lastCorrectPusher = pusher;
             }
