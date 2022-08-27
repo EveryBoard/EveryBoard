@@ -679,6 +679,57 @@ describe('PartDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
+        it('should allow accepting a rematch when it was proposed by playerZero', async() => {
+            // Given a part where player zero proposes a rematch
+            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+
+            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const partId: string = await partDAO.create(part);
+
+            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
+                                             { request: Request.rematchProposed(Player.ZERO) });
+
+            await signOut();
+            await reconnectUser(OPPONENT_EMAIL);
+
+            // When the player one accepts the rematch
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+                request: Request.rematchAccepted('Quarto', 'newPartId'),
+            });
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+        it('should allow accepting a rematch when it was proposed by playerOne', async() => {
+            // Given a part where player one proposes a rematch
+            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+
+            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const partId: string = await partDAO.create(part);
+
+            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
+                                             { turn: 0, listMoves: [] });
+
+            await signOut();
+            await reconnectUser(OPPONENT_EMAIL);
+
+            await partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1,
+                                             { request: Request.rematchProposed(Player.ONE) });
+
+            await signOut();
+            await reconnectUser(CREATOR_EMAIL);
+
+            // When the player zero accepts the rematch
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+2, {
+                request: Request.rematchAccepted('Quarto', 'newPartId'),
+            });
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+
         it('should allow accepting a draw when it was proposed', async() => {
             // Given a part where one player proposes a draw
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
@@ -758,6 +809,30 @@ describe('PartDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
+        it('should allow timeouting a part with a timed out user', async() => {
+            // Given a part where one player has timed out
+            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+
+            const part: Part = { ...PartMocks.STARTING, remainingMsForOne: 1, playerZero, playerOne };
+            const partId: string = await partDAO.create(part);
+
+            // Wait 10ms to ensure the player has timed out
+            await new Promise((f: (value: unknown) => void) => setTimeout(f, 10));
+
+            // When setting the part as result as timed out
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+                result: MGPResult.TIMEOUT.value,
+                winner: playerZero,
+                loser: playerOne,
+            });
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+        xit('should forbid timeouting a part without timed out users', async() => {
+            // Not tested as the security rules do not ensure proper time management yet
+        });
         it('should allow setting winner and loser with a move', async() => {
             // Given an ongoing part
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
@@ -827,7 +902,7 @@ describe('PartDAO', () => {
             await expectPermissionToBeDenied(winnerResult);
             await expectPermissionToBeDenied(loserResult);
         });
-        it('should forbid setting winner and loser without move or resigning', async() => {
+        it('should forbid setting winner and loser without move, resigning, or timeout', async() => {
             // Given an ongoing part
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
@@ -838,6 +913,23 @@ describe('PartDAO', () => {
             // When setting the winner and loser without sending a move
             const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 result: MGPResult.VICTORY.value,
+                winner: playerZero,
+                loser: playerOne,
+            });
+
+            // Then it should fail
+            await expectPermissionToBeDenied(result);
+        });
+        it('should forbid setting winner and loser without changing result', async() => {
+            // Given an ongoing part
+            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+
+            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const partId: string = await partDAO.create(part);
+
+            // When setting the winner and loser without changing part result
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 winner: playerZero,
                 loser: playerOne,
             });

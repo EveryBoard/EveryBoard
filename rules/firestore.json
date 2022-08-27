@@ -8,7 +8,7 @@ service cloud.firestore {
         function preservesField(fieldName) {
             // A field is preserved if it is not part of the update
             // or if the same value is given in the update
-            return !(fieldName in request.resource.data) || (request.resource.data[fieldName] == resource.data[fieldName]);
+            return !(fieldName in request.resource.data) || (fieldName in resource.data && request.resource.data[fieldName] == resource.data[fieldName]);
         }
         match /{document=**} {
             // by default, nothing can be read or written unless explicitly authorized
@@ -155,7 +155,7 @@ service cloud.firestore {
                 isUserTurn;
         }
         function setsWinnerIfVictory(part, update) {
-            let isVictory = update.result == 3; // 3 = victory
+            let isVictory = part.result != 3 && update.result == 3; // 3 = victory
             let playerZeroWinsAndOneLoses = update.loser.id == part.playerZero.id && update.winner.id == part.playerOne.id;
             let playerOneWinsAndZeroLoses =  update.loser.id == part.playerOne.id && update.winner.id == part.playerZero.id;
             return isVictory == false || playerZeroWinsAndOneLoses || playerOneWinsAndZeroLoses;
@@ -174,10 +174,15 @@ service cloud.firestore {
             return isValidPartUpdateDuringGame(part) &&
                 safeTimeManagement &&
                 (preservesField('turn') || safeTurnDecrease(part.turn, update.turn)) &&
+                preservesWinnerAndLoserUnlessResultChanges() &&
                 onlyAcceptsDrawIfProposed(part, update) &&
 //                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
                 onlyResignsInTheirName(part, update) &&
+                isNotSetToVictory(update) &&
                 safeLastUpdate(part, update);
+        }
+        function isNotSetToVictory(update) {
+            return update.result != 3; // 3 = victory
         }
         function onlyAcceptsDrawIfProposed(part, update) {
             // 6 = draw agreed by zero
@@ -199,14 +204,17 @@ service cloud.firestore {
 //                (takeBackWasProposed && updateAnswersToTakeBack && updateFromDifferentPlayer);
 //        }
         function onlyResignsInTheirName(part, update) {
-            let playerResigns = update.result == 1 && // 1 = resign
+            let playerResigns = part.result != 1 && update.result == 1 && // 1 = resign
                 hasField(update, 'winner') &&
                 hasField(update, 'loser');
             let resignerIsLoser = update.loser.id == request.auth.uid;
             let otherPlayerIsWinner = update.winner.id != request.auth.uid &&
                 (update.winner.id == part.playerZero.id || update.winner.id == part.playerOne.id);
-            return (playerResigns == false && preservesField('winner') && preservesField('loser')) ||
-                (playerResigns && resignerIsLoser && otherPlayerIsWinner);
+            return (playerResigns == false) || (playerResigns && resignerIsLoser && otherPlayerIsWinner);
+        }
+        function preservesWinnerAndLoserUnlessResultChanges() {
+            let partHasFinished = preservesField('result') == false;
+            return partHasFinished || (preservesField('winner') && preservesField('loser'));
         }
         function isValidPartUpdateDuringGame(part) {
             return userIsVerified() &&
