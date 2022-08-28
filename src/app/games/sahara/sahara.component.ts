@@ -67,7 +67,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         } else if (this.board[y][x].value === this.getTurn() % 2) { // selected his own pyramid
             const coord: Coord = new Coord(x, y);
             this.chosenCoord = MGPOptional.of(coord);
-            this.possibleLandings = this.rules.getLandingsCoords(this.board, coord);
+            this.possibleLandings = this.rules.getLandingCoords(this.board, coord);
             return MGPValidation.SUCCESS;
         } else { // Selected opponent pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
