@@ -52,7 +52,7 @@ export abstract class GameWrapper {
                 protected readonly router: Router,
                 protected readonly messageDisplayer: MessageDisplayer)
     {
-        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
+        display(GameWrapper.VERBOSE || true, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
     public getMatchingComponent(gameName: string) : MGPOptional<Type<AbstractGameComponent>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
@@ -61,7 +61,7 @@ export abstract class GameWrapper {
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
     protected async afterGameIncluderViewInit(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
+        display(GameWrapper.VERBOSE || true, 'GameWrapper.afterGameIncluderViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.rules.setInitialBoard();
@@ -69,7 +69,7 @@ export abstract class GameWrapper {
         return gameCreatedSuccessfully;
     }
     private async createGameComponent(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
+        display(GameWrapper.VERBOSE || true, 'GameWrapper.createGameComponent');
 
         const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
@@ -103,10 +103,14 @@ export abstract class GameWrapper {
             (reason?: string): void => {
                 this.onCancelMove(reason);
             };
-
-        this.gameComponent.observerRole = this.observerRole;
+        this.setObserverRole(this.observerRole);
         this.canPass = this.gameComponent.canPass;
         return true;
+    }
+    public setObserverRole(observerRole: number): void {
+        console.log('Wrapper and Game receive', observerRole)
+        this.observerRole = observerRole;
+        this.gameComponent.observerRole = this.observerRole;
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,

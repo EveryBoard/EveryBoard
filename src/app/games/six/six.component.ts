@@ -51,7 +51,7 @@ export class SixComponent
     private nextClickShouldSelectGroup: boolean = false;
 
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.rules = new SixRules(SixState);
         this.availableMinimaxes = [
             new SixMinimax(this.rules, 'SixMinimax'),

@@ -146,7 +146,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return this.SPACE_SIZE * circle / 10;
     }
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, true);
+        super(messageDisplayer);
+        this.mustRotateBoard = true;
         this.rules = new MartianChessRules(MartianChessState);
         this.availableMinimaxes = [
             new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),

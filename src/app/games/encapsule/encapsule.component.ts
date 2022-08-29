@@ -35,7 +35,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public remainingPieceLeftX: number[][] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.rules = new EncapsuleRules(EncapsuleState);
         this.availableMinimaxes = [
             new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),

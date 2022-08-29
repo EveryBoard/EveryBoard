@@ -34,7 +34,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public victoriousCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.rules = new QuixoRules(QuixoState);
         this.availableMinimaxes = [
             new QuixoMinimax(this.rules, 'QuixoMinimax'),

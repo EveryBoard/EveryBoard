@@ -1,11 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { GameComponent } from './GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({ template: '' })
 export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
@@ -19,11 +18,6 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
 
     public board: Table<P>;
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       @Inject(Boolean) mustRotateBoard: boolean)
-    {
-        super(messageDisplayer, mustRotateBoard);
-    }
     public getTriangleCornerCoords(x: number, y: number) : Coord[] {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
         else return this.getUpwardCoordinate(x, y);

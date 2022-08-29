@@ -30,7 +30,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public state: DvonnState;
 
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.rules = new DvonnRules(DvonnState);
         this.availableMinimaxes = [
             new DvonnMinimax(this.rules, 'DvonnMinimax'),

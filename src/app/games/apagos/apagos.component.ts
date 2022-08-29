@@ -71,7 +71,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.rules = new ApagosRules(ApagosState);
         this.availableMinimaxes = [
             new ApagosDummyMinimax(this.rules, 'ApagosDummyMinimax'),

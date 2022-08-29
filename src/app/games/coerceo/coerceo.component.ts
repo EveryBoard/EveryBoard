@@ -38,7 +38,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public highlights: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new CoerceoRules(CoerceoState);
         this.availableMinimaxes = [

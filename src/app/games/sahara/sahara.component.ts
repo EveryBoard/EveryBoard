@@ -35,7 +35,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.rules = new SaharaRules(SaharaState);
         this.availableMinimaxes = [
             new SaharaMinimax(this.rules, 'SaharaMinimax'),

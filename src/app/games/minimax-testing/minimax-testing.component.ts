@@ -21,7 +21,7 @@ export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTes
     public coord: Coord = new Coord(-1, -1);
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false);
+        super(messageDisplayer);
         this.rules = new MinimaxTestingRules(MinimaxTestingState);
         this.availableMinimaxes = [
             new MinimaxTestingMinimax(this.rules, 'MinimaxTestingMinimax'),

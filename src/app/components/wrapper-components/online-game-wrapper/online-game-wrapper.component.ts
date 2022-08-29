@@ -111,7 +111,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 private readonly gameService: GameService)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
@@ -158,7 +158,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return this.redirectIfPartOrGameIsInvalid();
     }
     public async ngOnInit(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.ngOnInit');
 
         this.routerEventsSub = this.router.events.subscribe(async(ev: Event) => {
             if (ev instanceof NavigationEnd) {
@@ -170,6 +170,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.authUser = user;
         });
         await this.setCurrentPartIdOrRedirect();
+    }
+    public setObserverRole(observerRole: number): void {
+        super.setObserverRole(observerRole);
+        if (this.gameComponent.mustRotateBoard) {
+            this.gameComponent.rotation = 'rotate(' + (this.observerRole * 180) + ')';
+        }
     }
     public async startGame(iJoiner: Joiner): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
@@ -365,9 +371,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             rules.choose(chosenMove);
         }
         this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2].get();
-        if (this.gameComponent.mustRotateBoard) {
-            this.gameComponent.rotation = 'rotate(' + this.observerRole * 180 + ')';
-        }
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
@@ -594,13 +597,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();
         let opponentName: MGPOptional<string> = MGPOptional.empty();
         if (this.players[0].equalsValue(this.getPlayerName())) {
-            this.observerRole = Player.ZERO.value;
+            this.setObserverRole(Player.ZERO.value);
             opponentName = this.players[1];
         } else if (this.players[1].equalsValue(this.getPlayerName())) {
-            this.observerRole = Player.ONE.value;
+            this.setObserverRole(Player.ONE.value);
             opponentName = this.players[0];
         } else {
-            this.observerRole = PlayerOrNone.NONE.value;
+            this.setObserverRole(PlayerOrNone.NONE.value);
         }
         if (opponentName.isPresent()) {
             const onDocumentCreatedOrModified: (f: UserDocument[]) => void = (user: UserDocument[]) => {
