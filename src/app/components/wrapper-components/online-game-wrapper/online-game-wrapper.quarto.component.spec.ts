@@ -267,6 +267,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         wrapper.pauseCountDownsFor(Player.ZERO);
     }));
     it('Should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
+        // Given an online game being created
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER, false, false);
         const partCreationId: DebugElement = testUtils.findElement('#partCreation');
         let quartoTag: DebugElement = testUtils.querySelector('app-quarto');
@@ -282,9 +283,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(testUtils.getComponent())
             .withContext('gameComponent field should be absent after config accepted and async ms finished')
             .toBeFalsy();
+
+        // When the component initializes
         testUtils.detectChanges();
         tick(1);
 
+        // Then the game component should become present in the component
         quartoTag = testUtils.querySelector('app-quarto');
         expect(quartoTag)
             .withContext('quarto tag should be present after config accepted and async millisec finished')
@@ -364,7 +368,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         spyOn(messageDisplayer, 'gameMessage');
-        tick(1);
 
         // When it is not the player's turn (because he made the first move)
         await doMove(FIRST_MOVE, true);
@@ -949,7 +952,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.clickElement('#proposeDrawButton');
             await receiveRequest(Request.drawRefused(Player.ONE), 1);
 
-            tick(1);
             testUtils.expectElementNotToExist('#proposeDrawButton');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -960,9 +962,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.drawProposed(Player.ONE), 1);
             spyOn(partDAO, 'update').and.callThrough();
 
-            // When accepting the drawn
+            // When accepting the draw
             await testUtils.clickElement('#acceptDrawButton');
-            tick(1);
 
             // Then a request indicating game is an agreed draw should be sent
             expect(partDAO.update).toHaveBeenCalledWith('configRoomId', {
@@ -1748,7 +1749,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When it is finished
             await testUtils.expectInterfaceClickSuccess('#resignButton');
-            tick(1);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToExist('#proposeRematchButton');
@@ -1770,7 +1770,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an ended game
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
-            tick(1);
 
             // When request is received
             testUtils.expectElementNotToExist('#acceptRematchButton');
@@ -1783,7 +1782,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // give a part with rematch request send by opponent
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
-            tick(1);
             await receiveRequest(Request.rematchProposed(Player.ONE), 2);
 
             // When accepting it
@@ -1856,9 +1854,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Visuals', () => {
         it('should highlight each player name in their respective color', fakeAsync(async() => {
             // Given a game that has been started
-            await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
+            await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER, false, false);
 
             // When the game is displayed
+            tick(1);
+            testUtils.detectChanges();
 
             // Then it should highlight the player's names
             testUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg');
