@@ -1,6 +1,13 @@
 rules_version = "2";
 service cloud.firestore {
     match /databases/{database}/documents {
+        // ----------------8<-------------[ cut from here ]------------------
+        // The rules used for testing are the production rules, with the addition that we have a /foo/ collection to test our DAO mock.
+        match /foo/{document=**} {
+            // only used for testing purposes, do not push to production
+            allow read, write: if true;
+        }
+        // -----------[ cut until here ]--------------->8---------------------
         // From here, the rest of the file matches with firestore.rules
         function hasField(data, field) {
             return field in data && data[field] != null;
@@ -181,8 +188,8 @@ service cloud.firestore {
                 isNotSetToVictory(update) &&
                 safeLastUpdate(part, update);
         }
-        function isNotSetToVictory(update) {
-            return update.result != 3; // 3 = victory
+        function isNotSetToVictory(part, update) {
+            return part.result == 3 || update.result != 3; // 3 = victory
         }
         function onlyAcceptsDrawIfProposed(part, update) {
             // 6 = draw agreed by zero

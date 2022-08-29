@@ -188,8 +188,8 @@ service cloud.firestore {
                 isNotSetToVictory(update) &&
                 safeLastUpdate(part, update);
         }
-        function isNotSetToVictory(update) {
-            return update.result != 3; // 3 = victory
+        function isNotSetToVictory(part, update) {
+            return part.result == 3 || update.result != 3; // 3 = victory
         }
         function onlyAcceptsDrawIfProposed(part, update) {
             // 6 = draw agreed by zero

@@ -729,7 +729,38 @@ describe('PartDAO', () => {
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
+        it('should allow accepting a rematch when it was proposed after a victory', async() => {
+            // Given a part where someone has won and proposed a rematch
+            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
+            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const partId: string = await partDAO.create(part);
+
+            // Player zero wins
+            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+                listMoves: [1],
+                turn: 1,
+                result: MGPResult.VICTORY.value,
+                winner: playerZero,
+                loser: playerOne,
+            });
+
+            // Player zero proposes a rematch
+            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+1,
+                                             { request: Request.rematchProposed(Player.ZERO) });
+
+            await signOut();
+            await reconnectUser(OPPONENT_EMAIL);
+
+            // When the player one accepts the rematch
+            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+2, {
+                request: Request.rematchAccepted('Quarto', 'newPartId'),
+            });
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
         it('should allow accepting a draw when it was proposed', async() => {
             // Given a part where one player proposes a draw
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
