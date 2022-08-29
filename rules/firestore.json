@@ -185,7 +185,7 @@ service cloud.firestore {
                 onlyAcceptsDrawIfProposed(part, update) &&
 //                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
                 onlyResignsInTheirName(part, update) &&
-                isNotSetToVictory(update) &&
+                isNotSetToVictory(part, update) &&
                 safeLastUpdate(part, update);
         }
         function isNotSetToVictory(part, update) {
