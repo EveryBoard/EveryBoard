@@ -7,7 +7,6 @@ export const environment: Environment = {
     firebaseConfig: {
         apiKey: 'unknown',
         authDomain: 'unknown',
-        databaseURL: 'http://localhost:8080',
         projectId: 'my-project',
         storageBucket: 'unknown',
         messagingSenderId: 'unknown',

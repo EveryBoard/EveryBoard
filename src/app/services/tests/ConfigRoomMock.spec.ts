@@ -1,31 +1,31 @@
 /* eslint-disable max-lines-per-function */
-import { FirstPlayer, Joiner, JoinerDocument, PartStatus, PartType } from 'src/app/domain/Joiner';
+import { FirstPlayer, ConfigRoom, ConfigRoomDocument, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { display } from 'src/app/utils/utils';
 
-export class JoinerServiceMock {
+export class ConfigRoomServiceMock {
 
     public static VERBOSE: boolean = false;
 
-    public static emittedsJoiner: JoinerDocument[];
+    public static emittedsConfigRoom: ConfigRoomDocument[];
 
     public constructor() {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.constructor');
+        display(ConfigRoomServiceMock.VERBOSE, 'ConfigRoomServiceMock.constructor');
     }
     public joinGame(): Promise<void> {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.joinGame');
+        display(ConfigRoomServiceMock.VERBOSE, 'ConfigRoomServiceMock.joinGame');
         return new Promise((resolve: () => void) => {
             resolve();
         });
     }
     public async cancelJoining(): Promise<void> {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.cancelJoining');
+        display(ConfigRoomServiceMock.VERBOSE, 'ConfigRoomServiceMock.cancelJoining');
         return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
     }
-    public readJoinerById(partId: string): Promise<Joiner> {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
-        return new Promise((resolve: (j: Joiner) => void) => {
+    public readConfigRoomById(partId: string): Promise<ConfigRoom> {
+        display(ConfigRoomServiceMock.VERBOSE, 'ConfigRoomServiceMock.readConfigRoomById');
+        return new Promise((resolve: (j: ConfigRoom) => void) => {
             resolve({
                 candidates: [{ id: '24854rf', name: 'uniqueCandidate' }],
                 creator: { id: 'doc-creator', name: 'creator' },
@@ -40,13 +40,13 @@ export class JoinerServiceMock {
         });
     }
     public async setChosenOpponent(username: string): Promise<void> {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.setChosenOpponent');
+        display(ConfigRoomServiceMock.VERBOSE, 'ConfigRoomServiceMock.setChosenOpponent');
         return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
     }
-    public async deleteJoiner(): Promise<void> {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.deleteJoiner');
+    public async deleteConfigRoom(): Promise<void> {
+        display(ConfigRoomServiceMock.VERBOSE, 'ConfigRoomServiceMock.deleteConfigRoom');
         return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
@@ -56,7 +56,7 @@ export class JoinerServiceMock {
                                totalPartDuration: number)
     : Promise<void>
     {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.proposeConfig');
+        display(ConfigRoomServiceMock.VERBOSE, 'ConfigRoomServiceMock.proposeConfig');
         return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK

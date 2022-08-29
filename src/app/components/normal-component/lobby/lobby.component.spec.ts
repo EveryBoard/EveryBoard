@@ -16,6 +16,7 @@ import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
+import { Timestamp } from 'firebase/firestore';
 
 describe('LobbyComponent', () => {
 
@@ -80,11 +81,11 @@ describe('LobbyComponent', () => {
         const mm: number = 34 * 60;
         const ss: number = 56;
         const timeStampInSecond: number = HH + mm + ss;
-        const userWithLastChange: User = {
+        const userWithLastUpdateTime: User = {
             ...UserMocks.CREATOR,
-            last_changed: { seconds: timeStampInSecond, nanoseconds: 0 },
+            lastUpdateTime: new Timestamp(timeStampInSecond, 0),
         };
-        void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.id, userWithLastChange);
+        void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.id, userWithLastUpdateTime);
         tick();
         void testUtils.clickElement('#tab-chat');
         tick();
