@@ -90,9 +90,9 @@ export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInform
         }
 
         this.getPossibleCaptureCombinations(state).forEach((initialCaptures: ReadonlyArray<GipfCapture>) => {
-            const stateAfterCapture: GipfState = GipfRules.applyCaptures(state, initialCaptures);
+            const stateAfterCapture: GipfState = GipfRules.applyCaptures(initialCaptures, state);
             GipfRules.getPlacements(stateAfterCapture).forEach((placement: GipfPlacement) => {
-                const stateAfterPlacement: GipfState = GipfRules.applyPlacement(stateAfterCapture, placement);
+                const stateAfterPlacement: GipfState = GipfRules.applyPlacement(placement, stateAfterCapture);
                 this.getPossibleCaptureCombinations(stateAfterPlacement)
                     .forEach((finalCaptures: ReadonlyArray<GipfCapture>) => {
                         const moveSimple: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);

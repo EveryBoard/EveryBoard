@@ -103,23 +103,26 @@ export class ConfigRoomService {
             return;
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
+            const configRoomUpdates: Promise<void>[] = [this.configRoomDAO.removeCandidate(configRoomId, user)];
             if (configRoom.chosenOpponent?.id === user.id) {
                 // if the chosenOpponent leave, we're back to initial part creation
                 const update: Partial<ConfigRoom> = {
                     chosenOpponent: null,
                     partStatus: PartStatus.PART_CREATED.value,
                 };
-                await this.configRoomDAO.update(configRoomId, update);
+
+                configRoomUpdates.push(this.configRoomDAO.update(configRoomId, update));
             }
-            await this.configRoomDAO.removeCandidate(configRoomId, user);
+            await Promise.all(configRoomUpdates);
         }
     }
     public async deleteConfigRoom(configRoomId: string, candidates: MinimalUser[]): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.deleteConfigRoom(${configRoomId}, ${candidates})`);
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.deleteConfigRoom(${configRoomId}`);
+        // We need to delete the candidates before the actual configRoom,
+        // for the security rules to check that we are allowed to delete the configRoom
+        await Promise.all(candidates.map((candidate: MinimalUser): Promise<void> =>
+            this.configRoomDAO.removeCandidate(configRoomId, candidate)));
         await this.configRoomDAO.delete(configRoomId);
-        for (const candidate of candidates) {
-            await this.configRoomDAO.removeCandidate(configRoomId, candidate);
-        }
     }
     public async proposeConfig(configRoomId: string,
                                chosenOpponent: MinimalUser,

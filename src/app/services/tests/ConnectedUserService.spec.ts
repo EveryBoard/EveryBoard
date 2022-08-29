@@ -122,6 +122,12 @@ export async function createConnectedUser(email: string, username: string): Prom
     return { id: user.uid, name: username };
 }
 
+export async function createDisconnectedUser(email: string, username: string): Promise<MinimalUser> {
+    const user: FireAuth.User = await createConnectedGoogleUser(email, username);
+    await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
+    return { id: user.uid, name: username };
+}
+
 export async function reconnectUser(email: string): Promise<void> {
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
@@ -590,18 +596,11 @@ describe('ConnectedUserService', () => {
         expect(service.unsubscribeFromAuth).toHaveBeenCalledWith();
     });
     describe('updateObservedPart', () => {
-        it('should throw when called while no user is logged', async() => {
+        it('should throw when called while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
-            let failed: boolean = false;
-            try {
-                await service.updateObservedPart('some-part-doc-id');
-            } catch (error) {
-                expect(error.message).toBe(expectedError);
-                failed = true;
-            }
-            expect(failed).toBeTrue();
-        });
+            expect(() => service.updateObservedPart('some-part-doc-id')).toThrowError(expectedError);
+        }));
         it('should delegate to userDAO', async() => {
             // Given a service observing an user
             service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
@@ -617,18 +616,11 @@ describe('ConnectedUserService', () => {
         });
     });
     describe('removeObservedPart', () => {
-        it('should throw when asking to remove while no user is logged', async() => {
+        it('should throw when asking to remove while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
-            let failed: boolean = false;
-            try {
-                await service.removeObservedPart();
-            } catch (error) {
-                expect(error.message).toBe(expectedError);
-                failed = true;
-            }
-            expect(failed).toBeTrue();
-        });
+            expect(() => service.removeObservedPart()).toThrowError(expectedError);
+        }));
         it('should delegate removal to userDAO', async() => {
             // Given a service observing an user
             service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
@@ -643,18 +635,11 @@ describe('ConnectedUserService', () => {
         });
     });
     describe('sendPresenceToken', () => {
-        it('should throw when asking to send presence token while no user is logged', async() => {
+        it('should throw when asking to send presence token while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call sendPresenceToken when not connected';
-            let failed: boolean = false;
-            try {
-                await service.sendPresenceToken();
-            } catch (error) {
-                expect(error.message).toBe(expectedError);
-                failed = true;
-            }
-            expect(failed).toBeTrue();
-        });
+            expect(() => service.sendPresenceToken()).toThrowError(expectedError);
+        }));
         it('should delegate presence token sending to userDAO', async() => {
             // Given a service observing an user
             service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);

@@ -10,6 +10,8 @@ import { FirstPlayer, ConfigRoom, PartStatus, PartType } from 'src/app/domain/Co
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { createUnverifiedUser, createConnectedUser, reconnectUser, signOut } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { UserDAO } from '../UserDAO';
+import { Timestamp } from 'firebase/firestore';
 
 interface TestOptions {
     signOut?: boolean,
@@ -34,6 +36,10 @@ describe('ConfigRoomDAO', () => {
 
     const MALICIOUS_EMAIL: string = 'm@licio.us';
     const MALICIOUS_NAME: string = 'malicious';
+
+    const OTHER_USER_EMAIL: string = 'other@us.er';
+    const OTHER_USER_NAME: string = 'other';
+
 
     beforeEach(async() => {
         await setupEmulators();
@@ -85,12 +91,12 @@ describe('ConfigRoomDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
-        it('should forbid to add themselves to the candidates', async() => {
+        it('should forbid to join the list of candidates', async() => {
             // Given a part with a configRoom, and a non-verified user
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
 
             const nonVerifiedUser: MinimalUser = await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-            // When the user adds themself to the candidates
+            // When the user joins the list of candidates
             const result: Promise<void> = configRoomDAO.addCandidate(partId, nonVerifiedUser);
 
             // Then it should fail
@@ -164,7 +170,7 @@ describe('ConfigRoomDAO', () => {
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
             const candidate: MinimalUser = await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
-            // When the user adds themself to the list of candidates with a fake name
+            // When the user joins the list of candidates with a fake name
             const result: Promise<void> = configRoomDAO.addCandidate(partId, { id: candidate.id, name: 'blibli' });
 
             // Then it should fail
@@ -183,12 +189,12 @@ describe('ConfigRoomDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
-        it('should allow to add themself to the candidates', async() => {
+        it('should allow to join the list of candidates', async() => {
             // Given a part with a configRoom, and a verified user
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
             const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
 
-            // When the user adds themself to the list of candidates
+            // When the user joins to the list of candidates
             const result: Promise<void> = configRoomDAO.addCandidate(partId, candidate);
 
             // Then it should succeed
@@ -196,13 +202,13 @@ describe('ConfigRoomDAO', () => {
             const matchingDocs: unknown[] = await configRoomDAO.subCollectionDAO(partId, 'candidates').findWhere([['id', '==', candidate.id]]);
             expect(matchingDocs.length).toBe(1);
         });
-        it('should allow to add themself twice to the candidates', async() => {
+        it('should allow to join twice the list of candidates', async() => {
             // Given a part with a configRoom, and a verified user that is already candidate
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
             const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
             await expectAsync(configRoomDAO.addCandidate(partId, candidate)).toBeResolvedTo();
 
-            // When the user adds themself to the list of candidates a second time
+            // When the user joins the list of candidates a second time
             // (for example, because they closed their tab and open it again)
             const result: Promise<void> = configRoomDAO.addCandidate(partId, candidate);
 
@@ -212,18 +218,33 @@ describe('ConfigRoomDAO', () => {
             const matchingDocs: unknown[] = await configRoomDAO.subCollectionDAO(partId, 'candidates').findWhere([['id', '==', candidate.id]]);
             expect(matchingDocs.length).toBe(1);
         });
-        it('should forbid to remove someone else from the candidates', async() => {
+        it('should forbid to remove someone else from the candidates if creator did not time out', async() => {
             // Given a part with a configRoom, with another user as candidate, and a malicious user
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
             const candidate: MinimalUser = await addCandidate(partId);
             await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
-            // When the malicious users tries to remove another candidate
+            // When the malicious user tries to remove another candidate
             const result: Promise<void> = configRoomDAO.removeCandidate(partId, candidate);
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
+        it('should allow to remove someone else from the candidates if creator timed out', async() => {
+            // Given a part with a configRoom, with another user as candidate, and with a timed out creator
+            const createdPart: CreatedPart = await createPart({ createConfigRoom: true, signOut: false });
+            await TestBed.inject(UserDAO).update(createdPart.creator.id, { lastUpdateTime: new Timestamp(0, 0) });
+            await signOut();
+            const candidate: MinimalUser = await addCandidate(createdPart.partId);
+            await createConnectedUser(OTHER_USER_EMAIL, OTHER_USER_NAME);
+
+            // When verified user tries to remove another candidate
+            const result: Promise<void> = configRoomDAO.removeCandidate(createdPart.partId, candidate);
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
+        });
+
         it('should forbid changing the fields of another candidate', async() => {
             // Given a part with a configRoom, with another user as candidate, and a malicious user
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
@@ -231,7 +252,7 @@ describe('ConfigRoomDAO', () => {
 
             await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
-            // When the malicious users tries to change another candidate's fields
+            // When the malicious user tries to change another candidate's fields
             const update: Partial<MinimalUser> = { name: 'foo' };
             const result: Promise<void> = configRoomDAO.subCollectionDAO(partId, 'candidates').update(candidate.id, update);
 
@@ -254,15 +275,27 @@ describe('ConfigRoomDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
-        it('should forbid to add themself to the candidates', async() => {
+        it('should forbid to join the list of candidates', async() => {
             // Given a part with a configRoom, with the current user being the creator
             const createdPart: CreatedPart = await createPart({ createConfigRoom: true });
 
-            // When trying to add themself to the candidates
+            // When trying to join the list of candidates
             const result: Promise<void> = configRoomDAO.addCandidate(createdPart.partId, createdPart.creator);
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
+        });
+        it('should allow to remove someone else from the candidates', async() => {
+            // Given a part with a configRoom, with another user as candidate
+            const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
+            const candidate: MinimalUser = await addCandidate(partId);
+            await reconnectUser(CREATOR_EMAIL);
+
+            // When creator tries to remove another candidate
+            const result: Promise<void> = configRoomDAO.removeCandidate(partId, candidate);
+
+            // Then it should succeed
+            await expectAsync(result).toBeResolvedTo();
         });
         it('should allow to change other fields than candidates and partStatus to STARTED', async() => {
             // Given a user that created a (non-started) part with a configRoom
@@ -295,7 +328,7 @@ describe('ConfigRoomDAO', () => {
                 partId = createdPart.partId;
                 creator = createdPart.creator;
 
-                // A candidate adds themself to the candidates list
+                // A candidate joins the candidates list
                 const candidate: MinimalUser = await addCandidate(partId);
 
                 // The creator then selects candidates as the chosen opponent and proposes the config
@@ -316,15 +349,6 @@ describe('ConfigRoomDAO', () => {
 
                 // And we act as the creator
                 await reconnectUser(CREATOR_EMAIL);
-            });
-            it('should allow to change partStatus to FINISHED after it is STARTED', async() => {
-                // When changing partStatus to FINISHED
-                const result: Promise<void> = configRoomDAO.update(partId, {
-                    partStatus: PartStatus.PART_FINISHED.value,
-                });
-
-                // Then it should succeed
-                await expectAsync(result).toBeResolvedTo();
             });
             it('should forbid to change fields after part has started', async() => {
                 const updates: Partial<ConfigRoom>[] = [
@@ -347,12 +371,12 @@ describe('ConfigRoomDAO', () => {
         });
     });
     describe('for non-chosen candidate', () => {
-        it('should allow to remove themself from the candidates', async() => {
+        it('should allow to leave the list of candidates', async() => {
             // Given a part with a configRoom, and a candidate
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
             const candidate: MinimalUser = await addCandidate(partId, false);
 
-            // When the candidate removes themself from the list
+            // When the candidate leaves the list of candidates
             const result: Promise<void> = configRoomDAO.removeCandidate(partId, candidate);
 
             // Then it should succeed
@@ -361,13 +385,11 @@ describe('ConfigRoomDAO', () => {
         it('should forbid changing its own candidate fields', async() => {
             // Given a part with a configRoom, with a candidate
             const partId: string = (await createPart({ createConfigRoom: true, signOut: true })).partId;
-            const candidate: MinimalUser = await addCandidate(partId);
+            const malicious: MinimalUser = await addCandidate(partId);
 
-            await createConnectedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
-
-            // When the malicious users tries to change one of its own candidate's fields
+            // When the malicious user tries to change one of its own candidate's fields
             const update: Partial<MinimalUser> = { name: 'foo' };
-            const result: Promise<void> = configRoomDAO.subCollectionDAO(partId, 'candidates').set(candidate.id, update);
+            const result: Promise<void> = configRoomDAO.subCollectionDAO(partId, 'candidates').update(malicious.id, update);
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -406,7 +428,7 @@ describe('ConfigRoomDAO', () => {
             // The part and configRoom are first created
             partId = (await createPart({ createConfigRoom: true, signOut: true })).partId;
 
-            // A candidate adds themself to the candidates list
+            // A candidate joins the candidates list
             const candidate: MinimalUser = await addCandidate(partId);
 
             // The creator then selects candidates as the chosen opponent and proposes the config

@@ -116,8 +116,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
-        if (this.hexaBoard[y][x].is(OPPONENT)) {
+        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+        if (this.hexaBoard[y][x].is(opponent)) {
             return this.opponentClick(x, y);
         }
         if (this.selecteds.length === 0) {
@@ -227,8 +227,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
         if (this.selecteds.length === 3) {
             const middle: Coord = this.selecteds[1];
-            const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
-            if (this.hexaBoard[middle.y][middle.x].is(PLAYER) === false) {
+            const player: Player = this.rules.node.gameState.getCurrentPlayer();
+            if (this.hexaBoard[middle.y][middle.x].is(player) === false) {
                 this.cancelMoveAttempt();
                 return this.firstClick(x, y);
             }

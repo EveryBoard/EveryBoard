@@ -444,7 +444,7 @@
         <source>It is your turn.</source>
       </trans-unit>
       <trans-unit id="3724541577412345595" datatype="html">
-        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer }}"/>&apos;s turn.</source>
+        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer?.name }}"/>&apos;s turn.</source>
       </trans-unit>
       <trans-unit id="715032829765584790" datatype="html">
         <source>vs.</source>
@@ -486,22 +486,22 @@
         <source>You lost.</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getWinner().get() }}"/> won.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getWinner().get().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get() }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get() }}"/> has reached their time limit.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get() }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has resigned.</source>
       </trans-unit>
       <trans-unit id="4624707315308487849" datatype="html">
         <source>Go back to the game list</source>
@@ -1967,8 +1967,8 @@
       <trans-unit id="2162535855239454361" datatype="html">
         <source>Your piece must land on the board or on 4 other pieces.</source>
       </trans-unit>
-      <trans-unit id="1024410441498731703" datatype="html">
-        <source>You cannot land on this space.</source>
+      <trans-unit id="2201596715619103633" datatype="html">
+        <source>You cannot move a supporting piece.</source>
       </trans-unit>
       <trans-unit id="70110199629015603" datatype="html">
         <source>You cannot capture.</source>

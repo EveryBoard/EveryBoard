@@ -3,11 +3,11 @@ import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const X: GoPiece = GoPiece.WHITE;
-const O: GoPiece = GoPiece.BLACK;
-const k: GoPiece = GoPiece.DEAD_WHITE;
-const w: GoPiece = GoPiece.WHITE_TERRITORY;
-const b: GoPiece = GoPiece.BLACK_TERRITORY;
+const X: GoPiece = GoPiece.LIGHT;
+const O: GoPiece = GoPiece.DARK;
+const k: GoPiece = GoPiece.DEAD_LIGHT;
+const w: GoPiece = GoPiece.LIGHT_TERRITORY;
+const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
 export class GoTutorial {

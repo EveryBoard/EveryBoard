@@ -24,6 +24,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp, Timestamp, Unsubscribe } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { PartService } from '../PartService';
+import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
 
 describe('GameService', () => {
 
@@ -97,7 +99,7 @@ describe('GameService', () => {
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     }));
     it('should forbid to accept a take back that the players proposed themselves', fakeAsync(async() => {
-        spyOn(ErrorLoggerService, 'logError');
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         const error: string = 'Illegal to accept your own request';
         for (const player of Player.PLAYERS) {
             const part: PartDocument = new PartDocument('configRoomId', {
@@ -132,7 +134,7 @@ describe('GameService', () => {
         const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
         const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
         // Install some mocks to check what we need
-        // (we can't rely on toHaveBeenCalled for some strange reason, so we model this manually)
+        // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
         let chatCreated: boolean = false;
         let configRoomCreated: boolean = false;
         spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
@@ -149,26 +151,11 @@ describe('GameService', () => {
         });
 
         // When calling createPartConfigRoomAndChat
-        await service.createPartConfigRoomAndChat('P4');
+        await service.createPartConfigRoomAndChat('Quarto');
         // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
         // Moreover, everything needs to have been called eventually
-        const part: Part = {
-            lastUpdate: { index: 0, player: 0 },
-            typeGame: 'P4',
-            playerZero: UserMocks.CREATOR_MINIMAL_USER,
-            turn: -1,
-            result: MGPResult.UNACHIEVED.value,
-            listMoves: [],
-        };
-        const configRoom: ConfigRoom = {
-            chosenOpponent: null,
-            firstPlayer: FirstPlayer.RANDOM.value,
-            partType: PartType.STANDARD.value,
-            partStatus: PartStatus.PART_CREATED.value,
-            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
-            totalPartDuration: PartType.NORMAL_PART_DURATION,
-            creator: UserMocks.CREATOR_MINIMAL_USER,
-        };
+        const part: Part = PartMocks.INITIAL;
+        const configRoom: ConfigRoom = ConfigRoomMocks.INITIAL;
         expect(partDAO.create).toHaveBeenCalledOnceWith(part);
         expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
@@ -244,8 +231,8 @@ describe('GameService', () => {
                 typeGame: 'laMarelle',
                 beginning: new Timestamp(1700102, 680000000),
                 lastUpdateTime: new Timestamp(2, 3000000),
-                loser: 'creator',
-                winner: 'opponent',
+                loser: UserMocks.CREATOR_MINIMAL_USER,
+                winner: UserMocks.OPPONENT_MINIMAL_USER,
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameConfigRoom: ConfigRoom = {
@@ -287,8 +274,8 @@ describe('GameService', () => {
                 typeGame: 'laMarelle',
                 beginning: new Timestamp(1700102, 680000000),
                 lastUpdateTime: new Timestamp(2, 3000000),
-                loser: 'creator',
-                winner: 'configRoom',
+                loser: UserMocks.CREATOR_MINIMAL_USER,
+                winner: UserMocks.OPPONENT_MINIMAL_USER,
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameConfigRoom: ConfigRoom = {
@@ -332,8 +319,8 @@ describe('GameService', () => {
                 typeGame: 'laMarelle',
                 beginning: new Timestamp(1700102, 680000000),
                 lastUpdateTime: new Timestamp(2, 3000000),
-                loser: 'creator',
-                winner: 'configRoom',
+                loser: UserMocks.CREATOR_MINIMAL_USER,
+                winner: UserMocks.OPPONENT_MINIMAL_USER,
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameConfigRoom: ConfigRoom = {
@@ -349,7 +336,7 @@ describe('GameService', () => {
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
 
             // Install some mocks to check what we need
-            // (we can't rely on toHaveBeenCalled for some strange reason, so we model this manually)
+            // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
             let chatCreated: boolean = false;
             let configRoomCreated: boolean = false;
             spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {

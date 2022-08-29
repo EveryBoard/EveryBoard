@@ -9,26 +9,26 @@ describe('SiamPiece:', () => {
         const names: string[] = pieces.map((piece: SiamPiece) => piece.toString());
         const expectedPieces: SiamPiece[] = [
             SiamPiece.EMPTY,
-            SiamPiece.WHITE_UP,
-            SiamPiece.WHITE_RIGHT,
-            SiamPiece.WHITE_DOWN,
-            SiamPiece.WHITE_LEFT,
-            SiamPiece.BLACK_UP,
-            SiamPiece.BLACK_RIGHT,
-            SiamPiece.BLACK_DOWN,
-            SiamPiece.BLACK_LEFT,
+            SiamPiece.LIGHT_UP,
+            SiamPiece.LIGHT_RIGHT,
+            SiamPiece.LIGHT_DOWN,
+            SiamPiece.LIGHT_LEFT,
+            SiamPiece.DARK_UP,
+            SiamPiece.DARK_RIGHT,
+            SiamPiece.DARK_DOWN,
+            SiamPiece.DARK_LEFT,
             SiamPiece.MOUNTAIN,
         ];
         const expectedNames: string[] = [
             'EMPTY',
-            'WHITE_UP',
-            'WHITE_RIGHT',
-            'WHITE_DOWN',
-            'WHITE_LEFT',
-            'BLACK_UP',
-            'BLACK_RIGHT',
-            'BLACK_DOWN',
-            'BLACK_LEFT',
+            'LIGHT_UP',
+            'LIGHT_RIGHT',
+            'LIGHT_DOWN',
+            'LIGHT_LEFT',
+            'DARK_UP',
+            'DARK_RIGHT',
+            'DARK_DOWN',
+            'DARK_LEFT',
             'MOUNTAIN',
         ];
         expect(names).toEqual(expectedNames);
@@ -37,14 +37,14 @@ describe('SiamPiece:', () => {
     it('Should consider moutains as belonging to no player and pieces to their respective players', () => {
         expect(SiamPiece.MOUNTAIN.belongTo(Player.ONE)).toBeFalse();
         expect(SiamPiece.MOUNTAIN.belongTo(Player.ZERO)).toBeFalse();
-        expect(SiamPiece.BLACK_DOWN.belongTo(Player.ZERO)).toBeFalse();
-        expect(SiamPiece.BLACK_DOWN.belongTo(Player.ONE)).toBeTrue();
-        expect(SiamPiece.WHITE_RIGHT.belongTo(Player.ZERO)).toBeTrue();
-        expect(SiamPiece.WHITE_RIGHT.belongTo(Player.ONE)).toBeFalse();
+        expect(SiamPiece.DARK_DOWN.belongTo(Player.ZERO)).toBeFalse();
+        expect(SiamPiece.DARK_DOWN.belongTo(Player.ONE)).toBeTrue();
+        expect(SiamPiece.LIGHT_RIGHT.belongTo(Player.ZERO)).toBeTrue();
+        expect(SiamPiece.LIGHT_RIGHT.belongTo(Player.ONE)).toBeFalse();
     });
     it('should give the owner of each piece with getOwner', () => {
         expect(SiamPiece.MOUNTAIN.getOwner()).toBe(PlayerOrNone.NONE);
-        expect(SiamPiece.BLACK_DOWN.getOwner()).toBe(Player.ONE);
-        expect(SiamPiece.WHITE_RIGHT.getOwner()).toBe(Player.ZERO);
+        expect(SiamPiece.DARK_DOWN.getOwner()).toBe(Player.ONE);
+        expect(SiamPiece.LIGHT_RIGHT.getOwner()).toBe(Player.ZERO);
     });
 });

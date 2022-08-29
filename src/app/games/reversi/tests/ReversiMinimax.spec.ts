@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
@@ -9,8 +9,8 @@ import { Table } from 'src/app/utils/ArrayUtils';
 describe('ReversiMinimax', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ReversiRules;
     let minimax: ReversiMinimax;

@@ -70,12 +70,12 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                     total += avancement * mod;
                     total += SCORE_BY_PIECE * mod;
                     for (const dir of dirs) {
-                        let neighboor: Coord = coord.getNext(dir, 1);
-                        while (neighboor.isInRange(14, 12) &&
-                               state.getPieceAt(neighboor) === player)
+                        let neighbor: Coord = coord.getNext(dir, 1);
+                        while (neighbor.isInRange(14, 12) &&
+                               state.getPieceAt(neighbor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;
-                            neighboor = neighboor.getNext(dir, 1);
+                            neighbor = neighbor.getNext(dir, 1);
                         }
                     }
                 }

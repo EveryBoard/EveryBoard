@@ -131,20 +131,26 @@ export class GameService {
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Unsubscribe {
         return this.partDAO.subscribeToChanges(partId, callback);
     }
-    public resign(partId: string, lastIndex: number, user: Player, winner: string, loser: string): Promise<void> {
+    public resign(partId: string,
+                  lastIndex: number,
+                  user: Player,
+                  winner: MinimalUser,
+                  loser: MinimalUser)
+    : Promise<void>
+    {
         const update: Partial<Part> = {
             winner,
             loser,
             result: MGPResult.RESIGN.value,
             request: null,
         };
-        return this.partService.updateAndBumpIndex(partId, user, lastIndex, update); // resign
+        return this.partService.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public notifyTimeout(partId: string,
                          user: Player,
                          lastIndex: number,
-                         winner: string,
-                         loser: string)
+                         winner: MinimalUser,
+                         loser: MinimalUser)
     : Promise<void>
     {
         const update: Partial<Part> = {
@@ -277,8 +283,8 @@ export class GameService {
                                msToSubstract: [number, number],
                                scores?: [number, number],
                                notifyDraw?: boolean,
-                               winner?: string,
-                               loser?: string)
+                               winner?: MinimalUser,
+                               loser?: MinimalUser)
     : Promise<void>
     {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {

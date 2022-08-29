@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Unsubscribe } from 'firebase/auth';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
-import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
@@ -34,14 +33,6 @@ export class UserService {
     public async markAsVerified(uid: string): Promise<void> {
         await this.userDAO.update(uid, { verified: true });
     }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
-        return this.userDAO.observingWhere([['username', '==', username]], callback);
-    }
-    public updatePresenceToken(userId: string): Promise<void> {
-        return this.userDAO.update(userId, {
-            lastUpdateTime: serverTimestamp(),
-        });
-    }
     public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
         return this.userDAO.subscribeToChanges(userId, callback);
     }
@@ -54,5 +45,10 @@ export class UserService {
             assert(lastUpdateTime != null, 'should not receive a lastUpdateTime equal to null');
             return MGPOptional.of(lastUpdateTime as FirestoreTime);
         }
+    }
+    public updatePresenceToken(userId: string): Promise<void> {
+        return this.userDAO.update(userId, {
+            lastUpdateTime: serverTimestamp(),
+        });
     }
 }

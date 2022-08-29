@@ -72,7 +72,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Input() partId: string;
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
-    @Output('gameStartNotification') gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
+    @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
     public gameStarted: boolean = false;
 
     public viewInfo: PartCreationViewInfo = {
@@ -115,7 +115,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed');
     }
     public async ngOnInit(): Promise<void> {
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit for ' + this.connectedUserService.user.get().username.get());
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit');
 
         this.checkInputs();
         this.createForms();
@@ -478,7 +478,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.cancelGameCreation();
         } else {
             display(PartCreationComponent.VERBOSE,
-                    'PartCreationComponent.ngOnDestroy: you(configRoom) about to cancel game joining');
+                    'PartCreationComponent.ngOnDestroy: you are about to cancel game joining');
             await this.connectedUserService.removeObservedPart();
             await this.configRoomService.cancelJoining(this.partId);
         }

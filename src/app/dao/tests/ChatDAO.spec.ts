@@ -110,7 +110,7 @@ describe('ChatDAO', () => {
             // Then it fails
             await expectPermissionToBeDenied(result);
         });
-        it('should allow users to delete one of its messages', async() => {
+        it('should allow user to delete one of its messages', async() => {
             // When deleting one of the current user's message
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').delete(myMessageId);
             // Then it succeeds and the message is removed

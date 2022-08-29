@@ -13,9 +13,9 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
-        const PLAYER: Player = node.gameState.getCurrentPlayer();
-        const OPPONENT: Player = node.gameState.getCurrentOpponent();
-        const EMPTY: PlayerOrNone = PlayerOrNone.NONE;
+        const player: Player = node.gameState.getCurrentPlayer();
+        const opponent: Player = node.gameState.getCurrentOpponent();
+        const empty: PlayerOrNone = PlayerOrNone.NONE;
 
         let moves: EpaminondasMove[] = [];
         const state: EpaminondasState = node.gameState;
@@ -23,19 +23,19 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const firstCoord: Coord = new Coord(x, y);
-                if (state.getPieceAt(firstCoord) === PLAYER) {
+                if (state.getPieceAt(firstCoord) === player) {
                     for (const direction of Direction.DIRECTIONS) {
                         let movedPieces: number = 1;
                         let nextCoord: Coord = firstCoord.getNext(direction, 1);
                         while (nextCoord.isInRange(14, 12) &&
-                            state.getPieceAt(nextCoord) === PLAYER) {
+                            state.getPieceAt(nextCoord) === player) {
                             movedPieces += 1;
                             nextCoord = nextCoord.getNext(direction, 1);
                         }
                         let stepSize: number = 1;
                         while (nextCoord.isInRange(14, 12) &&
                             stepSize <= movedPieces &&
-                            state.getPieceAt(nextCoord) === EMPTY) {
+                            state.getPieceAt(nextCoord) === empty) {
                             move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
                             moves = this.addMove(moves, move, state);
 
@@ -44,7 +44,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
                         }
                         if (nextCoord.isInRange(14, 12) &&
                             stepSize <= movedPieces &&
-                            state.getPieceAt(nextCoord) === OPPONENT) {
+                            state.getPieceAt(nextCoord) === opponent) {
                             move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
                             moves = this.addMove(moves, move, state);
                         }
@@ -97,12 +97,12 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
                     wasPresent[player.value] = mod;
                     row += mod;
                     for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
-                        let neighboor: Coord = coord.getNext(dir, 1);
-                        while (neighboor.isInRange(14, 12) &&
-                               state.getPieceAt(neighboor) === player)
+                        let neighbor: Coord = coord.getNext(dir, 1);
+                        while (neighbor.isInRange(14, 12) &&
+                               state.getPieceAt(neighbor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;
-                            neighboor = neighboor.getNext(dir, 1);
+                            neighbor = neighbor.getNext(dir, 1);
                         }
                     }
                 }

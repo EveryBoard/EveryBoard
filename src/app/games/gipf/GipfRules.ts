@@ -26,16 +26,16 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
                              computedState.sidePieces,
                              computedState.capturedPieces);
     }
-    public static applyCaptures(state: GipfState, captures: ReadonlyArray<GipfCapture>)
+    public static applyCaptures(captures: ReadonlyArray<GipfCapture>, state: GipfState)
     : GipfState
     {
         let computedState: GipfState = state;
         captures.forEach((capture: GipfCapture) => {
-            computedState = GipfRules.applyCapture(computedState, capture);
+            computedState = GipfRules.applyCapture(capture, computedState);
         });
         return computedState;
     }
-    public static applyCapture(state: GipfState, capture: GipfCapture): GipfState {
+    public static applyCapture(capture: GipfCapture, state: GipfState): GipfState {
         const player: Player = state.getCurrentPlayer();
         let newState: GipfState = state;
         const sidePieces: [number, number] = [state.sidePieces[0], state.sidePieces[1]];
@@ -77,7 +77,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return MGPOptional.empty();
     }
-    public static applyPlacement(state: GipfState, placement: GipfPlacement): GipfState {
+    public static applyPlacement(placement: GipfPlacement, state: GipfState): GipfState {
         const player: Player = state.getCurrentPlayer();
         let newState: GipfState = state;
         let prevPiece: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
@@ -104,7 +104,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     public getPiecesMoved(state: GipfState,
                           initialCaptures: ReadonlyArray<GipfCapture>,
                           placement: GipfPlacement): Coord[] {
-        const stateAfterCapture: GipfState = GipfRules.applyCaptures(state, initialCaptures);
+        const stateAfterCapture: GipfState = GipfRules.applyCaptures(initialCaptures, state);
         if (placement.direction.isAbsent()) {
             return [placement.coord];
         } else {
@@ -159,7 +159,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         if (initialCapturesValidity.isFailure()) {
             return initialCapturesValidity.toFailedFallible();
         }
-        const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(state, move.initialCaptures);
+        const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(move.initialCaptures, state);
 
         const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterInitialCaptures);
         if (noMoreCaptureAfterInitialValidity.isFailure()) {
@@ -172,7 +172,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             return placementValidity.toFailedFallible();
         }
         const stateAfterPlacement: GipfState =
-            GipfRules.applyPlacement(stateAfterInitialCaptures, move.placement);
+            GipfRules.applyPlacement(move.placement, stateAfterInitialCaptures);
 
         const finalCapturesValidity: MGPValidation =
             this.capturesValidity(stateAfterPlacement, move.finalCaptures);
@@ -181,7 +181,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
 
         const stateAfterFinalCaptures: GipfState =
-            GipfRules.applyCaptures(stateAfterPlacement, move.finalCaptures);
+            GipfRules.applyCaptures(move.finalCaptures, stateAfterPlacement);
         const noMoreCaptureAfterFinalValidity: MGPValidation =
             this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCaptureAfterFinalValidity.isFailure()) {
@@ -199,7 +199,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             if (validity.isFailure()) {
                 return validity;
             }
-            updatedState = GipfRules.applyCapture(updatedState, capture);
+            updatedState = GipfRules.applyCapture(capture, updatedState);
         }
         return MGPValidation.SUCCESS;
     }

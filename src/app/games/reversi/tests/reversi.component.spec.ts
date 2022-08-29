@@ -2,7 +2,7 @@
 import { ReversiComponent } from '../reversi.component';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiState } from 'src/app/games/reversi/ReversiState';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
@@ -12,8 +12,8 @@ describe('ReversiComponent', () => {
     let componentTestUtils: ComponentTestUtils<ReversiComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
-    const O: PlayerOrNone = Player.ZERO;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');

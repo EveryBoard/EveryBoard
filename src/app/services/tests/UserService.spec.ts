@@ -29,21 +29,6 @@ describe('UserService', () => {
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    describe('observeUserByUsername', () => {
-        it('should call observingWhere with the right condition', () => {
-            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
-                () => void { },
-                () => void { },
-                () => void { },
-            );
-            spyOn(userDAO, 'observingWhere');
-            service.observeUserByUsername('jeanjaja', callback);
-            const parameters: FirestoreCondition[] = [
-                ['username', '==', 'jeanjaja'],
-            ];
-            expect(userDAO.observingWhere).toHaveBeenCalledWith(parameters, callback);
-        });
-    });
     describe('setUsername', () => {
         it('should change the username of a user', async() => {
             spyOn(userDAO, 'update').and.resolveTo();

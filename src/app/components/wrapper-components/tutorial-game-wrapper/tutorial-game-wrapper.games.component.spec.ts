@@ -79,6 +79,7 @@ import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshT
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
 import { TutorialStepFailure } from './TutorialStepFailure';
+import { Comparable } from 'src/app/utils/Comparable';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -86,8 +87,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
         for (const game of GameInfo.ALL_GAMES()) {
             if (game.display) {
                 it(game.urlName, fakeAsync(async() => {
-                    const wrapper: GameWrapper =
-                        (await ComponentTestUtils.forGame(game.urlName, TutorialGameWrapperComponent)).wrapper;
+                    const wrapper: GameWrapper<Comparable> =
+                        (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
+                            .wrapper;
                     expect(wrapper).toBeTruthy();
                 }));
             }
@@ -146,7 +148,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new EncapsuleRules(EncapsuleState),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromDrop(EncapsulePiece.BIG_BLACK, new Coord(0, 2)),
+                    EncapsuleMove.fromDrop(EncapsulePiece.BIG_DARK, new Coord(0, 2)),
                     MGPValidation.failure(`You won, but the exercise is to win while moving a piece!`),
                 ], [
                     new EncapsuleRules(EncapsuleState),

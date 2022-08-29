@@ -27,9 +27,6 @@ export class UserDAOMock extends FirestoreDAOMock<User> {
     public observeUser(id: string, callback: FirestoreCollectionObserver<User>): () => void {
         return this.observingWhere([['id', '==', id]], callback);
     }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
-        return this.observingWhere([['username', '==', username]], callback);
-    }
     public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }

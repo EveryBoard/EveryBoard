@@ -17,6 +17,7 @@ import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { assert } from 'src/app/utils/assert';
 
 interface SpaceInfo {
     coord: Coord,
@@ -322,13 +323,11 @@ export class YinshComponent
                 this.viewInfo.selectableCoords.push(coord);
             }
         }
-        switch (this.movePhase) {
-            case 'INITIAL_CAPTURE_SELECT_FIRST':
-                this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';
-                break;
-            case 'FINAL_CAPTURE_SELECT_FIRST':
-                this.movePhase = 'FINAL_CAPTURE_SELECT_LAST';
-                break;
+        if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST') {
+            this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';
+        } else {
+            Utils.expectToBe(this.movePhase, 'FINAL_CAPTURE_SELECT_FIRST', 'moveToCaptureSelectLast did not expect to be called in movePhase' + this.movePhase);
+            this.movePhase = 'FINAL_CAPTURE_SELECT_LAST';
         }
     }
     private async selectCaptureLastCoord(coord: Coord): Promise<MGPValidation> {
@@ -353,15 +352,14 @@ export class YinshComponent
             this.constructedState.sideRings,
             this.constructedState.turn);
 
-        switch (this.movePhase) {
-            case 'INITIAL_CAPTURE_SELECT_FIRST':
-            case 'INITIAL_CAPTURE_SELECT_LAST':
-                this.movePhase = 'INITIAL_CAPTURE_SELECT_RING';
-                break;
-            case 'FINAL_CAPTURE_SELECT_FIRST':
-            case 'FINAL_CAPTURE_SELECT_LAST':
-                this.movePhase = 'FINAL_CAPTURE_SELECT_RING';
-                break;
+        if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST' ||
+            this.movePhase === 'INITIAL_CAPTURE_SELECT_LAST')
+        {
+            this.movePhase = 'INITIAL_CAPTURE_SELECT_RING';
+        } else {
+            const message: string = 'selectCapture did not expect to be called in movePhase ' + this.movePhase;
+            assert(this.movePhase === 'FINAL_CAPTURE_SELECT_FIRST' || this.movePhase === 'FINAL_CAPTURE_SELECT_LAST', message);
+            this.movePhase = 'FINAL_CAPTURE_SELECT_RING';
         }
         this.updateViewInfo();
         return MGPValidation.SUCCESS;
@@ -457,7 +455,7 @@ export class YinshComponent
         }
         this.moveEnd = MGPOptional.of(coord);
         this.currentlyMoved = this.coordsBetween(this.moveStart.get(), coord);
-        this.constructedState = this.rules.applyRingMoveAndFlip(this.constructedState, this.moveStart.get(), coord);
+        this.constructedState = this.rules.applyRingMoveAndFlip(this.moveStart.get(), coord, this.constructedState);
         this.updateViewInfo();
         return this.moveToFinalCapturePhaseOrTryMove();
     }

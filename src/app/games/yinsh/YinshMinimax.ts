@@ -37,10 +37,10 @@ export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityIn
             const rules: YinshRules = this.ruler as YinshRules; // TODO: ugly cast, this.rules should be a YinshRules!
             this.getPossibleCaptureCombinations(state)
                 .forEach((initialCaptures: ReadonlyArray<YinshCapture>): void => {
-                    const stateAfterCapture: YinshState = rules.applyCaptures(state, initialCaptures);
+                    const stateAfterCapture: YinshState = rules.applyCaptures(initialCaptures, state);
                     this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord, end: Coord}): void => {
                         const stateAfterRingMove: YinshState =
-                            rules.applyRingMoveAndFlip(stateAfterCapture, ringMove.start, ringMove.end);
+                            rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
                             .forEach((finalCaptures: ReadonlyArray<YinshCapture>): void => {
                                 const move: YinshMove = new YinshMove(initialCaptures,

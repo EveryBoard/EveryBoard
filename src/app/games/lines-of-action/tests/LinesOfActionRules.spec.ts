@@ -16,9 +16,9 @@ describe('LinesOfActionRules', () => {
 
     let rules: LinesOfActionRules;
     let minimaxes: Minimax<LinesOfActionMove, LinesOfActionState>[];
-    const X: PlayerOrNone = Player.ZERO;
-    const O: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = new LinesOfActionRules(LinesOfActionState);
@@ -36,14 +36,14 @@ describe('LinesOfActionRules', () => {
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, X, _, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, X, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, O, _, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, O, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
@@ -52,14 +52,14 @@ describe('LinesOfActionRules', () => {
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going up', () => {
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, X, X, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, X, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, _, X, X, X, X, _],
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, O, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 7), new Coord(2, 5)).get();
@@ -68,24 +68,24 @@ describe('LinesOfActionRules', () => {
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, horizontally', () => {
         const board: Table<PlayerOrNone> = [
-            [_, X, _, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, X, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, O, _, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, O, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, X, _, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, X, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, O, _, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, O, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(5, 2)).get();
@@ -94,14 +94,14 @@ describe('LinesOfActionRules', () => {
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, diagonally', () => {
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, _, X, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, X, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, _, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, O, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get();
@@ -110,14 +110,14 @@ describe('LinesOfActionRules', () => {
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, diagonally from the bottom row', () => {
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, X, X, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, X, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, _, X, X, X, X, X, _],
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, O, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, _, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 7), new Coord(3, 5)).get();
@@ -126,25 +126,25 @@ describe('LinesOfActionRules', () => {
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, variant', () => {
         const board: Table<PlayerOrNone> = [
-            [_, X, X, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, X, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, _, X, X, X, _],
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, O, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, _, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, X, X, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, O, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, _, X, X, X, _],
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, X, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, _, O, O, O, _],
         ];
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(3, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 2);
@@ -157,14 +157,14 @@ describe('LinesOfActionRules', () => {
     });
     it(`should forbid to land on one of the player's pieces`, () => {
         const board: Table<PlayerOrNone> = [
-            [_, _, X, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [_, _, X, _, _, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, _, X, X, X, X, _],
+            [_, _, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [_, _, O, _, _, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
@@ -172,14 +172,14 @@ describe('LinesOfActionRules', () => {
     });
     it(`should forbid to jump over an opponent's piece`, () => {
         const board: Table<PlayerOrNone> = [
-            [_, X, _, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [_, O, X, _, _, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, O, _, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [_, X, O, _, _, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(0, 2)).get();
@@ -187,14 +187,14 @@ describe('LinesOfActionRules', () => {
     });
     it('should allow to jump over its own pieces', () => {
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, _, X, X, X, X, X, X],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, _, O, O, O, O, O, O],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(7, 0)).get();
@@ -203,24 +203,24 @@ describe('LinesOfActionRules', () => {
     });
     it('should capture when landing on an opponent', () => {
         const board: Table<PlayerOrNone> = [
-            [_, X, _, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [_, _, X, _, O, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, O, _, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [_, _, O, _, X, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const expectedBoard: Table<PlayerOrNone> = [
-            [_, X, _, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [_, _, _, _, X, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, O, _, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [_, _, _, _, O, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get();
@@ -230,10 +230,10 @@ describe('LinesOfActionRules', () => {
     it('should not detect win when there still are multiple groups', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, X],
-            [_, _, O, _, X, _, _, _],
+            [_, _, _, _, _, _, _, O],
+            [_, _, X, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O, _],
+            [_, _, _, _, _, _, X, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -244,8 +244,8 @@ describe('LinesOfActionRules', () => {
     it('should win when a player has only one piece', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, X],
-            [_, _, O, _, X, _, _, _],
+            [_, _, _, _, _, _, _, O],
+            [_, _, X, _, O, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -259,9 +259,9 @@ describe('LinesOfActionRules', () => {
     it(`should win when all the player's pieces are connected, in any direction`, () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
-            [O, _, _, _, X, _, _, O],
-            [_, _, X, X, O, _, _, _],
-            [_, _, _, X, _, _, _, _],
+            [X, _, _, _, O, _, _, X],
+            [_, _, O, O, X, _, _, _],
+            [_, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -275,11 +275,11 @@ describe('LinesOfActionRules', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [X, _, _, X, O, X, _, _],
-            [_, _, _, X, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
+            [O, _, _, O, X, O, _, _],
+            [_, _, _, O, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
@@ -287,11 +287,11 @@ describe('LinesOfActionRules', () => {
         const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, X, X, X, _, _],
-            [_, _, _, X, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
+            [_, _, _, O, O, O, _, _],
+            [_, _, _, O, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
             [_, _, _, _, _, _, _, _],
         ];
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
@@ -309,11 +309,11 @@ describe('LinesOfActionRules', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [X, _, X, _, O, _, _, _],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, _, _, O],
+            [O, _, O, _, X, _, _, _],
+            [_, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
+            [_, _, _, _, _, _, _, X],
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);

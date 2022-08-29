@@ -97,15 +97,15 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
-        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
-        const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
+        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+        const player: Player = this.rules.node.gameState.getCurrentPlayer();
         switch (this.board[y][x]) {
-            case PLAYER:
+            case player:
                 this.firstPiece = MGPOptional.of(new Coord(x, y));
-                this.validExtensions = this.getValidExtensions(PLAYER);
+                this.validExtensions = this.getValidExtensions(player);
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 return MGPValidation.SUCCESS;
-            case OPPONENT:
+            case opponent:
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
             default:
                 Utils.expectToBe(this.board[y][x], PlayerOrNone.NONE);
@@ -171,29 +171,29 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             const landingsBackward: Coord[] = this.getLandingsToward(landingBackward, direction, phalanxSize);
             return landingsBackward.concat(landingsForward);
         } else {
-            return this.getNeighbooringEmptyCases();
+            return this.getNeighboringEmptyCases();
         }
     }
-    private getNeighbooringEmptyCases(): Coord[] {
-        const neighboors: Coord[] = [];
+    private getNeighboringEmptyCases(): Coord[] {
+        const neighbors: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.get().getNext(direction, 1);
             if (coord.isInRange(14, 12) &&
                 this.board[coord.y][coord.x] === PlayerOrNone.NONE) {
-                neighboors.push(coord);
+                neighbors.push(coord);
             }
         }
-        return neighboors;
+        return neighbors;
     }
     private getLandingsToward(landing: Coord, direction: Direction, phalanxSize: number): Coord[] {
-        const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
-        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
+        const player: Player = this.rules.node.gameState.getCurrentPlayer();
+        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
         const landings: Coord[] = [];
         while (landing.isInRange(14, 12) &&
                landings.length < phalanxSize &&
-               this.board[landing.y][landing.x] !== PLAYER) {
-            if (this.board[landing.y][landing.x] === OPPONENT) {
-                if (this.getPhalanxLength(landing, direction, OPPONENT) < phalanxSize) {
+               this.board[landing.y][landing.x] !== player) {
+            if (this.board[landing.y][landing.x] === opponent) {
+                if (this.getPhalanxLength(landing, direction, opponent) < phalanxSize) {
                     landings.push(landing);
                 }
                 return landings;
@@ -229,8 +229,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
-        const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
+        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+        const player: Player = this.rules.node.gameState.getCurrentPlayer();
         if (!clicked.isAlignedWith(firstPiece)) {
             return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED());
         }
@@ -243,10 +243,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 } else {
                     return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE());
                 }
-            case OPPONENT:
+            case opponent:
                 return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE());
             default:
-                Utils.expectToBe(this.board[y][x], PLAYER);
+                Utils.expectToBe(this.board[y][x], player);
                 const incompleteMove: EpaminondasMove = new EpaminondasMove(firstPiece.x,
                                                                             firstPiece.y,
                                                                             distance,
@@ -258,7 +258,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                     return this.cancelMove(phalanxValidity.getReason());
                 } else {
                     this.lastPiece = MGPOptional.of(clicked);
-                    this.validExtensions = this.getValidExtensions(PLAYER);
+                    this.validExtensions = this.getValidExtensions(player);
                     this.phalanxValidLandings = this.getPhalanxValidLandings();
                     this.phalanxMiddles = firstPiece.getCoordsToward(clicked);
                     this.phalanxDirection = MGPOptional.of(direction);
@@ -267,13 +267,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     private async thirdClick(x: number, y: number): Promise<MGPValidation> {
-        const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
+        const player: Player = this.rules.node.gameState.getCurrentPlayer();
         const clicked: Coord = new Coord(x, y);
         if (this.firstPiece.equalsValue(clicked)) {
-            return this.moveFirstPiece(PLAYER);
+            return this.moveFirstPiece(player);
         }
         if (this.lastPiece.equalsValue(clicked)) {
-            return this.moveLastPiece(PLAYER);
+            return this.moveLastPiece(player);
         }
         const firstPiece: Coord = this.firstPiece.get();
         const lastPiece: Coord = this.lastPiece.get();
@@ -291,7 +291,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         if (phalanxDirection !== phalanxLanding) {
             return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
         }
-        if (this.board[y][x] === PLAYER) {
+        if (this.board[y][x] === player) {
             this.lastPiece = MGPOptional.of(clicked);
             const phalanxSize: number = this.firstPiece.get().getDistance(clicked) + 1;
             const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.get().x,
@@ -305,7 +305,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 return this.cancelMove(phalanxValidity.getReason());
             } else {
                 this.phalanxMiddles = this.firstPiece.get().getCoordsToward(this.lastPiece.get());
-                this.validExtensions = this.getValidExtensions(PLAYER);
+                this.validExtensions = this.getValidExtensions(player);
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 return MGPValidation.SUCCESS;
             }
