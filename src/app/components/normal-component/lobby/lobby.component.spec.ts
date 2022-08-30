@@ -74,6 +74,7 @@ describe('LobbyComponent', () => {
         check();
     }));
     it('should unsubscribe from active users when destroying component', fakeAsync(async() => {
+        // Given an initialized lobby
         const check: () => void = prepareUnsubscribeCheck(TestBed.inject(ActiveUsersService), 'subscribeToActiveUsers');
         testUtils.detectChanges();
 

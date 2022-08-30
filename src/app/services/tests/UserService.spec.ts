@@ -3,9 +3,6 @@ import { UserService } from '../UserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { serverTimestamp } from 'firebase/firestore';
-import { User } from 'src/app/domain/User';
-import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
-import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 

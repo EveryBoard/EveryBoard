@@ -660,7 +660,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // Player zero wins
-            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            await partService.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 listMoves: [1],
                 turn: 1,
                 result: MGPResult.VICTORY.value,
@@ -669,14 +669,14 @@ describe('PartDAO', () => {
             });
 
             // Player zero proposes a rematch
-            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+1,
-                                             { request: Request.rematchProposed(Player.ZERO) });
+            await partService.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+1,
+                                                 { request: Request.rematchProposed(Player.ZERO) });
 
             await signOut();
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the player one accepts the rematch
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+2, {
+            const result: Promise<void> = partService.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+2, {
                 request: Request.rematchAccepted('Quarto', 'newPartId'),
             });
 

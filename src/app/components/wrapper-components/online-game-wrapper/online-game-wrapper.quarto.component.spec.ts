@@ -36,7 +36,6 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { PartService } from 'src/app/services/PartService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ChatService } from 'src/app/services/ChatService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 

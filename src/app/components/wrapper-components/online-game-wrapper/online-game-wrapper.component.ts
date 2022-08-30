@@ -170,11 +170,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.setCurrentPartIdOrRedirect();
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
-    public async startGame(iConfigRoom: ConfigRoom): Promise<void> {
+    public async startGame(configRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         assert(this.gameStarted === false, 'Should not start already started game');
-        this.configRoom = iConfigRoom;
+        this.configRoom = configRoom;
 
         this.gameStarted = true;
         window.setTimeout(async() => {
