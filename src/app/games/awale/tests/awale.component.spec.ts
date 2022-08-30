@@ -51,7 +51,7 @@ describe('AwaleComponent', () => {
         // Then it should be rejected
         const move: AwaleMove = AwaleMove.ZERO;
         await testUtils.expectMoveFailure('#click_0_0',
-                                          AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE(),
+                                          AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE(),
                                           move, undefined, [0, 0]);
     }));
     it(`should tell to user opponent's house cannot be moved`, fakeAsync(async() => {

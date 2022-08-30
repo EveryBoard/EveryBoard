@@ -89,8 +89,8 @@ export class SixTutorial {
                 [_, O, _, X, _, _, _, _, _],
             ], 40),
             SixMove.fromMovement(new Coord(6, 1), new Coord(5, 1)),
-            (_move: SixMove, _previous: SixState, result: SixState) => {
-                const pieces: [number, number] = result.countPieces();
+            (_move: SixMove, _previousState: SixState, resultingState: SixState) => {
+                const pieces: [number, number] = resultingState.countPieces();
                 if (pieces[0] === 19) {
                     if (pieces[1] === 18) {
                         return MGPValidation.SUCCESS;
@@ -119,7 +119,7 @@ export class SixTutorial {
                 [O, _, _, _, _, _],
             ], 40),
             SixMove.fromMovement(new Coord(2, 3), new Coord(3, 3)),
-            (move: SixMove, _previous: SixState, _result: SixState) => {
+            (move: SixMove, _previousState: SixState, _resultingState: SixState) => {
                 if (move.start.equalsValue(new Coord(2, 3))) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -143,11 +143,11 @@ export class SixTutorial {
                 [O, _, _, _, _, _],
             ], 40),
             SixMove.fromCut(new Coord(2, 3), new Coord(2, 5), new Coord(2, 5)),
-            (move: SixMove, _previous: SixState, result: SixState) => {
+            (move: SixMove, _previousState: SixState, resultingState: SixState) => {
                 if (move.keep.isAbsent()) {
                     return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
                 }
-                if (result.getPieceAt(move.landing.getNext(result.offset)) === PlayerOrNone.NONE) {
+                if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === PlayerOrNone.NONE) {
                     return MGPValidation.failure($localize`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
                 } else {
                     return MGPValidation.SUCCESS;
