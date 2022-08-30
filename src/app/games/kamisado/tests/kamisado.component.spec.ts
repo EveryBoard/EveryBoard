@@ -154,4 +154,25 @@ describe('KamisadoComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
+    it('should not highlight selected piece if game has ended', fakeAsync(async() => {
+        // Given a board where one player has won
+        const board: Table<KamisadoPiece> = [
+            [_, r, _, _, _, _, _, _],
+            [_, _, R, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const state: KamisadoState =
+            new KamisadoState(1, KamisadoColor.RED, MGPOptional.of(new Coord(2, 1)), false, board);
+
+        // When displaying the board
+        testUtils.setupState(state);
+
+        // Then the next selected piece should not be highlighted
+        testUtils.expectElementNotToExist('#selectedPiece');
+    }));
 });

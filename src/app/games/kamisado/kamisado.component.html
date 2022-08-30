@@ -52,6 +52,7 @@
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen.isPresent()"
+            id="selectedPiece"
             [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
             [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
             [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
