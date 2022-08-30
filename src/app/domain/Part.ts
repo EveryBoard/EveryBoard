@@ -4,6 +4,7 @@ import { Request } from './Request';
 import { FirestoreTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { MinimalUser } from './MinimalUser';
 
 interface LastUpdateInfo extends FirestoreJSONObject {
     readonly index: number,
@@ -12,12 +13,12 @@ interface LastUpdateInfo extends FirestoreJSONObject {
 export interface Part extends FirestoreJSONObject {
     readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
-    readonly playerZero: string, // the id of the first player
+    readonly playerZero: MinimalUser, // the first player
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn
     readonly result: IMGPResult,
     readonly listMoves: ReadonlyArray<JSONValueWithoutArray>,
 
-    readonly playerOne?: string, // the id of the second player
+    readonly playerOne?: MinimalUser, // the second player
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
@@ -25,8 +26,8 @@ export interface Part extends FirestoreJSONObject {
     readonly lastUpdateTime?: FirestoreTime,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
-    readonly winner?: string,
-    readonly loser?: string,
+    readonly winner?: MinimalUser,
+    readonly loser?: MinimalUser,
     readonly scorePlayerZero?: number,
     readonly scorePlayerOne?: number,
     readonly request?: Request | null, // can be null because we should be able to remove a request
@@ -66,7 +67,7 @@ export class PartDocument implements FirestoreDocument<Part> {
         return this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value ||
                this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value;
     }
-    public getDrawAccepter(): string {
+    public getDrawAccepter(): MinimalUser {
         if (this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
             return this.data.playerZero;
         } else {
@@ -83,13 +84,13 @@ export class PartDocument implements FirestoreDocument<Part> {
     public isResign(): boolean {
         return this.data.result === MGPResult.RESIGN.value;
     }
-    public getWinner(): MGPOptional<string> {
+    public getWinner(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.winner);
     }
-    public getLoser(): MGPOptional<string> {
+    public getLoser(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.loser);
     }
-    public setWinnerAndLoser(winner: string, loser: string): PartDocument {
+    public setWinnerAndLoser(winner: MinimalUser, loser: MinimalUser): PartDocument {
         return new PartDocument(this.id, { ...this.data, winner, loser });
     }
 }

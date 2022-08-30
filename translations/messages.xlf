@@ -444,7 +444,7 @@
         <source>It is your turn.</source>
       </trans-unit>
       <trans-unit id="3724541577412345595" datatype="html">
-        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer }}"/>&apos;s turn.</source>
+        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer?.name }}"/>&apos;s turn.</source>
       </trans-unit>
       <trans-unit id="715032829765584790" datatype="html">
         <source>vs.</source>
@@ -486,22 +486,22 @@
         <source>You lost.</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getWinner().get() }}"/> won.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getWinner().get().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get() }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get() }}"/> has reached their time limit.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get() }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has resigned.</source>
       </trans-unit>
       <trans-unit id="4624707315308487849" datatype="html">
         <source>Go back to the game list</source>
@@ -1675,8 +1675,8 @@
       <trans-unit id="8752797532802461254" datatype="html">
         <source>Capturing</source>
       </trans-unit>
-      <trans-unit id="5036745511795758114" datatype="html">
-        <source>If a move ends on an opponent&apos;s piece, it is captured and removed from the board.
+      <trans-unit id="8651686499168234683" datatype="html">
+        <source>If a move ends on an opponent&apos;s pieces, this one is captured and removed from the board.
         However, a move cannot end on one of the player&apos;s pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
         If a player has only one piece, that player wins the game.&lt;br/&gt;&lt;br/&gt;
@@ -2659,6 +2659,9 @@
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
       </trans-unit>
+      <trans-unit id="5120671221766405888" datatype="html">
+        <source>Game does not exist</source>
+      </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>
       </trans-unit>
@@ -2694,12 +2697,6 @@
       </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
-      </trans-unit>
-      <trans-unit id="4938355530757756821" datatype="html">
-        <source>You cannot join this game because you are already in another one.</source>
-      </trans-unit>
-      <trans-unit id="5120671221766405888" datatype="html">
-        <source>Game does not exist</source>
       </trans-unit>
     </body>
   </file>

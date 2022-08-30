@@ -3817,10 +3817,6 @@
         <source>This username is already in use, please select a different one.</source>
         <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
-      <trans-unit id="4938355530757756821" datatype="html">
-        <source>You cannot join this game because you are already in another one.</source>
-        <target>Vous ne pouvez pas rejoindre cette partie car vous êtes déjà dans une autre.</target>
-      </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
         <target>Vous n'êtes pas autorisé à envoyer un message ici.</target>

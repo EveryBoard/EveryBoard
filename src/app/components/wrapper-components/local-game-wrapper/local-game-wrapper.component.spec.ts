@@ -50,7 +50,7 @@ describe('LocalGameWrapperComponent', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
+        testUtils = await ComponentTestUtils.forGame<P4Component>('P4');
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));

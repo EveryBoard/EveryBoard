@@ -17,6 +17,7 @@ import { OnlineGameCreationComponent } from '../../normal-component/online-game-
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { Comparable } from 'src/app/utils/Comparable';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -37,12 +38,12 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
-    let testUtils: ComponentTestUtils<QuartoComponent>;
+    let testUtils: ComponentTestUtils<QuartoComponent, Comparable>;
     let wrapper: TutorialGameWrapperComponent;
 
     beforeEach(fakeAsync(async() => {
         testUtils =
-            await ComponentTestUtils.forGame<QuartoComponent>('Quarto', TutorialGameWrapperComponent);
+            await ComponentTestUtils.forGameWithWrapper<QuartoComponent, Comparable>('Quarto', TutorialGameWrapperComponent);
         wrapper = testUtils.wrapper as TutorialGameWrapperComponent;
     }));
     describe('Common behavior', () => {

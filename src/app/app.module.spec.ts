@@ -20,7 +20,6 @@ import { MGPOptional } from './utils/MGPOptional';
 import { Utils } from './utils/utils';
 
 import * as Firestore from '@angular/fire/firestore';
-import * as Database from '@angular/fire/database';
 import * as FireAuth from '@angular/fire/auth';
 import { TestBed } from '@angular/core/testing';
 import { setupEmulators } from './utils/tests/TestUtils.spec';
@@ -78,7 +77,6 @@ describe('app module', () => {
         await setupEmulators();
         expect(TestBed.inject(FireAuth.Auth)).toBeDefined();
         expect(TestBed.inject(Firestore.Firestore)).toBeDefined();
-        expect(TestBed.inject(Database.Database)).toBeDefined();
     });
     it('router should map all urls to their expected components', () => {
         for (const [url, expectedComponent] of routingSpecification) {
