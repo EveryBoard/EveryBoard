@@ -1,6 +1,13 @@
 rules_version = "2";
 service cloud.firestore {
     match /databases/{database}/documents {
+        // ----------------8<-------------[ cut from here ]------------------
+        // The rules used for testing are the production rules, with the addition that we have a /foo/ collection to test our DAO mock.
+        match /foo/{document=**} {
+            // only used for testing purposes, do not push to production
+            allow read, write: if true;
+        }
+        // -----------[ cut until here ]--------------->8---------------------
         // From here, the rest of the file matches with firestore.rules
         function hasField(data, field) {
             return field in data && data[field] != null;
@@ -155,7 +162,7 @@ service cloud.firestore {
                 isUserTurn;
         }
         function setsWinnerIfVictory(part, update) {
-            let isVictory = part.result != 3 && update.result == 3; // 3 = victory
+            let isVictory = part.result == 5 && update.result == 3; // 3 = victory, 5 = unachieved
             let playerZeroWinsAndOneLoses = update.loser.id == part.playerZero.id && update.winner.id == part.playerOne.id;
             let playerOneWinsAndZeroLoses =  update.loser.id == part.playerOne.id && update.winner.id == part.playerZero.id;
             return isVictory == false || playerZeroWinsAndOneLoses || playerOneWinsAndZeroLoses;
@@ -178,11 +185,14 @@ service cloud.firestore {
                 onlyAcceptsDrawIfProposed(part, update) &&
 //                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
                 onlyResignsInTheirName(part, update) &&
-                isNotSetToVictory(update) &&
+                isNotSetToVictory(part, update) &&
                 safeLastUpdate(part, update);
         }
-        function isNotSetToVictory(update) {
-            return update.result != 3; // 3 = victory
+        function isNotSetToVictory(part, update) {
+            // 3 = victory
+            let partWasVictory = part.result == 3;
+            let newPartIsVictory = update.result == 3;
+            return partWasVictory || (newPartIsVictory == false);
         }
         function onlyAcceptsDrawIfProposed(part, update) {
             // 6 = draw agreed by zero
@@ -204,7 +214,7 @@ service cloud.firestore {
 //                (takeBackWasProposed && updateAnswersToTakeBack && updateFromDifferentPlayer);
 //        }
         function onlyResignsInTheirName(part, update) {
-            let playerResigns = part.result != 1 && update.result == 1 && // 1 = resign
+            let playerResigns = part.result == 5 && update.result == 1 && // 1 = resign, 5 = unachieved
                 hasField(update, 'winner') &&
                 hasField(update, 'loser');
             let resignerIsLoser = update.loser.id == request.auth.uid;
@@ -213,8 +223,8 @@ service cloud.firestore {
             return (playerResigns == false) || (playerResigns && resignerIsLoser && otherPlayerIsWinner);
         }
         function preservesWinnerAndLoserUnlessResultChanges() {
-            let partHasFinished = preservesField('result') == false;
-            return partHasFinished || (preservesField('winner') && preservesField('loser'));
+            let resultChanged = preservesField('result') == false;
+            return resultChanged || (preservesField('winner') && preservesField('loser'));
         }
         function isValidPartUpdateDuringGame(part) {
             return userIsVerified() &&
