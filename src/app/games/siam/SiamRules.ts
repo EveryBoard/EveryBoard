@@ -144,7 +144,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const currentPiece: SiamPiece = state.getPieceAt(coord);
         const currentPlayer: Player = state.getCurrentPlayer();
         if (currentPiece.getDirection() === rotation.landingOrientation) {
-            return MGPFallible.failure(SiamFailure.ILLEGAL_ROTATION());
+            return MGPFallible.failure(SiamFailure.MUST_MOVE_OR_ROTATE());
         }
         const resultingBoard: SiamPiece[][] = state.getCopiedBoard();
         resultingBoard[coord.y][coord.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);

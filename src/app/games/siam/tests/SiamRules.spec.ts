@@ -197,7 +197,7 @@ describe('SiamRules:', () => {
         // When trying to perform a rotation that does not change the orientation
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.ILLEGAL_ROTATION());
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.MUST_MOVE_OR_ROTATE());
     });
     it('should allow moving in a direction different from the orientation of the piece', () => {
         // Given a board with a piece
