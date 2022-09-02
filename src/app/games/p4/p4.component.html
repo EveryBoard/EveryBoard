@@ -3,7 +3,7 @@
       viewBox="-4 -4 708 608"
       preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let currentCase of line; index as x"
+        <g *ngFor="let currentSquare of line; index as x"
            id="click_{{ x }}"
            (click)="onClick(x)">
             <rect class="base"
@@ -12,7 +12,7 @@
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
             />
-            <circle *ngIf="currentCase !== EMPTY_CASE"
+            <circle *ngIf="currentSquare !== EMPTY"
                     class="base"
                     [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
                     [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"

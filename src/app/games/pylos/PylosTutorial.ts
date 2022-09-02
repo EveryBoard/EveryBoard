@@ -126,7 +126,7 @@ export class PylosTutorial {
                 ],
             ], 0),
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]),
-            (move: PylosMove, _state: PylosState) => {
+            (move: PylosMove, _previous: PylosState, _result: PylosState) => {
                 if (move.secondCapture.isPresent()) {
                     return MGPValidation.SUCCESS;
                 }

@@ -68,7 +68,7 @@ export class EpaminondasTutorial {
         </ol>`,
             EpaminondasState.getInitialState(),
             new EpaminondasMove(0, 10, 1, 1, Direction.UP),
-            (move: EpaminondasMove, _state: EpaminondasState) => {
+            (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces === 1) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -88,7 +88,7 @@ export class EpaminondasTutorial {
         Move a phalanx!`,
             EpaminondasState.getInitialState(),
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-            (move: EpaminondasMove, _: EpaminondasState) => {
+            (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces > 1) {
                     return MGPValidation.SUCCESS;
                 } else {

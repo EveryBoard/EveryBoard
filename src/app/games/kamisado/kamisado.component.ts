@@ -2,7 +2,7 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
-import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
+import { KamisadoMove, KamisadoPieceMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
@@ -15,6 +15,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-kamisado',
@@ -29,6 +30,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
 {
     public UNOCCUPIED: KamisadoPiece = KamisadoPiece.EMPTY;
     public lastMove: MGPOptional<KamisadoMove> = MGPOptional.empty();
+    public lastPieceMove: MGPOptional<KamisadoPieceMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
@@ -59,9 +61,17 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const state: KamisadoState = this.rules.node.gameState;
         this.board = state.getCopiedBoard();
         this.lastMove = this.rules.node.move;
+        this.lastPieceMove = MGPOptional.empty();
+        if (this.lastMove.isPresent()) {
+            const lastMove: KamisadoMove = this.lastMove.get();
+            if (lastMove.isPieceMove()) {
+                this.lastPieceMove = MGPOptional.of(lastMove);
+            }
+        }
 
         this.canPass = KamisadoRules.mustPass(state);
-        if (this.canPass || state.coordToPlay.isAbsent()) {
+        const isFinished: boolean = this.rules.getGameStatus(this.rules.node) !== GameStatus.ONGOING;
+        if (this.canPass || state.coordToPlay.isAbsent() || isFinished) {
             this.chosenAutomatically = false;
             this.chosen = MGPOptional.empty();
         } else {
