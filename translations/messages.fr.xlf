@@ -3179,9 +3179,9 @@
         <source>You do not have enough strength to push.</source>
         <target>Vous ne pouvez pas pousser, vous n&apos;avez pas assez de forces</target>
       </trans-unit>
-      <trans-unit id="3634874399235422132" datatype="html">
-        <source>You cannot push and turn at the same time.</source>
-        <target>Vous ne pouvez pas changer d'orientation quand vous poussez !</target>
+      <trans-unit id="6414951217478686255" datatype="html">
+        <source>You must move or rotate your piece.</source>
+        <target>Vous devez déplacer votre pièce ou effectuer une rotation.</target>
       </trans-unit>
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>

@@ -2233,8 +2233,8 @@
       <trans-unit id="2237663589140902242" datatype="html">
         <source>You do not have enough strength to push.</source>
       </trans-unit>
-      <trans-unit id="3634874399235422132" datatype="html">
-        <source>You cannot push and turn at the same time.</source>
+      <trans-unit id="6414951217478686255" datatype="html">
+        <source>You must move or rotate your piece.</source>
       </trans-unit>
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>

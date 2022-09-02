@@ -157,8 +157,8 @@ describe('KamisadoComponent', () => {
     it('should not highlight selected piece if game has ended', fakeAsync(async() => {
         // Given a board where one player has won
         const board: Table<KamisadoPiece> = [
-            [_, r, _, _, _, _, _, _],
-            [_, _, R, _, _, _, _, _],
+            [_, R, _, _, _, _, _, _],
+            [_, _, r, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
