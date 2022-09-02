@@ -4,8 +4,6 @@
     text-transform: uppercase;
     font-size: 0.85rem;
     font-weight: bold;
-    // Fix for the following bug: https://github.com/jgthms/bulma/issues/3471
-    justify-content: center;
 }
 
 .card {
@@ -46,4 +44,22 @@ html {
     -webkit-text-fill-color: white; /* Will override color (regardless of order) */
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
+}
+
+
+/* the following is to ensure that the footer is always on the bottom of the
+   page and that if the page is too short to fill a screen, the footer is still
+   on the bottom of the screen */
+html,
+body,
+app-root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+main {
+    width: 100% !important;
+}
+footer {
+    margin-top: auto;
 }
