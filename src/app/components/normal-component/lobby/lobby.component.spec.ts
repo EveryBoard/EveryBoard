@@ -64,25 +64,25 @@ describe('LobbyComponent', () => {
     }));
     it('should unsubscribe from active parts when destroying component', fakeAsync(async() => {
         // Given the lobby
-        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(ActivePartsService), 'subscribeToActiveParts');
+        const checkUnsubscription: () => void = prepareUnsubscribeCheck(TestBed.inject(ActivePartsService), 'subscribeToActiveParts');
         testUtils.detectChanges();
 
         // When it is destroyed
         component.ngOnDestroy();
 
         // Then it should have unsubscrbed from active parts
-        check();
+        checkUnsubscription();
     }));
     it('should unsubscribe from active users when destroying component', fakeAsync(async() => {
         // Given an initialized lobby
-        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(ActiveUsersService), 'subscribeToActiveUsers');
+        const checkUnsubscription: () => void = prepareUnsubscribeCheck(TestBed.inject(ActiveUsersService), 'subscribeToActiveUsers');
         testUtils.detectChanges();
 
         // When it is destroyed
         component.ngOnDestroy();
 
         // Then it should have unsubscrbed from active users
-        check();
+        checkUnsubscription();
     }));
     it('should display firebase time HH:mm:ss', fakeAsync(() => {
         // Given a lobby in which we observe tab chat, and where one user is here

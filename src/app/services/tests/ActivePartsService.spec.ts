@@ -61,7 +61,7 @@ describe('ActivePartsService', () => {
             activePartsUnsubscribe();
         }));
         it('should not notify about new parts when we unsubscribe', fakeAsync(async() => {
-            // Given a service where we were observing active parts, but have stopped observing
+            // Given a service where we were observing active parts, but have unsubscribed
             let seenActiveParts: PartDocument[] = [];
             const activePartsUnsubscribe: Unsubscribe = service.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
