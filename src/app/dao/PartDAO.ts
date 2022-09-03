@@ -14,7 +14,7 @@ export class PartDAO extends FirestoreDAO<Part> {
     public static VERBOSE: boolean = false;
 
     constructor(firestore: Firestore) {
-        super('parties', firestore);
+        super('parts', firestore);
         display(PartDAO.VERBOSE, 'PartDAO.constructor');
     }
     public async updateAndBumpIndex(id: string,

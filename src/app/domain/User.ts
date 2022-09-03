@@ -9,8 +9,7 @@ export type UserRoleInPart = 'Player' | 'Observer' | 'Creator' | 'ChosenOpponent
 
 export interface User extends FirestoreJSONObject {
     username?: string; // may not be set initially for google users
-    // eslint-disable-next-line camelcase
-    last_changed?: FirestoreTime,
+    lastUpdateTime?: FirestoreTime,
     verified: boolean,
     observedPart?: FocussedPart | null,
 }

@@ -9,7 +9,6 @@ import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 export class OnlineGameCreationMessages {
@@ -26,7 +25,8 @@ export class OnlineGameCreationComponent implements OnInit {
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer,
-                       private readonly gameService: GameService) {
+                       private readonly gameService: GameService)
+    {
     }
     public async ngOnInit(): Promise<void> {
         await this.createGameAndRedirectOrShowError(this.extractGameFromURL());
@@ -37,15 +37,13 @@ export class OnlineGameCreationComponent implements OnInit {
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         const authUser: AuthUser = this.connectedUserService.user.get();
         assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
-        const user: MinimalUser = authUser.toMinimalUser();
         if (this.gameExists(game) === false) {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
         const canCreateOnlineGame: MGPValidation = this.connectedUserService.canUserCreate();
         if (canCreateOnlineGame.isSuccess()) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(user, game);
-            // create Part and Joiner
+            const gameId: string = await this.gameService.createPartConfigRoomAndChat(game);
             await this.router.navigate(['/play', game, gameId]);
             return true;
         } else {

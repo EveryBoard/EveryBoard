@@ -7,13 +7,14 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Comparable, comparableEquals } from 'src/app/utils/Comparable';
 
 export class GameWrapperMessages {
 
@@ -28,7 +29,7 @@ export class GameWrapperMessages {
 }
 
 @Component({ template: '' })
-export abstract class GameWrapper {
+export abstract class GameWrapper<P extends Comparable> {
 
     public static VERBOSE: boolean = false;
 
@@ -38,13 +39,15 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent;
 
-    public players: MGPOptional<string>[] = [MGPOptional.empty(), MGPOptional.empty()];
+    public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
-    public observerRole: number;
+    public observerRole: PlayerOrNone = PlayerOrNone.NONE;
 
     public canPass: boolean;
 
     public endGame: boolean = false;
+
+    public Player: typeof Player = Player;
 
     constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
                 protected readonly actRoute: ActivatedRoute,
@@ -104,7 +107,6 @@ export abstract class GameWrapper {
                 this.onCancelMove(reason);
             };
 
-        this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
         return true;
     }
@@ -135,7 +137,7 @@ export abstract class GameWrapper {
 
     public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract
-        if (this.observerRole === PlayerOrNone.NONE.value) {
+        if (this.observerRole === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
         }
@@ -149,7 +151,7 @@ export abstract class GameWrapper {
         // Not needed by default'
     }
     public isPlayerTurn(): boolean {
-        if (this.observerRole === PlayerOrNone.NONE.value) {
+        if (this.observerRole === PlayerOrNone.NONE) {
             return false;
         }
         if (this.gameComponent == null) {
@@ -158,22 +160,23 @@ export abstract class GameWrapper {
         }
         const turn: number = this.gameComponent.rules.node.gameState.turn;
         const indexPlayer: number = turn % 2;
-        const username: string = this.getPlayerName();
+        const player: P = this.getPlayer();
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
             turn,
             players: this.players,
-            username,
+            player,
             observer: this.observerRole,
-            areYouPlayer: (this.players[indexPlayer].equalsValue(username)),
+            areYouPlayer: this.players[indexPlayer].isPresent() &&
+                comparableEquals(this.players[indexPlayer].get(), player),
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer].isPresent()) {
-            return this.players[indexPlayer].equalsValue(username);
+            return this.players[indexPlayer].equalsValue(player);
         } else {
             return true;
         }
     }
-    public abstract getPlayerName(): string
+    public abstract getPlayer(): P
 
     public getBoardHighlight(): string[] {
         if (this.endGame) {

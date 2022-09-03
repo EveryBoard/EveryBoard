@@ -6,14 +6,14 @@ import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 
 describe('UserService', () => {
 
-    let service: UserService;
+    let userService: UserService;
 
     beforeEach(() => {
         const userDAOMock: UserDAOMock = new UserDAOMock();
-        service = new UserService(new ActiveUsersService(userDAOMock as unknown as UserDAO),
+        userService = new UserService(new ActiveUsersService(userDAOMock as unknown as UserDAO),
                                   userDAOMock as unknown as UserDAO);
     });
     it('should create', () => {
-        expect(service).toBeTruthy();
+        expect(userService).toBeTruthy();
     });
 });

@@ -7,20 +7,20 @@ import { FirestoreDocument } from '../FirestoreDAO';
 
 describe('ErrorDAO', () => {
 
-    let dao: ErrorDAO;
+    let errorDAO: ErrorDAO;
 
     beforeEach(async() => {
         await setupEmulators();
-        dao = TestBed.inject(ErrorDAO);
+        errorDAO = TestBed.inject(ErrorDAO);
     });
     it('should be created', () => {
-        expect(dao).toBeTruthy();
+        expect(errorDAO).toBeTruthy();
     });
     describe('findErrors', () => {
         it('should return the empty list if there is no matching error', async() => {
             // Given no matching error
             // When looking for matching errors
-            const errors: FirestoreDocument<MGPError>[] = await dao.findErrors('test', '', 'dummy message');
+            const errors: FirestoreDocument<MGPError>[] = await errorDAO.findErrors('test', '', 'dummy message');
             // Then no matching error should be found
             expect(errors.length).toBe(0);
         });
@@ -35,10 +35,10 @@ describe('ErrorDAO', () => {
                 lastEncounter: serverTimestamp(),
                 occurences: 1,
             };
-            const errorId: string = await dao.create(error);
+            const errorId: string = await errorDAO.create(error);
             // When looking for matching errors
             const errors: FirestoreDocument<MGPError>[] =
-                await dao.findErrors(error.component, error.route, error.message, error.data);
+                await errorDAO.findErrors(error.component, error.route, error.message, error.data);
             // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toBe(errorId);
@@ -53,10 +53,10 @@ describe('ErrorDAO', () => {
                 lastEncounter: serverTimestamp(),
                 occurences: 1,
             };
-            const errorId: string = await dao.create(error);
+            const errorId: string = await errorDAO.create(error);
             // When looking for matching errors (without data)
             const errors: FirestoreDocument<MGPError>[] =
-                await dao.findErrors(error.component, error.route, error.message);
+                await errorDAO.findErrors(error.component, error.route, error.message);
             // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toEqual(errorId);

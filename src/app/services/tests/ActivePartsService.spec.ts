@@ -7,10 +7,11 @@ import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('ActivePartsService', () => {
 
-    let service: ActivePartsService;
+    let activePartsService: ActivePartsService;
 
     let partDAO: PartDAO;
 
@@ -25,18 +26,18 @@ describe('ActivePartsService', () => {
             ],
         }).compileComponents();
         partDAO = TestBed.inject(PartDAO);
-        service = new ActivePartsService(partDAO);
-        service.startObserving();
+        activePartsService = new ActivePartsService(partDAO);
+        activePartsService.startObserving();
         stoppedObserving = false;
     }));
     it('should create', () => {
-        expect(service).toBeTruthy();
+        expect(activePartsService).toBeTruthy();
     });
     describe('getActivePartsObs', () => {
         it('should notify about new parts', fakeAsync(async() => {
             // Given a service where we are observing active parts
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
+            const activePartsSub: Subscription = activePartsService.getActivePartsObs()
                 .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -48,8 +49,8 @@ describe('ActivePartsService', () => {
                     player: 0,
                 },
                 listMoves: [],
-                playerZero: 'creator',
-                playerOne: 'firstCandidate',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: 5,
                 turn: 0,
                 typeGame: 'P4',
@@ -65,11 +66,11 @@ describe('ActivePartsService', () => {
         it('should not notify about new parts when we stopped observing', fakeAsync(async() => {
             // Given a service where we were observing active parts, but have stopped observing
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
+            const activePartsSub: Subscription = activePartsService.getActivePartsObs()
                 .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
-            service.stopObserving();
+            activePartsService.stopObserving();
             stoppedObserving = true;
             tick(3000);
 
@@ -80,8 +81,8 @@ describe('ActivePartsService', () => {
                     player: 0,
                 },
                 listMoves: [],
-                playerZero: 'creator',
-                playerOne: 'firstCandidate',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: 5,
                 turn: 0,
                 typeGame: 'P4',
@@ -101,15 +102,15 @@ describe('ActivePartsService', () => {
                     player: 0,
                 },
                 listMoves: [],
-                playerZero: 'creator',
-                playerOne: 'firstCandidate',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: 5,
                 turn: 0,
                 typeGame: 'P4',
             };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
+            const activePartsSub: Subscription = activePartsService.getActivePartsObs()
                 .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -130,8 +131,8 @@ describe('ActivePartsService', () => {
                     player: 0,
                 },
                 listMoves: [],
-                playerZero: 'creator',
-                playerOne: 'firstCandidate',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: 5,
                 turn: 0,
                 typeGame: 'P4',
@@ -139,7 +140,7 @@ describe('ActivePartsService', () => {
             const partToBeDeleted: string = await partDAO.create(part);
             const partThatWillRemain: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
+            const activePartsSub: Subscription = activePartsService.getActivePartsObs()
                 .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -161,15 +162,15 @@ describe('ActivePartsService', () => {
                     player: 0,
                 },
                 listMoves: [],
-                playerZero: 'creator',
-                playerOne: 'firstCandidate',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: 5,
                 turn: 0,
                 typeGame: 'P4',
             };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
+            const activePartsSub: Subscription = activePartsService.getActivePartsObs()
                 .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -191,8 +192,8 @@ describe('ActivePartsService', () => {
                     player: 0,
                 },
                 listMoves: [],
-                playerZero: 'creator',
-                playerOne: 'firstCandidate',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: 5,
                 turn: 0,
                 typeGame: 'P4',
@@ -200,7 +201,7 @@ describe('ActivePartsService', () => {
             const partToBeModified: string = await partDAO.create(part);
             const partThatWontChange: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSub: Subscription = service.getActivePartsObs()
+            const activePartsSub: Subscription = activePartsService.getActivePartsObs()
                 .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -223,7 +224,7 @@ describe('ActivePartsService', () => {
     });
     afterEach(() => {
         if (stoppedObserving === false) {
-            service.stopObserving();
+            activePartsService.stopObserving();
         }
     });
 });

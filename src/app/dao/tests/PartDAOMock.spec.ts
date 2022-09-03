@@ -45,13 +45,4 @@ export class PartDAOMock extends FirestoreDAOMock<Part> {
     public observeActiveParts(callback: FirestoreCollectionObserver<Part>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
-    public async userHasActivePart(username: string): Promise<boolean> {
-        const partsAsPlayerZero: FirestoreDocument<Part>[] = await this.findWhere([
-            ['playerZero', '==', username],
-            ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const partsAsPlayerOne: FirestoreDocument<Part>[] = await this.findWhere([
-            ['playerOne', '==', username],
-            ['result', '==', MGPResult.UNACHIEVED.value]]);
-        return partsAsPlayerZero.length > 0 || partsAsPlayerOne.length > 0;
-    }
 }

@@ -7,8 +7,8 @@ import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { Time } from 'src/app/domain/Time';
 import { FieldValue, Unsubscribe, UpdateData } from '@angular/fire/firestore';
+import { Timestamp } from 'firebase/firestore';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 
@@ -16,12 +16,12 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
 
     public static VERBOSE: boolean = false;
 
-    public static mockServerTime(): Time {
+    public static mockServerTime(): Timestamp {
         const dateNow: number = Date.now();
         const ms: number = dateNow % 1000;
         const seconds: number = (dateNow - ms) / 1000;
         const nanoseconds: number = ms * 1000 * 1000;
-        return { seconds, nanoseconds };
+        return new Timestamp(seconds, nanoseconds);
     }
 
     public callbacks: [FirestoreCondition[], FirestoreCollectionObserver<T>][] = [];

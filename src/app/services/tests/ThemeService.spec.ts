@@ -6,7 +6,8 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ThemeService } from '../ThemeService';
 
 describe('ThemeService', () => {
-    let service: ThemeService;
+
+    let themeService: ThemeService;
     let testUtils: SimpleComponentTestUtils<WelcomeComponent>;
 
     function getThemeElement(): HTMLLinkElement {
@@ -16,7 +17,7 @@ describe('ThemeService', () => {
 
     async function prepare(): Promise<void> {
         testUtils = await SimpleComponentTestUtils.create(WelcomeComponent);
-        service = TestBed.inject(ThemeService);
+        themeService = TestBed.inject(ThemeService);
     }
 
     describe('without stored theme nor preferred color scheme', () => {
@@ -36,10 +37,10 @@ describe('ThemeService', () => {
             // given a loaded page
             testUtils.detectChanges();
             // when a new theme is loaded
-            service.loadTheme('dark');
+            themeService.loadTheme('dark');
             // then the CSS has been changed
             expect(getThemeElement().href).toMatch('/dark.css$');
-            expect(service.getTheme()).toBe('dark');
+            expect(themeService.getTheme()).toBe('dark');
         });
     });
     it('should use the stored theme if there is one', fakeAsync(async() => {

@@ -14,7 +14,7 @@ import { MessageDisplayer } from '../MessageDisplayer';
 
 describe('ErrorLoggerService', () => {
 
-    let service: ErrorLoggerService;
+    let errorLoggerService: ErrorLoggerService;
     let errorDAO: ErrorDAO;
 
     beforeEach(fakeAsync(async() => {
@@ -29,11 +29,11 @@ describe('ErrorLoggerService', () => {
                 { provide: ErrorDAO, useClass: ErrorDAOMock },
             ],
         }).compileComponents();
-        service = TestBed.inject(ErrorLoggerService);
+        errorLoggerService = TestBed.inject(ErrorLoggerService);
         errorDAO = TestBed.inject(ErrorDAO);
     }));
     it('should create', fakeAsync(async() => {
-        expect(service).toBeTruthy();
+        expect(errorLoggerService).toBeTruthy();
     }));
     it('should throw instead of logging the error when not initialized', () => {
         // Given a non-initialized error logger service

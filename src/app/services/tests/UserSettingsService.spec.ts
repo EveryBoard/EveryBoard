@@ -3,17 +3,18 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserSettingsService } from '../UserSettingsService';
 
 describe('UserSettingsService', () => {
-    let service: UserSettingsService;
+
+    let userSettingsService: UserSettingsService;
 
     beforeEach(() => {
-        service = new UserSettingsService();
+        userSettingsService = new UserSettingsService();
     });
 
     describe('theme', () => {
         it('should update local storage on theme change', () => {
             spyOn(localStorage, 'setItem');
             // when changing the theme
-            service.changeTheme('light');
+            userSettingsService.changeTheme('light');
             // then localStorage is updated
             expect(localStorage.setItem).toHaveBeenCalledWith('theme', 'light');
 
@@ -23,7 +24,7 @@ describe('UserSettingsService', () => {
             // given that the stored theme is 'light'
             spyOn(localStorage, 'getItem').and.returnValue('light');
             // when getting the theme
-            const theme: MGPOptional<string> = service.getTheme();
+            const theme: MGPOptional<string> = userSettingsService.getTheme();
             // then the theme is 'light'
             expect(theme.isPresent()).toBeTrue();
             expect(theme.get()).toBe('light');
@@ -33,7 +34,7 @@ describe('UserSettingsService', () => {
         it('should update local storage on language change', () => {
             spyOn(localStorage, 'setItem');
             // when changing the language
-            service.changeLanguage('fr');
+            userSettingsService.changeLanguage('fr');
             // then localStorage is updated
             expect(localStorage.setItem).toHaveBeenCalledWith('locale', 'fr');
 
@@ -43,7 +44,7 @@ describe('UserSettingsService', () => {
             // given that the stored theme is 'light'
             spyOn(localStorage, 'getItem').and.returnValue('fr');
             // when getting the language
-            const language: string = service.getLanguage();
+            const language: string = userSettingsService.getLanguage();
             // then the theme is 'light'
             expect(language).toBe('fr');
         });

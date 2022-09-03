@@ -56,7 +56,6 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public observerRole: number;
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow
      * ie:  - if it's online, he'll tell the game-component when the remote opponent has played

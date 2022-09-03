@@ -10,7 +10,6 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
-import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Localized } from '../utils/LocaleUtils';
@@ -122,8 +121,7 @@ export class ConnectedUserService implements OnDestroy {
     private observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
 
     constructor(private readonly userDAO: UserDAO,
-                private readonly auth: FireAuth.Auth,
-                private readonly connectivityDAO: ConnectivityDAO)
+                private readonly auth: FireAuth.Auth)
     {
         display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
 
@@ -143,7 +141,6 @@ export class ConnectedUserService implements OnDestroy {
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
                     assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
-                    await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
                     this.userUnsubscribe = MGPOptional.of(
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                             if (doc.isPresent()) {
@@ -154,7 +151,7 @@ export class ConnectedUserService implements OnDestroy {
                                 if (userHasFinalizedVerification === true && doc.get().verified === false) {
                                     // The user has finalized verification but isn't yet marked as so in the DB.
                                     // So we mark it, and we'll get notified when the user is marked.
-                                    return this.userDAO.markVerified(user.uid);
+                                    return this.userDAO.markAsVerified(user.uid);
                                 }
                                 const authUser: AuthUser = new AuthUser(user.uid,
                                                                         MGPOptional.ofNullable(user.email),
@@ -209,6 +206,8 @@ export class ConnectedUserService implements OnDestroy {
         try {
             const userCredential: FireAuth.UserCredential =
                 await Auth.createUserWithEmailAndPassword(this.auth, email, password);
+            // Directly logs in
+            await Auth.signInWithEmailAndPassword(this.auth, email, password);
             const user: FireAuth.User = Utils.getNonNullable(userCredential.user);
             await this.createUser(user.uid, username);
             return MGPFallible.success(user);
@@ -306,9 +305,7 @@ export class ConnectedUserService implements OnDestroy {
     public async disconnect(): Promise<MGPValidation> {
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
-            const uid: string = user.get().uid;
             this.observedPartRS.next(MGPOptional.empty());
-            await this.connectivityDAO.setOffline(uid);
             await this.auth.signOut();
             return MGPValidation.SUCCESS;
         } else {
@@ -334,7 +331,7 @@ export class ConnectedUserService implements OnDestroy {
             await Auth.updateProfile(currentUser, { displayName: username });
             await this.userDAO.setUsername(currentUser.uid, username);
             // Only gmail accounts can set their username, and they become finalized once they do
-            await this.userDAO.markVerified(currentUser.uid);
+            await this.userDAO.markAsVerified(currentUser.uid);
             // Reload the user to notify listeners that the user has changed
             await this.reloadUser();
             return MGPValidation.SUCCESS;
