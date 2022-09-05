@@ -284,7 +284,7 @@ describe('ChatComponent', () => {
             // When it is destroyed
             component.ngOnDestroy();
 
-            // Then it should have unsubscrbed from active users
+            // Then it should have unsubscribed from active users
             expectUnsubscribeToBeCalled();
         }));
         afterEach(fakeAsync(async() => {
