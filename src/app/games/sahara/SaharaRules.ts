@@ -80,21 +80,26 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
     }
     public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
-        const isInBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
+        const isOnBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
             return coord.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT) &&
                    board[coord.y][coord.x] === FourStatePiece.EMPTY;
         };
-        const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord).filter(isInBoardAndEmpty);
+        const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty);
         if (TriangularCheckerBoard.isSpaceDark(coord) === true) {
             return neighbors;
         } else {
-            const twoStepJump: Coord[] = [];
+            const twoStepJump: MGPSet<Coord> = new MGPSet();
             for (const neighbor of neighbors) {
                 const secondStepNeighbors: Coord[] =
-                    TriangularCheckerBoard.getNeighbors(neighbor).filter(isInBoardAndEmpty);
-                twoStepJump.push(...secondStepNeighbors);
+                    TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
+                for (const secondStepNeighbor of secondStepNeighbors) {
+                    twoStepJump.add(secondStepNeighbor);
+                }
             }
-            return new MGPSet(twoStepJump.concat(neighbors)).toList();
+            for (const neighbor of neighbors) {
+                twoStepJump.add(neighbor);
+            }
+            return twoStepJump.toList();
         }
     }
     public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {

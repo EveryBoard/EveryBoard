@@ -76,15 +76,15 @@ describe('SaharaComponent', () => {
         await testUtils.expectClickSuccess('#click_2_0');
         await testUtils.expectClickSuccess('#click_7_0');
     }));
-    it('should show possible landing when selecting a piece', fakeAsync(async() => {
+    it('should show possible landings when selecting a piece', fakeAsync(async() => {
         // Given the initial board
         // When clicking on a piece of the current player
-        await componentTestUtils.expectClickSuccess('#click_7_0');
+        await testUtils.expectClickSuccess('#click_7_0');
 
         // Then its differents landing coord should be highlighted
-        componentTestUtils.expectElementToExist('#possible_landing_6_0');
-        componentTestUtils.expectElementToExist('#possible_landing_5_0');
-        componentTestUtils.expectElementToExist('#possible_landing_6_1');
+        testUtils.expectElementToExist('#possible_landing_6_0');
+        testUtils.expectElementToExist('#possible_landing_5_0');
+        testUtils.expectElementToExist('#possible_landing_6_1');
     }));
     it('should take "false neighbor" as 3-step move', fakeAsync(async() => {
         // given the initial board with a first piece selected
