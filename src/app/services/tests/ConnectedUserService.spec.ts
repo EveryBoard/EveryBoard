@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
@@ -17,6 +17,7 @@ import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
+import { UserService } from '../UserService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 @Injectable()
@@ -42,8 +43,8 @@ export class ConnectedUserServiceMock {
             this.userRS.next(user);
         }
     }
-    public getUserObs(): Observable<AuthUser> {
-        return this.userRS.asObservable();
+    public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
+        return this.userRS.asObservable().subscribe(callback);
     }
     public async disconnect(): Promise<MGPValidation> {
         throw new Error('ConnectedUserServiceMock.disconnect not implemented');
@@ -173,8 +174,8 @@ describe('ConnectedUserService', () => {
         expect(service).toBeTruthy();
     }));
     it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
-        const userDAO: UserDAO = TestBed.inject(UserDAO);
-        spyOn(userDAO, 'markAsVerified');
+        const userService: UserService = TestBed.inject(UserService);
+        spyOn(userService, 'markAsVerified');
 
         // given a registered user that has finalized all steps to verify its account
         const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
@@ -188,7 +189,7 @@ describe('ConnectedUserService', () => {
         const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
             resolvePromise = resolve;
         });
-        const subscription: Subscription = service.getUserObs().subscribe((_user: AuthUser) => {
+        const subscription: Subscription = service.subscribeToUser((_user: AuthUser) => {
             // Wait 2s to ensure that the handler has the time to mark for verification
             window.setTimeout(resolvePromise, 2000);
         });
@@ -196,7 +197,7 @@ describe('ConnectedUserService', () => {
         await userHasUpdated;
 
         // then its status is set to verified
-        expect(userDAO.markAsVerified).toHaveBeenCalledWith(uid);
+        expect(userService.markAsVerified).toHaveBeenCalledWith(uid);
 
         subscription.unsubscribe();
     });
@@ -336,7 +337,7 @@ describe('ConnectedUserService', () => {
 
             let subscription!: Subscription;
             const updateSeen: Promise<void> = new Promise((resolve: () => void) => {
-                subscription = service.getUserObs().subscribe((user: AuthUser): void => {
+                subscription = service.subscribeToUser((user: AuthUser): void => {
                     if (user.isConnected()) {
                         resolve();
                     }
@@ -520,9 +521,9 @@ describe('ConnectedUserService', () => {
             expect(result.getReason()).toEqual(`Your username may not be empty.`);
         });
         it('should reject existing usernames', async() => {
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            const userService: UserService = TestBed.inject(UserService);
             // when the username is set to an username that is not available
-            spyOn(userDAO, 'usernameIsAvailable').and.resolveTo(false);
+            spyOn(userService, 'usernameIsAvailable').and.resolveTo(false);
             const result: MGPValidation = await service.setUsername('not-available');
 
             // then it fails
@@ -585,14 +586,16 @@ describe('ConnectedUserService', () => {
         });
     });
     it('should unsubscribe from auth subscription upon destruction', () => {
-        spyOn(service, 'unsubscribeFromAuth');
+        // eslint-disable-next-line dot-notation
+        spyOn(service['authSubscription'], 'unsubscribe');
 
         // when the service is destroyed
         service.ngOnDestroy();
         alreadyDestroyed = true;
 
         // then it unsubscribed
-        expect(service.unsubscribeFromAuth).toHaveBeenCalledWith();
+        // eslint-disable-next-line dot-notation
+        expect(service['authSubscription'].unsubscribe).toHaveBeenCalledWith();
     });
     describe('updateObservedPart', () => {
         it('should throw when called while no user is logged', fakeAsync(() => {

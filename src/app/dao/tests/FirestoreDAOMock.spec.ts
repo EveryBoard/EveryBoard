@@ -7,7 +7,7 @@ import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { FieldValue, Unsubscribe, UpdateData } from '@angular/fire/firestore';
+import { FieldValue, UpdateData } from '@angular/fire/firestore';
 import { Timestamp } from 'firebase/firestore';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
@@ -41,17 +41,13 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
 
         this.resetStaticDB();
     }
-    public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Unsubscribe {
+    public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
         display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.subscribeToChanges(' + id + ')');
 
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            const subscription: Subscription =
-                optionalOS.get().observable.subscribe((subject: MGPOptional<FirestoreDocument<T>>) =>
-                    callback(subject.map((doc: FirestoreDocument<T>) => doc.data)));
-            return () => {
-                subscription.unsubscribe();
-            };
+            return optionalOS.get().observable.subscribe((subject: MGPOptional<FirestoreDocument<T>>) =>
+                callback(subject.map((doc: FirestoreDocument<T>) => doc.data)));
         } else {
             throw new Error('No doc of id ' + id + ' to observe in ' + this.collectionName);
             // TODO: check that observing unexisting doc throws
@@ -185,14 +181,13 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
     }
     public observingWhere(conditions: FirestoreCondition[],
-                          callback: FirestoreCollectionObserver<T>): () => void
+                          callback: FirestoreCollectionObserver<T>): Subscription
     {
         display(this.VERBOSE || FirestoreDAOMock.VERBOSE,
                 { 'FirestoreDAOMock_observingWhere': {
                     collection: this.collectionName,
                     conditions } });
-        const subscription: Subscription = this.subscribeToMatchers(conditions, callback);
-        return () => subscription.unsubscribe();
+        return this.subscribeToMatchers(conditions, callback);
     }
     private subscribeToMatchers(conditions: FirestoreCondition[],
                                 callback: FirestoreCollectionObserver<T>): Subscription

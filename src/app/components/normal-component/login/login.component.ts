@@ -21,18 +21,17 @@ export class LoginComponent implements OnInit, OnDestroy {
         password: new FormControl(),
     });
 
-    private subscription!: Subscription;
+    private userSubscription!: Subscription; // Initialized in ngOnInit
 
     constructor(public router: Router,
                 public connectedUserService: ConnectedUserService) {
     }
     public ngOnInit(): void {
-        this.subscription = this.connectedUserService.getUserObs()
-            .subscribe(async(user: AuthUser) => {
-                if (user !== AuthUser.NOT_CONNECTED) {
-                    await this.redirect();
-                }
-            });
+        this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
+            if (user !== AuthUser.NOT_CONNECTED) {
+                await this.redirect();
+            }
+        });
     }
     public async loginWithEmail(value: {email: string, password: string}): Promise<void> {
         const result: MGPValidation = await this.connectedUserService.doEmailLogin(value.email, value.password);
@@ -58,6 +57,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         return true;
     }
     public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.userSubscription.unsubscribe();
     }
 }

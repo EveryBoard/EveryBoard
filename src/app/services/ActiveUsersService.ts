@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';
+import { Subscription } from 'rxjs';
 import { Timestamp } from 'firebase/firestore';
 
 @Injectable({
@@ -13,24 +13,19 @@ export class ActiveUsersService {
 
     public static VERBOSE: boolean = false;
 
-    private readonly activeUsersBS: BehaviorSubject<UserDocument[]> = new BehaviorSubject<UserDocument[]>([]);
-
-    public activeUsersObs: Observable<UserDocument[]>;
-
-    private unsubscribe: () => void;
+    private activeUsers: UserDocument[] = [];
 
     constructor(public userDAO: UserDAO) {
-        this.activeUsersObs = this.activeUsersBS.asObservable();
     }
-    public startObserving(): void {
-        display(ActiveUsersService.VERBOSE, 'ActiveUsersService.startObservingActiveUsers');
+    public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {
+        display(ActiveUsersService.VERBOSE, 'ActiveUsersService.subscribeToActiveUsers');
         const onDocumentCreated: (newUsers: UserDocument[]) => void = (newUsers: UserDocument[]) => {
             display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
-            const newUsersList: UserDocument[] = this.activeUsersBS.value.concat(...newUsers);
-            this.activeUsersBS.next(this.sort(newUsersList));
+            this.activeUsers = this.sort(this.activeUsers.concat(...newUsers));
+            callback(this.activeUsers);
         };
         const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
-            let updatedUsers: UserDocument[] = this.activeUsersBS.value;
+            let updatedUsers: UserDocument[] = this.activeUsers;
             display(ActiveUsersService.VERBOSE, 'our DAO updated ' + modifiedUsers.length + ' user(s)');
             for (const u of modifiedUsers) {
                 updatedUsers.forEach((user: UserDocument) => {
@@ -38,21 +33,22 @@ export class ActiveUsersService {
                 });
                 updatedUsers = this.sort(updatedUsers);
             }
-            this.activeUsersBS.next(updatedUsers);
+            this.activeUsers = updatedUsers;
+            callback(this.activeUsers);
         };
         const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {
-            const newUsersList: UserDocument[] =
-                this.activeUsersBS.value.filter((u: UserDocument) =>
+            // No need to sort again upon deletion
+            this.activeUsers =
+                this.activeUsers.filter((u: UserDocument) =>
                     !deletedUsers.some((user: UserDocument) => user.id === u.id));
-            this.activeUsersBS.next(this.sort(newUsersList));
+            callback(this.activeUsers);
         };
         const usersObserver: FirestoreCollectionObserver<User> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        this.unsubscribe = this.userDAO.observeActiveUsers(usersObserver);
+        return this.observeActiveUsers(usersObserver);
     }
-    public stopObserving(): void {
-        this.unsubscribe();
-        this.activeUsersBS.next([]);
+    public observeActiveUsers(callback: FirestoreCollectionObserver<User>): Subscription {
+        return this.userDAO.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
     public sort(users: UserDocument[]): UserDocument[] {
         return users.sort((first: UserDocument, second: UserDocument) => {

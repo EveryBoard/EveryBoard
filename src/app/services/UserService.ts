@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Unsubscribe } from 'firebase/auth';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
-import { User, UserDocument } from '../domain/User';
-import { ActiveUsersService } from './ActiveUsersService';
+import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { serverTimestamp } from 'firebase/firestore';
 
 /**
   * The aim of this service is to:
@@ -21,17 +21,19 @@ import { assert } from '../utils/assert';
 })
 export class UserService {
 
-    constructor(private readonly activeUsersService: ActiveUsersService,
-                private readonly userDAO: UserDAO) {
+    constructor(private readonly userDAO: UserDAO) {
     }
-    public getActiveUsersObs(): Observable<UserDocument[]> {
-        this.activeUsersService.startObserving();
-        return this.activeUsersService.activeUsersObs;
+    public async usernameIsAvailable(username: string): Promise<boolean> {
+        const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);
+        return usersWithSameUsername.length === 0;
     }
-    public unSubFromActiveUsersObs(): void {
-        this.activeUsersService.stopObserving();
+    public async setUsername(uid: string, username: string): Promise<void> {
+        await this.userDAO.update(uid, { username: username });
     }
-    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
+    public async markAsVerified(uid: string): Promise<void> {
+        await this.userDAO.update(uid, { verified: true });
+    }
+    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Subscription {
         return this.userDAO.subscribeToChanges(userId, callback);
     }
     public async getUserLastUpdateTime(id: string): Promise<MGPOptional<FirestoreTime>> {
@@ -43,5 +45,10 @@ export class UserService {
             assert(lastUpdateTime != null, 'should not receive a lastUpdateTime equal to null');
             return MGPOptional.of(lastUpdateTime as FirestoreTime);
         }
+    }
+    public updatePresenceToken(userId: string): Promise<void> {
+        return this.userDAO.update(userId, {
+            lastUpdateTime: serverTimestamp(),
+        });
     }
 }

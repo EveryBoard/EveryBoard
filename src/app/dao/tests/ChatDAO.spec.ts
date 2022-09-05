@@ -16,10 +16,13 @@ import { IFirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserDAO } from '../UserDAO';
+import { ChatService } from 'src/app/services/ChatService';
+import { Subscription } from 'rxjs';
 
 describe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
+    let chatService: ChatService;
     let partDAO: PartDAO;
     let configRoomDAO: ConfigRoomDAO;
     let userDAO: UserDAO;
@@ -35,6 +38,7 @@ describe('ChatDAO', () => {
     beforeEach(async() => {
         await setupEmulators();
         chatDAO = TestBed.inject(ChatDAO);
+        chatService = TestBed.inject(ChatService);
         partDAO = TestBed.inject(PartDAO);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         userDAO = TestBed.inject(UserDAO);
@@ -46,11 +50,11 @@ describe('ChatDAO', () => {
         it('should rely on observingWhere of messages DAO and sort by postedTime', () => {
             // Given a chat DAO
             const messagesDAO: IFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
-            spyOn(messagesDAO, 'observingWhere').and.returnValue(() => { });
+            spyOn(messagesDAO, 'observingWhere').and.returnValue(new Subscription());
             // When calling subscribeToMessages
             const callback: FirestoreCollectionObserver<Message> =
                 new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {});
-            chatDAO.subscribeToMessages('chatId', callback);
+            chatService.subscribeToMessages('chatId', callback);
             // Then it should call observingWhere and sort by postedTime
             expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');
         });
@@ -71,11 +75,11 @@ describe('ChatDAO', () => {
                 sender: otherUser,
                 postedTime: serverTimestamp(),
             };
-            otherMessageId = await chatDAO.addMessage('lobby', message);
+            otherMessageId = await chatService.addMessage('lobby', message);
             await signOut();
             // and a message from the current user, who is able to add messages
             myUser = await createConnectedUser('bar@bar.com', 'user');
-            myMessageId = await chatDAO.addMessage('lobby', { ...message, sender: myUser });
+            myMessageId = await chatService.addMessage('lobby', { ...message, sender: myUser });
         });
         it('should forbid disconnected users to read a chat', async() => {
             // Given a disconnected user
@@ -92,7 +96,7 @@ describe('ChatDAO', () => {
                 sender: otherUser,
                 postedTime: serverTimestamp(),
             };
-            const result: Promise<string> = chatDAO.addMessage('lobby', message);
+            const result: Promise<string> = chatService.addMessage('lobby', message);
             // Then it fails
             await expectPermissionToBeDenied(result);
         });
@@ -103,7 +107,7 @@ describe('ChatDAO', () => {
                 sender: { id: myUser.id, name: 'not-my-username!' },
                 postedTime: serverTimestamp(),
             };
-            const result: Promise<string> = chatDAO.addMessage('lobby', message);
+            const result: Promise<string> = chatService.addMessage('lobby', message);
             // Then it fails
             await expectPermissionToBeDenied(result);
         });
@@ -112,7 +116,7 @@ describe('ChatDAO', () => {
             const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').delete(myMessageId);
             // Then it succeeds and the message is removed
             await expectAsync(result).toBeResolvedTo();
-            const allMessages: MessageDocument[] = await chatDAO.getLastMessages('lobby', 5);
+            const allMessages: MessageDocument[] = await chatService.getLastMessages('lobby', 5);
             expect(allMessages.length).toBe(1); // Only 1 of the original message remains
         });
         it('should forbid a user to delete a message of another user', async() => {
@@ -169,10 +173,10 @@ describe('ChatDAO', () => {
                 sender: myUser,
                 postedTime: serverTimestamp(),
             };
-            const result: Promise<string> = chatDAO.addMessage('lobby', message);
+            const result: Promise<string> = chatService.addMessage('lobby', message);
             // Then it succeeds and the message has been added to the chat
             await expectAsync(result).toBeResolved();
-            const allMessages: MessageDocument[] = await chatDAO.getLastMessages('lobby', 5);
+            const allMessages: MessageDocument[] = await chatService.getLastMessages('lobby', 5);
             expect(allMessages.length).toBe(1);
             await signOut();
         });
@@ -188,7 +192,7 @@ describe('ChatDAO', () => {
                 sender: someUser,
                 postedTime: serverTimestamp(),
             };
-            const result: Promise<string> = chatDAO.addMessage('lobby', message);
+            const result: Promise<string> = chatService.addMessage('lobby', message);
             // Then it fails
             await expectPermissionToBeDenied(result);
         });

@@ -5,9 +5,7 @@ import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { Chat, ChatDocument } from 'src/app/domain/Chat';
 import { display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Message, MessageDocument } from 'src/app/domain/Message';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import * as Firestore from '@angular/fire/firestore';
+import { MessageDocument } from 'src/app/domain/Message';
 
 type ChatOS = ObservableSubject<MGPOptional<ChatDocument>>
 type MessageOS = ObservableSubject<MGPOptional<MessageDocument>>
@@ -27,14 +25,5 @@ export class ChatDAOMock extends FirestoreDAOMock<Chat> {
     }
     public resetStaticDB(): void {
         ChatDAOMock.chatDB = new MGPMap();
-    }
-    public async addMessage(chatId: string, message: Message): Promise<string> {
-        return this.subCollectionDAO(chatId, 'messages').create(message);
-    }
-    public async getLastMessages(chatId: string, limit: number): Promise<MessageDocument[]> {
-        return this.subCollectionDAO<Message>(chatId, 'messages').findWhere([], 'postedTime', limit);
-    }
-    public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Firestore.Unsubscribe {
-        return this.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
     }
 }
