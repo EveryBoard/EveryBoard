@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MinimalUser } from '../domain/MinimalUser';
-import { Subscription } from 'rxjs';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
-import { PartService } from '../services/PartService';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirstPlayer, ConfigRoom, PartStatus } from '../domain/ConfigRoom';
 import { ConfigRoomService } from './ConfigRoomService';
@@ -33,12 +32,26 @@ export class GameService {
     public static VERBOSE: boolean = false;
 
     constructor(private readonly partDAO: PartDAO,
-                private readonly partService: PartService,
                 private readonly connectedUserService: ConnectedUserService,
                 private readonly configRoomService: ConfigRoomService,
                 private readonly chatService: ChatService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');
+    }
+    public async updateAndBumpIndex(id: string,
+                                    user: Player,
+                                    lastIndex: number,
+                                    update: Partial<Part>)
+    : Promise<void>
+    {
+        update = {
+            ...update,
+            lastUpdate: {
+                index: lastIndex + 1,
+                player: user.value,
+            },
+        };
+        return this.partDAO.update(id, update);
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: MGPOptional<Part> = await this.partDAO.read(partId);
@@ -88,7 +101,7 @@ export class GameService {
     {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(configRoom));
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        return this.partService.updateAndBumpIndex(partId, user, lastIndex, update);
+        return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig
     {
@@ -144,7 +157,7 @@ export class GameService {
             result: MGPResult.RESIGN.value,
             request: null,
         };
-        return this.partService.updateAndBumpIndex(partId, user, lastIndex, update);
+        return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public notifyTimeout(partId: string,
                          user: Player,
@@ -159,10 +172,10 @@ export class GameService {
             result: MGPResult.TIMEOUT.value,
             request: null,
         };
-        return this.partService.updateAndBumpIndex(partId, user, lastIndex, update);
+        return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public sendRequest(partId: string, user: Player, lastIndex: number, request: Request): Promise<void> {
-        return this.partService.updateAndBumpIndex(partId, user, lastIndex, { request });
+        return this.updateAndBumpIndex(partId, user, lastIndex, { request });
     }
     public proposeDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
         return this.sendRequest(partId, player, lastIndex, Request.drawProposed(player));
@@ -173,7 +186,7 @@ export class GameService {
             result: mgpResult.value,
             request: null,
         };
-        return this.partService.updateAndBumpIndex(partId, as, lastIndex, update);
+        return this.updateAndBumpIndex(partId, as, lastIndex, update);
     }
     public refuseDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
         return this.sendRequest(partId, player, lastIndex, Request.drawRefused(player));
@@ -245,11 +258,11 @@ export class GameService {
             remainingMsForOne: Utils.getNonNullable(part.data.remainingMsForOne) - msToSubstract[1],
         };
         const lastIndex: number = part.data.lastUpdate.index;
-        return await this.partService.updateAndBumpIndex(id, observerRole, lastIndex, update);
+        return await this.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
     public refuseTakeBack(id: string, lastIndex: number, observerRole: Player): Promise<void> {
         const request: Request = Request.takeBackRefused(observerRole);
-        return this.partService.updateAndBumpIndex(id, observerRole, lastIndex, { request });
+        return this.updateAndBumpIndex(id, observerRole, lastIndex, { request });
     }
     public async addGlobalTime(id: string,
                                lastIndex: number,
@@ -271,11 +284,11 @@ export class GameService {
                 remainingMsForZero: Utils.getNonNullable(part.remainingMsForZero) + 5 * 60 * 1000,
             };
         }
-        return await this.partService.updateAndBumpIndex(id, observerRole, lastIndex, update);
+        return await this.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
     public async addTurnTime(observerRole: Player, lastIndex: number, id: string): Promise<void> {
         const update: Partial<Part> = { request: Request.addTurnTime(observerRole.getOpponent()) };
-        return await this.partService.updateAndBumpIndex(id, observerRole, lastIndex, update);
+        return await this.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
     public async updateDBBoard(partId: string,
                                user: Player,
@@ -316,7 +329,7 @@ export class GameService {
                 result: MGPResult.HARD_DRAW.value,
             };
         }
-        return await this.partService.updateAndBumpIndex(partId, user, lastIndex, update);
+        return await this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     private updateScore(update: Partial<Part>, scores?: [number, number]): Partial<Part> {
         if (scores !== undefined) {
