@@ -5,7 +5,7 @@ import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
 import { UserDocument } from 'src/app/domain/User';
 import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
-import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -21,9 +21,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public activeParts: PartDocument[] = [];
 
-    private activeUsersUnsubscribe!: Unsubscribe; // initialized in ngOnInit
+    private activeUsersSubscription!: Subscription; // initialized in ngOnInit
 
-    private activePartsUnsubscribe!: Unsubscribe; // initialized in ngOnInit
+    private activePartsSubscription!: Subscription; // initialized in ngOnInit
 
     public currentTab: Tab = 'games';
 
@@ -33,19 +33,19 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
     public ngOnInit(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');
-        this.activeUsersUnsubscribe = this.activeUsersService.subscribeToActiveUsers(
+        this.activeUsersSubscription = this.activeUsersService.subscribeToActiveUsers(
             (activeUsers: UserDocument[]) => {
                 this.activeUsers = activeUsers;
             });
-        this.activePartsUnsubscribe = this.activePartsService.subscribeToActiveParts(
+        this.activePartsSubscription = this.activePartsService.subscribeToActiveParts(
             (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
     }
     public ngOnDestroy(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
-        this.activeUsersUnsubscribe();
-        this.activePartsUnsubscribe();
+        this.activeUsersSubscription.unsubscribe();
+        this.activePartsSubscription.unsubscribe();
     }
     public async joinGame(partId: string, typeGame: string): Promise<void> {
         await this.router.navigate(['/play', typeGame, partId]);

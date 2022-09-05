@@ -586,14 +586,16 @@ describe('ConnectedUserService', () => {
         });
     });
     it('should unsubscribe from auth subscription upon destruction', () => {
-        spyOn(service, 'unsubscribeFromAuth');
+        // eslint-disable-next-line dot-notation
+        spyOn(service['authSubscription'], 'unsubscribe');
 
         // when the service is destroyed
         service.ngOnDestroy();
         alreadyDestroyed = true;
 
         // then it unsubscribed
-        expect(service.unsubscribeFromAuth).toHaveBeenCalledWith();
+        // eslint-disable-next-line dot-notation
+        expect(service['authSubscription'].unsubscribe).toHaveBeenCalledWith();
     });
     describe('updateObservedPart', () => {
         it('should throw when called while no user is logged', fakeAsync(() => {

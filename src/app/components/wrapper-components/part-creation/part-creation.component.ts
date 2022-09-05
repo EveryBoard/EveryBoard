@@ -20,7 +20,8 @@ import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { User } from 'src/app/domain/User';
-import { Timestamp, Unsubscribe } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -94,10 +95,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private allUserInterval: MGPOptional<number> = MGPOptional.empty();
     private ownTokenInterval: MGPOptional<number> = MGPOptional.empty();
     private lastToken: Timestamp;
-    private selfSubscription: () => void = () => {};
+    private selfSubscription: Subscription = new Subscription();
 
-    private configRoomUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
-    private candidatesUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
+    private configRoomSubscription: Subscription = new Subscription();
+    private candidatesSubscription: Subscription = new Subscription();
 
     public configFormGroup: FormGroup;
 
@@ -160,10 +161,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const candidatesCallback: (candidates: MinimalUser[]) => void = async(candidates: MinimalUser[]) => {
             await this.onCandidatesUpdate(candidates);
         };
-        this.configRoomUnsubscribe =
-            MGPOptional.of(this.configRoomService.subscribeToChanges(this.partId, configRoomCallback));
-        this.candidatesUnsubscribe =
-            MGPOptional.of(this.configRoomService.subscribeToCandidates(this.partId, candidatesCallback));
+        this.configRoomSubscription =
+            this.configRoomService.subscribeToChanges(this.partId, configRoomCallback);
+        this.candidatesSubscription =
+            this.configRoomService.subscribeToCandidates(this.partId, candidatesCallback);
     }
     private getForm(name: string): AbstractControl {
         return Utils.getNonNullable(this.configFormGroup.get(name));
@@ -438,7 +439,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         if (this.allUserInterval.isPresent()) {
             window.clearInterval(this.allUserInterval.get());
         }
-        this.selfSubscription();
+        this.selfSubscription.unsubscribe();
     }
     public acceptConfig(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');
@@ -454,12 +455,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
 
         // Unsubscribe from the config room and candidates
-        if (this.configRoomUnsubscribe.isPresent()) {
-            this.configRoomUnsubscribe.get()();
-        }
-        if (this.candidatesUnsubscribe.isPresent()) {
-            this.candidatesUnsubscribe.get()();
-        }
+        this.configRoomSubscription.unsubscribe();
+        this.candidatesSubscription.unsubscribe();
 
         this.stopSendingPresenceTokensAndObservingUsersIfNeeded();
         const authUser: AuthUser = this.connectedUserService.user.get();

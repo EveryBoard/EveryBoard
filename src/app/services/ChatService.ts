@@ -4,7 +4,7 @@ import { Message, MessageDocument } from '../domain/Message';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { Localized } from '../utils/LocaleUtils';
-import { Unsubscribe } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { serverTimestamp } from 'firebase/firestore';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MinimalUser } from '../domain/MinimalUser';
@@ -30,7 +30,7 @@ export class ChatService {
         const ordering: string = 'postedTime';
         return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').findWhere([], ordering, limit);
     }
-    public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Unsubscribe {
+    public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Subscription {
         return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
     }
     public async deleteChat(chatId: string): Promise<void> {

@@ -7,7 +7,8 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Timestamp, Unsubscribe } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 describe('ActiveUsersService', () => {
 
@@ -36,7 +37,7 @@ describe('ActiveUsersService', () => {
             verified: true,
         });
         let observerCalls: number = 0;
-        const unsubscribe: Unsubscribe = service.subscribeToActiveUsers((users: UserDocument[]) => {
+        const subscription: Subscription = service.subscribeToActiveUsers((users: UserDocument[]) => {
             if (observerCalls === 1) {
                 expect(users).toEqual([{
                     id: 'playerDocId',
@@ -51,7 +52,7 @@ describe('ActiveUsersService', () => {
         });
         await service.userDAO.update('playerDocId', { username: 'nouveau' });
         expect(observerCalls).toBe(2);
-        unsubscribe();
+        subscription.unsubscribe();
     }));
     it('should order', () => {
         const FIRST_USER: User = {

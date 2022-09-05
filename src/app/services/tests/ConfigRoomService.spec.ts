@@ -84,17 +84,17 @@ describe('ConfigRoomService', () => {
             const resultingConfigRoom: ConfigRoom = (await configRoomDAO.read('configRoomId')).get();
             expect(resultingConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
         }));
-        it('should be delegated to ConfigRoomCONFIGROOMDAO', fakeAsync(async() => {
+        it('should call addCandidate', fakeAsync(async() => {
             // Given a configRoom
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
-            spyOn(configRoomDAO, 'addCandidate').and.callThrough();
+            spyOn(service, 'addCandidate').and.callThrough();
 
             // When joining it
             await service.joinGame('configRoomId');
 
             // We should be added to the candidate list
-            expect(configRoomDAO.addCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
+            expect(service.addCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
         it('should fail when joining an unexisting configRoom', fakeAsync(async() => {
             spyOn(configRoomDAO, 'read').and.resolveTo(MGPOptional.empty());
@@ -106,26 +106,26 @@ describe('ConfigRoomService', () => {
         }));
     });
     describe('cancelJoining', () => {
-        it('should delegate update to DAO', fakeAsync(async() => {
+        it('should call removeCandidate', fakeAsync(async() => {
             // Given a configRoom that we are observing and that we joined
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
             service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
             await service.joinGame('configRoomId');
 
-            spyOn(configRoomDAO, 'removeCandidate').and.resolveTo();
+            spyOn(service, 'removeCandidate').and.resolveTo();
 
             // When cancelling our join
             await service.cancelJoining('configRoomId');
 
             // Then we are removed from the list
-            expect(configRoomDAO.removeCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
+            expect(service.removeCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
         it('should start as new when chosen opponent leaves', fakeAsync(async() => {
             // Given a configRoom that we are observing, with a chosen opponent
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
-            await configRoomDAO.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+            await service.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
             service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             // When the chosen opponent leaves
@@ -154,15 +154,15 @@ describe('ConfigRoomService', () => {
             // Given a configRoom that we are observing, which has candidates
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
             service.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
-            await configRoomDAO.addCandidate('partId', UserMocks.CANDIDATE_MINIMAL_USER);
+            await service.addCandidate('partId', UserMocks.CANDIDATE_MINIMAL_USER);
 
-            spyOn(configRoomDAO, 'removeCandidate').and.resolveTo();
+            spyOn(service, 'removeCandidate').and.resolveTo();
 
             // When we delete it
             await service.deleteConfigRoom('configRoomId', [UserMocks.CANDIDATE_MINIMAL_USER]);
 
             // Then the candidate docs are also deleted in the CONFIGROOMDAO
-            expect(configRoomDAO.removeCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
+            expect(service.removeCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
     });
     describe('reviewConfig', () => {

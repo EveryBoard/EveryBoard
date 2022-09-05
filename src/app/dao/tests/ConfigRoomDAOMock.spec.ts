@@ -7,9 +7,8 @@ import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Unsubscribe } from '@angular/fire/firestore';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { Subscription } from 'rxjs';
 
 type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>
 
@@ -22,12 +21,6 @@ export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {
     public constructor() {
         super('ConfigRoomDAOMock', ConfigRoomDAOMock.VERBOSE);
         display(this.VERBOSE, 'ConfigRoomDAOMock.constructor');
-    }
-    public addCandidate(partId: string, candidate: MinimalUser): Promise<void> {
-        return this.subCollectionDAO(partId, 'candidates').set(candidate.id, candidate);
-    }
-    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
-        return this.subCollectionDAO(partId, 'candidates').delete(candidate.id);
     }
     public getStaticDB(): MGPMap<string, ConfigRoomOS> {
         return ConfigRoomDAOMock.configRoomDB;
@@ -57,7 +50,7 @@ describe('ConfigRoomDAOMock', () => {
         expect(lastConfigRoom).toEqual(MGPOptional.empty());
         expect(callCount).toBe(0);
 
-        const unsubscribe: Unsubscribe = configRoomDAOMock.subscribeToChanges('configRoomId', (configRoom: MGPOptional<ConfigRoom>) => {
+        const subscription: Subscription = configRoomDAOMock.subscribeToChanges('configRoomId', (configRoom: MGPOptional<ConfigRoom>) => {
             callCount++;
             lastConfigRoom = configRoom;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
@@ -72,7 +65,7 @@ describe('ConfigRoomDAOMock', () => {
         // Then we should have seen the update
         expect(callCount).toEqual(2);
         expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
-        unsubscribe();
+        subscription.unsubscribe();
     }));
     it('Partial update should update', fakeAsync(async() => {
         // Given an initial configRoom to which we subscribed
@@ -81,7 +74,7 @@ describe('ConfigRoomDAOMock', () => {
         expect(callCount).toEqual(0);
         expect(lastConfigRoom).toEqual(MGPOptional.empty());
 
-        const unsubscribe: Unsubscribe = configRoomDAOMock.subscribeToChanges('configRoomId', (configRoom: MGPOptional<ConfigRoom>) => {
+        const subscription: Subscription = configRoomDAOMock.subscribeToChanges('configRoomId', (configRoom: MGPOptional<ConfigRoom>) => {
             callCount++;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
             lastConfigRoom = configRoom;
@@ -96,6 +89,6 @@ describe('ConfigRoomDAOMock', () => {
         // Then we should see the update
         expect(callCount).toEqual(2);
         expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
-        unsubscribe();
+        subscription.unsubscribe();
     }));
 });

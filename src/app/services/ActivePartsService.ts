@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { Unsubscribe } from '@angular/fire/firestore';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService
@@ -23,7 +23,7 @@ export class ActivePartsService {
     constructor(private readonly partDAO: PartDAO) {
     }
 
-    public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Unsubscribe {
+    public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
         const onDocumentCreated: (createdParts: PartDocument[]) => void = (createdParts: PartDocument[]) => {
             this.activeParts = this.activeParts.concat(...createdParts);
             callback(this.activeParts);
@@ -52,7 +52,7 @@ export class ActivePartsService {
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         return this.observeActiveParts(partObserver);
     }
-    public observeActiveParts(callback: FirestoreCollectionObserver<Part>): Unsubscribe {
+    public observeActiveParts(callback: FirestoreCollectionObserver<Part>): Subscription {
         return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
     public async userHasActivePart(user: MinimalUser): Promise<boolean> {

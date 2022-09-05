@@ -8,7 +8,7 @@ import { Utils } from 'src/app/utils/utils';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 describe('ActivePartsService', () => {
 
@@ -34,7 +34,7 @@ describe('ActivePartsService', () => {
         it('should notify about new parts', fakeAsync(async() => {
             // Given a service where we are observing active parts
             let seenActiveParts: PartDocument[] = [];
-            const activePartsUnsubscribe: Unsubscribe = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -58,16 +58,16 @@ describe('ActivePartsService', () => {
             expect(seenActiveParts.length).toBe(1);
             expect(seenActiveParts[0].data).toEqual(part);
 
-            activePartsUnsubscribe();
+            activePartsSubscription.unsubscribe();
         }));
         it('should not notify about new parts when we unsubscribe', fakeAsync(async() => {
             // Given a service where we were observing active parts, but have unsubscribed
             let seenActiveParts: PartDocument[] = [];
-            const activePartsUnsubscribe: Unsubscribe = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
-            activePartsUnsubscribe();
+            activePartsSubscription.unsubscribe();
             tick(3000);
 
             // When a new part is added
@@ -104,7 +104,7 @@ describe('ActivePartsService', () => {
             };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsUnsubscribe: Unsubscribe = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -115,7 +115,7 @@ describe('ActivePartsService', () => {
             // Then the deleted part should not be considered as an active part
             expect(seenActiveParts.length).toBe(0);
 
-            activePartsUnsubscribe();
+            activePartsSubscription.unsubscribe();
         }));
         it('should preserve non-deleted upon a deletion', fakeAsync(async() => {
             // Given a service observing active parts, and there are already multiple parts
@@ -134,7 +134,7 @@ describe('ActivePartsService', () => {
             const partToBeDeleted: string = await partDAO.create(part);
             const partThatWillRemain: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsUnsubscribe: Unsubscribe = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -146,7 +146,7 @@ describe('ActivePartsService', () => {
             expect(seenActiveParts.length).toBe(1);
             expect(seenActiveParts[0].id).toBe(partThatWillRemain);
 
-            activePartsUnsubscribe();
+            activePartsSubscription.unsubscribe();
         }));
         it('should update when a part is modified', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
@@ -164,7 +164,7 @@ describe('ActivePartsService', () => {
             };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsUnsubscribe: Unsubscribe = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -176,7 +176,7 @@ describe('ActivePartsService', () => {
             expect(seenActiveParts.length).toBe(1);
             expect(Utils.getNonNullable(seenActiveParts[0].data).turn).toBe(1);
 
-            activePartsUnsubscribe();
+            activePartsSubscription.unsubscribe();
         }));
         it('should update only the modified part', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
@@ -195,7 +195,7 @@ describe('ActivePartsService', () => {
             const partToBeModified: string = await partDAO.create(part);
             const partThatWontChange: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsUnsubscribe: Unsubscribe = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -213,7 +213,7 @@ describe('ActivePartsService', () => {
             // and the other one should still be there and still be the same
             expect(Utils.getNonNullable(newPart2.data).turn).toBe(0);
 
-            activePartsUnsubscribe();
+            activePartsSubscription.unsubscribe();
         }));
     });
     describe('observeActiveParts', () => {

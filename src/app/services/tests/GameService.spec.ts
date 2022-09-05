@@ -21,11 +21,12 @@ import { Utils } from 'src/app/utils/utils';
 import { ConfigRoomService } from '../ConfigRoomService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { serverTimestamp, Timestamp, Unsubscribe } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { PartService } from '../PartService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { Subscription } from 'rxjs';
 
 describe('GameService', () => {
 
@@ -85,13 +86,13 @@ describe('GameService', () => {
         spyOn(partDAO, 'subscribeToChanges').and.callThrough();
 
         // When observing the part
-        const unsubscribe: Unsubscribe = service.subscribeToChanges('partId', myCallback);
+        const subscription: Subscription = service.subscribeToChanges('partId', myCallback);
 
         // Then subscribeToChanges should be called on the DAO and the part should be observed
         expect(partDAO.subscribeToChanges).toHaveBeenCalledWith('partId', myCallback);
         expect(calledCallback).toBeTrue();
 
-        unsubscribe();
+        subscription.unsubscribe();
     }));
     it('should delegate delete to PartDAO', fakeAsync(async() => {
         spyOn(partDAO, 'delete');

@@ -255,7 +255,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         // Given a started part
         testUtils = await ComponentTestUtils.basic('P4');
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
-        const check: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
+        const expectUnsubscribeToBeCalled: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
 
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
@@ -270,6 +270,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         wrapper.ngOnDestroy();
 
         // Then it unsubscribed from the part
-        check();
+        expectUnsubscribeToBeCalled();
     }));
 });

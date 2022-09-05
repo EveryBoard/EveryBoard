@@ -17,6 +17,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
+import { Subscription } from 'rxjs';
 
 describe('LobbyComponent', () => {
 
@@ -50,7 +51,7 @@ describe('LobbyComponent', () => {
         spyOn(activePartsService, 'subscribeToActiveParts').and.callFake(
             (callback: (parts: PartDocument[]) => void) => {
                 callback([activePart]);
-                return () => {};
+                return new Subscription();
             });
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -64,25 +65,27 @@ describe('LobbyComponent', () => {
     }));
     it('should unsubscribe from active parts when destroying component', fakeAsync(async() => {
         // Given the lobby
-        const checkUnsubscription: () => void = prepareUnsubscribeCheck(TestBed.inject(ActivePartsService), 'subscribeToActiveParts');
+        const expectUnsubscribeToBeCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(ActivePartsService), 'subscribeToActiveParts');
         testUtils.detectChanges();
 
         // When it is destroyed
         component.ngOnDestroy();
 
         // Then it should have unsubscrbed from active parts
-        checkUnsubscription();
+        expectUnsubscribeToBeCalled();
     }));
     it('should unsubscribe from active users when destroying component', fakeAsync(async() => {
         // Given an initialized lobby
-        const checkUnsubscription: () => void = prepareUnsubscribeCheck(TestBed.inject(ActiveUsersService), 'subscribeToActiveUsers');
+        const expectUnsubscribeToBeCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(ActiveUsersService), 'subscribeToActiveUsers');
         testUtils.detectChanges();
 
         // When it is destroyed
         component.ngOnDestroy();
 
         // Then it should have unsubscrbed from active users
-        checkUnsubscription();
+        expectUnsubscribeToBeCalled();
     }));
     it('should display firebase time HH:mm:ss', fakeAsync(() => {
         // Given a lobby in which we observe tab chat, and where one user is here

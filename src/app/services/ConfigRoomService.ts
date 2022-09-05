@@ -3,7 +3,7 @@ import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigR
 import { ConfigRoomDAO } from '../dao/ConfigRoomDAO';
 import { display, FirestoreJSONObject } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Unsubscribe } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Localized } from '../utils/LocaleUtils';
@@ -25,10 +25,16 @@ export class ConfigRoomService {
     {
         display(ConfigRoomService.VERBOSE, 'ConfigRoomService.constructor');
     }
-    public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Unsubscribe {
+    public addCandidate(partId: string, candidate: MinimalUser): Promise<void> {
+        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').set(candidate.id, candidate);
+    }
+    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
+        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').delete(candidate.id);
+    }
+    public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
         return this.configRoomDAO.subscribeToChanges(configRoomId, callback);
     }
-    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): Unsubscribe {
+    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
         let candidates: MinimalUser[] = [];
         const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
             (created: FirestoreDocument<MinimalUser>[]) => {
@@ -85,13 +91,10 @@ export class ConfigRoomService {
         } else {
             if (configRoom.get().creator.id !== user.id) {
                 // Only add actual candidates to the game, not the creator
-                await this.configRoomDAO.addCandidate(configRoomId, user);
+                await this.addCandidate(configRoomId, user);
             }
             return MGPValidation.SUCCESS;
         }
-    }
-    public async removeCandidate(configRoomId: string, candidate: MinimalUser): Promise<void> {
-        return this.configRoomDAO.removeCandidate(configRoomId, candidate);
     }
     public async cancelJoining(configRoomId: string): Promise<void> {
         display(ConfigRoomService.VERBOSE, `ConfigRoomService.cancelJoining(${configRoomId})`);
@@ -103,7 +106,7 @@ export class ConfigRoomService {
             return;
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
-            const configRoomUpdates: Promise<void>[] = [this.configRoomDAO.removeCandidate(configRoomId, user)];
+            const configRoomUpdates: Promise<void>[] = [this.removeCandidate(configRoomId, user)];
             if (configRoom.chosenOpponent?.id === user.id) {
                 // if the chosenOpponent leave, we're back to initial part creation
                 const update: Partial<ConfigRoom> = {
@@ -121,7 +124,7 @@ export class ConfigRoomService {
         // We need to delete the candidates before the actual configRoom,
         // for the security rules to check that we are allowed to delete the configRoom
         await Promise.all(candidates.map((candidate: MinimalUser): Promise<void> =>
-            this.configRoomDAO.removeCandidate(configRoomId, candidate)));
+            this.removeCandidate(configRoomId, candidate)));
         await this.configRoomDAO.delete(configRoomId);
     }
     public async proposeConfig(configRoomId: string,

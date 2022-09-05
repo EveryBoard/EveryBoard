@@ -3,7 +3,7 @@ import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';
-import { Unsubscribe } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { Timestamp } from 'firebase/firestore';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class ActiveUsersService {
 
     constructor(public userDAO: UserDAO) {
     }
-    public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Unsubscribe {
+    public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {
         display(ActiveUsersService.VERBOSE, 'ActiveUsersService.subscribeToActiveUsers');
         const onDocumentCreated: (newUsers: UserDocument[]) => void = (newUsers: UserDocument[]) => {
             display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
@@ -47,7 +47,7 @@ export class ActiveUsersService {
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         return this.observeActiveUsers(usersObserver);
     }
-    public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
+    public observeActiveUsers(callback: FirestoreCollectionObserver<User>): Subscription {
         return this.userDAO.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
     public sort(users: UserDocument[]): UserDocument[] {

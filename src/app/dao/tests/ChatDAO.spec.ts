@@ -17,6 +17,7 @@ import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserDAO } from '../UserDAO';
 import { ChatService } from 'src/app/services/ChatService';
+import { Subscription } from 'rxjs';
 
 describe('ChatDAO', () => {
 
@@ -49,7 +50,7 @@ describe('ChatDAO', () => {
         it('should rely on observingWhere of messages DAO and sort by postedTime', () => {
             // Given a chat DAO
             const messagesDAO: IFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
-            spyOn(messagesDAO, 'observingWhere').and.returnValue(() => { });
+            spyOn(messagesDAO, 'observingWhere').and.returnValue(new Subscription());
             // When calling subscribeToMessages
             const callback: FirestoreCollectionObserver<Message> =
                 new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {});

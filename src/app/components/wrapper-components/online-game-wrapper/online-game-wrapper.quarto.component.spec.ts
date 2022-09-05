@@ -36,6 +36,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { PartService } from 'src/app/services/PartService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -56,6 +57,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let wrapper: OnlineGameWrapperComponent;
 
     let configRoomDAO: ConfigRoomDAO;
+    let configRoomService: ConfigRoomService;
     let partDAO: PartDAO;
     let partService: PartService;
     let userDAO: UserDAO;
@@ -83,6 +85,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promise<void> {
         partDAO = TestBed.inject(PartDAO);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
+        configRoomService = TestBed.inject(ConfigRoomService);
         userDAO = TestBed.inject(UserDAO);
         partService = TestBed.inject(PartService);
         await configRoomDAO.set('configRoomId', initialConfigRoom);
@@ -121,7 +124,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partCreationId).withContext(context).toBeTruthy();
         context = 'partCreation field should also be present';
         expect(wrapper.partCreation).withContext(context).toBeTruthy();
-        await configRoomDAO.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+        await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
         testUtils.detectChanges();
         await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
         // TODO: replace by a click on the component to really simulate it "end2end"

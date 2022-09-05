@@ -7,7 +7,6 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ErrorLoggerService } from './ErrorLoggerService';
@@ -82,7 +81,7 @@ export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    public unsubscribeFromAuth!: Unsubscribe; // public for testing purposes only
+    private readonly authSubscription!: Subscription;
 
     /**
      * This is the current user, if there is one.
@@ -91,7 +90,7 @@ export class ConnectedUserService implements OnDestroy {
      */
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
 
-    private userUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
+    private userSubscription: Subscription = new Subscription();
 
     private readonly userRS: ReplaySubject<AuthUser>;
 
@@ -105,18 +104,16 @@ export class ConnectedUserService implements OnDestroy {
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.unsubscribeFromAuth =
-            FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
+        this.authSubscription =
+            new Subscription(FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
                     display(ConnectedUserService.VERBOSE, 'User is not connected');
-                    if (this.userUnsubscribe.isPresent()) {
-                        this.userUnsubscribe.get()();
-                    }
+                    this.userSubscription.unsubscribe();
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
                     assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
-                    this.userUnsubscribe = MGPOptional.of(
+                    this.userSubscription =
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                             if (doc.isPresent()) {
                                 const username: string | undefined = doc.get().username;
@@ -135,9 +132,9 @@ export class ConnectedUserService implements OnDestroy {
                                 this.user = MGPOptional.of(authUser);
                                 this.userRS.next(authUser);
                             }
-                        }));
+                        });
                 }
-            });
+            }));
     }
     public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
@@ -325,9 +322,7 @@ export class ConnectedUserService implements OnDestroy {
         return this.userService.updatePresenceToken(this.user.get().id);
     }
     public ngOnDestroy(): void {
-        if (this.userUnsubscribe.isPresent()) {
-            this.userUnsubscribe.get()();
-        }
-        this.unsubscribeFromAuth();
+        this.userSubscription.unsubscribe();
+        this.authSubscription.unsubscribe();
     }
 }

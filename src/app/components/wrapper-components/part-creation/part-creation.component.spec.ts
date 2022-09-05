@@ -49,7 +49,7 @@ describe('PartCreationComponent', () => {
         if (lastUpdateTime) {
             await userDAO.update(UserMocks.OPPONENT_MINIMAL_USER.id, { lastUpdateTime });
         }
-        return configRoomDAO.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+        return configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     }
     async function receiveConfigRoomUpdate(update: Partial<ConfigRoom>): Promise<void> {
         await configRoomDAO.update('configRoomId', update);
@@ -185,7 +185,7 @@ describe('PartCreationComponent', () => {
                     partStatus: PartStatus.PART_CREATED.value,
                     chosenOpponent: null,
                 });
-                await configRoomDAO.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
                 tick(3000);
 
                 // Then it is not selected anymore,
@@ -204,7 +204,7 @@ describe('PartCreationComponent', () => {
                 spyOn(component.messageDisplayer, 'infoMessage').and.callThrough();
 
                 // When the candidate leaves
-                await configRoomDAO.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
 
                 // Then it is not selected anymore, configRoom is back to start, and no toast appeared
                 expectElementNotToExist('#presenceOf_' + UserMocks.OPPONENT.username);
@@ -513,8 +513,10 @@ describe('PartCreationComponent', () => {
             }));
             it('should unsubscribe from configRoom upon destruction', fakeAsync(async() => {
                 // Given a component that is loaded by anyone (here, the creator)
-                const configRoomCheck: () => void = prepareUnsubscribeCheck(configRoomService, 'subscribeToChanges');
-                const candidatesCheck: () => void = prepareUnsubscribeCheck(configRoomService, 'subscribeToCandidates');
+                const expectConfigRoomUnsubscribeToBeCalled: () => void =
+                    prepareUnsubscribeCheck(configRoomService, 'subscribeToChanges');
+                const expectCandidateUnsubscribeToBeCalled: () => void =
+                    prepareUnsubscribeCheck(configRoomService, 'subscribeToCandidates');
                 awaitComponentInitialisation();
                 spyOn(component, 'cancelGameCreation').and.resolveTo(); // spied in order to avoid calling it
 
@@ -524,8 +526,8 @@ describe('PartCreationComponent', () => {
                 await component.ngOnDestroy();
 
                 // Then the component unsubscribes from the configRoom subscriptions
-                configRoomCheck();
-                candidatesCheck();
+                expectConfigRoomUnsubscribeToBeCalled();
+                expectCandidateUnsubscribeToBeCalled();
             }));
         });
     });
@@ -536,14 +538,15 @@ describe('PartCreationComponent', () => {
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
         }));
         describe('Arrival', () => {
-            it('should add user to configRoom candidates with DAO', fakeAsync(() => {
-                spyOn(configRoomDAO, 'addCandidate').and.callThrough();
+            it('should add user to configRoom candidates with service', fakeAsync(() => {
+                spyOn(configRoomService, 'addCandidate').and.callThrough();
 
                 // When candidate arrives
                 awaitComponentInitialisation();
 
                 // Then the candidate is added to the configRoom and the configRoom is updated
-                expect(configRoomDAO.addCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                expect(configRoomService.addCandidate)
+                    .toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -693,8 +696,8 @@ describe('PartCreationComponent', () => {
                 // Given a component where user is chosen opponent amongst two candidate
                 awaitComponentInitialisation();
                 await receiveConfigRoomUpdate(ConfigRoomMocks.INITIAL);
-                await configRoomDAO.addCandidate('configRoomId', UserMocks.OTHER_OPPONENT_MINIMAL_USER);
-                await configRoomDAO.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await configRoomService.addCandidate('configRoomId', UserMocks.OTHER_OPPONENT_MINIMAL_USER);
+                await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
                 await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
 
                 // When an update notifies user that the chosen opponent changed

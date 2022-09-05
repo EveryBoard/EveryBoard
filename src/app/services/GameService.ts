@@ -12,7 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Unsubscribe } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
@@ -128,7 +128,7 @@ export class GameService {
         await this.configRoomService.acceptConfig(partId);
         return this.startGameWithConfig(partId, Player.ONE, 0, configRoom);
     }
-    public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Unsubscribe {
+    public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);
     }
     public resign(partId: string,

@@ -27,7 +27,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { Timestamp, Unsubscribe } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 export class OnlineGameWrapperMessages {
@@ -93,16 +93,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
 
-    protected routerEventsSub!: Subscription; // Initialized in ngOnInit
-    protected userSub!: Subscription; // Initialized in ngOnInit
-    protected opponentSubscription: MGPOptional<() => void> = MGPOptional.empty();
+    private routerEventsSub!: Subscription; // Initialized in ngOnInit
+    private userSub!: Subscription; // Initialized in ngOnInit
+    private opponentSubscription: Subscription = new Subscription();
+    private partSubscription: Subscription = new Subscription();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
 
     public readonly globalTimeMessage: string = $localize`5 minutes`;
     public readonly turnTimeMessage: string = $localize`30 seconds`;
-
-    private partUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
@@ -188,11 +187,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
         // TODO: don't start count down for Observer.
-        this.partUnsubscribe =
-            MGPOptional.of(this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
+        this.partSubscription =
+            this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
                 assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
                 await this.onCurrentPartUpdate(part.get());
-            }));
+            });
     }
     private async onCurrentPartUpdate(update: Part): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
@@ -609,7 +608,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 this.opponent = { id: opponent.get().id, name: Utils.getNonNullable(user.get().username) };
             };
             this.opponentSubscription =
-                MGPOptional.of(this.userService.observeUser(opponent.get().id, callback));
+                this.userService.observeUser(opponent.get().id, callback);
         }
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
@@ -846,11 +845,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.routerEventsSub.unsubscribe();
         this.userSub.unsubscribe();
         if (this.gameStarted === true) {
-            if (this.opponentSubscription.isPresent()) {
-                this.opponentSubscription.get()();
-            }
-            // Unsubscribe from the part
-            this.partUnsubscribe.get()();
+            this.opponentSubscription.unsubscribe();
+            this.partSubscription.unsubscribe();
         }
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
     }

@@ -278,14 +278,14 @@ describe('ChatComponent', () => {
         }));
         it('should unsubscribe from the chat when destroying component', fakeAsync(async() => {
             // Given a chat
-            const check: () => void = prepareUnsubscribeCheck(chatService, 'subscribeToMessages');
+            const expectUnsubscribeToBeCalled: () => void = prepareUnsubscribeCheck(chatService, 'subscribeToMessages');
             testUtils.detectChanges();
 
             // When it is destroyed
             component.ngOnDestroy();
 
             // Then it should have unsubscrbed from active users
-            check();
+            expectUnsubscribeToBeCalled();
         }));
         afterEach(fakeAsync(async() => {
             component.ngOnDestroy();

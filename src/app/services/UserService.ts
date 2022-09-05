@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Unsubscribe } from 'firebase/auth';
+import { Subscription } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -33,7 +33,7 @@ export class UserService {
     public async markAsVerified(uid: string): Promise<void> {
         await this.userDAO.update(uid, { verified: true });
     }
-    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
+    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Subscription {
         return this.userDAO.subscribeToChanges(userId, callback);
     }
     public async getUserLastUpdateTime(id: string): Promise<MGPOptional<FirestoreTime>> {
