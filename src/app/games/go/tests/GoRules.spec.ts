@@ -16,12 +16,12 @@ describe('GoRules:', () => {
     let rules: GoRules;
     let minimaxes: Minimax<GoMove, GoState, GoLegalityInformation>[];
 
-    const X: GoPiece = GoPiece.WHITE;
-    const O: GoPiece = GoPiece.BLACK;
-    const k: GoPiece = GoPiece.DEAD_WHITE;
-    const u: GoPiece = GoPiece.DEAD_BLACK;
-    const w: GoPiece = GoPiece.WHITE_TERRITORY;
-    const b: GoPiece = GoPiece.BLACK_TERRITORY;
+    const X: GoPiece = GoPiece.LIGHT;
+    const O: GoPiece = GoPiece.DARK;
+    const k: GoPiece = GoPiece.DEAD_LIGHT;
+    const u: GoPiece = GoPiece.DEAD_DARK;
+    const w: GoPiece = GoPiece.LIGHT_TERRITORY;
+    const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
     beforeAll(() => {

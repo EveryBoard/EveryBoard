@@ -3,6 +3,7 @@ import { MGPOptional } from './MGPOptional';
 import { Sets } from './Sets';
 
 export class MGPSet<T extends Comparable> implements ComparableObject {
+
     protected values: T[];
 
     constructor(values?: readonly T[]) {

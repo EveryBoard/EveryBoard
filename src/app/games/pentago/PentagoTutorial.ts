@@ -1,12 +1,12 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const X: PlayerOrNone = Player.ONE;
-const O: PlayerOrNone = Player.ZERO;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
 export class PentagoTutorial {
 
@@ -43,7 +43,7 @@ export class PentagoTutorial {
                 [_, _, _, _, _, _],
             ], 10),
             PentagoMove.rotationless(2, 2),
-            (move: PentagoMove, _: PentagoState) => {
+            (move: PentagoMove, _previous: PentagoState, _result: PentagoState) => {
                 if (move.blockTurned.isPresent()) {
                     return MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`);
                 } else {
@@ -65,7 +65,7 @@ export class PentagoTutorial {
                 [_, _, _, _, _, _],
             ], 10),
             PentagoMove.withRotation(0, 0, 0, true),
-            (move: PentagoMove, _: PentagoState) => {
+            (move: PentagoMove, _previous: PentagoState, _result: PentagoState) => {
                 if (move.blockTurned.isPresent()) {
                     return MGPValidation.SUCCESS;
                 } else {

@@ -101,8 +101,8 @@ export class YinshTutorial {
             ], [0, 0], 20),
             new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
                           [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), new Coord(7, 4))]),
-            (_: YinshMove, resultingState: YinshState): MGPValidation => {
-                if (resultingState.sideRings[Player.ZERO.value] === 1) {
+            (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
+                if (result.sideRings[Player.ZERO.value] === 1) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE());
@@ -134,8 +134,8 @@ export class YinshTutorial {
             ],
                           new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
                           []),
-            (_: YinshMove, resultingState: YinshState): MGPValidation => {
-                if (resultingState.sideRings[Player.ZERO.value] === 2) {
+            (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
+                if (result.sideRings[Player.ZERO.value] === 2) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO());

@@ -1,13 +1,13 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const A: PlayerOrNone = Player.ZERO;
-const B: PlayerOrNone = Player.ONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
 export class ConspirateursTutorial {
 
@@ -34,11 +34,11 @@ export class ConspirateursTutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, A, A, B, B, A, A, B, A, B, _, _, _, _],
-                [_, _, _, _, A, B, A, B, A, A, A, A, B, _, _, _, _],
-                [_, _, _, _, A, B, _, _, _, _, _, B, A, _, _, _, _],
-                [_, _, _, _, B, A, A, B, B, B, A, A, A, _, _, _, _],
-                [_, _, _, _, B, A, B, B, B, B, B, B, A, _, _, _, _],
+                [_, _, _, _, O, O, X, X, O, O, X, O, X, _, _, _, _],
+                [_, _, _, _, O, X, O, X, O, O, O, O, X, _, _, _, _],
+                [_, _, _, _, O, X, _, _, _, _, _, X, O, _, _, _, _],
+                [_, _, _, _, X, O, O, X, X, X, O, O, O, _, _, _, _],
+                [_, _, _, _, X, O, X, X, X, X, X, X, O, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -47,7 +47,7 @@ export class ConspirateursTutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
             ConspirateursMoveSimple.of(new Coord(4, 6), new Coord(3, 5)).get(),
-            (move: ConspirateursMove, _: ConspirateursState) => {
+            (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
                 if (move.isSimple()) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -67,11 +67,11 @@ export class ConspirateursTutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, A, A, B, B, A, A, B, A, B, _, _, _, _],
-                [_, _, _, _, A, B, A, B, A, A, A, A, B, _, _, _, _],
-                [_, _, _, _, A, B, _, _, _, _, _, B, A, _, _, _, _],
-                [_, _, _, _, B, A, A, B, B, B, A, A, A, _, _, _, _],
-                [_, _, _, _, B, A, B, B, B, B, B, B, A, _, _, _, _],
+                [_, _, _, _, O, O, X, X, O, O, X, O, X, _, _, _, _],
+                [_, _, _, _, O, X, O, X, O, O, O, O, X, _, _, _, _],
+                [_, _, _, _, O, X, _, _, _, _, _, X, O, _, _, _, _],
+                [_, _, _, _, X, O, O, X, X, X, O, O, O, _, _, _, _],
+                [_, _, _, _, X, O, X, X, X, X, X, X, O, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -80,7 +80,7 @@ export class ConspirateursTutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
             ConspirateursMoveJump.of([new Coord(6, 7), new Coord(6, 5)]).get(),
-            (move: ConspirateursMove, _: ConspirateursState) => {
+            (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
                 if (move.isJump()) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -94,16 +94,16 @@ export class ConspirateursTutorial {
             $localize`Jumps can be chained when possible. You can decide whether to continue a jump or to stop it at any time. To finish your jump, click a second time on your current location. Otherwise, simply keep clicking on your next location. Once no more destination is possible, your move will end without you needing to click the piece a second time.<br/><br/>You're playing Dark and you can perform a triple jump! Do it.`,
             new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, B, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, A, A, _, B, A, A, B, A, B, _, _, _, _],
-                [_, _, _, _, A, _, A, B, A, A, A, A, B, _, _, _, _],
-                [_, _, _, _, A, B, _, _, _, _, _, B, A, _, _, _, _],
-                [_, _, _, _, B, A, A, B, B, B, A, A, A, _, _, _, _],
-                [_, _, _, _, B, A, B, B, B, B, B, B, A, _, _, _, _],
+                [_, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, O, O, _, X, O, O, X, O, X, _, _, _, _],
+                [_, _, _, _, O, _, O, X, O, O, O, O, X, _, _, _, _],
+                [_, _, _, _, O, X, _, _, _, _, _, X, O, _, _, _, _],
+                [_, _, _, _, X, O, O, X, X, X, O, O, O, _, _, _, _],
+                [_, _, _, _, X, O, X, X, X, X, X, X, O, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

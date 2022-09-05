@@ -15,11 +15,11 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
     public getListMoves(node: AbaloneNode): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
         const state: AbaloneState = node.gameState;
-        const PLAYER: Player = state.getCurrentPlayer();
+        const player: Player = state.getCurrentPlayer();
         for (let y: number = 0; y < 9; y++) {
             for (let x: number = 0; x < 9; x++) {
                 const first: Coord = new Coord(x, y);
-                if (state.getPieceAt(first).is(PLAYER) === false) {
+                if (state.getPieceAt(first).is(player) === false) {
                     continue;
                 }
                 for (const dir of HexaDirection.factory.all) {

@@ -37,7 +37,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
         const state: TaflState = node.gameState;
-        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
+        const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
@@ -53,7 +53,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
                         while (testedCoord.isInRange(this.width, this.width) &&
-                               state.getPieceAt(testedCoord) === EMPTY)
+                               state.getPieceAt(testedCoord) === empty)
                         {
                             influence++;
                             testedCoord = testedCoord.getNext(dir, 1);
@@ -66,14 +66,14 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         return new NodeUnheritance(score);
     }
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
-        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
+        const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
         for (let y: number = 0; y < this.width; y++) {
             for (let x: number = 0; x < this.width; x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: TaflPawn = state.getPieceAt(coord);
-                if (piece !== EMPTY) {
+                if (piece !== empty) {
                     const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
                     if (owner === Player.ZERO) {
                         zeroPieces.push(coord);

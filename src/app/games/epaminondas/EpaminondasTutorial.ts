@@ -1,13 +1,13 @@
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const O: PlayerOrNone = Player.ZERO;
-const X: PlayerOrNone = Player.ONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
 export class EpaminondasTutorial {
 
@@ -68,7 +68,7 @@ export class EpaminondasTutorial {
         </ol>`,
             EpaminondasState.getInitialState(),
             new EpaminondasMove(0, 10, 1, 1, Direction.UP),
-            (move: EpaminondasMove, _state: EpaminondasState) => {
+            (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces === 1) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -88,7 +88,7 @@ export class EpaminondasTutorial {
         Move a phalanx!`,
             EpaminondasState.getInitialState(),
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-            (move: EpaminondasMove, _: EpaminondasState) => {
+            (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces > 1) {
                     return MGPValidation.SUCCESS;
                 } else {

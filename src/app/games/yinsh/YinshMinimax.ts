@@ -12,7 +12,8 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
 
-export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityInformation> {
+export class YinshMinimax
+    extends Minimax<YinshMove, YinshState, YinshLegalityInformation, NodeUnheritance, YinshRules> {
 
     public getBoardValue(node: YinshNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
@@ -34,13 +35,13 @@ export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityIn
                 }
             }
         } else {
-            const rules: YinshRules = this.ruler as YinshRules; // TODO: ugly cast, this.rules should be a YinshRules!
+            const rules: YinshRules = this.ruler;
             this.getPossibleCaptureCombinations(state)
                 .forEach((initialCaptures: ReadonlyArray<YinshCapture>): void => {
-                    const stateAfterCapture: YinshState = rules.applyCaptures(state, initialCaptures);
+                    const stateAfterCapture: YinshState = rules.applyCaptures(initialCaptures, state);
                     this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord, end: Coord}): void => {
                         const stateAfterRingMove: YinshState =
-                            rules.applyRingMoveAndFlip(stateAfterCapture, ringMove.start, ringMove.end);
+                            rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
                             .forEach((finalCaptures: ReadonlyArray<YinshCapture>): void => {
                                 const move: YinshMove = new YinshMove(initialCaptures,
@@ -55,7 +56,7 @@ export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityIn
         return moves;
     }
     private getPossibleCaptureCombinations(state: YinshState): ReadonlyArray<ReadonlyArray<YinshCapture>> {
-        const rules: YinshRules = this.ruler as YinshRules;
+        const rules: YinshRules = this.ruler;
         const possibleCaptures: YinshCapture[] = rules.getPossibleCaptures(state);
         const ringCoords: Coord[] = this.getRingCoords(state);
         return GipfMinimax.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
@@ -71,7 +72,7 @@ export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityIn
             }, []);
     }
     private getRingMoves(state: YinshState): {start: Coord, end: Coord}[] {
-        const rules: YinshRules = this.ruler as YinshRules;
+        const rules: YinshRules = this.ruler;
         const moves: {start: Coord, end: Coord}[] = [];
         for (const start of this.getRingCoords(state)) {
             for (const end of rules.getRingTargets(state, start)) {

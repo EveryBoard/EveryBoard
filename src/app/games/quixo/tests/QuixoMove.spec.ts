@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 describe('QuixoMove:', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
-    const X: PlayerOrNone = Player.ONE;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     it('Should forbid move creation for invalid x or y coord', () => {
         expect(() => new QuixoMove(-1, 0, Orthogonal.UP))
@@ -53,11 +53,11 @@ describe('QuixoMove:', () => {
     });
     it('Should override correctly equals and toString', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
-        const neighboor: QuixoMove = new QuixoMove(0, 1, Orthogonal.RIGHT);
+        const neighbor: QuixoMove = new QuixoMove(0, 1, Orthogonal.RIGHT);
         const twin: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
         const cousin: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         expect(move.equals(move)).toBeTrue();
-        expect(move.equals(neighboor)).toBeFalse();
+        expect(move.equals(neighbor)).toBeFalse();
         expect(move.equals(cousin)).toBeFalse();
         expect(move.equals(twin)).toBeTrue();
         expect(move.toString()).toBe('QuixoMove(0, 0, RIGHT)');

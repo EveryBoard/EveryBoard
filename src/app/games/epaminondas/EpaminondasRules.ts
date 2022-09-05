@@ -48,7 +48,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             }
             const caseContent: PlayerOrNone = state.getPieceAt(coord);
             if (caseContent === PlayerOrNone.NONE) {
-                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_SQUARE());
             }
             if (caseContent === opponent) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());

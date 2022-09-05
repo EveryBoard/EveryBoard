@@ -10,28 +10,28 @@ import { fakeAsync } from '@angular/core/testing';
 
 describe('GoComponent', () => {
 
-    let componentTestUtils: ComponentTestUtils<GoComponent>;
+    let testUtils: ComponentTestUtils<GoComponent>;
 
     const _: GoPiece = GoPiece.EMPTY;
-    const O: GoPiece = GoPiece.BLACK;
-    const X: GoPiece = GoPiece.WHITE;
+    const O: GoPiece = GoPiece.DARK;
+    const X: GoPiece = GoPiece.LIGHT;
 
     beforeAll(() => {
         GoState.HEIGHT = 5;
         GoState.WIDTH = 5;
     });
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame<GoComponent>('Go');
+        testUtils = await ComponentTestUtils.forGame<GoComponent>('Go');
     }));
     it('should create', () => {
-        componentTestUtils.expectToBeCreated();
+        testUtils.expectToBeCreated();
     });
     it('Should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
-        await componentTestUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Passed
-        await componentTestUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Counting
-        await componentTestUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Accept
-        await componentTestUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Finished
-        componentTestUtils.expectPassToBeForbidden();
+        await testUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Passed
+        await testUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Counting
+        await testUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Accept
+        await testUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Finished
+        testUtils.expectPassToBeForbidden();
     }));
     it('Should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [
@@ -42,17 +42,17 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
-        await componentTestUtils.expectMoveSuccess('#click_0_1', move, undefined, [0, 0]);
-        const goComponent: GoComponent = componentTestUtils.getComponent();
+        await testUtils.expectMoveSuccess('#click_0_1', move, undefined, [0, 0]);
+        const goComponent: GoComponent = testUtils.getComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
     it('Should allow simple clicks', fakeAsync(async() => {
         const move: GoMove = new GoMove(1, 1);
-        await componentTestUtils.expectMoveSuccess('#click_1_1', move, undefined, [0, 0]);
+        await testUtils.expectMoveSuccess('#click_1_1', move, undefined, [0, 0]);
         const secondMove: GoMove = new GoMove(2, 2);
-        await componentTestUtils.expectMoveSuccess('#click_2_2', secondMove, undefined, [0, 0]);
+        await testUtils.expectMoveSuccess('#click_2_2', secondMove, undefined, [0, 0]);
     }));
 });

@@ -37,8 +37,8 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
         const state: TaflState = node.gameState;
-        const WIDTH: number = this.ruler.config.WIDTH;
-        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
+        const width: number = this.ruler.config.WIDTH;
+        const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let safeScore: number = 0;
         let threatenedScore: number = 0;
@@ -55,7 +55,7 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
                     safeScore += owner.getScoreModifier();
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(WIDTH, WIDTH) && state.getPieceAt(testedCoord) === EMPTY) {
+                        while (testedCoord.isInRange(width, width) && state.getPieceAt(testedCoord) === empty) {
                             controlledSquares.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }

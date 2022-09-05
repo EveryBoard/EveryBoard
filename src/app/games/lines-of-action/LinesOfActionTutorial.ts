@@ -1,12 +1,13 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const X: PlayerOrNone = Player.ZERO;
-const O: PlayerOrNone = Player.ONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
 export class LinesOfActionTutorial {
 
@@ -18,9 +19,9 @@ export class LinesOfActionTutorial {
         Dark's pieces are forming a single group, while Light's pieces form three groups.`,
             new LinesOfActionState([
                 [_, _, _, _, _, _, _, _],
-                [O, _, _, _, X, _, _, O],
-                [_, _, X, X, O, _, _, _],
-                [_, _, _, X, _, _, _, _],
+                [X, _, _, _, O, _, _, X],
+                [_, _, O, O, X, _, _, _],
+                [_, _, _, O, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -45,13 +46,13 @@ export class LinesOfActionTutorial {
         You're playing Dark, make a jump over one of your pieces on the following board.`,
             new LinesOfActionState([
                 [_, _, _, _, _, _, _, _],
-                [_, _, O, X, X, _, _, _],
+                [_, _, X, O, O, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, O],
                 [_, _, _, _, _, _, _, X],
+                [_, _, _, _, _, _, _, O],
             ], 0),
             [LinesOfActionMove.of(new Coord(3, 1), new Coord(6, 1)).get()],
             $localize`Congratulations!`,
@@ -69,14 +70,14 @@ export class LinesOfActionTutorial {
         On the other diagonal, there are too many pieces to end the move on the board.<br/><br/>
         Make one of these moves.`,
             new LinesOfActionState([
-                [_, _, _, _, _, _, O, _],
-                [_, _, _, _, _, X, _, _],
-                [_, _, _, _, O, _, _, _],
-                [_, _, _, X, _, _, _, _],
-                [_, _, _, _, _, _, _, O],
-                [_, _, _, _, _, O, _, O],
-                [_, _, _, X, _, _, O, O],
-                [_, _, _, X, _, _, _, _],
+                [_, _, _, _, _, _, X, _],
+                [_, _, _, _, _, O, _, _],
+                [_, _, _, _, X, _, _, _],
+                [_, _, _, O, _, _, _, _],
+                [_, _, _, _, _, _, _, X],
+                [_, _, _, _, _, X, _, X],
+                [_, _, _, O, _, _, X, X],
+                [_, _, _, O, _, _, _, _],
             ], 0),
             [
                 LinesOfActionMove.of(new Coord(3, 3), new Coord(3, 0)).get(),
@@ -87,26 +88,32 @@ export class LinesOfActionTutorial {
             $localize`Congratulations!`,
             $localize`Failed. This was not one of the expected moves.`,
         ),
-        TutorialStep.fromMove(
+        TutorialStep.fromPredicate(
             $localize`Capturing`,
-            $localize`If a move ends on an opponent's pieces, this one is captured and removed from the board.
+            $localize`If a move ends on an opponent's piece, it is captured and removed from the board.
         However, a move cannot end on one of the player's pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
         If a player has only one piece, that player wins the game.<br/><br/>
         On the following board, try to capture one piece with Dark.`,
             new LinesOfActionState([
-                [_, X, _, X, X, X, X, _],
-                [O, _, _, _, _, _, _, O],
-                [_, _, X, _, O, _, _, _],
-                [O, _, _, _, _, _, _, O],
-                [O, _, _, _, _, _, _, O],
-                [O, _, _, _, _, _, _, O],
-                [O, _, _, _, _, _, _, O],
-                [_, X, X, X, X, X, X, _],
+                [_, O, _, O, O, O, O, _],
+                [X, _, _, _, _, _, _, X],
+                [_, _, O, _, X, _, _, _],
+                [X, _, _, _, _, _, _, X],
+                [X, _, _, _, _, _, _, X],
+                [X, _, _, _, _, _, _, X],
+                [X, _, _, _, _, _, _, X],
+                [_, O, O, O, O, O, O, _],
             ], 0),
-            [LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get()],
+            LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get(),
+            (move: LinesOfActionMove, previous: LinesOfActionState, _result: LinesOfActionState): MGPValidation => {
+                if (previous.getPieceAt(move.end) === PlayerOrNone.ONE) {
+                    return MGPValidation.SUCCESS;
+                } else {
+                    return MGPValidation.failure($localize`Failed!`);
+                }
+            },
             $localize`Congratulations!`,
-            $localize`Failed!`,
         ),
         TutorialStep.fromMove(
             $localize`Tie`,
@@ -116,11 +123,11 @@ export class LinesOfActionTutorial {
             new LinesOfActionState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
-                [X, _, _, X, O, X, _, _],
-                [_, _, _, X, _, _, _, O],
-                [_, _, _, _, _, _, _, O],
-                [_, _, _, _, _, _, _, O],
-                [_, _, _, _, _, _, _, O],
+                [O, _, _, O, X, O, _, _],
+                [_, _, _, O, _, _, _, X],
+                [_, _, _, _, _, _, _, X],
+                [_, _, _, _, _, _, _, X],
+                [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],
             ], 0),
             [LinesOfActionMove.of(new Coord(0, 2), new Coord(4, 2)).get()],

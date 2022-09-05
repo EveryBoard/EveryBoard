@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class LinesOfActionState extends GameStateWithTable<PlayerOrNone> {
 
@@ -8,17 +8,17 @@ export class LinesOfActionState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(): LinesOfActionState {
         const _: PlayerOrNone = PlayerOrNone.NONE;
-        const X: PlayerOrNone = Player.ZERO;
-        const O: PlayerOrNone = Player.ONE;
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
         const board: PlayerOrNone[][] = [
-            [_, X, X, X, X, X, X, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, X, X, X, X, X, _],
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
         ];
         return new LinesOfActionState(board, 0);
     }

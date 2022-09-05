@@ -11,47 +11,48 @@ export enum Size {
 
 export class EncapsulePiece implements ComparableObject {
 
-    public static readonly SMALL_BLACK: EncapsulePiece = new EncapsulePiece(0);
-    public static readonly SMALL_WHITE: EncapsulePiece = new EncapsulePiece(1);
-    public static readonly MEDIUM_BLACK: EncapsulePiece = new EncapsulePiece(2);
-    public static readonly MEDIUM_WHITE: EncapsulePiece = new EncapsulePiece(3);
-    public static readonly BIG_BLACK: EncapsulePiece = new EncapsulePiece(4);
-    public static readonly BIG_WHITE: EncapsulePiece = new EncapsulePiece(5);
-    public static readonly EMPTY: EncapsulePiece = new EncapsulePiece(6);
+    public static readonly SMALL_DARK: EncapsulePiece = new EncapsulePiece(0);
+    public static readonly SMALL_LIGHT: EncapsulePiece = new EncapsulePiece(1);
+    public static readonly MEDIUM_DARK: EncapsulePiece = new EncapsulePiece(2);
+    public static readonly MEDIUM_LIGHT: EncapsulePiece = new EncapsulePiece(3);
+    public static readonly BIG_DARK: EncapsulePiece = new EncapsulePiece(4);
+    public static readonly BIG_LIGHT: EncapsulePiece = new EncapsulePiece(5);
+    public static readonly NONE: EncapsulePiece = new EncapsulePiece(6);
 
     public static of(value: number): EncapsulePiece {
         switch (value) {
-            case 0: return EncapsulePiece.SMALL_BLACK;
-            case 1: return EncapsulePiece.SMALL_WHITE;
-            case 2: return EncapsulePiece.MEDIUM_BLACK;
-            case 3: return EncapsulePiece.MEDIUM_WHITE;
-            case 4: return EncapsulePiece.BIG_BLACK;
-            case 5: return EncapsulePiece.BIG_WHITE;
-            case 6: return EncapsulePiece.EMPTY;
+            case 0: return this.SMALL_DARK;
+            case 1: return this.SMALL_LIGHT;
+            case 2: return this.MEDIUM_DARK;
+            case 3: return this.MEDIUM_LIGHT;
+            case 4: return this.BIG_DARK;
+            case 5: return this.BIG_LIGHT;
+            case 6: return this.NONE;
             default: throw new Error('Invalid value ' + value + ' for EncapsulePiece');
         }
     }
     public static ofSizeAndPlayer(size: Size, player: PlayerOrNone): EncapsulePiece {
-        if (player === Player.ZERO && size === Size.BIG) return EncapsulePiece.BIG_BLACK;
-        if (player === Player.ZERO && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_BLACK;
-        if (player === Player.ZERO && size === Size.SMALL) return EncapsulePiece.SMALL_BLACK;
-        if (player === Player.ONE && size === Size.BIG) return EncapsulePiece.BIG_WHITE;
-        if (player === Player.ONE && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_WHITE;
-        if (player === Player.ONE && size === Size.SMALL) return EncapsulePiece.SMALL_WHITE;
-        return EncapsulePiece.EMPTY;
+        if (player === Player.ZERO && size === Size.BIG) return EncapsulePiece.BIG_DARK;
+        if (player === Player.ZERO && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_DARK;
+        if (player === Player.ZERO && size === Size.SMALL) return EncapsulePiece.SMALL_DARK;
+        if (player === Player.ONE && size === Size.BIG) return EncapsulePiece.BIG_LIGHT;
+        if (player === Player.ONE && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_LIGHT;
+        if (player === Player.ONE && size === Size.SMALL) return EncapsulePiece.SMALL_LIGHT;
+        return EncapsulePiece.NONE;
     }
 
     private constructor(public readonly value: number) {
     }
+
     public getPlayer(): PlayerOrNone {
         switch (this) {
-            case EncapsulePiece.SMALL_BLACK:
-            case EncapsulePiece.MEDIUM_BLACK:
-            case EncapsulePiece.BIG_BLACK:
+            case EncapsulePiece.SMALL_DARK:
+            case EncapsulePiece.MEDIUM_DARK:
+            case EncapsulePiece.BIG_DARK:
                 return Player.ZERO;
-            case EncapsulePiece.SMALL_WHITE:
-            case EncapsulePiece.MEDIUM_WHITE:
-            case EncapsulePiece.BIG_WHITE:
+            case EncapsulePiece.SMALL_LIGHT:
+            case EncapsulePiece.MEDIUM_LIGHT:
+            case EncapsulePiece.BIG_LIGHT:
                 return Player.ONE;
             default:
                 return PlayerOrNone.NONE;
@@ -59,17 +60,17 @@ export class EncapsulePiece implements ComparableObject {
     }
     public getSize(): Size {
         switch (this) {
-            case EncapsulePiece.BIG_BLACK:
-            case EncapsulePiece.BIG_WHITE:
+            case EncapsulePiece.BIG_DARK:
+            case EncapsulePiece.BIG_LIGHT:
                 return Size.BIG;
-            case EncapsulePiece.MEDIUM_BLACK:
-            case EncapsulePiece.MEDIUM_WHITE:
+            case EncapsulePiece.MEDIUM_DARK:
+            case EncapsulePiece.MEDIUM_LIGHT:
                 return Size.MEDIUM;
-            case EncapsulePiece.SMALL_BLACK:
-            case EncapsulePiece.SMALL_WHITE:
+            case EncapsulePiece.SMALL_DARK:
+            case EncapsulePiece.SMALL_LIGHT:
                 return Size.SMALL;
             default:
-                Utils.expectToBe(this, EncapsulePiece.EMPTY);
+                Utils.expectToBe(this, EncapsulePiece.NONE);
                 return Size.NONE;
         }
     }
@@ -81,14 +82,14 @@ export class EncapsulePiece implements ComparableObject {
     }
     public toString(): string {
         switch (this) {
-            case EncapsulePiece.BIG_BLACK: return 'BIG_BLACK';
-            case EncapsulePiece.BIG_WHITE: return 'BIG_WHITE';
-            case EncapsulePiece.MEDIUM_BLACK: return 'MEDIUM_BLACK';
-            case EncapsulePiece.MEDIUM_WHITE: return 'MEDIUM_WHITE';
-            case EncapsulePiece.SMALL_BLACK: return 'SMALL_BLACK';
-            case EncapsulePiece.SMALL_WHITE: return 'SMALL_WHITE';
+            case EncapsulePiece.BIG_DARK: return 'BIG_DARK';
+            case EncapsulePiece.BIG_LIGHT: return 'BIG_LIGHT';
+            case EncapsulePiece.MEDIUM_DARK: return 'MEDIUM_DARK';
+            case EncapsulePiece.MEDIUM_LIGHT: return 'MEDIUM_LIGHT';
+            case EncapsulePiece.SMALL_DARK: return 'SMALL_DARK';
+            case EncapsulePiece.SMALL_LIGHT: return 'SMALL_LIGHT';
             default:
-                Utils.expectToBe(this, EncapsulePiece.EMPTY);
+                Utils.expectToBe(this, EncapsulePiece.NONE);
                 return 'EMPTY';
         }
     }

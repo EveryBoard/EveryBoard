@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LinesOfActionComponent } from '../lines-of-action.component';
 import { LinesOfActionMove } from '../LinesOfActionMove';
@@ -12,85 +12,85 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('LinesOfActionComponent', () => {
 
-    let componentTestUtils: ComponentTestUtils<LinesOfActionComponent>;
-    const X: PlayerOrNone = Player.ZERO;
-    const O: PlayerOrNone = Player.ONE;
+    let testUtils: ComponentTestUtils<LinesOfActionComponent>;
     const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
+        testUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContext('LinesOfActionComponent should be created').toBeTruthy();
+        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(testUtils.getComponent()).withContext('LinesOfActionComponent should be created').toBeTruthy();
     });
     it('should allow a simple move', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickSuccess('#click_2_0');
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
-        await componentTestUtils.expectMoveSuccess('#click_2_2', move);
+        await testUtils.expectMoveSuccess('#click_2_2', move);
     }));
     it('should forbid moving in an invalid direction', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#click_2_0');
-        await componentTestUtils.expectClickFailure('#click_4_5', LinesOfActionFailure.INVALID_DIRECTION());
+        await testUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickFailure('#click_4_5', LinesOfActionFailure.INVALID_DIRECTION());
     }));
     it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
-            [O, X, X, X, X, X, X, _],
-            [X, X, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, _, X, X, X, X, _],
+            [X, O, O, O, O, O, O, _],
+            [O, O, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
+        await testUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
     }));
     it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should allow selecting a different piece in one click', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#click_2_0');
-        await componentTestUtils.expectClickSuccess('#click_3_0');
+        await testUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickSuccess('#click_3_0');
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(3, 0), new Coord(3, 2)).get();
-        await componentTestUtils.expectMoveSuccess('#click_3_2', move);
+        await testUtils.expectMoveSuccess('#click_3_2', move);
     }));
     it('should show selected piece', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#click_2_0');
-        const component: LinesOfActionComponent = componentTestUtils.getComponent();
+        await testUtils.expectClickSuccess('#click_2_0');
+        const component: LinesOfActionComponent = testUtils.getComponent();
         expect(component.getPieceClasses(2, 0)).toEqual(['player0', 'selected']);
     }));
     it('should show last move cases', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickSuccess('#click_2_0');
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
-        await componentTestUtils.expectMoveSuccess('#click_2_2', move);
+        await testUtils.expectMoveSuccess('#click_2_2', move);
 
-        const component: LinesOfActionComponent = componentTestUtils.getComponent();
+        const component: LinesOfActionComponent = testUtils.getComponent();
         expect(component.getSquareClasses(2, 2)).toEqual(['moved']);
         expect(component.getSquareClasses(2, 0)).toEqual(['moved']);
     }));
     it('should show captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
-            [O, X, X, X, X, X, X, X],
-            [_, _, _, _, _, _, _, O],
-            [_, _, O, _, _, _, _, _],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [O, _, _, _, _, _, _, O],
-            [_, X, _, X, X, X, X, _],
+            [X, O, O, O, O, O, O, O],
+            [_, _, _, _, _, _, _, X],
+            [_, _, X, _, _, _, _, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
-        await componentTestUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickSuccess('#click_2_0');
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
-        await componentTestUtils.expectMoveSuccess('#click_2_2', move);
+        await testUtils.expectMoveSuccess('#click_2_2', move);
 
-        const component: LinesOfActionComponent = componentTestUtils.getComponent();
+        const component: LinesOfActionComponent = testUtils.getComponent();
         expect(component.getSquareClasses(2, 2)).toEqual(['captured']);
     }));
 });

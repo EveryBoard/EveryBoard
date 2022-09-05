@@ -2,13 +2,13 @@ import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutor
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
-const O: PlayerOrNone = Player.ZERO;
-const X: PlayerOrNone = Player.ONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
 export class PylosTutorial {
 
@@ -126,7 +126,7 @@ export class PylosTutorial {
                 ],
             ], 0),
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]),
-            (move: PylosMove, _state: PylosState) => {
+            (move: PylosMove, _previous: PylosState, _result: PylosState) => {
                 if (move.secondCapture.isPresent()) {
                     return MGPValidation.SUCCESS;
                 }

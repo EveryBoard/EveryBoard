@@ -1,5 +1,6 @@
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
+import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { Utils } from 'src/app/utils/utils';
 import { GoPiece } from './GoState';
@@ -8,79 +9,74 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
 
     constructor(color: GoPiece,
                 public emptyCoords: Coord[],
-                public blackCoords: Coord[],
-                public whiteCoords: Coord[],
-                public deadBlackCoords: Coord[],
-                public deadWhiteCoords: Coord[])
+                public darkCoords: Coord[],
+                public lightCoords: Coord[],
+                public deadDarkCoords: Coord[],
+                public deadLightCoords: Coord[])
     {
         super(color);
     }
     public getCoords(): Coord[] {
-        if (this.color === GoPiece.BLACK) {
-            return this.blackCoords;
-        } else if (this.color === GoPiece.WHITE) {
-            return this.whiteCoords;
-        } else if (this.color === GoPiece.DEAD_BLACK) {
-            return this.deadBlackCoords;
-        } else if (this.color === GoPiece.DEAD_WHITE) {
-            return this.deadWhiteCoords;
+        if (this.color === GoPiece.DARK) {
+            return this.darkCoords;
+        } else if (this.color === GoPiece.LIGHT) {
+            return this.lightCoords;
+        } else if (this.color === GoPiece.DEAD_DARK) {
+            return this.deadDarkCoords;
+        } else if (this.color === GoPiece.DEAD_LIGHT) {
+            return this.deadLightCoords;
         } else {
             return this.emptyCoords;
         }
     }
     public contains(coord: Coord): boolean {
-        const allCoords: Coord[] = this.blackCoords
-            .concat(this.whiteCoords
+        const allCoords: Coord[] = this.darkCoords
+            .concat(this.lightCoords
                 .concat(this.emptyCoords
-                    .concat(this.deadBlackCoords
-                        .concat(this.deadWhiteCoords))));
+                    .concat(this.deadDarkCoords
+                        .concat(this.deadLightCoords))));
         return allCoords.some((c: Coord) => c.equals(coord));
     }
     public addPawn(coord: Coord, color: GoPiece): void {
-        if (this.contains(coord)) {
-            throw new Error('This group already contains ' + coord);
-        }
+        assert(this.contains(coord) === false, 'This group already contains ' + coord.toString());
+
         switch (color) {
-            case GoPiece.BLACK:
-                this.blackCoords = GroupDatas.insertAsEntryPoint(this.blackCoords, coord);
+            case GoPiece.DARK:
+                this.darkCoords = GroupDatas.insertAsEntryPoint(this.darkCoords, coord);
                 break;
-            case GoPiece.WHITE:
-                this.whiteCoords = GroupDatas.insertAsEntryPoint(this.whiteCoords, coord);
+            case GoPiece.LIGHT:
+                this.lightCoords = GroupDatas.insertAsEntryPoint(this.lightCoords, coord);
                 break;
-            case GoPiece.DEAD_BLACK:
-                this.deadBlackCoords = GroupDatas.insertAsEntryPoint(this.deadBlackCoords, coord);
+            case GoPiece.DEAD_DARK:
+                this.deadDarkCoords = GroupDatas.insertAsEntryPoint(this.deadDarkCoords, coord);
                 break;
-            case GoPiece.DEAD_WHITE:
-                this.deadWhiteCoords = GroupDatas.insertAsEntryPoint(this.deadWhiteCoords, coord);
+            case GoPiece.DEAD_LIGHT:
+                this.deadLightCoords = GroupDatas.insertAsEntryPoint(this.deadLightCoords, coord);
                 break;
             default:
-                Utils.expectToBeMultiple(color, [GoPiece.EMPTY, GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY]);
+                Utils.expectToBeMultiple(color, [GoPiece.EMPTY, GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY]);
                 this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         }
     }
     public isMonoWrapped(): boolean {
         // If a group is empty, we assign him 1, else 2
         // If only the group of the group and the group of his wrapper are filled, result will be 2*2*1
-        const emptyWrapper: number = this.emptyCoords.length === 0 ? 1 : 2;
-        const blackWrapper: number = (this.blackCoords.length + this.deadWhiteCoords.length) === 0 ? 1 : 2;
-        const whiteWrapper: number = (this.whiteCoords.length + this.deadBlackCoords.length) === 0 ? 1 : 2;
-        // const deadBlackWrapper: number = this.deadBlackCoords.length === 0 ? 1 : 2;
-        // const deadWhiteWrapper: number = this.deadWhiteCoords.length === 0 ? 1 : 2;
-        return (emptyWrapper * blackWrapper * whiteWrapper) === 4;
+        const darkWrapper: number = (this.darkCoords.length + this.deadLightCoords.length) === 0 ? 0 : 1;
+        const lightWrapper: number = (this.lightCoords.length + this.deadDarkCoords.length) === 0 ? 0 : 1;
+        return darkWrapper + lightWrapper === 1;
     }
     public getWrapper(): GoPiece {
         // If a piece is wrapped by a player and/or by dead pawn of his opponent, it's returning the player
         // If a piece is wrapped by two player, it's throwing
         // If a piece is wrapped by a player and dead pawn of this player, it's throwing
-        // color, [ empty, black, white, deadblack, deadwhite ]
-        // empty, [  0(2),     0,     4,         2,         0 ] => WHITE
+        // color, [ empty,  dark, light,  deadDark, deadLight ]
+        // empty, [  0(2),     0,     4,         2,         0 ] => LIGHT
         // empty, [  0(2),     2,     2,         0,         0 ] => throw
-        // empty, [  0(2),     0,     0,         6,         0 ] => WHITE
-        const wrapperSizes: MGPMap<GoPiece, number> = new MGPMap([
-            { key: GoPiece.EMPTY, value: this.emptyCoords.length },
-            { key: GoPiece.BLACK, value: this.blackCoords.length + this.deadWhiteCoords.length },
-            { key: GoPiece.WHITE, value: this.whiteCoords.length + this.deadBlackCoords.length },
-        ]);
+        // empty, [  0(2),     0,     0,         6,         0 ] => LIGHT
+        const wrapperSizes: MGPMap<GoPiece, number> = new MGPMap();
+        wrapperSizes.set(GoPiece.EMPTY, this.emptyCoords.length);
+        wrapperSizes.set(GoPiece.DARK, this.darkCoords.length + this.deadLightCoords.length);
+        wrapperSizes.set(GoPiece.LIGHT, this.lightCoords.length + this.deadDarkCoords.length);
         wrapperSizes.put(this.color.nonTerritory(), 0);
         const nonEmptyWrapper: MGPMap<GoPiece, number> =
             wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
@@ -90,23 +86,23 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
         }
     }
-    public getNeighboorsEntryPoint(): Coord[] {
-        const neighboorsEntryPoint: Coord[] = [];
+    public getNeighborsEntryPoints(): Coord[] {
+        const neighborsEntryPoints: Coord[] = [];
         if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0) {
-            neighboorsEntryPoint.push(this.emptyCoords[0]);
+            neighborsEntryPoints.push(this.emptyCoords[0]);
         }
-        if (this.color !== GoPiece.BLACK && this.blackCoords.length > 0) {
-            neighboorsEntryPoint.push(this.blackCoords[0]);
+        if (this.color !== GoPiece.DARK && this.darkCoords.length > 0) {
+            neighborsEntryPoints.push(this.darkCoords[0]);
         }
-        if (this.color !== GoPiece.WHITE && this.whiteCoords.length > 0) {
-            neighboorsEntryPoint.push(this.whiteCoords[0]);
+        if (this.color !== GoPiece.LIGHT && this.lightCoords.length > 0) {
+            neighborsEntryPoints.push(this.lightCoords[0]);
         }
-        if (this.color !== GoPiece.DEAD_BLACK && this.deadBlackCoords.length > 0) {
-            neighboorsEntryPoint.push(this.deadBlackCoords[0]);
+        if (this.color !== GoPiece.DEAD_DARK && this.deadDarkCoords.length > 0) {
+            neighborsEntryPoints.push(this.deadDarkCoords[0]);
         }
-        if (this.color !== GoPiece.DEAD_WHITE && this.deadWhiteCoords.length > 0) {
-            neighboorsEntryPoint.push(this.deadWhiteCoords[0]);
+        if (this.color !== GoPiece.DEAD_LIGHT && this.deadLightCoords.length > 0) {
+            neighborsEntryPoints.push(this.deadLightCoords[0]);
         }
-        return neighboorsEntryPoint;
+        return neighborsEntryPoints;
     }
 }

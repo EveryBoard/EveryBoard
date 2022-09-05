@@ -23,8 +23,8 @@
 }
 
 $primary: #ffc34d;
+$footer-padding:2rem 1rem 2rem;
 @import "../../node_modules/bulmaswatch/default/bulmaswatch.scss";
-@import '~bulma-slider';
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./mystyles.scss";
 

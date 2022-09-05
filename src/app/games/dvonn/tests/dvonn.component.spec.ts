@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('DvonnComponent', () => {
 
-    let componentTestUtils: ComponentTestUtils<DvonnComponent>;
+    let testUtils: ComponentTestUtils<DvonnComponent>;
 
     const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
     const D_: DvonnPieceStack = DvonnPieceStack.SOURCE;
@@ -21,24 +21,24 @@ describe('DvonnComponent', () => {
     const WW: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame<DvonnComponent>('Dvonn');
+        testUtils = await ComponentTestUtils.forGame<DvonnComponent>('Dvonn');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeDefined();
-        expect(componentTestUtils.getComponent()).withContext('DvonnComponent should be created').toBeDefined();
+        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeDefined();
+        expect(testUtils.getComponent()).withContext('DvonnComponent should be created').toBeDefined();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
         // Given the initial state
         // Then the player cannot pass
-        componentTestUtils.expectPassToBeForbidden();
+        testUtils.expectPassToBeForbidden();
     }));
     it('should allow valid moves', fakeAsync(async() => {
         // Given that the user has selected a valid piece
-        await componentTestUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickSuccess('#click_2_0');
         // When the user selects a valid destination
         // Then the move is made
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
-        await componentTestUtils.expectMoveSuccess('#click_2_1', move);
+        await testUtils.expectMoveSuccess('#click_2_1', move);
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
         // Given a state where the player can't make a move
@@ -51,14 +51,14 @@ describe('DvonnComponent', () => {
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
         // When it is displayed
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
         // Then the player can pass
         const move: DvonnMove = DvonnMove.PASS;
-        await componentTestUtils.expectPassSuccess(move);
+        await testUtils.expectPassSuccess(move);
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
-        // select black piece (but white plays first)
-        await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE());
+        // select dark piece (but light plays first)
+        await testUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE());
     }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection
@@ -69,23 +69,23 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        componentTestUtils.setupState(new DvonnState(board, 0, false));
+        testUtils.setupState(new DvonnState(board, 0, false));
 
         // When doing that disconnection
-        await componentTestUtils.expectClickSuccess('#click_3_1');
+        await testUtils.expectClickSuccess('#click_3_1');
         const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(2, 1));
-        await componentTestUtils.expectMoveSuccess('#click_2_1', move);
+        await testUtils.expectMoveSuccess('#click_2_1', move);
 
-        const gameComponent: DvonnComponent = componentTestUtils.getComponent();
+        const gameComponent: DvonnComponent = testUtils.getComponent();
         // expect board to show it
         expect(gameComponent.disconnecteds).toEqual([
             { coord: new Coord(4, 1), caseContent: W_ },
         ]);
     }));
     it('should allow clicking twice on a piece to deselect it', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#click_2_0');
-        await componentTestUtils.expectClickSuccess('#click_2_0');
-        expect(componentTestUtils.getComponent().chosen).toEqual(MGPOptional.empty());
+        await testUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickSuccess('#click_2_0');
+        expect(testUtils.getComponent().chosen).toEqual(MGPOptional.empty());
     }));
 });
 
