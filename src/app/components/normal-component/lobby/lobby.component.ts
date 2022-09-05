@@ -5,7 +5,7 @@ import { UserService } from '../../../services/UserService';
 import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
-import { FocussedPart, UserDocument } from 'src/app/domain/User';
+import { FocusedPart, UserDocument } from 'src/app/domain/User';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -50,7 +50,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
             .subscribe((activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
-        this.connectedUserService.getObservedPartObs().subscribe((observed: MGPOptional<FocussedPart>) => {
+        this.connectedUserService.getObservedPartObs().subscribe((observed: MGPOptional<FocusedPart>) => {
             this.createTabClasses = [];
             if (observed.isPresent()) {
                 this.createTabClasses = ['disabled-tab'];

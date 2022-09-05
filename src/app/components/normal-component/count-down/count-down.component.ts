@@ -113,7 +113,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
 
         if (!this.started) {
-            console.log('TAMERDASSE')
             throw new Error('Should not pause not started chrono (' + this.debugName + ')');
         }
         if (this.isPaused) {

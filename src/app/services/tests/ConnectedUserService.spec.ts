@@ -15,10 +15,11 @@ import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { FocussedPart } from 'src/app/domain/User';
+import { FocusedPart } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 
 @Injectable()
 export class ConnectedUserServiceMock {
@@ -27,7 +28,7 @@ export class ConnectedUserServiceMock {
         (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
             .setUser(userId, user, notifyObservers);
     }
-    public static setObservedPart(observedPart: MGPOptional<FocussedPart>): void {
+    public static setObservedPart(observedPart: MGPOptional<FocusedPart>): void {
         (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
             .setObservedPart(observedPart);
     }
@@ -36,12 +37,12 @@ export class ConnectedUserServiceMock {
 
     private readonly userRS: ReplaySubject<AuthUser>;
 
-    private readonly observedPartRS: ReplaySubject<MGPOptional<FocussedPart>>;
-    private observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
+    private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
+    private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
-        this.observedPartRS = new ReplaySubject<MGPOptional<FocussedPart>>(1);
+        this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
     }
     public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {
         this.user = MGPOptional.of(user);
@@ -52,14 +53,15 @@ export class ConnectedUserServiceMock {
             this.userRS.next(user);
         }
     }
-    public setObservedPart(observedPart: MGPOptional<FocussedPart>): void {
+    public setObservedPart(observedPart: MGPOptional<FocusedPart>): void {
+        console.log('setObservedPart')
         this.observedPart = observedPart;
         this.observedPartRS.next(observedPart);
     }
     public getUserObs(): Observable<AuthUser> {
         return this.userRS.asObservable();
     }
-    public getObservedPartObs(): Observable<MGPOptional<FocussedPart>> {
+    public getObservedPartObs(): Observable<MGPOptional<FocusedPart>> {
         return this.observedPartRS.asObservable();
     }
     public async disconnect(): Promise<MGPValidation> {
@@ -124,7 +126,7 @@ export class ConnectedUserServiceMock {
             // or to do it twice with the same one
             return MGPValidation.SUCCESS;
         } else {
-            const observedPart: FocussedPart = this.observedPart.get();
+            const observedPart: FocusedPart = this.observedPart.get();
             switch (observedPart.role) {
                 case 'Creator':
                     // Even if one player can be creator of one part that is started
@@ -517,9 +519,9 @@ describe('ConnectedUserService', () => {
             const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
                 resolvePromise = resolve;
             });
-            let observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
+            let observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                connectedUserService.getObservedPartObs().subscribe((newValue: MGPOptional<FocussedPart>) => {
+                connectedUserService.getObservedPartObs().subscribe((newValue: MGPOptional<FocusedPart>) => {
                     observedPart = newValue;
                     window.setTimeout(resolvePromise, 2000);
                 });
@@ -687,9 +689,9 @@ describe('ConnectedUserService', () => {
             const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
                 resolvePromise = resolve;
             });
-            let lastValue: MGPOptional<FocussedPart> = MGPOptional.empty();
+            let lastValue: MGPOptional<FocusedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                connectedUserService.getObservedPartObs().subscribe((observedPart: MGPOptional<FocussedPart>) => {
+                connectedUserService.getObservedPartObs().subscribe((observedPart: MGPOptional<FocusedPart>) => {
                     lastValue = observedPart;
                     window.setTimeout(resolvePromise, 2000);
                 });
@@ -702,12 +704,6 @@ describe('ConnectedUserService', () => {
             subscription.unsubscribe();
         });
         describe('updateObservedPart', () => {
-            const observedPart: FocussedPart = {
-                id: 'some-part-doc-id',
-                opponent: { id: '123quatre', name: 'Jean Jaja Del Jaaj' },
-                typeGame: 'le jeu',
-                role: 'Creator',
-            };
             it('should throw when called while no user is logged', async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
@@ -720,6 +716,7 @@ describe('ConnectedUserService', () => {
                 // When asking to update observedPart
                 const userDAO: UserDAO = TestBed.inject(UserDAO);
                 spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+                const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITHOUT_OPPONENT;
                 await connectedUserService.updateObservedPart(observedPart);
 
                 // Then the userDAO should update the connected user doc
@@ -856,7 +853,7 @@ describe('ConnectedUserService', () => {
             // Then it's should be authorised
             expect(validation.isSuccess()).toBeTrue();
         }));
-        it('should refuse for a player already playing', fakeAsync(async() => { // TODOTODO check for instability (last failed, 2022/08/17 - 06:49)
+        it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
             await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });

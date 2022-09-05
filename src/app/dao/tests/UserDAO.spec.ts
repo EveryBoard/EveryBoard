@@ -38,7 +38,7 @@ describe('UserDAO', () => {
         });
     });
     describe('setUsername', () => {
-        it('should change the username of a user', fakeAsync(async() => { // TODOTODO check instability, failed last 2022-08-17 T 08:28
+        it('should change the username of a user', fakeAsync(async() => {
             // given a google user
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com');
             const uid: string = user.uid;

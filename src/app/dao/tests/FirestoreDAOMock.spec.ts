@@ -36,7 +36,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public abstract resetStaticDB(): void;
 
     public reset(): void {
-        const removed: string = this.getStaticDB() != null ? this.getStaticDB().size() + ' removed' : 'not initialised yet';
+        const removed: string = this.getStaticDB() != null ? this.getStaticDB().size() + ' removed' : 'not initialized yet';
         display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.reset, ' + removed);
 
         this.resetStaticDB();
@@ -147,6 +147,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         if (this.hasFieldValue(update)) {
             const serverUpdate: UpdateData<T> =
                 this.replaceFieldValueWith(update, FirestoreDAOMock.mockServerTime());
+            console.log('DOING THE TIME UPDATE NOW')
             await this.internalUpdate(id, serverUpdate);
         }
     }

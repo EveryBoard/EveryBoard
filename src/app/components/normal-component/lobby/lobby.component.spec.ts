@@ -91,8 +91,8 @@ describe('LobbyComponent', () => {
         beforeEach(fakeAsync(async() => {
             // Unstarted
             unstartedPartUserCreated = new PartDocument('I-create', PartMocks.INITIAL);
-            unstartedPartUserDidNotCreate = new PartDocument('I-did-not-create', PartMocks.ANOTHER_UNSTARTED);
-            anotherUnstartedPartUserDidNotCreate = new PartDocument('me-no-create-either', PartMocks.ANOTHER_UNSTARTED);
+            unstartedPartUserDidNotCreate = new PartDocument('I-did-not-create', PartMocks.OTHER_UNSTARTED);
+            anotherUnstartedPartUserDidNotCreate = new PartDocument('me-no-create-either', PartMocks.OTHER_UNSTARTED);
 
             // Started
             startedPartUserPlay = new PartDocument('I-play', PartMocks.STARTED);

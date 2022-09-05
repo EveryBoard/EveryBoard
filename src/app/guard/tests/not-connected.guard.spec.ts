@@ -11,7 +11,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 describe('NotConnectedGuard', () => {
     let guard: NotConnectedGuard;
 
-    let authService: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     let router: Router;
 
@@ -28,8 +28,8 @@ describe('NotConnectedGuard', () => {
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate');
-        authService = TestBed.inject(ConnectedUserService);
-        guard = new NotConnectedGuard(authService, router);
+        connectedUserService = TestBed.inject(ConnectedUserService);
+        guard = new NotConnectedGuard(connectedUserService, router);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

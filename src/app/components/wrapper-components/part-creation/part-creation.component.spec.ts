@@ -25,12 +25,13 @@ import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/test
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec'; // TODOTODO check that the old is dead
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Part } from 'src/app/domain/Part';
-import { FocussedPart } from 'src/app/domain/User';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { FocusedPart } from 'src/app/domain/User';
+import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 
 describe('PartCreationComponent', () => {
@@ -91,7 +92,7 @@ describe('PartCreationComponent', () => {
         testUtils.expectElementToHaveClass(elementName, classes);
     }
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(PartCreationComponent, new ActivatedRouteStub('JOSER'));
+        testUtils = await SimpleComponentTestUtils.create(PartCreationComponent, new ActivatedRouteStub('P4'));
         destroyed = false;
         chatDAO = TestBed.inject(ChatDAO);
         partDAO = TestBed.inject(PartDAO);
@@ -137,12 +138,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
-                const expectedObservedPart: FocussedPart = {
-                    id: 'configRoomId',
-                    opponent: null,
-                    typeGame: 'JOSER',
-                    role: 'Creator',
-                };
+                const expectedObservedPart: FocusedPart = FocusedPartMocks.CREATOR_WITHOUT_OPPONENT;
                 expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith(expectedObservedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -305,7 +301,7 @@ describe('PartCreationComponent', () => {
             }));
         });
         describe('Chosing Opponent', () => {
-            it('should modify joiner, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
+            it('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
                 // Given a component with candidate present but not selected
                 awaitComponentInitialisation();
                 await mockCandidateArrival();
@@ -317,7 +313,7 @@ describe('PartCreationComponent', () => {
                 // When choosing the opponent
                 await chooseOpponent();
 
-                // Then joiner doc should be updated
+                // Then current config room doc should be updated
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
 
                 // and proposal should now be possible
@@ -622,12 +618,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
-                const observedPart: FocussedPart = {
-                    id: 'configRoomId',
-                    opponent: UserMocks.CREATOR_MINIMAL_USER,
-                    typeGame: 'JOSER',
-                    role: 'Candidate',
-                };
+                const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
                 expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith(observedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -787,13 +778,9 @@ describe('PartCreationComponent', () => {
                 await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
 
                 // Then an update should change user doc to say it's chosenOpponent now
-                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith({
-                    id: 'configRoomId',
-                    typeGame: 'JOSER',
-                    opponent: UserMocks.CREATOR_MINIMAL_USER,
-                    role: 'ChosenOpponent',
-                    // TODOTODO after that, code a test that change "ConfigRoom"roles to "StartedPart"roles
-                });
+                expect(connectedUserService.updateObservedPart)
+                    .toHaveBeenCalledOnceWith(FocusedPartMocks.CHOSEN_OPPONENT);
+                // TODOTODO after that, code a test that change "ConfigRoom"roles to "StartedPart"roles
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

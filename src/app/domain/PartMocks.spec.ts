@@ -17,7 +17,7 @@ export class PartMocks {
         listMoves: [],
     };
 
-    public static readonly ANOTHER_UNSTARTED: Part = {
+    public static readonly OTHER_UNSTARTED: Part = {
         lastUpdate: {
             index: 0,
             player: 0,

@@ -17,7 +17,7 @@ describe('VerifiedAndNotActiveGuard', () => {
 
     let guard: VerifiedAndNotActiveGuard;
 
-    let authService: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     let router: Router;
 
@@ -36,9 +36,9 @@ describe('VerifiedAndNotActiveGuard', () => {
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate');
-        authService = TestBed.inject(ConnectedUserService);
+        connectedUserService = TestBed.inject(ConnectedUserService);
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        guard = new VerifiedAndNotActiveGuard(authService, messageDisplayer, router);
+        guard = new VerifiedAndNotActiveGuard(connectedUserService, messageDisplayer, router);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
     }));
     it('should create', () => {
@@ -62,7 +62,7 @@ describe('VerifiedAndNotActiveGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
         tick(3000);
     }));
-    it('shoud allow to go to this component when you are not doing anything', async() => {
+    it('shoud allow to activate when you are not doing anything', async() => {
         // Given a connected user not observing any part
         ConnectedUserServiceMock.setObservedPart(MGPOptional.empty());
 

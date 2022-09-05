@@ -2,12 +2,14 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UserDAO } from 'src/app/dao/UserDAO';
-import { FocussedPart } from 'src/app/domain/User';
+import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { FocusedPart } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Utils } from 'src/app/utils/utils';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -37,17 +39,13 @@ describe('HeaderComponent', () => {
         it('should remove comment in header when disconnecting', fakeAsync(async() => {
             // Given a connected user that has an observedPart
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            const observedPart: FocussedPart = {
-                id: '123',
-                opponent: { id: 'jeanjajar', name: 'Jean-Jaja' },
-                typeGame: 'P4',
-                role: 'Candidate',
-            };
+            const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
             ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
+            testUtils.expectElementToExist('#observedPartLink');
 
-            // When user disconnect
+            // When user logs out
             await testUtils.clickElement('#connectedUserName');
             await testUtils.clickElement('#logout');
 
@@ -76,12 +74,7 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart
-            const observedPart: FocussedPart = {
-                id: '123',
-                typeGame: 'P4',
-                role: 'Creator',
-            };
-            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(FocusedPartMocks.CREATOR_WITHOUT_OPPONENT));
             testUtils.detectChanges();
             tick();
 
@@ -96,20 +89,17 @@ describe('HeaderComponent', () => {
             tick();
             testUtils.expectElementNotToExist('#observedPartLink');
 
-            // When user become linked to an observedPart
-            const observedPart: FocussedPart = {
-                id: '123',
-                opponent: { id: 'jjj', name: 'Jean-Jaja' },
-                typeGame: 'P4',
-                role: 'Creator',
-            };
+            // When user become linked to an observedPart with an opponent set
+            const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITH_OPPONENT;
             ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
 
-            // Then "P4 against Jean-Jaja" should be displayed
+            // Then "<Game> against <Opponent>" should be displayed
             const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
-            expect(observedPartLink.nativeElement.innerText).toEqual('P4 against Jean-Jaja');
+            const typeGame: string = observedPart.typeGame;
+            const opponentName: string = Utils.getNonNullable(observedPart.opponent?.name);
+            expect(observedPartLink.nativeElement.innerText).toEqual(typeGame + ' against ' + opponentName);
         }));
         it(`should display '<TypeGame> by <Creator>' when watching as observer`, fakeAsync(async() => {
             // Given a connected user that has no observedPart
@@ -119,19 +109,16 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart
-            const observedPart: FocussedPart = {
-                id: '123',
-                opponent: { id: '123creator', name: 'El Creatoro' },
-                typeGame: 'Epaminondas',
-                role: 'Observer',
-            };
+            const observedPart: FocusedPart = FocusedPartMocks.OBSERVER;
             ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
 
-            // Then "Epaminondas by El Creatoro" should be displayed
+            // Then "<TypeGame> by <Opponent, that should contain the creator>" should be displayed
             const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
-            expect(observedPartLink.nativeElement.innerText).toEqual('Epaminondas by El Creatoro');
+            const typeGame: string = observedPart.typeGame;
+            const opponent: string = Utils.getNonNullable(observedPart.opponent?.name);
+            expect(observedPartLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
         }));
         it(`should display '<TypeGame> by <Creator>' when watching as candidate`, fakeAsync(async() => {
             // Given a connected user that has no observedPart
@@ -141,19 +128,16 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart
-            const observedPart: FocussedPart = {
-                id: '123',
-                opponent: { id: '123creator', name: 'El Creatoro' },
-                typeGame: 'Epaminondas',
-                role: 'Candidate',
-            };
+            const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
             ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
 
             // Then "Epaminondas by El Creatoro" should be displayed
             const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
-            expect(observedPartLink.nativeElement.innerText).toEqual('Epaminondas by El Creatoro');
+            const typeGame: string = observedPart.typeGame;
+            const opponent: string = Utils.getNonNullable(observedPart.opponent?.name);
+            expect(observedPartLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
         }));
     });
 });

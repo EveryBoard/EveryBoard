@@ -3,7 +3,7 @@ import { Router, UrlTree } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { FocussedPart } from '../domain/User';
+import { FocusedPart } from '../domain/User';
 import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
 import { MessageDisplayer } from '../services/MessageDisplayer';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -33,11 +33,11 @@ export class VerifiedAndNotActiveGuard extends VerifiedAccountGuard implements O
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
             const subscription: Subscription = this.authService
                 .getObservedPartObs()
-                .subscribe((optionalPart: MGPOptional<FocussedPart>) => {
+                .subscribe((optionalPart: MGPOptional<FocusedPart>) => {
                     if (optionalPart.isAbsent()) {
                         return resolve(true);
                     }
-                    const part: FocussedPart = optionalPart.get();
+                    const part: FocusedPart = optionalPart.get();
                     return resolve(this.router.parseUrl('/play/' + part.typeGame + '/' + part.id));
                 });
             this.observedPartSub = MGPOptional.of(subscription);

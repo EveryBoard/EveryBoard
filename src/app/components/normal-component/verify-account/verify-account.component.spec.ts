@@ -12,11 +12,11 @@ import { LobbyComponent } from '../lobby/lobby.component';
 describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
 
-    let authService: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(VerifyAccountComponent);
-        authService = TestBed.inject(ConnectedUserService);
+        connectedUserService = TestBed.inject(ConnectedUserService);
     }));
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
@@ -37,7 +37,7 @@ describe('VerifyAccountComponent', () => {
             testUtils.expectElementNotToExist('#success');
 
             // when a valid username is picked
-            spyOn(authService, 'setUsername').and.resolveTo(MGPValidation.SUCCESS);
+            spyOn(connectedUserService, 'setUsername').and.resolveTo(MGPValidation.SUCCESS);
             testUtils.fillInput('#username', username);
             testUtils.detectChanges();
             await testUtils.clickElement('#pickUsername');
@@ -46,12 +46,12 @@ describe('VerifyAccountComponent', () => {
             // then the success message is shown
             testUtils.expectElementToExist('#success');
             testUtils.expectElementNotToExist('#askUsername');
-            expect(authService.setUsername).toHaveBeenCalledWith(username);
+            expect(connectedUserService.setUsername).toHaveBeenCalledWith(username);
         }));
         it('should show error if setting the username fails', fakeAsync(async() => {
             const failure: string = 'Invalid username';
             // when an invalid username is picked
-            spyOn(authService, 'setUsername').and.resolveTo(MGPValidation.failure(failure));
+            spyOn(connectedUserService, 'setUsername').and.resolveTo(MGPValidation.failure(failure));
             testUtils.fillInput('#username', 'jeanjiji');
             testUtils.detectChanges();
             await testUtils.clickElement('#pickUsername');
@@ -77,19 +77,19 @@ describe('VerifyAccountComponent', () => {
             testUtils.expectElementNotToExist('#success');
 
             // when the user asks for sending the email
-            spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
+            spyOn(connectedUserService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
             testUtils.expectElementToExist('#verificationEmail');
             await testUtils.clickElement('#sendEmail');
 
             // then the success message is shown
             testUtils.expectElementToExist('#success');
-            expect(authService.sendEmailVerification).toHaveBeenCalledWith();
+            expect(connectedUserService.sendEmailVerification).toHaveBeenCalledWith();
         }));
         it('should show error if sending the verification email failed', fakeAsync(async() => {
             const failure: string = 'I cannot send emails!';
 
             // when the user asks for sending the email
-            spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(failure));
+            spyOn(connectedUserService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(failure));
             await testUtils.clickElement('#sendEmail');
 
             // then the success message is shown

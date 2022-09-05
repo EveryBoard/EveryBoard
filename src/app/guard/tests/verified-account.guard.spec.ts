@@ -12,7 +12,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 describe('VerifiedAccountGuard', () => {
     let guard: VerifiedAccountGuard;
 
-    let authService: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     let router: Router;
 
@@ -29,8 +29,8 @@ describe('VerifiedAccountGuard', () => {
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate');
-        authService = TestBed.inject(ConnectedUserService);
-        guard = new VerifiedAccountGuard(authService, router);
+        connectedUserService = TestBed.inject(ConnectedUserService);
+        guard = new VerifiedAccountGuard(connectedUserService, router);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

@@ -29,7 +29,7 @@
                   class="base"
             />
             <g *ngIf="c.isPiece()">
-                <use id="clickPiece_{{x}}_{{y}}"
+                <use id="clickPiece_{{ x }}_{{ y }}"
                      class="base mid-stroke"
                      [ngClass]="getPieceClasses(c)"
                      (click)="clickPiece(x, y)"

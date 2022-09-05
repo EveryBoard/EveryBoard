@@ -11,7 +11,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 describe('ConnectedButNotVerifiedGuard', () => {
     let guard: ConnectedButNotVerifiedGuard;
 
-    let authService: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     let router: Router;
 
@@ -28,8 +28,8 @@ describe('ConnectedButNotVerifiedGuard', () => {
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate');
-        authService = TestBed.inject(ConnectedUserService);
-        guard = new ConnectedButNotVerifiedGuard(authService, router);
+        connectedUserService = TestBed.inject(ConnectedUserService);
+        guard = new ConnectedButNotVerifiedGuard(connectedUserService, router);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

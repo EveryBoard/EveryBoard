@@ -8,7 +8,7 @@ import { Move } from '../../../jscaip/Move';
 import { Part, MGPResult, PartDocument } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { FocussedPart, User } from '../../../domain/User';
+import { FocusedPart, User } from '../../../domain/User';
 import { Request } from '../../../domain/Request';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
@@ -63,7 +63,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -90,7 +90,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private userLinkedToThisPart: boolean = true;
 
     public configRoom: ConfigRoom;
-    public observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
+    public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
@@ -105,7 +105,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public readonly globalTimeMessage: string = $localize`5 minutes`;
     public readonly turnTimeMessage: string = $localize`30 seconds`;
 
-    private updateProcessingTime: MGPOptional<number> = MGPOptional.empty();
+    private onCurrentUpdateOngoing: boolean = false;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
@@ -177,30 +177,37 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.setCurrentPartIdOrRedirect();
         // onObservedPartUpdate need to access to currentPartId, so it must after setCurrentPartIdOrRedirect
         this.observedPartSub = this.connectedUserService.getObservedPartObs()
-            .subscribe(async(part: MGPOptional<FocussedPart>) => {
+            .subscribe(async(part: MGPOptional<FocusedPart>) => {
                 await this.onObservedPartUpdate(part);
             });
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
-    private async onObservedPartUpdate(part: MGPOptional<FocussedPart>): Promise<void> {
+    /**
+      * Here you can only be an observer or a player
+      * (creator, candidat and chosen opponent being only for non started game)
+      * If you are player, it is impossible that you start creating/joining a part
+      * If you are observer, you can join this part as observer in another tab
+      * then, if you quit this tab, you become unlinked to this part in here
+      * then, if you start creating a game, this tab should go back to the lobby
+      * because user that are playing should not see other players playing
+      */
+    private async onObservedPartUpdate(part: MGPOptional<FocusedPart>): Promise<void> {
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onObservedPartUpdate called')
         if (part.isPresent()) {
-            const newPart: FocussedPart = part.get();
+            const newPart: FocusedPart = part.get();
             if (newPart.role === 'Observer' || newPart.id === this.currentPartId) {
                 // if we learn that other tabs are observer
                 // or that other tabs are from the same part
                 // then nothing is to be done here
                 this.observedPart = part;
-                return;
             } else {
                 // we learn that another that is active on another part (typically creating another game) so we quit
                 this.userLinkedToThisPart = false;
                 await this.router.navigate(['/lobby']);
-                return;
             }
         } else {
             this.observedPart = MGPOptional.empty();
         }
-        return;
     }
     public async startGame(iConfigRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
@@ -234,20 +241,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             before_state_turn: this.gameComponent.rules.node.gameState.turn,
             nbPlayedMoves: part.data.listMoves.length,
         } });
-        if (this.updateProcessingTime.isPresent()) {
+        if (this.onCurrentUpdateOngoing) {
+            console.log('KUBILAY KHAN')
             attempt -= 1;
             assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
             window.setTimeout(async() => await this.onCurrentPartUpdate(update, attempt), 1000);
             return;
         } else {
-            this.updateProcessingTime = MGPOptional.of(Date.now());
+            this.onCurrentUpdateOngoing = true;
         }
-        const updatesTypes: UpdateType[] = this.getUpdatesTypes(part);
+        const updatesTypes: UpdateType[] = this.getUpdateTypes(part);
         const turn: number = update.turn;
         if (updatesTypes.includes(UpdateType.REQUEST)) {
             display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(part.data.request).code + ') (' + turn + ')');
         } else {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updatesTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE || true, 'UpdateType: ' + updatesTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
         }
         const oldPart: PartDocument = this.currentPart;
         this.currentPart = part;
@@ -255,7 +263,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         for (const updateType of updatesTypes) {
             await this.applyUpdate(updateType, part, oldPart);
         }
-        this.updateProcessingTime = MGPOptional.empty();
+        this.onCurrentUpdateOngoing = false;
     }
     private async applyUpdate(updateType: UpdateType, part: PartDocument, oldPart: PartDocument): Promise<void> {
         switch (updateType) {
@@ -299,7 +307,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.startCountDownFor(Player.fromTurn(part.data.turn - 1));
         }
     }
-    public getUpdatesTypes(update: PartDocument): UpdateType[] {
+    public getUpdateTypes(update: PartDocument): UpdateType[] {
         const currentPartDoc: Part | null = this.currentPart != null ? this.currentPart.data : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.data);
         const updatesTypes: UpdateType[] = [];
@@ -333,7 +341,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             update.data.result !== MGPResult.UNACHIEVED.value)
         {
             const turnModified: boolean = diff.modified.turn != null;
-            const lastUpdateTimeMissing: boolean = diff.modified.lastUpdateTime == null;
+            const lastUpdateTimeMissing: boolean = diff.addedOrModified('lastUpdateTime') === false;
             if (turnModified && lastUpdateTimeMissing) {
                 updatesTypes.push(UpdateType.END_GAME_WITHOUT_TIME);
             } else {

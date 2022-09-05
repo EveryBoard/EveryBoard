@@ -7,7 +7,6 @@ import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { FirestoreDocument } from '../FirestoreDAO';
 
 type PartOS = ObservableSubject<MGPOptional<PartDocument>>
 

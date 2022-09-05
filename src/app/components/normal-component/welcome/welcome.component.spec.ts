@@ -25,7 +25,7 @@ describe('WelcomeComponent', () => {
     });
     it('should redirect to online game creation when clicking on the corresponding button', fakeAsync(async() => {
         // Given a welcome component
-        // where ConnectedUserService tell us user can join a game
+        // where ConnectedUserService tells us user can join a game
         const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
         spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
         const router: Router = TestBed.inject(Router);
@@ -38,7 +38,7 @@ describe('WelcomeComponent', () => {
     }));
     it('should not redirect to online game creation when clicking on the corresponding button while in a game', fakeAsync(async() => {
         // Given a welcome component
-        // where ConnectedUserService tell us user cannot join a game
+        // where ConnectedUserService tells us user cannot join a game
         const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
         const error: string = `j'ai dit non!`;
         spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
@@ -86,7 +86,7 @@ describe('WelcomeComponent', () => {
     }));
     it('should not redirect to part selection when clicking on the corresponding button while already playing', fakeAsync(async() => {
         // Given a welcome component
-        // where ConnectedUserService tell us user cannot join a game
+        // where ConnectedUserService tells us user cannot join a game
         const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
         const error: string = `j'ai dit non!`;
         spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));

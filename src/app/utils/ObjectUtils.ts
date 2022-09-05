@@ -124,4 +124,9 @@ export class ObjectDifference {
         return Object.keys(this.modified).length === 0 &&
                Object.keys(this.removed).length === 0;
     }
+    public addedOrModified(key: string): boolean {
+        const keyPresence: { state: 'added' | 'modified' | 'removed' | null, present: boolean } = this.isPresent(key);
+        return keyPresence.present === true &&
+               keyPresence.state !== 'removed';
+    }
 }

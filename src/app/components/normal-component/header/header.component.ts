@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { FocussedPart } from 'src/app/domain/User';
+import { FocusedPart } from 'src/app/domain/User';
 
 @Component({
     selector: 'app-header',
@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public showMenu: boolean = false;
 
-    public observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
+    public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
     constructor(public router: Router,
                 public connectedUserService: ConnectedUserService,
@@ -39,8 +39,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.username = user.email;
             }});
         this.observedPartSub =
-            this.connectedUserService.getObservedPartObs().subscribe((opo: MGPOptional<FocussedPart>) => {
-                this.observedPart = opo;
+            this.connectedUserService.getObservedPartObs().subscribe((focusedPart: MGPOptional<FocusedPart>) => {
+                this.observedPart = focusedPart;
             });
     }
     public async logout(): Promise<void> {

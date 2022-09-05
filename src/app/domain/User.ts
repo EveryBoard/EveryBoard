@@ -11,10 +11,10 @@ export interface User extends FirestoreJSONObject {
     username?: string; // may not be set initially for google users
     lastUpdateTime?: FirestoreTime,
     verified: boolean,
-    observedPart?: FocussedPart | null,
+    observedPart?: FocusedPart | null,
 }
 
-export interface FocussedPart extends FirestoreJSONObject {
+export interface FocusedPart extends FirestoreJSONObject {
     id: string,
     typeGame: string,
     opponent?: MinimalUser | null,

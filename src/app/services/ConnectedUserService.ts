@@ -5,7 +5,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
-import { FocussedPart, User, UserRoleInPart } from '../domain/User';
+import { FocusedPart, User, UserRoleInPart } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
@@ -78,7 +78,7 @@ export class AuthUser {
                 public verified: boolean) {
     }
     public isConnected(): boolean {
-        return this.email.isPresent(); // TODO FOR REVIEW: AH !
+        return this.email.isPresent();
     }
     public toMinimalUser(): MinimalUser {
         return {
@@ -116,9 +116,9 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userRS: ReplaySubject<AuthUser>;
     private readonly userObs: Observable<AuthUser>;
 
-    private readonly observedPartRS: ReplaySubject<MGPOptional<FocussedPart>>;
-    private readonly observedPartObs: Observable<MGPOptional<FocussedPart>>;
-    private observedPart: MGPOptional<FocussedPart> = MGPOptional.empty();
+    private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
+    private readonly observedPartObs: Observable<MGPOptional<FocusedPart>>;
+    private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
     constructor(private readonly userDAO: UserDAO,
                 private readonly auth: FireAuth.Auth)
@@ -127,7 +127,7 @@ export class ConnectedUserService implements OnDestroy {
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.observedPartRS = new ReplaySubject<MGPOptional<FocussedPart>>(1);
+        this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
         this.observedPartRS.next(MGPOptional.empty());
         this.observedPartObs = this.observedPartRS.asObservable();
         this.unsubscribeFromAuth =
@@ -165,8 +165,8 @@ export class ConnectedUserService implements OnDestroy {
                 }
             });
     }
-    private updateObservedPartWithDoc(newObservedPart: FocussedPart | null | undefined): void {
-        const previousObservedPart: MGPOptional<FocussedPart> = this.observedPart;
+    private updateObservedPartWithDoc(newObservedPart: FocusedPart | null | undefined): void {
+        const previousObservedPart: MGPOptional<FocusedPart> = this.observedPart;
         const stayedNull: boolean = newObservedPart == null && previousObservedPart.isAbsent();
         const stayedItselfAsNonNull: boolean = newObservedPart != null &&
                                                previousObservedPart.equalsValue(newObservedPart);
@@ -315,7 +315,7 @@ export class ConnectedUserService implements OnDestroy {
     public getUserObs(): Observable<AuthUser> {
         return this.userObs;
     }
-    public getObservedPartObs(): Observable<MGPOptional<FocussedPart>> {
+    public getObservedPartObs(): Observable<MGPOptional<FocusedPart>> {
         return this.observedPartObs;
     }
     public async setUsername(username: string): Promise<MGPValidation> {
@@ -353,10 +353,10 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
-    public updateObservedPart(observedPart: Partial<FocussedPart>): Promise<void> {
-        // TODOTODO should we assert that observedPart (the update) is not partial if this.observedPart (the current value) is not set ?
-        const oldObservedPart: FocussedPart = this.observedPart.getOrElse(observedPart as FocussedPart);
-        const mergedObservedPart: FocussedPart = { ...oldObservedPart, ...observedPart };
+    public updateObservedPart(observedPart: Partial<FocusedPart>): Promise<void> {
+        // TODO FOR REVIEW should we assert that observedPart (the update) is not partial if this.observedPart (the current value) is not set ?
+        const oldObservedPart: FocusedPart = this.observedPart.getOrElse(observedPart as FocusedPart);
+        const mergedObservedPart: FocusedPart = { ...oldObservedPart, ...observedPart };
         assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
         return this.userDAO.update(this.user.get().id, { observedPart: mergedObservedPart });
     }
