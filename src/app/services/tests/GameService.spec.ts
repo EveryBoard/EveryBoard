@@ -4,27 +4,26 @@ import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { Part, PartDocument, MGPResult } from 'src/app/domain/Part';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
-import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
+import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/Request';
-import { Joiner, PartType } from 'src/app/domain/Joiner';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { FirstPlayer, ConfigRoom, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
+import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
-import { JoinerService } from '../JoinerService';
+import { ConfigRoomService } from '../ConfigRoomService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 
 describe('GameService', () => {
@@ -35,8 +34,6 @@ describe('GameService', () => {
 
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
-
-    const CANDIDATES: MinimalUser[] = [{ id: 'joiner-user-doc-id', name: 'joiner' }];
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -49,12 +46,13 @@ describe('GameService', () => {
             providers: [
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
             ],
         }).compileComponents();
         service = TestBed.inject(GameService);
         partDAO = TestBed.inject(PartDAO);
+        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
     it('should create', () => {
         expect(service).toBeTruthy();
@@ -67,8 +65,8 @@ describe('GameService', () => {
                 player: 0,
             },
             typeGame: 'Quarto',
-            playerZero: 'creator',
-            playerOne: 'joiner',
+            playerZero: UserMocks.CREATOR_MINIMAL_USER,
+            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 2,
             listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
@@ -91,11 +89,11 @@ describe('GameService', () => {
         expect(calledCallback).toBeTrue();
     }));
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
-        await partDAO.set('myJoinerId', PartMocks.INITIAL);
+        await partDAO.set('myConfigRoomId', PartMocks.INITIAL);
 
         expect(() => {
-            service.startObserving('myJoinerId', (_part: MGPOptional<Part>) => {});
-            service.startObserving('myJoinerId', (_part: MGPOptional<Part>) => {});
+            service.startObserving('myConfigRoomId', (_part: MGPOptional<Part>) => {});
+            service.startObserving('myConfigRoomId', (_part: MGPOptional<Part>) => {});
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
     }));
     it('should delegate delete to PartDAO', fakeAsync(async() => {
@@ -107,40 +105,69 @@ describe('GameService', () => {
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         const error: string = 'Illegal to accept your own request';
         for (const player of Player.PLAYERS) {
-            const part: PartDocument = new PartDocument('joinerId', {
+            const part: PartDocument = new PartDocument('configRoomId', {
                 lastUpdate: {
                     index: 0,
                     player: player.value,
                 },
                 typeGame: 'Quarto',
-                playerZero: 'creator',
-                playerOne: 'joiner',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 turn: 2,
                 listMoves: [MOVE_1, MOVE_2],
                 request: Request.takeBackAsked(player),
                 result: MGPResult.UNACHIEVED.value,
             });
-            await expectAsync(service.acceptTakeBack('joinerId', part, player, [0, 1]))
+            await expectAsync(service.acceptTakeBack('configRoomId', part, player, [0, 1]))
                 .toBeRejectedWithError('Assertion failure: ' + error);
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
         }
     }));
-    it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
-        const joinerService: JoinerService = TestBed.inject(JoinerService);
-        const joiner: Joiner = JoinerMocks.WITH_PROPOSED_CONFIG;
-        spyOn(joinerService, 'acceptConfig').and.resolveTo();
+    it('acceptConfig should delegate to ConfigRoomService and call startGameWithConfig', fakeAsync(async() => {
+        const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
+        const configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
+        spyOn(configRoomService, 'acceptConfig').and.resolveTo();
         spyOn(partDAO, 'update').and.resolveTo();
 
-        await service.acceptConfig('partId', joiner);
+        await service.acceptConfig('partId', configRoom);
 
-        expect(joinerService.acceptConfig).toHaveBeenCalledOnceWith();
+        expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith();
+    }));
+    it('createPartConfigRoomAndChat should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
+        const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
+        const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
+        // Install some mocks to check what we need
+        // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
+        let chatCreated: boolean = false;
+        let configRoomCreated: boolean = false;
+        spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
+            chatCreated = true;
+        });
+        spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
+            expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
+            configRoomCreated = true;
+        });
+        spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
+            expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
+            expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
+            return 'partId';
+        });
+
+        // When calling createPartConfigRoomAndChat
+        await service.createPartConfigRoomAndChat('Quarto');
+        // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
+        // Moreover, everything needs to have been called eventually
+        const part: Part = PartMocks.INITIAL;
+        const configRoom: ConfigRoom = ConfigRoomMocks.INITIAL;
+        expect(partDAO.create).toHaveBeenCalledOnceWith(part);
+        expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
+        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
     }));
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
-            // given a joiner config asking random start
-            const joiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+            // given a configRoom config asking random start
+            const configRoom: ConfigRoom = {
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -151,17 +178,16 @@ describe('GameService', () => {
 
             // when calling getStartingConfig
             spyOn(Math, 'random').and.returnValue(0.4);
-            const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
+            const startConfig: StartingPartConfig = service.getStartingConfig(configRoom);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(joiner.creator.name);
-            expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
+            expect(startConfig.playerZero).toEqual(configRoom.creator);
+            expect(startConfig.playerOne).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
         }));
         it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
-            // given a joiner config asking random start
-            const joiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+            // given a configRoom config asking random start
+            const configRoom: ConfigRoom = {
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -172,18 +198,18 @@ describe('GameService', () => {
 
             // when calling getStartingConfig
             spyOn(Math, 'random').and.returnValue(0.6);
-            const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
+            const startConfig: StartingPartConfig = service.getStartingConfig(configRoom);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenOpponent).name);
-            expect(startConfig.playerOne).toBe(joiner.creator.name);
+            expect(startConfig.playerZero).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
+            expect(startConfig.playerOne).toEqual(configRoom.creator);
         }));
     });
     describe('rematch', () => {
-        let joinerService: JoinerService;
+        let configRoomService: ConfigRoomService;
         let partDAO: PartDAO;
         beforeEach(() => {
-            joinerService = TestBed.inject(JoinerService);
+            configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
         });
         it('should send request when proposing a rematch', fakeAsync(async() => {
@@ -201,20 +227,19 @@ describe('GameService', () => {
                     player: 0,
                 },
                 listMoves: [MOVE_1, MOVE_2],
-                playerZero: 'creator',
-                playerOne: 'joiner',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
-                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
-                loser: 'creator',
-                winner: 'joiner',
+                beginning: new Timestamp(1700102, 680000000),
+                lastUpdateTime: new Timestamp(2, 3000000),
+                loser: UserMocks.CREATOR_MINIMAL_USER,
+                winner: UserMocks.OPPONENT_MINIMAL_USER,
                 request: Request.rematchProposed(Player.ZERO),
             });
-            const lastGameJoiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+            const lastGameConfigRoom: ConfigRoom = {
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'CREATOR',
                 maximalMoveDuration: 10,
@@ -223,7 +248,7 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.resolveTo();
-            spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.data.playerOne));
@@ -245,20 +270,19 @@ describe('GameService', () => {
                     player: 0,
                 },
                 listMoves: [MOVE_1, MOVE_2],
-                playerZero: 'joiner',
-                playerOne: 'creator',
+                playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOne: UserMocks.CREATOR_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
-                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
-                loser: 'creator',
-                winner: 'joiner',
+                beginning: new Timestamp(1700102, 680000000),
+                lastUpdateTime: new Timestamp(2, 3000000),
+                loser: UserMocks.CREATOR_MINIMAL_USER,
+                winner: UserMocks.OPPONENT_MINIMAL_USER,
                 request: Request.rematchProposed(Player.ZERO),
             });
-            const lastGameJoiner: Joiner = {
-                candidates: CANDIDATES,
-                chosenOpponent: { id: 'joiner-doc-id', name: 'joiner' },
+            const lastGameConfigRoom: ConfigRoom = {
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
@@ -267,7 +291,7 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.resolveTo();
-            spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.data.playerOne));
@@ -281,6 +305,85 @@ describe('GameService', () => {
             // then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
         }));
+        it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
+            const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
+            const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
+            // Given a part that will be replayed
+            const lastPart: PartDocument = new PartDocument('partId', {
+                lastUpdate: {
+                    index: 4,
+                    player: 0,
+                },
+                listMoves: [MOVE_1, MOVE_2],
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                result: MGPResult.VICTORY.value,
+                turn: 2,
+                typeGame: 'laMarelle',
+                beginning: new Timestamp(1700102, 680000000),
+                lastUpdateTime: new Timestamp(2, 3000000),
+                loser: UserMocks.CREATOR_MINIMAL_USER,
+                winner: UserMocks.OPPONENT_MINIMAL_USER,
+                request: Request.rematchProposed(Player.ZERO),
+            });
+            const lastGameConfigRoom: ConfigRoom = {
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
+                firstPlayer: FirstPlayer.CREATOR.value,
+                maximalMoveDuration: 10,
+                partStatus: 3,
+                partType: PartType.BLITZ.value,
+                totalPartDuration: 25,
+            };
+            spyOn(service, 'sendRequest').and.resolveTo();
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
+
+            // Install some mocks to check what we need
+            // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
+            let chatCreated: boolean = false;
+            let configRoomCreated: boolean = false;
+            spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
+                chatCreated = true;
+            });
+            spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
+                expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
+                configRoomCreated = true;
+            });
+            spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
+                expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
+                expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
+                return 'partId';
+            });
+
+            // When creator accepts the rematch
+            await service.acceptRematch(lastPart, 5, Player.ONE);
+            // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
+            // Moreover, everything needs to have been called eventually
+            const part: Part = {
+                lastUpdate: { index: 0, player: 1 },
+                typeGame: 'laMarelle',
+                playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOne: UserMocks.CREATOR_MINIMAL_USER,
+                turn: 0,
+                result: MGPResult.UNACHIEVED.value,
+                listMoves: [],
+                beginning: serverTimestamp(),
+                remainingMsForZero: 25000,
+                remainingMsForOne: 25000,
+            };
+            const configRoom: ConfigRoom = {
+                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
+                firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
+                partType: PartType.BLITZ.value,
+                partStatus: PartStatus.PART_STARTED.value,
+                maximalMoveDuration: 10,
+                totalPartDuration: 25,
+            };
+            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
+            expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
+            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
+        }));
     });
     describe('updateDBBoard', () => {
         const part: Part = {
@@ -289,8 +392,8 @@ describe('GameService', () => {
                 player: 0,
             },
             typeGame: 'Quarto',
-            playerZero: 'creator',
-            playerOne: 'joiner',
+            playerZero: UserMocks.CREATOR_MINIMAL_USER,
+            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 1,
             listMoves: [MOVE_1],
             request: null,
@@ -341,13 +444,13 @@ describe('GameService', () => {
                 spyOn(partDAO, 'update');
 
                 // When calling acceptDraw as the player
-                await service.acceptDraw('joinerId', 5, player);
+                await service.acceptDraw('configRoomId', 5, player);
 
                 // Then PartDAO should have been called with the appropriate MGPResult
                 const result: number = [
                     MGPResult.AGREED_DRAW_BY_ZERO.value,
                     MGPResult.AGREED_DRAW_BY_ONE.value][player.value];
-                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
                     lastUpdate: {
                         index: 6,
                         player: player.value,

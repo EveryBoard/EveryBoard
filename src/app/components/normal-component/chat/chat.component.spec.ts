@@ -257,7 +257,7 @@ describe('ChatComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             testUtils.detectChanges();
 
-            // When the user's last_changed time is updated
+            // When the user's lastUpdateTime is updated
             spyOn(component, 'loadChatContent').and.callThrough();
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             tick();

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { serverTimestamp } from 'firebase/firestore';
 import { MGPResult, Part } from './Part';
+import { UserMocks } from './UserMocks.spec';
 
 export class PartMocks {
     public static readonly INITIAL: Part = {
@@ -9,7 +10,7 @@ export class PartMocks {
             player: 0,
         },
         typeGame: 'Quarto',
-        playerZero: 'creator',
+        playerZero: UserMocks.CREATOR_MINIMAL_USER,
         turn: -1,
         result: MGPResult.UNACHIEVED.value,
         listMoves: [],
@@ -21,11 +22,11 @@ export class PartMocks {
             player: 1,
         },
         typeGame: 'Quarto',
-        playerZero: 'creator',
+        playerZero: UserMocks.CREATOR_MINIMAL_USER,
         turn: 0,
         listMoves: [],
         result: MGPResult.UNACHIEVED.value,
-        playerOne: 'firstCandidate',
+        playerOne: UserMocks.OPPONENT_MINIMAL_USER,
         remainingMsForOne: 1800 * 1000,
         remainingMsForZero: 1800 * 1000,
         beginning: serverTimestamp(),

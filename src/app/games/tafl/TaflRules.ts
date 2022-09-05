@@ -48,7 +48,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         const landingCoordOwner: RelativePlayer = state.getRelativeOwner(player, move.end);
         if (landingCoordOwner !== RelativePlayer.NONE) {
-            return MGPValidation.failure(TaflFailure.LANDING_ON_OCCUPIED_CASE());
+            return MGPValidation.failure(TaflFailure.LANDING_ON_OCCUPIED_SQUARE());
         }
         if (this.isThrone(state, move.end)) {
             if (state.getPieceAt(move.coord).isKing()) {

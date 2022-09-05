@@ -14,13 +14,14 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Player } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
+export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
     public static VERBOSE: boolean = false;
 
@@ -41,6 +42,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
+        this.observerRole = Player.ZERO; // The user is playing, not observing
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
@@ -58,8 +60,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             }
         }, 1);
     }
-    public updatePlayer(player: 0|1): void {
-        this.players[player] = MGPOptional.of(this.playerSelection[player]);
+    public updatePlayer(player: Player): void {
+        this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
@@ -101,7 +103,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }
         return MGPOptional.ofNullable(
             this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
-                return this.players[playerIndex].equalsValue(a.name);
+                return this.players[playerIndex].isPresent() && this.players[playerIndex].get() === a.name;
             }));
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
@@ -144,7 +146,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.winner = MGPOptional.empty();
         this.proposeAIToPlay();
     }
-    public getPlayerName(): string {
+    public getPlayer(): string {
         return 'human';
     }
 }

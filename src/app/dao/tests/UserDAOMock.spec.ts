@@ -24,15 +24,15 @@ export class UserDAOMock extends FirestoreDAOMock<User> {
     public resetStaticDB(): void {
         UserDAOMock.usersDB = new MGPMap();
     }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
-        return this.observingWhere([['username', '==', username], ['verified', '==', true]], callback);
+    public observeUser(id: string, callback: FirestoreCollectionObserver<User>): () => void {
+        return this.observingWhere([['id', '==', id]], callback);
     }
     public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
     public updatePresenceToken(userId: string): Promise<void> {
         return this.update(userId, {
-            last_changed: serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         });
     }
 }

@@ -43,7 +43,7 @@ export class PentagoTutorial {
                 [_, _, _, _, _, _],
             ], 10),
             PentagoMove.rotationless(2, 2),
-            (move: PentagoMove, _: PentagoState) => {
+            (move: PentagoMove, _previous: PentagoState, _result: PentagoState) => {
                 if (move.blockTurned.isPresent()) {
                     return MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`);
                 } else {
@@ -65,7 +65,7 @@ export class PentagoTutorial {
                 [_, _, _, _, _, _],
             ], 10),
             PentagoMove.withRotation(0, 0, 0, true),
-            (move: PentagoMove, _: PentagoState) => {
+            (move: PentagoMove, _previous: PentagoState, _result: PentagoState) => {
                 if (move.blockTurned.isPresent()) {
                     return MGPValidation.SUCCESS;
                 } else {

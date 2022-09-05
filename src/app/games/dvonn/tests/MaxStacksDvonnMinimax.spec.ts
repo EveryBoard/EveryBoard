@@ -14,7 +14,6 @@ describe('MaxStacksDvonnMinimax', () => {
 
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
     const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
-    // const B: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
     const BB: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
     const W: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
     const WW: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
