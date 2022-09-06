@@ -39,6 +39,7 @@
     "jquery": "^3.6.0",
     "popper.js": "^1.16.1",
     "rxfire": "^6.0.3",
+    "rxjs": "^7.4.0",
     "zone.js": "^0.11.6"
   },
   "devDependencies": {
