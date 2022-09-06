@@ -589,7 +589,7 @@ describe('ConnectedUserService', () => {
     });
     it('should unsubscribe from auth subscription upon destruction', () => {
         // eslint-disable-next-line dot-notation
-        spyOn(connectedUserService['authSubscription'], 'unsubscribe');
+        spyOn(connectedUserService['authSubscription'], 'unsubscribe').and.callThrough();
 
         // when the service is destroyed
         connectedUserService.ngOnDestroy();
