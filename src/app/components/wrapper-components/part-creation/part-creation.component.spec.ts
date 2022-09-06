@@ -513,9 +513,9 @@ describe('PartCreationComponent', () => {
             }));
             it('should unsubscribe from configRoom upon destruction', fakeAsync(async() => {
                 // Given a component that is loaded by anyone (here, the creator)
-                const expectConfigRoomUnsubscribeToBeCalled: () => void =
+                const expectConfigRoomUnsubscribeToHaveBeenCalled: () => void =
                     prepareUnsubscribeCheck(configRoomService, 'subscribeToChanges');
-                const expectCandidateUnsubscribeToBeCalled: () => void =
+                const expectCandidateUnsubscribeToHaveBeenCalled: () => void =
                     prepareUnsubscribeCheck(configRoomService, 'subscribeToCandidates');
                 awaitComponentInitialisation();
                 spyOn(component, 'cancelGameCreation').and.resolveTo(); // spied in order to avoid calling it
@@ -526,8 +526,8 @@ describe('PartCreationComponent', () => {
                 await component.ngOnDestroy();
 
                 // Then the component unsubscribes from the configRoom subscriptions
-                expectConfigRoomUnsubscribeToBeCalled();
-                expectCandidateUnsubscribeToBeCalled();
+                expectConfigRoomUnsubscribeToHaveBeenCalled();
+                expectCandidateUnsubscribeToHaveBeenCalled();
             }));
         });
     });

@@ -33,7 +33,6 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { PartService } from 'src/app/services/PartService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
@@ -59,7 +58,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let configRoomDAO: ConfigRoomDAO;
     let configRoomService: ConfigRoomService;
     let partDAO: PartDAO;
-    let partService: PartService;
+    let gameService: GameService;
     let userDAO: UserDAO;
 
     const OBSERVER: User = {
@@ -87,7 +86,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         configRoomService = TestBed.inject(ConfigRoomService);
         userDAO = TestBed.inject(UserDAO);
-        partService = TestBed.inject(PartService);
+        gameService = TestBed.inject(GameService);
         await configRoomDAO.set('configRoomId', initialConfigRoom);
         await partDAO.set('configRoomId', PartMocks.INITIAL);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
@@ -153,7 +152,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             beginning: serverTimestamp(),
         };
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-        await partService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, 0, update);
+        await gameService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, 0, update);
         testUtils.detectChanges();
         if (waitForPartToStart === true) {
             tick(1);
@@ -190,7 +189,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
     async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number): Promise<void> {
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-        await partService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, lastIndex, update);
+        await gameService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, lastIndex, update);
         testUtils.detectChanges();
         tick(1);
     }
