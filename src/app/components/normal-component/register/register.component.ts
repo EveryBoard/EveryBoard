@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -17,10 +17,10 @@ export class RegisterComponent {
 
     public errorMessage: string;
 
-    public registrationForm: FormGroup = new FormGroup({
-        email: new FormControl(),
-        username: new FormControl(),
-        password: new FormControl(),
+    public registrationForm: UntypedFormGroup = new UntypedFormGroup({
+        email: new UntypedFormControl(),
+        username: new UntypedFormControl(),
+        password: new UntypedFormControl(),
     });
 
     constructor(public authService: ConnectedUserService,

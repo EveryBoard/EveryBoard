@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
@@ -28,8 +28,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
 
     public userSub: Subscription;
 
-    public usernameForm: FormGroup = new FormGroup({
-        username: new FormControl(),
+    public usernameForm: UntypedFormGroup = new UntypedFormGroup({
+        username: new UntypedFormControl(),
     });
 
     constructor(private readonly authService: ConnectedUserService,
