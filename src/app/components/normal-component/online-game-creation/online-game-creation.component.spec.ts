@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { PartDAO } from 'src/app/dao/PartDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -43,8 +43,8 @@ describe('OnlineGameCreationComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        const partDAO: PartDAO = TestBed.inject(PartDAO);
-        spyOn(partDAO, 'userHasActivePart').and.resolveTo(false);
+        const partService: ActivePartsService = TestBed.inject(ActivePartsService);
+        spyOn(partService, 'userHasActivePart').and.resolveTo(false);
 
         // When the page is rendered
         testUtils.detectChanges();
@@ -60,8 +60,8 @@ describe('OnlineGameCreationComponent', () => {
         spyOn(router, 'navigate').and.callThrough();
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         spyOn(messageDisplayer, 'infoMessage').and.callThrough();
-        const partDAO: PartDAO = TestBed.inject(PartDAO);
-        spyOn(partDAO, 'userHasActivePart').and.resolveTo(true);
+        const partService: ActivePartsService = TestBed.inject(ActivePartsService);
+        spyOn(partService, 'userHasActivePart').and.resolveTo(true);
 
         // When the page is rendered
         testUtils.detectChanges();

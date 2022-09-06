@@ -15,7 +15,7 @@ export abstract class AccountGuard implements CanActivate, OnDestroy {
     }
     public async canActivate(): Promise<boolean | UrlTree > {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
-            this.userSub = this.authService.getUserObs().subscribe(async(user: AuthUser) => {
+            this.userSub = this.authService.subscribeToUser(async(user: AuthUser) => {
                 await this.evaluateUserPermission(user).then(resolve);
             });
         });

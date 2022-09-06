@@ -29,7 +29,9 @@ describe('LoginComponent', () => {
 
         userRS = new ReplaySubject<AuthUser>(1);
         const userObs: Observable<AuthUser> = userRS.asObservable();
-        spyOn(connectedUserService, 'getUserObs').and.returnValue(userObs);
+        spyOn(connectedUserService, 'subscribeToUser').and.callFake((callback: (user: AuthUser) => void) => {
+            return userObs.subscribe(callback);
+        });
 
         testUtils.detectChanges();
     }));

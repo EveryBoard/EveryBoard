@@ -109,7 +109,7 @@ describe('ErrorLoggerService', () => {
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
         tick(1000);
-        const errors: FirestoreDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
+        const errors: FirestoreDocument<MGPError>[] = await service.findErrors(component, '/', message, data);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
 
@@ -124,4 +124,50 @@ describe('ErrorLoggerService', () => {
         };
         expect(errorDAO.update).toHaveBeenCalledOnceWith(id, update);
     }));
+    describe('findErrors', () => {
+        it('should return the empty list if there is no matching error', async() => {
+            // Given no matching error
+            // When looking for matching errors
+            const errors: FirestoreDocument<MGPError>[] = await service.findErrors('test', '', 'dummy message');
+            // Then no matching error should be found
+            expect(errors.length).toBe(0);
+        });
+        it('should find a corresponding error if there is one (with attached data)', async() => {
+            // Given an already encountered error
+            const error: MGPError = {
+                component: 'foo',
+                route: '',
+                message: 'some error',
+                data: { 'foo': 'bar' },
+                firstEncounter: serverTimestamp(),
+                lastEncounter: serverTimestamp(),
+                occurences: 1,
+            };
+            const errorId: string = await errorDAO.create(error);
+            // When looking for matching errors
+            const errors: FirestoreDocument<MGPError>[] =
+                await service.findErrors(error.component, error.route, error.message, error.data);
+            // Then we should find the matching error
+            expect(errors.length).toBe(1);
+            expect(errors[0].id).toBe(errorId);
+        });
+        it('should find a corresponding error if there is one (without attached data)', async() => {
+            // Given an already encountered error (without data)
+            const error: MGPError = {
+                component: 'foo',
+                route: '',
+                message: 'some error',
+                firstEncounter: serverTimestamp(),
+                lastEncounter: serverTimestamp(),
+                occurences: 1,
+            };
+            const errorId: string = await errorDAO.create(error);
+            // When looking for matching errors (without data)
+            const errors: FirestoreDocument<MGPError>[] =
+                await service.findErrors(error.component, error.route, error.message);
+            // Then we should find the matching error
+            expect(errors.length).toBe(1);
+            expect(errors[0].id).toEqual(errorId);
+        });
+    });
 });

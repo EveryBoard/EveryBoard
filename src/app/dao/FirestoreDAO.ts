@@ -2,6 +2,7 @@ import { display, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
+import { Subscription } from 'rxjs';
 
 export interface FirestoreDocument<T> {
     id: string
@@ -27,11 +28,11 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
      * The is given an optional, set to empty when the document is deleted.
      * If the document does not exist initially, the optional is also empty.
      */
-    subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Firestore.Unsubscribe;
+    subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription;
 
     observingWhere(conditions: FirestoreCondition[],
                    callback: FirestoreCollectionObserver<T>,
-                   order?: string): () => void;
+                   order?: string): Subscription;
 
     findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]>
 
@@ -88,10 +89,11 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
         return Firestore.setDoc(Firestore.doc(this.collection, id), element);
     }
-    public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Firestore.Unsubscribe {
-        return Firestore.onSnapshot(Firestore.doc(this.collection, id), (doc: Firestore.DocumentSnapshot<T>) => {
-            callback(MGPOptional.ofNullable(doc.data()));
-        });
+    public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
+        return new Subscription(Firestore.onSnapshot(Firestore.doc(this.collection, id),
+                                                     (doc: Firestore.DocumentSnapshot<T>) => {
+                                                         callback(MGPOptional.ofNullable(doc.data()));
+                                                     }));
     }
     public async findWhere(conditions: FirestoreCondition[], order?: string, limit?: number)
     : Promise<FirestoreDocument<T>[]>
@@ -114,11 +116,11 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
     public observingWhere(conditions: FirestoreCondition[],
                           callback: FirestoreCollectionObserver<T>,
                           order?: string)
-    : () => void
+    : Subscription
     {
         display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.observingWhere' });
         const query: Firestore.Query<T> = this.constructQuery(conditions, order);
-        return Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
+        return new Subscription(Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
             const createdDocs: FirestoreDocument<T>[] = [];
             const modifiedDocs: FirestoreDocument<T>[] = [];
             const deletedDocs: FirestoreDocument<T>[] = [];
@@ -155,7 +157,7 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
                         'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
                 callback.onDocumentDeleted(deletedDocs);
             }
-        });
+        }));
     }
     private constructQuery(conditions: FirestoreCondition[], order?: string, limit?: number): Firestore.Query<T> {
         let query: Firestore.Query<T> = Firestore.query(this.collection);

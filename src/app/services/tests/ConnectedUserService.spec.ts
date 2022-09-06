@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
@@ -17,6 +17,7 @@ import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Part } from 'src/app/domain/Part';
+import { UserService } from '../UserService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 @Injectable()
@@ -42,8 +43,8 @@ export class ConnectedUserServiceMock {
             this.userRS.next(user);
         }
     }
-    public getUserObs(): Observable<AuthUser> {
-        return this.userRS.asObservable();
+    public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
+        return this.userRS.asObservable().subscribe(callback);
     }
     public async disconnect(): Promise<MGPValidation> {
         throw new Error('ConnectedUserServiceMock.disconnect not implemented');
@@ -155,7 +156,7 @@ export async function createDisconnectedGoogleUser(email: string, username?: str
 
 describe('ConnectedUserService', () => {
     let auth: FireAuth.Auth;
-    let service: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
@@ -165,59 +166,59 @@ describe('ConnectedUserService', () => {
 
     beforeEach(async() => {
         await setupAuthTestModule();
-        service = TestBed.inject(ConnectedUserService);
+        connectedUserService = TestBed.inject(ConnectedUserService);
         auth = TestBed.inject(FireAuth.Auth);
     });
 
     it('should create', fakeAsync(async() => {
-        expect(service).toBeTruthy();
+        expect(connectedUserService).toBeTruthy();
     }));
     it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
-        const userDAO: UserDAO = TestBed.inject(UserDAO);
-        spyOn(userDAO, 'markAsVerified');
+        const userService: UserService = TestBed.inject(UserService);
+        spyOn(userService, 'markAsVerified').and.callThrough();
 
         // given a registered user that has finalized all steps to verify its account
-        const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
+        const result: MGPFallible<FireAuth.User> = await connectedUserService.doRegister(username, email, password);
         expect(result.isSuccess()).toBeTrue();
         const uid: string = result.get().uid;
         await FireAuth.signOut(auth);
-        spyOn(service, 'emailVerified').and.returnValue(true);
+        spyOn(connectedUserService, 'emailVerified').and.returnValue(true);
 
         // when the user appears again
         let resolvePromise: () => void;
         const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
             resolvePromise = resolve;
         });
-        const subscription: Subscription = service.getUserObs().subscribe((_user: AuthUser) => {
+        const subscription: Subscription = connectedUserService.subscribeToUser((_user: AuthUser) => {
             // Wait 2s to ensure that the handler has the time to mark for verification
             window.setTimeout(resolvePromise, 2000);
         });
-        await service.doEmailLogin(email, password);
+        await connectedUserService.doEmailLogin(email, password);
         await userHasUpdated;
 
         // then its status is set to verified
-        expect(userDAO.markAsVerified).toHaveBeenCalledWith(uid);
+        expect(userService.markAsVerified).toHaveBeenCalledWith(uid);
 
         subscription.unsubscribe();
     });
     describe('register', () => {
         it('should create user upon successful registration', async() => {
-            spyOn(service, 'createUser').and.callThrough();
+            spyOn(connectedUserService, 'createUser').and.callThrough();
             // given an user that does not exist
 
             // when the user is registered
-            const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
+            const result: MGPFallible<FireAuth.User> = await connectedUserService.doRegister(username, email, password);
 
             // then the user is successfully registered and created
             expect(result.isSuccess()).toBeTrue();
-            expect(service.createUser).toHaveBeenCalledWith(result.get().uid, username);
+            expect(connectedUserService.createUser).toHaveBeenCalledWith(result.get().uid, username);
         });
         it('should fail when trying to register an user with an email that is already registered', async() => {
             // given an user that already exists
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
             // when an user with the same email is registered
-            const result: MGPFallible<FireAuth.User> = await service.doRegister('blibli', email, password);
+            const result: MGPFallible<FireAuth.User> = await connectedUserService.doRegister('blibli', email, password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -225,10 +226,10 @@ describe('ConnectedUserService', () => {
         });
         it('should fail when trying to register an user with an username that is already registered', async() => {
             // given an user that already exists
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
             // when an user with the same email is registered
-            const result: MGPFallible<FireAuth.User> = await service.doRegister(username, 'bli@blah.com', password);
+            const result: MGPFallible<FireAuth.User> = await connectedUserService.doRegister(username, 'bli@blah.com', password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -239,7 +240,8 @@ describe('ConnectedUserService', () => {
             const invalidEmail: string = 'blibli';
 
             // when an user registers with that email
-            const result: MGPFallible<FireAuth.User> = await service.doRegister(username, invalidEmail, password);
+            const result: MGPFallible<FireAuth.User> =
+                await connectedUserService.doRegister(username, invalidEmail, password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -250,7 +252,7 @@ describe('ConnectedUserService', () => {
             const password: string = '1';
 
             // when an user registers with that password
-            const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
+            const result: MGPFallible<FireAuth.User> = await connectedUserService.doRegister(username, email, password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -261,15 +263,15 @@ describe('ConnectedUserService', () => {
         it('should send the email verification', async() => {
             // given a user that just registered and hence is not verified
             const userRegistrationResult: MGPFallible<FireAuth.User> =
-                await service.doRegister(username, email, password);
+                await connectedUserService.doRegister(username, email, password);
             expect(userRegistrationResult.isSuccess()).toBeTrue();
             // and that the user is connected
-            expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
+            expect(await connectedUserService.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
 
             spyOn(Auth, 'sendEmailVerification').and.callThrough();
 
             // when the email verification is requested
-            const result: MGPValidation = await service.sendEmailVerification();
+            const result: MGPValidation = await connectedUserService.sendEmailVerification();
 
             // then the email verification has been sent
             const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
@@ -281,7 +283,7 @@ describe('ConnectedUserService', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // when the email verification is requested
-            const result: MGPValidation = await service.sendEmailVerification();
+            const result: MGPValidation = await connectedUserService.sendEmailVerification();
 
             // then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
@@ -294,7 +296,7 @@ describe('ConnectedUserService', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // when the email verification is requested
-            const result: MGPValidation = await service.sendEmailVerification();
+            const result: MGPValidation = await connectedUserService.sendEmailVerification();
 
             // then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
@@ -303,14 +305,14 @@ describe('ConnectedUserService', () => {
         });
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // given a user that just registered and hence is not verified
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
             // and that the user is connected
-            expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
+            expect(await connectedUserService.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
 
             // when the email verification is requested but fails
             const error: FirebaseError = new FirebaseError('auth/too-many-requests', 'Error');
             spyOn(Auth, 'sendEmailVerification').and.rejectWith(error);
-            const result: MGPValidation = await service.sendEmailVerification();
+            const result: MGPValidation = await connectedUserService.sendEmailVerification();
 
             // then a failure is returned
             expect(result.isFailure()).toBeTrue();
@@ -319,11 +321,11 @@ describe('ConnectedUserService', () => {
     describe('email login', () => {
         it('should succeed when the password is correct', async() => {
             // given a registered user
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
             await FireAuth.signOut(auth);
 
             // when logging in with email with the right password
-            const result: MGPValidation = await service.doEmailLogin(email, password);
+            const result: MGPValidation = await connectedUserService.doEmailLogin(email, password);
 
             // then the login succeeds and the current user is set
             expect(result.isSuccess()).toBeTrue();
@@ -331,12 +333,12 @@ describe('ConnectedUserService', () => {
         });
         it('should update user when successfully logging in', async() => {
             // given a registered user and a listener waiting for user updates
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
             await auth.signOut();
 
             let subscription!: Subscription;
             const updateSeen: Promise<void> = new Promise((resolve: () => void) => {
-                subscription = service.getUserObs().subscribe((user: AuthUser): void => {
+                subscription = connectedUserService.subscribeToUser((user: AuthUser): void => {
                     if (user.isConnected()) {
                         resolve();
                     }
@@ -345,7 +347,7 @@ describe('ConnectedUserService', () => {
             await expectAsync(updateSeen).toBePending();
 
             // when the user is logged in
-            expect((await service.doEmailLogin(email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doEmailLogin(email, password)).isSuccess()).toBeTrue();
 
             // then the update has been seen
             await expectAsync(updateSeen).toBeResolved();
@@ -353,11 +355,11 @@ describe('ConnectedUserService', () => {
         });
         it('should fail when the password is incorrect', async() => {
             // given a registered user
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
             await auth.signOut();
 
             // when logging in with email with an incorrect password,
-            const result: MGPValidation = await service.doEmailLogin(email, 'helaba');
+            const result: MGPValidation = await connectedUserService.doEmailLogin(email, 'helaba');
 
             // then the login fails
             expect(result.isFailure()).toBeTrue();
@@ -367,7 +369,7 @@ describe('ConnectedUserService', () => {
             // given that the user does not exist
 
             // when trying to log in
-            const result: MGPValidation = await service.doEmailLogin(email, password);
+            const result: MGPValidation = await connectedUserService.doEmailLogin(email, password);
 
             // then the login fails
             expect(result.isFailure()).toBeTrue();
@@ -377,7 +379,7 @@ describe('ConnectedUserService', () => {
     describe('google login', () => {
         it('should delegate to signInPopup and create the user if it does not exist', async() => {
             // given a non-existing google user
-            spyOn(service, 'createUser').and.callThrough();
+            spyOn(connectedUserService, 'createUser').and.callThrough();
             const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
@@ -386,7 +388,7 @@ describe('ConnectedUserService', () => {
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
 
             // when the user registers and connects with google
-            const result: MGPValidation = await service.doGoogleLogin();
+            const result: MGPValidation = await connectedUserService.doGoogleLogin();
 
             // then it succeeded and created the user
             expect(result.isSuccess()).toBeTrue();
@@ -394,16 +396,16 @@ describe('ConnectedUserService', () => {
             provider.addScope('profile');
             provider.addScope('email');
             expect(Auth.signInWithPopup).toHaveBeenCalledWith(auth, provider);
-            expect(service.createUser).toHaveBeenCalledWith(user.uid);
+            expect(connectedUserService.createUser).toHaveBeenCalledWith(user.uid);
         });
         it('should not create the user if it already exists', async() => {
             // given a disconnected google user
-            spyOn(service, 'createUser');
+            spyOn(connectedUserService, 'createUser').and.callThrough();
             const user: FireAuth.User = await createDisconnectedGoogleUser('foo@bar.com');
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
 
             // when the user connects with google
-            const result: MGPValidation = await service.doGoogleLogin();
+            const result: MGPValidation = await connectedUserService.doGoogleLogin();
 
             // then it should have succeeded
             expect(result.isSuccess()).toBeTrue();
@@ -411,7 +413,7 @@ describe('ConnectedUserService', () => {
             provider.addScope('profile');
             provider.addScope('email');
             expect(Auth.signInWithPopup).toHaveBeenCalledWith(auth, provider);
-            expect(service.createUser).not.toHaveBeenCalled();
+            expect(connectedUserService.createUser).not.toHaveBeenCalled();
         });
         it('should fail if google login also fails', async() => {
             // given a google user that will fail to connect
@@ -419,7 +421,7 @@ describe('ConnectedUserService', () => {
             spyOn(Auth, 'signInWithPopup').and.rejectWith(error);
 
             // when the user tries to connect but fails
-            const result: MGPValidation = await service.doGoogleLogin();
+            const result: MGPValidation = await connectedUserService.doGoogleLogin();
 
             // then it failed
             expect(result.isFailure()).toBeTrue();
@@ -431,19 +433,20 @@ describe('ConnectedUserService', () => {
             // given that no user is connected (default)
 
             // when trying to disconnect
-            const result: MGPValidation = await service.disconnect();
+            const result: MGPValidation = await connectedUserService.disconnect();
 
             // then it fails
             expect(result).toEqual(MGPValidation.failure('Cannot disconnect a non-connected user'));
         });
         it('should succeed if a user is connected, and result in the user being disconnected', async() => {
             // given a registered and connected user
-            const registrationResult: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
+            const registrationResult: MGPFallible<FireAuth.User> =
+                await connectedUserService.doRegister(username, email, password);
             expect(registrationResult.isSuccess()).toBeTrue();
-            await service.doEmailLogin(email, password);
+            await connectedUserService.doEmailLogin(email, password);
 
             // when trying to disconnect
-            const result: MGPValidation = await service.disconnect();
+            const result: MGPValidation = await connectedUserService.disconnect();
 
             // then it succeeds
             expect(result).toBe(MGPValidation.SUCCESS);
@@ -460,7 +463,7 @@ describe('ConnectedUserService', () => {
             const error: FirebaseError = new FirebaseError('auth/unknown-error', 'Error message');
 
             // when mapping it
-            service.mapFirebaseError(error);
+            connectedUserService.mapFirebaseError(error);
 
             // then logError is called
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
@@ -478,7 +481,7 @@ describe('ConnectedUserService', () => {
                 const error: FirebaseError = new FirebaseError(code, 'Error message');
 
                 // when mapping it
-                service.mapFirebaseError(error);
+                connectedUserService.mapFirebaseError(error);
 
                 // then it is properly handled
                 expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
@@ -493,7 +496,7 @@ describe('ConnectedUserService', () => {
         it('should update the username', async() => {
             // when the username is set
             const newUsername: string = 'grandgaga';
-            const result: MGPValidation = await service.setUsername(newUsername);
+            const result: MGPValidation = await connectedUserService.setUsername(newUsername);
 
             // then the username is updated
             expect(result.isSuccess()).toBeTrue();
@@ -504,7 +507,7 @@ describe('ConnectedUserService', () => {
             // when the username is set but fails
             const error: FirebaseError = new FirebaseError('unknown/error', 'Error');
             spyOn(Auth, 'updateProfile').and.rejectWith(error);
-            const result: MGPValidation = await service.setUsername(username);
+            const result: MGPValidation = await connectedUserService.setUsername(username);
 
             // then it fails
             expect(result.isFailure()).toBeTrue();
@@ -513,17 +516,17 @@ describe('ConnectedUserService', () => {
         });
         it('should reject empty usernames', async() => {
             // when the username is set to an empty username
-            const result: MGPValidation = await service.setUsername('');
+            const result: MGPValidation = await connectedUserService.setUsername('');
 
             // then it fails
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual(`Your username may not be empty.`);
         });
         it('should reject existing usernames', async() => {
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            const userService: UserService = TestBed.inject(UserService);
             // when the username is set to an username that is not available
-            spyOn(userDAO, 'usernameIsAvailable').and.resolveTo(false);
-            const result: MGPValidation = await service.setUsername('not-available');
+            spyOn(userService, 'usernameIsAvailable').and.resolveTo(false);
+            const result: MGPValidation = await connectedUserService.setUsername('not-available');
 
             // then it fails
             expect(result.isFailure()).toBeTrue();
@@ -537,7 +540,7 @@ describe('ConnectedUserService', () => {
 
             // when the picture is set
             const photoURL: string = 'http://my.pic/foo.png';
-            const result: MGPValidation = await service.setPicture(photoURL);
+            const result: MGPValidation = await connectedUserService.setPicture(photoURL);
 
             // then the picture is updated
             expect(result.isSuccess()).toBeTrue();
@@ -551,7 +554,7 @@ describe('ConnectedUserService', () => {
             // when the picture is set but fails
             const error: FirebaseError = new FirebaseError('unknown/error', 'Error');
             spyOn(Auth, 'updateProfile').and.rejectWith(error);
-            const result: MGPValidation = await service.setPicture('http://my.pic/foo.png');
+            const result: MGPValidation = await connectedUserService.setPicture('http://my.pic/foo.png');
 
             // then it fails and logs the error
             expect(result.isFailure()).toBeTrue();
@@ -563,10 +566,10 @@ describe('ConnectedUserService', () => {
         it('should delegate to Auth.sendPasswordResetEmail', async() => {
             spyOn(Auth, 'sendPasswordResetEmail').and.callThrough();
             // given a registered user
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
             // when asking for password reset
-            const result: MGPValidation = await service.sendPasswordResetEmail(email);
+            const result: MGPValidation = await connectedUserService.sendPasswordResetEmail(email);
 
             // then it should have delegated and succeeded
             expect(result.isSuccess()).toBeTrue();
@@ -578,37 +581,39 @@ describe('ConnectedUserService', () => {
             const error: FirebaseError = new FirebaseError('auth/user-not-found', 'Error');
             spyOn(Auth, 'sendPasswordResetEmail').and.rejectWith(error);
             // when asking for password reset
-            const result: MGPValidation = await service.sendPasswordResetEmail(email);
+            const result: MGPValidation = await connectedUserService.sendPasswordResetEmail(email);
             // then it should fail
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('You have entered invalid credentials.');
         });
     });
     it('should unsubscribe from auth subscription upon destruction', () => {
-        spyOn(service, 'unsubscribeFromAuth');
+        // eslint-disable-next-line dot-notation
+        spyOn(connectedUserService['authSubscription'], 'unsubscribe').and.callThrough();
 
         // when the service is destroyed
-        service.ngOnDestroy();
+        connectedUserService.ngOnDestroy();
         alreadyDestroyed = true;
 
         // then it unsubscribed
-        expect(service.unsubscribeFromAuth).toHaveBeenCalledWith();
+        // eslint-disable-next-line dot-notation
+        expect(connectedUserService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
     });
     describe('updateObservedPart', () => {
         it('should throw when called while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
-            expect(() => service.updateObservedPart('some-part-doc-id')).toThrowError(expectedError);
+            expect(() => connectedUserService.updateObservedPart('some-part-doc-id')).toThrowError(expectedError);
         }));
         it('should delegate to userDAO', async() => {
             // Given a service observing an user
-            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+            connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to update observedPart
             const userDAO: UserDAO = TestBed.inject(UserDAO);
             spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
             const observedPart: string = 'observedPartId';
-            await service.updateObservedPart(observedPart);
+            await connectedUserService.updateObservedPart(observedPart);
 
             // Then the userDAO should update the connected user doc
             expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart });
@@ -618,16 +623,16 @@ describe('ConnectedUserService', () => {
         it('should throw when asking to remove while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
-            expect(() => service.removeObservedPart()).toThrowError(expectedError);
+            expect(() => connectedUserService.removeObservedPart()).toThrowError(expectedError);
         }));
         it('should delegate removal to userDAO', async() => {
             // Given a service observing an user
-            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+            connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to update observedPart
             const userDAO: UserDAO = TestBed.inject(UserDAO);
             spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
-            await service.removeObservedPart();
+            await connectedUserService.removeObservedPart();
 
             // Then the userDAO should update the connected user doc
             expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart: null });
@@ -637,16 +642,16 @@ describe('ConnectedUserService', () => {
         it('should throw when asking to send presence token while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call sendPresenceToken when not connected';
-            expect(() => service.sendPresenceToken()).toThrowError(expectedError);
+            expect(() => connectedUserService.sendPresenceToken()).toThrowError(expectedError);
         }));
         it('should delegate presence token sending to userDAO', async() => {
             // Given a service observing an user
-            service.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+            connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to send presence token
             const userDAO: UserDAO = TestBed.inject(UserDAO);
             spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
-            await service.sendPresenceToken();
+            await connectedUserService.sendPresenceToken();
 
             // Then the userDAO should update the connected user doc
             const userDocId: string = UserMocks.CREATOR_MINIMAL_USER.id;
@@ -655,7 +660,7 @@ describe('ConnectedUserService', () => {
     });
     afterEach(async() => {
         if (alreadyDestroyed === false) {
-            service.ngOnDestroy();
+            connectedUserService.ngOnDestroy();
         }
         await auth.signOut();
     });
