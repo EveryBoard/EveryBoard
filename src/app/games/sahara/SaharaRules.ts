@@ -84,22 +84,19 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
             return coord.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT) &&
                    board[coord.y][coord.x] === FourStatePiece.EMPTY;
         };
-        const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty);
+        const landings: MGPSet<Coord> =
+            new MGPSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
         if (TriangularCheckerBoard.isSpaceDark(coord) === true) {
-            return neighbors;
+            return landings.toList();
         } else {
-            const twoStepJump: MGPSet<Coord> = new MGPSet();
-            for (const neighbor of neighbors) {
+            for (const neighbor of landings) {
                 const secondStepNeighbors: Coord[] =
                     TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
                 for (const secondStepNeighbor of secondStepNeighbors) {
-                    twoStepJump.add(secondStepNeighbor);
+                    landings.add(secondStepNeighbor);
                 }
             }
-            for (const neighbor of neighbors) {
-                twoStepJump.add(neighbor);
-            }
-            return twoStepJump.toList();
+            return landings.toList();
         }
     }
     public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
