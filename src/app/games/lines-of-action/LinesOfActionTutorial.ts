@@ -1,6 +1,7 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
@@ -87,9 +88,9 @@ export class LinesOfActionTutorial {
             $localize`Congratulations!`,
             $localize`Failed. This was not one of the expected moves.`,
         ),
-        TutorialStep.fromMove(
+        TutorialStep.fromPredicate(
             $localize`Capturing`,
-            $localize`If a move ends on an opponent's pieces, this one is captured and removed from the board.
+            $localize`If a move ends on an opponent's piece, it is captured and removed from the board.
         However, a move cannot end on one of the player's pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
         If a player has only one piece, that player wins the game.<br/><br/>
@@ -104,9 +105,15 @@ export class LinesOfActionTutorial {
                 [X, _, _, _, _, _, _, X],
                 [_, O, O, O, O, O, O, _],
             ], 0),
-            [LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get()],
+            LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get(),
+            (move: LinesOfActionMove, previous: LinesOfActionState, _result: LinesOfActionState): MGPValidation => {
+                if (previous.getPieceAt(move.end) === PlayerOrNone.ONE) {
+                    return MGPValidation.SUCCESS;
+                } else {
+                    return MGPValidation.failure($localize`Failed!`);
+                }
+            },
             $localize`Congratulations!`,
-            $localize`Failed!`,
         ),
         TutorialStep.fromMove(
             $localize`Tie`,

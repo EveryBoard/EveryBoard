@@ -52,6 +52,7 @@
             </g>
             <use *ngIf="isMountain(c)"
                  xlink:href="#mountain"
+                 (click)="clickPiece(x, y)"
                  [attr.transform]="'translate(' + ((x+1) * SPACE_SIZE) + ' ' + ((y+1) * SPACE_SIZE) + ')'"
                  fill="brown" />
             <g *ngIf="choosingOrientation(x, y)">

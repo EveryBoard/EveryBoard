@@ -13,7 +13,7 @@ import { SiamFailure } from '../SiamFailure';
 
 describe('SiamComponent', () => {
 
-    let componentTestUtils: ComponentTestUtils<SiamComponent>;
+    let testUtils: ComponentTestUtils<SiamComponent>;
 
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -22,31 +22,34 @@ describe('SiamComponent', () => {
 
     async function expectMoveLegality(move: SiamMove): Promise<void> {
         if (move.isInsertion()) {
-            await componentTestUtils.expectClickSuccess('#insertAt_' + move.coord.x + '_' + move.coord.y);
+            await testUtils.expectClickSuccess('#insertAt_' + move.coord.x + '_' + move.coord.y);
             const orientation: string = move.landingOrientation.toString();
-            return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + orientation, move);
+            return testUtils.expectMoveSuccess('#chooseOrientation_' + orientation, move);
         } else {
-            await componentTestUtils.expectClickSuccess('#clickPiece_' + move.coord.x + '_' + move.coord.y);
+            await testUtils.expectClickSuccess('#clickPiece_' + move.coord.x + '_' + move.coord.y);
             const direction: MGPOptional<Orthogonal> = move.moveDirection;
             const moveDirection: string = direction.isPresent() ? direction.get().toString() : '';
-            await componentTestUtils.expectClickSuccess('#chooseDirection_' + moveDirection);
+            await testUtils.expectClickSuccess('#chooseDirection_' + moveDirection);
             const landingOrientation: string = move.landingOrientation.toString();
-            return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + landingOrientation, move);
+            return testUtils.expectMoveSuccess('#chooseOrientation_' + landingOrientation, move);
         }
     }
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame<SiamComponent>('Siam');
+        testUtils = await ComponentTestUtils.forGame<SiamComponent>('Siam');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     it('should accept insertion at first turn', fakeAsync(async() => {
-        await componentTestUtils.expectClickSuccess('#insertAt_2_-1');
+        // Given the initial state
+        // When inserting a piece
+        await testUtils.expectClickSuccess('#insertAt_2_-1');
         const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
-        await componentTestUtils.expectMoveSuccess('#chooseOrientation_DOWN', move);
+        // Then it should succeed
+        await testUtils.expectMoveSuccess('#chooseOrientation_DOWN', move);
     }));
-    it('Should not allow to move opponent pieces', fakeAsync(async() => {
+    it('should forbid to select opponent pieces', fakeAsync(async() => {
+        // Given a state with a piece of the opponent
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -55,11 +58,14 @@ describe('SiamComponent', () => {
             [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#clickPiece_4_4', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        // When trying to select the opponent's piece
+        // Then it should fail
+        await testUtils.expectClickFailure('#clickPiece_4_4', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
+        // Given a state and a selected piece
         const board: Table<SiamPiece> = [
             [U, _, _, _, _],
             [_, _, _, _, _],
@@ -68,13 +74,16 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
-        await componentTestUtils.expectClickSuccess('#clickPiece_0_0');
+        await testUtils.expectClickSuccess('#clickPiece_0_0');
 
-        await componentTestUtils.expectClickFailure('#insertAt_-1_2', SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
+        // When trying to insert a piece
+        // Then it should fail
+        await testUtils.expectClickFailure('#insertAt_-1_2', SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
     }));
     it('should allow rotation', fakeAsync(async() => {
+        // Given a state with one piece
         const board: Table<SiamPiece> = [
             [U, _, _, _, _],
             [_, _, _, _, _],
@@ -83,12 +92,15 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
+        // When performing a rotation
+        // Then it should succeed
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.empty(), Orthogonal.DOWN);
         await expectMoveLegality(move);
     }));
     it('should allow normal move', fakeAsync(async() => {
+        // Given a state with a piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -97,12 +109,15 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
+        // When moving forward
+        // Then it should succeed
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
     }));
-    it('should highlight all moved pieces upon push', fakeAsync(async() => {
+    it('should highlight all moved pieces upon move', fakeAsync(async() => {
+        // Given a state with a piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -111,16 +126,19 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
+        // When performing a move
         const move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
 
-        componentTestUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved']);
-        componentTestUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved']);
-        componentTestUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']);
+        // Then the moved piece and departed square should be highlighted
+        testUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved']);
+        testUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved']);
+        testUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']);
     }));
-    it('should decide outing orientation automatically', fakeAsync(async() => {
+    it('should decide exit orientation automatically', fakeAsync(async() => {
+        // Given a board with a piece next to the border
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -129,17 +147,19 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
-        await componentTestUtils.expectClickSuccess('#clickPiece_4_4');
+        // When making the piece exit the board
+        // The the orientation of the piece does not have to be chosen
+        await testUtils.expectClickSuccess('#clickPiece_4_4');
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
-        await componentTestUtils.expectMoveSuccess('#chooseDirection_DOWN', move);
+        await testUtils.expectMoveSuccess('#chooseDirection_DOWN', move);
     }));
     it('should toast when clicking as first click on an empty square', fakeAsync(async() => {
         // Given the initial board
         // When clicking on an empty piece
         // Then a toast should say it's forbidden
         const reason: string = SiamFailure.MUST_INSERT_OR_CHOOSE_YOUR_PIECE();
-        await componentTestUtils.expectClickFailure('#insertAt_2_1', reason);
+        await testUtils.expectClickFailure('#insertAt_2_1', reason);
     }));
 });

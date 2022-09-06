@@ -34,7 +34,7 @@ export class ApagosTutorial {
             ], 9, 9),
             ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ZERO).get(),
 
-            (move: ApagosMove, _: ApagosState) => {
+            (move: ApagosMove, _previous: ApagosState, _result: ApagosState) => {
                 if (move.isDrop()) {
                     return MGPValidation.failure($localize`This move is a drop, please do a transfer!`);
                 }
@@ -52,7 +52,7 @@ export class ApagosTutorial {
             ], 2, 3),
             ApagosMove.drop(ApagosCoord.TWO, Player.ONE),
 
-            (move: ApagosMove, _: ApagosState) => {
+            (move: ApagosMove, _previous: ApagosState, _result: ApagosState) => {
                 if (move.isDrop()) {
                     if (move.piece.equalsValue(Player.ONE)) {
                         return MGPValidation.SUCCESS;

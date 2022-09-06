@@ -89,7 +89,7 @@ export class SixTutorial {
                 [_, O, _, X, _, _, _, _, _],
             ], 40),
             SixMove.fromMovement(new Coord(6, 1), new Coord(5, 1)),
-            (_move: SixMove, resultingState: SixState) => {
+            (_move: SixMove, _previousState: SixState, resultingState: SixState) => {
                 const pieces: [number, number] = resultingState.countPieces();
                 if (pieces[0] === 19) {
                     if (pieces[1] === 18) {
@@ -119,7 +119,7 @@ export class SixTutorial {
                 [O, _, _, _, _, _],
             ], 40),
             SixMove.fromMovement(new Coord(2, 3), new Coord(3, 3)),
-            (move: SixMove, _resultingState: SixState) => {
+            (move: SixMove, _previousState: SixState, _resultingState: SixState) => {
                 if (move.start.equalsValue(new Coord(2, 3))) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -143,7 +143,7 @@ export class SixTutorial {
                 [O, _, _, _, _, _],
             ], 40),
             SixMove.fromCut(new Coord(2, 3), new Coord(2, 5), new Coord(2, 5)),
-            (move: SixMove, resultingState: SixState) => {
+            (move: SixMove, _previousState: SixState, resultingState: SixState) => {
                 if (move.keep.isAbsent()) {
                     return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
                 }

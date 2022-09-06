@@ -2253,9 +2253,7 @@
       </trans-unit>
       <trans-unit id="8029874053731693714" datatype="html">
         <source>Victory by blocking</source>
-        <target>Foncé s&apos;est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
-        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
-        Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.</target>
+        <target>Victoire par blocage</target>
       </trans-unit>
       <trans-unit id="5546725507412628775" datatype="html">
         <source>At any time, if a player blocks the entire game, that player loses.
@@ -2366,8 +2364,8 @@
         <source>Capturing</source>
         <target>Captures</target>
       </trans-unit>
-      <trans-unit id="8651686499168234683" datatype="html">
-        <source>If a move ends on an opponent&apos;s pieces, this one is captured and removed from the board.
+      <trans-unit id="5036745511795758114" datatype="html">
+        <source>If a move ends on an opponent&apos;s piece, it is captured and removed from the board.
         However, a move cannot end on one of the player&apos;s pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
         If a player has only one piece, that player wins the game.&lt;br/&gt;&lt;br/&gt;
@@ -3193,9 +3191,9 @@
         <source>You do not have enough strength to push.</source>
         <target>Vous ne pouvez pas pousser, vous n&apos;avez pas assez de forces</target>
       </trans-unit>
-      <trans-unit id="3634874399235422132" datatype="html">
-        <source>You cannot push and turn at the same time.</source>
-        <target>Vous ne pouvez pas changer d'orientation quand vous poussez !</target>
+      <trans-unit id="6414951217478686255" datatype="html">
+        <source>You must move or rotate your piece.</source>
+        <target>Vous devez déplacer votre pièce ou effectuer une rotation.</target>
       </trans-unit>
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>

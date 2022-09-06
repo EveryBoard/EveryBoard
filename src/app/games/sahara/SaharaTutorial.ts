@@ -44,7 +44,7 @@ export class SaharaTutorial {
         Do any simple step.`,
             SaharaState.getInitialState(),
             SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
-            (move: SaharaMove, _state: SaharaState) => {
+            (move: SaharaMove, _previous: SaharaState, _result: SaharaState) => {
                 if (move.isSimpleStep()) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -64,7 +64,7 @@ export class SaharaTutorial {
         </ol>`,
             SaharaState.getInitialState(),
             SaharaMove.from(new Coord(7, 0), new Coord(5, 0)).get(),
-            (move: SaharaMove, _: SaharaState) => {
+            (move: SaharaMove, _previous: SaharaState, _result: SaharaState) => {
                 if (move.isSimpleStep()) {
                     return MGPValidation.failure($localize`Failed! You have made a single step.`);
                 } else {

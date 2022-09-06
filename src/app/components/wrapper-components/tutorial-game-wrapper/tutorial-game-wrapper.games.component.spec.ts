@@ -43,6 +43,11 @@ import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 
+import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
+import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
+import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
+import { LinesOfActionMove } from 'src/app/games/lines-of-action/LinesOfActionMove';
+
 import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
 import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
 import { LodestoneMove } from 'src/app/games/lodestone/LodestoneMove';
@@ -102,6 +107,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
+            const linesOfActionTutorial: TutorialStep[] = new LinesOfActionTutorial().tutorial;
             const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
             const martianChessTutorial: TutorialStep[] = new MartianChessTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
@@ -170,6 +176,11 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
+                ], [
+                    new LinesOfActionRules(LinesOfActionState),
+                    linesOfActionTutorial[4],
+                    LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get(),
+                    MGPValidation.failure(`Failed!`),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[5],
@@ -291,9 +302,10 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     const move: Move = stepExpectation[2];
                     const moveResult: MGPFallible<unknown> = rules.isLegal(move, step.state);
                     if (moveResult.isSuccess()) {
-                        const state: GameState = rules.applyLegalMove(move, step.state, moveResult.get());
+                        const resultingState: GameState = rules.applyLegalMove(move, step.state, moveResult.get());
                         const validation: MGPValidation = stepExpectation[3];
-                        expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
+                        expect(Utils.getNonNullable(step.predicate)(move, step.state, resultingState))
+                            .toEqual(validation);
                     } else {
                         const context: string = 'Move should be legal to reach predicate but failed in "' + step.title+ '" because';
                         TestUtils.expectValidationSuccess(MGPValidation.ofFallible(moveResult), context);
@@ -319,9 +331,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
                             const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state);
                             if (moveResult.isSuccess()) {
                                 if (step.isPredicate()) {
-                                    const state: GameState =
+                                    const resultingState: GameState =
                                         rules.applyLegalMove(solution, step.state, moveResult.get());
-                                    expect(Utils.getNonNullable(step.predicate)(solution, state))
+                                    expect(Utils.getNonNullable(step.predicate)(solution, step.state, resultingState))
                                         .toEqual(MGPValidation.SUCCESS);
                                 }
                             } else {

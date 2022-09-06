@@ -9,13 +9,13 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('AwaleComponent', () => {
 
-    let componentTestUtils: ComponentTestUtils<AwaleComponent>;
+    let testUtils: ComponentTestUtils<AwaleComponent>;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame<AwaleComponent>('Awale');
+        testUtils = await ComponentTestUtils.forGame<AwaleComponent>('Awale');
     }));
     it('should create', () => {
-        componentTestUtils.expectToBeCreated();
+        testUtils.expectToBeCreated();
     });
     it('should accept simple move for player zero, show captured and moved', fakeAsync(async() => {
         // Given a state where player zero can capture
@@ -24,14 +24,14 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 1, 4],
         ];
         const state: AwaleState = new AwaleState(board, 0, [0, 0]);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
         // When player zero clicks on a house to distribute
         const move: AwaleMove = AwaleMove.FIVE;
 
         // Then the move should be performed
-        await componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
-        const awaleComponent: AwaleComponent = componentTestUtils.getComponent();
+        await testUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
+        const awaleComponent: AwaleComponent = testUtils.getComponent();
         // and the moved spaces should be shown
         expect(awaleComponent.getSquareClasses(5, 0)).toEqual(['moved', 'highlighted']);
         expect(awaleComponent.getSquareClasses(5, 1)).toEqual(['moved']);
@@ -45,14 +45,14 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 4, 4],
         ];
         const state: AwaleState = new AwaleState(board, 0, [0, 0]);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
         // When clicking on the empty house
         // Then it should be rejected
         const move: AwaleMove = AwaleMove.ZERO;
-        await componentTestUtils.expectMoveFailure('#click_0_0',
-                                                   AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE(),
-                                                   move, undefined, [0, 0]);
+        await testUtils.expectMoveFailure('#click_0_0',
+                                          AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE(),
+                                          move, undefined, [0, 0]);
     }));
     it(`should tell to user opponent's house cannot be moved`, fakeAsync(async() => {
         // Given a state
@@ -61,10 +61,10 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 4, 4],
         ];
         const state: AwaleState = new AwaleState(board, 0, [0, 0]);
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
         // When clicking on a house of the opponent
         // Then it should be rejected
-        await componentTestUtils.expectClickFailure('#click_0_1', AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
+        await testUtils.expectClickFailure('#click_0_1', AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
     }));
 });
