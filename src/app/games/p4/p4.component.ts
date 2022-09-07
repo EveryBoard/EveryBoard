@@ -20,7 +20,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
     public static VERBOSE: boolean = false;
 
-    public EMPTY_CASE: PlayerOrNone = PlayerOrNone.NONE;
+    public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];
 

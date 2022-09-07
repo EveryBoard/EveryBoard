@@ -47,7 +47,7 @@ export class ConspirateursTutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
             ConspirateursMoveSimple.of(new Coord(4, 6), new Coord(3, 5)).get(),
-            (move: ConspirateursMove, _: ConspirateursState) => {
+            (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
                 if (move.isSimple()) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -80,7 +80,7 @@ export class ConspirateursTutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
             ConspirateursMoveJump.of([new Coord(6, 7), new Coord(6, 5)]).get(),
-            (move: ConspirateursMove, _: ConspirateursState) => {
+            (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
                 if (move.isJump()) {
                     return MGPValidation.SUCCESS;
                 } else {

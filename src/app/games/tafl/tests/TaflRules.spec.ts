@@ -85,7 +85,7 @@ describe('TaflRules', () => {
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 3));
 
         // Then the move should be illegal
-        const reason: string = TaflFailure.LANDING_ON_OCCUPIED_CASE();
+        const reason: string = TaflFailure.LANDING_ON_OCCUPIED_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be illegal to pass through a pawn', () => {

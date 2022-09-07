@@ -29,7 +29,6 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        console.log('game construct')
         this.mustRotateBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new AwaleRules(AwaleState);
@@ -49,7 +48,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
         this.board = state.getCopiedBoard();
         if (lastMove.isPresent()) {
-            const lastPlayer: number = state.getCurrentOpponent().value;
+            const lastPlayer: number = state.getCurrentPlayer().value;
             this.last = MGPOptional.of(new Coord(lastMove.get().x, lastPlayer));
             this.showPreviousMove();
         } else {
@@ -82,7 +81,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (y !== this.rules.node.gameState.getCurrentPlayer().value) {
+        if (y === this.rules.node.gameState.getCurrentPlayer().value) {
             return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
         }
         this.last = MGPOptional.empty(); // now the user stop try to do a move
@@ -102,5 +101,16 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         } else {
             return [];
         }
+    }
+    public getPieceCx(x: number): number {
+        return 50 + 100 * x;
+    }
+    public getPieceCy(y: number): number {
+        return 50 + 120 * y;
+    }
+    public getPieceRotation(x: number, y: number): string {
+        return 'rotate(' + this.observerRole.value * 180 + ' ' +
+               this.getPieceCx(x) + ' ' +
+               this.getPieceCy(y) + ')';
     }
 }

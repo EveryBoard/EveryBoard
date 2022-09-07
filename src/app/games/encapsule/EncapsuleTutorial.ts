@@ -78,7 +78,7 @@ export class EncapsuleTutorial {
                 EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT,
             ]),
             EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
-            (move: EncapsuleMove, _: EncapsuleState) => {
+            (move: EncapsuleMove, _previous: EncapsuleState, _result: EncapsuleState) => {
                 const isCorrectLandingCoord: boolean = move.landingCoord.equals(new Coord(0, 2));
                 if (isCorrectLandingCoord) {
                     if (move.isDropping()) {

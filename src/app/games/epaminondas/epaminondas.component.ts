@@ -233,7 +233,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
         const player: Player = this.rules.node.gameState.getCurrentPlayer();
         if (!clicked.isAlignedWith(firstPiece)) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED());
+            return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_SELECTED());
         }
         const distance: number = clicked.getDistance(firstPiece);
         const direction: Direction = firstPiece.getDirectionToward(clicked).get();
@@ -279,7 +279,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const firstPiece: Coord = this.firstPiece.get();
         const lastPiece: Coord = this.lastPiece.get();
         if (!clicked.isAlignedWith(firstPiece)) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
+            return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
         }
         // The directions are valid because they are is aligned
         let phalanxDirection: Direction = Direction.factory.fromMove(firstPiece, lastPiece).get();
@@ -290,7 +290,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             phalanxDirection = phalanxLanding;
         }
         if (phalanxDirection !== phalanxLanding) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
+            return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
         }
         if (this.board[y][x] === player) {
             return this.thirdClickOnPlayerPiece(clicked, phalanxDirection, player);

@@ -8,6 +8,7 @@ import { assert } from 'src/app/utils/assert';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AwaleFailure } from './AwaleFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Player } from 'src/app/jscaip/Player';
 
 export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState> {}
 
@@ -18,22 +19,23 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
     public applyLegalMove(move: AwaleMove, state: AwaleState, infos: void): AwaleState {
         display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state });
         const x: number = move.x;
-        const player: number = state.getCurrentPlayer().value;
-        const opponent: number = state.getCurrentPlayer().getOpponent().value;
+        const player: Player = state.getCurrentPlayer();
+        const opponent: Player = state.getCurrentOpponent();
+        const playerY: number = opponent.value; // So that Player ZERO plays on the row 1
         let resultingBoard: number[][] = state.getCopiedBoard();
 
         // distribute and retrieve the landing coord of the last stone
-        const lastSpace: Coord = AwaleRules.distribute(x, player, resultingBoard);
+        const lastSpace: Coord = AwaleRules.distribute(x, playerY, resultingBoard);
         const landingCamp: number = lastSpace.y;
-        if (landingCamp === player) {
+        if (landingCamp === playerY) {
             // we finish sowing on our own side, nothing else to do
-            return new AwaleState(resultingBoard, state.turn+1, state.captured);
+            return new AwaleState(resultingBoard, state.turn + 1, state.captured);
         } else {
             // we finish sowing on the opponent's side, we therefore check the captures
             let captured: [number, number] = [0, 0];
             const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
-            captured[player] = AwaleRules.capture(lastSpace.x, opponent, player, resultingBoard);
-            if (captured[player] > 0 && AwaleRules.isStarving(opponent, resultingBoard)) {
+            captured[player.value] = AwaleRules.capture(lastSpace.x, lastSpace.y, player, resultingBoard);
+            if (captured[player.value] > 0 && AwaleRules.isStarving(opponent, resultingBoard)) {
                 /**
                  * if the distribution would capture all seeds
                  * the capture is forbidden and cancelled
@@ -45,11 +47,11 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
                 AwaleRules.canDistribute(opponent, resultingBoard) === false;
             if (mustPerformMansoon) {
                 // if the player distributed his last seeds and the opponent could not give him seeds
-                captured[opponent] += AwaleRules.mansoon(opponent, resultingBoard);
+                captured[opponent.value] += AwaleRules.mansoon(opponent, resultingBoard);
             }
             captured[0] += state.captured[0];
             captured[1] += state.captured[1];
-            return new AwaleState(resultingBoard, state.turn+1, captured);
+            return new AwaleState(resultingBoard, state.turn + 1, captured);
         }
     }
     /**
@@ -57,12 +59,13 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Returns the sum of all captured seeds.
      * Is called when a game is over because of starvation
      */
-    public static mansoon(mansooningPlayer: number, board: number[][]): number {
+    public static mansoon(mansooningPlayer: Player, board: number[][]): number {
         let sum: number = 0;
         let x: number = 0;
+        const mansoonedY: number = mansooningPlayer.getOpponent().value;
         do {
-            sum += board[mansooningPlayer][x];
-            board[mansooningPlayer][x] = 0;
+            sum += board[mansoonedY][x];
+            board[mansoonedY][x] = 0;
             x++;
         } while (x < 6);
         return sum;
@@ -74,16 +77,15 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Returns the number captured otherwise
      */
     public static isLegal(move: AwaleMove, state: AwaleState): MGPFallible<void> {
-        const player: number = state.getCurrentPlayer().value;
-        const opponent: number = state.getCurrentPlayer().getOpponent().value;
+        const opponent: Player = state.getCurrentOpponent();
+        const playerY: number = opponent.value; // So player 0 is in row 1
 
         const x: number = move.x;
-        if (state.getPieceAtXY(x, player) === 0) {
-            return MGPFallible.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE());
+        if (state.getPieceAtXY(x, playerY) === 0) {
+            return MGPFallible.failure(AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
-
         const opponentIsStarving: boolean = AwaleRules.isStarving(opponent, state.board);
-        const doesNotDistribute: boolean = AwaleRules.doesDistribute(x, player, state.board) === false;
+        const doesNotDistribute: boolean = AwaleRules.doesDistribute(x, playerY, state.board) === false;
         if (opponentIsStarving && doesNotDistribute) {
             return MGPFallible.failure(AwaleFailure.SHOULD_DISTRIBUTE());
         }
@@ -98,18 +100,19 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         }
         return board[y][x] > x; // distribution from right to left
     }
-    public static canDistribute(player: number, board: Table<number>): boolean {
+    public static canDistribute(player: Player, board: Table<number>): boolean {
         for (let x: number = 0; x < 6; x++) {
-            if (AwaleRules.doesDistribute(x++, player, board)) {
+            if (AwaleRules.doesDistribute(x++, player.getOpponent().value, board)) {
                 return true;
             }
         }
         return false;
     }
-    public static isStarving(player: number, board: Table<number>): boolean {
+    public static isStarving(player: Player, board: Table<number>): boolean {
         let i: number = 0;
+        const playerY: number = player.getOpponent().value;
         do {
-            if (board[player][i++] > 0) {
+            if (board[playerY][i++] > 0) {
                 return false; // found some food there, so not starving
             }
         } while (i < 6);
@@ -157,8 +160,9 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Captures and return the number of captured
      * Captures even if this could mean doing an illegal starvation
      */
-    public static capture(x: number, y: number, player: number, board: number[][]): number {
-        assert(y !== player, 'AwaleRules.capture called with wrong values of x and player');
+    public static capture(x: number, y: number, player: Player, board: number[][]): number {
+        const playerY: number = player.getOpponent().value;
+        assert(y !== playerY, 'AwaleRules.capture cannot capture the players house');
         let target: number = board[y][x];
         if ((target < 2) || (target > 3)) {
             return 0; // first space not capturable
@@ -167,11 +171,10 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         let captured: number = 0;
         let direction: number = -1; // by defaut, capture from right to left
         let limit: number = -1;
-        if (player === 0) {
-            /**
-             * if turn == 0 capture is on the bottom line
-             * means capture goes from left to right ( + 1)
-             * so one ending condition of the loop is reaching index 6
+        if (player === Player.ONE) {
+            /** if Player.ONE capture, it is on the bottom line
+              * means capture goes from left to right ( + 1)
+              * so one ending condition of the loop is reaching index 6
              */
             direction = +1;
             limit = 6;

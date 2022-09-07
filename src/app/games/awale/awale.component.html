@@ -16,14 +16,14 @@
                     (click)="onClick(x, y)"
                     [ngClass]="getSquareClasses(x, y)"
                     class="base"
-                    [attr.cx]="50 + 100*x"
-                    [attr.cy]="50 + 120*y"
+                    [attr.cx]="getPieceCx(x)"
+                    [attr.cy]="getPieceCy(y)"
                     r="46"
-                    [attr.transform]="rotation"
             />
             <text (click)="onClick(x, y)"
                   [attr.x]="50 + 100*x"
                   [attr.y]="66 + 120*y"
+                  [attr.transform]="getPieceRotation(x, y)"
                   class="text-big text-center"
             >
                 {{ content }}

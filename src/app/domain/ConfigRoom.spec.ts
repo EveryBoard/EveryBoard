@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { FirstPlayer } from './Joiner';
+import { FirstPlayer } from './ConfigRoom';
 
 describe('FirstPlayer', () => {
 

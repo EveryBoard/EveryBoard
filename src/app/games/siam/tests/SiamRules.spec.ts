@@ -12,7 +12,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('SiamRules:', () => {
 
@@ -39,18 +38,12 @@ describe('SiamRules:', () => {
             new SiamMinimax(rules, 'SiamMinimax'),
         ];
     });
-    it('Should be created', () => {
-        expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
-    });
-    it('Insertion should work', () => {
-        const board: Table<SiamPiece> = [
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, M, M, M, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
+    it('should allow insertions', () => {
+        // Given the initial board
+        const state: SiamState = SiamState.getInitialState();
+        // When performing an insertion
+        const move: SiamMove = new SiamMove(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -58,15 +51,11 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [R, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Simple forwarding should work', () => {
+    it('should allow moving a piece forward', () => {
+        // Given a state with a piece already on the board
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -74,6 +63,10 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, _, U, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When moving a piece forward
+        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -81,15 +74,11 @@ describe('SiamRules:', () => {
             [_, _, U, _, _],
             [_, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should forbid moving opponent pieces', () => {
+    it('should forbid moving pieces of the opponent', () => {
+        // Given a state with a piece already on the board
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -98,11 +87,13 @@ describe('SiamRules:', () => {
             [_, _, u, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When trying to move a piece of the opponent
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     });
-    it('Side pushing should work', () => {
+    it('should allow pushing', () => {
+        // Given a board with pieces next to each other
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -110,6 +101,10 @@ describe('SiamRules:', () => {
             [r, _, _, _, _],
             [U, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When pushing the opponent's piece with the player's piece
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -117,15 +112,11 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Rotation should work', () => {
+    it('should allow rotating a piece', () => {
+        // Given a board with a piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -133,6 +124,10 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [U, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When performing a rotation
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.RIGHT);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -140,15 +135,11 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [R, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.RIGHT);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Half turn rotation should work', () => {
+    it('should allow rotating a piece by half a turn', () => {
+        // Given a board with a piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -156,22 +147,22 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [U, _, _, _, _],
         ];
-        const expectedBoard: Table<SiamPiece> = [
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, M, M, M, _],
-            [_, _, _, _, _],
-            [D, _, _, _, _],
-        ];
         const state: SiamState = new SiamState(board, 0);
+        // When performing a half-turn rotation
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.DOWN);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
+        // Then it should succeed
+        const expectedBoard: Table<SiamPiece> = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [D, _, _, _, _],
+        ];
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Rotation should work while forwarding', () => {
+    it('should allow rotating and moving forward', () => {
+        // Given a board with a piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -179,6 +170,10 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [U, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When rotating the piece and moving it forward at the same time
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -186,15 +181,11 @@ describe('SiamRules:', () => {
             [D, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should recognize fake-rotations', () => {
+    it('should forbid staying in the same orientation through a fake rotation', () => {
+        // Given a board with a player piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -203,11 +194,13 @@ describe('SiamRules:', () => {
             [_, _, U, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When trying to perform a rotation that does not change the orientation
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(SiamFailure.ILLEGAL_ROTATION());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.MUST_MOVE_OR_ROTATE());
     });
-    it('Moving in a direction different from the piece should be legal', () => {
+    it('should allow moving in a direction different from the orientation of the piece', () => {
+        // Given a board with a piece
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -215,6 +208,10 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [U, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When moving the piece in a different direction than its orientation
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -222,15 +219,11 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, L, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('One vs one push should not work', () => {
+    it('should forbid pushing one against one', () => {
+        // Given a board with head-to-head pieces
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -239,11 +232,13 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When trying to push the other piece
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
-    it('One vs one push should not work even if one of the involved is at the border', () => {
+    it('should forbid pushing one against one, next to a border', () => {
+        // Given a board with head-to-head pieces, with one next to the border
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -252,11 +247,13 @@ describe('SiamRules:', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When trying to push the other piece over the border
         const move: SiamMove = new SiamMove(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
-    it('Two vs one push should work', () => {
+    it('should allow to push two against one', () => {
+        // Given a board with two pieces against one
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -264,6 +261,10 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
             [U, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When pushing the one piece
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [d, _, _, _, _],
@@ -271,15 +272,11 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Two vs one should not work on this configuration', () => {
+    it('should forbid to push two against one in case of sandwich', () => {
+        // Given a board with two pieces against one, where the one is sandwiched between the other pieces
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -288,11 +285,13 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When tryig to push the one piece
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
-    it('Pushing while changing direction should be impossible', () => {
+    it('should forbid to push while changing direction', () => {
+        // Given a board with two pieces head-to-head
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -301,11 +300,13 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When trying to push and change direction at the same time
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(SiamFailure.ILLEGAL_PUSH());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.ILLEGAL_PUSH());
     });
-    it('6 insertions should be impossible', () => {
+    it('should be forbidden to insert a sixth peice', () => {
+        // Given a board with 5 pieces of the player
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -314,11 +315,13 @@ describe('SiamRules:', () => {
             [U, U, U, U, U],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When trying to insert a 6th piece
         const move: SiamMove = new SiamMove(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(SiamFailure.NO_REMAINING_PIECE_TO_INSERT());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NO_REMAINING_PIECE_TO_INSERT());
     });
-    it('Pushing several mountains should be illegal', () => {
+    it('should be forbidden to push several mountains with a single piece', () => {
+        // Given a board with a piece next to aligned mountains
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -327,11 +330,13 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+        // When trying to push more than one mountain
         const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.getReason()).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
-    it('Two pusher can push two mountain', () => {
+    it('should be allowed to push two montains with two pushers', () => {
+        // Given a board with two pushers next to the mountains
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -339,6 +344,10 @@ describe('SiamRules:', () => {
             [_, _, _, M, _],
             [_, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When pushing two mountains
+        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -346,15 +355,11 @@ describe('SiamRules:', () => {
             [_, _, _, M, _],
             [_, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Player 0 pushing player 0 pushing mountain should be a victory for player 0', () => {
+    it('should assign victory to player 0 if its pieces push the mountain out of the board', () => {
+        // Given a board with two player 0 pieces ready to push a mountai
         const board: Table<SiamPiece> = [
             [_, _, M, _, _],
             [_, _, U, _, _],
@@ -362,6 +367,10 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When pushing the mountain out of the board
+        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, U, _, _],
             [_, _, U, _, _],
@@ -369,17 +378,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        // and victory should be for player zero
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
+    it('should assign victory to the player closest to and aligned with the fallen mountain', () => {
+        // Given a board where 0 can push 1 that pushes the mountain
         const board: Table<SiamPiece> = [
             [_, _, M, _, _],
             [_, _, u, _, _],
@@ -387,6 +393,10 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When pushing the mountain out of the board
+        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, u, _, _],
             [_, _, U, _, _],
@@ -394,17 +404,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        // and victory should be for player zero
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('Player 0 pushing player 1 on his side pushing mountain should be a victory for player 0', () => {
+    it('should assign victory to player closest to and aligned with the fallen mountain (and not to the non-aligned pieces)', () => {
+        // Given a board where the piece next to the mountain is not aligned vertically
         const board: Table<SiamPiece> = [
             [_, _, M, _, _],
             [_, _, l, _, _],
@@ -412,6 +419,10 @@ describe('SiamRules:', () => {
             [_, _, R, _, _],
             [_, _, R, _, _],
         ];
+        const state: SiamState = new SiamState(board, 0);
+        // When pushing the mountain out of the board vertically
+        const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, l, _, _],
             [_, _, R, _, _],
@@ -419,13 +430,9 @@ describe('SiamRules:', () => {
             [_, _, R, _, _],
             [_, _, U, _, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
-        const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const status: MGPFallible<SiamLegalityInformation> = rules.isLegal(move, state);
-        expect(status.isSuccess()).toBeTrue();
-        const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        // and victory should be for player zero, whose pieces are aligned with the push
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });

@@ -1,6 +1,6 @@
 <svg  xmlns="http://www.w3.org/2000/svg"
       width="100%" height="auto"
-      [attr.viewBox]="'-4 -4 ' + (8 * SPACE_SIZE) + ' ' + (8 + 8 * SPACE_SIZE)"
+      [attr.viewBox]="getViewBox()"
       [attr.transform]="rotation"
       preserveAspectRatio="xMidYMid meet"
 >
@@ -21,7 +21,7 @@
                 <circle *ngIf="caseContent !== UNOCCUPIED"
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
                         [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
-                        [attr.fill]="pieceColor(caseContent)"
+                        [ngClass]="piecePlayerClass(caseContent)"
                         [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                         class="base-no-fill"
                 />
@@ -32,29 +32,30 @@
                       [attr.ry]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
                       [attr.width]="SPACE_SIZE/4"
                       [attr.height]="SPACE_SIZE/4"
-                      [ngClass]="piecePlayerClass(caseContent)"
+                      [attr.fill]="pieceColor(caseContent)"
                       class="no-stroke"
                 />
             </g>
         </g>
     </g>
     <!-- Highlight last move -->
-    <g *ngIf="lastMove.isPresent()">
-        <rect [attr.x]="lastMove.get().coord.x * SPACE_SIZE"
-              [attr.y]="lastMove.get().coord.y * SPACE_SIZE"
+    <g *ngIf="lastPieceMove.isPresent()">
+        <rect [attr.x]="lastPieceMove.get().coord.x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().coord.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
-        <rect [attr.x]="lastMove.get().end.x * SPACE_SIZE"
-              [attr.y]="lastMove.get().end.y * SPACE_SIZE"
+        <rect [attr.x]="lastPieceMove.get().end.x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().end.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen.isPresent()"
+            id="selectedPiece"
             [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
             [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
-            r="30"
+            [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
             class="base mid-stroke no-fill highlighted"/>
 </svg>

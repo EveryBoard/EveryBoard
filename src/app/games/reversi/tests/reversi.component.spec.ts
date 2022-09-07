@@ -9,18 +9,18 @@ import { fakeAsync } from '@angular/core/testing';
 
 describe('ReversiComponent', () => {
 
-    let componentTestUtils: ComponentTestUtils<ReversiComponent>;
+    let testUtils: ComponentTestUtils<ReversiComponent>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
+        testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should show last move and captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
@@ -34,12 +34,12 @@ describe('ReversiComponent', () => {
             [_, _, _, O, _, _, _, _],
         ];
         const initialState: ReversiState = new ReversiState(board, 0);
-        componentTestUtils.setupState(initialState);
+        testUtils.setupState(initialState);
 
         const move: ReversiMove = new ReversiMove(0, 4);
-        await componentTestUtils.expectMoveSuccess('#click_0_4', move, undefined, [2, 7]);
+        await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [2, 7]);
 
-        const tablutGameComponent: ReversiComponent = componentTestUtils.getComponent();
+        const tablutGameComponent: ReversiComponent = testUtils.getComponent();
         expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured');
         expect(tablutGameComponent.getRectClasses(2, 2)).not.toContain('captured');
         expect(tablutGameComponent.getRectClasses(3, 1)).not.toContain('captured');
@@ -66,9 +66,9 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // when displaying the board
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
         // then the player can pass
-        await componentTestUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);
+        await testUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);
     }));
 });
