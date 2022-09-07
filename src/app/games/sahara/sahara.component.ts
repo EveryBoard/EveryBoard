@@ -64,21 +64,25 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     private choosePiece(x: number, y: number): MGPValidation {
         if (this.board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
-        } else if (this.board[y][x].value === this.getTurn() % 2) { // selected his own pyramid
+        } else if (this.board[y][x].is(Player.fromTurn(this.getTurn()))) { // selected his own pyramid
+            console.log('click bien !')
             const coord: Coord = new Coord(x, y);
-            this.chosenCoord = MGPOptional.of(coord);
-            this.possibleLandings = this.rules.getLandingCoords(this.board, coord);
+            this.selectPiece(coord);
             return MGPValidation.SUCCESS;
         } else { // Selected opponent pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
         }
+    }
+    private selectPiece(coord: Coord): void {
+        this.chosenCoord = MGPOptional.of(coord);
+        this.possibleLandings = this.rules.getLandingCoords(this.board, coord);
     }
     private async chooseLandingCoord(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
         const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
         const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
         if (this.board[y][x] === player) {
-            this.chosenCoord = MGPOptional.of(new Coord(x, y));
+            this.selectPiece(new Coord(x, y));
             return MGPValidation.SUCCESS;
         }
         const newMove: MGPFallible<SaharaMove> = SaharaMove.from(this.chosenCoord.get(), clickedCoord);
@@ -88,7 +92,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get(), this.rules.node.gameState);
     }
     public updateBoard(): void {
-        this.chosenCoord = MGPOptional.empty();
         const move: MGPOptional<SaharaMove> = this.rules.node.move;
         this.lastCoord = move.map((move: SaharaMove) => move.coord);
         this.lastMoved = move.map((move: SaharaMove) => move.end);

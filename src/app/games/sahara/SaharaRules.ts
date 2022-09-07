@@ -89,14 +89,15 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         if (TriangularCheckerBoard.isSpaceDark(coord) === true) {
             return landings.toList();
         } else {
+            const farLandings: MGPSet<Coord> = new MGPSet(landings.toList()); // Deep copy
             for (const neighbor of landings) {
                 const secondStepNeighbors: Coord[] =
                     TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
                 for (const secondStepNeighbor of secondStepNeighbors) {
-                    landings.add(secondStepNeighbor);
+                    farLandings.add(secondStepNeighbor);
                 }
             }
-            return landings.toList();
+            return farLandings.toList();
         }
     }
     public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
