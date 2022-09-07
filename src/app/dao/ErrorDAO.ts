@@ -30,11 +30,4 @@ export class ErrorDAO extends FirestoreDAO<MGPError> {
     public constructor(firestore: Firestore) {
         super('errors', firestore);
     }
-    public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {
-        if (data === undefined) {
-            return this.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message]]);
-        } else {
-            return this.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message], ['data', '==', data]]);
-        }
-    }
 }

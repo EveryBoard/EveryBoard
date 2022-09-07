@@ -35,8 +35,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ChatService } from 'src/app/services/ChatService';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 
 export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promise<void> {
     const partDAO: PartDAO = TestBed.inject(PartDAO);
@@ -57,9 +57,7 @@ export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promi
                                                  MGPOptional.of('observer@home'),
                                                  true);
     await userDAO.set(USER_OBSERVER.id, OBSERVER);
-    spyOn(TestBed.inject(ChatService), 'startObserving').and.resolveTo();
-    spyOn(TestBed.inject(ChatService), 'stopObserving').and.resolveTo();
-    return Promise.resolve();
+    return;
 }
 export async function prepareWrapper<T extends AbstractGameComponent>(user: AuthUser, component: string)
 : Promise<ComponentTestUtils<T, MinimalUser>>
@@ -75,7 +73,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     component: string,
     shorterGlobalChrono: boolean = false,
     waitForPartToStart: boolean = true)
-: Promise<{ t: ComponentTestUtils<T, MinimalUser>, o: PlayerOrNone, p: PartDAO }>
+: Promise<{ t: ComponentTestUtils<T, MinimalUser>, o: PlayerOrNone }>
 {
     const testUtils: ComponentTestUtils<T, MinimalUser> = await prepareWrapper<T>(user, component);
 
@@ -89,9 +87,10 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     expect(partCreationId).withContext(context).toBeTruthy();
     context = 'partCreation field should also be present';
     expect(wrapper.partCreation).withContext(context).toBeTruthy();
-    const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-    await configRoomDAO.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+    const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
+    await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
+    const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
     await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
     // TODO: replace by a click on the component to really simulate it "end2end"
     testUtils.detectChanges();
@@ -125,8 +124,8 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
         beginning: serverTimestamp(),
     };
     const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-    const partDAO: PartDAO = TestBed.inject(PartDAO);
-    await partDAO.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, 0, update);
+    const gameService: GameService = TestBed.inject(GameService);
+    await gameService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, 0, update);
     testUtils.detectChanges();
     if (waitForPartToStart === true) {
         tick(1);
@@ -134,7 +133,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
         testUtils.bindGameComponent();
         testUtils.prepareSpies();
     }
-    return { t: testUtils, o: observerRole, p: partDAO };
+    return { t: testUtils, o: observerRole };
 }
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
@@ -155,9 +154,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     let wrapper: OnlineGameWrapperComponent;
 
-    // let configRoomDAO: ConfigRoomDAO;
+    let gameService: GameService;
     let partDAO: PartDAO;
-    // let userDAO: UserDAO;
 
     const OBSERVER: User = {
         username: 'jeanJaja',
@@ -206,7 +204,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
     async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number): Promise<void> {
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-        await partDAO.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, lastIndex, update);
+        await gameService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, lastIndex, update);
         testUtils.detectChanges();
         tick(1);
     }
@@ -240,13 +238,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                       waitForPartToStart?: boolean)
     : Promise<void>
     {
-        const { t, o, p } = (await prepareStartedGameFor<QuartoComponent>(authUser,
-                                                                          'Quarto',
-                                                                          shorterGlobalChrono,
-                                                                          waitForPartToStart));
+        const { t, o } = (await prepareStartedGameFor<QuartoComponent>(authUser,
+                                                                       'Quarto',
+                                                                       shorterGlobalChrono,
+                                                                       waitForPartToStart));
         testUtils = t;
         observerRole = o;
-        partDAO = p;
+        partDAO = TestBed.inject(PartDAO);
+        gameService = TestBed.inject(GameService);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
     }
     async function prepareBoard(moves: QuartoMove[], player: Player = Player.ZERO): Promise<void> {

@@ -7,11 +7,12 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Subscription } from 'rxjs';
+import { UserService } from './UserService';
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -80,7 +81,7 @@ export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    public unsubscribeFromAuth!: Unsubscribe; // public for testing purposes only
+    private readonly authSubscription!: Subscription;
 
     /**
      * This is the current user, if there is one.
@@ -89,31 +90,30 @@ export class ConnectedUserService implements OnDestroy {
      */
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
 
-    private userUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
+    private userSubscription: Subscription = new Subscription();
 
     private readonly userRS: ReplaySubject<AuthUser>;
 
     private readonly userObs: Observable<AuthUser>;
 
     constructor(private readonly userDAO: UserDAO,
+                private readonly userService: UserService,
                 private readonly auth: FireAuth.Auth)
     {
         display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.unsubscribeFromAuth =
-            FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
+        this.authSubscription =
+            new Subscription(FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
                     display(ConnectedUserService.VERBOSE, 'User is not connected');
-                    if (this.userUnsubscribe.isPresent()) {
-                        this.userUnsubscribe.get()();
-                    }
+                    this.userSubscription.unsubscribe();
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
                     assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
-                    this.userUnsubscribe = MGPOptional.of(
+                    this.userSubscription =
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                             if (doc.isPresent()) {
                                 const username: string | undefined = doc.get().username;
@@ -123,7 +123,7 @@ export class ConnectedUserService implements OnDestroy {
                                 if (userHasFinalizedVerification === true && doc.get().verified === false) {
                                     // The user has finalized verification but isn't yet marked as so in the DB.
                                     // So we mark it, and we'll get notified when the user is marked.
-                                    return this.userDAO.markAsVerified(user.uid);
+                                    return this.userService.markAsVerified(user.uid);
                                 }
                                 const authUser: AuthUser = new AuthUser(user.uid,
                                                                         MGPOptional.ofNullable(user.email),
@@ -132,9 +132,9 @@ export class ConnectedUserService implements OnDestroy {
                                 this.user = MGPOptional.of(authUser);
                                 this.userRS.next(authUser);
                             }
-                        }));
+                        });
                 }
-            });
+            }));
     }
     public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
@@ -154,7 +154,7 @@ export class ConnectedUserService implements OnDestroy {
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
         display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doRegister(' + email + ')');
-        if (await this.userDAO.usernameIsAvailable(username)) {
+        if (await this.userService.usernameIsAvailable(username)) {
             return this.registerAfterUsernameCheck(username, email, password);
         } else {
             return MGPFallible.failure($localize`This username is already in use.`);
@@ -271,23 +271,23 @@ export class ConnectedUserService implements OnDestroy {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
         }
     }
-    public getUserObs(): Observable<AuthUser> {
-        return this.userObs;
+    public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
+        return this.userObs.subscribe(callback);
     }
     public async setUsername(username: string): Promise<MGPValidation> {
         if (username === '') {
             return MGPValidation.failure($localize`Your username may not be empty.`);
         }
         try {
-            const available: boolean = await this.userDAO.usernameIsAvailable(username);
+            const available: boolean = await this.userService.usernameIsAvailable(username);
             if (available === false) {
                 return MGPValidation.failure($localize`This username is already in use, please select a different one.`);
             }
             const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
             await Auth.updateProfile(currentUser, { displayName: username });
-            await this.userDAO.setUsername(currentUser.uid, username);
+            await this.userService.setUsername(currentUser.uid, username);
             // Only gmail accounts can set their username, and they become finalized once they do
-            await this.userDAO.markAsVerified(currentUser.uid);
+            await this.userService.markAsVerified(currentUser.uid);
             // Reload the user to notify listeners that the user has changed
             await this.reloadUser();
             return MGPValidation.SUCCESS;
@@ -319,12 +319,10 @@ export class ConnectedUserService implements OnDestroy {
     }
     public sendPresenceToken(): Promise<void> {
         assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
-        return this.userDAO.updatePresenceToken(this.user.get().id);
+        return this.userService.updatePresenceToken(this.user.get().id);
     }
     public ngOnDestroy(): void {
-        if (this.userUnsubscribe.isPresent()) {
-            this.userUnsubscribe.get()();
-        }
-        this.unsubscribeFromAuth();
+        this.userSubscription.unsubscribe();
+        this.authSubscription.unsubscribe();
     }
 }

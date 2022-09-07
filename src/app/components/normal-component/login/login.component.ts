@@ -24,12 +24,11 @@ export class LoginComponent implements OnInit {
                 public connectedUserService: ConnectedUserService) {
     }
     public ngOnInit(): void {
-        this.connectedUserService.getUserObs()
-            .subscribe(async(user: AuthUser) => {
-                if (user !== AuthUser.NOT_CONNECTED) {
-                    await this.redirect();
-                }
-            });
+        this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
+            if (user !== AuthUser.NOT_CONNECTED) {
+                await this.redirect();
+            }
+        });
     }
     public async loginWithEmail(value: {email: string, password: string}): Promise<void> {
         const result: MGPValidation = await this.connectedUserService.doEmailLogin(value.email, value.password);
