@@ -5,7 +5,6 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, createDisconnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { PartDAO } from '../PartDAO';
 import { UserDAO } from '../UserDAO';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
@@ -19,6 +18,7 @@ import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { Utils } from 'src/app/utils/utils';
 import { FocusedPart } from 'src/app/domain/User';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 
 type PartInfo = {
     id: string,
@@ -32,6 +32,7 @@ describe('PartDAO', () => {
     let partDAO: PartDAO;
     let userDAO: UserDAO;
     let configRoomDAO: ConfigRoomDAO;
+    let configRoomService: ConfigRoomService;
 
     const CREATOR_EMAIL: string = UserMocks.CREATOR_AUTH_USER.email.get();
     const CREATOR_NAME: string = UserMocks.CREATOR_AUTH_USER.username.get();
@@ -45,49 +46,26 @@ describe('PartDAO', () => {
     const MALICIOUS_EMAIL: string = 'm@licio.us';
     const MALICIOUS_NAME: string = 'malicious';
 
+    function updateAndBumpIndex(id: string, user: Player, lastIndex: number, update: Partial<Part>): Promise<void> {
+        update = {
+            ...update,
+            lastUpdate: {
+                index: lastIndex + 1,
+                player: user.value,
+            },
+        };
+        return partDAO.update(id, update);
+    }
 
     beforeEach(async() => {
         await setupEmulators();
         partDAO = TestBed.inject(PartDAO);
         userDAO = TestBed.inject(UserDAO);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
+        configRoomService = TestBed.inject(ConfigRoomService);
     });
     it('should be created', () => {
         expect(partDAO).toBeTruthy();
-    });
-    describe('observeActiveParts', () => {
-        it('should call observingWhere with the right condition', () => {
-            const callback: FirestoreCollectionObserver<Part> = new FirestoreCollectionObserver<Part>(
-                () => void { },
-                () => void { },
-                () => void { },
-            );
-            spyOn(partDAO, 'observingWhere').and.callFake(() => {return () => {};});
-            partDAO.observeActiveParts(callback);
-            expect(partDAO.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
-        });
-    });
-    describe('updateAndBumpIndex', () => {
-        it('Should delegate to update and bump index', fakeAsync(async() => {
-            // Given a PartDAO and an update to make to the part
-            spyOn(partDAO, 'update').and.resolveTo();
-            const update: Partial<Part> = {
-                turn: 42,
-            };
-
-            // When calling updateAndBumpIndex
-            await partDAO.updateAndBumpIndex('partId', Player.ZERO, 73, update);
-
-            // Then update should have been called with lastUpdate infos added to it
-            const expectedUpdate: Partial<Part> = {
-                lastUpdate: {
-                    index: 74,
-                    player: Player.ZERO.value,
-                },
-                turn: 42,
-            };
-            expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
-        }));
     });
     describe('for verified user', () => {
         it('should allow creating a part', fakeAsync(async() => {
@@ -280,7 +258,7 @@ describe('PartDAO', () => {
         }));
         async function addCandidate(partId: string, signOutUser: boolean = true): Promise<MinimalUser> {
             const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
-            await configRoomDAO.addCandidate(partId, candidate);
+            await configRoomService.addCandidate(partId, candidate);
             if (signOutUser) {
                 await signOut();
             }
@@ -318,17 +296,17 @@ describe('PartDAO', () => {
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document
             const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
-                                                                     Player.ONE,
-                                                                     partInfo.part.lastUpdate.index,
-                                                                     {
-                                                                         playerZero: partInfo.creator,
-                                                                         playerOne: partInfo.candidate,
-                                                                         turn: 0,
-                                                                         beginning: serverTimestamp(),
-                                                                         remainingMsForZero: remainingMs,
-                                                                         remainingMsForOne: remainingMs,
-                                                                     });
+            const result: Promise<void> = updateAndBumpIndex(partInfo.id,
+                                                             Player.ONE,
+                                                             partInfo.part.lastUpdate.index,
+                                                             {
+                                                                 playerZero: partInfo.creator,
+                                                                 playerOne: partInfo.candidate,
+                                                                 turn: 0,
+                                                                 beginning: serverTimestamp(),
+                                                                 remainingMsForZero: remainingMs,
+                                                                 remainingMsForOne: remainingMs,
+                                                             });
 
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
@@ -338,17 +316,17 @@ describe('PartDAO', () => {
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but uses an incorrect remainingMs for player zero
             const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
-                                                                     Player.ONE,
-                                                                     partInfo.part.lastUpdate.index,
-                                                                     {
-                                                                         playerZero: partInfo.creator,
-                                                                         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                                                                         turn: 0,
-                                                                         beginning: serverTimestamp(),
-                                                                         remainingMsForZero: 42,
-                                                                         remainingMsForOne: remainingMs,
-                                                                     });
+            const result: Promise<void> = updateAndBumpIndex(partInfo.id,
+                                                             Player.ONE,
+                                                             partInfo.part.lastUpdate.index,
+                                                             {
+                                                                 playerZero: partInfo.creator,
+                                                                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                                                                 turn: 0,
+                                                                 beginning: serverTimestamp(),
+                                                                 remainingMsForZero: 42,
+                                                                 remainingMsForOne: remainingMs,
+                                                             });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -358,17 +336,17 @@ describe('PartDAO', () => {
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document but uses an incorrect remainingMs for playerOne
             const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
-                                                                     Player.ONE,
-                                                                     partInfo.part.lastUpdate.index,
-                                                                     {
-                                                                         playerZero: partInfo.creator,
-                                                                         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                                                                         turn: 0,
-                                                                         beginning: serverTimestamp(),
-                                                                         remainingMsForZero: remainingMs,
-                                                                         remainingMsForOne: 42424242,
-                                                                     });
+            const result: Promise<void> = updateAndBumpIndex(partInfo.id,
+                                                             Player.ONE,
+                                                             partInfo.part.lastUpdate.index,
+                                                             {
+                                                                 playerZero: partInfo.creator,
+                                                                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                                                                 turn: 0,
+                                                                 beginning: serverTimestamp(),
+                                                                 remainingMsForZero: remainingMs,
+                                                                 remainingMsForOne: 42424242,
+                                                             });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -387,10 +365,10 @@ describe('PartDAO', () => {
                 remainingMsForZero: remainingMs,
                 remainingMsForOne: remainingMs,
             };
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
-                                                                     Player.ONE,
-                                                                     partInfo.part.lastUpdate.index,
-                                                                     update);
+            const result: Promise<void> = updateAndBumpIndex(partInfo.id,
+                                                             Player.ONE,
+                                                             partInfo.part.lastUpdate.index,
+                                                             update);
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -409,10 +387,10 @@ describe('PartDAO', () => {
                 remainingMsForZero: remainingMs,
                 remainingMsForOne: remainingMs,
             };
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
-                                                                     Player.ONE,
-                                                                     partInfo.part.lastUpdate.index,
-                                                                     update);
+            const result: Promise<void> = updateAndBumpIndex(partInfo.id,
+                                                             Player.ONE,
+                                                             partInfo.part.lastUpdate.index,
+                                                             update);
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -433,18 +411,18 @@ describe('PartDAO', () => {
             for (const update of forbiddenUpdates) {
                 // When chosen oopponent starts the part but modifies one of the forbidden field
                 const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
-                const result: Promise<void> = partDAO.updateAndBumpIndex(partInfo.id,
-                                                                         Player.ONE,
-                                                                         partInfo.part.lastUpdate.index,
-                                                                         {
-                                                                             ...update,
-                                                                             playerZero: partInfo.creator,
-                                                                             playerOne: partInfo.candidate,
-                                                                             turn: 0,
-                                                                             beginning: serverTimestamp(),
-                                                                             remainingMsForZero: remainingMs,
-                                                                             remainingMsForOne: remainingMs,
-                                                                         });
+                const result: Promise<void> = updateAndBumpIndex(partInfo.id,
+                                                                 Player.ONE,
+                                                                 partInfo.part.lastUpdate.index,
+                                                                 {
+                                                                     ...update,
+                                                                     playerZero: partInfo.creator,
+                                                                     playerOne: partInfo.candidate,
+                                                                     turn: 0,
+                                                                     beginning: serverTimestamp(),
+                                                                     remainingMsForZero: remainingMs,
+                                                                     remainingMsForOne: remainingMs,
+                                                                 });
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
             }}));
@@ -491,7 +469,7 @@ describe('PartDAO', () => {
             for (const update of updates) {
                 // When trying to change the field
                 const result: Promise<void> =
-                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, update);
+                    updateAndBumpIndex(partId, Player.ZERO, PartMocks.INITIAL.lastUpdate.index, update);
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
             }
@@ -532,10 +510,10 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero });
 
             // When trying to change the game type
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId,
-                                                                     Player.ZERO,
-                                                                     PartMocks.INITIAL.lastUpdate.index,
-                                                                     { typeGame: 'P4' });
+            const result: Promise<void> = updateAndBumpIndex(partId,
+                                                             Player.ZERO,
+                                                             PartMocks.INITIAL.lastUpdate.index,
+                                                             { typeGame: 'P4' });
             // Then it should fail
             await expectPermissionToBeDenied(result);
         }));
@@ -555,13 +533,13 @@ describe('PartDAO', () => {
                 let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForZero);
                 let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1,
-                                                 { turn: 1, listMoves: [0] });
+                await updateAndBumpIndex(partId, Player.ZERO, 1,
+                                         { turn: 1, listMoves: [0] });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
                 remainingMsForZero -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2,
-                                                 { turn: 2, listMoves: [0, 1], remainingMsForZero });
+                await updateAndBumpIndex(partId, Player.ONE, 2,
+                                         { turn: 2, listMoves: [0, 1], remainingMsForZero });
                 await signOut();
                 await reconnectUser(CREATOR_EMAIL);
                 // When updating turns with a legitimate increase/decrease
@@ -570,8 +548,8 @@ describe('PartDAO', () => {
                     remainingMsForOne -= 10;
                 }
                 const result: Promise<void> =
-                    partDAO.updateAndBumpIndex(partId, Player.ZERO, 3,
-                                               { turn, listMoves, remainingMsForOne });
+                    updateAndBumpIndex(partId, Player.ZERO, 3,
+                                       { turn, listMoves, remainingMsForOne });
                 // Then it should succeed
                 await expectAsync(result).toBeResolvedTo();
             }
@@ -591,26 +569,26 @@ describe('PartDAO', () => {
                 let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForZero);
                 let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 1,
-                                                 { turn: 1, listMoves: [0] });
+                await updateAndBumpIndex(partId, Player.ZERO, 1,
+                                         { turn: 1, listMoves: [0] });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
                 remainingMsForZero -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ONE, 2,
-                                                 { turn: 2, listMoves: [0, 1], remainingMsForZero });
+                await updateAndBumpIndex(partId, Player.ONE, 2,
+                                         { turn: 2, listMoves: [0, 1], remainingMsForZero });
                 await signOut();
                 await reconnectUser(CREATOR_EMAIL);
                 remainingMsForOne -= 10;
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, 3,
-                                                 { turn: 3, listMoves: [0, 1, 2], remainingMsForOne });
+                await updateAndBumpIndex(partId, Player.ZERO, 3,
+                                         { turn: 3, listMoves: [0, 1, 2], remainingMsForOne });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
                 // When updating turns with an illegal increase/decrease
                 const turn: number = 3 + turnDelta;
                 remainingMsForZero -= 10;
                 const result: Promise<void> =
-                    partDAO.updateAndBumpIndex(partId, Player.ONE, 4,
-                                               { turn, listMoves: [0, 1, 2, 3], remainingMsForZero });
+                    updateAndBumpIndex(partId, Player.ONE, 4,
+                                       { turn, listMoves: [0, 1, 2, 3], remainingMsForZero });
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
 
@@ -625,8 +603,10 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero });
 
             // When updating lastUpdate as expected
-            const result: Promise<void> =
-                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.STARTED.lastUpdate.index, { });
+            const result: Promise<void> = updateAndBumpIndex(partId,
+                                                             Player.ZERO,
+                                                             PartMocks.STARTED.lastUpdate.index,
+                                                             { });
 
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
@@ -638,7 +618,7 @@ describe('PartDAO', () => {
 
             // When incrementing the index of lastUpdate too much
             const result: Promise<void> =
-                    partDAO.updateAndBumpIndex(partId, Player.ZERO, PartMocks.STARTED.lastUpdate.index + 1, { });
+                    updateAndBumpIndex(partId, Player.ZERO, PartMocks.STARTED.lastUpdate.index + 1, { });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -650,7 +630,7 @@ describe('PartDAO', () => {
 
             // When providing the wrong player in lastUpdate
             const result: Promise<void> =
-                    partDAO.updateAndBumpIndex(partId, Player.ONE, PartMocks.STARTED.lastUpdate.index, { });
+                    updateAndBumpIndex(partId, Player.ONE, PartMocks.STARTED.lastUpdate.index, { });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -663,14 +643,14 @@ describe('PartDAO', () => {
             const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
-            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
-                                             { request: Request.rematchProposed(Player.ZERO) });
+            await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
+                                     { request: Request.rematchProposed(Player.ZERO) });
 
             await signOut();
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the player one accepts the rematch
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
                 request: Request.rematchAccepted('Quarto', 'newPartId'),
             });
 
@@ -685,20 +665,20 @@ describe('PartDAO', () => {
             const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
-            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
-                                             { turn: 0, listMoves: [] });
+            await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
+                                     { turn: 0, listMoves: [] });
 
             await signOut();
             await reconnectUser(OPPONENT_EMAIL);
 
-            await partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1,
-                                             { request: Request.rematchProposed(Player.ONE) });
+            await updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1,
+                                     { request: Request.rematchProposed(Player.ONE) });
 
             await signOut();
             await reconnectUser(CREATOR_EMAIL);
 
             // When the player zero accepts the rematch
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+2, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+2, {
                 request: Request.rematchAccepted('Quarto', 'newPartId'),
             });
 
@@ -714,7 +694,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // Player zero wins
-            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 listMoves: [1],
                 turn: 1,
                 result: MGPResult.VICTORY.value,
@@ -723,14 +703,14 @@ describe('PartDAO', () => {
             });
 
             // Player zero proposes a rematch
-            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+1,
-                                             { request: Request.rematchProposed(Player.ZERO) });
+            await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+1,
+                                     { request: Request.rematchProposed(Player.ZERO) });
 
             await signOut();
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the player one accepts the rematch
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+2, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+2, {
                 request: Request.rematchAccepted('Quarto', 'newPartId'),
             });
 
@@ -745,14 +725,14 @@ describe('PartDAO', () => {
             const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
-            await partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
-                                             { request: Request.drawProposed(Player.ZERO) });
+            await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
+                                     { request: Request.drawProposed(Player.ZERO) });
 
             await signOut();
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the other user accepts the draw
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
                 request: null,
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });
@@ -772,7 +752,7 @@ describe('PartDAO', () => {
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the other user tries to change the result to draw
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
                 request: null,
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });
@@ -789,7 +769,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // When resigning
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 result: MGPResult.RESIGN.value,
                 winner: playerOne, // we are resigning
                 loser: playerZero,
@@ -807,7 +787,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // When resigning and setting the other player as loser
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 result: MGPResult.RESIGN.value,
                 winner: playerZero, // we're trying to be the winner
                 loser: playerOne,
@@ -828,7 +808,7 @@ describe('PartDAO', () => {
             await new Promise((f: (value: unknown) => void) => setTimeout(f, 10));
 
             // When setting the part as result as timed out
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 result: MGPResult.TIMEOUT.value,
                 winner: playerZero,
                 loser: playerOne,
@@ -849,7 +829,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser along with a move
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 listMoves: [0],
                 turn: 1,
                 result: MGPResult.VICTORY.value,
@@ -869,7 +849,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser along with a move
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 listMoves: [0],
                 turn: 1,
                 result: MGPResult.VICTORY.value,
@@ -896,14 +876,22 @@ describe('PartDAO', () => {
                 winner: playerZero,
                 loser: playerOne,
             };
-            const winnerResult: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
-                ...update,
-                winner: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
-            });
-            const loserResult: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
-                ...update,
-                loser: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
-            });
+            const winnerResult: Promise<void> = updateAndBumpIndex(
+                partId,
+                Player.ZERO,
+                part.lastUpdate.index,
+                {
+                    ...update,
+                    winner: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
+                });
+            const loserResult: Promise<void> = updateAndBumpIndex(
+                partId,
+                Player.ZERO,
+                part.lastUpdate.index,
+                {
+                    ...update,
+                    loser: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
+                });
 
             // Then it should fail
             await expectPermissionToBeDenied(winnerResult);
@@ -918,7 +906,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser without sending a move
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 result: MGPResult.VICTORY.value,
                 winner: playerZero,
                 loser: playerOne,
@@ -936,7 +924,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser without changing part result
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
                 winner: playerZero,
                 loser: playerOne,
             });
@@ -958,7 +946,7 @@ describe('PartDAO', () => {
             const partId: string = await partDAO.create(part);
             let index: number = 1;
             if (player === Player.ONE) {
-                await partDAO.updateAndBumpIndex(partId, Player.ZERO, index, { turn: 1, listMoves: [1] });
+                await updateAndBumpIndex(partId, Player.ZERO, index, { turn: 1, listMoves: [1] });
                 index += 1;
                 await signOut();
                 await reconnectUser(OPPONENT_EMAIL);
@@ -967,7 +955,7 @@ describe('PartDAO', () => {
             // When updating a time
             const update: Partial<Part> = updateTime(Utils.getNonNullable(part.remainingMsForZero),
                                                      Utils.getNonNullable(part.remainingMsForOne));
-            const result: Promise<void> = partDAO.updateAndBumpIndex(partId, player, index, update);
+            const result: Promise<void> = updateAndBumpIndex(partId, player, index, update);
             if (expectedToSucceed) {
                 // Then it should succeed
                 await expectAsync(result).toBeResolvedTo();

@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -11,9 +10,6 @@ import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
-export class OnlineGameCreationMessages {
-    public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;
-}
 
 @Component({
     selector: 'app-online-game-creation',
@@ -25,8 +21,7 @@ export class OnlineGameCreationComponent implements OnInit {
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer,
-                       private readonly gameService: GameService)
-    {
+                       private readonly gameService: GameService) {
     }
     public async ngOnInit(): Promise<void> {
         await this.createGameAndRedirectOrShowError(this.extractGameFromURL());

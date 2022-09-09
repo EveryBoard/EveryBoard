@@ -51,13 +51,13 @@ describe('ConnectedButNotVerifiedGuard', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await guard.canActivate();
         // eslint-disable-next-line dot-notation
-        spyOn(guard['userSub'], 'unsubscribe');
+        spyOn(guard['userSubscription'], 'unsubscribe');
 
         // When destroying the guard
         guard.ngOnDestroy();
 
         // Then unsubscribe is called
         // eslint-disable-next-line dot-notation
-        expect(guard['userSub'].unsubscribe).toHaveBeenCalledWith();
+        expect(guard['userSubscription'].unsubscribe).toHaveBeenCalledWith();
     }));
 });

@@ -7,6 +7,7 @@ import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 
 interface Foo extends FirestoreJSONObject {
     value: string,
@@ -101,10 +102,10 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
-            unsubscribe();
+            subscription.unsubscribe();
         });
         it('should observe document creation according to multiple conditions', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
@@ -112,10 +113,10 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 1]], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 1]], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
-            unsubscribe();
+            subscription.unsubscribe();
         });
         it('should not observe document creation when the condition does not hold (simple)', async() => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
@@ -124,10 +125,10 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'baz']], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
-            unsubscribe();
+            subscription.unsubscribe();
         });
         it('should not observe document creation when the condition does not hold (complexe)', async() => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
@@ -136,10 +137,10 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
-            unsubscribe();
+            subscription.unsubscribe();
         });
         it('should observe document update with the given condition', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
@@ -147,11 +148,11 @@ describe('FirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
             await fooDAO.update(id, { otherValue: 42 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 42 }]);
-            unsubscribe();
+            subscription.unsubscribe();
         });
         it('should not observe document update when the condition does not hold', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
@@ -159,11 +160,11 @@ describe('FirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'baz']], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
             const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
             await fooDAO.update(id, { otherValue: 42 });
             await expectAsync(promise).toBePending();
-            unsubscribe();
+            subscription.unsubscribe();
         });
         it('should observe document deletions with the given condition', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
@@ -171,11 +172,11 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 callbackFunction,
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
             await fooDAO.delete(id);
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
-            unsubscribe();
+            subscription.unsubscribe();
         });
         it('should not observe document deletions when the condition does not hold', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
@@ -183,11 +184,11 @@ describe('FirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
             await fooDAO.delete(id);
             await expectAsync(promise).toBePending();
-            unsubscribe();
+            subscription.unsubscribe();
         });
     });
     describe('findWhere', () => {
@@ -206,7 +207,7 @@ describe('FirestoreDAO', () => {
     });
     describe('subCollectionDAO', () => {
         it('should provide the subcollection with the fully correct path', async() => {
-            // Given a dao with a certain path
+            // Given a fooDAO with a certain path
             const path: string = fooDAO.collection.path;
             // When calling subCollectionDAO
             const subDAO: FirestoreDAO<FirestoreJSONObject> =

@@ -19,8 +19,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public faCog: IconDefinition = faCog;
     public faSpinner: IconDefinition = faSpinner;
 
-    private userSub: Subscription;
-    private observedPartSub: Subscription;
+    private userSubscription: Subscription;
+    private observedPartSubscription: Subscription;
 
     public showMenu: boolean = false;
 
@@ -31,14 +31,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 public userService: UserService) {
     }
     public ngOnInit(): void {
-        this.userSub = this.connectedUserService.getUserObs().subscribe((user: AuthUser) => {
+        this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.loading = false;
             if (user.username.isPresent()) {
                 this.username = user.username;
             } else {
                 this.username = user.email;
             }});
-        this.observedPartSub =
+        this.observedPartSubscription =
             this.connectedUserService.getObservedPartObs().subscribe((focusedPart: MGPOptional<FocusedPart>) => {
                 this.observedPart = focusedPart;
             });
@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         await this.router.navigate(['/']);
     }
     public ngOnDestroy(): void {
-        this.userSub.unsubscribe();
-        this.observedPartSub.unsubscribe();
+        this.userSubscription.unsubscribe();
+        this.observedPartSubscription.unsubscribe();
     }
 }

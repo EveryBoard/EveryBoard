@@ -63,7 +63,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -95,10 +95,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
 
-    protected routerEventsSub!: Subscription; // Initialized in ngOnInit
-    protected userSub!: Subscription; // Initialized in ngOnInit
-    protected observedPartSub!: Subscription; // Initialized in ngOnInit
-    protected opponentSubscription: MGPOptional<() => void> = MGPOptional.empty();
+    private routerEventsSubscription!: Subscription; // Initialized in ngOnInit
+    private userSubscription!: Subscription; // Initialized in ngOnInit
+    private opponentSubscription: Subscription = new Subscription();
+    private partSubscription: Subscription = new Subscription();
+    private observedPartSubscription: Subscription = new Subscription();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
 
@@ -109,9 +110,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
+                connectedUserService: ConnectedUserService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
-                connectedUserService: ConnectedUserService,
                 private readonly userService: UserService,
                 private readonly gameService: GameService)
     {
@@ -134,13 +135,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private isPlayer(player: Player): boolean {
         return this.observerRole === player;
     }
-    private isOpponent(player: PlayerOrNone): boolean {
-        if (this.observerRole.isPlayer()) {
-            return this.observerRole !== player;
-        } else {
-            return false;
-        }
-    }
     private async redirectIfPartOrGameIsInvalid(): Promise<void> {
         const gameURL: string = this.extractGameNameFromURL();
         const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
@@ -148,12 +142,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const partValidity: MGPValidation =
                 await this.gameService.getPartValidity(this.currentPartId, gameURL);
             if (partValidity.isFailure()) {
-                this.routerEventsSub.unsubscribe();
+                this.routerEventsSubscription.unsubscribe();
                 const message: string = OnlineGameWrapperMessages.NO_MATCHING_PART();
                 await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
             }
         } else {
-            this.routerEventsSub.unsubscribe();
+            this.routerEventsSubscription.unsubscribe();
             const message: string = GameWrapperMessages.NO_MATCHING_GAME(gameURL);
             await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
         }
@@ -165,18 +159,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async ngOnInit(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
 
-        this.routerEventsSub = this.router.events.subscribe(async(ev: Event) => {
+        this.routerEventsSubscription = this.router.events.subscribe(async(ev: Event) => {
             if (ev instanceof NavigationEnd) {
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSub = this.connectedUserService.getUserObs().subscribe((user: AuthUser) => {
+        this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             // player should be authenticated and have a username to be here
             this.authUser = user;
         });
         await this.setCurrentPartIdOrRedirect();
         // onObservedPartUpdate need to access to currentPartId, so it must after setCurrentPartIdOrRedirect
-        this.observedPartSub = this.connectedUserService.getObservedPartObs()
+        this.observedPartSubscription = this.connectedUserService.getObservedPartObs()
             .subscribe(async(part: MGPOptional<FocusedPart>) => {
                 await this.onObservedPartUpdate(part);
             });
@@ -192,7 +186,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
       * because user that are playing should not see other players playing
       */
     private async onObservedPartUpdate(part: MGPOptional<FocusedPart>): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onObservedPartUpdate called')
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onObservedPartUpdate called');
         if (part.isPresent()) {
             const newPart: FocusedPart = part.get();
             if (newPart.role === 'Observer' || newPart.id === this.currentPartId) {
@@ -206,14 +200,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.router.navigate(['/lobby']);
             }
         } else {
+            this.messageDisplayer.criticalMessage('EH VOILAAAAAA')
             this.observedPart = MGPOptional.empty();
         }
     }
-    public async startGame(iConfigRoom: ConfigRoom): Promise<void> {
+    public async startGame(configRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         assert(this.gameStarted === false, 'Should not start already started game');
-        this.configRoom = iConfigRoom;
+        this.configRoom = configRoom;
 
         this.gameStarted = true;
         window.setTimeout(async() => {
@@ -227,10 +222,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
         // TODO: don't start count down for Observer.
-        this.gameService.startObserving(this.currentPartId, async(part: MGPOptional<Part>) => {
-            assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
-            await this.onCurrentPartUpdate(part.get());
-        });
+        this.partSubscription =
+            this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
+                assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
+                await this.onCurrentPartUpdate(part.get());
+            });
     }
     private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
@@ -242,7 +238,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             nbPlayedMoves: part.data.listMoves.length,
         } });
         if (this.onCurrentUpdateOngoing) {
-            console.log('KUBILAY KHAN')
             attempt -= 1;
             assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
             window.setTimeout(async() => await this.onCurrentPartUpdate(update, attempt), 1000);
@@ -255,7 +250,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (updatesTypes.includes(UpdateType.REQUEST)) {
             display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(part.data.request).code + ') (' + turn + ')');
         } else {
-            display(OnlineGameWrapperComponent.VERBOSE || true, 'UpdateType: ' + updatesTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updatesTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
         }
         const oldPart: PartDocument = this.currentPart;
         this.currentPart = part;
@@ -311,7 +306,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const currentPartDoc: Part | null = this.currentPart != null ? this.currentPart.data : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.data);
         const updatesTypes: UpdateType[] = [];
-        display(OnlineGameWrapperComponent.VERBOSE || true, { currentPartDoc, update, diff });
+        display(OnlineGameWrapperComponent.VERBOSE, { currentPartDoc, update, diff });
         const nbDiffs: number = diff.countChanges();
         if (nbDiffs === 0) {
             updatesTypes.push(UpdateType.DUPLICATE);
@@ -536,7 +531,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public isOpponentWaitingForTakeBackResponse(): boolean {
         const takeBackRequester: PlayerOrNone = this.getTakeBackRequester();
         if (takeBackRequester.isPlayer()) {
-            return this.isOpponent(takeBackRequester);
+            return takeBackRequester !== this.observerRole;
         } else {
             return false;
         }
@@ -570,7 +565,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public isOpponentWaitingForDrawResponse(): boolean {
         const drawRequester: PlayerOrNone = this.getDrawRequester();
         if (drawRequester === PlayerOrNone.NONE) return false;
-        return this.isOpponent(drawRequester);
+        return drawRequester !== this.observerRole;
     }
     private getDrawRequester(): PlayerOrNone {
         const request: Request | null | undefined = this.currentPart.data.request;
@@ -652,7 +647,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 this.opponent = opponent.get();
             };
             this.opponentSubscription =
-                MGPOptional.of(this.userService.observeUser(opponent.get().id, callback));
+                this.userService.observeUser(opponent.get().id, callback);
         }
     }
     public async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {
@@ -868,10 +863,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.endGame === true) {
             return false;
         }
-        if (this.opponent == null) {
-            return false;
-        }
-        return true;
+        return this.opponent != null;
     }
     public addGlobalTime(): Promise<void> {
         const giver: Player = this.observerRole as Player;
@@ -905,17 +897,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');
-        this.routerEventsSub.unsubscribe();
-        this.userSub.unsubscribe();
-        this.observedPartSub.unsubscribe();
+        this.routerEventsSubscription.unsubscribe();
+        this.userSubscription.unsubscribe();
+        this.observedPartSubscription.unsubscribe();
         if (this.isPlaying() === false && this.userLinkedToThisPart) {
             await this.connectedUserService.removeObservedPart();
         }
         if (this.gameStarted === true) {
-            if (this.opponentSubscription.isPresent()) {
-                this.opponentSubscription.get()();
-            }
-            this.gameService.stopObserving();
+            this.opponentSubscription.unsubscribe();
+            this.partSubscription.unsubscribe();
         }
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
     }

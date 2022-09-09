@@ -42,6 +42,7 @@ import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.p
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
 import { Comparable } from '../Comparable';
+import { Subscription } from 'rxjs';
 
 @Component({})
 export class BlankComponent {}
@@ -587,4 +588,17 @@ export async function expectPermissionToBeDenied<T>(promise: Promise<T>): Promis
         expect(actualValue.code).toBe('permission-denied');
     };
     await promise.then(throwIfFulfilled, checkErrorCode);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): () => void {
+    let unsubscribed: boolean = false;
+    spyOn(service, subscribeMethod).and.returnValue(new Subscription(() => {
+        unsubscribed = true;
+    }));
+    return () => {
+        expect(unsubscribed)
+            .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method bub did not')
+            .toBeTrue();
+    };
 }

@@ -31,9 +31,11 @@ describe('WelcomeComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
+        // When clicking on the button to start a specific game
         await testUtils.clickElement('#playOnline_Awale');
         testUtils.detectChanges();
 
+        // Then there should have been a redirection to online-game-creation
         expectValidRouting(router, ['/play', 'Awale'], OnlineGameCreationComponent);
     }));
     it('should not redirect to online game creation when clicking on the corresponding button while in a game', fakeAsync(async() => {
@@ -51,7 +53,7 @@ describe('WelcomeComponent', () => {
         await testUtils.clickElement('#playOnline_Awale');
         tick(3000);
 
-        // Then the component should not have changed page and toast the reason
+        // Then the component should not have changed page and should toast the reason
         expect(router.navigate).not.toHaveBeenCalled();
         expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
     }));
@@ -99,7 +101,7 @@ describe('WelcomeComponent', () => {
         await testUtils.clickElement('#createOnlineGame');
         tick(3000);
 
-        // Then the component should not have changed page and toast the reason
+        // Then the component should not have changed page and should toast the reason
         expect(router.navigate).not.toHaveBeenCalled();
         expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
     }));

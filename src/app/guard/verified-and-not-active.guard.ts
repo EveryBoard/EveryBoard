@@ -1,37 +1,28 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
 import { FocusedPart } from '../domain/User';
-import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
+import { ConnectedUserService } from '../services/ConnectedUserService';
 import { MessageDisplayer } from '../services/MessageDisplayer';
 import { MGPOptional } from '../utils/MGPOptional';
-import { VerifiedAccountGuard } from './verified-account.guard';
 
 @Injectable({
     providedIn: 'root',
 })
-export class VerifiedAndNotActiveGuard extends VerifiedAccountGuard implements OnDestroy {
+export class ExclusiveOnlineGameGuard implements CanActivate, OnDestroy {
 
     protected observedPartSub: MGPOptional<Subscription> = MGPOptional.empty();
 
-    constructor(connectedUserService: ConnectedUserService,
+    constructor(public readonly connectedUserService: ConnectedUserService,
                 public readonly messageDisplayer: MessageDisplayer,
                 protected readonly router: Router)
     {
-        super(connectedUserService, router);
     }
-    public async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
-        const isVerified: boolean | UrlTree = await super.evaluateUserPermission(user);
-        if (isVerified !== true) {
-            return isVerified;
-        }
-        return this.evaluateUserPermissionBasedOnHisObservedPart();
-    }
-    public async evaluateUserPermissionBasedOnHisObservedPart(): Promise<boolean | UrlTree> {
+    public async canActivate(): Promise<boolean | UrlTree> {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
-            const subscription: Subscription = this.authService
+            const subscription: Subscription = this.connectedUserService
                 .getObservedPartObs()
                 .subscribe((optionalPart: MGPOptional<FocusedPart>) => {
                     if (optionalPart.isAbsent()) {
@@ -44,7 +35,6 @@ export class VerifiedAndNotActiveGuard extends VerifiedAccountGuard implements O
         });
     }
     public ngOnDestroy(): void {
-        this.userSub.unsubscribe();
         if (this.observedPartSub.isPresent()) {
             this.observedPartSub.get().unsubscribe();
         }

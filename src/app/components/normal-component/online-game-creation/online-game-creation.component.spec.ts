@@ -47,7 +47,7 @@ describe('OnlineGameCreationComponent', () => {
 
         // When the page is rendered
         testUtils.detectChanges();
-        tick(3000); // needs to be >2999
+        tick(3000); // wait for some toast to leave
 
         // Then the user should be redirected to the game
         expectValidRouting(router, ['/play', game, 'PartDAOMock0'], OnlineGameWrapperComponent);

@@ -7,7 +7,6 @@ import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/Request';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
@@ -25,6 +24,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { Subscription } from 'rxjs';
 
 describe('GameService', () => {
 
@@ -57,7 +58,27 @@ describe('GameService', () => {
     it('should create', () => {
         expect(gameService).toBeTruthy();
     });
-    it('startObserving should delegate callback to partDAO', fakeAsync(async() => {
+    it('Should delegate updateAndBumpIndex to the DAO update, and bump the index', async() => {
+        // Given a part and an update to make to the part
+        spyOn(partDAO, 'update').and.resolveTo();
+        const update: Partial<Part> = {
+            turn: 42,
+        };
+
+        // When calling updateAndBumpIndex
+        await gameService.updateAndBumpIndex('partId', Player.ZERO, 73, update);
+
+        // Then update should have been called with lastUpdate infos added to it
+        const expectedUpdate: Partial<Part> = {
+            lastUpdate: {
+                index: 74,
+                player: Player.ZERO.value,
+            },
+            turn: 42,
+        };
+        expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
+    });
+    it('should delegate subscribeToChanges callback to partDAO', fakeAsync(async() => {
         // Given an existing part
         const part: Part = {
             lastUpdate: {
@@ -82,19 +103,13 @@ describe('GameService', () => {
         spyOn(partDAO, 'subscribeToChanges').and.callThrough();
 
         // When observing the part
-        gameService.startObserving('partId', myCallback);
+        const subscription: Subscription = gameService.subscribeToChanges('partId', myCallback);
 
-        // Then subscribeToChanges should be called and the part should be observed
+        // Then subscribeToChanges should be called on the DAO and the part should be observed
         expect(partDAO.subscribeToChanges).toHaveBeenCalledWith('partId', myCallback);
         expect(calledCallback).toBeTrue();
-    }));
-    it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
-        await partDAO.set('myConfigRoomId', PartMocks.INITIAL);
 
-        expect(() => {
-            gameService.startObserving('myConfigRoomId', (_part: MGPOptional<Part>) => {});
-            gameService.startObserving('myConfigRoomId', (_part: MGPOptional<Part>) => {});
-        }).toThrowError('GameService.startObserving should not be called while already observing a game');
+        subscription.unsubscribe();
     }));
     it('should delegate delete to PartDAO', fakeAsync(async() => {
         spyOn(partDAO, 'delete');
@@ -131,7 +146,7 @@ describe('GameService', () => {
 
         await gameService.acceptConfig('partId', configRoom);
 
-        expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith();
+        expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
     }));
     it('createPartConfigRoomAndChat should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
         const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
@@ -402,7 +417,7 @@ describe('GameService', () => {
         beforeEach(() => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
-            spyOn(partDAO, 'updateAndBumpIndex').and.callThrough();
+            spyOn(gameService, 'updateAndBumpIndex').and.callThrough();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // when updating the board with scores
@@ -417,7 +432,7 @@ describe('GameService', () => {
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
-            expect(partDAO.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
+            expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
             // when updating the board to notify of a draw

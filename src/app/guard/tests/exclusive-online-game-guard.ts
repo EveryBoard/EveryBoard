@@ -5,7 +5,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { VerifiedAndNotActiveGuard } from '../verified-and-not-active.guard';
+import { ExclusiveOnlineGameGuard } from '../verified-and-not-active.guard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PartDocument } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -13,9 +13,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { VerifiedAccountGuard } from '../verified-account.guard';
 
-describe('VerifiedAndNotActiveGuard', () => {
+describe('ExclusiveOnlineGameGuard', () => {
 
-    let guard: VerifiedAndNotActiveGuard;
+    let guard: ExclusiveOnlineGameGuard;
 
     let connectedUserService: ConnectedUserService;
 
@@ -38,7 +38,7 @@ describe('VerifiedAndNotActiveGuard', () => {
         spyOn(router, 'navigate');
         connectedUserService = TestBed.inject(ConnectedUserService);
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        guard = new VerifiedAndNotActiveGuard(connectedUserService, messageDisplayer, router);
+        guard = new ExclusiveOnlineGameGuard(connectedUserService, messageDisplayer, router);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
     }));
     it('should create', () => {
@@ -73,7 +73,6 @@ describe('VerifiedAndNotActiveGuard', () => {
     it('should unsubscribe from userSub upon destruction (where observed part was unnecessary)', fakeAsync(async() => {
         // Given a guard that has resolved
         ConnectedUserServiceMock.setUser(UserMocks.USER_WITHOUT_EMAIL);
-        spyOn(guard, 'evaluateUserPermissionBasedOnHisObservedPart').and.resolveTo(true);
         await guard.canActivate();
         // eslint-disable-next-line dot-notation
         spyOn(guard['userSub'], 'unsubscribe');

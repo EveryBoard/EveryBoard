@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigRoom';
 import { ConfigRoomDAO } from '../dao/ConfigRoomDAO';
-import { display, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { display, FirestoreJSONObject } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Unsubscribe } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Localized } from '../utils/LocaleUtils';
@@ -19,11 +18,6 @@ export class ConfigRoomService {
 
     public static VERBOSE: boolean = false;
 
-    private observedConfigRoomId: string | null;
-
-    private configRoomUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
-    private candidatesUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
-
     public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
 
     constructor(private readonly configRoomDAO: ConfigRoomDAO,
@@ -31,11 +25,16 @@ export class ConfigRoomService {
     {
         display(ConfigRoomService.VERBOSE, 'ConfigRoomService.constructor');
     }
-    public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): void {
-        this.observedConfigRoomId = configRoomId;
-        this.configRoomUnsubscribe = MGPOptional.of(this.configRoomDAO.subscribeToChanges(configRoomId, callback));
+    public addCandidate(partId: string, candidate: MinimalUser): Promise<void> {
+        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').set(candidate.id, candidate);
     }
-    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): void {
+    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
+        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').delete(candidate.id);
+    }
+    public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
+        return this.configRoomDAO.subscribeToChanges(configRoomId, callback);
+    }
+    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
         let candidates: MinimalUser[] = [];
         const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
             (created: FirestoreDocument<MinimalUser>[]) => {
@@ -65,15 +64,7 @@ export class ConfigRoomService {
                 callback(candidates);
             });
         const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.configRoomDAO.subCollectionDAO(configRoomId, 'candidates');
-        this.candidatesUnsubscribe = MGPOptional.of(subCollection.observingWhere([], observer));
-    }
-    public unsubscribe(): void {
-        assert(this.configRoomUnsubscribe.isPresent(), 'ConfigRoomService cannot unsubscribe if no configRoom is observed');
-        assert(this.candidatesUnsubscribe.isPresent(), 'ConfigRoomService cannot unsubscribe if no configRoom is observed');
-        this.configRoomUnsubscribe.get()();
-        this.configRoomUnsubscribe = MGPOptional.empty();
-        this.candidatesUnsubscribe.get()();
-        this.candidatesUnsubscribe = MGPOptional.empty();
+        return subCollection.observingWhere([], observer);
     }
     public async createInitialConfigRoom(configRoomId: string): Promise<void> {
         display(ConfigRoomService.VERBOSE, 'ConfigRoomService.createInitialConfigRoom(' + configRoomId + ')');
@@ -88,78 +79,67 @@ export class ConfigRoomService {
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator,
         };
-        return this.set(configRoomId, newConfigRoom);
+        return this.configRoomDAO.set(configRoomId, newConfigRoom);
     }
-    public async joinGame(partId: string): Promise<MGPValidation> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.joinGame(' + partId + ')');
+    public async joinGame(configRoomId: string): Promise<MGPValidation> {
+        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.joinGame(' + configRoomId + ')');
 
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(partId);
+        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
         if (configRoom.isAbsent()) {
             return MGPValidation.failure(ConfigRoomService.GAME_DOES_NOT_EXIST());
         } else {
             if (configRoom.get().creator.id !== user.id) {
                 // Only add actual candidates to the game, not the creator
-                await this.configRoomDAO.addCandidate(partId, user);
+                await this.addCandidate(configRoomId, user);
             }
             return MGPValidation.SUCCESS;
         }
     }
-    public async removeCandidate(candidate: MinimalUser): Promise<void> {
-        assert(this.observedConfigRoomId != null, 'cannot remove candidate if not observing a configRoom');
-        return this.configRoomDAO.removeCandidate(Utils.getNonNullable(this.observedConfigRoomId), candidate);
-    }
-    public async cancelJoining(): Promise<void> {
-        display(ConfigRoomService.VERBOSE,
-                'ConfigRoomService.cancelJoining(); this.observedConfigRoomId = ' + this.observedConfigRoomId);
+    public async cancelJoining(configRoomId: string): Promise<void> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.cancelJoining(${configRoomId})`);
 
-        if (this.observedConfigRoomId == null) {
-            throw new Error('cannot cancel joining when not observing a configRoom');
-        }
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const configRoomOpt: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(this.observedConfigRoomId);
+        const configRoomOpt: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
         if (configRoomOpt.isAbsent()) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
-            const configRoomUpdates: Promise<void>[] =
-                [this.configRoomDAO.removeCandidate(this.observedConfigRoomId, user)];
+            const configRoomUpdates: Promise<void>[] = [this.removeCandidate(configRoomId, user)];
             if (configRoom.chosenOpponent?.id === user.id) {
                 // if the chosenOpponent leave, we're back to initial part creation
                 const update: Partial<ConfigRoom> = {
                     chosenOpponent: null,
                     partStatus: PartStatus.PART_CREATED.value,
                 };
-                configRoomUpdates.push(this.configRoomDAO.update(this.observedConfigRoomId, update));
+
+                configRoomUpdates.push(this.configRoomDAO.update(configRoomId, update));
             }
             await Promise.all(configRoomUpdates);
         }
     }
-    public async deleteConfigRoom(candidates: MinimalUser[]): Promise<void> {
-        display(ConfigRoomService.VERBOSE,
-                'ConfigRoomService.deleteConfigRoom(); this.observedConfigRoomId = ' + this.observedConfigRoomId);
-        assert(this.observedConfigRoomId != null, 'ConfigRoomService is not observing a configRoom');
-        const configRoomId: string = Utils.getNonNullable(this.observedConfigRoomId);
+    public async deleteConfigRoom(configRoomId: string, candidates: MinimalUser[]): Promise<void> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.deleteConfigRoom(${configRoomId}`);
         // We need to delete the candidates before the actual configRoom,
         // for the security rules to check that we are allowed to delete the configRoom
         await Promise.all(candidates.map((candidate: MinimalUser): Promise<void> =>
-            this.configRoomDAO.removeCandidate(configRoomId, candidate)));
+            this.removeCandidate(configRoomId, candidate)));
         await this.configRoomDAO.delete(configRoomId);
     }
-    public async proposeConfig(chosenOpponent: MinimalUser,
+    public async proposeConfig(configRoomId: string,
+                               chosenOpponent: MinimalUser,
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
                                totalPartDuration: number)
     : Promise<void>
     {
-        display(ConfigRoomService.VERBOSE,
-                { configRoomService_proposeConfig: { maximalMoveDuration, firstPlayer, totalPartDuration } });
-        display(ConfigRoomService.VERBOSE, 'this.followedConfigRoomId: ' + this.observedConfigRoomId);
-        assert(this.observedConfigRoomId != null, 'ConfigRoomService is not observing a configRoom');
+        display(ConfigRoomService.VERBOSE, { configRoomService_proposeConfig: {
+            configRoomId, maximalMoveDuration, firstPlayer, totalPartDuration,
+        } });
 
-        return this.configRoomDAO.update(Utils.getNonNullable(this.observedConfigRoomId), {
+        return this.configRoomDAO.update(configRoomId, {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             chosenOpponent: chosenOpponent,
             partType: partType.value,
@@ -168,56 +148,43 @@ export class ConfigRoomService {
             firstPlayer: firstPlayer.value,
         });
     }
-    public setChosenOpponent(chosenOpponent: MinimalUser): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.setChosenOpponent(${chosenOpponent.name})`);
+    public setChosenOpponent(configRoomId: string, chosenOpponent: MinimalUser): Promise<void> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.setChosenOpponent(${configRoomId}, ${chosenOpponent.name})`);
 
-        return this.configRoomDAO.update(Utils.getNonNullable(this.observedConfigRoomId), {
+        return this.configRoomDAO.update(configRoomId, {
             chosenOpponent: chosenOpponent,
         });
     }
-    public async reviewConfig(): Promise<void> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.reviewConfig');
-        assert(this.observedConfigRoomId != null, 'ConfigRoomService is not observing a configRoom');
+    public async reviewConfig(configRoomId: string): Promise<void> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.reviewConfig(${configRoomId})`);
 
-        return this.configRoomDAO.update(Utils.getNonNullable(this.observedConfigRoomId), {
+        return this.configRoomDAO.update(configRoomId, {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
-    public async reviewConfigAndRemoveChosenOpponent(): Promise<void> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.reviewConfig');
-        assert(this.observedConfigRoomId != null, 'ConfigRoomService is not observing a configRoom');
+    public async reviewConfigAndRemoveChosenOpponent(configRoomId: string): Promise<void> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.reviewConfigAndRemoveChosenOpponent(${configRoomId})`);
 
-        return this.configRoomDAO.update(Utils.getNonNullable(this.observedConfigRoomId), {
+        return this.configRoomDAO.update(configRoomId, {
             partStatus: PartStatus.PART_CREATED.value,
             chosenOpponent: null,
         });
     }
-    public acceptConfig(): Promise<void> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.acceptConfig');
-        assert(this.observedConfigRoomId != null, 'ConfigRoomService is not observing a configRoom');
+    public acceptConfig(configRoomId: string): Promise<void> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.acceptConfig(${configRoomId}`);
 
-        return this.configRoomDAO.update(Utils.getNonNullable(this.observedConfigRoomId), {
+        return this.configRoomDAO.update(configRoomId, {
             partStatus: PartStatus.PART_STARTED.value,
         });
     }
-    public async createConfigRoom(partId: string, configRoom: ConfigRoom): Promise<void> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.create(' + JSON.stringify(configRoom) + ')');
+    public async createConfigRoom(configRoomId: string, configRoom: ConfigRoom): Promise<void> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.create(${configRoomId}` + JSON.stringify(configRoom) + ')');
 
-        return this.configRoomDAO.set(partId, configRoom);
+        return this.configRoomDAO.set(configRoomId, configRoom);
     }
-    public async readConfigRoomById(partId: string): Promise<ConfigRoom> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.readConfigRoomById(' + partId + ')');
+    public async readConfigRoomById(configRoomId: string): Promise<ConfigRoom> {
+        display(ConfigRoomService.VERBOSE, `ConfigRoomService.readConfigRoomById(${configRoomId})`);
 
-        return (await this.configRoomDAO.read(partId)).get();
-    }
-    public async set(partId: string, configRoom: ConfigRoom): Promise<void> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.set(' + partId + ', ' + JSON.stringify(configRoom) + ')');
-
-        return this.configRoomDAO.set(partId, configRoom);
-    }
-    public async updateConfigRoomById(partId: string, update: Partial<ConfigRoom>): Promise<void> {
-        display(ConfigRoomService.VERBOSE, { configRoomService_updateConfigRoomById: { partId, update } });
-
-        return this.configRoomDAO.update(partId, update);
+        return (await this.configRoomDAO.read(configRoomId)).get();
     }
 }

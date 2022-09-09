@@ -38,9 +38,10 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ChatService } from 'src/app/services/ChatService';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { UserService } from 'src/app/services/UserService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -61,7 +62,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let wrapper: OnlineGameWrapperComponent;
 
     let configRoomDAO: ConfigRoomDAO;
+    let configRoomService: ConfigRoomService;
     let partDAO: PartDAO;
+    let gameService: GameService;
     let userDAO: UserDAO;
 
     const OBSERVER: User = {
@@ -87,14 +90,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promise<void> {
         partDAO = TestBed.inject(PartDAO);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
+        configRoomService = TestBed.inject(ConfigRoomService);
         userDAO = TestBed.inject(UserDAO);
+        gameService = TestBed.inject(GameService);
         await configRoomDAO.set('configRoomId', initialConfigRoom);
         await partDAO.set('configRoomId', PartMocks.INITIAL);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
         await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
         await userDAO.set(USER_OBSERVER.id, OBSERVER);
-        spyOn(TestBed.inject(ChatService), 'startObserving').and.resolveTo();
-        spyOn(TestBed.inject(ChatService), 'stopObserving').and.resolveTo();
         return Promise.resolve();
     }
     async function prepareWrapper(user: AuthUser): Promise<void> {
@@ -126,7 +129,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partCreationId).withContext(context).toBeTruthy();
         context = 'partCreation field should also be present';
         expect(wrapper.partCreation).withContext(context).toBeTruthy();
-        await configRoomDAO.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+        await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
         testUtils.detectChanges();
         await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
         // TODO: replace by a click on the component to really simulate it "end2end"
@@ -168,7 +171,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             beginning: serverTimestamp(),
         };
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-        await partDAO.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, 0, update);
+        await gameService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, 0, update);
         testUtils.detectChanges();
         if (waitForPartToStart === true) {
             tick(1);
@@ -208,7 +211,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
     async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number): Promise<void> {
         const observerRoleAsPlayer: Player = observerRole === PlayerOrNone.NONE ? Player.ZERO : observerRole as Player;
-        await partDAO.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, lastIndex, update);
+        await gameService.updateAndBumpIndex('configRoomId', observerRoleAsPlayer, lastIndex, update);
         testUtils.detectChanges();
         tick(1);
     }
@@ -1474,7 +1477,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When the opponent token become too old
             // Creator update his last presence token
-            await userDAO.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
+            const userService: UserService = TestBed.inject(UserService);
+            await userService.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
             // but chosenOpponent don't update his last presence token
             tick(PartCreationComponent.TOKEN_TIMEOUT); // two token time pass and reactive the timeout
             testUtils.detectChanges();
@@ -1992,6 +1996,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchProposed(Player.ONE), 2);
 
             // When accepting it
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo();
             const gameService: GameService = TestBed.inject(GameService);
             spyOn(gameService, 'acceptRematch').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#acceptRematchButton');
@@ -2074,7 +2080,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then the observedPart should have been removed
             expect(connectedUserService.removeObservedPart).not.toHaveBeenCalled();
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> now we are done')
         }));
         it('should not be able to do anything', fakeAsync(async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

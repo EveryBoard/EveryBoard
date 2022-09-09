@@ -1,67 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
-import { serverTimestamp } from 'firebase/firestore';
+import { TestBed } from '@angular/core/testing';
 import * as FireAuth from '@angular/fire/auth';
 import { User } from 'src/app/domain/User';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { FirestoreCondition } from '../FirestoreDAO';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { UserService } from 'src/app/services/UserService';
 
 describe('UserDAO', () => {
 
     let userDAO: UserDAO;
+    let userService: UserService;
 
     beforeEach(async() => {
         await setupEmulators();
         userDAO = TestBed.inject(UserDAO);
+        userService = TestBed.inject(UserService);
     });
     it('should be created', () => {
         expect(userDAO).toBeTruthy();
-    });
-    describe('observeActiveUsers', () => {
-        it('should call observingWhere with the right condition', () => {
-            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
-                () => void { },
-                () => void { },
-                () => void { },
-            );
-            spyOn(userDAO, 'observingWhere');
-            userDAO.observeActiveUsers(callback);
-            const parameters: FirestoreCondition[] = [
-                ['state', '==', 'online'],
-                ['verified', '==', true],
-            ];
-            expect(userDAO.observingWhere).toHaveBeenCalledWith(parameters, callback);
-        });
-    });
-    describe('setUsername', () => {
-        it('should change the username of a user', fakeAsync(async() => {
-            // given a google user
-            const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com');
-            const uid: string = user.uid;
-
-            // when its username is set
-            await userDAO.setUsername(uid, 'foo');
-
-            // then its username has changed
-            const userWithUsername: User = (await userDAO.read(uid)).get();
-            expect(userWithUsername.username).toEqual('foo');
-        }));
-    });
-    describe('updatePresenceToken', () => {
-        it('should delegate to update', async() => {
-            // Given any situation
-            spyOn(userDAO, 'update').and.resolveTo();
-
-            // When calling updatePresenceToken
-            await userDAO.updatePresenceToken('joserId');
-
-            // Then update should be called
-            expect(userDAO.update).toHaveBeenCalledOnceWith('joserId', { lastUpdateTime: serverTimestamp() });
-        });
     });
     describe('security', () => {
         it('should authorize connected user to read any other user', async() => {
@@ -108,7 +66,7 @@ describe('UserDAO', () => {
             // Given an existing, logged in user, without username
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com');
             // When trying to set the username
-            const result: Promise<void> = userDAO.setUsername(user.uid, 'user');
+            const result: Promise<void> = userService.setUsername(user.uid, 'user');
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -116,7 +74,7 @@ describe('UserDAO', () => {
             // Given an existing, logged in user, with a username
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set the username
-            const result: Promise<void> = userDAO.setUsername(user.uid, 'user!');
+            const result: Promise<void> = userService.setUsername(user.uid, 'user!');
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -129,7 +87,7 @@ describe('UserDAO', () => {
             await userDAO.set(credential.user.uid, { verified: false, username: 'user' });
 
             // When marking the user as verified
-            const result: Promise<void> = userDAO.markAsVerified(credential.user.uid);
+            const result: Promise<void> = userService.markAsVerified(credential.user.uid);
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -142,7 +100,7 @@ describe('UserDAO', () => {
             await userDAO.set(credential.user.uid, { verified: false });
 
             // When marking the user as verified
-            const result: Promise<void> = userDAO.markAsVerified(credential.user.uid);
+            const result: Promise<void> = userService.markAsVerified(credential.user.uid);
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -155,7 +113,7 @@ describe('UserDAO', () => {
             await userDAO.set(credential.user.uid, { verified: false, username: 'foo' });
 
             // When marking the user as verified
-            const result: Promise<void> = userDAO.markAsVerified(credential.user.uid);
+            const result: Promise<void> = userService.markAsVerified(credential.user.uid);
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });

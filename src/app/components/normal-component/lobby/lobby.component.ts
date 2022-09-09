@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { UserService } from '../../../services/UserService';
 import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
@@ -10,6 +8,8 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Subscription } from 'rxjs';
+import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -25,29 +25,27 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public activeParts: PartDocument[] = [];
 
-    public observedPartSub: Subscription;
+    private activeUsersSubscription!: Subscription; // initialized in ngOnInit
 
-    private activeUsersSub: Subscription;
-    private activePartsSub: Subscription;
+    private activePartsSubscription!: Subscription; // initialized in ngOnInit
 
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
 
     constructor(public readonly router: Router,
                 public readonly messageDisplayer: MessageDisplayer,
-                private readonly userService: UserService,
                 private readonly activePartsService: ActivePartsService,
+                private readonly activeUsersService: ActiveUsersService,
                 private readonly connectedUserService: ConnectedUserService) {
     }
     public ngOnInit(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');
-        this.activeUsersSub = this.userService.getActiveUsersObs()
-            .subscribe((activeUsers: UserDocument[]) => {
+        this.activeUsersSubscription = this.activeUsersService.subscribeToActiveUsers(
+            (activeUsers: UserDocument[]) => {
                 this.activeUsers = activeUsers;
             });
-        this.activePartsService.startObserving();
-        this.activePartsSub = this.activePartsService.getActivePartsObs()
-            .subscribe((activeParts: PartDocument[]) => {
+        this.activePartsSubscription = this.activePartsService.subscribeToActiveParts(
+            (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
         this.connectedUserService.getObservedPartObs().subscribe((observed: MGPOptional<FocusedPart>) => {
@@ -59,10 +57,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
     public ngOnDestroy(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
-        this.activeUsersSub.unsubscribe();
-        this.activePartsService.stopObserving();
-        this.activePartsSub.unsubscribe();
-        this.userService.unSubFromActiveUsersObs();
+        this.activeUsersSubscription.unsubscribe();
+        this.activePartsSubscription.unsubscribe();
     }
     public async joinGame(partId: string, typeGame: string): Promise<void> {
         const canUserJoin: MGPValidation = this.connectedUserService.canUserJoin(partId);

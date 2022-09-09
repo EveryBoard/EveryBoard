@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { Part, PartDocument } from '../domain/Part';
+import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService
@@ -18,51 +16,40 @@ import { MGPOptional } from '../utils/MGPOptional';
  */
 export class ActivePartsService {
 
-    private readonly activePartsBS: BehaviorSubject<PartDocument[]>;
-
-    private readonly activePartsObs: Observable<PartDocument[]>;
-
-    private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
+    private activeParts: PartDocument[] = [];
 
     constructor(private readonly partDAO: PartDAO) {
-        this.activePartsBS = new BehaviorSubject<PartDocument[]>([]);
-        this.activePartsObs = this.activePartsBS.asObservable();
     }
-    public getActivePartsObs(): Observable<PartDocument[]> {
-        return this.activePartsObs;
-    }
-    public startObserving(): void {
-        assert(this.unsubscribe.isAbsent(), 'ActivePartsService: already observing');
+    public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
         const onDocumentCreated: (createdParts: PartDocument[]) => void = (createdParts: PartDocument[]) => {
-            const result: PartDocument[] = this.activePartsBS.value.concat(...createdParts);
-            this.activePartsBS.next(result);
+            this.activeParts = this.activeParts.concat(...createdParts);
+            callback(this.activeParts);
         };
         const onDocumentModified: (modifiedParts: PartDocument[]) => void = (modifiedParts: PartDocument[]) => {
-            const result: PartDocument[] = this.activePartsBS.value;
+            const result: PartDocument[] = this.activeParts;
             for (const p of modifiedParts) {
                 result.forEach((part: PartDocument) => {
                     if (part.id === p.id) part.data = p.data;
                 });
             }
-            this.activePartsBS.next(result);
+            this.activeParts = result;
+            callback(this.activeParts);
         };
         const onDocumentDeleted: (deletedDocIds: PartDocument[]) => void = (deletedDocs: PartDocument[]) => {
             const result: PartDocument[] = [];
-            for (const p of this.activePartsBS.value) {
+            for (const p of this.activeParts) {
                 if (!deletedDocs.some((part: PartDocument) => part.id === p.id)) {
                     result.push(p);
                 }
             }
-            this.activePartsBS.next(result);
+            this.activeParts = result;
+            callback(this.activeParts);
         };
         const partObserver: FirestoreCollectionObserver<Part> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        this.unsubscribe = MGPOptional.of(this.partDAO.observeActiveParts(partObserver));
+        return this.observeActiveParts(partObserver);
     }
-    public stopObserving(): void {
-        assert(this.unsubscribe.isPresent(), 'Cannot stop observing active parts when you have not started observing');
-        this.activePartsBS.next([]);
-        this.unsubscribe.get()();
-        this.unsubscribe = MGPOptional.empty();
+    public observeActiveParts(callback: FirestoreCollectionObserver<Part>): Subscription {
+        return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
 }

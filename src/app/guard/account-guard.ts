@@ -11,14 +11,14 @@ import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService
  */
 export abstract class AccountGuard implements CanActivate, OnDestroy {
 
-    protected userSub!: Subscription; // always bound in canActivate
+    protected userSubscription!: Subscription; // always bound in canActivate
 
-    constructor(protected readonly authService: ConnectedUserService) {
+    constructor(protected readonly connectedUserService: ConnectedUserService) {
     }
 
     public async canActivate(): Promise<boolean | UrlTree > {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
-            this.userSub = this.authService.getUserObs().subscribe(async(user: AuthUser) => {
+            this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
                 await this.evaluateUserPermission(user).then(resolve);
             });
         });
@@ -27,6 +27,6 @@ export abstract class AccountGuard implements CanActivate, OnDestroy {
     protected abstract evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree>
 
     public ngOnDestroy(): void {
-        this.userSub.unsubscribe();
+        this.userSubscription.unsubscribe();
     }
 }

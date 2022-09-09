@@ -3,23 +3,26 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
+import { Timestamp } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
-import { LobbyComponent } from './lobby.component';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { PartDocument } from 'src/app/domain/Part';
-import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
+import { ConnectedUserService, GameActionFailure } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { UserDAO } from 'src/app/dao/UserDAO';
+
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { PartDocument } from 'src/app/domain/Part';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ConnectedUserService, GameActionFailure } from 'src/app/services/ConnectedUserService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Timestamp } from 'firebase/firestore';
+
+import { LobbyComponent } from './lobby.component';
+import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 
 describe('LobbyComponent', () => {
 
@@ -36,7 +39,6 @@ describe('LobbyComponent', () => {
         expect(component).toBeDefined();
         component.ngOnInit();
     }));
-
     describe('tab-create element', () => {
         it('should display online-game-selection component when clicking on it when allowed by connectedUserService', fakeAsync(async() => {
             // Given a server page
@@ -75,8 +77,11 @@ describe('LobbyComponent', () => {
 
     function setLobbyPartList(list: PartDocument[]): void {
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-        spyOn(activePartsService, 'getActivePartsObs')
-            .and.returnValue(new BehaviorSubject(list).asObservable());
+        spyOn(activePartsService, 'subscribeToActiveParts')
+            .and.callFake((callback: (parts: PartDocument[]) => void) => {
+                callback(list);
+                return new Subscription();
+            });
     }
     describe('clicking on a started game', () => {
 
@@ -447,25 +452,30 @@ describe('LobbyComponent', () => {
             }));
         });
     });
-
-    it('should stop watching current part observable and part list when destroying component', fakeAsync(async() => {
-        // Given a server page
+    it('should unsubscribe from active parts when destroying component', fakeAsync(async() => {
+        // Given the lobby
+        const expectUnsubscribeToHaveBeenCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(ActivePartsService), 'subscribeToActiveParts');
         testUtils.detectChanges();
-        // eslint-disable-next-line dot-notation
-        spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
-        const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-        spyOn(activePartsService, 'stopObserving');
 
-        // When destroying the component
+        // When it is destroyed
         component.ngOnDestroy();
 
-        // Then the router active part observer should have been unsubscribed
-        // eslint-disable-next-line dot-notation
-        expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
-        // and ActivePartsService should have been told to stop observing
-        expect(activePartsService.stopObserving).toHaveBeenCalledOnceWith();
+        // Then it should have unsubscrbed from active parts
+        expectUnsubscribeToHaveBeenCalled();
     }));
+    it('should unsubscribe from active users when destroying component', fakeAsync(async() => {
+        // Given an initialized lobby
+        const expectUnsubscribeToHaveBeenCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(ActiveUsersService), 'subscribeToActiveUsers');
+        testUtils.detectChanges();
 
+        // When it is destroyed
+        component.ngOnDestroy();
+
+        // Then it should have unsubscrbed from active users
+        expectUnsubscribeToHaveBeenCalled();
+    }));
     it('should display firebase time HH:mm:ss', fakeAsync(async() => {
         // Given a lobby in which we observe tab chat, and where one user is here
         const HH: number = 11 * 3600;
@@ -484,7 +494,7 @@ describe('LobbyComponent', () => {
         // When rendering it
         testUtils.detectChanges();
 
-        // Then the date should be written in format HH:mm:ss (with 1h added due to Locale?)
+        // Then the date should be written in format HH:mm:ss
         const element: DebugElement = testUtils.findElement('#' + UserMocks.CREATOR_MINIMAL_USER.name);
         const time: string = element.nativeElement.innerText;
         const timeAsString: string = formatDate(timeStampInSecond * 1000, 'HH:mm:ss', 'en-US');

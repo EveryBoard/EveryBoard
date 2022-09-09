@@ -10,7 +10,7 @@ import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
@@ -19,6 +19,7 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
+import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('OnlineGameWrapper for non-existing game', () => {
@@ -252,5 +253,25 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
-});
+    it('should unsubscribe from the part upon destruction', fakeAsync(async() => {
+        // Given a started part
+        testUtils = await ComponentTestUtils.basic('P4');
+        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
+        const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
 
+        testUtils.prepareFixture(OnlineGameWrapperComponent);
+        wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+
+        await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
+        testUtils.detectChanges();
+        tick();
+        testUtils.detectChanges();
+        tick(1); // Need to wait for startPart to be called
+
+        // When the component is destroyed
+        await wrapper.ngOnDestroy();
+
+        // Then it unsubscribed from the part
+        expectUnsubscribeToHaveBeenCalled();
+    }));
+});

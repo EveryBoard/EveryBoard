@@ -9,7 +9,7 @@ import { assert } from 'src/app/utils/assert';
     templateUrl: './reset-password.component.html',
 })
 export class ResetPasswordComponent {
-    constructor(public authService: ConnectedUserService) {}
+    constructor(public connectedUserService: ConnectedUserService) {}
 
     public success: boolean = false;
     public errorMessage: MGPOptional<string> = MGPOptional.empty();
@@ -19,7 +19,7 @@ export class ResetPasswordComponent {
         assert(this.email !== '', 'No email was entered, but it should not be possible to submit the form then!');
         this.errorMessage = MGPOptional.empty();
         this.success = false;
-        const result: MGPValidation = await this.authService.sendPasswordResetEmail(this.email);
+        const result: MGPValidation = await this.connectedUserService.sendPasswordResetEmail(this.email);
         if (result.isSuccess()) {
             this.success = true;
         } else {

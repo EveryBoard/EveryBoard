@@ -26,7 +26,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
 
     public emailAddress: string;
 
-    public userSub: Subscription;
+    private userSubscription: Subscription;
 
     public usernameForm: FormGroup = new FormGroup({
         username: new FormControl(),
@@ -36,8 +36,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
-        this.userSub = this.connectedUserService.getUserObs()
-            .subscribe(async(user: AuthUser) => {
+        this.userSubscription = this.connectedUserService.subscribeToUser(
+            async(user: AuthUser) => {
                 this.emailAddress = user.email.get();
                 // We know that if this page is shown, something needs to be done to finalize the account
                 if (user.username.isAbsent()) {
@@ -79,8 +79,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         window.open(window.location.href, '_self');
     }
     public ngOnDestroy(): void {
-        if (this.userSub != null && this.userSub.unsubscribe != null) {
-            this.userSub.unsubscribe();
+        if (this.userSubscription != null && this.userSubscription.unsubscribe != null) {
+            this.userSubscription.unsubscribe();
         }
     }
 }

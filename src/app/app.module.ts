@@ -8,8 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import localeFr from '@angular/common/locales/fr';
 
-import { PartDAO } from './dao/PartDAO';
-
 import { ChatService } from './services/ChatService';
 import { UserService } from './services/UserService';
 import { ConnectedUserService } from './services/ConnectedUserService';
@@ -78,7 +76,7 @@ import { environment } from 'src/environments/environment';
 import { LocaleUtils } from './utils/LocaleUtils';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
-import { VerifiedAndNotActiveGuard } from './guard/verified-and-not-active.guard';
+import { ExclusiveOnlineGameGuard } from './guard/verified-and-not-active.guard';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 
@@ -109,9 +107,9 @@ export const routes: Route[] = [
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 
-    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAndNotActiveGuard] },
-    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAndNotActiveGuard] },
-    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
     { path: 'tutorial', component: TutorialGameCreationComponent },
@@ -226,7 +224,6 @@ export class FirebaseProviders {
         ConfigRoomService,
         UserService,
         ChatService,
-        PartDAO,
         ThemeService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],
