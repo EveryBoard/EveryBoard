@@ -2,7 +2,7 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -26,19 +26,20 @@ describe('LoginComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(LoginComponent);
         router = TestBed.inject(Router);
         connectedUserService = TestBed.inject(ConnectedUserService);
-
-        userRS = new ReplaySubject<AuthUser>(1);
-        const userObs: Observable<AuthUser> = userRS.asObservable();
-        spyOn(connectedUserService, 'subscribeToUser').and.callFake((callback: (user: AuthUser) => void) => {
-            return userObs.subscribe(callback);
-        });
-
-        testUtils.detectChanges();
     }));
     it('should create', () => {
+        testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     });
     describe('redirections', () => {
+        beforeEach(() => {
+            userRS = new ReplaySubject<AuthUser>(1);
+            const userObs: Observable<AuthUser> = userRS.asObservable();
+            spyOn(connectedUserService, 'subscribeToUser').and.callFake((callback: (user: AuthUser) => void) => {
+                return userObs.subscribe(callback);
+            });
+            testUtils.detectChanges();
+        });
         it('should redirect upon logged-in user change', fakeAsync(async() => {
             spyOn(router, 'navigate').and.callFake(async() => true);
 
@@ -77,8 +78,9 @@ describe('LoginComponent', () => {
         }
 
         it('should dispatch email login to authentication service', fakeAsync(async() => {
-            // given an existing user
+            // given an existing user and a loaded component
             spyOn(connectedUserService, 'doEmailLogin').and.resolveTo(MGPValidation.SUCCESS);
+            testUtils.detectChanges();
 
             // when the user logs in
             await login();
@@ -87,8 +89,9 @@ describe('LoginComponent', () => {
             expect(connectedUserService.doEmailLogin).toHaveBeenCalledWith(email, password);
         }));
         it('should show an error if login fails', fakeAsync(async() => {
-            // given a user that will fail to login
+            // given a user that will fail to login and a loaded component
             spyOn(connectedUserService, 'doEmailLogin').and.resolveTo(MGPValidation.failure('Error message'));
+            testUtils.detectChanges();
 
             // when the user logs in
             await login();
@@ -122,4 +125,15 @@ describe('LoginComponent', () => {
             expect(getShownError()).toEqual('Error message');
         }));
     });
+    it('should unsubscribe from user upon destruction', fakeAsync(async() => {
+        // Given the login component
+        const expectUnsubscribeToBeCalled: () => void = prepareUnsubscribeCheck(connectedUserService, 'subscribeToUser');
+        testUtils.detectChanges();
+
+        // When it is destroyed
+        testUtils.getComponent().ngOnDestroy();
+
+        // Then it should have unsubscribed from the user
+        expectUnsubscribeToBeCalled();
+    }));
 });
