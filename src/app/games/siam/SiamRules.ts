@@ -56,7 +56,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
     }
     public isLegalInsertion(coord: Coord, state: SiamState): {insertedPiece: SiamPiece, legal: MGPValidation} {
-        const numberOnBoard: number = state.countPlayerPawn();
+        const numberOnBoard: number = state.countCurrentPlayerPawn();
         const currentPlayer: Player = state.getCurrentPlayer();
         const legal: MGPValidation = (numberOnBoard < 5) ?
             MGPValidation.SUCCESS :
@@ -403,7 +403,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         if (testedCoord.isNotInRange(5, 5)) {
             missingForce -= 1;
-            if (state.countPlayerPawn() === 5) {
+            if (state.countCurrentPlayerPawn() === 5) {
                 return MGPOptional.empty();
             }
         }

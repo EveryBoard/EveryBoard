@@ -15,6 +15,7 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SiamFailure } from './SiamFailure';
+import { Player } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-siam',
@@ -163,7 +164,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         return false;
     }
-    public getInsertionArrowTransform(x: number, y: number, direction: string): string {
+    public getArrowTransform(x: number, y: number, direction: string): string {
         const orientation: number = Orthogonal.factory.fromString(direction).get().toInt() - 2;
         const rotation: string = `rotate(${orientation*90} ${this.SPACE_SIZE/2} ${this.SPACE_SIZE/2})`;
         const translation: string = 'translate(' + x * this.SPACE_SIZE + ', ' + y * this.SPACE_SIZE + ')';
@@ -176,7 +177,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const translation: string = 'translate(' + (x+1) * this.SPACE_SIZE + ', ' + (y+1) * this.SPACE_SIZE + ')';
         return [translation, rotation].join(' ');
     }
-    public getArrowTransform(x: number, y: number, orientation: string): string {
+    public getTriangleTransform(x: number, y: number, orientation: string): string {
         return GameComponentUtils.getArrowTransform(this.SPACE_SIZE,
                                                     new Coord(x, y),
                                                     Orthogonal.factory.fromString(orientation).get());
@@ -191,5 +192,17 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return ['moved'];
         }
         return [];
+    }
+    public playerPieces(player: Player): number {
+        return 5 - this.getState().countPlayersPawn()[player.value];
+    }
+    public getRemainingPieceTransform(piece: number, player: Player): string {
+        const x: number = piece + (5 - this.playerPieces(player) / 2) - 1.5;
+        const y: number = player === Player.ZERO ? -1 : 7;
+        const orientation: string = player === Player.ZERO ? 'UP' : 'DOWN';
+        return this.getArrowTransform(x, y, orientation);
+    }
+    public async selectPiece(player: Player): Promise<void> {
+        return; // TODO
     }
 }

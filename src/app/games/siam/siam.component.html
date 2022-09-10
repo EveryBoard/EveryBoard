@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 700 700"
+     viewBox="-100 -100 900 900"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <polygon id="triangle" points="0 -6, 10 0, 0 6"/>
-        <polygon id="arrow" points="30 7, 30 50, 10 50, 50 93, 90 50, 70 50, 70 7, 27.5 7" />
+        <polygon id="arrow" points="30 7, 30 50, 10 50, 50 93, 90 50, 70 50, 70 7" />
         <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95" />
     </defs>
     <ng-container *ngIf="isPlayerTurn()">
@@ -13,7 +13,7 @@
                  xlink:href="#arrow"
                  id="insertAt_{{orientation.x}}_{{orientation.y}}"
                  (click)="insertAt(orientation.x, orientation.y)"
-                 [attr.transform]="getInsertionArrowTransform(orientation.x+1, orientation.y+1, orientation.dir)"
+                 [attr.transform]="getArrowTransform(orientation.x+1, orientation.y+1, orientation.dir)"
                  class="base mid-stroke"/>
         </g>
     </ng-container>
@@ -47,7 +47,7 @@
                          class="arrow selected-fill no-stroke"
                          (click)="chooseDirection(direction)"
                          xlink:href="#triangle"
-                         [attr.transform]="getArrowTransform(x+1, y+1, direction)"/>
+                         [attr.transform]="getTriangleTransform(x+1, y+1, direction)"/>
                 </g>
             </g>
             <use *ngIf="isMountain(c)"
@@ -61,8 +61,19 @@
                      class="arrow selected-fill no-stroke"
                      (click)="chooseOrientation(orientation)"
                      xlink:href="#triangle"
-                     [attr.transform]="getArrowTransform(x+1, y+1, orientation)" />
+                     [attr.transform]="getTriangleTransform(x+1, y+1, orientation)" />
             </g>
+        </g>
+    </g>
+    <g *ngFor="let player of [Player.ZERO, Player.ONE]">
+        <g *ngFor="let x of range(playerPieces(player))">
+            <use class="base mid-stroke"
+                 [ngClass]="getPlayerClass(player)"
+                 id="{{x}}_{{ player }}"
+                 (click)="selectPiece(Player.ZERO)"
+                 xlink:href="#arrow"
+                 [attr.transform]="getRemainingPieceTransform(x, player)"
+            />
         </g>
     </g>
 </svg>

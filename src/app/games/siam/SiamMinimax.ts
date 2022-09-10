@@ -23,7 +23,7 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInform
                 }
             }
         }
-        if (node.gameState.countPlayerPawn() < 5) {
+        if (node.gameState.countCurrentPlayerPawn() < 5) {
             // up to 20 pushing insertion
             moves = moves.concat(SiamRules.getPushingInsertions(node.gameState));
             // up to 24 deraping insertion
