@@ -68,4 +68,14 @@ describe('MGPSet', () => {
             expect(emptySet.getAnyElement().isAbsent()).toBeTrue();
         });
     });
+    describe('isEmpty', () => {
+        it('should return true for the empty set', () => {
+            const set: MGPSet<number> = new MGPSet();
+            expect(set.isEmpty()).toBeTrue();
+        });
+        it('should return false for any non-empty set', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            expect(set.isEmpty()).toBeFalse();
+        });
+    });
 });

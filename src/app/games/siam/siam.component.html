@@ -7,20 +7,10 @@
         <polygon id="arrow" points="30 7, 30 50, 10 50, 50 93, 90 50, 70 50, 70 7" />
         <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95" />
     </defs>
-    <ng-container *ngIf="isPlayerTurn()">
-        <g *ngFor="let n of [0, 1, 2, 3, 4]">
-            <use *ngFor="let orientation of [{ dir: 'DOWN', x: n, y: -1 }, { dir: 'UP', x: n, y: 5}, { dir: 'RIGHT', x: -1, y: n }, { dir: 'LEFT', x: 5, y: n }]"
-                 xlink:href="#arrow"
-                 id="insertAt_{{orientation.x}}_{{orientation.y}}"
-                 (click)="insertAt(orientation.x, orientation.y)"
-                 [attr.transform]="getArrowTransform(orientation.x+1, orientation.y+1, orientation.dir)"
-                 class="base mid-stroke"/>
-        </g>
-    </ng-container>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
-            <rect id="insertAt_{{ x }}_{{ y }}"
-                  (click)="insertAt(x, y)"
+            <rect id="square_{{ x }}_{{ y }}"
+                  (click)="clickSquare(x, y)"
                   [attr.x]="SPACE_SIZE * (x + 1)"
                   [attr.y]="SPACE_SIZE * (y + 1)"
                   [attr.width]="SPACE_SIZE"
@@ -65,15 +55,29 @@
             </g>
         </g>
     </g>
+    <g *ngFor="let coord of clickableCoords">
+        <rect (click)="clickSquare(coord.x, coord.y)"
+              [attr.x]="SPACE_SIZE * (coord.x + 1)"
+              [attr.y]="SPACE_SIZE * (coord.y + 1)"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="base no-fill small-stroke clickable" />
+    </g>
     <g *ngFor="let player of [Player.ZERO, Player.ONE]">
         <g *ngFor="let x of range(playerPieces(player))">
-            <use class="base mid-stroke"
+            <use id="selectPiece_{{ player }}"
+                 class="base mid-stroke"
                  [ngClass]="getPlayerClass(player)"
-                 id="{{x}}_{{ player }}"
-                 (click)="selectPiece(Player.ZERO)"
+                 (click)="selectPieceForInsertion(player)"
                  xlink:href="#arrow"
-                 [attr.transform]="getRemainingPieceTransform(x, player)"
-            />
+                 [attr.transform]="getRemainingPieceTransform(x, player)" />
         </g>
+    </g>
+    <g *ngFor="let orientation of displayedArrows">
+        <use id="orientation_{{ orientation }}"
+             class="base mid-stroke highlighted-fill semi-transparent"
+             (click)="selectOrientation(orientation)"
+             xlink:href="#arrow"
+             [attr.transform]="getOrientationTransform(orientation)" />
     </g>
 </svg>

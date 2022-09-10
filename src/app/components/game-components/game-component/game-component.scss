@@ -93,6 +93,9 @@
 .highlighted {
     stroke: var(--selectable);
 }
+.highlighted-fill {
+    fill: var(--selectable);
+}
 .highlighted > .base-no-stroke {
     fill: var(--selectable);
 }
