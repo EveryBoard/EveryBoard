@@ -41,7 +41,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
-    public observerRole: PlayerOrNone = PlayerOrNone.NONE;
+    public role: PlayerOrNone = PlayerOrNone.NONE;
 
     public canPass: boolean;
 
@@ -106,13 +106,13 @@ export abstract class GameWrapper<P extends Comparable> {
             (reason?: string): void => {
                 this.onCancelMove(reason);
             };
-        this.setObserverRole(this.observerRole);
+        this.setRole(this.role);
         this.canPass = this.gameComponent.canPass;
         return true;
     }
-    public setObserverRole(observerRole: PlayerOrNone): void {
-        this.observerRole = observerRole;
-        this.gameComponent.observerRole = this.observerRole;
+    public setRole(role: PlayerOrNone): void {
+        this.role = role;
+        this.gameComponent.role = this.role;
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
@@ -141,7 +141,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract
-        if (this.observerRole === PlayerOrNone.NONE) {
+        if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
         }
@@ -155,7 +155,7 @@ export abstract class GameWrapper<P extends Comparable> {
         // Not needed by default'
     }
     public isPlayerTurn(): boolean {
-        if (this.observerRole === PlayerOrNone.NONE) {
+        if (this.role === PlayerOrNone.NONE) {
             return false;
         }
         if (this.gameComponent == null) {
@@ -169,7 +169,7 @@ export abstract class GameWrapper<P extends Comparable> {
             turn,
             players: this.players,
             player,
-            observer: this.observerRole,
+            observer: this.role,
             areYouPlayer: this.players[indexPlayer].isPresent() &&
                 comparableEquals(this.players[indexPlayer].get(), player),
             isThereAPlayer: this.players[indexPlayer],

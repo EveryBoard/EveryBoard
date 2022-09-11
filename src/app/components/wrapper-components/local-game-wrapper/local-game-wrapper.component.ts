@@ -42,7 +42,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
-        this.observerRole = Player.ZERO; // The user is playing, not observing
+        this.role = Player.ZERO; // The user is playing, not observing
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {

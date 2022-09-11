@@ -109,7 +109,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         return 50 + 120 * y;
     }
     public getPieceRotation(x: number, y: number): string {
-        return 'rotate(' + this.observerRole.value * 180 + ' ' +
+        return 'rotate(' + this.role.value * 180 + ' ' +
                this.getPieceCx(x) + ' ' +
                this.getPieceCy(y) + ')';
     }

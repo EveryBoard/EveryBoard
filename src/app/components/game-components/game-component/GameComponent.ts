@@ -60,7 +60,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public observerRole: PlayerOrNone;
+    public role: PlayerOrNone;
 
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow

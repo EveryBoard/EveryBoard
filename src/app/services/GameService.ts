@@ -237,15 +237,15 @@ export class GameService {
     public askTakeBack(partId: string, lastIndex: number, player: Player): Promise<void> {
         return this.sendRequest(partId, player, lastIndex, Request.takeBackAsked(player));
     }
-    public async acceptTakeBack(id: string, part: PartDocument, observerRole: Player, msToSubstract: [number, number])
+    public async acceptTakeBack(id: string, part: PartDocument, role: Player, msToSubstract: [number, number])
     : Promise<void>
     {
         const requester: Player = Request.getPlayer(Utils.getNonNullable(part.data.request));
-        assert(requester !== observerRole, 'Illegal to accept your own request');
+        assert(requester !== role, 'Illegal to accept your own request');
 
-        const request: Request = Request.takeBackAccepted(observerRole);
+        const request: Request = Request.takeBackAccepted(role);
         let listMoves: JSONValueWithoutArray[] = part.data.listMoves.slice(0, part.data.listMoves.length - 1);
-        if (listMoves.length % 2 === observerRole.value) {
+        if (listMoves.length % 2 === role.value) {
             // Deleting a second move
             listMoves = listMoves.slice(0, listMoves.length - 1);
         }
@@ -258,22 +258,17 @@ export class GameService {
             remainingMsForOne: Utils.getNonNullable(part.data.remainingMsForOne) - msToSubstract[1],
         };
         const lastIndex: number = part.data.lastUpdate.index;
-        return await this.updateAndBumpIndex(id, observerRole, lastIndex, update);
+        return await this.updateAndBumpIndex(id, role, lastIndex, update);
     }
-    public refuseTakeBack(id: string, lastIndex: number, observerRole: Player): Promise<void> {
-        const request: Request = Request.takeBackRefused(observerRole);
-        return this.updateAndBumpIndex(id, observerRole, lastIndex, { request });
+    public refuseTakeBack(id: string, lastIndex: number, role: Player): Promise<void> {
+        const request: Request = Request.takeBackRefused(role);
+        return this.updateAndBumpIndex(id, role, lastIndex, { request });
     }
-    public async addGlobalTime(id: string,
-                               lastIndex: number,
-                               part: Part,
-                               observerRole: Player)
-    : Promise<void>
-    {
+    public async addGlobalTime(id: string, lastIndex: number, part: Part, role: Player): Promise<void> {
         let update: Partial<Part> = {
-            request: Request.addGlobalTime(observerRole.getOpponent()),
+            request: Request.addGlobalTime(role.getOpponent()),
         };
-        if (observerRole === Player.ZERO) {
+        if (role === Player.ZERO) {
             update = {
                 ...update,
                 remainingMsForOne: Utils.getNonNullable(part.remainingMsForOne) + 5 * 60 * 1000,
@@ -284,11 +279,11 @@ export class GameService {
                 remainingMsForZero: Utils.getNonNullable(part.remainingMsForZero) + 5 * 60 * 1000,
             };
         }
-        return await this.updateAndBumpIndex(id, observerRole, lastIndex, update);
+        return await this.updateAndBumpIndex(id, role, lastIndex, update);
     }
-    public async addTurnTime(observerRole: Player, lastIndex: number, id: string): Promise<void> {
-        const update: Partial<Part> = { request: Request.addTurnTime(observerRole.getOpponent()) };
-        return await this.updateAndBumpIndex(id, observerRole, lastIndex, update);
+    public async addTurnTime(role: Player, lastIndex: number, id: string): Promise<void> {
+        const update: Partial<Part> = { request: Request.addTurnTime(role.getOpponent()) };
+        return await this.updateAndBumpIndex(id, role, lastIndex, update);
     }
     public async updateDBBoard(partId: string,
                                user: Player,
