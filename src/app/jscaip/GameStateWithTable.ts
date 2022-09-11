@@ -3,7 +3,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 
-export abstract class GameStateWithTable<P> extends GameState { // RectangularGameState ?
+export abstract class GameStateWithTable<P> extends GameState {
 
     public constructor(public readonly board: Table<P>, turn: number) {
         super(turn);

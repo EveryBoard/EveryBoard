@@ -3883,7 +3883,7 @@
       </trans-unit>
       <trans-unit id="2025949389316561274" datatype="html">
         <source>You are already playing in another game.</source>
-        <target>Vous jouez déjà en train de jouer une autre partie.</target>
+        <target>Vous êtes déjà en train de jouer une autre partie.</target>
       </trans-unit>
       <trans-unit id="3355072499279505626" datatype="html">
         <source>You are already the creator of another game.</source>
@@ -3898,7 +3898,7 @@
         <target>Vous êtes déjà candidat dans une autre partie.</target>
       </trans-unit>
       <trans-unit id="9143820669260107420" datatype="html">
-        <source>You are already observer in another game.</source>
+        <source>You are already observing in another game.</source>
         <target>Vous observez déjà une autre partie.</target>
       </trans-unit>
     </body>

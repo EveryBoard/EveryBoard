@@ -28,11 +28,14 @@ describe('LobbyComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<LobbyComponent>;
     let component: LobbyComponent;
+    let router: Router;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LobbyComponent);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
         component = testUtils.getComponent();
+        router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
     }));
 
     it('should create', fakeAsync(async() => {
@@ -51,13 +54,13 @@ describe('LobbyComponent', () => {
             await testUtils.clickElement('#tab-create');
             await testUtils.whenStable();
 
-            // Then online-game-selection component is on the page
+            // Then online-game-selection component should be on the page
             testUtils.expectElementToExist('#online-game-selection');
         }));
         it('should refuse to change page when clicking on it while not allowed by connectedUserService, and toast the reason', fakeAsync(async() => {
             // Given a server page
             testUtils.detectChanges();
-            // where you are allowed by connectedUserService
+            // where you are forbidden by connectedUserService
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
             spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
             const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
@@ -69,7 +72,7 @@ describe('LobbyComponent', () => {
             await testUtils.whenStable();
             tick(3000);
 
-            // Then online-game-selection component is on the page
+            // Then online-game-selection component should not be visible and an error should be toasted
             testUtils.expectElementNotToExist('#online-game-selection');
             expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
         }));
@@ -82,6 +85,28 @@ describe('LobbyComponent', () => {
                 callback(list);
                 return new Subscription();
             });
+    }
+    async function shouldAllowJoinPart(partList: PartDocument[]): Promise<void> {
+        // Given a server with the given partList
+        setLobbyPartList(partList);
+        testUtils.detectChanges();
+
+        // When clicking on the first part
+        await testUtils.clickElement('#part_0');
+
+        // The the component should have navigate to the part
+        expectValidRouting(router, ['/play', 'Quarto', partList[0].id], OnlineGameWrapperComponent);
+    }
+    async function shouldForbidToJoinPart(partList: PartDocument[], reason: string): Promise<void> {
+        setLobbyPartList(partList);
+        testUtils.detectChanges();
+
+        // When clicking on the part
+        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
+        await testUtils.clickElement('#part_0');
+
+        // Then the refusal reason should be given
+        expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
     }
     describe('clicking on a started game', () => {
 
@@ -111,16 +136,7 @@ describe('LobbyComponent', () => {
             });
             it('Should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
-                setLobbyPartList([startedPartUserDoNotPlay]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then the component should navigate to the part
-                expectValidRouting(router, ['/play', 'Quarto', startedPartUserDoNotPlay.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([startedPartUserDoNotPlay]);
             }));
         });
         describe('as a player', () => {
@@ -134,30 +150,12 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to join another game', fakeAsync(async() => {
                 // And a lobby where the a part user do not play is present
-                setLobbyPartList([startedPartUserDoNotPlay]);
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([startedPartUserDoNotPlay], reason);
             }));
             it('should allow users to play their games from several tabs', fakeAsync(async() => {
                 // And a lobby where the part player plays is present
-                setLobbyPartList([startedPartUserPlay]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then we should have went to see the game
-                expectValidRouting(router, ['/play', 'Quarto', startedPartUserPlay.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([startedPartUserPlay]);
             }));
         });
         describe('as an observer', () => {
@@ -171,29 +169,11 @@ describe('LobbyComponent', () => {
             });
             it('should allow to observe a second part', fakeAsync(async() => {
                 // And a lobby where another started part that user do not play is present
-                setLobbyPartList([anotherStartedPartUserDoNotPlay]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then we should have went to see the game
-                expectValidRouting(router, ['/play', 'Quarto', anotherStartedPartUserDoNotPlay.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([anotherStartedPartUserDoNotPlay]);
             }));
             it('should allow to observe twice the same part', fakeAsync(async() => {
                 // Given a lobby where the connected user is already the observer in this part
-                setLobbyPartList([startedPartUserDoNotPlay]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then we should have went to see the game
-                expectValidRouting(router, ['/play', 'Quarto', startedPartUserDoNotPlay.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([startedPartUserDoNotPlay]);
             }));
         });
         describe('as a creator', () => {
@@ -207,19 +187,8 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to observe game while creating another one', fakeAsync(async() => {
                 // And a lobby where another started part that user do not play is present
-                setLobbyPartList([startedPartUserDoNotPlay]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([startedPartUserDoNotPlay], reason);
             }));
         });
         describe('as a candidate', () => {
@@ -233,19 +202,8 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to observe game while candidate in another one', fakeAsync((async() => {
                 // And a lobby where another unstarted part not linked to user is present
-                setLobbyPartList([anotherUnstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
             })));
         });
         describe('as chosen opponent', () => {
@@ -259,19 +217,8 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to observe game while chosen opponent in another one', fakeAsync((async() => {
                 // And a lobby where another unstarted part not linked to user is present
-                setLobbyPartList([anotherUnstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
             })));
         });
     });
@@ -296,16 +243,7 @@ describe('LobbyComponent', () => {
             });
             it('Should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
-                setLobbyPartList([unstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then the component should navigate to the part
-                expectValidRouting(router, ['/play', 'Quarto', unstartedPartUserDidNotCreate.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
             }));
         });
         describe('as a player', () => {
@@ -319,19 +257,8 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to become candidate while already playing another game', fakeAsync(async() => {
                 // And a lobby where the connected user is already the Player in one part
-                setLobbyPartList([unstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([unstartedPartUserDidNotCreate], reason);
             }));
         });
         describe('as a creator', () => {
@@ -345,32 +272,12 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to be candidate while already creating another game', fakeAsync(async() => {
                 // And a lobby where another unstarted part not linked to user is present
-                setLobbyPartList([unstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([unstartedPartUserDidNotCreate], reason);
             }));
             it('should allow user to have his created part in two tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already
-                setLobbyPartList([unstartedPartUserCreated]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then the refusal reason should be given
-                expectValidRouting(router, ['/play', 'Quarto', unstartedPartUserCreated.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([unstartedPartUserCreated]);
             }));
         });
         describe('as a chosen opponent', () => {
@@ -384,32 +291,12 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to be candidate while already chosen opponent in another game', fakeAsync(async() => {
                 // Given a lobby where the connected user is already the chosen opponent in one part
-                setLobbyPartList([anotherUnstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
             }));
             it('should allow user to be candidate of the same part in several tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already
-                setLobbyPartList([unstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then the refusal reason should be given
-                expectValidRouting(router, ['/play', 'Quarto', unstartedPartUserDidNotCreate.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
             }));
         });
         describe('as a candidate', () => {
@@ -423,32 +310,12 @@ describe('LobbyComponent', () => {
             });
             it('should forbid user to be candidate in two part as once', fakeAsync(async() => {
                 // Given a lobby where the connected user is already the candidate in one part
-                setLobbyPartList([anotherUnstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
-                await testUtils.clickElement('#part_0');
-                tick(3000); // 3 sec of toast display
-
-                // Then the refusal reason should be given
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
-                expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
             }));
             it('should allow user to have be candidate of the same part in two tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already
-                setLobbyPartList([unstartedPartUserDidNotCreate]);
-                const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.resolveTo();
-                testUtils.detectChanges();
-
-                // When clicking on the part
-                await testUtils.clickElement('#part_0');
-
-                // Then the refusal reason should be given
-                expectValidRouting(router, ['/play', 'Quarto', unstartedPartUserDidNotCreate.id], OnlineGameWrapperComponent);
+                await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
             }));
         });
     });

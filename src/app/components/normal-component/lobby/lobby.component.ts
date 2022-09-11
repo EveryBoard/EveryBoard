@@ -48,7 +48,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
             (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
-        this.connectedUserService.getObservedPartObs().subscribe((observed: MGPOptional<FocusedPart>) => {
+        this.connectedUserService.subscribeToObservedPart((observed: MGPOptional<FocusedPart>) => {
             this.createTabClasses = [];
             if (observed.isPresent()) {
                 this.createTabClasses = ['disabled-tab'];
@@ -60,8 +60,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.activeUsersSubscription.unsubscribe();
         this.activePartsSubscription.unsubscribe();
     }
-    public async joinGame(partId: string, typeGame: string): Promise<void> {
-        const canUserJoin: MGPValidation = this.connectedUserService.canUserJoin(partId);
+    public async joinGame(part: PartDocument): Promise<void> {
+        const partId: string = part.id;
+        const typeGame: string = part.data.typeGame;
+        const gameStarted: boolean = part.data.beginning != null;
+        const canUserJoin: MGPValidation = this.connectedUserService.canUserJoin(partId, gameStarted);
         if (canUserJoin.isSuccess()) {
             await this.router.navigate(['/play', typeGame, partId]);
         } else {

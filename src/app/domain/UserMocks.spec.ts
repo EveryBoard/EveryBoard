@@ -65,4 +65,6 @@ export class UserMocks {
 
     public static readonly OTHER_OPPONENT_MINIMAL_USER: MinimalUser =
         UserMocks.OTHER_OPPONENT_AUTH_USER.toMinimalUser();
+
+    public static readonly OTHER_CREATOR_MINIMAL_USER: MinimalUser = { id: 'creator-id', name: 'le_createur' };
 }

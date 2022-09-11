@@ -49,9 +49,8 @@ describe('WelcomeComponent', () => {
 
         // When clicking on the online-button of one game
         const component: WelcomeComponent = testUtils.getComponent();
-        spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
+        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
         await testUtils.clickElement('#playOnline_Awale');
-        tick(3000);
 
         // Then the component should not have changed page and should toast the reason
         expect(router.navigate).not.toHaveBeenCalled();
@@ -97,9 +96,8 @@ describe('WelcomeComponent', () => {
 
         // When clicking on the online-button of one game
         const component: WelcomeComponent = testUtils.getComponent();
-        spyOn(component.messageDisplayer, 'criticalMessage').and.callThrough();
+        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
         await testUtils.clickElement('#createOnlineGame');
-        tick(3000);
 
         // Then the component should not have changed page and should toast the reason
         expect(router.navigate).not.toHaveBeenCalled();

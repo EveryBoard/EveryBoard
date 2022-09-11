@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.username = user.email;
             }});
         this.observedPartSubscription =
-            this.connectedUserService.getObservedPartObs().subscribe((focusedPart: MGPOptional<FocusedPart>) => {
+            this.connectedUserService.subscribeToObservedPart((focusedPart: MGPOptional<FocusedPart>) => {
                 this.observedPart = focusedPart;
             });
     }

@@ -28,7 +28,7 @@
             <tbody>
                 <tr *ngFor="let part of activeParts; index as i"
                     id="part_{{ i }}"
-                    (click)="joinGame(part.id, part.data.typeGame)">
+                    (click)="joinGame(part)">
                     <td class="td">{{ part.data.typeGame }}</td>
                     <td class="td">{{ part.data.playerZero.name }}</td>
                     <td class="td">

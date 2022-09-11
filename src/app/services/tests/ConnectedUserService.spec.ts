@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { serverTimestamp } from 'firebase/firestore';
-import { Observable } from 'rxjs';
 
 import { Auth, ConnectedUserService, AuthUser, GameActionFailure } from '../ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -62,8 +61,8 @@ export class ConnectedUserServiceMock {
     public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
         return this.userRS.asObservable().subscribe(callback);
     }
-    public getObservedPartObs(): Observable<MGPOptional<FocusedPart>> { // TODOTODO uniformiser avec les autres observables
-        return this.observedPartRS.asObservable();
+    public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {
+        return this.observedPartRS.asObservable().subscribe(callback);
     }
     public async disconnect(): Promise<MGPValidation> {
         if (this.user.isPresent()) {
@@ -121,28 +120,20 @@ export class ConnectedUserServiceMock {
             return MGPValidation.failure(message);
         }
     }
-    public canUserJoin(partId: string): MGPValidation {
+    public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
         if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
-            // User is allowed to observe one part in any way
-            // or to do it twice with the same one
+            // If user is in no part, he can join one
+            // If he is onne part and want to join it again, he can
             return MGPValidation.SUCCESS;
         } else {
-            const observedPart: FocusedPart = this.observedPart.get();
-            switch (observedPart.role) {
-                case 'Creator':
-                    // Even if one player can be creator of one part that is started
-                    // It is here only used for non started game
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CREATING());
-                case 'Candidate':
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CANDIDATE());
-                case 'ChosenOpponent':
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT());
-                case 'Player':
-                    return MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_PLAYING());
-                default:
-                    Utils.expectToBe(observedPart.role, 'Observer');
-                    return MGPValidation.SUCCESS;
-                    // It is allow to observe another game
+            if (gameStarted && this.observedPart.get().role === 'Observer') {
+                // User is allowed to observe two different parts
+                return MGPValidation.SUCCESS;
+            } else {
+                // If the other-part is not-started, you cannot (join it and become candidate)
+                // if the other-part is started but you are active(aka: non-observer) you cannot join it
+                const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
+                return MGPValidation.failure(message);
             }
         }
     }
@@ -158,7 +149,7 @@ function setupAuthTestModule(): Promise<unknown> {
  * await firebase.auth().signOut();
  */
 export async function createConnectedGoogleUser(email: string, username?: string): Promise<FireAuth.User> {
-    TestBed.inject(ConnectedUserService);
+    const userDAO: UserDAO = TestBed.inject(UserDAO);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
@@ -166,11 +157,11 @@ export async function createConnectedGoogleUser(email: string, username?: string
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
+    await userDAO.set(credential.user.uid, { verified: false });
     if (username != null) {
         // This needs to happen in multiple updates to match the security rules
-        await TestBed.inject(UserDAO).update(credential.user.uid, { username });
-        await TestBed.inject(UserDAO).update(credential.user.uid, { verified: true });
+        await userDAO.update(credential.user.uid, { username });
+        await userDAO.update(credential.user.uid, { verified: true });
     }
     return credential.user;
 }
@@ -193,12 +184,13 @@ export async function reconnectUser(email: string): Promise<void> {
 }
 
 export async function createUnverifiedUser(email: string, username: string): Promise<MinimalUser> {
+    const userDAO: UserDAO = TestBed.inject(UserDAO);
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": false}';
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
-    await TestBed.inject(UserDAO).update(credential.user.uid, { username });
+    await userDAO.set(credential.user.uid, { verified: false });
+    await userDAO.update(credential.user.uid, { username });
     return { id: credential.user.uid, name: username };
 }
 
@@ -216,6 +208,7 @@ describe('ConnectedUserService', () => {
 
     let auth: FireAuth.Auth;
     let connectedUserService: ConnectedUserService;
+    let userDAO: UserDAO;
 
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
@@ -227,6 +220,7 @@ describe('ConnectedUserService', () => {
         await setupAuthTestModule();
         connectedUserService = TestBed.inject(ConnectedUserService);
         auth = TestBed.inject(FireAuth.Auth);
+        userDAO = TestBed.inject(UserDAO);
     });
 
     it('should create', fakeAsync(async() => {
@@ -522,12 +516,12 @@ describe('ConnectedUserService', () => {
             });
             let observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                connectedUserService.getObservedPartObs().subscribe((newValue: MGPOptional<FocusedPart>) => {
+                connectedUserService.subscribeToObservedPart((newValue: MGPOptional<FocusedPart>) => {
                     observedPart = newValue;
                     window.setTimeout(resolvePromise, 2000);
                 });
             await connectedUserService.doEmailLogin(email, password);
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
+            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
             await userHasUpdated;
             expect(observedPart).toEqual(MGPOptional.of({ id: '1234', typeGame: 'P4' }));
 
@@ -684,7 +678,7 @@ describe('ConnectedUserService', () => {
         expect(connectedUserService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
     });
     describe('observed part', () => {
-        it('should update observedPart observable when UserDao touches it', async() => {
+        it('should update observedPart observable when UserDAO touches it', async() => {
             // Given a connected user
             // and the observedPart observable
             const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
@@ -694,12 +688,12 @@ describe('ConnectedUserService', () => {
             });
             let lastValue: MGPOptional<FocusedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                connectedUserService.getObservedPartObs().subscribe((observedPart: MGPOptional<FocusedPart>) => {
+                connectedUserService.subscribeToObservedPart((observedPart: MGPOptional<FocusedPart>) => {
                     lastValue = observedPart;
                     window.setTimeout(resolvePromise, 2000);
                 });
             // When the UserDAO modify observedPart in the user document
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
+            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
             await userHasUpdated;
 
             // Then the observable should have updated its value
@@ -707,7 +701,7 @@ describe('ConnectedUserService', () => {
             subscription.unsubscribe();
         });
         describe('updateObservedPart', () => {
-            it('should throw when called while no user is logged', async() => {
+            it('should throw when called whilst no user is logged', async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
                 expect(() => connectedUserService.updateObservedPart({ id: 'some-part-doc-id' })).toThrowError(expectedError);
@@ -717,7 +711,6 @@ describe('ConnectedUserService', () => {
                 connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
                 // When asking to update observedPart
-                const userDAO: UserDAO = TestBed.inject(UserDAO);
                 spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
                 const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITHOUT_OPPONENT;
                 await connectedUserService.updateObservedPart(observedPart);
@@ -727,7 +720,7 @@ describe('ConnectedUserService', () => {
             });
         });
         describe('removeObservedPart', () => {
-            it('should throw when asking to remove while no user is logged', async() => {
+            it('should throw when asking to remove whilst no user is logged', async() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
                 expect(() => connectedUserService.removeObservedPart()).toThrowError(expectedError);
@@ -737,7 +730,6 @@ describe('ConnectedUserService', () => {
                 connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
                 // When asking to update observedPart
-                const userDAO: UserDAO = TestBed.inject(UserDAO);
                 spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
                 await connectedUserService.removeObservedPart();
 
@@ -758,7 +750,6 @@ describe('ConnectedUserService', () => {
             connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to send presence token
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
             spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
             await connectedUserService.sendPresenceToken();
 
@@ -781,7 +772,7 @@ describe('ConnectedUserService', () => {
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
+            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
 
             // When asking if you can create
             const validation: MGPValidation = connectedUserService.canUserCreate();
@@ -792,7 +783,7 @@ describe('ConnectedUserService', () => {
         it('should refuse for a player already creator', fakeAsync(async() => { // UNSTABLE: last failed 2022-08-18
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Creator' } });
+            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Creator' } });
 
             // When asking if you can create
             const validation: MGPValidation = connectedUserService.canUserCreate();
@@ -803,7 +794,7 @@ describe('ConnectedUserService', () => {
         it('should refuse for a player already candidate', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Candidate' } });
+            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Candidate' } });
 
             // When asking if you can create
             const validation: MGPValidation = connectedUserService.canUserCreate();
@@ -814,7 +805,7 @@ describe('ConnectedUserService', () => {
         it('should refuse for a player already Chosen Opponent', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' } });
+            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' } });
 
             // When asking if you can create
             const validation: MGPValidation = connectedUserService.canUserCreate();
@@ -825,7 +816,7 @@ describe('ConnectedUserService', () => {
         it('should refuse for a player already Observer', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Observer' } });
+            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Observer' } });
 
             // When asking if you can join some part
             const validation: MGPValidation = connectedUserService.canUserCreate();
@@ -835,81 +826,120 @@ describe('ConnectedUserService', () => {
         }));
     });
     describe('canUserJoin', () => {
-        it('should allow user to join when user do not observe any part', fakeAsync(async() => {
+
+        async function shouldAllowJoinPart(observedPart: FocusedPart, partToJoin: string, gameStarted: boolean)
+        : Promise<void>
+        {
+            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
+            await userDAO.update(uid, { observedPart });
+
+            // When asking if you can join that specific part again
+            const validation: MGPValidation = connectedUserService.canUserJoin(partToJoin, gameStarted);
+
+            // Then it's should be authorised
+            expect(validation.isSuccess())
+                .withContext('validation should be a success')
+                .toBeTrue();
+        }
+        async function shouldForbidJoinPart(observedPart: FocusedPart,
+                                            partToJoin: string,
+                                            gameStarted: boolean,
+                                            reason: string)
+        : Promise<void>
+        {
+            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
+            await userDAO.update(uid, { observedPart });
+
+            // When asking if you can join that specific part again
+            const validation: MGPValidation = connectedUserService.canUserJoin(partToJoin, gameStarted);
+
+            // Then it's should be refused
+            expect(validation.getReason()).toBe(reason);
+        }
+        it('should allow user to join started part when user do not observe any part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             await createConnectedGoogleUser('foo@email.com');
 
             // When asking if you can join that specific part again
-            const validation: MGPValidation = connectedUserService.canUserJoin('some-id');
+            const validation: MGPValidation = connectedUserService.canUserJoin('some-id', true);
+
+            // Then it's should be authorised
+            expect(validation.isSuccess()).toBeTrue();
+        }));
+        it('should allow user to join unstarted part when user do not observe any part', fakeAsync(async() => {
+            // Given a ConnectedUserService where user observe a part
+            await createConnectedGoogleUser('foo@email.com');
+
+            // When asking if you can join that specific part again
+            const validation: MGPValidation = connectedUserService.canUserJoin('some-id', false);
 
             // Then it's should be authorised
             expect(validation.isSuccess()).toBeTrue();
         }));
         it('should allow user to join twice the same part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
-
             // When asking if you can join that specific part again
-            const validation: MGPValidation = connectedUserService.canUserJoin('1234');
-
-            // Then it's should be authorised
-            expect(validation.isSuccess()).toBeTrue();
+            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Player' };
+            await shouldAllowJoinPart(observedPart, '1234', true);
         }));
         it('should refuse for a player already playing', fakeAsync(async() => {
-            // Given a ConnectedUserService where user observe a part
-            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
+            // Given a ConnectedUserService where user plays a part
+            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Player' };
+            const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
 
-            // When asking if you can join some part
-            const validation: MGPValidation = connectedUserService.canUserJoin('some-id');
+            // When asking if you can join some started part
+            await shouldForbidJoinPart(observedPart, 'some-id', true, reason);
 
-            // Then it's should be refused
-            expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_PLAYING());
+            // When asking if you can join some unstarted part
+            await shouldForbidJoinPart(observedPart, 'some-id', false, reason);
         }));
         it('should refuse for a player already creator', fakeAsync(async() => {
-            // Given a ConnectedUserService where user observe a part
-            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Creator' } });
+            // Given a ConnectedUserService where user is creating a part
+            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Creator' };
+            const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
 
-            // When asking if you can join some part
-            const validation: MGPValidation = connectedUserService.canUserJoin('some-id');
+            // When asking if you can join some started part
+            await shouldForbidJoinPart(observedPart, 'some-id', true, reason);
 
-            // Then it's should be refused
-            expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_CREATING());
+            // When asking if you can join some unstarted part
+            await shouldForbidJoinPart(observedPart, 'some-id', false, reason);
         }));
         it('should refuse for a player already candidate', fakeAsync(async() => { // Instable: last failed 2022-08-18
-            // Given a ConnectedUserService where user observe a part
-            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Candidate' } });
+            // Given a ConnectedUserService where user is candidate of a part
+            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Candidate' };
+            const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
 
-            // When asking if you can join some part
-            const validation: MGPValidation = connectedUserService.canUserJoin('some-id');
+            // When asking if you can join some started part
+            await shouldForbidJoinPart(observedPart, 'some-id', true, reason);
 
-            // Then it's should be refused
-            expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_CANDIDATE());
+            // When asking if you can join some unstarted part
+            await shouldForbidJoinPart(observedPart, 'some-id', false, reason);
         }));
         it('should refuse for a player already Chosen Opponent', fakeAsync(async() => {
-            // Given a ConnectedUserService where user observe a part
-            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' } });
+            // Given a ConnectedUserService where user is chosen opponent in a part
+            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' };
+            const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
 
-            // When asking if you can join some part
-            const validation: MGPValidation = connectedUserService.canUserJoin('some-id');
+            // When asking if you can join some started part
+            await shouldForbidJoinPart(observedPart, 'some-id', true, reason);
 
-            // Then it's should be refused
-            expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT());
+            // When asking if you can join some unstarted part
+            await shouldForbidJoinPart(observedPart, 'some-id', false, reason);
         }));
-        it('should refuse for a player already Observer', fakeAsync(async() => {
+        it('should refuse for a player already Observer to join non-started part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const uid: string = (await createConnectedGoogleUser('foo@email.com')).uid;
-            await TestBed.inject(UserDAO).update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Observer' } });
+            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Observer' };
+            const reason: string = GameActionFailure.YOU_ARE_ALREADY_OBSERVING();
 
-            // When asking if you can join some part
-            const validation: MGPValidation = connectedUserService.canUserJoin('some-id');
+            // When asking if you can join some unstarted part
+            await shouldForbidJoinPart(observedPart, 'some-id', false, reason);
+        }));
+        it('should allow for a player already Observer to join a started part', fakeAsync(async() => {
+            // Given a ConnectedUserService where user observe a part
+            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Observer' };
 
-            // Then it's should be refused
-            expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_OBSERVING());
+            // When asking if you can join some started part
+            await shouldAllowJoinPart(observedPart, 'some-id', true);
         }));
     });
     afterEach(async() => {

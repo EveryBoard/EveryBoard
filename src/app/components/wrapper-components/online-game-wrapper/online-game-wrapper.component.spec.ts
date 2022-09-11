@@ -123,7 +123,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             spyOn(wrapper, 'startGame').and.callThrough();
             expect(wrapper.startGame).not.toHaveBeenCalled();
 
-            tick(); // Finish calling async code from PartCreationComponent initialisation
+            tick(); // Finish calling async code from PartCreationComponent initialization
 
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
 
@@ -133,7 +133,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(1);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('Some tags are needed before initialisation', fakeAsync(async() => {
+        it('Some tags are needed before initialization', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.INITIAL, PartMocks.INITIAL);
             expect(wrapper).toBeTruthy();
             const partCreationTag: DebugElement = testUtils.querySelector('app-part-creation');
@@ -150,7 +150,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
-        it('Some ids are needed before initialisation', fakeAsync(async() => {
+        it('Some ids are needed before initialization', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.INITIAL, PartMocks.INITIAL);
             const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             const gameId: DebugElement = testUtils.findElement('#game');

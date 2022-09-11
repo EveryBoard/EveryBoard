@@ -26,7 +26,7 @@ export class GameActionFailure {
 
     public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
 
-    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observer in another game.`;
+    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing in another game.`;
 }
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
@@ -112,15 +112,13 @@ export class ConnectedUserService implements OnDestroy {
      * (This is because the guard can't activate if there is no user, so if the guard was activated, there is a user)
      */
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
-
-    private userSubscription: Subscription = new Subscription();
-
     private readonly userRS: ReplaySubject<AuthUser>;
     private readonly userObs: Observable<AuthUser>;
+    private userSubscription: Subscription = new Subscription();
 
+    private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
     private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
     private readonly observedPartObs: Observable<MGPOptional<FocusedPart>>;
-    private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
     constructor(private readonly userDAO: UserDAO,
                 private readonly userService: UserService,
@@ -143,13 +141,14 @@ export class ConnectedUserService implements OnDestroy {
                 } else { // new user logged in
                     assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
                     this.userSubscription =
-                        this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
-                            if (doc.isPresent()) {
-                                const username: string | undefined = doc.get().username;
+                        this.userDAO.subscribeToChanges(user.uid, (docOpt: MGPOptional<User>) => {
+                            if (docOpt.isPresent()) {
+                                const doc: User = docOpt.get();
+                                const username: string | undefined = doc.username;
                                 display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
                                 const userHasFinalizedVerification: boolean =
                                     this.emailVerified(user) === true && username != null;
-                                if (userHasFinalizedVerification === true && doc.get().verified === false) {
+                                if (userHasFinalizedVerification === true && doc.verified === false) {
                                     // The user has finalized verification but isn't yet marked as so in the DB.
                                     // So we mark it, and we'll get notified when the user is marked.
                                     return this.userService.markAsVerified(user.uid);
@@ -160,7 +159,7 @@ export class ConnectedUserService implements OnDestroy {
                                                                         userHasFinalizedVerification);
                                 this.user = MGPOptional.of(authUser);
                                 this.userRS.next(authUser);
-                                this.updateObservedPartWithDoc(doc.get().observedPart);
+                                this.updateObservedPartWithDoc(doc.observedPart);
                             }
                         });
                 }
@@ -316,8 +315,8 @@ export class ConnectedUserService implements OnDestroy {
     public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
         return this.userObs.subscribe(callback);
     }
-    public getObservedPartObs(): Observable<MGPOptional<FocusedPart>> {
-        return this.observedPartObs;
+    public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {
+        return this.observedPartObs.subscribe(callback);
     }
     public async setUsername(username: string): Promise<MGPValidation> {
         if (username === '') {
@@ -377,14 +376,21 @@ export class ConnectedUserService implements OnDestroy {
             return MGPValidation.failure(message);
         }
     }
-    public canUserJoin(partId: string): MGPValidation {
+    public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
         if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
-            // User is allowed to observe one part in any way
-            // or to do it twice with the same one
+            // If user is in no part, he can join one
+            // If he is onne part and want to join it again, he can
             return MGPValidation.SUCCESS;
         } else {
-            const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
-            return MGPValidation.failure(message);
+            if (gameStarted && this.observedPart.get().role === 'Observer') {
+                // User is allowed to observe two different parts
+                return MGPValidation.SUCCESS;
+            } else {
+                // If the other-part is not-started, you cannot (join it and become candidate)
+                // if the other-part is started but you are active(aka: non-observer) you cannot join it
+                const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
+                return MGPValidation.failure(message);
+            }
         }
     }
     public ngOnDestroy(): void {

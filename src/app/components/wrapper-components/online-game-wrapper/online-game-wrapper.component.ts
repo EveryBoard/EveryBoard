@@ -169,16 +169,16 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.authUser = user;
         });
         await this.setCurrentPartIdOrRedirect();
-        // onObservedPartUpdate need to access to currentPartId, so it must after setCurrentPartIdOrRedirect
-        this.observedPartSubscription = this.connectedUserService.getObservedPartObs()
-            .subscribe(async(part: MGPOptional<FocusedPart>) => {
+        // onObservedPartUpdate needs to access to currentPartId, so it must do it after setCurrentPartIdOrRedirect
+        this.observedPartSubscription = this.connectedUserService.subscribeToObservedPart(
+            (async(part: MGPOptional<FocusedPart>) => {
                 await this.onObservedPartUpdate(part);
-            });
+            }));
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
     /**
       * Here you can only be an observer or a player
-      * (creator, candidat and chosen opponent being only for non started game)
+      * (creator, candidate and chosen opponent being only for non started game)
       * If you are player, it is impossible that you start creating/joining a part
       * If you are observer, you can join this part as observer in another tab
       * then, if you quit this tab, you become unlinked to this part in here
@@ -195,12 +195,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 // then nothing is to be done here
                 this.observedPart = part;
             } else {
-                // we learn that another that is active on another part (typically creating another game) so we quit
+                // we learn that we are active in another part (typically creating another game) so we quit
                 this.userLinkedToThisPart = false;
                 await this.router.navigate(['/lobby']);
             }
         } else {
-            this.messageDisplayer.criticalMessage('EH VOILAAAAAA')
+            this.messageDisplayer.criticalMessage('NOUS AVONS RECU UNE OBSERVED_PART UPDATE VIDE !!!')
             this.observedPart = MGPOptional.empty();
         }
     }
@@ -366,8 +366,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public getLastUpdateTime(oldPart: PartDocument | null, update: PartDocument): [number, number] {
         if (oldPart == null) {
-            return [0, 0]; // TODO: create a ticket to handle time once you come back
-            // If I wait 25sec, leave the component and come back, those 25 sec should not be included
+            return [0, 0];
         }
         const oldTime: Timestamp | null = this.getMoreRecentTime(oldPart);
         const updateTime: Timestamp | null= this.getMoreRecentTime(update);
@@ -430,9 +429,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const currentPlayer: Player = Player.fromTurn(part.data.turn);
         this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2].get();
         const currentOpponent: Player = currentPlayer.getOpponent();
-        // if (this.didUserPlay(currentOpponent)) {
         this.pauseCountDownsFor(currentOpponent);
-        // }
         if (this.didUserPlay(currentPlayer)) {
             display(OnlineGameWrapperComponent.VERBOSE,
                     'OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player');
@@ -464,7 +461,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const resultIsIncluded: boolean =
                 endGameResults.some((result: MGPResult) => result.value === currentPart.data.result);
             assert(resultIsIncluded === true, 'Unknown type of end game (' + currentPart.data.result + ')');
-            const log: string = 'endGame est true et winner est ' + currentPart.getWinner().getOrElse({ id: 'fake', name: 'no one' }).name;
+            const log: string = 'endGame is true and winner is ' + currentPart.getWinner().getOrElse({ id: 'fake', name: 'no one' }).name;
             display(OnlineGameWrapperComponent.VERBOSE, log);
         }
         this.stopCountdownsFor(player);

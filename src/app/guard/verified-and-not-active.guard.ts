@@ -23,14 +23,14 @@ export class ExclusiveOnlineGameGuard implements CanActivate, OnDestroy {
     public async canActivate(): Promise<boolean | UrlTree> {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
             const subscription: Subscription = this.connectedUserService
-                .getObservedPartObs()
-                .subscribe((optionalPart: MGPOptional<FocusedPart>) => {
-                    if (optionalPart.isAbsent()) {
-                        return resolve(true);
-                    }
-                    const part: FocusedPart = optionalPart.get();
-                    return resolve(this.router.parseUrl('/play/' + part.typeGame + '/' + part.id));
-                });
+                .subscribeToObservedPart(
+                    (optionalPart: MGPOptional<FocusedPart>) => {
+                        if (optionalPart.isAbsent()) {
+                            return resolve(true);
+                        }
+                        const part: FocusedPart = optionalPart.get();
+                        return resolve(this.router.parseUrl('/play/' + part.typeGame + '/' + part.id));
+                    });
             this.observedPartSub = MGPOptional.of(subscription);
         });
     }

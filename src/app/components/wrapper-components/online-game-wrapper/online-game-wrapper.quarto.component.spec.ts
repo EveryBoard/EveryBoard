@@ -362,7 +362,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
-    describe('Component initialisation', () => {
+    describe('Component initialization', () => {
         it('should mark creator as Player when arriving', fakeAsync(async() => {
             // Given a component that is not initialized yet
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER, false, false);
@@ -550,7 +550,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('Move victory', () => {
-        it('should notifyVictory when active player win', fakeAsync(async() => {
+        it('should notifyVictory when active player wins', fakeAsync(async() => {
             // Given a board on which user can win
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
@@ -2134,7 +2134,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
-            // Given a game that has not been started
+            // Given a game that has not initialize yet
             await prepareStartedGameFor(UserMocks.CREATOR_AUTH_USER, false, false);
 
             // When the component initialize and it is the current player's turn
