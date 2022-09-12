@@ -55,7 +55,11 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.chosenCoord.isAbsent()) { // Must select pyramid
+        const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
+        const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
+        if (this.chosenCoord.isAbsent() ||
+            this.board[y][x] === player)
+        { // Must select pyramid
             return this.choosePiece(x, y);
         } else { // Must choose empty landing space
             return this.chooseLandingCoord(x, y);
@@ -64,8 +68,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     private choosePiece(x: number, y: number): MGPValidation {
         if (this.board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
-        } else if (this.board[y][x].is(Player.fromTurn(this.getTurn()))) { // selected his own pyramid
-            console.log('click bien !')
+        } else if (this.board[y][x].is(Player.fromTurn(this.getTurn()))) { // selected player's pyramid
             const coord: Coord = new Coord(x, y);
             this.selectPiece(coord);
             return MGPValidation.SUCCESS;
@@ -79,12 +82,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
     private async chooseLandingCoord(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
-        const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
-        const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
-        if (this.board[y][x] === player) {
-            this.selectPiece(new Coord(x, y));
-            return MGPValidation.SUCCESS;
-        }
         const newMove: MGPFallible<SaharaMove> = SaharaMove.from(this.chosenCoord.get(), clickedCoord);
         if (newMove.isFailure()) {
             return this.cancelMove(newMove.getReason());
