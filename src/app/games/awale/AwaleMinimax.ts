@@ -71,7 +71,6 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
         const captured: number[] = state.getCapturedCopy();
         const c1: number = captured[1];
         const c0: number = captured[0];
-        console.log(node, c1- c0)
         return new NodeUnheritance(c1 - c0);
     }
 }

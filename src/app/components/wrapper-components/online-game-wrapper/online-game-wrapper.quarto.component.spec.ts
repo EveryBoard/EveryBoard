@@ -73,7 +73,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     component: string,
     shorterGlobalChrono: boolean = false,
     waitForPartToStart: boolean = true)
-: Promise<{ t: ComponentTestUtils<T, MinimalUser>, o: PlayerOrNone }>
+: Promise<{ _testUtils: ComponentTestUtils<T, MinimalUser>, _role: PlayerOrNone }>
 {
     const testUtils: ComponentTestUtils<T, MinimalUser> = await prepareWrapper<T>(user, component);
 
@@ -133,7 +133,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
         testUtils.bindGameComponent();
         testUtils.prepareSpies();
     }
-    return { t: testUtils, o: role };
+    return { _testUtils: testUtils, _role: role };
 }
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
@@ -238,12 +238,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                        waitForPartToStart?: boolean)
     : Promise<void>
     {
-        const { t, o } = (await prepareStartedGameFor<QuartoComponent>(authUser,
-                                                                       'Quarto',
-                                                                       shorterGlobalChrono,
-                                                                       waitForPartToStart));
-        testUtils = t;
-        role = o;
+        const { _testUtils, _role } = (await prepareStartedGameFor<QuartoComponent>(authUser,
+                                                                                    'Quarto',
+                                                                                    shorterGlobalChrono,
+                                                                                    waitForPartToStart));
+        testUtils = _testUtils;
+        role = _role;
         partDAO = TestBed.inject(PartDAO);
         gameService = TestBed.inject(GameService);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
