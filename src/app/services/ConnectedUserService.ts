@@ -79,6 +79,7 @@ export class AuthUser {
                 public verified: boolean) {
     }
     public isConnected(): boolean {
+        // Only a user that is connected has its email set pour éviter les confusions futures !
         return this.email.isPresent();
     }
     public toMinimalUser(): MinimalUser {
