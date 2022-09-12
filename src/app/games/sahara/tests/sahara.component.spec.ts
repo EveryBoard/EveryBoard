@@ -71,10 +71,33 @@ describe('SaharaComponent', () => {
         const reason: string = 'You can move one or two spaces, not 3.';
         await testUtils.expectClickFailure('#click_2_2', reason);
     }));
-    it('should change selected piece when clicking twice in a row on current player pieces', fakeAsync(async() => {
-        // Given the initial board
+    it('should change selected piece when clicking twice in a row on different player pieces', fakeAsync(async() => {
+        // Given the initial board with one selected piece
         await testUtils.expectClickSuccess('#click_2_0');
+        testUtils.expectElementToExist('#chosen_coord_2_0');
+        testUtils.expectElementToExist('#possible_landing_2_1');
+
+        // When clicking another piece of the same player
         await testUtils.expectClickSuccess('#click_7_0');
+
+        // Then the selected piece should have changed and the possible landings too
+        testUtils.expectElementToExist('#chosen_coord_7_0');
+        testUtils.expectElementToExist('#possible_landing_6_0');
+        testUtils.expectElementToExist('#possible_landing_5_0');
+        testUtils.expectElementToExist('#possible_landing_6_1');
+        // and obviously previous highlight removed
+        testUtils.expectElementNotToExist('chosen_coord_2_0');
+        testUtils.expectElementNotToExist('possible_landing_2_1');
+    }));
+    it('should show possible landings when selecting a piece', fakeAsync(async() => {
+        // Given the initial board
+        // When clicking on a piece of the current player
+        await testUtils.expectClickSuccess('#click_7_0');
+
+        // Then its differents landing coord should be highlighted
+        testUtils.expectElementToExist('#possible_landing_6_0');
+        testUtils.expectElementToExist('#possible_landing_5_0');
+        testUtils.expectElementToExist('#possible_landing_6_1');
     }));
     it('should take "false neighbor" as 3-step move', fakeAsync(async() => {
         // given the initial board with a first piece selected
