@@ -13,6 +13,7 @@ import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { assert } from 'src/app/utils/assert';
 
 export class SiamLegalityInformation {
     public constructor(public readonly resultingBoard: Table<SiamPiece>,
@@ -73,6 +74,8 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     public static isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece)
     : MGPFallible<SiamLegalityInformation> {
         display(SiamRules.VERBOSE, { isLegalForwarding: { move: move.toString(), state, firstPiece } });
+
+        assert(firstPiece !== SiamPiece.MOUNTAIN && firstPiece !== SiamPiece.EMPTY, 'forwarding must be done with player piece');
 
         const movedPieces: Coord[] = [];
         let movingPiece: SiamPiece = SiamPiece.of(move.landingOrientation, state.getCurrentPlayer());
@@ -435,6 +438,12 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return insertions;
     }
+/* TODO
+    public static getDerapingInsertions(state: SiamState): SiamMove[] {
+        
+    }
+    public static getDerapingInsertionsAt(state: SiamState, x: number, y: number): SiamMove[] {
+    } */
     public static getDerapingInsertions(state: SiamState): SiamMove[] {
         const insertions: SiamMove[] = [];
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -503,30 +512,60 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         return insertedPiece.getDirection();
     }
     public static getMovesFrom(state: SiamState, piece: SiamPiece, x: number, y: number): SiamMove[] {
+        const coord: Coord = new Coord(x, y);
+        // Three rotations
+        let moves: SiamMove[] = SiamRules.getRotationMovesAt(coord, piece);
+
+        for (const direction of Orthogonal.ORTHOGONALS) {
+            // All legal forward moves
+            const landingCoord: Coord = coord.getNext(direction);
+            moves = moves.concat(SiamRules.getForwardMovesBetween(state, piece, coord, landingCoord, direction));
+        }
+        return moves;
+    }
+    public static getMovesBetween(state: SiamState, piece: SiamPiece, start: Coord, end: Coord)
+    : SiamMove[]
+    {
+        console.log({method: 'getMovesBetween', start, end, piece})
+        if (start.equals(end)) {
+            return SiamRules.getRotationMovesAt(start, piece);
+        } else {
+            const directionOpt: MGPFallible<Orthogonal> = Orthogonal.factory.fromMove(start, end);
+            if (directionOpt.isSuccess()) {
+                return SiamRules.getForwardMovesBetween(state, piece, start, end, directionOpt.get());
+            } else {
+                // There are no possible moves here
+                return [];
+            }
+        }
+    }
+    public static getRotationMovesAt(coord: Coord, piece: SiamPiece): SiamMove[] {
         const moves: SiamMove[] = [];
         const currentOrientation: Orthogonal = piece.getDirection();
         for (const direction of Orthogonal.ORTHOGONALS) {
-            // Three rotations
             if (direction !== currentOrientation) {
-                const newMove: SiamMove = new SiamMove(x, y, MGPOptional.empty(), direction);
+                const newMove: SiamMove = new SiamMove(coord.x, coord.y, MGPOptional.empty(), direction);
                 moves.push(newMove);
             }
-
-            // All legal forward moves
-            const landingCoord: Coord = new Coord(x + direction.x, y + direction.y);
-            let orientations: ReadonlyArray<Orthogonal>;
-            if (landingCoord.isInRange(5, 5)) {
-                orientations = Orthogonal.ORTHOGONALS;
-            } else {
-                orientations = [direction];
-            }
-            for (const orientation of orientations) {
-                const forwardMove: SiamMove = new SiamMove(x, y, MGPOptional.of(direction), orientation);
-                const legality: MGPFallible<SiamLegalityInformation> =
-                    SiamRules.isLegalForwarding(forwardMove, state, piece);
-                if (legality.isSuccess()) {
-                    moves.push(forwardMove);
-                }
+        }
+        return moves;
+    }
+    public static getForwardMovesBetween(state: SiamState, piece: SiamPiece, start: Coord, end: Coord, direction: Orthogonal)
+    : SiamMove[]
+    {
+        const moves: SiamMove[] = [];
+        let orientations: ReadonlyArray<Orthogonal>;
+        if (end.isInRange(5, 5)) {
+            orientations = Orthogonal.ORTHOGONALS;
+        } else {
+            orientations = [direction];
+        }
+        for (const orientation of orientations) {
+            const move: SiamMove = new SiamMove(start.x, start.y, MGPOptional.of(direction), orientation);
+            console.log({move: move.toString()})
+            const legality: MGPFallible<SiamLegalityInformation> = SiamRules.isLegalForwarding(move, state, piece);
+            if (legality.isSuccess()) {
+                moves.push(move);
             }
         }
         return moves;
