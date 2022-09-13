@@ -73,7 +73,20 @@
                  [attr.transform]="getRemainingPieceTransform(x, player)" />
         </g>
     </g>
-    <g *ngFor="let orientation of displayedArrows">
+    <g *ngFor="let arrow of indicatorArrows">
+        <use id="indicator_{{ arrow.target.x }}_{{ arrow.target.y }}_{{ arrow.direction.toString() }}"
+             class="base mid-stroke highlighted-fill"
+             (click)="clickSquare(arrow.target.x, arrow.target.y)"
+             xlink:href="#arrow"
+             [attr.transform]="getIndicatorTransform(arrow)" />
+        <!-- Need to redraw the source piece, if it is not an insertion -->
+        <use *ngIf="arrow.source.isPresent()"
+             [ngClass]="getPieceClasses(arrow.source.get().piece)"
+             (click)="clickSquare(arrow.target.x, arrow.target.y)"
+             xlink:href="#arrow"
+             [attr.transform]="getPieceTransform(arrow.source.get().coord.x, arrow.source.get().coord.y)" />
+    </g>
+    <g *ngFor="let orientation of orientationArrows">
         <use id="orientation_{{ orientation }}"
              class="base mid-stroke highlighted-fill semi-transparent"
              (click)="selectOrientation(orientation)"
