@@ -246,7 +246,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
         await TestBed.inject(ChatDAO).set('configRoomId', { messages: [], status: `I don't have a clue` });
         testUtils.detectChanges();
         tick(3000); // Since a criticalToast will pop

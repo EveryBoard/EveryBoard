@@ -62,7 +62,7 @@ describe('ErrorLoggerService', () => {
         const component: string = 'Some component';
         const message: string = 'my new error message';
         const data: JSONValue = { foo: 'bar' };
-        spyOn(errorDAO, 'create');
+        spyOn(errorDAO, 'create').and.callThrough();
 
         // When logging it
         ErrorLoggerService.logError(component, message, data);
@@ -84,7 +84,7 @@ describe('ErrorLoggerService', () => {
         // Given an error in a component which has not already been encountered
         const component: string = 'Some component';
         const message: string = 'my new error message';
-        spyOn(errorDAO, 'create');
+        spyOn(errorDAO, 'create').and.callThrough();
 
         // When logging it
         ErrorLoggerService.logError(component, message);
@@ -102,7 +102,7 @@ describe('ErrorLoggerService', () => {
         expect(errorDAO.create).toHaveBeenCalledOnceWith(expectedError);
     }));
     it('should increment count of already encountered errors', fakeAsync(async() => {
-        spyOn(errorDAO, 'update');
+        spyOn(errorDAO, 'update').and.callThrough();
         // Given an error in a component which has already been encountered
         const component: string = 'Some component';
         const message: string = 'my new error message';

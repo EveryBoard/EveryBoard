@@ -27,7 +27,7 @@ describe('ConnectedButNotVerifiedGuard', () => {
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
         connectedUserService = TestBed.inject(ConnectedUserService);
         guard = new ConnectedButNotVerifiedGuard(connectedUserService, router);
     }));
@@ -51,7 +51,7 @@ describe('ConnectedButNotVerifiedGuard', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await guard.canActivate();
         // eslint-disable-next-line dot-notation
-        spyOn(guard['userSubscription'], 'unsubscribe');
+        spyOn(guard['userSubscription'], 'unsubscribe').and.callThrough();
 
         // When destroying the guard
         guard.ngOnDestroy();

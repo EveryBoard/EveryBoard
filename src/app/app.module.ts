@@ -76,7 +76,7 @@ import { environment } from 'src/environments/environment';
 import { LocaleUtils } from './utils/LocaleUtils';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
-import { ExclusiveOnlineGameGuard } from './guard/verified-and-not-active.guard';
+import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 

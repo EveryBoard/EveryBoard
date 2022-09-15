@@ -10,6 +10,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Subscription } from 'rxjs';
 import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -36,7 +37,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
                 public readonly messageDisplayer: MessageDisplayer,
                 private readonly activePartsService: ActivePartsService,
                 private readonly activeUsersService: ActiveUsersService,
-                private readonly connectedUserService: ConnectedUserService) {
+                private readonly observedPartService: ObservedPartService) {
     }
     public ngOnInit(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');
@@ -48,7 +49,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
             (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
-        this.connectedUserService.subscribeToObservedPart((observed: MGPOptional<FocusedPart>) => {
+        this.observedPartService.subscribeToObservedPart((observed: MGPOptional<FocusedPart>) => {
             this.createTabClasses = [];
             if (observed.isPresent()) {
                 this.createTabClasses = ['disabled-tab'];
@@ -64,7 +65,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         const partId: string = part.id;
         const typeGame: string = part.data.typeGame;
         const gameStarted: boolean = part.data.beginning != null;
-        const canUserJoin: MGPValidation = this.connectedUserService.canUserJoin(partId, gameStarted);
+        const canUserJoin: MGPValidation = this.observedPartService.canUserJoin(partId, gameStarted);
         if (canUserJoin.isSuccess()) {
             await this.router.navigate(['/play', typeGame, partId]);
         } else {
@@ -73,7 +74,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
     public selectTab(tab: Tab): void {
         if (tab ==='create') {
-            const canUserCreate: MGPValidation = this.connectedUserService.canUserCreate();
+            const canUserCreate: MGPValidation = this.observedPartService.canUserCreate();
             if (canUserCreate.isSuccess()) {
                 this.currentTab = tab;
             } else {

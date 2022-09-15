@@ -22,6 +22,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { FocusedPart, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -107,6 +108,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public constructor(public readonly router: Router,
                        public actRoute: ActivatedRoute,
                        public readonly connectedUserService: ConnectedUserService,
+                       public readonly observedPartService: ObservedPartService,
                        public readonly gameService: GameService,
                        public readonly configRoomService: ConfigRoomService,
                        public readonly chatService: ChatService,
@@ -158,7 +160,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             typeGame: Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo')),
             role,
         };
-        return this.connectedUserService.updateObservedPart(observedPart);
+        return this.observedPartService.updateObservedPart(observedPart);
     }
     private getUserRoleInPart(configRoom: ConfigRoom): UserRoleInPart {
         const currentUserId: string = this.connectedUserService.user.get().id;
@@ -297,7 +299,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.setChosenOpponent(' + opponentName + ')');
         const opponent: MinimalUser = this.getUserFromName(opponentName);
         await Promise.all([
-            this.connectedUserService.updateObservedPart({ opponent }),
+            this.observedPartService.updateObservedPart({ opponent }),
             this.configRoomService.setChosenOpponent(this.partId, opponent),
         ]);
         return;
@@ -325,7 +327,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
-        await this.connectedUserService.removeObservedPart();
+        await this.observedPartService.removeObservedPart();
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
         await this.chatService.deleteChat(this.partId);
@@ -355,7 +357,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 const currentConfigRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
                 const userName: string = Utils.getNonNullable(currentConfigRoom.chosenOpponent).name;
                 this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
-                await this.connectedUserService.updateObservedPart({ opponent: null });
+                await this.observedPartService.updateObservedPart({ opponent: null });
             }
             let observedPartUpdated: boolean = false;
             if (this.userJustChosenAsOpponent(configRoom)) {
@@ -527,7 +529,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         } else {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: you are about to cancel game joining');
-            await this.connectedUserService.removeObservedPart();
+            await this.observedPartService.removeObservedPart();
             await this.configRoomService.cancelJoining(this.partId);
         }
     }

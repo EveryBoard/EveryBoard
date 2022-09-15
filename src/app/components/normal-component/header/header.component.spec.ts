@@ -7,6 +7,7 @@ import { FocusedPart } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Utils } from 'src/app/utils/utils';
@@ -27,10 +28,11 @@ describe('HeaderComponent', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     }));
     describe('disconnection', () => {
-        it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
+        it('should disconnect when connected user clicks on the logout button', fakeAsync(async() => {
+            // Given a connected user
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
-            spyOn(testUtils.getComponent().connectedUserService, 'disconnect');
+            spyOn(testUtils.getComponent().connectedUserService, 'disconnect').and.callThrough();
             await testUtils.clickElement('#logout');
             tick();
             const component: HeaderComponent = testUtils.getComponent();
@@ -40,14 +42,15 @@ describe('HeaderComponent', () => {
             // Given a connected user that has an observedPart
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
-            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
             testUtils.expectElementToExist('#observedPartLink');
 
-            // When user logs out
-            await testUtils.clickElement('#connectedUserName');
-            await testUtils.clickElement('#logout');
+            // When connectedUserService informs us that user is disconnected
+            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+            ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+            testUtils.detectChanges();
 
             // Then observedPartLink should not be displayed
             testUtils.expectElementNotToExist('#observedPartLink');
@@ -74,7 +77,7 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart
-            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(FocusedPartMocks.CREATOR_WITHOUT_OPPONENT));
+            ObservedPartServiceMock.setObservedPart(MGPOptional.of(FocusedPartMocks.CREATOR_WITHOUT_OPPONENT));
             testUtils.detectChanges();
             tick();
 
@@ -91,7 +94,7 @@ describe('HeaderComponent', () => {
 
             // When user become linked to an observedPart with an opponent set
             const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITH_OPPONENT;
-            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
 
@@ -110,7 +113,7 @@ describe('HeaderComponent', () => {
 
             // When user become linked to an observedPart
             const observedPart: FocusedPart = FocusedPartMocks.OBSERVER;
-            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
 
@@ -129,7 +132,7 @@ describe('HeaderComponent', () => {
 
             // When user become linked to an observedPart
             const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
-            ConnectedUserServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
 

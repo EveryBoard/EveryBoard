@@ -12,7 +12,7 @@ describe('UserSettingsService', () => {
 
     describe('theme', () => {
         it('should update local storage on theme change', () => {
-            spyOn(localStorage, 'setItem');
+            spyOn(localStorage, 'setItem').and.callThrough();
             // when changing the theme
             userSettingsService.changeTheme('light');
             // then localStorage is updated
@@ -32,7 +32,7 @@ describe('UserSettingsService', () => {
     });
     describe('language', () => {
         it('should update local storage on language change', () => {
-            spyOn(localStorage, 'setItem');
+            spyOn(localStorage, 'setItem').and.callThrough();
             // when changing the language
             userSettingsService.changeLanguage('fr');
             // then localStorage is updated

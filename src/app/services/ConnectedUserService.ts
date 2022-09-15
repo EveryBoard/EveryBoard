@@ -1,19 +1,18 @@
+import { FirebaseError } from '@angular/fire/app';
+import * as FireAuth from '@angular/fire/auth';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
+
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
-import { FocusedPart, User, UserRoleInPart } from '../domain/User';
+import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
-import { FirebaseError } from '@angular/fire/app';
-import * as FireAuth from '@angular/fire/auth';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Localized } from '../utils/LocaleUtils';
-import { MGPMap } from '../utils/MGPMap';
-import { Subscription } from 'rxjs';
 import { UserService } from './UserService';
 
 export class GameActionFailure {
@@ -97,14 +96,6 @@ export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    public static roleToMessage: MGPMap<UserRoleInPart, Localized> = new MGPMap([
-        { key: 'Candidate', value: GameActionFailure.YOU_ARE_ALREADY_CANDIDATE },
-        { key: 'ChosenOpponent', value: GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT },
-        { key: 'Creator', value: GameActionFailure.YOU_ARE_ALREADY_CREATING },
-        { key: 'Player', value: GameActionFailure.YOU_ARE_ALREADY_PLAYING },
-        { key: 'Observer', value: GameActionFailure.YOU_ARE_ALREADY_OBSERVING },
-    ]);
-
     private readonly authSubscription!: Subscription;
 
     /**
@@ -117,10 +108,6 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userObs: Observable<AuthUser>;
     private userSubscription: Subscription = new Subscription();
 
-    private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
-    private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
-    private readonly observedPartObs: Observable<MGPOptional<FocusedPart>>;
-
     constructor(private readonly userDAO: UserDAO,
                 private readonly userService: UserService,
                 private readonly auth: FireAuth.Auth)
@@ -129,9 +116,6 @@ export class ConnectedUserService implements OnDestroy {
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
-        this.observedPartRS.next(MGPOptional.empty());
-        this.observedPartObs = this.observedPartRS.asObservable();
         this.authSubscription =
             new Subscription(FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
@@ -160,22 +144,10 @@ export class ConnectedUserService implements OnDestroy {
                                                                         userHasFinalizedVerification);
                                 this.user = MGPOptional.of(authUser);
                                 this.userRS.next(authUser);
-                                this.updateObservedPartWithDoc(doc.observedPart);
                             }
                         });
                 }
             }));
-    }
-    private updateObservedPartWithDoc(newObservedPart: FocusedPart | null | undefined): void {
-        const previousObservedPart: MGPOptional<FocusedPart> = this.observedPart;
-        const stayedNull: boolean = newObservedPart == null && previousObservedPart.isAbsent();
-        const stayedItselfAsNonNull: boolean = newObservedPart != null &&
-                                               previousObservedPart.equalsValue(newObservedPart);
-        const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
-        if (valueChanged) {
-            this.observedPart = MGPOptional.ofNullable(newObservedPart);
-            this.observedPartRS.next(this.observedPart);
-        }
     }
     public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
@@ -306,7 +278,6 @@ export class ConnectedUserService implements OnDestroy {
     public async disconnect(): Promise<MGPValidation> {
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
-            this.observedPartRS.next(MGPOptional.empty());
             await this.auth.signOut();
             return MGPValidation.SUCCESS;
         } else {
@@ -315,9 +286,6 @@ export class ConnectedUserService implements OnDestroy {
     }
     public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
         return this.userObs.subscribe(callback);
-    }
-    public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {
-        return this.observedPartObs.subscribe(callback);
     }
     public async setUsername(username: string): Promise<MGPValidation> {
         if (username === '') {
@@ -354,45 +322,9 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
-    public updateObservedPart(observedPart: Partial<FocusedPart>): Promise<void> {
-        // TODO FOR REVIEW should we assert that observedPart (the update) is not partial if this.observedPart (the current value) is not set ?
-        const oldObservedPart: FocusedPart = this.observedPart.getOrElse(observedPart as FocusedPart);
-        const mergedObservedPart: FocusedPart = { ...oldObservedPart, ...observedPart };
-        assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
-        return this.userDAO.update(this.user.get().id, { observedPart: mergedObservedPart });
-    }
-    public removeObservedPart(): Promise<void> {
-        assert(this.user.isPresent(), 'Should not call removeObservedPart when not connected');
-        return this.userDAO.update(this.user.get().id, { observedPart: null });
-    }
     public sendPresenceToken(): Promise<void> {
         assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
         return this.userService.updatePresenceToken(this.user.get().id);
-    }
-    public canUserCreate(): MGPValidation {
-        if (this.observedPart.isAbsent()) {
-            return MGPValidation.SUCCESS;
-        } else {
-            const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
-            return MGPValidation.failure(message);
-        }
-    }
-    public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
-        if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
-            // If user is in no part, he can join one
-            // If he is onne part and want to join it again, he can
-            return MGPValidation.SUCCESS;
-        } else {
-            if (gameStarted && this.observedPart.get().role === 'Observer') {
-                // User is allowed to observe two different parts
-                return MGPValidation.SUCCESS;
-            } else {
-                // If the other-part is not-started, you cannot (join it and become candidate)
-                // if the other-part is started but you are active(aka: non-observer) you cannot join it
-                const message: string = ConnectedUserService.roleToMessage.get(this.observedPart.get().role).get()();
-                return MGPValidation.failure(message);
-            }
-        }
     }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();

@@ -41,7 +41,7 @@ describe('LoginComponent', () => {
             testUtils.detectChanges();
         });
         it('should redirect upon logged-in user change', fakeAsync(async() => {
-            spyOn(router, 'navigate').and.callFake(async() => true);
+            spyOn(router, 'navigate').and.resolveTo();
 
             // given an existing user
             const user: AuthUser = UserMocks.CONNECTED_AUTH_USER;
@@ -54,7 +54,7 @@ describe('LoginComponent', () => {
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect if it sees a non logged-in user', fakeAsync(async() => {
-            spyOn(router, 'navigate').and.callFake(async() => true);
+            spyOn(router, 'navigate').and.resolveTo();
 
             // given that no user is connected
             const user: AuthUser = AuthUser.NOT_CONNECTED;

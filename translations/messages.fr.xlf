@@ -3887,7 +3887,7 @@
       </trans-unit>
       <trans-unit id="3355072499279505626" datatype="html">
         <source>You are already the creator of another game.</source>
-        <target>Vous êtes déjà en train de créer une autre partie.</target>
+        <target>Vous êtes déjà le créateur d'une autre partie.</target>
       </trans-unit>
       <trans-unit id="5005469579079717737" datatype="html">
         <source>You are already the chosen opponent in another game.</source>

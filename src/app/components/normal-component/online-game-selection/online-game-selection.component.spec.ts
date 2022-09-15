@@ -19,7 +19,7 @@ describe('OnlineGameSelectionComponent', () => {
         // Given a chosen game
         testUtils.getComponent().pickGame('whateverGame');
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on 'play'
         await testUtils.clickElement('#playOnline');
@@ -33,11 +33,11 @@ describe('OnlineGameSelectionComponent', () => {
         const component: OnlineGameSelectionComponent = testUtils.getComponent();
         testUtils.getComponent().pickGame('whateverGame');
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         spyOn(messageDisplayer, 'criticalMessage').and.callFake((m: string) => null);
         const reason: string = 'some refusal reason from the service';
-        spyOn(component.connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
+        spyOn(component.observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
 
         // When clicking on 'play'
         await testUtils.clickElement('#playOnline');

@@ -223,7 +223,7 @@ describe('ActivePartsService', () => {
                 () => void { },
                 () => void { },
             );
-            spyOn(partDAO, 'observingWhere');
+            spyOn(partDAO, 'observingWhere').and.callThrough();
             activePartsService.observeActiveParts(callback);
             expect(partDAO.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
         });

@@ -29,6 +29,7 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Timestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
 
 export class OnlineGameWrapperMessages {
 
@@ -63,7 +64,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -113,6 +114,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 connectedUserService: ConnectedUserService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
+                private readonly observedPartService: ObservedPartService,
                 private readonly userService: UserService,
                 private readonly gameService: GameService)
     {
@@ -170,7 +172,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         });
         await this.setCurrentPartIdOrRedirect();
         // onObservedPartUpdate needs to access to currentPartId, so it must do it after setCurrentPartIdOrRedirect
-        this.observedPartSubscription = this.connectedUserService.subscribeToObservedPart(
+        this.observedPartSubscription = this.observedPartService.subscribeToObservedPart(
             (async(part: MGPOptional<FocusedPart>) => {
                 await this.onObservedPartUpdate(part);
             }));
@@ -444,7 +446,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async applyEndGame() {
         // currently working for normal victory, resign, and timeouts!
-        await this.connectedUserService.removeObservedPart();
+        await this.observedPartService.removeObservedPart();
         const currentPart: PartDocument = this.currentPart;
         const player: Player = Player.fromTurn(currentPart.data.turn);
         this.endGame = true;
@@ -658,7 +660,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         } else {
             this.observerRole = PlayerOrNone.NONE;
         }
-        await this.connectedUserService.updateObservedPart({
+        await this.observedPartService.updateObservedPart({
             // ...this.observedPart,
             role: this.observerRole === PlayerOrNone.NONE ? 'Observer' : 'Player',
         });
@@ -898,7 +900,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.userSubscription.unsubscribe();
         this.observedPartSubscription.unsubscribe();
         if (this.isPlaying() === false && this.userLinkedToThisPart) {
-            await this.connectedUserService.removeObservedPart();
+            await this.observedPartService.removeObservedPart();
         }
         if (this.gameStarted === true) {
             this.opponentSubscription.unsubscribe();

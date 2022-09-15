@@ -97,7 +97,7 @@ describe('ActiveUsersService', () => {
                 () => void { },
                 () => void { },
             );
-            spyOn(userDAO, 'observingWhere');
+            spyOn(userDAO, 'observingWhere').and.callThrough();
             activeUsersService.observeActiveUsers(callback);
             const parameters: FirestoreCondition[] = [
                 ['state', '==', 'online'],

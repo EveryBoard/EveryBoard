@@ -256,7 +256,7 @@ describe('LocalGameWrapperComponent', () => {
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
-            spyOn(localGameWrapper, 'doAIMove');
+            spyOn(localGameWrapper, 'doAIMove').and.callThrough();
 
             // given a game which is finished
             spyOn(testUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);

@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { Subscription } from 'rxjs';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FocusedPart } from 'src/app/domain/User';
@@ -28,7 +29,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     constructor(public router: Router,
                 public connectedUserService: ConnectedUserService,
-                public userService: UserService) {
+                public observedPartService: ObservedPartService,
+                public userService: UserService)
+    {
     }
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
@@ -39,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.username = user.email;
             }});
         this.observedPartSubscription =
-            this.connectedUserService.subscribeToObservedPart((focusedPart: MGPOptional<FocusedPart>) => {
+            this.observedPartService.subscribeToObservedPart((focusedPart: MGPOptional<FocusedPart>) => {
                 this.observedPart = focusedPart;
             });
     }

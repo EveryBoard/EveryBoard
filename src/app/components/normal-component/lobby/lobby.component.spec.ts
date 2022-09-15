@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
-import { ConnectedUserService, GameActionFailure } from 'src/app/services/ConnectedUserService';
+import { GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { UserDAO } from 'src/app/dao/UserDAO';
@@ -23,6 +23,8 @@ import { User } from 'src/app/domain/User';
 
 import { LobbyComponent } from './lobby.component';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 
 describe('LobbyComponent', () => {
 
@@ -46,9 +48,9 @@ describe('LobbyComponent', () => {
         it('should display online-game-selection component when clicking on it when allowed by connectedUserService', fakeAsync(async() => {
             // Given a server page
             testUtils.detectChanges();
-            // where you are allowed by connectedUserService
-            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
-            spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
+            // where you are allowed by observedPartService
+            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
+            spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
 
             // When clicking on the 'create game' tab
             await testUtils.clickElement('#tab-create');
@@ -63,9 +65,9 @@ describe('LobbyComponent', () => {
             // where you are forbidden by connectedUserService
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
             spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
-            const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
             const error: string = `Si je dit non, c'est non!!!`;
-            spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+            spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
 
             // When clicking on the 'create game' tab
             await testUtils.clickElement('#tab-create');
@@ -132,7 +134,7 @@ describe('LobbyComponent', () => {
         describe('as a user participating to no games', () => {
             beforeEach(() => {
                 // Given an user not part of any part
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.empty());
+                ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
             });
             it('Should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
@@ -142,7 +144,7 @@ describe('LobbyComponent', () => {
         describe('as a player', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Player
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: startedPartUserPlay.id,
                     role: 'Player',
                     typeGame: 'P4',
@@ -161,7 +163,7 @@ describe('LobbyComponent', () => {
         describe('as an observer', () => {
             beforeEach(() => {
                 // Given an user observing a part as an Observer
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: startedPartUserDoNotPlay.id,
                     role: 'Observer',
                     typeGame: 'P4',
@@ -179,7 +181,7 @@ describe('LobbyComponent', () => {
         describe('as a creator', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Creator
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: unstartedPartUserCreated.id,
                     role: 'Creator',
                     typeGame: 'P4',
@@ -194,7 +196,7 @@ describe('LobbyComponent', () => {
         describe('as a candidate', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Candidate
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'Candidate',
                     typeGame: 'P4',
@@ -209,7 +211,7 @@ describe('LobbyComponent', () => {
         describe('as chosen opponent', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Candidate
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'ChosenOpponent',
                     typeGame: 'P4',
@@ -239,7 +241,7 @@ describe('LobbyComponent', () => {
         describe('as a user part of no games', () => {
             beforeEach(() => {
                 // Given an user not part of any part
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.empty());
+                ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
             });
             it('Should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
@@ -249,7 +251,7 @@ describe('LobbyComponent', () => {
         describe('as a player', () => {
             beforeEach(() => {
                 // Given an user already playing a part
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: startedPartUserPlay.id,
                     role: 'Player',
                     typeGame: 'P4',
@@ -264,7 +266,7 @@ describe('LobbyComponent', () => {
         describe('as a creator', () => {
             beforeEach(() => {
                 // Given an user already creator of a part
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: unstartedPartUserCreated.id,
                     role: 'Creator',
                     typeGame: 'P4',
@@ -283,7 +285,7 @@ describe('LobbyComponent', () => {
         describe('as a chosen opponent', () => {
             beforeEach(() => {
                 // Given an user observing a part as a chosen opponent
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'ChosenOpponent',
                     typeGame: 'P4',
@@ -302,7 +304,7 @@ describe('LobbyComponent', () => {
         describe('as a candidate', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Candidate
-                ConnectedUserServiceMock.setObservedPart(MGPOptional.of({
+                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'Candidate',
                     typeGame: 'P4',

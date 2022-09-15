@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
@@ -26,10 +26,10 @@ describe('WelcomeComponent', () => {
     it('should redirect to online game creation when clicking on the corresponding button', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user can join a game
-        const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
-        spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
+        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
+        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on the button to start a specific game
         await testUtils.clickElement('#playOnline_Awale');
@@ -41,9 +41,9 @@ describe('WelcomeComponent', () => {
     it('should not redirect to online game creation when clicking on the corresponding button while in a game', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user cannot join a game
-        const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
         const error: string = `j'ai dit non!`;
-        spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
@@ -58,7 +58,7 @@ describe('WelcomeComponent', () => {
     }));
     it('should redirect to local game when clicking on the corresponding button', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
 
         await testUtils.clickElement('#playLocally_Awale');
         testUtils.detectChanges();
@@ -67,7 +67,7 @@ describe('WelcomeComponent', () => {
     }));
     it('should redirect to tutorial when clicking on the corresponding button', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
 
         await testUtils.clickElement('#startTutorial_Awale');
 
@@ -88,9 +88,9 @@ describe('WelcomeComponent', () => {
     it('should not redirect to part selection when clicking on the corresponding button while already playing', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user cannot join a game
-        const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
+        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
         const error: string = `j'ai dit non!`;
-        spyOn(connectedUserService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 

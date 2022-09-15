@@ -126,7 +126,7 @@ describe('ChatComponent', () => {
         it('should scroll to the bottom on load', fakeAsync(async() => {
             // Given a visible chat with multiple messages
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            spyOn(component, 'scrollTo');
+            spyOn(component, 'scrollTo').and.callThrough();
             await addMessages('fauxChat', 100);
 
             // when the chat is initialized
@@ -210,7 +210,7 @@ describe('ChatComponent', () => {
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
         }));
         it('should send messages using the chat service', fakeAsync(async() => {
-            spyOn(chatService, 'sendMessage');
+            spyOn(chatService, 'sendMessage').and.callThrough();
             // given a chat
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -236,7 +236,7 @@ describe('ChatComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             await addMessages('fauxChat', 100);
             testUtils.detectChanges();
-            spyOn(component, 'scrollTo');
+            spyOn(component, 'scrollTo').and.callThrough();
 
             // when a message is sent
             component.userMessage = 'hello there';

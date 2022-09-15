@@ -38,7 +38,7 @@ describe('ChatService', () => {
     });
     describe('deleteChat', () => {
         it('should delete the chat through the DAO', fakeAsync(async() => {
-            spyOn(chatDAO, 'delete');
+            spyOn(chatDAO, 'delete').and.callThrough();
             // given a chat that exists
             await chatService.createNewChat('id');
 
@@ -51,7 +51,7 @@ describe('ChatService', () => {
     });
     describe('createNewChat', () => {
         it('should create the chat through the DAO', fakeAsync(async() => {
-            spyOn(chatDAO, 'set');
+            spyOn(chatDAO, 'set').and.callThrough();
             // when calling createNewChat
             await chatService.createNewChat('id');
             // then the chat has been initialized with the DAO
@@ -79,7 +79,7 @@ describe('ChatService', () => {
         }));
         it('should update the chat with the new message in the DAO', fakeAsync(async() => {
             spyOn(Date, 'now').and.returnValue(42);
-            spyOn(chatService, 'addMessage');
+            spyOn(chatService, 'addMessage').and.callThrough();
             // given an empty chat
             await chatService.createNewChat('id');
 

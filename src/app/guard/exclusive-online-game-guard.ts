@@ -4,8 +4,8 @@ import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { FocusedPart } from '../domain/User';
-import { ConnectedUserService } from '../services/ConnectedUserService';
 import { MessageDisplayer } from '../services/MessageDisplayer';
+import { ObservedPartService } from '../services/ObservedPartService';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
@@ -13,16 +13,16 @@ import { MGPOptional } from '../utils/MGPOptional';
 })
 export class ExclusiveOnlineGameGuard implements CanActivate, OnDestroy {
 
-    protected observedPartSub: MGPOptional<Subscription> = MGPOptional.empty();
+    protected observedPartSubscription!: Subscription;
 
-    constructor(public readonly connectedUserService: ConnectedUserService,
+    constructor(public readonly observedPartService: ObservedPartService,
                 public readonly messageDisplayer: MessageDisplayer,
                 protected readonly router: Router)
     {
     }
     public async canActivate(): Promise<boolean | UrlTree> {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
-            const subscription: Subscription = this.connectedUserService
+            const subscription: Subscription = this.observedPartService
                 .subscribeToObservedPart(
                     (optionalPart: MGPOptional<FocusedPart>) => {
                         if (optionalPart.isAbsent()) {
@@ -31,12 +31,10 @@ export class ExclusiveOnlineGameGuard implements CanActivate, OnDestroy {
                         const part: FocusedPart = optionalPart.get();
                         return resolve(this.router.parseUrl('/play/' + part.typeGame + '/' + part.id));
                     });
-            this.observedPartSub = MGPOptional.of(subscription);
+            this.observedPartSubscription = subscription;
         });
     }
     public ngOnDestroy(): void {
-        if (this.observedPartSub.isPresent()) {
-            this.observedPartSub.get().unsubscribe();
-        }
+        this.observedPartSubscription.unsubscribe();
     }
 }
