@@ -90,6 +90,9 @@
     fill: var(--indicator);
     stroke: none;
 }
+.indicator-fill {
+    fill: var(--indicator);
+}
 .highlighted {
     stroke: var(--selectable);
 }

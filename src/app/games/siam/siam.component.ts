@@ -11,7 +11,6 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
-import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
@@ -49,7 +48,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new SiamRules(SiamState);
+        this.rules = SiamRules.get();
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),
         ];
@@ -77,8 +76,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.clickableCoords = new MGPSet();
         this.indicatorArrows = [];
     }
-    public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#selectPiece_' + player);
+    public async selectPieceForInsertion(player: Player, pieceIndex: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#selectPiece_' + player.value + '_' + pieceIndex);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -86,17 +85,14 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.cancelMoveAttempt();
-        for (const move of SiamRules.getDerapingInsertions(this.getState())) {
-            this.clickableCoords.add(move.coord.getNext(move.moveDirection.get()));
-        }
-        for (const move of SiamRules.getPushingInsertions(this.getState())) {
-            const target: Coord = move.coord.getNext(move.moveDirection.get());
+        for (const move of SiamRules.get().getInsertions(this.getState())) {
+            const target: Coord = move.coord.getNext(move.direction.get());
             // For every pushing insertion, we draw an arrow in case it will push a piece
             if (this.board[target.y][target.x] !== SiamPiece.EMPTY) {
                 const arrow: IndicatorArrow = {
                     source: MGPOptional.empty(),
                     target,
-                    direction: move.moveDirection.get(),
+                    direction: move.direction.get(),
                 };
                 this.indicatorArrows.push(arrow);
             }
@@ -106,19 +102,24 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return MGPValidation.SUCCESS;
     }
     public async selectOrientation(orientation: Orthogonal): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#orientation_' + orientation.toString());
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         // The player has clicked on an orientation arrow
         // A landing coordinate is already selected in selectedLanding
         // We can simply perform the move, but first we need to construct the correct move.
         // To do so, we pick the a valid move that matches our selected landing and orientation.
         let moves: SiamMove[];
         if (this.insertingPiece) {
-            moves = this.getInsertionsAt(this.selectedLanding.get());
+            const landing: Coord = this.selectedLanding.get();
+            moves = SiamRules.get().getInsertionsAt(this.getState(), landing.x, landing.y);
         } else {
             const piece: SiamPiece = this.getState().getPieceAt(this.selectedPiece.get());
-            moves = SiamRules.getMovesBetween(this.getState(),
-                                              piece,
-                                              this.selectedPiece.get(),
-                                              this.selectedLanding.get());
+            moves = SiamRules.get().getMovesBetween(this.getState(),
+                                                    piece,
+                                                    this.selectedPiece.get(),
+                                                    this.selectedLanding.get());
         }
         for (const move of moves) {
             if (move.landingOrientation === orientation) {
@@ -136,36 +137,64 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         const clickedCoord: Coord = new Coord(x, y);
         if (this.insertingPiece) {
-            // Inserting a new piece
-            this.selectedLanding = MGPOptional.of(clickedCoord);
-            const insertions: SiamMove[] = this.getInsertionsAt(clickedCoord);
-            if (insertions.length === 0) {
-                this.cancelMoveAttempt();
-                return this.clickSquare(x, y);
-            }
-            return this.performMoveOrShowOrientationArrows(insertions);
+            return this.insertPiece(clickedCoord);
         } else {
             // Clicking a square to select a piece or end a non-insertion move
-            const clickedPiece: SiamPiece = this.board[y][x];
-            if (this.selectedPiece.isPresent()) {
+            if (this.selectedLanding.isPresent()) {
+                // Player clicked somewhere on the board instead of an orientation arrow, cancel the move
+                this.cancelMoveAttempt();
+                return MGPValidation.SUCCESS;
+            } else if (this.selectedPiece.isPresent()) {
                 // Select the landing
                 this.selectedLanding = MGPOptional.of(clickedCoord);
                 const moves: SiamMove[] =
-                    SiamRules.getMovesBetween(this.getState(),
-                                              this.getState().getPieceAt(this.selectedPiece.get()),
-                                              this.selectedPiece.get(),
-                                              clickedCoord);
+                    SiamRules.get().getMovesBetween(this.getState(),
+                                                    this.getState().getPieceAt(this.selectedPiece.get()),
+                                                    this.selectedPiece.get(),
+                                                    clickedCoord);
                 if (moves.length === 0) {
-                    this.cancelMoveAttempt();
-                    return this.clickSquare(x, y);
+                    return this.changeMoveClick(clickedCoord);
                 }
                 return this.performMoveOrShowOrientationArrows(moves);
-            } else if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            } else if (this.getState().isOnBoard(clickedCoord)) {
+                const clickedPiece: SiamPiece = this.board[y][x];
+                if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
+                    return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                } else {
+                    // Select the piece
+                    return this.selectPiece(clickedCoord, clickedPiece);
+                }
             } else {
-                // Select the piece
-                return this.selectPiece(clickedCoord, clickedPiece);
+                // Click outside of board, but not for removing a piece, so we do nothing
+                // This should never happen in practice
+                return MGPValidation.SUCCESS;
             }
+        }
+    }
+    private async insertPiece(clickedCoord: Coord): Promise<MGPValidation> {
+        if (this.selectedLanding.isPresent()) {
+            // The landing is already selected, we cancel the move to avoid any confusion
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
+        // Inserting a new piece, the player just clicked on the landing
+        this.selectedLanding = MGPOptional.of(clickedCoord);
+        const insertions: SiamMove[] =
+            SiamRules.get().getInsertionsAt(this.getState(), clickedCoord.x, clickedCoord.y);
+        if (insertions.length === 0) {
+            return this.changeMoveClick(clickedCoord);
+        }
+        return this.performMoveOrShowOrientationArrows(insertions);
+    }
+    private async changeMoveClick(clickedCoord: Coord): Promise<MGPValidation> {
+        // The player clicked somewhere where there are no possible move, cancel the move
+        this.cancelMoveAttempt();
+        if (this.getState().getPieceAt(clickedCoord) === SiamPiece.EMPTY) {
+            // The click was made on an empty square, likely to just cancel the move
+            return MGPValidation.SUCCESS;
+        } else {
+            // The click was made on another piece, likely to select it
+            return this.clickSquare(clickedCoord.x, clickedCoord.y);
         }
     }
     private async performMoveOrShowOrientationArrows(availableMoves: SiamMove[]): Promise<MGPValidation> {
@@ -186,10 +215,10 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.cancelMoveAttempt();
         this.selectedPiece = MGPOptional.of(clickedCoord);
         const moves: SiamMove[] =
-            SiamRules.getMovesFrom(this.getState(), clickedPiece, clickedCoord.x, clickedCoord.y);
+            SiamRules.get().getMovesFrom(this.getState(), clickedPiece, clickedCoord.x, clickedCoord.y);
         for (const move of moves) {
-            if (move.moveDirection.isPresent()) {
-                const target: Coord = move.coord.getNext(move.moveDirection.get());
+            if (move.direction.isPresent()) {
+                const target: Coord = move.coord.getNext(move.direction.get());
                 this.clickableCoords.add(target);
                 if (this.getState().isOnBoard(target) === false ||
                     this.getState().getPieceAt(target) !== SiamPiece.EMPTY) {
@@ -199,7 +228,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                             piece: clickedPiece,
                         }),
                         target,
-                        direction: move.moveDirection.get(),
+                        direction: move.direction.get(),
                     };
                     this.indicatorArrows.push(arrow);
                 }
@@ -227,20 +256,21 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return this.getArrowTransform(startingAt.x+1, startingAt.y+1, arrow.direction);
     }
     public getRemainingPieceTransform(piece: number, player: Player): string {
-        const x: number = (piece/3) + 2.5; // TODO FOR REVIEW: do we want vertically centered piece (looks better visually on a screenshot) or a stack that decreases from right to left (feels better in game, it really feels like a stack of pieces)
+        const x: number = (player === Player.ZERO ? (4-piece)/3 : piece/3) + 2.5;
         const y: number = player === Player.ZERO ? -0.5 : 6.5;
-        const orientation: Orthogonal = player === Player.ZERO ? Orthogonal.UP : Orthogonal.DOWN;
+        const orientation: Orthogonal = player === Player.ZERO ? Orthogonal.RIGHT : Orthogonal.LEFT;
         return this.getArrowTransform(x, y, orientation);
     }
     public getOrientationTransform(orientation: Orthogonal): string {
+        // This shift will be done before the rotation to have nice visuals
+        const shift: string = `translate(0, ${this.SPACE_SIZE / 1.57})`;
+        // Then, the arrow is rotated
         const orientationDegrees: number = (orientation.toInt() - 2) * 90;
         const rotation: string = `rotate(${orientationDegrees} ${this.SPACE_SIZE/2} ${this.SPACE_SIZE/2})`;
-        // This shift will be done before the rotation to have nice visuals
-        const shift: string = `translate(0, ${this.SPACE_SIZE/1.5})`;
-        // This translation will be done after, to center the arrows
-        const translation: string = `translate(${2.5 * this.SPACE_SIZE}, ${2.5 * this.SPACE_SIZE})`;
-
-        const scale: string = 'scale(2)';
+        // We want the arrows bigger so we scale them
+        const scale: string = `scale(2.45)`;
+        // The final translation is to center the arrows
+        const translation: string = `translate(${2.27 * this.SPACE_SIZE}, ${2.27 * this.SPACE_SIZE})`;
         return [translation, scale, rotation, shift].join(' ');
     }
     public getPieceClasses(c: SiamPiece): string[] {
@@ -254,33 +284,17 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         return [];
     }
+    public getRemainingPieceClasses(player: Player, pieceIndex: number): string[] {
+        const classes: string[] = [this.getPlayerClass(player)];
+        if (this.insertingPiece && this.getCurrentPlayer() === player && pieceIndex === this.playerPieces(player)-1) {
+            classes.push('selected');
+        }
+        return classes;
+    }
+    public getCurrentPlayerClass(): string {
+        return this.getPlayerClass(this.getCurrentPlayer());
+    }
     public playerPieces(player: Player): number {
         return 5 - this.getState().countPlayersPawn()[player.value];
-    }
-    // TODO: these methods should be done better in SiamRules after refactoring the getXXInsertions
-    /**
-     * Gets the pushing insertion that land at the given coord.
-     * There can be more than one in the case of corner squares.
-     */
-    private getPushingInsertionsAt(coord: Coord): SiamMove[] {
-        const moves: SiamMove[] = [];
-        for (const move of SiamRules.getPushingInsertions(this.getState())) {
-            if (move.coord.getNext(move.moveDirection.get()).equals(coord)) {
-                moves.push(move);
-            }
-        }
-        return moves;
-    }
-    private getDerapingInsertionsAt(coord: Coord): SiamMove[] {
-        const moves: SiamMove[] = [];
-        for (const move of SiamRules.getDerapingInsertions(this.getState())) {
-            if (move.coord.getNext(move.moveDirection.get()).equals(coord)) {
-                moves.push(move);
-            }
-        }
-        return moves;
-    }
-    private getInsertionsAt(coord: Coord): SiamMove[] {
-        return this.getDerapingInsertionsAt(coord).concat(this.getPushingInsertionsAt(coord));
     }
 }

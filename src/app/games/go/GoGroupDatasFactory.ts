@@ -9,6 +9,6 @@ export class GoGroupDatasFactory extends GroupDatasFactory<GoPiece> {
         return new GoGroupDatas(color, [], [], [], [], []);
     }
     public getDirections(): ReadonlyArray<Direction> {
-        return Orthogonal.ORTHOGONALS as ReadonlyArray<Direction>;
+        return Orthogonal.ORTHOGONALS as unknown as ReadonlyArray<Direction>;
     }
 }

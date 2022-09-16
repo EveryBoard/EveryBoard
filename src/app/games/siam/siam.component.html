@@ -30,7 +30,7 @@
                  xlink:href="#mountain"
                  (click)="clickSquare(x, y)"
                  [attr.transform]="'translate(' + ((x+1) * SPACE_SIZE) + ' ' + ((y+1) * SPACE_SIZE) + ')'"
-                 fill="brown" />
+                 fill="#009903" />
         </g>
     </g>
     <g *ngFor="let coord of clickableCoords">
@@ -41,19 +41,35 @@
               [attr.height]="SPACE_SIZE"
               class="base no-fill small-stroke clickable" />
     </g>
+    <g *ngIf="selectedLanding.isPresent()">
+        <rect (click)="clickSquare(selectedLanding.get().x, selectedLanding.get().y)"
+              [attr.x]="SPACE_SIZE * (selectedLanding.get().x + 1)"
+              [attr.y]="SPACE_SIZE * (selectedLanding.get().y + 1)"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="base no-fill small-stroke selected" />
+    </g>
+    <g *ngIf="selectedPiece.isPresent()">
+        <rect (click)="clickSquare(selectedPiece.get().x, selectedPiece.get().y)"
+              [attr.x]="SPACE_SIZE * (selectedPiece.get().x + 1)"
+              [attr.y]="SPACE_SIZE * (selectedPiece.get().y + 1)"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="base no-fill small-stroke selected" />
+    </g>
     <g *ngFor="let player of [Player.ZERO, Player.ONE]">
         <g *ngFor="let x of range(playerPieces(player))">
-            <use id="selectPiece_{{ player }}"
+            <use id="selectPiece_{{ player.value }}_{{ x }}"
                  class="base mid-stroke"
-                 [ngClass]="getPlayerClass(player)"
-                 (click)="selectPieceForInsertion(player)"
+                 [ngClass]="getRemainingPieceClasses(player, x)"
+                 (click)="selectPieceForInsertion(player, x)"
                  xlink:href="#arrow"
                  [attr.transform]="getRemainingPieceTransform(x, player)" />
         </g>
     </g>
     <g *ngFor="let arrow of indicatorArrows">
         <use id="indicator_{{ arrow.target.x }}_{{ arrow.target.y }}_{{ arrow.direction.toString() }}"
-             class="base mid-stroke highlighted-fill"
+             class="base mid-stroke indicator-fill"
              (click)="clickSquare(arrow.target.x, arrow.target.y)"
              xlink:href="#arrow"
              [attr.transform]="getIndicatorTransform(arrow)" />
@@ -61,13 +77,14 @@
         <use *ngIf="arrow.source.isPresent()"
              class="base mid-stroke"
              [ngClass]="getPieceClasses(arrow.source.get().piece)"
-             (click)="clickSquare(arrow.target.x, arrow.target.y)"
+             (click)="clickSquare(arrow.source.get().coord.x, arrow.source.get().coord.y)"
              xlink:href="#arrow"
              [attr.transform]="getPieceTransform(arrow.source.get().coord.x, arrow.source.get().coord.y)" />
     </g>
     <g *ngFor="let orientation of orientationArrows">
         <use id="orientation_{{ orientation }}"
-             class="base mid-stroke highlighted-fill semi-transparent"
+             class="base mid-stroke semi-transparent"
+             [ngClass]="getCurrentPlayerClass()"
              (click)="selectOrientation(orientation)"
              xlink:href="#arrow"
              [attr.transform]="getOrientationTransform(orientation)" />

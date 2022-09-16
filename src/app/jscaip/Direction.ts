@@ -211,6 +211,10 @@ export class Orthogonal extends BaseDirection {
         const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
         return opposite.get();
     }
+    public rotateClockwise(): Orthogonal {
+        const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.y, this.x);
+        return rotated.get();
+    }
 }
 
 export class DirectionFailure {
