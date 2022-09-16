@@ -66,7 +66,8 @@ export class ObservedPartService implements OnDestroy {
         }
     }
     public updateObservedPart(observedPart: Partial<FocusedPart>): Promise<void> {
-        // TODO FOR REVIEW should we assert that observedPart (the update) is not partial if this.observedPart (the current value) is not set ?
+        // TODO FOR REVIEW: should we assert that observedPart (the update)
+        //  is not partial if this.observedPart (the current value) is not set ?
         const oldObservedPart: FocusedPart = this.observedPart.getOrElse(observedPart as FocusedPart);
         const mergedObservedPart: FocusedPart = { ...oldObservedPart, ...observedPart };
         assert(this.connectedUserService.user.isPresent(), 'Should not call updateObservedPart when not connected');
@@ -88,7 +89,8 @@ export class ObservedPartService implements OnDestroy {
         }
     }
     public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
-        // TODO FOR REVIEW: du coup maintenant observedPartService.canUserJoin ça a moins de sens à lire que [connected]UserService.canUserJoin non x) ?
+        // TODO FOR REVIEW: du coup maintenant observedPartService.canUserJoin ça a moins de sens à lire que
+        //  [connected]UserService.canUserJoin non x) ?
         if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
             // If user is in no part, he can join one
             // If he is onne part and want to join it again, he can
