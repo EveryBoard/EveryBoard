@@ -5,9 +5,8 @@ import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 @Component({
     selector: 'app-welcome',

@@ -4,13 +4,12 @@ import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
 import { FocusedPart, UserDocument } from 'src/app/domain/User';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Subscription } from 'rxjs';
 import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
 
 type Tab = 'games' | 'create' | 'chat';
 

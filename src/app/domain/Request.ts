@@ -3,7 +3,7 @@ import { JSONValue, Utils } from 'src/app/utils/utils';
 import { JSONObject } from 'src/app/utils/utils';
 
 export type RequestCode =
-    'DrawProposed' | 'DrawAccepted' | 'DrawRefused' |
+    'DrawProposed' | 'DrawRefused' |
     'TakeBackAsked' | 'TakeBackAccepted' | 'TakeBackRefused' |
     'RematchProposed' | 'RematchAccepted' |
     'AddTurnTime' | 'AddGlobalTime';
@@ -12,7 +12,6 @@ export class Request implements JSONObject {
     [key: string]: JSONValue; // Index signature to type to JSONObject
 
     public static drawProposed: (by: Player) => Request = makeWithPlayer('DrawProposed');
-    public static drawAccepted: Request = make('DrawAccepted', {});
     public static drawRefused: (by: Player) => Request = makeWithPlayer('DrawRefused');
 
     public static takeBackAsked: (by: Player) => Request = makeWithPlayer('TakeBackAsked');

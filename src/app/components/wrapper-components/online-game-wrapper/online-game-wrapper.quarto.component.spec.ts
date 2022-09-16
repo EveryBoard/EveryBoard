@@ -522,7 +522,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('ObservedPart Change', () => {
         it('should redirect to lobby when role and partId change', fakeAsync(async() => {
             // Given a part where you are observer
-            console.log('>>>> let us prepareStartedGameFor OBSERVER')
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
@@ -530,15 +529,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
-            console.log('>>>> let us set observedPart to say WE ARE NOW CANDIDATE ELSEWHERE')
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
 
             // Then a redirection to lobby should be triggered
-            console.log('>>>> let us expect valid routing')
             expectValidRouting(router, ['/lobby'], LobbyComponent);
-            console.log('>>>> let us tick till the end baby')
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
-            console.log('>>>> let us rest in peace')
         }));
         it('should not redirect to lobby when role stay "observer" but partId change', fakeAsync(async() => {
             // Given a part where you are observer
@@ -553,6 +548,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then a redirection to lobby should not have been triggered
             expect(router.navigate).not.toHaveBeenCalled();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it('should not do anything particular when observer leaves this part from another tab', fakeAsync(async() => {
+            // Given a part where you are observer
+            await prepareStartedGameFor(USER_OBSERVER);
+            spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
+
+            // When observedPart update to inform component that user stopped observing some part in another tab
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo();
+            ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+
+            // Then nothing special should have happened, including no redirection
+            // Though compo.observedPart should have been locally changed
+            expect(router.navigate).not.toHaveBeenCalled();
+            expect(wrapper.getObservedPart()).toEqual(MGPOptional.empty());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });

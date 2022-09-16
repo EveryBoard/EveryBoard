@@ -49,7 +49,6 @@ export class ConnectedUserServiceMock {
     }
     public async disconnect(): Promise<MGPValidation> {
         if (this.user.isPresent()) {
-            // this.observedPartRS.next(MGPOptional.empty()); TODOTODO
             this.user = MGPOptional.empty();
             return MGPValidation.SUCCESS;
         } else {
@@ -166,13 +165,14 @@ describe('ConnectedUserService', () => {
     const email: string = 'jean@jaja.europe';
     const password: string = 'hunter2';
 
-    let alreadyDestroyed: boolean = false;
+    let alreadyDestroyed: boolean;
 
     beforeEach(async() => {
         await setupAuthTestModule();
         connectedUserService = TestBed.inject(ConnectedUserService);
         auth = TestBed.inject(FireAuth.Auth);
         userDAO = TestBed.inject(UserDAO);
+        alreadyDestroyed = false;
     });
 
     it('should create', fakeAsync(async() => {

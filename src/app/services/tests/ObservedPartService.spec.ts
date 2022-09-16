@@ -73,7 +73,8 @@ describe('ObservedPartService', () => {
     let observedPartService: ObservedPartService;
     let connectedUserService: ConnectedUserService;
     let userDAO: UserDAO;
-    const uid: string = UserMocks.OPPONENT_AUTH_USER.id;
+    const opponentId: string = UserMocks.OPPONENT_AUTH_USER.id;
+    let alreadyDestroyed: boolean;
 
     beforeEach(async() => {
         await TestBed.configureTestingModule({
@@ -90,11 +91,11 @@ describe('ObservedPartService', () => {
         await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
         connectedUserService = TestBed.inject(ConnectedUserService);
         observedPartService = new ObservedPartService(userDAO, connectedUserService);
+        alreadyDestroyed = false;
     });
     it('should remove the observedPart when user is disconnected', async() => {
         // given a registered and connected user observing a game
         ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-        // TODOTODO preparingTheTest
         let resolvePromise: () => void;
         const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
             resolvePromise = resolve;
@@ -105,7 +106,7 @@ describe('ObservedPartService', () => {
                 observedPart = newValue;
                 window.setTimeout(resolvePromise, 2000);
             });
-        await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
+        await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
         await userHasUpdated;
         expect(observedPart).toEqual(MGPOptional.of({ id: '1234', typeGame: 'P4' }));
 
@@ -132,7 +133,7 @@ describe('ObservedPartService', () => {
                     window.setTimeout(resolvePromise, 2000);
                 });
             // When the UserDAO modify observedPart in the user document
-            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4' } });
+            await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
             await userHasUpdated;
 
             // Then the observable should have updated its value
@@ -203,7 +204,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
+            await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
 
             // When asking if you can create
             const validation: MGPValidation = observedPartService.canUserCreate();
@@ -213,7 +214,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already creator', fakeAsync(async() => { // UNSTABLE: last failed 2022-08-18
             // Given a ConnectedUserService where user observe a part
-            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Creator' } });
+            await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'Creator' } });
 
             // When asking if you can create
             const validation: MGPValidation = observedPartService.canUserCreate();
@@ -223,7 +224,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already candidate', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Candidate' } });
+            await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'Candidate' } });
 
             // When asking if you can create
             const validation: MGPValidation = observedPartService.canUserCreate();
@@ -233,7 +234,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already Chosen Opponent', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' } });
+            await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' } });
 
             // When asking if you can create
             const validation: MGPValidation = observedPartService.canUserCreate();
@@ -243,7 +244,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already Observer', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            await userDAO.update(uid, { observedPart: { id: '1234', typeGame: 'P4', role: 'Observer' } });
+            await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'Observer' } });
 
             // When asking if you can join some part
             const validation: MGPValidation = observedPartService.canUserCreate();
@@ -258,7 +259,7 @@ describe('ObservedPartService', () => {
         async function shouldAllowJoinPart(observedPart: FocusedPart, partToJoin: string, gameStarted: boolean)
         : Promise<void>
         {
-            await userDAO.update(uid, { observedPart });
+            await userDAO.update(opponentId, { observedPart });
 
             // When asking if you can join that specific part again
             const validation: MGPValidation = observedPartService.canUserJoin(partToJoin, gameStarted);
@@ -274,7 +275,7 @@ describe('ObservedPartService', () => {
                                             reason: string)
         : Promise<void>
         {
-            await userDAO.update(uid, { observedPart });
+            await userDAO.update(opponentId, { observedPart });
 
             // When asking if you can join that specific part again
             const validation: MGPValidation = observedPartService.canUserJoin(partToJoin, gameStarted);
@@ -371,5 +372,28 @@ describe('ObservedPartService', () => {
             // When asking if you can join some started part
             await shouldAllowJoinPart(observedPart, 'some-id', true);
         }));
+    });
+
+    it('should unsubscribe from subscriptions upon destruction', () => {
+        // eslint-disable-next-line dot-notation
+        spyOn(observedPartService['authSubscription'], 'unsubscribe').and.callThrough();
+        // eslint-disable-next-line dot-notation
+        spyOn(observedPartService['userSubscription'], 'unsubscribe').and.callThrough();
+
+        // when the service is destroyed
+        observedPartService.ngOnDestroy();
+        alreadyDestroyed = true;
+
+        // then it unsubscribed
+        // eslint-disable-next-line dot-notation
+        expect(observedPartService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
+        // eslint-disable-next-line dot-notation
+        expect(observedPartService['userSubscription'].unsubscribe).toHaveBeenCalledWith();
+    });
+
+    afterEach(async() => {
+        if (alreadyDestroyed === false) {
+            observedPartService.ngOnDestroy();
+        }
     });
 });

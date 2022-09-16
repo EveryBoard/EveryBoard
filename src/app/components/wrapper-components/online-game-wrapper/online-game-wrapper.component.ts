@@ -202,9 +202,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.router.navigate(['/lobby']);
             }
         } else {
-            this.messageDisplayer.criticalMessage('NOUS AVONS RECU UNE OBSERVED_PART UPDATE VIDE !!!')
             this.observedPart = MGPOptional.empty();
         }
+    }
+    public getObservedPart(): MGPOptional<FocusedPart> {
+        return this.observedPart;
     }
     public async startGame(configRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
@@ -606,15 +608,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 const localPlayer: Player = Player.of(request.data['player']);
                 this.addTurnTimeTo(localPlayer, addedTurnTime);
                 break;
-            case 'AddGlobalTime':
+            default:
+                Utils.expectToBe(request.code, 'AddGlobalTime', 'Unknown RequestType : ' + request.code + ' for ' + JSON.stringify(request));
                 const addedGlobalTime: number = 5 * 60 * 1000;
                 // eslint-disable-next-line dot-notation
                 const globalPlayer: Player = Player.of(request.data['player']);
                 this.addGlobalTimeTo(globalPlayer, addedGlobalTime);
                 break;
-            default:
-                Utils.expectToBe(request.code, 'DrawAccepted', 'Unknown RequestType : ' + request.code + ' for ' + JSON.stringify(request));
-                await this.acceptDraw();
                 break;
         }
     }
