@@ -34,8 +34,6 @@ describe('BrandhubComponent', () => {
     });
     it('Should cancel move when clicking on opponent piece', fakeAsync( async() => {
         // Given any state
-        const state: BrandhubState = BrandhubState.getInitialState();
-        testUtils.setupState(state);
 
         // When clicking on an opponent piece
         // Then the move should be illegal
@@ -45,9 +43,7 @@ describe('BrandhubComponent', () => {
         await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('Should allow simple move', fakeAsync(async() => {
-        // given the initial state
-        const state: BrandhubState = BrandhubState.getInitialState();
-        testUtils.setupState(state);
+        // Given the initial state
 
         // When moving your piece
         await testUtils.expectClickSuccess('#click_3_1');
@@ -57,9 +53,7 @@ describe('BrandhubComponent', () => {
         await testUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('Diagonal move attempt should not throw', fakeAsync(async() => {
-        // given the initial state
-        const state: BrandhubState = BrandhubState.getInitialState();
-        testUtils.setupState(state);
+        // Given the initial state
 
         // When attempting diagonal move
         await testUtils.expectClickSuccess('#click_3_0');

@@ -24,7 +24,8 @@
                 </ng-template>
             </g>
             <g *ngIf="board[y][x] !== EMPTY">
-                <circle [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                <circle id="piece_{{ x }}_{{ y }}"
+                        [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                         [attr.cx]="SPACE_SIZE * 0.50"
                         [attr.cy]="SPACE_SIZE * 0.50"
                         [ngClass]="viewInfo.pieceClasses[y][x]"

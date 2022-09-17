@@ -176,8 +176,6 @@ describe('ApagosComponent', () => {
     }));
     it('should drop when clicking on arrow above square', fakeAsync(async() => {
         // Given the initial board
-        const state: ApagosState = ApagosState.getInitialState();
-        testUtils.setupState(state);
 
         // When clicking on the light arrow above the second square
         // Then the move should have been a success

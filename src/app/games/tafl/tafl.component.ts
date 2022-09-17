@@ -24,7 +24,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     protected captureds: Coord[] = [];
 
-    public chosen: Coord = new Coord(-1, -1);
+    public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMove: MGPOptional<M> = MGPOptional.empty();
 
@@ -88,7 +88,9 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.chosen.x === -1) {
+        if (this.chosen.isAbsent() ||
+            this.pieceBelongToCurrentPlayer(x, y))
+        {
             return this.choosePiece(x, y);
         } else {
             return this.chooseDestination(x, y);
@@ -97,11 +99,10 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         display(this.VERBOSE, 'TaflComponent.chooseDestination');
 
-        const chosenPiece: Coord = this.chosen;
+        const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
         if (move.isSuccess()) {
-            this.cancelMove();
             return await this.chooseMove(move.get(), this.rules.node.gameState);
         } else {
             return this.cancelMove(move.getReason());
@@ -117,7 +118,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
 
-        this.chosen = new Coord(x, y);
+        this.chosen = MGPOptional.of(new Coord(x, y));
         this.updateViewInfo();
         display(this.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
         return MGPValidation.SUCCESS;
@@ -129,7 +130,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
     public cancelMoveAttempt(): void {
-        this.chosen = new Coord(-1, -1);
+        this.chosen = MGPOptional.empty();
+        this.updateViewInfo();
     }
     public isThrone(x: number, y: number): boolean {
         const state: S = this.rules.node.gameState;
@@ -145,7 +147,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const owner: PlayerOrNone = this.rules.node.gameState.getAbsoluteOwner(coord);
         classes.push(this.getPlayerClass(owner));
 
-        if (this.chosen.equals(coord)) {
+        if (this.chosen.equalsValue(coord)) {
             classes.push('selected');
         }
 

@@ -114,6 +114,7 @@ describe('YinshComponent', () => {
 
             // When rendering it
             testUtils.setupState(state);
+
             // Then the rings should not be highlighted
             testUtils.expectElementNotToExist('#selectable_3_3');
             testUtils.expectElementNotToExist('#selectable_4_4');
