@@ -24,7 +24,7 @@ const state: BrandhubState = new BrandhubState([
 const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, BrandhubMove, BrandhubState> = {
     gameName: 'Brandhub',
     component: BrandhubComponent,
-    secondPlayerPiece: new Coord(3, 2),
+    secondPlayerPiece: new Coord(3, 1),
     validFirstCoord: new Coord(3, 0),
     moveProvider: BrandhubMove.of,
     validSecondCoord: new Coord(2, 0),
@@ -32,7 +32,7 @@ const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, Brandhu
     stateReadyForCapture: state,
     capture: BrandhubMove.of(new Coord(1, 0), new Coord(2, 0)),
     firstCaptured: new Coord(2, 1),
-    otherPlayerPiece: new Coord(3, 1),
+    otherPlayerPiece: new Coord(3, 2),
     stateReadyForJumpOver: state,
     jumpOver: BrandhubMove.of(new Coord(1, 0), new Coord(1, 4)),
 };
