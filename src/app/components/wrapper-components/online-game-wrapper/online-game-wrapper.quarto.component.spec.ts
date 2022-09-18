@@ -38,6 +38,11 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 
+export type PreparationResult<T extends AbstractGameComponent> = {
+
+    testUtils: ComponentTestUtils<T, MinimalUser>;
+    role: PlayerOrNone;
+}
 export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promise<void> {
     const partDAO: PartDAO = TestBed.inject(PartDAO);
     const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
@@ -73,7 +78,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     component: string,
     shorterGlobalChrono: boolean = false,
     waitForPartToStart: boolean = true)
-: Promise<{ _testUtils: ComponentTestUtils<T, MinimalUser>, _role: PlayerOrNone }>
+: Promise<PreparationResult<T>>
 {
     const testUtils: ComponentTestUtils<T, MinimalUser> = await prepareWrapper<T>(user, component);
 
@@ -133,7 +138,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
         testUtils.bindGameComponent();
         testUtils.prepareSpies();
     }
-    return { _testUtils: testUtils, _role: role };
+    return { testUtils, role };
 }
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
@@ -238,12 +243,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                        waitForPartToStart?: boolean)
     : Promise<void>
     {
-        const { _testUtils, _role } = (await prepareStartedGameFor<QuartoComponent>(authUser,
-                                                                                    'Quarto',
-                                                                                    shorterGlobalChrono,
-                                                                                    waitForPartToStart));
-        testUtils = _testUtils;
-        role = _role;
+        const preparationResult: PreparationResult<QuartoComponent> =
+            (await prepareStartedGameFor<QuartoComponent>(authUser,
+                                                          'Quarto',
+                                                          shorterGlobalChrono,
+                                                          waitForPartToStart));
+        testUtils = preparationResult.testUtils;
+        role = preparationResult.role;
         partDAO = TestBed.inject(PartDAO);
         gameService = TestBed.inject(GameService);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
