@@ -2224,9 +2224,6 @@
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
       </trans-unit>
-      <trans-unit id="5300676389075722498" datatype="html">
-        <source>You cannot insert a piece when you have already selected a piece.</source>
-      </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
       </trans-unit>
@@ -2238,9 +2235,6 @@
       </trans-unit>
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
-      </trans-unit>
-      <trans-unit id="5868009287424458246" datatype="html">
-        <source>You should insert or choose one of your pieces!</source>
       </trans-unit>
       <trans-unit id="4223815631577991732" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.

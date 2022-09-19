@@ -1,4 +1,4 @@
-from PIL import Image, ImageOps
+from PIL import Image
 import sys
 
 if len(sys.argv) != 2:
@@ -16,7 +16,7 @@ ratio = float(desired_size)/max(old_size)
 new_size = tuple([int(x*ratio) for x in old_size])
 
 # resize the image so that it is square
-im = im.resize(new_size, Image.ANTIALIAS)
+im = im.resize(new_size, resample=Image.Resampling.LANCZOS)
 
 # we pad with the color present in (0, 0), which is supposed to be the background color
 color = im.getpixel((3, 3))

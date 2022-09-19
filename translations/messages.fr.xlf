@@ -3167,10 +3167,6 @@
         <source>Failed! You have made a single step.</source>
         <target>Raté ! Vous avez fait un simple pas.</target>
       </trans-unit>
-      <trans-unit id="5300676389075722498" datatype="html">
-        <source>You cannot insert a piece when you have already selected a piece.</source>
-        <target>Vous ne pouvez pas insérer une pièce si vous avez déjà sélectionné une pièce.</target>
-      </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
         <target>Vous ne pouvez plus insérer, toutes vos pièces sont déjà sur le plateau !</target>
@@ -3186,10 +3182,6 @@
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
         <target>Votre poussée est invalide : elle n'est pas droite, ne pousse rien, ou sort du plateau.</target>
-      </trans-unit>
-      <trans-unit id="5868009287424458246" datatype="html">
-        <source>You should insert or choose one of your pieces!</source>
-        <target>Vous devez insérez ou choisir une de vos pièces !</target>
       </trans-unit>
       <trans-unit id="4223815631577991732" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
