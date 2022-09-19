@@ -77,7 +77,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.indicatorArrows = [];
     }
     public async selectPieceForInsertion(player: Player, pieceIndex: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#selectPiece_' + player.value + '_' + pieceIndex);
+        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + player.value + '_' + pieceIndex);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -213,15 +213,15 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     private selectPiece(clickedCoord: Coord, clickedPiece: SiamPiece): MGPValidation {
         this.cancelMoveAttempt();
+        const state: SiamState = this.getState();
         this.selectedPiece = MGPOptional.of(clickedCoord);
         const moves: SiamMove[] =
-            SiamRules.get().getMovesFrom(this.getState(), clickedPiece, clickedCoord.x, clickedCoord.y);
+            SiamRules.get().getMovesFrom(state, clickedPiece, clickedCoord.x, clickedCoord.y);
         for (const move of moves) {
             if (move.direction.isPresent()) {
                 const target: Coord = move.coord.getNext(move.direction.get());
                 this.clickableCoords.add(target);
-                if (this.getState().isOnBoard(target) === false ||
-                    this.getState().getPieceAt(target) !== SiamPiece.EMPTY) {
+                if (state.isOnBoard(target) && state.getPieceAt(target) !== SiamPiece.EMPTY) {
                     const arrow: IndicatorArrow = {
                         source: MGPOptional.of({
                             coord: clickedCoord,
@@ -256,25 +256,30 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return this.getArrowTransform(startingAt.x+1, startingAt.y+1, arrow.direction);
     }
     public getRemainingPieceTransform(piece: number, player: Player): string {
-        const x: number = (player === Player.ZERO ? (4-piece)/3 : piece/3) + 2.5;
+        const x: number = (player === Player.ZERO ? (3.5-piece)/3 : (piece-0.5)/3) + 2.5;
         const y: number = player === Player.ZERO ? -0.5 : 6.5;
         const orientation: Orthogonal = player === Player.ZERO ? Orthogonal.RIGHT : Orthogonal.LEFT;
         return this.getArrowTransform(x, y, orientation);
     }
     public getOrientationTransform(orientation: Orthogonal): string {
         // This shift will be done before the rotation to have nice visuals
-        const shift: string = `translate(0, ${this.SPACE_SIZE / 1.57})`;
+        const shift: string = `translate(0, ${this.SPACE_SIZE / 1.6})`;
         // Then, the arrow is rotated
         const orientationDegrees: number = (orientation.toInt() - 2) * 90;
         const rotation: string = `rotate(${orientationDegrees} ${this.SPACE_SIZE/2} ${this.SPACE_SIZE/2})`;
         // We want the arrows bigger so we scale them
-        const scale: string = `scale(2.45)`;
+        const scale: string = `scale(2.43)`;
         // The final translation is to center the arrows
         const translation: string = `translate(${2.27 * this.SPACE_SIZE}, ${2.27 * this.SPACE_SIZE})`;
         return [translation, scale, rotation, shift].join(' ');
     }
-    public getPieceClasses(c: SiamPiece): string[] {
-        return [this.getPlayerClass(c.getOwner())];
+    public getPieceClasses(x: number, y: number, c: SiamPiece): string[] {
+        const coord: Coord = new Coord(x, y);
+        const classes: string[] = [this.getPlayerClass(c.getOwner())];
+        if (this.selectedPiece.equalsValue(coord)) {
+            classes.push('selected');
+        }
+        return classes;
     }
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

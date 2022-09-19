@@ -56,13 +56,13 @@
 .player1-stroke {
     stroke: var(--player1);
 }
-.other-piece {
+.nonplayer {
     fill: var(--nonplayer);
 }
-.other-piece-light {
+.nonplayer-light {
     fill: var(--nonplayer-light);
 }
-.other-piece-stroke {
+.nonplayer-stroke {
     stroke: var(--nonplayer);
 }
 .dashed-stroke {
