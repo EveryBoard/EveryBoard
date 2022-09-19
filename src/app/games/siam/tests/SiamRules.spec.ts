@@ -12,8 +12,9 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Coord } from 'src/app/jscaip/Coord';
 
-fdescribe('SiamRules:', () => {
+describe('SiamRules:', () => {
 
     let rules: SiamRules;
 
@@ -435,5 +436,15 @@ fdescribe('SiamRules:', () => {
         // and victory should be for player zero, whose pieces are aligned with the push
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+    });
+    it('should compute empty list of moves between two impossible squares', () => {
+        // Given two coordinatess that are not neighbors
+        const state: SiamState = SiamState.getInitialState();
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(2, 2);
+        // When computing the list of moves between these coords
+        const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
+        // Then there should be no moves
+        expect(moves).toEqual([]);
     });
 });

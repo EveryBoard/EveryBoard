@@ -10,7 +10,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { SiamMinimax } from '../../siam/SiamMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-fdescribe('SiamMinimax:', () => {
+describe('SiamMinimax:', () => {
 
     let rules: SiamRules;
     let minimax: SiamMinimax;

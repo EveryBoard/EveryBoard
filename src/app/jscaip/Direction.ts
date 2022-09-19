@@ -1,10 +1,10 @@
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Localized } from '../utils/LocaleUtils';
-import { Encoder } from '../utils/Encoder';
+import { Encoder, NumberEncoder } from '../utils/Encoder';
 
 export class Vector implements ComparableObject {
     public equals(other: Vector): boolean {
@@ -214,6 +214,29 @@ export class Orthogonal extends BaseDirection {
     public rotateClockwise(): Orthogonal {
         const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.y, this.x);
         return rotated.get();
+    }
+}
+
+export class OrthogonalNumberEncoder extends NumberEncoder<Orthogonal> {
+
+    public maxValue(): number {
+        return 3;
+    }
+    public encodeNumber(orthogonal: Orthogonal): number {
+        if (orthogonal === Orthogonal.UP) return 0;
+        if (orthogonal === Orthogonal.RIGHT) return 1;
+        if (orthogonal === Orthogonal.DOWN) return 2;
+        return 3;
+    }
+    public decodeNumber(encoded: number): Orthogonal {
+        switch (encoded) {
+            case 0: return Orthogonal.UP;
+            case 1: return Orthogonal.RIGHT;
+            case 2: return Orthogonal.DOWN;
+            default:
+                Utils.expectToBe(encoded, 3, `Encoded orthogonal should be 3 for LEFT but got ${encoded} instead`);
+                return Orthogonal.LEFT;
+        }
     }
 }
 

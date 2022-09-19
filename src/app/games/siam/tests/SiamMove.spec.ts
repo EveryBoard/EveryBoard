@@ -10,7 +10,7 @@ import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-fdescribe('SiamMove', () => {
+describe('SiamMove', () => {
 
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;

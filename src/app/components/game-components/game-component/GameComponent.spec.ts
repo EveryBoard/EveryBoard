@@ -2,7 +2,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub, ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -14,6 +14,8 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
+import { SiamMove } from 'src/app/games/siam/SiamMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('GameComponent', () => {
 
@@ -109,10 +111,15 @@ describe('GameComponent', () => {
             Reversi: { onClick: [0, 0] },
             Sahara: { onClick: [0, 0] },
             Siam: {
-                insertAt: [0, 0],
-                clickPiece: [0, 0],
-                chooseDirection: [0],
-                chooseOrientation: [0],
+                selectPieceForInsertion: [Player.ZERO, 0],
+                selectOrientation: [SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
+                clickSquare: [0, 0],
+                clickArrow: [{
+                    source: MGPOptional.empty(),
+                    target: new Coord(0, 0),
+                    direction: Orthogonal.DOWN,
+                    move: SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
+                }],
             },
             Six: {
                 onPieceClick: [0, 0],

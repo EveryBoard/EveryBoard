@@ -231,7 +231,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const zeroScore: number = 6 - zeroShortestDistance;
         const oneScore: number = 6 - oneShortestDistance;
         if (zeroScore === oneScore) {
-            // TODO TODO For Review: any idea what "think that correctly" means? It should be ticketted or removed!
             return currentPlayer.getScoreModifier();
         } else if (zeroScore > oneScore) {
             return (-10 * (zeroScore + 1)) + (oneScore + 1);
@@ -289,8 +288,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             pusher = pushed;
             pushed = pushed.getNext(pushingDirection);
             const pushingPiece: SiamPiece = state.getPieceAt(pusher);
-            // TODO: test when mountain amongst the pushers
-            // TODO TODO: clarify todo (and ticket instead of keeping here!)
             if (pushingPiece !== SiamPiece.MOUNTAIN && pushingPiece.getDirection() === pushingDirection) {
                 lastCorrectPusher = pusher;
             }
@@ -428,7 +425,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         return MGPOptional.of({ distance: currentDistance, coord: testedCoord });
     }
     public getInsertions(state: SiamState): SiamMove[] {
-        // TODO: although this does not return any duplicates, some moves have the same effect, maybe we should filter them
         let moves: SiamMove[] = [];
         for (let xOrY: number = 1; xOrY < 4; xOrY++) {
             moves = moves.concat(this.getInsertionsAt(state, 0, xOrY));
@@ -450,12 +446,10 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                 for (const orientation of Orthogonal.ORTHOGONALS) {
                     const move: MGPFallible<SiamMove> =
                         SiamMove.of(entrance.x, entrance.y, MGPOptional.of(direction), orientation);
-                    if (move.isSuccess()) {
-                        const legality: MGPFallible<SiamLegalityInformation> =
-                            this.isLegal(move.get(), state);
-                        if (legality.isSuccess()) {
-                            moves.push(move.get());
-                        }
+                    assert(move.isSuccess(), 'SiamRules.getInsertionsAt should only construct valid insertions');
+                    const legality: MGPFallible<SiamLegalityInformation> = this.isLegal(move.get(), state);
+                    if (legality.isSuccess()) {
+                        moves.push(move.get());
                     }
                 }
             }

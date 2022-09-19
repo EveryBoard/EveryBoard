@@ -1,38 +1,22 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal, OrthogonalNumberEncoder } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptionalNumberEncoder } from 'src/app/utils/MGPOptionalEncoder';
 
 export class SiamMove extends MoveCoord {
-    public static encoder: NumberEncoder<SiamMove> = new class extends NumberEncoder<SiamMove> {
-        public maxValue(): number {
-            return 245 * 8 + 49 * 8 + 7 * 7 + 7;
-        }
-        public encodeNumber(move: SiamMove): number {
-            const y: number = move.coord.y + 1; // 0 to 6
-            const x: number = move.coord.x + 1; // 0 to 6
-            const direction: number = move.direction.isAbsent() ? 4 : move.direction.get().toInt(); // 0 to 4
-            const landingOrientation: number = move.landingOrientation.toInt();
-            return (245 * landingOrientation) + (49 * direction) + (7 * x) + y;
-        }
-        public decodeNumber(encodedMove: number): SiamMove {
-            const y: number = encodedMove%7;
-            encodedMove -= y;
-            encodedMove/= 7;
-            const x: number = encodedMove%7;
-            encodedMove -= x;
-            encodedMove/= 7;
-            const moveDirectionInt: number = encodedMove % 5;
-            const moveDirection: MGPOptional<Orthogonal> = moveDirectionInt === 4 ?
-                MGPOptional.empty() :
-                Orthogonal.factory.fromInt(moveDirectionInt).toOptional();
-            encodedMove -= moveDirectionInt;
-            encodedMove /= 5;
-            const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove).get();
-            return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
-        }
-    };
+    public static encoder: NumberEncoder<SiamMove> = NumberEncoder.tuple([
+        NumberEncoder.numberEncoder(6), // x (from -1 to 5)
+        NumberEncoder.numberEncoder(6), // y (from -1 to 5)
+        MGPOptionalNumberEncoder<Orthogonal>(new OrthogonalNumberEncoder()), // direction
+        new OrthogonalNumberEncoder(), // orientation
+    ], (move: SiamMove): [number, number, MGPOptional<Orthogonal>, Orthogonal] => {
+        return [move.x+1, move.y+1, move.direction, move.landingOrientation];
+    }, (fields: [number, number, MGPOptional<Orthogonal>, Orthogonal]): SiamMove => {
+        return SiamMove.of(fields[0]-1, fields[1]-1, fields[2], fields[3]).get();
+    });
+
     private constructor(
         readonly x: number,
         readonly y: number,

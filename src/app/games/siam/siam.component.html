@@ -7,7 +7,6 @@
         <polygon id="arrow" points="30 7, 30 50, 10 50, 50 90, 90 50, 70 50, 70 7" />
         <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95" />
     </defs>
-    <polyline points="350 0, 350 1000" class="base"/>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
             <rect id="square_{{ x }}_{{ y }}"
@@ -82,7 +81,7 @@
     <g *ngFor="let arrow of indicatorArrows">
         <use id="indicator_{{ arrow.target.x }}_{{ arrow.target.y }}_{{ arrow.direction.toString() }}"
              class="base mid-stroke indicator-fill"
-             (click)="clickSquare(arrow.target.x, arrow.target.y)"
+             (click)="clickArrow(arrow)"
              xlink:href="#arrow"
              [attr.transform]="getIndicatorTransform(arrow)" />
         <!-- Need to redraw the source piece, if it is not an insertion -->
@@ -93,12 +92,12 @@
              xlink:href="#arrow"
              [attr.transform]="getPieceTransform(arrow.source.get().coord.x, arrow.source.get().coord.y)" />
     </g>
-    <g *ngFor="let orientation of orientationArrows">
-        <use id="orientation_{{ orientation }}"
+    <g *ngFor="let move of orientations">
+        <use id="orientation_{{ move.landingOrientation }}"
              class="base mid-stroke semi-transparent"
              [ngClass]="getCurrentPlayerClass()"
-             (click)="selectOrientation(orientation)"
+             (click)="selectOrientation(move)"
              xlink:href="#arrow"
-             [attr.transform]="getOrientationTransform(orientation)" />
+             [attr.transform]="getOrientationTransform(move.landingOrientation)" />
     </g>
 </svg>
