@@ -15,7 +15,7 @@ describe('MinimaxTestingComponent', () => {
         expect(testUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(testUtils.getComponent()).toBeTruthy('Component should be created');
     });
-    it('should allow simple moves', fakeAsync(async() => {
+    it('Should allow simple moves', fakeAsync(async() => {
         await testUtils.expectMoveSuccess('#click_down', MinimaxTestingMove.DOWN);
         await testUtils.expectMoveSuccess('#click_right', MinimaxTestingMove.RIGHT);
     }));

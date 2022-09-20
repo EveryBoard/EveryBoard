@@ -9,15 +9,15 @@ import { ApagosMove } from '../ApagosMove';
 describe('ApagosMove', () => {
 
     it('should refuse creating static sliding', () => {
-        // given a move whose landing coord is lower than starting
+        // Given a move whose landing coord is lower than starting
         const invalidMove: MGPFallible<ApagosMove> = ApagosMove.transfer(ApagosCoord.ZERO, ApagosCoord.ZERO);
-        // then it should not be legal
+        // Then it should not be legal
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosFailure.PIECE_SHOULD_MOVE_DOWNWARD()));
     });
     it('should refuse creating "climbing" slide', () => {
-        // given a move whose landing coord is lower than starting
+        // Given a move whose landing coord is lower than starting
         const invalidMove: MGPFallible<ApagosMove> = ApagosMove.transfer(ApagosCoord.ONE, ApagosCoord.TWO);
-        // then it should not be legal
+        // Then it should not be legal
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosFailure.PIECE_SHOULD_MOVE_DOWNWARD()));
     });
     it('ApagosMove.encoder should be correct', () => {

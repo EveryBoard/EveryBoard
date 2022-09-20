@@ -4,23 +4,23 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TaflMove } from '../TaflMove';
 
-export class BrandhubMove extends TaflMove {
+export class HnefataflMove extends TaflMove {
 
-    public static encoder: NumberEncoder<BrandhubMove> =
-        MoveCoordToCoord.getEncoder<BrandhubMove>(7, 7, BrandhubMove.of);
+    public static encoder: NumberEncoder<HnefataflMove> =
+        MoveCoordToCoord.getEncoder<HnefataflMove>(11, 11, HnefataflMove.of);
 
-    public static of(start: Coord, end: Coord): BrandhubMove {
-        return new BrandhubMove(start, end);
+    public static of(start: Coord, end: Coord): HnefataflMove {
+        return new HnefataflMove(start, end);
     }
-    public static from(start: Coord, end: Coord): MGPFallible<BrandhubMove> {
+    public static from(start: Coord, end: Coord): MGPFallible<HnefataflMove> {
         try {
-            const move: BrandhubMove = new BrandhubMove(start, end);
+            const move: HnefataflMove = new HnefataflMove(start, end);
             return MGPFallible.success(move);
         } catch (e) {
             return MGPFallible.failure(e.message);
         }
     }
     public getMaximalDistance(): number {
-        return 7;
+        return 11;
     }
 }

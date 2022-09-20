@@ -61,7 +61,7 @@ describe('DvonnComponent', () => {
         await testUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE());
     }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {
-        // given board with ready disconnection
+        // Given board with ready disconnection
         const board: Table<DvonnPieceStack> = [
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, W_, W_, __, __, __, __, __, __],

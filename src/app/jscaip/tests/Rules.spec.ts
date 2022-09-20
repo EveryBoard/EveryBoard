@@ -42,7 +42,7 @@ describe('Rules', () => {
         spyOn(rules.node, 'hasMoves').and.returnValue(true);
         spyOn(rules.node, 'getSonByMove').and.returnValue(MGPOptional.empty());
 
-        // when choosing another one
+        // When choosing another one
         const wasLegal: boolean = rules.choose(P4Move.ZERO);
 
         // he should be created and chosen
@@ -54,10 +54,10 @@ describe('Rules', () => {
         const initialState: MyAbstractState = MyAbstractState.getInitialState();
         const encodedMoveList: number[] = [0, 1, 2, 3];
 
-        // when calling applyMoves
+        // When calling applyMoves
         const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeNumber);
 
-        // then last move should be the last one encoded and state should be adapted
+        // Then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([encodedMoveList]);
         expect(state.turn).toBe(4);
     });

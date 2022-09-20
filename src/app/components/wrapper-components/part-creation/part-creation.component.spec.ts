@@ -504,7 +504,7 @@ describe('PartCreationComponent', () => {
                 clickElement('#cancel');
                 tick(3000);
 
-                // then observedPart should be emptied
+                // Then observedPart should be emptied
                 expect(authService.removeObservedPart).toHaveBeenCalledOnceWith();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 await partDAO.set('configRoomId', PartMocks.INITIAL);

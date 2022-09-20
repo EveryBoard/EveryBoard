@@ -87,8 +87,9 @@ describe('YinshComponent', () => {
             const component: YinshComponent = testUtils.getComponent();
             spyOn(component, 'isPlayerTurn').and.returnValue(true);
 
-            // When rendering it
+            // When rendering the board
             testUtils.setupState(state);
+
             // Then the player's ring should be highlighted
             testUtils.expectElementToExist('#selectable_3_3');
             testUtils.expectElementNotToExist('#selectable_4_4');
@@ -112,7 +113,7 @@ describe('YinshComponent', () => {
             const component: YinshComponent = testUtils.getComponent();
             spyOn(component, 'isPlayerTurn').and.returnValue(false);
 
-            // When rendering it
+            // When rendering the board
             testUtils.setupState(state);
 
             // Then the rings should not be highlighted
@@ -123,7 +124,7 @@ describe('YinshComponent', () => {
             // Given the initial state
             const state: YinshState = YinshState.getInitialState();
 
-            // When rendering it
+            // When rendering the board
             testUtils.setupState(state);
 
             // Then the score (0 - 0) should be displayed
@@ -277,8 +278,10 @@ describe('YinshComponent', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
+
             // When rendering the board
             testUtils.setupState(state);
+
             // Then it should show the pieces as capturable
             testUtils.expectElementToExist('#selectable_3_3');
             testUtils.expectElementToHaveClass('#selectable_3_3', 'capturable');
@@ -387,8 +390,10 @@ describe('YinshComponent', () => {
         it('should show the number of rings of each player', fakeAsync(async() => {
             // Given the initial board
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [2, 1], 10);
-            // When rendering it
+
+            // When rendering the board
             testUtils.setupState(state);
+
             // Then it should show all side rings for each player
             testUtils.expectElementToExist('#player_0_sideRing_1');
             testUtils.expectElementToExist('#player_0_sideRing_2');

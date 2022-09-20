@@ -68,7 +68,7 @@ describe('GipfRules:', () => {
 
             RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.PLACEMENT_WITHOUT_DIRECTION());
         });
-        it('should allow simple move without direction when target coord is empty', () => {
+        it('Should allow simple move without direction when target coord is empty', () => {
             const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 1), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
@@ -86,7 +86,7 @@ describe('GipfRules:', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should allow simple moves without captures when possible', () => {
+        it('Should allow simple moves without captures when possible', () => {
             // This is diagram 2a in the rules of Gipf
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, A, _, _],

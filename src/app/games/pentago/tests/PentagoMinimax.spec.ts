@@ -47,7 +47,7 @@ describe('PentagoMinimax', () => {
          */
         const moves: PentagoMove[] = minimax.getListMoves(rules.node);
 
-        // then the number should be 105
+        // Then the number should be 105
         expect(moves.length).toBe(35 + 6 + 16 + 48);
     });
     it('should not include drop when there is no neutral block', () => {
@@ -70,7 +70,7 @@ describe('PentagoMinimax', () => {
          */
         const moves: PentagoMove[] = minimax.getListMoves(rules.node);
 
-        // then the number should be 28*8
+        // Then the number should be 28*8
         expect(moves.length).toBe(28 * 8);
     });
     it('Should only propose one rotation when we just made the last neutral block non-neutral', () => {
@@ -93,7 +93,7 @@ describe('PentagoMinimax', () => {
          */
         const moves: PentagoMove[] = minimax.getListMoves(rules.node);
 
-        // then the number should be (24+8) * 7
+        // Then the number should be (24+8) * 7
         expect(moves.length).toBe(32 * 7);
     });
 });

@@ -130,6 +130,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
     public cancelMoveAttempt(): void {
+        console.log('update view info then updateViewInfo!')
         this.chosen = MGPOptional.empty();
         this.updateViewInfo();
     }

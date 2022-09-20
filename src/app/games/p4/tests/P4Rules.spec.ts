@@ -57,7 +57,7 @@ describe('P4Rules', () => {
         ];
         const state: P4State = new P4State(board, 6);
 
-        // when aligning a fourth piece
+        // When aligning a fourth piece
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be legal and player zero winner
@@ -86,7 +86,7 @@ describe('P4Rules', () => {
         ];
         const state: P4State = new P4State(board, 7);
 
-        // when aligning a fourth piece
+        // When aligning a fourth piece
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be legal and player zero winner

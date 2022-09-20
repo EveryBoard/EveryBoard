@@ -181,10 +181,10 @@ describe('LocalGameWrapperComponent', () => {
             tick(1000);
         }));
         it('should propose AI 2 to play when selecting her just before her turn', async() => {
-            // given wrapper on which a first move have been done
+            // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
-            // when clicking on AI then its level
+            // When clicking on AI then its level
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));
@@ -198,7 +198,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.detectChanges();
             await testUtils.fixture.whenStable();
 
-            // then it should have proposed AI to play
+            // Then it should have proposed AI to play
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
         });
         it('should take back to users turn when playing against AI', fakeAsync(async() => {
@@ -224,7 +224,7 @@ describe('LocalGameWrapperComponent', () => {
             tick(testUtils.wrapper['botTimeOut']);
             expect(testUtils.getComponent().rules.node.gameState.turn).toBe(2);
 
-            // // when taking back
+            // // When taking back
             spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#takeBack');
 
@@ -237,16 +237,16 @@ describe('LocalGameWrapperComponent', () => {
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
             spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            // given a board on which some illegal move are possible from the AI
+            // Given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
             spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(false);
             spyOn(testUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
-            // when it is the turn of the bugged AI (that performs an illegal move)
+            // When it is the turn of the bugged AI (that performs an illegal move)
             const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
             const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
 
-            // then it should fail and an error should be logged
+            // Then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
             const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
@@ -258,10 +258,10 @@ describe('LocalGameWrapperComponent', () => {
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
             spyOn(localGameWrapper, 'doAIMove');
 
-            // given a game which is finished
+            // Given a game which is finished
             spyOn(testUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
-            // when selecting an AI for the current player
+            // When selecting an AI for the current player
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));
@@ -273,7 +273,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.detectChanges();
             await testUtils.fixture.whenStable();
 
-            // then it should not try to play
+            // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
         }));
         it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {

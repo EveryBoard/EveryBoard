@@ -70,7 +70,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Perdu.',
                 ),
             ];
-            // when starting tutorial
+            // When starting tutorial
             wrapper.startTutorial(tutorial);
 
             // expect to see step instruction on component
@@ -99,7 +99,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Perdu.',
                 ).withPreviousMove(expectedPreviousMove),
             ];
-            // when starting tutorial
+            // When starting tutorial
             wrapper.startTutorial(tutorial);
 
             // expect to see setted previous move
@@ -125,7 +125,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     QuartoState.getInitialState(),
                 ),
             ];
-            // when page rendered
+            // When page rendered
             wrapper.startTutorial(tutorial);
 
             // expect to see three "li" with step title
@@ -158,7 +158,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when selecting a step
+            // When selecting a step
             const stepSelection: HTMLSelectElement = testUtils.findElement('#steps').nativeElement;
             stepSelection.value = stepSelection.options[2].value;
             stepSelection.dispatchEvent(new Event('change'));
@@ -189,7 +189,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#chooseCoord_1_1', move, QuartoState.getInitialState());
             tick(10);
 
-            // when clicking retry
+            // When clicking retry
             await testUtils.clickElement('#retryButton');
 
             // expect to see steps instruction message on component and board restarted
@@ -212,7 +212,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            // when doing another move, then clicking retry
+            // When doing another move, then clicking retry
             await testUtils.expectClickSuccess('#choosePiece_15');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
@@ -252,7 +252,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
-            // when clicking again
+            // When clicking again
             await testUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.STEP_FINISHED());
             tick(10);
 
@@ -308,7 +308,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Reperdu.',
                 ),
             ];
-            // when clicking "Skip"
+            // When clicking "Skip"
             await testUtils.clickElement('#nextButton');
 
             // expect to see next step on component
@@ -418,7 +418,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
-            // when clicking next button
+            // When clicking next button
             await testUtils.clickElement('#nextButton');
 
             // expect to see end tutorial congratulations
@@ -446,7 +446,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ]);
             await testUtils.clickElement('#nextButton');
 
-            // when clicking restart
+            // When clicking restart
             await testUtils.clickElement('#restartButton');
 
             // expect to be back on first step
@@ -469,7 +469,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             testUtils.expectElementNotToExist('#playLocallyButton');
             await testUtils.clickElement('#nextButton');
 
-            // when clicking play locally
+            // When clicking play locally
             spyOn(router, 'navigate').and.callThrough();
             await testUtils.clickElement('#playLocallyButton');
 
@@ -488,7 +488,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             testUtils.expectElementNotToExist('#playOnlineButton');
             await testUtils.clickElement('#nextButton');
 
-            // when clicking play locally
+            // When clicking play locally
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate');
             await testUtils.clickElement('#playOnlineButton');
@@ -517,7 +517,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing that move
+            // When doing that move
             await testUtils.expectClickSuccess('#chooseCoord_3_3');
             tick(11);
 
@@ -543,7 +543,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing that move
+            // When doing that move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
@@ -575,7 +575,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing another move
+            // When doing another move
             await testUtils.expectClickSuccess('#chooseCoord_1_1');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBB);
@@ -589,7 +589,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentReason).toBe(expectedReason);
         }));
         it('When illegal move is done, toast message should be shown and restart not needed', fakeAsync(async() => {
-            // given tutorial awaiting any move, but mocking rules to make it mark a move illegal
+            // Given tutorial awaiting any move, but mocking rules to make it mark a move illegal
             const tutorial: TutorialStep[] = [
                 TutorialStep.anyMove(
                     'title',
@@ -601,7 +601,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing a (virtually) illegal move
+            // When doing a (virtually) illegal move
             const error: string = 'some error message...';
             spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue(MGPFallible.failure(error));
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
@@ -650,7 +650,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             tick(10);
         }));
         it('should not show error if cancelMove is called with no specified reason', fakeAsync(async() => {
-            // given a tutorial awaiting a move
+            // Given a tutorial awaiting a move
             const tutorial: TutorialStep[] = [
                 TutorialStep.anyMove(
                     'title',
@@ -662,10 +662,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when cancelMove is called with no specified reason
+            // When cancelMove is called with no specified reason
             wrapper.gameComponent.cancelMove();
 
-            // then no error is shown
+            // Then no error is shown
             testUtils.expectElementNotToExist('#currentReason');
         }));
         it('Should propose to see the solution when move attempt done', fakeAsync(async() => {
@@ -714,7 +714,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
     describe('TutorialStep awaiting any move', () => {
         it('Should consider any move legal when step is anyMove', fakeAsync(async() => {
-            // given tutorial step fo type "anyMove"
+            // Given tutorial step fo type "anyMove"
             const tutorial: TutorialStep[] = [
                 TutorialStep.anyMove(
                     'title',
@@ -726,7 +726,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing any move
+            // When doing any move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
@@ -755,7 +755,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing that move
+            // When doing that move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // expect to see steps success message on component
@@ -778,7 +778,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing another move
+            // When doing another move
             await testUtils.expectClickSuccess('#chooseCoord_1_1');
 
             // expect to see steps success message on component
@@ -860,7 +860,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when clicking
+            // When clicking
             await testUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.INFORMATIONAL_STEP());
 
             // expect to see still the steps success message on component
@@ -884,7 +884,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            // when clicking "Next Button"
+            // When clicking "Next Button"
             const nextButtonMessage: string =
                 testUtils.findElement('#nextButton').nativeElement.textContent;
             expect(nextButtonMessage).toBe('Ok');
@@ -915,7 +915,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing a move
+            // When doing a move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
@@ -944,7 +944,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             wrapper.startTutorial(tutorial);
 
-            // when doing a move
+            // When doing a move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);

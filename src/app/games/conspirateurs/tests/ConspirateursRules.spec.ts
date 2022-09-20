@@ -128,7 +128,7 @@ describe('ConspirateursRules', () => {
         });
     });
     describe('simple moves', () => {
-        it('should allow simple moves', () => {
+        it('Should allow simple moves', () => {
             // Given a fictitious board after the drop phase, with one piece
             const state: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

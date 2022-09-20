@@ -47,13 +47,13 @@ describe('RegisterComponent', () => {
         spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success(user));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
 
-        // given some user
+        // Given some user
         fillInUserDetails();
 
-        // when the user clicks on the registration button
+        // When the user clicks on the registration button
         await testUtils.clickElement('#registerButton');
 
-        // then the services are called and the user is registered
+        // Then the services are called and the user is registered
         expectValidRouting(router, ['/verify-account'], VerifyAccountComponent);
         expect(authService.sendEmailVerification).toHaveBeenCalledWith();
         expect(authService.doRegister).toHaveBeenCalledWith(username, email, password);
@@ -62,16 +62,16 @@ describe('RegisterComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
-        // given some user
+        // Given some user
         fillInUserDetails();
 
-        // when the user registers and it fails
+        // When the user registers and it fails
         const error: string = `c'est caca monsieur.`;
         spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.failure(error));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
         await testUtils.clickElement('#registerButton');
 
-        // then an error message is shown
+        // Then an error message is shown
         expect(getShownError()).toBe(error);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
@@ -79,17 +79,17 @@ describe('RegisterComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
-        // given some user
+        // Given some user
         fillInUserDetails();
 
-        // when the user registers and it fails
+        // When the user registers and it fails
         const error: string = `c'est caca monsieur.`;
         spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success(user));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(error));
         await testUtils.clickElement('#registerButton');
         testUtils.detectChanges();
 
-        // then an error message is shown
+        // Then an error message is shown
         expect(getShownError()).toBe(error);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
@@ -97,15 +97,15 @@ describe('RegisterComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
-        // given some user that does not provide an email address
+        // Given some user that does not provide an email address
         testUtils.fillInput('#username', username);
         testUtils.fillInput('#password', password);
         testUtils.detectChanges();
 
-        // when the user clicks on the registration button
+        // When the user clicks on the registration button
         await testUtils.clickElement('#registerButton');
 
-        // then an error message is shown
+        // Then an error message is shown
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
@@ -113,15 +113,15 @@ describe('RegisterComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
-        // given some user that does not provide a username
+        // Given some user that does not provide a username
         testUtils.fillInput('#email', email);
         testUtils.fillInput('#password', password);
         testUtils.detectChanges();
 
-        // when the user clicks on the registration button
+        // When the user clicks on the registration button
         await testUtils.clickElement('#registerButton');
 
-        // then an error message is shown
+        // Then an error message is shown
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
@@ -129,42 +129,46 @@ describe('RegisterComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
-        // given some user that does not provide a password
+        // Given some user that does not provide a password
         testUtils.fillInput('#email', email);
         testUtils.fillInput('#username', username);
         testUtils.detectChanges();
 
-        // when the user clicks on the registration button
+        // When the user clicks on the registration button
         await testUtils.clickElement('#registerButton');
 
-        // then an error message is shown
+        // Then an error message is shown
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
     it('should dynamically validate password', fakeAsync(async() => {
-        // given some user
-        // when it fills in a password that is too short
+        // Given some user
+        // When it fills in a password that is too short
         testUtils.fillInput('#password', '123');
         testUtils.detectChanges();
 
-        // then the help indicator is colored red
+        // Then the help indicator is colored red
         testUtils.expectElementToHaveClass('#passwordHelp', 'is-danger');
     }));
     describe('google registration', () => {
         it('should delegate registration with google to auth service', fakeAsync(async() => {
-            // given a google user
+            // Given a google user
             spyOn(authService, 'doGoogleLogin').and.resolveTo(MGPValidation.SUCCESS);
-            // when that persons registers on the website with google
+
+            // When that persons registers on the website with google
             await testUtils.clickElement('#googleButton');
-            // then the corresponding service method is called
+
+            // Then the corresponding service method is called
             expect(authService.doGoogleLogin).toHaveBeenCalledWith();
         }));
         it('should show an error if registration fails', fakeAsync(async() => {
-            // given a user that will fail to register
+            // Given a user that will fail to register
             spyOn(authService, 'doGoogleLogin').and.resolveTo(MGPValidation.failure('Error message'));
-            // when he user registers
+
+            // When he user registers
             await testUtils.clickElement('#googleButton');
-            // then the error message is shown
+
+            // Then the error message is shown
             expect(getShownError()).toEqual('Error message');
         }));
     });

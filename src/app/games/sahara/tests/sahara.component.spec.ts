@@ -45,12 +45,12 @@ describe('SaharaComponent', () => {
     }));
     it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
         // Given the initial board
-        // when clicking on empty space, expect move to be refused
+        // When clicking on empty space, expect move to be refused
         await testUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
     }));
     it('should not allow to select opponent pyramid', fakeAsync(async() => {
         // Given the initial board
-        // when clicking on opponent's pyramid, expect move to be refused
+        // When clicking on opponent's pyramid, expect move to be refused
         await testUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
     }));
     it('should not allow to land on opponent pyramid', fakeAsync(async() => {
@@ -100,11 +100,11 @@ describe('SaharaComponent', () => {
         testUtils.expectElementToExist('#possible_landing_6_1');
     }));
     it('should take "false neighbor" as 3-step move', fakeAsync(async() => {
-        // given the initial board with a first piece selected
+        // Given the initial board with a first piece selected
         await testUtils.expectClickSuccess('#click_7_0');
 
-        // when clicking on the false neighbor
-        // then the correct message should be shown
+        // When clicking on the false neighbor
+        // Then the correct message should be shown
         const reason: string = SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS();
         await testUtils.expectClickFailure('#click_7_1', reason);
     }));

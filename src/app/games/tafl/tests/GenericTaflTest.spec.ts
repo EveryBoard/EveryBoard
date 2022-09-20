@@ -76,7 +76,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
         });
         describe('second click', () => {
             it('Should allow simple move', fakeAsync(async() => {
-                // given a state where first click selected one of your pieces
+                // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
@@ -88,7 +88,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 await testUtils.expectMoveSuccess(landingSpace, move);
             }));
             it('Diagonal move attempt should not throw', fakeAsync(async() => {
-                // given a state where first click selected one of your pieces
+                // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
@@ -116,7 +116,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 expect(component.getRectClasses(secondCoord.x, secondCoord.y)).toContain('moved');
             }));
             it('Should select other piece when clicking on another piece of the player', fakeAsync(async() => {
-                // given a state where first click selected one of your pieces
+                // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
@@ -129,7 +129,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected');
             }));
             it('Should cancelMove when trying to jump over another piece', fakeAsync(async() => {
-                // given a state where first click selected one of your pieces
+                // Given a state where first click selected one of your pieces
                 testUtils.setupState(entries.stateReadyForJumpOver);
                 const firstCoord: string = entries.jumpOver.coord.x + '_' + entries.jumpOver.coord.y;
                 await testUtils.expectClickSuccess('#click_' + firstCoord);
@@ -148,13 +148,14 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
         it('encoder should be correct', () => {
             const rules: R = testUtils.getComponent().rules;
             MGPNode.ruler = rules;
-            // TODOTODO check that it indeed testing the real component
             const encoder: MoveEncoder<M> = testUtils.getComponent().encoder;
             rules.node = rules.node.getInitialNode();
             const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
             const firstTurnMoves: M[] = minimax
                 .getListMoves(rules.node)
-                .map((move: TaflMove) => entries.moveProvider(move.coord, move.end));
+                .map((move: TaflMove) => {
+                    return entries.moveProvider(move.coord, move.end)
+                });
             for (const move of firstTurnMoves) {
                 NumberEncoderTestUtils.expectToBeCorrect(encoder as NumberEncoder<M>, move);
             }

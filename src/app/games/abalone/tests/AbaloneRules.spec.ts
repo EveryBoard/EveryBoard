@@ -315,10 +315,10 @@ describe('AbaloneRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES());
     });
     it('Should push on UNREACHABLE the same way as outside the array board', () => {
-        // given the initial state
+        // Given the initial state
         const state: AbaloneState = AbaloneState.getInitialState();
 
-        // when moving a piece in one of the coord in the array but out of the board
+        // When moving a piece in one of the coord in the array but out of the board
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 8), HexaDirection.RIGHT).get();
 
         // Then the piece should be moved
@@ -337,7 +337,7 @@ describe('AbaloneRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Should do sidestep landing on UNREACHABLE the same way as outside the array board', () => {
-        // given a state allowing to translate two piece, one of them going to UNREACHABLE
+        // Given a state allowing to translate two piece, one of them going to UNREACHABLE
         const board: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],
@@ -351,7 +351,7 @@ describe('AbaloneRules', () => {
         ];
         const state: AbaloneState = new AbaloneState(board, 0);
 
-        // when moving a piece in one of the coord in the array but out of the board
+        // When moving a piece in one of the coord in the array but out of the board
         const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(4, 7),
                                                               new Coord(5, 7),
                                                               HexaDirection.DOWN).get();
@@ -372,7 +372,7 @@ describe('AbaloneRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Should do sidestep landing outside the board correctly', () => {
-        // given a state allowing to translate three pieces, one of them going outside the board
+        // Given a state allowing to translate three pieces, one of them going outside the board
         const board: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],
@@ -386,7 +386,7 @@ describe('AbaloneRules', () => {
         ];
         const state: AbaloneState = new AbaloneState(board, 0);
 
-        // when moving a piece in one of the coord in the array but out of the board
+        // When moving a piece in one of the coord in the array but out of the board
         const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(2, 6),
                                                               new Coord(0, 8),
                                                               HexaDirection.LEFT).get();

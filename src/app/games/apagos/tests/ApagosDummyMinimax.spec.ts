@@ -13,14 +13,14 @@ describe('ApagosDummyMinimax', () => {
         minimax = new ApagosDummyMinimax(ruler, 'ApagosDummyMinimax');
     });
     it('Should have all 8 drop as possible move at first turn', () => {
-        // given initial node
+        // Given initial node
         const initialState: ApagosState = ApagosState.getInitialState();
         const node: ApagosNode = new ApagosNode(initialState);
 
-        // when calling getListMoves
+        // When calling getListMoves
         const moves: ApagosMove[] = minimax.getListMoves(node);
 
-        // then there should be 8 drops
+        // Then there should be 8 drops
         expect(moves.length).toBe(8);
         const isThereTransfer: boolean = moves.some((move: ApagosMove) => move.isDrop() === false);
         expect(isThereTransfer).toBeFalse();

@@ -24,69 +24,97 @@ describe('PylosComponent', () => {
         expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    it('should allow droping piece on occupable space', fakeAsync(async() => {
-        // Given a board where a drop is possible
+    describe('first click', () => {
+        it('should allow droping piece on occupable space', fakeAsync(async() => {
+            // Given a board where a drop is possible
 
-        // When clicking on it
-        // Then the move should be accepted
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
-        await testUtils.expectMoveSuccess('#drop_0_0_0', move);
-    }));
-    it('should forbid clicking on opponent piece', fakeAsync(async() => {
-        // Given a board with opponent's pieces
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [X, _, _, _],
-                [_, _, _, _],
-                [_, _, _, _],
-                [_, _, _, _],
-            ], [
-                [_, _, _],
-                [_, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
+            // When clicking on it
+            // Then the move should be accepted
+            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
+            await testUtils.expectMoveSuccess('#drop_0_0_0', move);
+        }));
+        it('should forbid clicking on opponent piece', fakeAsync(async() => {
+            // Given a board with opponent's pieces
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [X, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                ], [
+                    [_, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
 
-        //  When clicking on one
-        // Then the move should be illegal
-        await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
-    }));
-    it('should forbid piece to land lower than they started', fakeAsync(async() => {
-        // Given a board with an higher piece and lower space
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, X, _, _],
-                [X, O, _, _],
-                [_, _, _, _],
-                [_, _, _, _],
-            ], [
-                [O, _, _],
-                [_, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
+            //  When clicking on one
+            // Then the move should be illegal
+            await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        }));
+        it('should cancel move when clicking on a supporting piece', fakeAsync(async() => {
+            // Given a board where there is supporting piece
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, X, _, _],
+                    [X, O, O, _],
+                    [_, O, _, _],
+                    [_, _, _, _],
+                ], [
+                    [O, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
 
-        // When choosing the higher piece
-        await testUtils.expectClickSuccess('#piece_0_0_1');
+            // When clicking on the supporting piece
+            // Then the move should be cancelled
+            await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
+        }));
+    });
+    describe('second click', () => {
+        it('should forbid piece to land lower than they started', fakeAsync(async() => {
+            // Given a board with an higher piece and lower space
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, X, _, _],
+                    [X, O, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                ], [
+                    [O, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
 
-        // Then dropping lower should warn the user that it's illegal
-        await testUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD());
-    }));
-    describe('climbing', () => {
+            // When choosing the higher piece
+            await testUtils.expectClickSuccess('#piece_0_0_1');
+
+            // Then dropping lower should warn the user that it's illegal
+            await testUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD());
+        }));
         it('should allow climbing', fakeAsync(async() => {
             // Given an board where climbing is possible
             const initialBoard: PlayerOrNone[][][] = [
@@ -116,6 +144,8 @@ describe('PylosComponent', () => {
             // Then the climb should be legal
             await testUtils.expectMoveSuccess('#drop_0_0_1', move);
         }));
+    });
+    describe('climbing', () => {
         it(`should show as 'left' climbing piece during the capture`, fakeAsync(async() => {
             // Given a board where by climbing you can make a capture
             const initialBoard: PlayerOrNone[][][] = [
@@ -177,220 +207,197 @@ describe('PylosComponent', () => {
             testUtils.expectElementNotToExist('#drop_1_1_1');
         }));
     });
-    it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
-        // Given a board where capture is possible
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, O, _, _],
-                [O, _, _, _],
-                [_, _, _, _],
-                [_, _, _, _],
-            ], [
-                [_, _, _],
-                [_, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
+    describe('capture', () => {
+        it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
+            // Given a board where capture is possible
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, O, _, _],
+                    [O, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                ], [
+                    [_, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
 
-        // When dropping the piece allowing the capture then clicking twice on this piece
-        await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
-        await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
-        const expectedClasses: string[] = ['base', 'player0', 'selected', 'pre-captured'];
-        testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(1, 1, 0)]);
+            // When dropping the piece allowing the capture then clicking twice on this piece
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
+            await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
+            const expectedClasses: string[] = ['base', 'player0', 'selected', 'pre-captured'];
+            testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
+            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(1, 1, 0)]);
 
-        // Then clicking a second time on this piece should confirm the single capture move
-        await testUtils.expectMoveSuccess('#piece_1_1_0', move); // confirm single capture
-    }));
-    it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
-        // Given a board where a capture can be done
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, O, _, _],
-                [O, _, _, _],
-                [_, _, _, _],
-                [_, _, _, _],
-            ], [
-                [_, _, _],
-                [_, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
+            // Then clicking a second time on this piece should confirm the single capture move
+            await testUtils.expectMoveSuccess('#piece_1_1_0', move); // confirm single capture
+        }));
+        it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
+            // Given a board where a capture can be done
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, O, _, _],
+                    [O, _, _, _],
+                    [_, _, _, _],
+                    [_, _, _, _],
+                ], [
+                    [_, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
 
-        // When dropping the piece allowing you to capture
-        await testUtils.expectClickSuccess('#drop_1_1_0');
+            // When dropping the piece allowing you to capture
+            await testUtils.expectClickSuccess('#drop_1_1_0');
 
-        // Then capturing two piece should be possible
-        await testUtils.expectClickSuccess('#piece_0_0_0');
-        testUtils.expectElementToHaveClasses('#piece_0_0_0', ['base', 'player0', 'pre-captured']);
+            // Then capturing two piece should be possible
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+            testUtils.expectElementToHaveClasses('#piece_0_0_0', ['base', 'player0', 'pre-captured']);
 
-        // and When clicking on the second capture
-        const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
-        await testUtils.expectMoveSuccess('#piece_0_1_0', move);
+            // and When clicking on the second capture
+            const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
+            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
+            await testUtils.expectMoveSuccess('#piece_0_1_0', move);
 
-        // Then the two captures should be displayed as captured
-        testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured');
-        testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured');
-    }));
-    it('should show disappeared square when it has been captured, even if no longer landable', fakeAsync(async() => {
-        // Given a board where a capture is possible
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, X, _, _],
-                [X, O, O, _],
-                [_, O, _, _],
-                [_, _, _, _],
-            ], [
-                [O, _, _],
-                [_, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
+            // Then the two captures should be displayed as captured
+            testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured');
+            testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured');
+        }));
+        it('should show disappeared square when it has been captured, even if no longer landable', fakeAsync(async() => {
+            // Given a board where a capture is possible
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, X, _, _],
+                    [X, O, O, _],
+                    [_, O, _, _],
+                    [_, _, _, _],
+                ], [
+                    [O, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
 
-        // When dropping a piece then clicking on two piece to capture
-        await testUtils.expectClickSuccess('#drop_2_2_0');
-        await testUtils.expectClickSuccess('#piece_0_0_1');
-        const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(1, 1, 0)];
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 0), captures);
-        await testUtils.expectMoveSuccess('#piece_1_1_0', move);
+            // When dropping a piece then clicking on two piece to capture
+            await testUtils.expectClickSuccess('#drop_2_2_0');
+            await testUtils.expectClickSuccess('#piece_0_0_1');
+            const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(1, 1, 0)];
+            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 0), captures);
+            await testUtils.expectMoveSuccess('#piece_1_1_0', move);
 
-        // Then the non longer landable square should be displayed
-        testUtils.expectElementToExist('#highCapture_0_0_1');
-    }));
-    it('should cancel move when clicking on a supporting piece', fakeAsync(async() => {
-        // Given a board where there is supporting piece
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, X, _, _],
-                [X, O, O, _],
-                [_, O, _, _],
-                [_, _, _, _],
-            ], [
-                [O, _, _],
-                [_, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
+            // Then the non longer landable square should be displayed
+            testUtils.expectElementToExist('#highCapture_0_0_1');
+        }));
+        it('should cancel move (during capture) when clicking on a non capturable piece', fakeAsync(async() => {
+            // Given a board where a capture is ongoing
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, X, O, _],
+                    [X, X, O, _],
+                    [X, X, X, _],
+                    [_, _, _, O],
+                ], [
+                    [O, O, _],
+                    [O, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#piece_3_3_0');
+            await testUtils.expectClickSuccess('#drop_1_1_1');
 
-        // When clicking on the supporting piece
-        // Then the move should be cancelled
-        await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
-    }));
-    it('should cancel move (during capture) when clicking on a non capturable piece', fakeAsync(async() => {
-        // Given a board where a capture is ongoing
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, X, O, _],
-                [X, X, O, _],
-                [X, X, X, _],
-                [_, _, _, O],
-            ], [
-                [O, O, _],
-                [O, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
-        await testUtils.expectClickSuccess('#piece_3_3_0');
-        await testUtils.expectClickSuccess('#drop_1_1_1');
+            // When clicking on a non capturable piece
+            // Then the move should be illegal
+            await testUtils.expectClickFailure('#piece_2_1_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
+        }));
+        it('should allow capturing piece supporting captured-piece', fakeAsync(async() => {
+            // Given a board where a piece has been captured
+            // so now the piece previously supporting it are now capturable
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, X, O, _],
+                    [X, X, O, _],
+                    [X, X, X, _],
+                    [_, _, _, O],
+                ], [
+                    [O, O, _],
+                    [O, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#piece_3_3_0');
+            await testUtils.expectClickSuccess('#drop_1_1_1');
+            await testUtils.expectClickSuccess('#piece_0_0_1');
 
-        // When clicking on a non capturable piece
-        // Then the move should be illegal
-        await testUtils.expectClickFailure('#piece_2_1_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
-    }));
-    it('should allow capturing piece supporting captured-piece', fakeAsync(async() => {
-        // Given a board where a piece has been captured, so now the piece previously supporting it are now capturable
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, X, O, _],
-                [X, X, O, _],
-                [X, X, X, _],
-                [_, _, _, O],
-            ], [
-                [O, O, _],
-                [O, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
-        await testUtils.expectClickSuccess('#piece_3_3_0');
-        await testUtils.expectClickSuccess('#drop_1_1_1');
-        await testUtils.expectClickSuccess('#piece_0_0_1');
+            // When clicking on the newly capturable piece
+            // Then the move should be legal
+            const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)];
+            const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(1, 1, 1), captures);
+            await testUtils.expectMoveSuccess('#piece_0_0_0', move);
+        }));
+        it('should no longer show drop during capture phase', fakeAsync(async() => {
+            // Given a board where a capture is about to be possible
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, X, O, _],
+                    [X, X, O, _],
+                    [X, X, X, O],
+                    [_, _, X, O],
+                ], [
+                    [O, O, _],
+                    [O, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
 
-        // When clicking on the newly capturable piece
-        // Then the move should be legal
-        const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)];
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(1, 1, 1), captures);
-        await testUtils.expectMoveSuccess('#piece_0_0_0', move);
-    }));
-    it('should no longer show drop during capture phase', fakeAsync(async() => {
-        // Given a board where a capture is about to be possible
-        const initialBoard: PlayerOrNone[][][] = [
-            [
-                [O, X, O, _],
-                [X, X, O, _],
-                [X, X, X, O],
-                [_, _, X, O],
-            ], [
-                [O, O, _],
-                [O, _, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-        const initialState: PylosState = new PylosState(initialBoard, 0);
-        testUtils.setupState(initialState);
+            // When passing in capture phase
+            await testUtils.expectClickSuccess('#drop_1_1_1');
 
-        // When passing in capture phase
-        await testUtils.expectClickSuccess('#drop_1_1_1');
-
-        // Then the landing coord should disappear
-        testUtils.expectElementNotToExist('#drop_0_0_2');
-        testUtils.expectElementNotToExist('#drop_2_2_1');
-    }));
+            // Then the landing coord should disappear
+            testUtils.expectElementNotToExist('#drop_0_0_2');
+            testUtils.expectElementNotToExist('#drop_2_2_1');
+        }));
+    });
 });

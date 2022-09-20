@@ -23,7 +23,7 @@ class FooDAO extends FirestoreDAO<Foo> {
     }
 }
 
-describe('FirestoreDAO', () => {
+xdescribe('FirestoreDAO', () => {
     let dao: FooDAO;
     beforeEach(async() => {
         await setupEmulators();

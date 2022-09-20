@@ -23,7 +23,7 @@ describe('GameComponent', () => {
         await ComponentTestUtils.configureTestModule(activatedRouteStub);
     }));
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
-        // given such a game, like Abalone
+        // Given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
         const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone');
         const component: AbstractGameComponent = testUtils.getComponent();
@@ -34,10 +34,10 @@ describe('GameComponent', () => {
 
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
-        // when the player tries to pass
+        // When the player tries to pass
         const result: MGPValidation = await component.pass();
 
-        // then should fail and call logError
+        // Then should fail and call logError
         const errorMessage: string = 'pass() called on a game that does not redefine it';
         const errorData: JSONValue = { gameName: 'AbaloneComponent' };
         expect(result.isFailure()).toBeTrue();
@@ -72,6 +72,7 @@ describe('GameComponent', () => {
             Epaminondas: { onClick: [0, 0] },
             Gipf: { onClick: [0, 0] },
             Go: { onClick: [0, 0] },
+            Hnefatafl: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },
             Lodestone: {

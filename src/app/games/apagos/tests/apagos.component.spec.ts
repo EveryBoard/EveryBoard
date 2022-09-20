@@ -24,10 +24,10 @@ describe('ApagosComponent', () => {
                 [7, 5, 3, 1],
             ], 5, 5);
 
-            // when rendering the board
+            // When rendering the board
             testUtils.setupState(state);
 
-            // then only the valid drop should be shown
+            // Then only the valid drop should be shown
             testUtils.expectElementToExist('#dropArrow_zero_0');
             testUtils.expectElementToExist('#dropArrow_one_0');
             testUtils.expectElementToExist('#dropArrow_zero_1');
@@ -262,8 +262,8 @@ describe('ApagosComponent', () => {
         ], 5, 5);
         testUtils.setupState(state);
 
-        // when clicking on leftmost space
-        // then move should be cancelled
+        // When clicking on leftmost space
+        // Then move should be cancelled
         const reason: string = ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS();
         await testUtils.expectClickFailure('#square_1', reason);
     }));
@@ -275,10 +275,10 @@ describe('ApagosComponent', () => {
             [7, 5, 3, 1],
         ], 0, 0);
 
-        // when rendering it
+        // When rendering the board
         testUtils.setupState(state);
 
-        // then no arrow should be displayed
+        // Then no arrow should be displayed
         testUtils.expectElementNotToExist('#dropArrow_zero_0');
         testUtils.expectElementNotToExist('#dropArrow_one_0');
         testUtils.expectElementNotToExist('#dropArrow_zero_1');

@@ -102,7 +102,7 @@ describe('LobbyComponent', () => {
         void testUtils.clickElement('#tab-chat');
         tick();
 
-        // When rendering it
+        // When rendering the board
         testUtils.detectChanges();
 
         // Then the date should be written in format HH:mm:ss

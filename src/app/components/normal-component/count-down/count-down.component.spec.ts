@@ -169,13 +169,13 @@ describe('CountDownComponent', () => {
             expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_ODD);
         });
         it('Should be in passive style when passive', () => {
-            // given a chrono that could be in danger time style
+            // Given a chrono that could be in danger time style
             component.setDuration(8 * 1000);
 
-            // when it become passive
+            // When it become passive
             component.active = false;
 
-            // then it should still be in passive style
+            // Then it should still be in passive style
             expect(component.getTimeClass()).toEqual(CountDownComponent.PASSIVE_STYLE);
         });
     });

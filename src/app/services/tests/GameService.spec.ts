@@ -180,7 +180,7 @@ describe('GameService', () => {
     }));
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
-            // given a configRoom config asking random start
+            // Given a configRoom config asking random start
             const configRoom: ConfigRoom = {
                 chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
@@ -191,16 +191,16 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
 
-            // when calling getStartingConfig
+            // When calling getStartingConfig
             spyOn(Math, 'random').and.returnValue(0.4);
             const startConfig: StartingPartConfig = gameService.getStartingConfig(configRoom);
 
-            // then we should have a creator starting the game
+            // Then we should have a creator starting the game
             expect(startConfig.playerZero).toEqual(configRoom.creator);
             expect(startConfig.playerOne).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
         }));
         it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
-            // given a configRoom config asking random start
+            // Given a configRoom config asking random start
             const configRoom: ConfigRoom = {
                 chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                 creator: UserMocks.CREATOR_MINIMAL_USER,
@@ -211,11 +211,11 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
 
-            // when calling getStartingConfig
+            // When calling getStartingConfig
             spyOn(Math, 'random').and.returnValue(0.6);
             const startConfig: StartingPartConfig = gameService.getStartingConfig(configRoom);
 
-            // then we should have a creator starting the game
+            // Then we should have a creator starting the game
             expect(startConfig.playerZero).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
             expect(startConfig.playerOne).toEqual(configRoom.creator);
         }));
@@ -235,7 +235,7 @@ describe('GameService', () => {
             expect(gameService.sendRequest).toHaveBeenCalledTimes(1);
         }));
         it('should start with the other player when first player mentionned in previous game', fakeAsync(async() => {
-            // given a previous match with creator starting
+            // Given a previous match with creator starting
             const lastPart: PartDocument = new PartDocument('partId', {
                 lastUpdate: {
                     index: 4,
@@ -271,14 +271,14 @@ describe('GameService', () => {
                 called = true;
             });
 
-            // when accepting rematch
+            // When accepting rematch
             await gameService.acceptRematch(lastPart, 5, Player.ONE);
 
-            // then we should have a part created with playerOne and playerZero switched
+            // Then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
         }));
         it('should start with the other player when first player was random', fakeAsync(async() => {
-            // given a previous match with creator starting
+            // Given a previous match with creator starting
             const lastPart: PartDocument = new PartDocument('partId', {
                 lastUpdate: {
                     index: 4,
@@ -314,10 +314,10 @@ describe('GameService', () => {
                 called = true;
             });
 
-            // when accepting rematch
+            // When accepting rematch
             await gameService.acceptRematch(lastPart, 5, Player.ONE);
 
-            // then we should have a part created with playerOne and playerZero switched
+            // Then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
         }));
         it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
@@ -420,10 +420,10 @@ describe('GameService', () => {
             spyOn(gameService, 'updateAndBumpIndex').and.callThrough();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
-            // when updating the board with scores
+            // When updating the board with scores
             const scores: [number, number] = [5, 0];
             await gameService.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], scores);
-            // then the update should contain the scores
+            // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
@@ -435,9 +435,9 @@ describe('GameService', () => {
             expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
-            // when updating the board to notify of a draw
+            // When updating the board to notify of a draw
             await gameService.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], undefined, true);
-            // then the result is set to draw in the update
+            // Then the result is set to draw in the update
             const expectedUpdate: Partial<Part> = {
                 lastUpdate: {
                     index: 5,

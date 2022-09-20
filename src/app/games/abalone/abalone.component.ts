@@ -259,7 +259,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (alignement.isSuccess()) {
             const secondAlignement: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
             if (alignement.equals(secondAlignement)) {
-                // then it's an extension of the line
+                // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);
                 const secondDistance: number = lastPiece.getDistance(clicked);
                 if (Math.max(firstDistance, secondDistance) === 2) {

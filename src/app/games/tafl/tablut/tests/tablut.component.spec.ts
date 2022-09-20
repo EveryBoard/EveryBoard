@@ -7,11 +7,6 @@ import { TablutState } from '../TablutState';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TablutComponent } from '../tablut.component';
 
-const instance: TablutRules = TablutRules.get();
-const typeofClass: typeof TablutRules = TablutRules;
-const nameOfTheClass: string = typeof TablutRules;
-console.log(instance, typeofClass, nameOfTheClass);
-
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.INVADERS;
 const i: TaflPawn = TaflPawn.DEFENDERS;
