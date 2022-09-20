@@ -33,9 +33,9 @@
             />
         </g>
     </g>
-    <polygon *ngFor="let hl of highlights"
-              [attr.points]="getTriangleCoordinate(hl.x, hl.y)"
-              class="base no-fill highlighted" />
+    <polygon *ngFor="let coord of selectable"
+              [attr.points]="getTriangleCoordinate(coord.x, coord.y)"
+              class="base no-fill selectable" />
     <polygon *ngIf="lastStart.isPresent()"
               [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
               class="base no-fill last-move" />

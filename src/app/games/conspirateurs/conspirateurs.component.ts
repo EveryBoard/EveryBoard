@@ -112,7 +112,7 @@ export class ConspirateursComponent
             const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
             squareInfo.isShelter = true;
             if (squareInfo.hasPiece) {
-                squareInfo.shelterClasses.push('highlighted');
+                squareInfo.shelterClasses.push('selectable');
             }
         }
     }

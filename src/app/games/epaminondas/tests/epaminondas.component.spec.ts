@@ -336,11 +336,11 @@ describe('EpaminondasComponent', () => {
         const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
-        expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('highlighted');
-        expect(epaminondasComponent.getPieceClasses(0, 8)).not.toContain('highlighted');
-        expect(epaminondasComponent.getPieceClasses(0, 9)).toContain('highlighted');
-        expect(epaminondasComponent.getPieceClasses(0, 10)).toContain('highlighted');
-        expect(epaminondasComponent.getPieceClasses(0, 11)).toContain('highlighted');
+        expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('selected');
+        expect(epaminondasComponent.getPieceClasses(0, 8)).not.toContain('selected');
+        expect(epaminondasComponent.getPieceClasses(0, 9)).toContain('selected');
+        expect(epaminondasComponent.getPieceClasses(0, 10)).toContain('selected');
+        expect(epaminondasComponent.getPieceClasses(0, 11)).toContain('selected');
     }));
     describe('third click behaviour', () => {
         beforeEach(fakeAsync(async() => {

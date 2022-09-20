@@ -41,13 +41,13 @@
                         />
             </g>
         </g>
-        <g *ngFor="let coord of getHighlightedCases()">
+        <g *ngFor="let coord of getSelectedCases()">
             <rect (click)="onBoardClick(coord.x, coord.y)"
                   [attr.x]="(SPACE_SIZE * coord.x) + STROKE_WIDTH"
                   [attr.y]="(SPACE_SIZE * coord.y) + STROKE_WIDTH"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
-                  class="base no-fill highlighted"
+                  class="base no-fill selected"
                   pointer-events="fill"
                   />
         </g>

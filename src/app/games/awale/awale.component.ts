@@ -94,7 +94,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured'];
         } else if (this.last.equalsValue(coord)) {
-            return ['moved', 'highlighted'];
+            return ['moved', 'last-move'];
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
         } else {

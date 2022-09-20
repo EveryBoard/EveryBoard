@@ -371,7 +371,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         if (this.firstPiece.equalsValue(coord) ||
             this.lastPiece.equalsValue(coord) ||
             this.phalanxMiddles.some((c: Coord) => c.equals(coord))) {
-            return ['highlighted'];
+            return ['selected'];
         } else {
             return [];
         }

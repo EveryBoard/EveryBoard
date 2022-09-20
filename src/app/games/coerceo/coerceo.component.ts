@@ -35,7 +35,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
     public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
 
-    public highlights: Coord[] = [];
+    public selectable: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -66,11 +66,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.board = this.rules.node.gameState.board;
     }
     private showHighlight() {
-        this.highlights = this.state.getLegalLandings(this.chosenCoord.get());
+        this.selectable = this.state.getLegalLandings(this.chosenCoord.get());
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
-        this.highlights = [];
+        this.selectable = [];
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -101,7 +101,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (coord.equals(this.chosenCoord.get())) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
-        } else if (this.highlights.some((c: Coord) => c.equals(coord))) {
+        } else if (this.selectable.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures);
         } else {

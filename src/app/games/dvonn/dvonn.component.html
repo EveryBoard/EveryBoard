@@ -48,9 +48,9 @@
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove.isPresent()">
         <polyline [attr.points]="getHexaCoordsAt(lastMove.get().coord)"
-                  class="base no-fill highlighted"/>
+                  class="base no-fill last-move"/>
         <polyline [attr.points]="getHexaCoordsAt(lastMove.get().end)"
-                  class="base no-fill highlighted"/>
+                  class="base no-fill last-move"/>
     </ng-container>
     <!-- Highlight selected piece -->
     <polyline *ngIf="chosen.isPresent()"

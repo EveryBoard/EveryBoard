@@ -33,7 +33,7 @@ describe('AwaleComponent', () => {
         await testUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
         const awaleComponent: AwaleComponent = testUtils.getComponent();
         // and the moved spaces should be shown
-        expect(awaleComponent.getSquareClasses(5, 0)).toEqual(['moved', 'highlighted']);
+        expect(awaleComponent.getSquareClasses(5, 0)).toEqual(['moved', 'last-move']);
         expect(awaleComponent.getSquareClasses(5, 1)).toEqual(['moved']);
         // as well as the captured spaces
         expect(awaleComponent.getSquareClasses(4, 1)).toEqual(['captured']);

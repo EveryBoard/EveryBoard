@@ -200,7 +200,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const c: PylosCoord = new PylosCoord(x, y, z);
         const classes: string[] = [this.getPieceFillClass(c)];
         if (this.lastLandingCoord.equalsValue(c) || this.lastStartingCoord.equalsValue(c)) {
-            classes.push('highlighted');
+            classes.push('last-move');
         }
         if (this.chosenStartingCoord.equalsValue(c) || this.chosenLandingCoord.equalsValue(c)) {
             classes.push('selected');

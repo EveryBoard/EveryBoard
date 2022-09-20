@@ -200,7 +200,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const classes: string[] = [];
         classes.push(y <= 3 ? 'player0' : 'player1');
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
-            classes.push('highlighted');
+            classes.push('selected');
         }
         if (this.rules.node.move.isPresent()) {
             const move: MartianChessMove = this.rules.node.move.get();
@@ -211,7 +211,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                 if (wasOccupied) {
                     const landingHome: boolean = this.rules.node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('highlighted');
+                        classes.push('selectable');
                     }
                 }
             }
@@ -328,7 +328,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getClockCircleClasses(): string[] {
         const classes: string[] = ['base'];
         if (this.callTheClock) {
-            classes.push('highlighted');
+            classes.push('selected');
         }
         if (this.getCurrentPlayer() === Player.ZERO) {
             classes.push('player0-stroke');

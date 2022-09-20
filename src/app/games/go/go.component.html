@@ -19,7 +19,7 @@
                 <circle *ngIf="isLastCase(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="22"
-                        class="base no-fill mid-stroke highlighted"
+                        class="base no-fill mid-stroke last-move"
                 />
                 <line *ngIf="isDead(x, y)"
                       (click)="onClick(x, y)"

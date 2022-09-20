@@ -331,7 +331,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const player: Player = Player.of(this.hexaBoard[y][x].value);
         const classes: string[] = [this.getPlayerClass(player)];
         if (this.selecteds.some((c: Coord) => c.equals(coord))) {
-            classes.push('highlighted');
+            classes.push('selected');
         }
         return classes;
     }

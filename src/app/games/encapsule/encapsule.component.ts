@@ -151,7 +151,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 return (this.SPACE_SIZE / 2) - (3 * this.STROKE_WIDTH) - 6;
         }
     }
-    public getHighlightedCases(): Coord[] {
+    public getSelectedCases(): Coord[] {
         const coords: Coord[] = [];
         if (this.chosenCoord.isPresent()) {
             coords.push(this.chosenCoord.get());
