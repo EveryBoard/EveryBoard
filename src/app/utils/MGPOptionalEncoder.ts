@@ -4,7 +4,7 @@ import { JSONValue } from './utils';
 
 /**
  * Encodes a MGPOptional<T> using an encoder of T.
- * It will use the same encoding as T, and use null te encode an empty optional.
+ * It will use the same encoding as T, and use null to encode an empty optional.
  */
 export function MGPOptionalEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
     return new class extends Encoder<MGPOptional<T>> {

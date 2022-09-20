@@ -6,7 +6,7 @@ import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SiamFailure } from '../SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -446,5 +446,22 @@ describe('SiamRules:', () => {
         const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
         // Then there should be no moves
         expect(moves).toEqual([]);
+    });
+    it('should compute the pusher player even with a mountain amongs the pushers', () => {
+        // Given a board where there is a mountain amongst the pusher,
+        // and a winning move
+        const board: Table<SiamPiece> = [
+            [_, _, M, _, _],
+            [_, _, U, _, _],
+            [_, M, M, _, _],
+            [_, _, u, _, _],
+            [_, _, U, _, _],
+        ];
+        const state: SiamState = new SiamState(board, 0);
+        const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+        // When computing the pusher for the winning move
+        const pusher: PlayerOrNone = rules.getPusher(state, move);
+        // Then it should identify the right player
+        expect(pusher).toBe(Player.ZERO);
     });
 });

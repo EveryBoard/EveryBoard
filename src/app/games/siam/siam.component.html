@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-100 -100 900 900"
+     viewBox="100 -100 500 900"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <polygon id="triangle" points="0 -6, 10 0, 0 6"/>
@@ -42,9 +42,7 @@
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               [ngClass]="getSquareClasses(coord.x, coord.y)"
-              class="base semi-transparent"
-              />
-
+              class="base semi-transparent" />
         <rect (click)="clickSquare(coord.x, coord.y)"
               [attr.x]="SPACE_SIZE * (coord.x + 1)"
               [attr.y]="SPACE_SIZE * (coord.y + 1)"
@@ -52,28 +50,26 @@
               [attr.height]="SPACE_SIZE"
               class="base no-fill small-stroke clickable" />
     </g>
-    <g *ngIf="selectedLanding.isPresent()">
-        <rect (click)="clickSquare(selectedLanding.get().x, selectedLanding.get().y)"
-              [attr.x]="SPACE_SIZE * (selectedLanding.get().x + 1)"
-              [attr.y]="SPACE_SIZE * (selectedLanding.get().y + 1)"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              class="base no-fill small-stroke selected" />
-    </g>
-    <g *ngIf="selectedPiece.isPresent()">
-        <rect (click)="clickSquare(selectedPiece.get().x, selectedPiece.get().y)"
-              [attr.x]="SPACE_SIZE * (selectedPiece.get().x + 1)"
-              [attr.y]="SPACE_SIZE * (selectedPiece.get().y + 1)"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              class="base no-fill small-stroke selected" />
-    </g>
-    <g *ngFor="let player of [Player.ZERO, Player.ONE]">
-        <g *ngFor="let x of range(playerPieces(player))">
-            <use id="piece_{{ player.value }}_{{ x }}"
+    <rect *ngIf="selectedLanding.isPresent()"
+          (click)="clickSquare(selectedLanding.get().x, selectedLanding.get().y)"
+          [attr.x]="SPACE_SIZE * (selectedLanding.get().x + 1)"
+          [attr.y]="SPACE_SIZE * (selectedLanding.get().y + 1)"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE"
+          class="base no-fill small-stroke selected" />
+    <rect *ngIf="selectedPiece.isPresent()"
+          (click)="clickSquare(selectedPiece.get().x, selectedPiece.get().y)"
+          [attr.x]="SPACE_SIZE * (selectedPiece.get().x + 1)"
+          [attr.y]="SPACE_SIZE * (selectedPiece.get().y + 1)"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE"
+          class="base no-fill small-stroke selected" />
+    <g *ngFor="let player of Player.PLAYERS">
+        <g id="remainingPieces_{{ player.value }}"
+           (click)="selectPieceForInsertion(player)" >
+            <use *ngFor="let x of range(playerPieces(player))"
                  class="base mid-stroke"
                  [ngClass]="getRemainingPieceClasses(player, x)"
-                 (click)="selectPieceForInsertion(player, x)"
                  xlink:href="#arrow"
                  [attr.transform]="getRemainingPieceTransform(x, player)" />
         </g>

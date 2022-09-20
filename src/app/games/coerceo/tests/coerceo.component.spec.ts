@@ -46,10 +46,10 @@ describe('CoerceoComponent', () => {
     it('Should show possibles destination after choosing your own piece', fakeAsync(async() => {
         await testUtils.expectClickSuccess('#click_6_2');
         const component: CoerceoComponent = testUtils.getComponent();
-        expect(component.highlights).toContain(new Coord(7, 1));
-        expect(component.highlights).toContain(new Coord(7, 3));
-        expect(component.highlights).toContain(new Coord(5, 3));
-        expect(component.highlights).toContain(new Coord(4, 2));
+        expect(component.selectable).toContain(new Coord(7, 1));
+        expect(component.selectable).toContain(new Coord(7, 3));
+        expect(component.selectable).toContain(new Coord(5, 3));
+        expect(component.selectable).toContain(new Coord(4, 2));
     }));
     it('Should accept movement', fakeAsync(async() => {
         await testUtils.expectClickSuccess('#click_6_2');
@@ -59,7 +59,7 @@ describe('CoerceoComponent', () => {
     it('Should cancelMoveAttempt without toasting when re-clicking on selected piece', fakeAsync(async() => {
         await testUtils.expectClickSuccess('#click_6_2');
         await testUtils.expectClickSuccess('#click_6_2');
-        expect(testUtils.getComponent().highlights).toEqual([]);
+        expect(testUtils.getComponent().selectable).toEqual([]);
     }));
     it('Should cancelMove when first click is on empty space', fakeAsync(async() => {
         await testUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());

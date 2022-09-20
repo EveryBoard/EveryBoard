@@ -6,22 +6,27 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptionalNumberEncoder } from 'src/app/utils/MGPOptionalEncoder';
 
 export class SiamMove extends MoveCoord {
-    public static encoder: NumberEncoder<SiamMove> = NumberEncoder.tuple([
-        NumberEncoder.numberEncoder(6), // x (from -1 to 5)
-        NumberEncoder.numberEncoder(6), // y (from -1 to 5)
-        MGPOptionalNumberEncoder<Orthogonal>(new OrthogonalNumberEncoder()), // direction
-        new OrthogonalNumberEncoder(), // orientation
-    ], (move: SiamMove): [number, number, MGPOptional<Orthogonal>, Orthogonal] => {
-        return [move.x+1, move.y+1, move.direction, move.landingOrientation];
-    }, (fields: [number, number, MGPOptional<Orthogonal>, Orthogonal]): SiamMove => {
-        return SiamMove.of(fields[0]-1, fields[1]-1, fields[2], fields[3]).get();
-    });
+    public static encoder: NumberEncoder<SiamMove> = NumberEncoder.tuple(
+        [
+            NumberEncoder.numberEncoder(6), // x (from -1 to 5)
+            NumberEncoder.numberEncoder(6), // y (from -1 to 5)
+            MGPOptionalNumberEncoder<Orthogonal>(new OrthogonalNumberEncoder()), // direction
+            new OrthogonalNumberEncoder(), // orientation
+        ],
+        (move: SiamMove): [number, number, MGPOptional<Orthogonal>, Orthogonal] => {
+            return [move.x+1, move.y+1, move.direction, move.landingOrientation];
+        },
+        (fields: [number, number, MGPOptional<Orthogonal>, Orthogonal]): SiamMove => {
+            return SiamMove.of(fields[0]-1, fields[1]-1, fields[2], fields[3]).get();
+        },
+    );
 
     private constructor(
         readonly x: number,
         readonly y: number,
         public readonly direction: MGPOptional<Orthogonal>,
-        public readonly landingOrientation: Orthogonal) {
+        public readonly landingOrientation: Orthogonal)
+    {
         super(x, y);
     }
     public static of(x: number,
@@ -32,7 +37,7 @@ export class SiamMove extends MoveCoord {
     {
         const move: SiamMove = new SiamMove(x, y, direction, landingOrientation);
         const startedOutside: boolean = move.coord.isNotInRange(5, 5);
-        if (move.direction.isAbsent()) {
+        if (move.isRotation()) {
             if (startedOutside) {
                 return MGPFallible.failure('Cannot rotate piece outside the board: ' + move.toString());
             }

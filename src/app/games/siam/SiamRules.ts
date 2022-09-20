@@ -438,6 +438,31 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         moves = moves.concat(this.getInsertionsAt(state, 4, 4));
         return moves;
     }
+    private pieceToString(piece: SiamPiece): string {
+        switch (piece) {
+            case SiamPiece.EMPTY: return '_';
+            case SiamPiece.LIGHT_UP: return 'U';
+            case SiamPiece.LIGHT_DOWN: return 'D';
+            case SiamPiece.LIGHT_RIGHT: return 'R';
+            case SiamPiece.LIGHT_LEFT: return 'L';
+            case SiamPiece.DARK_UP: return 'u';
+            case SiamPiece.DARK_DOWN: return 'd';
+            case SiamPiece.DARK_LEFT: return 'l';
+            case SiamPiece.DARK_RIGHT: return 'r';
+            case SiamPiece.MOUNTAIN: return 'M';
+        }
+        return 'UNK';
+    }
+    private stateToString(state: SiamState): string {
+        let result: string = '';
+        for (let y: number = 0; y < 5; y++) {
+            for (let x: number = 0; x < 5; x++) {
+                result = result + this.pieceToString(state.getPieceAtXY(x, y));
+            }
+            result = result + '\n';
+        }
+        return result;
+    }
     public getInsertionsAt(state: SiamState, x: number, y: number): SiamMove[] {
         const moves: SiamMove[] = [];
         for (const direction of Orthogonal.ORTHOGONALS) {
@@ -464,7 +489,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         for (const direction of Orthogonal.ORTHOGONALS) {
             // All legal forward moves
             const landingCoord: Coord = coord.getNext(direction);
-            moves = moves.concat(this.getForwardMovesBetween(state, piece, coord, landingCoord, direction));
+            moves = moves.concat(this.getForwardMovesBetween(state, coord, landingCoord));
         }
         return moves;
     }
@@ -474,7 +499,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         } else {
             const directionOpt: MGPFallible<Orthogonal> = Orthogonal.factory.fromMove(start, end);
             if (directionOpt.isSuccess()) {
-                return this.getForwardMovesBetween(state, piece, start, end, directionOpt.get());
+                return this.getForwardMovesBetween(state, start, end);
             } else {
                 // There are no possible moves here
                 return [];
@@ -493,14 +518,14 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         return moves;
     }
     public getForwardMovesBetween(state: SiamState,
-                                  piece: SiamPiece,
                                   start: Coord,
-                                  end: Coord,
-                                  direction: Orthogonal)
+                                  end: Coord)
     : SiamMove[]
     {
         const moves: SiamMove[] = [];
         let orientations: ReadonlyArray<Orthogonal>;
+        const direction: Orthogonal = Orthogonal.factory.fromMove(start, end).get();
+        const piece: SiamPiece = state.getPieceAt(start);
         if (end.isInRange(5, 5)) {
             orientations = Orthogonal.ORTHOGONALS;
         } else {

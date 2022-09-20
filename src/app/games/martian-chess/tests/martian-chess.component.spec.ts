@@ -202,7 +202,7 @@ describe('MartianChessComponent', () => {
         // Then left square and landing square should be highlighted
         testUtils.expectElementToHaveClass('#square_1_7', 'moved');
         testUtils.expectElementToHaveClass('#square_2_6', 'moved');
-        testUtils.expectElementToHaveClass('#queen_2_6', 'selected');
+        testUtils.expectElementToHaveClass('#queen_2_6', 'selectable');
     }));
     describe('clock and countdown interaction and appeareance', () => {
 

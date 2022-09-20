@@ -77,8 +77,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.clickableCoords = new MGPSet();
         this.indicatorArrows = [];
     }
-    public async selectPieceForInsertion(player: Player, pieceIndex: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + player.value + '_' + pieceIndex);
+    public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#remainingPieces_' + player.value);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

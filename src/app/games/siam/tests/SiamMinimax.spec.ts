@@ -34,8 +34,9 @@ describe('SiamMinimax:', () => {
     describe('list of moves', () => {
         it('should provide 44 possible moves on initial board', () => {
             // Given the initial board
+            const node: SiamNode = new SiamNode(SiamState.getInitialState());
             // When computing the list of moves
-            const firstTurnMoves: SiamMove[] = minimax.getListMoves(rules.node);
+            const firstTurnMoves: SiamMove[] = minimax.getListMoves(node);
             // Then there should be exactly 44 moves
             expect(firstTurnMoves.length).toEqual(44);
         });
