@@ -438,31 +438,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         moves = moves.concat(this.getInsertionsAt(state, 4, 4));
         return moves;
     }
-    private pieceToString(piece: SiamPiece): string {
-        switch (piece) {
-            case SiamPiece.EMPTY: return '_';
-            case SiamPiece.LIGHT_UP: return 'U';
-            case SiamPiece.LIGHT_DOWN: return 'D';
-            case SiamPiece.LIGHT_RIGHT: return 'R';
-            case SiamPiece.LIGHT_LEFT: return 'L';
-            case SiamPiece.DARK_UP: return 'u';
-            case SiamPiece.DARK_DOWN: return 'd';
-            case SiamPiece.DARK_LEFT: return 'l';
-            case SiamPiece.DARK_RIGHT: return 'r';
-            case SiamPiece.MOUNTAIN: return 'M';
-        }
-        return 'UNK';
-    }
-    private stateToString(state: SiamState): string {
-        let result: string = '';
-        for (let y: number = 0; y < 5; y++) {
-            for (let x: number = 0; x < 5; x++) {
-                result = result + this.pieceToString(state.getPieceAtXY(x, y));
-            }
-            result = result + '\n';
-        }
-        return result;
-    }
     public getInsertionsAt(state: SiamState, x: number, y: number): SiamMove[] {
         const moves: SiamMove[] = [];
         for (const direction of Orthogonal.ORTHOGONALS) {
