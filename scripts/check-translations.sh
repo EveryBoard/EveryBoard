@@ -1,5 +1,5 @@
 #!/bin/sh
-python ./scripts/check-translations.py
+python ./scripts/check-translations.py script
 if [ "$?" -eq 0 ]; then
     echo 'Translations are OK!'
     BEFORE=$(sha256sum src/assets/fr.json)

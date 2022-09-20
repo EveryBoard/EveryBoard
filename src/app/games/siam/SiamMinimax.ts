@@ -26,7 +26,9 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInform
         if (node.gameState.countCurrentPlayerPawn() < 5) {
             // up to 44 insertions
             // we remove some legal but useless insertions as explained below
-            for (const insertion of SiamRules.get().getInsertions(node.gameState)) {
+            const insertions = SiamRules.get().getInsertions(node.gameState);
+            console.log(`I got ${insertions.length} insertions`);
+            for (const insertion of insertions) {
                 if (insertion.direction.get().getOpposite() === insertion.landingOrientation) {
                     // this is an insertion with an orientation opposite to its direction,
                     // these are always a useless move and we don't want to take them into account here

@@ -257,7 +257,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         } else {
             x += ((piece + 1) + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
         }
-        const y: number = player === Player.ZERO ? -0.5 : 6.5;
+        const y: number = player === Player.ZERO ? -1 : 7;
         const orientation: Orthogonal = player === Player.ZERO ? Orthogonal.RIGHT : Orthogonal.LEFT;
         return this.getArrowTransform(x, y, orientation);
     }

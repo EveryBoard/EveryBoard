@@ -2236,39 +2236,40 @@
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
       </trans-unit>
-      <trans-unit id="4223815631577991732" datatype="html">
+      <trans-unit id="3753696680821191929" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following three actions:
+        During its turn, a player can do one of the following actions:
         &lt;ol&gt;
             &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece, and optionally move it.&lt;/li&gt;
+            &lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;
+            &lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;
             &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
         &lt;/ol&gt;</source>
       </trans-unit>
       <trans-unit id="4040000701091542987" datatype="html">
         <source>Inserting a piece</source>
       </trans-unit>
-      <trans-unit id="870234930796108332" datatype="html">
+      <trans-unit id="3225247864176431980" datatype="html">
         <source>Each player has 5 pieces in total.
         As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
         &lt;ol&gt;
-            &lt;li&gt;Click on one of the big arrows alongside the board.&lt;/li&gt;
-            &lt;li&gt;Click on one of the small arrows that appeared on the landing square of your piece.
-                This is the direction in which your piece will be oriented.&lt;/li&gt;
+            &lt;li&gt;Click on one of your pieces from your reserve, alongside the board.&lt;/li&gt;
+            &lt;li&gt;Click on one of the highlighted squares to select a landing for your piece.&lt;/li&gt;
+            &lt;li&gt;Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Insert a piece on the board.</source>
       </trans-unit>
-      <trans-unit id="5200908153537449128" datatype="html">
+      <trans-unit id="5068462365828443281" datatype="html">
         <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
         A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically.
-        During that move, you can also move the piece out of the board.
+        You can also move a piece out of the board.
         To move a piece:
         &lt;ol&gt;
             &lt;li&gt;Click on it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows to pick the direction in which it will move.
-                You can also click on the middle dot to change the piece&apos;s orientation without moving it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows on the landing square to pick its orientation.&lt;/li&gt;
+            &lt;li&gt;Click on the square on which you want the piece to move.
+                You can also click a second time on your piece to change its orientation without moving it.&lt;/li&gt;
+            &lt;li&gt;Select the orientation of your piece by clickin gone one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Try to move the piece that is on the board one square upwards and to orient it downwards.</source>
       </trans-unit>
@@ -2288,14 +2289,14 @@
       <trans-unit id="2311226881614577495" datatype="html">
         <source>Failed, the piece is still on the board.</source>
       </trans-unit>
-      <trans-unit id="7012941605576384729" datatype="html">
+      <trans-unit id="4788951099772002368" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
         In order to push, multiple conditions must hold:
         &lt;ol&gt;
             &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
             &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
-                must be smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
-            &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
+                must be less than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
+            &lt;li&gt;The number of mountains on that line must be less or equal to the difference between the pushers and the resistants.&lt;/li&gt;
         &lt;/ol&gt;
         Your piece on the top right cannot push because there is one mountain too much.
         Your piece on the bottom right can push.&lt;br/&gt;&lt;br/&gt;

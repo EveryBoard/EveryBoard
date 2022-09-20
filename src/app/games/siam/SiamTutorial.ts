@@ -24,10 +24,11 @@ export class SiamTutorial {
             $localize`Goal of the game`,
             $localize`The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following three actions:
+        During its turn, a player can do one of the following actions:
         <ol>
             <li>Put a new piece on the board.</li>
-            <li>Change the orientation of one of its piece, and optionally move it.</li>
+            <li>Change the orientation of one of its piece</li>
+            <li>Move one of its piece and optionally reorient it.</li>
             <li>Take one of its pieces out of the board.</li>
         </ol>`,
             SiamState.getInitialState(),
@@ -37,9 +38,9 @@ export class SiamTutorial {
             $localize`Each player has 5 pieces in total.
         As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
         <ol>
-            <li>Click on one of the big arrows alongside the board.</li>
-            <li>Click on one of the small arrows that appeared on the landing square of your piece.
-                This is the direction in which your piece will be oriented.</li>
+            <li>Click on one of your pieces from your reserve, alongside the board.</li>
+            <li>Click on one of the highlighted squares to select a landing for your piece.</li>
+            <li>Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.</li>
         </ol><br/>
         Insert a piece on the board.`,
             SiamState.getInitialState(),
@@ -50,13 +51,13 @@ export class SiamTutorial {
             $localize`Moving a piece`,
             $localize`We will distinguish here "moving" and "pushing".
         A move is made from a piece's square to an empty neighboring square, horizontally or vertically.
-        During that move, you can also move the piece out of the board.
+        You can also move a piece out of the board.
         To move a piece:
         <ol>
             <li>Click on it.</li>
-            <li>Click on one of the 4 arrows to pick the direction in which it will move.
-                You can also click on the middle dot to change the piece's orientation without moving it.</li>
-            <li>Click on one of the 4 arrows on the landing square to pick its orientation.</li>
+            <li>Click on the square on which you want the piece to move.
+                You can also click a second time on your piece to change its orientation without moving it.</li>
+            <li>Select the orientation of your piece by clickin gone one of the arrows that appear on top of the board.</li>
         </ol><br/>
         Try to move the piece that is on the board one square upwards and to orient it downwards.`,
             new SiamState([
@@ -92,8 +93,8 @@ export class SiamTutorial {
         <ol>
             <li>Your piece must already be oriented in the direction of the push.</li>
             <li>The number of the pieces (opponent's or not) that are facing yours (called the resistants)
-                must be smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).</li>
-            <li>The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.</li>
+                must be less than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).</li>
+            <li>The number of mountains on that line must be less or equal to the difference between the pushers and the resistants.</li>
         </ol>
         Your piece on the top right cannot push because there is one mountain too much.
         Your piece on the bottom right can push.<br/><br/>
