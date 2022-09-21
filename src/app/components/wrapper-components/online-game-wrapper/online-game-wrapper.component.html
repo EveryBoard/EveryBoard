@@ -9,7 +9,7 @@
      *ngIf="gameStarted">
     <div class="tile is-parent">
         <div class="tile is-child box has-text-centered">
-            <div class="block" id="turnIndicator" *ngIf="currentPart">
+            <div class="block" id="turnIndicator" *ngIf="currentPart !== null">
                 <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
                     <ng-container *ngIf="currentPlayer?.name === getPlayer().name else opponentsTurn" i18n>It is your turn.</ng-container>
@@ -21,10 +21,10 @@
                    [ngClass]="getPlayerNameClass(Player.ZERO)"
                    class="player0-bg"
                    *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
-                <p id="scoreZeroIndicator" *ngIf="currentPart && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[0] }} points</p>
+                <p id="scoreZeroIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[0] }} points</p>
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
-                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
+                                [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='observerRole === Player.ONE && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ZERO Global"
@@ -34,7 +34,7 @@
                 </app-count-down>
                 <app-count-down #chronoZeroTurn
                                 [dangerTimeLimit]="15*1000"
-                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
+                                [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='observerRole === Player.ONE && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ZERO Turn"
@@ -49,10 +49,10 @@
                    [ngClass]="getPlayerNameClass(Player.ONE)"
                    class="player1-bg"
                    *ngIf="players[1].isPresent()">{{ players[1].get().name }}</p>
-                <p id="scoreOneIndicator" *ngIf="currentPart && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[1] }} points</p>
+                <p id="scoreOneIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[1] }} points</p>
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
-                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
+                                [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='observerRole === Player.ZERO && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 debugName="ONE Global"
@@ -62,7 +62,7 @@
                 </app-count-down>
                 <app-count-down #chronoOneTurn
                                 [dangerTimeLimit]="15*1000"
-                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
+                                [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='observerRole === Player.ZERO && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 debugName="ONE Turn"
@@ -123,7 +123,7 @@
                         i18n
                 >Ask to take back one move</button>
             </ng-container>
-            <div class="block" id="winnerIndicator" *ngIf="endGame">
+            <div class="block" id="winnerIndicator" *ngIf="endGame && currentPart !== null">
                 <hr/>
                 <div *ngIf="currentPart.isHardDraw()">
                     <p class="title" id="hardDrawIndicator" i18n>Draw</p>
@@ -184,6 +184,7 @@
     <div id="chat"
          class="box" >
         <app-chat [chatId]="currentPartId"
+                  *ngIf="currentPart !== null"
                   [turn]="currentPart.getTurn()"></app-chat>
     </div>
 </div>

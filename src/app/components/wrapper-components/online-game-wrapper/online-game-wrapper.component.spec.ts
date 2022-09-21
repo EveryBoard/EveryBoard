@@ -137,13 +137,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const partCreationTag: DebugElement = testUtils.querySelector('app-part-creation');
             const gameIncluderTag: DebugElement = testUtils.querySelector('app-game-includer');
             const p4Tag: DebugElement = testUtils.querySelector('app-p4');
-            const chatTag: DebugElement = testUtils.querySelector('app-chat');
 
             expect(wrapper.gameStarted).toBeFalse();
             expect(partCreationTag).withContext('app-part-creation tag should be absent at start').toBeFalsy();
             expect(gameIncluderTag).withContext('app-game-includer tag should be absent at start').toBeFalsy();
             expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
-            expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
 
             // finish the game to have no timeout still running
             await finishTest();
