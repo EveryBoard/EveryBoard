@@ -211,7 +211,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                 if (wasOccupied) {
                     const landingHome: boolean = this.rules.node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('selectable');
+                        classes.push('last-move');
                     }
                 }
             }

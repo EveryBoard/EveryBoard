@@ -3217,13 +3217,13 @@
         &lt;/ol&gt;&lt;br/&gt;
         Insert a piece on the board.</source>
         <target>Chaque joueur a en tout 5 pièces.
-        Tant qu&apos;il n&apos;en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire :
+        Tant qu&apos;il vous reste des pièces de réserves sur le côté du plateau, vous pouvez en insérer une. Pour ce faire :
         &lt;ol&gt;
-            &lt;li&gt;Sélectionner une pièces depuis votre réserve, située à côté du plateau.&lt;/li&gt;
+            &lt;li&gt;Sélectionnez une pièces depuis votre réserve, située à côté du plateau.&lt;/li&gt;
             &lt;li&gt;Cliquez sur une des cases mises en avant pour sélectionner une case de destination pour votre pièce.&lt;/li&gt;
             &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Insérez une pièce sur le plateau.</target>
+        Vous jouez Clair, insérez une pièce sur le plateau.</target>
       </trans-unit>
       <trans-unit id="5068462365828443281" datatype="html">
         <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
@@ -3247,7 +3247,7 @@
               Vous pouvez aussi cliquer une seconde fois sur votre pièce pour changer son orientation sans la déplacer.&lt;/li&gt;
             &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Essayer de déplacer la pièce sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers le bas.</target>
+        Essayer de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
         <source>Congratulations, you made a side-slip!</source>
@@ -3284,12 +3284,11 @@
         Your piece on the bottom right can push.&lt;br/&gt;&lt;br/&gt;
         Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
-        Pour pousser il faut plusieurs critères :
+        Pour pousser, plusieurs critères doivent être vérifiés :
         &lt;ol&gt;
-            &lt;li&gt;Être déjà orienté dans le sens de la poussée.&lt;/li&gt;
-            &lt;li&gt;Que le nombre de pièces (adverses ou non) qui font face à la votre (les résistants)
-                soit inférieur que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).&lt;/li&gt;
-            &lt;li&gt;Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.&lt;/li&gt;
+            &lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;
+            &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face..&lt;/li&gt;
+            &lt;li&gt;Chaque montagne dans cette ligne requiert la force d'un pousseur supplémentaire..&lt;/li&gt;
         &lt;/ol&gt;
         Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
         Votre pièce tout en bas à droite, elle, peut pousser.&lt;br/&gt;&lt;br/&gt;
@@ -3305,7 +3304,7 @@
         Si vous l&apos;avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.
         Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
         En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.&lt;br/&gt;&lt;br/&gt;
-        Vous avez deux moyen de finir la partie, un gagnant, un perdant, choisissez !</target>
+        Ici, vous pouvez pousser une montagne hors du plateau et soit gagner, soit perdre. Choisissez consciencieusement !</target>
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>

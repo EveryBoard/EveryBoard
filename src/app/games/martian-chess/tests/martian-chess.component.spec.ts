@@ -29,7 +29,7 @@ describe('MartianChessComponent', () => {
         // When clicking on on of your pieces
         await testUtils.expectClickSuccess('#click_2_2');
 
-        // Then the piece should have a highlighted style
+        // Then the piece should have a selected style
         testUtils.expectElementToHaveClass('#pawn_2_2', 'selected');
     }));
     it('should show indicators of next possible click once piece is selected', fakeAsync(async() => {

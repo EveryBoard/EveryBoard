@@ -36,13 +36,13 @@ export class SiamTutorial {
         TutorialStep.anyMove(
             $localize`Inserting a piece`,
             $localize`Each player has 5 pieces in total.
-        As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
+        As long as you have remaining pieces next to the board, you can insert new pieces. To do so:
         <ol>
-            <li>Click on one of your pieces from your reserve, alongside the board.</li>
+            <li>Click on one of your pieces from your reserve, next to board.</li>
             <li>Click on one of the highlighted squares to select a landing for your piece.</li>
             <li>Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.</li>
         </ol><br/>
-        Insert a piece on the board.`,
+        You're playing Light, insert a piece on the board.`,
             SiamState.getInitialState(),
             SiamMove.of(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
             $localize`Congratulations!`,
@@ -57,9 +57,9 @@ export class SiamTutorial {
             <li>Click on it.</li>
             <li>Click on the square on which you want the piece to move.
                 You can also click a second time on your piece to change its orientation without moving it.</li>
-            <li>Select the orientation of your piece by clickin gone one of the arrows that appear on top of the board.</li>
+            <li>Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.</li>
         </ol><br/>
-        Try to move the piece that is on the board one square upwards and to orient it downwards.`,
+        Try to move your piece that is already on the board one square upwards and to orient it to the left.`,
             new SiamState([
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -67,7 +67,7 @@ export class SiamTutorial {
                 [_, _, _, _, _],
                 [_, _, U, _, _],
             ], 0),
-            [SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN).get()],
+            [SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT).get()],
             $localize`Congratulations, you made a side-slip!`,
             $localize`Failed!`,
         ),
@@ -89,12 +89,11 @@ export class SiamTutorial {
         TutorialStep.fromMove(
             $localize`Pushing`,
             $localize`When the landing square of your move is occupied, we use the term "push".
-        In order to push, multiple conditions must hold:
+        In order to push, the following conditions must hold:
         <ol>
             <li>Your piece must already be oriented in the direction of the push.</li>
-            <li>The number of the pieces (opponent's or not) that are facing yours (called the resistants)
-                must be less than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).</li>
-            <li>The number of mountains on that line must be less or equal to the difference between the pushers and the resistants.</li>
+            <li>Along the line that you are pushing, the number of pieces (yours or your opponent's) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.</li>
+            <li>Each mountain in that line requires the strength of one extra pusher.</li>
         </ol>
         Your piece on the top right cannot push because there is one mountain too much.
         Your piece on the bottom right can push.<br/><br/>
@@ -116,7 +115,7 @@ export class SiamTutorial {
         If you pushed it and nobody is in front of you, you're the winner.
         However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
         However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.<br/><br/>
-        You have two ways of ending the game here: you can either win, or lose. Choose correctly!`,
+        Here, you can push a mountain off the board and either win, or lose. Choose correctly!`,
             new SiamState([
                 [_, _, _, _, _],
                 [_, _, _, _, _],

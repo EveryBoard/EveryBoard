@@ -16,16 +16,14 @@
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   [ngClass]="getSquareClasses(x, y)"
-                  class="base"
-            />
-            <g *ngIf="c.isPiece()">
-                <use id="piece_{{x}}_{{y}}"
-                     class="base mid-stroke"
-                     [ngClass]="getPieceClasses(x, y, c)"
-                     (click)="clickSquare(x, y)"
-                     xlink:href="#arrow"
-                     [attr.transform]="getPieceTransform(x, y)"/>
-            </g>
+                  class="base" />
+            <use *ngIf="c.isPiece()"
+                 id="piece_{{x}}_{{y}}"
+                 class="base mid-stroke"
+                 [ngClass]="getPieceClasses(x, y, c)"
+                 (click)="clickSquare(x, y)"
+                 xlink:href="#arrow"
+                 [attr.transform]="getPieceTransform(x, y)"/>
             <use *ngIf="isMountain(c)"
                  xlink:href="#mountain"
                  class="nonplayer"
@@ -88,12 +86,11 @@
              xlink:href="#arrow"
              [attr.transform]="getPieceTransform(arrow.source.get().coord.x, arrow.source.get().coord.y)" />
     </g>
-    <g *ngFor="let move of orientations">
-        <use id="orientation_{{ move.landingOrientation }}"
-             class="base mid-stroke semi-transparent"
-             [ngClass]="getCurrentPlayerClass()"
-             (click)="selectOrientation(move)"
-             xlink:href="#arrow"
-             [attr.transform]="getOrientationTransform(move.landingOrientation)" />
-    </g>
+    <use *ngFor="let move of orientations"
+         id="orientation_{{ move.landingOrientation }}"
+         class="base mid-stroke semi-transparent"
+         [ngClass]="getCurrentPlayerClass()"
+         (click)="selectOrientation(move)"
+         xlink:href="#arrow"
+         [attr.transform]="getOrientationTransform(move.landingOrientation)" />
 </svg>

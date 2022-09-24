@@ -178,7 +178,7 @@ describe('SiamComponent', () => {
         // Given a component on which the player has selected a piece for insertion,
         // and must select the target for a move
         await testUtils.expectClickSuccess('#remainingPieces_0');
-        // When the player clicks on an empty target which would result in an impossible move
+        // When the player clicks on an invalid target which would result in an impossible move
         // Then the move should be canceled
         await testUtils.expectClickFailure('#square_2_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
@@ -203,7 +203,7 @@ describe('SiamComponent', () => {
         const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         await testUtils.expectMoveSuccess('#orientation_DOWN', move);
     }));
-    it('should cancel the move attempt when clicking on invalid target instead of selecting orientation move', fakeAsync(async() => {
+    it('should cancel the move attempt when clicking on invalid target instead of selecting orientation', fakeAsync(async() => {
         // Given a state with a piece already on board, which has been selected by the player, along with a valid target
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],

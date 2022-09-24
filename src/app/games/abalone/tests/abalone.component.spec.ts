@@ -68,14 +68,14 @@ describe('AbaloneComponent', () => {
             // when clicking a piece
             await testUtils.expectClickSuccess('#piece_2_7');
 
-            // then it should be highlighted
+            // then it should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
             expect(compo.getPieceClasses(2, 7)).toEqual(['player0', 'selected']);
 
             // when reclicking it
             await testUtils.expectClickSuccess('#piece_2_7');
 
-            // then it should no longer be highlighted
+            // then it should no longer be selected
             expect(compo.getPieceClasses(2, 7)).toEqual(['player0']);
         }));
         it('should select clicked piece when not aligned with first (non dir)', fakeAsync(async() => {
@@ -172,7 +172,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_2_7');
             await testUtils.expectClickSuccess('#piece_4_7');
 
-            // then three pieces should be highlighted
+            // then three pieces should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
             expect(compo.getPieceClasses(2, 7)).toEqual(['player0', 'selected']);
             expect(compo.getPieceClasses(3, 7)).toEqual(['player0', 'selected']);
