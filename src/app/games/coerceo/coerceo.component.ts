@@ -35,7 +35,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
     public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
 
-    public highlights: Coord[] = [];
+    public possibleLandings: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -66,11 +66,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.board = this.rules.node.gameState.board;
     }
     private showHighlight() {
-        this.highlights = this.state.getLegalLandings(this.chosenCoord.get());
+        this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
-        this.highlights = [];
+        this.possibleLandings = [];
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -79,8 +79,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
         const coord: Coord = new Coord(x, y);
         const currentPlayer: Player = this.state.getCurrentPlayer();
-        if (this.chosenCoord.isAbsent() ||
-            this.state.getPieceAt(coord).is(currentPlayer))
+        if (this.chosenCoord.equalsValue(coord)) {
+            // Deselects the piece
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        } else if (this.chosenCoord.isAbsent() ||
+                   this.state.getPieceAt(coord).is(currentPlayer))
         {
             return this.firstClick(coord);
         } else {
@@ -101,7 +105,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
     private async secondClick(coord: Coord): Promise<MGPValidation> {
-        if (this.highlights.some((c: Coord) => c.equals(coord))) {
+        if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures);
         } else {

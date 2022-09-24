@@ -8,7 +8,7 @@ import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserService } from 'src/app/services/UserService';
 
-xdescribe('UserDAO', () => {
+describe('UserDAO', () => {
 
     let dao: UserDAO;
     let service: UserService;

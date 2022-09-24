@@ -33,8 +33,8 @@
             />
         </g>
     </g>
-    <polygon *ngFor="let hl of highlights"
-             [attr.points]="getTriangleCoordinate(hl.x, hl.y)"
+    <polygon *ngFor="let possibleLanding of possibleLandings"
+             [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
              class="base no-fill highlighted" />
     <polygon *ngIf="lastStart.isPresent()"
              [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"

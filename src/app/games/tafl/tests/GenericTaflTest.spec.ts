@@ -1,3 +1,4 @@
+
 /* eslint-disable max-lines-per-function */
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
@@ -126,6 +127,17 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
 
                 // Then that piece should be selected and the previous unselected
                 testUtils.expectElementToHaveClass('#piece_' + otherCoord, 'selected');
+                testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected');
+            }));
+            it('Should deselect clicked piece when it is click for the second time in a row', fakeAsync(async() => {
+                // Given a state where first click selected one of your pieces
+                const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
+                await testUtils.expectClickSuccess('#click_' + playersCoord);
+
+                // When clicking on it again
+                await testUtils.expectClickSuccess('#click_' + playersCoord);
+
+                // Then that piece should be deselected
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected');
             }));
             it('Should cancelMove when trying to jump over another piece', fakeAsync(async() => {

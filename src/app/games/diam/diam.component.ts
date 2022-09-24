@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,10 +15,11 @@ import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 import { DiamTutorial } from './DiamTutorial';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[],
-    remainingPieces: PieceInfo[],
+    remainingPieces: MGPMap<PlayerOrNone, PieceInfo[]>,
 }
 
 interface SpaceInfo {
@@ -86,7 +87,10 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     public viewInfo: ViewInfo = {
         boardInfo: [],
-        remainingPieces: [],
+        remainingPieces: new MGPMap([
+            { key: Player.ZERO, value: [] },
+            { key: Player.ONE, value: [] },
+        ]),
     };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -145,22 +149,26 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
     }
-    public async onRemainingPieceClick(piece: DiamPiece): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(this.getPieceId(piece));
+    public async onRemainingPieceClick(piece: DiamPiece, z: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay(this.getPieceId(piece, z));
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
 
         if (piece.owner === this.getCurrentPlayer()) {
-            this.selected = MGPOptional.of({ type: 'pieceFromReserve', piece });
+            if (this.selected.isPresent() && this.selected.get()['piece'] === piece) {
+                this.selected = MGPOptional.empty();
+            } else {
+                this.selected = MGPOptional.of({ type: 'pieceFromReserve', piece });
+            }
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
     }
-    private getPieceId(piece: DiamPiece): string {
-        return '#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0);
+    private getPieceId(piece: DiamPiece, z: number): string {
+        return '#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0) + '_' + z;
     }
     public updateBoard(): void {
         this.updateViewInfo();
@@ -254,7 +262,10 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
     private updateRemainingPiecesInfo(): void {
         const currentPlayer: Player = this.getCurrentPlayer();
-        this.viewInfo.remainingPieces = [];
+        this.viewInfo.remainingPieces = new MGPMap([
+            { key: Player.ZERO, value: [] },
+            { key: Player.ONE, value: [] },
+        ]);
         const isPlayerTurn: boolean = this.isPlayerTurn();
         for (const piece of DiamPiece.PLAYER_PIECES) {
             const remaining: number = this.getState().getRemainingPiecesOf(piece);
@@ -267,13 +278,15 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     // Only let the top piece be clickable
                     foregroundClasses.push('clickable-hover');
                 }
-                this.viewInfo.remainingPieces.push({
+                const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner).get();
+                pieceInfos.push({
                     backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
                     foregroundClasses,
                     y,
                     drawPosition: this.getDrawPositionRemainingPiece(piece, y),
                     actualPiece: piece,
                 });
+                this.viewInfo.remainingPieces.put(piece.owner, pieceInfos);
             }
         }
     }

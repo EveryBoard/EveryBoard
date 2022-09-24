@@ -109,31 +109,31 @@
         </g>
     </g>
     <g id="captures">
-        <g *ngFor="let player of [0, 1]">
-            <g id="capture_of_player_{{ player }}"
-               [attr.transform]="'scale(0.5, 0.5) translate(' + (- SPACE_SIZE / 2) + ', ' + ((SPACE_SIZE / 2) + (player * ((10 * SPACE_SIZE) + (4 * STROKE_WIDTH)))) + ')'">
+        <g *ngFor="let player of Player.PLAYERS">
+            <g id="capture_of_player_{{ player.value }}"
+               [attr.transform]="'scale(0.5, 0.5) translate(' + (- SPACE_SIZE / 2) + ', ' + ((SPACE_SIZE / 2) + (player.value * ((10 * SPACE_SIZE) + (4 * STROKE_WIDTH)))) + ')'">
                 <g *ngFor="let value of state.getCapturesOf(player); index as piece">
                     <g *ngIf="value > 0"
                         [attr.transform]="'translate(0, ' + (2 * piece * SPACE_SIZE) + ')'">
                         <text *ngIf="value > 1"
                                class="text-giant text-center"
-                               [ngClass]="'player' + (player === 0 ? 1 : 0)"
+                               [ngClass]="'player' + (player.value === 0 ? 1 : 0)"
                                [attr.x]="SPACE_SIZE / 2"
                                [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
-                        <g id="piece_{{ piece }}_player_{{ player }}"
+                        <g id="piece_{{ piece }}_player_{{ player.value }}"
                            [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn
-                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
                                [style]="style" />
                             <g *ngIf="piece === 1"
                                app-martian-chess-drone
-                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
                                [style]="style" />
                             <g *ngIf="piece === 2"
                                app-martian-chess-queen
-                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
                                [style]="style" />
                         </g>
                     </g>

@@ -6,6 +6,7 @@ import { RulesFailure } from './RulesFailure';
 import { NumberEncoder } from '../utils/Encoder';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
+
     public static getEncoder<T extends MoveCoordToCoord>(width: number, height: number,
                                                          construct: (start: Coord, end: Coord) => T): NumberEncoder<T> {
         return new class extends NumberEncoder<T> {

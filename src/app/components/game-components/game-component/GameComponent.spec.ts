@@ -48,7 +48,7 @@ describe('GameComponent', () => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Abalone: {
                 onPieceClick: [0, 0],
-                onCaseClick: [0, 0],
+                onSpaceClick: [0, 0],
                 chooseDirection: [Direction.UP],
             },
             Apagos: {
@@ -62,7 +62,7 @@ describe('GameComponent', () => {
             Diam: {
                 onSpaceClick: [0],
                 onPieceInGameClick: [0, 0],
-                onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
+                onRemainingPieceClick: [DiamPiece.ZERO_FIRST, 7],
             },
             Dvonn: { onClick: [0, 0] },
             Encapsule: {

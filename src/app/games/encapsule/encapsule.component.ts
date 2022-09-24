@@ -100,7 +100,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.chosenPieceIndex = -1;
     }
     public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + player + '_' + piece.toString());
+        const clickedId: string = '#piece_' + player + '_' + piece.toString() + '_' + index;
+        const clickValidity: MGPValidation = this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -109,8 +110,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         if (state.isDroppable(piece) === false) {
             return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());
         } else if (this.chosenCoord.isAbsent()) {
-            this.chosenPiece = MGPOptional.of(piece);
-            this.chosenPieceIndex = index;
+            if (this.chosenPiece.equalsValue(piece) && this.chosenPieceIndex === index) {
+                this.chosenPiece = MGPOptional.empty();
+                this.chosenPieceIndex = -1;
+            } else {
+                this.chosenPiece = MGPOptional.of(piece);
+                this.chosenPieceIndex = index;
+            }
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE());
@@ -161,7 +167,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
         if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
-            pieceClasses.push('clickable ');
+            pieceClasses.push('selected');
         }
         return pieceClasses;
     }

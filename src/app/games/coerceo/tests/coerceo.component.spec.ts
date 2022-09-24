@@ -137,15 +137,23 @@ describe('CoerceoComponent', () => {
                                               getScores());
         }));
         it('Should show possibles destination after choosing your own piece', fakeAsync(async() => {
+            // Given any board
+            // When clicking on any piece
             await testUtils.expectClickSuccess('#click_6_2');
+
+            // Then its destinations should be displayed
             const component: CoerceoComponent = testUtils.getComponent();
             testUtils.expectElementToHaveClass('#selected_6_2', 'selected');
-            expect(component.highlights).toContain(new Coord(7, 1));
-            expect(component.highlights).toContain(new Coord(7, 3));
-            expect(component.highlights).toContain(new Coord(5, 3));
-            expect(component.highlights).toContain(new Coord(4, 2));
+            expect(component.possibleLandings.length).toBe(4);
+            expect(component.possibleLandings).toContain(new Coord(7, 1));
+            expect(component.possibleLandings).toContain(new Coord(7, 3));
+            expect(component.possibleLandings).toContain(new Coord(5, 3));
+            expect(component.possibleLandings).toContain(new Coord(4, 2));
         }));
         it('Should cancelMove when first click is on empty space', fakeAsync(async() => {
+            // Given any board
+            // When clicking on empty space
+            // Then it should have been a failure
             await testUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }));
     });
@@ -166,27 +174,24 @@ describe('CoerceoComponent', () => {
             const component: CoerceoComponent = testUtils.getComponent();
             testUtils.expectElementNotToExist('#selected_6_2');
             testUtils.expectElementToHaveClass('#selected_8_2', 'selected');
-            expect(component.highlights).toContain(new Coord(7, 1));
-            expect(component.highlights).toContain(new Coord(7, 3));
-            expect(component.highlights).not.toContain(new Coord(5, 3));
-            expect(component.highlights).not.toContain(new Coord(4, 2));
-            expect(component.highlights).toContain(new Coord(10, 2));
-            expect(component.highlights).toContain(new Coord(9, 3));
+            expect(component.possibleLandings).toContain(new Coord(7, 1));
+            expect(component.possibleLandings).toContain(new Coord(7, 3));
+            expect(component.possibleLandings).not.toContain(new Coord(5, 3));
+            expect(component.possibleLandings).not.toContain(new Coord(4, 2));
+            expect(component.possibleLandings).toContain(new Coord(10, 2));
+            expect(component.possibleLandings).toContain(new Coord(9, 3));
         }));
-        it('Should not do anything when double clicking on a player piece', fakeAsync(async() => {
-            // Given a state where a piece is selected
+        it('Should deselect piece when clicking a second time on it', fakeAsync(async() => {
+            // Given a board on which a piece is selected
             await testUtils.expectClickSuccess('#click_6_2');
 
             // When clicking on it again
             await testUtils.expectClickSuccess('#click_6_2');
 
-            // Then the selection should still be there
+            // Then the different highlighs should be gone since the piece is deselected
             const component: CoerceoComponent = testUtils.getComponent();
-            testUtils.expectElementToHaveClass('#selected_6_2', 'selected');
-            expect(component.highlights).toContain(new Coord(7, 1));
-            expect(component.highlights).toContain(new Coord(7, 3));
-            expect(component.highlights).toContain(new Coord(5, 3));
-            expect(component.highlights).toContain(new Coord(4, 2));
+            testUtils.expectElementNotToExist('#selected_6_2');
+            expect(component.possibleLandings.length).toBe(0);
         }));
         it('Should refuse invalid movement', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');

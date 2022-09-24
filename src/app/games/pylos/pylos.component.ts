@@ -214,13 +214,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.chosenLandingCoord.equalsValue(c)) {
             return this.getPlayerClass(this.state.getCurrentPlayer());
         }
-        return this.getPlayerPieceClass(this.state.getPieceAt(c).value);
+        return this.getPlayerPieceClass(this.state.getPieceAt(c));
     }
-    public getPlayerPieceClass(player: number): string {
-        return this.getPlayerClass(Player.of(player));
+    public getPlayerPieceClass(player: PlayerOrNone): string {
+        return this.getPlayerClass(player);
     }
-    public getPlayerSidePieces(player: number): number[] {
-        const nPieces: number = this.remainingPieces[player];
+    public getPlayerSidePieces(player: Player): number[] {
+        const nPieces: number = this.remainingPieces[player.value];
         const pieces: number[] = [];
         for (let i: number = 0; i < nPieces; i++) {
             pieces.push(i);

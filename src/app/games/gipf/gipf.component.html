@@ -13,21 +13,21 @@
         </marker>
     </defs>
 
-    <g *ngFor="let space of getAllCoords()">
-        <g (click)="onClick(space)"
-           id="click_{{ space.x }}_{{ space.y }}">
-            <polyline [attr.points]="getHexaCoordsAt(space)"
-                      id="case_{{ space.x }}_{{ space.y }}"
-                      [ngClass]="getSpaceClass(space)"
-                      class="base"
-                      stroke-linecap="round"/>
-            <circle *ngIf="isPiece(space)"
-                    [attr.cx]="getCenterAt(space).x"
-                    [attr.cy]="getCenterAt(space).y"
-                    [attr.r]="SPACE_SIZE"
-                    [ngClass]="getPieceClass(space)"
-                    class="base"/>
-        </g>
+    <g *ngFor="let space of getAllCoords()"
+       (click)="onClick(space)"
+       id="click_{{ space.x }}_{{ space.y }}">
+
+        <polyline [attr.points]="getHexaCoordsAt(space)"
+                  id="space_{{ space.x }}_{{ space.y }}"
+                  [ngClass]="getSpaceClass(space)"
+                  class="base"
+                  stroke-linecap="round"/>
+        <circle *ngIf="isPiece(space)"
+                [attr.cx]="getCenterAt(space).x"
+                [attr.cy]="getCenterAt(space).y"
+                [attr.r]="SPACE_SIZE"
+                [ngClass]="getPieceClass(space)"
+                class="base"/>
     </g>
 
     <g *ngFor="let capture of possibleCaptures; index as i"
@@ -40,21 +40,20 @@
                   stroke-linecap="round" />
     </g>
 
-    <g *ngFor="let arrow of arrows">
-        <line [attr.x1]="arrow.x1"
-              [attr.y1]="arrow.y1"
-              [attr.x2]="arrow.x2"
-              [attr.y2]="arrow.y2"
-              class="arrow"
-              marker-end="url(#arrowhead)"
-              (click)="onClick(arrow.destination)"/>
-    </g>
+    <line *ngFor="let arrow of arrows"
+          [attr.x1]="arrow.x1"
+          [attr.y1]="arrow.y1"
+          [attr.x2]="arrow.x2"
+          [attr.y2]="arrow.y2"
+          class="arrow"
+          marker-end="url(#arrowhead)"
+          (click)="onClick(arrow.destination)"/>
 
-    <g *ngFor="let player of [0, 1]">
+    <g *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let p of getPlayerSidePieces(player)">
-            <circle id="piece_{{ player }}_{{ p }}"
+            <circle id="piece_{{ player.value }}_{{ p }}"
                     [attr.cx]="10 + (p * SPACE_SIZE * 0.5)"
-                    [attr.cy]="10 + (SPACE_SIZE + 10) * player"
+                    [attr.cy]="10 + (SPACE_SIZE + 10) * player.value"
                     [attr.r]="SPACE_SIZE * 0.5"
                     [ngClass]="getSidePieceClass(player)"
                     class="base small-stroke"

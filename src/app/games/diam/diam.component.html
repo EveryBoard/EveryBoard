@@ -37,18 +37,20 @@
         </g>
     </g>
 
-    <g *ngFor="let piece of viewInfo.remainingPieces"
-       (click)="onRemainingPieceClick(piece.actualPiece)"
-       id="piece_{{ piece.actualPiece.owner.value }}_{{ piece.actualPiece.otherPieceType ? 1 : 0 }}"
-       class="base-no-fill no-fill mid-small-stroke"
-       [ngClass]="piece.foregroundClasses">
-        <use [attr.x]="piece.drawPosition.x"
-             [attr.y]="piece.drawPosition.y"
-             xlink:href="#piece"
-             class="base mid-stroke"
-             [ngClass]="piece.backgroundClasses" />
-        <use [attr.x]="piece.drawPosition.x"
-             [attr.y]="piece.drawPosition.y"
-             xlink:href="#piece" />
+    <g *ngFor="let player of Player.PLAYERS">
+        <g *ngFor="let piece of viewInfo.remainingPieces.get(player).get(); index as z"
+           (click)="onRemainingPieceClick(piece.actualPiece, z)"
+           id="piece_{{ piece.actualPiece.owner.value }}_{{ piece.actualPiece.otherPieceType ? 1 : 0 }}_{{ z }}"
+           class="base-no-fill no-fill mid-small-stroke"
+           [ngClass]="piece.foregroundClasses">
+            <use [attr.x]="piece.drawPosition.x"
+                 [attr.y]="piece.drawPosition.y"
+                 xlink:href="#piece"
+                 class="base mid-stroke"
+                 [ngClass]="piece.backgroundClasses" />
+            <use [attr.x]="piece.drawPosition.x"
+                 [attr.y]="piece.drawPosition.y"
+                 xlink:href="#piece" />
+        </g>
     </g>
 </svg>

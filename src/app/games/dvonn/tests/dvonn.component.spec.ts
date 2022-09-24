@@ -36,7 +36,7 @@ describe('DvonnComponent', () => {
         // Given that the user has selected a valid piece
         await testUtils.expectClickSuccess('#click_2_0');
         // When the user selects a valid destination
-        // Then the move is made
+        // Then the move should be made
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
         await testUtils.expectMoveSuccess('#click_2_1', move);
     }));

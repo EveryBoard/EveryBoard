@@ -200,7 +200,7 @@ describe('TablutRules', () => {
         // When trying to sandwich
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
 
-        // Then the move is legal but the king alive
+        // Then the move should be legal but the king alive
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -235,7 +235,7 @@ describe('TablutRules', () => {
         // When attempting to surround him
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
 
-        // Then the move is legal but the king not captured, hence the part ongoing
+        // Then the move should be legal but the king not captured, hence the part ongoing
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],

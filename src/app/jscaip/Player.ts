@@ -47,7 +47,7 @@ export class Player implements ComparableObject {
         return true;
     }
     public toString(): string {
-        return 'Player ' + this.value;
+        return 'Player ' + this.value; // TODOTODO write THIS (or PLAYER_ZERO) in diam _x_x_
     }
     public equals(other: PlayerOrNone): boolean {
         return this === other;

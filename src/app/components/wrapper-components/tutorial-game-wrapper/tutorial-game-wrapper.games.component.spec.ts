@@ -337,7 +337,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                                         .toEqual(MGPValidation.SUCCESS);
                                 }
                             } else {
-                                const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
+                                const context: string = 'Solution move should be legal but failed in "' + gameInfo.name + ': '+ step.title + '"';
                                 expect(moveResult.getReason()).withContext(context).toBeNull();
                             }
                         }

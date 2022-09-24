@@ -20,7 +20,7 @@ export class HnefataflTutorial {
             $localize`Moving`,
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move:<ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a throne.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
             HnefataflState.getInitialState(),
-            HnefataflMove.of(new Coord(4, 1), new Coord(1, 1)),
+            HnefataflMove.of(new Coord(5, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(

@@ -309,7 +309,7 @@ describe('MartianChessRules', () => {
             // When moving a piece
             const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
 
-            // Then the move should be saved in the state
+            // Then the move should be legal and saved in the state
             const expectedBoard: Table<MartianChessPiece> = [
                 [C, C, B, _],
                 [C, B, A, _],

@@ -302,8 +302,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
         return this.chooseMove(move, state, this.scores.get());
     }
-    public async onCaseClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#case_' + x + '_' + y);
+    public async onSpaceClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

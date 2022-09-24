@@ -170,7 +170,7 @@ describe('ApagosComponent', () => {
         testUtils.setupState(state);
 
         // When clicking on that square
-        // Then move should fail
+        // Then click should fail
         const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
         await testUtils.expectClickFailure('#square_2', reason);
     }));
@@ -263,7 +263,7 @@ describe('ApagosComponent', () => {
         testUtils.setupState(state);
 
         // When clicking on leftmost space
-        // Then move should be cancelled
+        // Then click should fail
         const reason: string = ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS();
         await testUtils.expectClickFailure('#square_1', reason);
     }));

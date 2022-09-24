@@ -413,7 +413,7 @@ describe('PartCreationComponent', () => {
                 // When setting the part type back to standard
                 clickElement('#partTypeStandard');
 
-                // Then  the timings are updated
+                // Then the timings are updated
                 const maximalMoveDuration: number = Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value;
                 expect(maximalMoveDuration).toBe(PartType.NORMAL_MOVE_DURATION);
                 const totalPartDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value;

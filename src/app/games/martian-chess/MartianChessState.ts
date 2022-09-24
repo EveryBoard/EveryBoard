@@ -134,8 +134,8 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         const playerTerritory: MGPSet<number> = this.getPlayerTerritory(player);
         return playerTerritory.contains(coord.y);
     }
-    public getCapturesOf(player: number): [number, number, number] {
-        const capture: MartianChessCapture = this.captured.get(Player.fromTurn(player)).get();
+    public getCapturesOf(player: Player): [number, number, number] {
+        const capture: MartianChessCapture = this.captured.get(player).get();
         return [
             capture.captures.get(MartianChessPiece.PAWN).getOrElse(0),
             capture.captures.get(MartianChessPiece.DRONE).getOrElse(0),

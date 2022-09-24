@@ -311,7 +311,7 @@ describe('GoRules:', () => {
             // When passing again
             const move: GoMove = GoMove.PASS;
 
-            // Then the move should be in counting phase
+            // Then the move should be legal and the board in counting phase
             const expectedBoard: Table<GoPiece> = [
                 [b, b, O, X, O],
                 [b, b, O, X, _],

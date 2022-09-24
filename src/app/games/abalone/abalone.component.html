@@ -6,8 +6,8 @@
     <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isBoard(c)">
-                <polyline id="case_{{ x }}_{{ y }}"
-                          (click)="onCaseClick(x, y)"
+                <polyline id="space_{{ x }}_{{ y }}"
+                          (click)="onSpaceClick(x, y)"
                           [ngClass]="getSquareClasses(x, y)"
                           class="base"
                           [attr.points]="getHexaCoordsBy(x, y)"
