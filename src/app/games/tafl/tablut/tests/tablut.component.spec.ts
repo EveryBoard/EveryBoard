@@ -88,9 +88,9 @@ describe('TablutComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_0', move);
 
         const tablutGameComponent: TablutComponent = testUtils.getComponent();
-        expect(tablutGameComponent.getRectClasses(2, 1)).toContain('captured');
-        expect(tablutGameComponent.getRectClasses(1, 0)).toContain('moved');
-        expect(tablutGameComponent.getRectClasses(2, 0)).toContain('moved');
+        expect(tablutGameComponent.getRectClasses(2, 1)).toContain('captured-fill');
+        expect(tablutGameComponent.getRectClasses(1, 0)).toContain('moved-fill');
+        expect(tablutGameComponent.getRectClasses(2, 0)).toContain('moved-fill');
     }));
     it('encoder should be correct', () => {
         const encoder: MoveEncoder<TablutMove> = testUtils.getComponent().encoder;

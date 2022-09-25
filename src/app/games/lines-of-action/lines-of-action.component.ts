@@ -106,10 +106,10 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             const lastMoveStart: Coord = this.lastMove.get().coord;
             const lastMoveEnd: Coord = this.lastMove.get().end;
             if (this.captured.isPresent() && coord.equals(this.captured.get())) {
-                return ['captured'];
+                return ['captured-fill'];
             }
             if (coord.equals(lastMoveStart) || coord.equals(lastMoveEnd)) {
-                return ['moved'];
+                return ['moved-fill'];
             }
         }
         return [];
@@ -119,7 +119,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(content)];
         if (this.selected.isPresent() && this.selected.get().equals(coord)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         return classes;
     }

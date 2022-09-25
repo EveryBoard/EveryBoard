@@ -88,10 +88,10 @@ describe('GipfComponent', () => {
 
         await testUtils.expectClickSuccess('#click_3_3');
 
-        testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#case_3_3', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#case_3_4', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#case_3_5', ['base', 'captured']);
+        testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#case_3_3', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#case_3_4', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#case_3_5', ['base', 'captured-fill']);
     }));
     it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
@@ -207,9 +207,9 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_1_6');
         await testUtils.expectMoveSuccess('#click_2_5', move, undefined, [0, 0]);
 
-        expect(testUtils.getComponent().getSpaceClass(new Coord(1, 6))).toEqual('moved');
-        expect(testUtils.getComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved');
-        expect(testUtils.getComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved');
+        expect(testUtils.getComponent().getSpaceClass(new Coord(1, 6))).toEqual('moved-fill');
+        expect(testUtils.getComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved-fill');
+        expect(testUtils.getComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved-fill');
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
@@ -252,10 +252,10 @@ describe('GipfComponent', () => {
 
         await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [0, 0]);
 
-        testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#case_3_3', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#case_3_4', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#case_3_5', ['base', 'captured']);
+        testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#case_3_3', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#case_3_4', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#case_3_5', ['base', 'captured-fill']);
     }));
     it('should update the number of pieces available', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [

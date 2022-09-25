@@ -24,12 +24,12 @@ describe('CoerceoComponent', () => {
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = testUtils.getComponent();
         expect(gameComponent.isEmptyCase(x, y)).toBeTrue();
-        expect(gameComponent.getEmptyClass(x, y)).toBe('captured2');
+        expect(gameComponent.getEmptyClass(x, y)).toBe('captured-alternate-fill');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = testUtils.getComponent();
         expect(gameComponent.isPyramid(x, y)).toBeTrue();
-        expect(gameComponent.getPyramidClass(x, y)).toBe('captured');
+        expect(gameComponent.getPyramidClass(x, y)).toBe('captured-fill');
     }
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');

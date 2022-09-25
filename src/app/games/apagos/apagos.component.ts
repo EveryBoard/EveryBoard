@@ -197,9 +197,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     public getSquareClasses(x: number): string[] {
         const classes: string[] = ['base'];
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         } else if (this.movedSquare.includes(x)) {
-            classes.push('last-move');
+            classes.push('last-move-stroke');
         }
         return classes;
     }
@@ -226,9 +226,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         let zero: number = square.count(Player.ZERO);
         let one: number = square.count(Player.ONE);
         if (this.selectedPiece.equalsValue(pieceLocation)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         } else if (this.droppedPiece.equalsValue(pieceLocation)) {
-            classes.push('last-move');
+            classes.push('last-move-stroke');
         } else if (this.leftPiece.isPresent() && this.leftPiece.get().square === x) {
             if (this.leftPiece.get().piece === i) {
                 classes.push('captured-stroke');
@@ -248,9 +248,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     }
     private getPieceColor(i: number, zero: number, neutral: number): string {
         if (i < zero) {
-            return 'player0';
+            return 'player0-fill';
         } else if (i >= (zero + neutral)) {
-            return 'player1';
+            return 'player1-fill';
         }
         return '';
 

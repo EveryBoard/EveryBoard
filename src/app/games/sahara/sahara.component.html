@@ -29,11 +29,11 @@
         <polygon *ngFor="let possibleLanding of possibleLandings"
                  id="possible_landing_{{ possibleLanding.x }}_{{ possibleLanding.y }}"
                  [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
-                 class="base no-fill small-stroke selected" />
+                 class="base no-fill small-stroke selected-stroke" />
         <polygon *ngIf="chosenCoord.isPresent()"
                  id="chosen_coord_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
                  [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
-                 class="base no-fill small-stroke selected" />
+                 class="base no-fill small-stroke selected-stroke" />
     </ng-container>
     <ng-template #lastMove>
         <ng-container *ngIf="lastMoved.isPresent()">

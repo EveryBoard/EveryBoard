@@ -163,13 +163,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.lastMove.isPresent()) {
             const move: PylosMove = this.lastMove.get();
             if (move.firstCapture.equalsValue(coord) || move.secondCapture.equalsValue(coord)) {
-                return ['captured'];
+                return ['captured-fill'];
             } else if (coord.equals(move.landingCoord) || move.startingCoord.equalsValue(coord)) {
-                return ['moved'];
+                return ['moved-fill'];
             }
         } else {
             if (this.justClimbed(coord)) {
-                return ['moved'];
+                return ['moved-fill'];
             }
         }
         return [];
@@ -200,13 +200,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const c: PylosCoord = new PylosCoord(x, y, z);
         const classes: string[] = [this.getPieceFillClass(c)];
         if (this.lastLandingCoord.equalsValue(c) || this.lastStartingCoord.equalsValue(c)) {
-            classes.push('last-move');
+            classes.push('last-move-stroke');
         }
         if (this.chosenStartingCoord.equalsValue(c) || this.chosenLandingCoord.equalsValue(c)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         if (this.chosenFirstCapture.equalsValue(c)) {
-            classes.push('pre-captured');
+            classes.push('pre-captured-fill');
         }
         return classes;
     }

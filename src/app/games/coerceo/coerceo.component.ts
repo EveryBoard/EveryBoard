@@ -124,7 +124,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         } else if (caseContent === FourStatePiece.ONE) {
             return this.getPlayerClass(Player.ONE);
         } else {
-            return 'captured';
+            return 'captured-fill';
         }
     }
     public isEmptyCase(x: number, y: number): boolean {
@@ -152,7 +152,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                 return 'background2';
             }
         } else {
-            return 'captured2';
+            return 'captured-alternate-fill';
         }
     }
     public getTilesCountCoordinate(x: number, y: number): string {

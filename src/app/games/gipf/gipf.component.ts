@@ -262,9 +262,9 @@ export class GipfComponent
     }
     public getSpaceClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return 'captured';
+            return 'captured-fill';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return 'moved';
+            return 'moved-fill';
         } else {
             return '';
         }

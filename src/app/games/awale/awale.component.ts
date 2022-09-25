@@ -92,11 +92,11 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return ['captured'];
+            return ['captured-fill'];
         } else if (this.last.equalsValue(coord)) {
-            return ['moved', 'last-move'];
+            return ['moved-fill', 'last-move-stroke'];
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return ['moved'];
+            return ['moved-fill'];
         } else {
             return [];
         }

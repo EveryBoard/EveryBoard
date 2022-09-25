@@ -17,7 +17,7 @@
                     [ngClass]="getPieceClasses(caseContent)"
                     class="base mid-stroke"/>
             <polygon *ngIf="caseContent.containsSource()"
-                     class="nonplayer-light"
+                     class="nonplayer-light-fill"
                      points="157.055,0 90.798,196.319 164.417,196.319 88.344,400 289.571,159.509 218.405,159.509 311.656,0"
                      [attr.transform]="caseContent.getSize() === 1 ? ('translate(' + (getCenterAt(coord).x-18) + ' ' + (getCenterAt(coord).y-16) + ') scale(0.10)') : ('translate(' + (getCenterAt(coord).x-3) + ' ' + (getCenterAt(coord).y-12) + ') scale(0.07)')"/>
             <text *ngIf="caseContent.getSize() > 1"
@@ -32,7 +32,7 @@
     <!-- Show disconnecteds -->
     <g *ngFor="let disconnected of disconnecteds">
         <polyline [attr.points]="getHexaCoordsAt(disconnected.coord)"
-                  class="base mid-stroke captured"/>
+                  class="base mid-stroke captured-fill"/>
         <circle id="captured_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}"
                 [attr.cx]="getCenterAt(disconnected.coord).x"
                 [attr.cy]="getCenterAt(disconnected.coord).y"
@@ -48,12 +48,12 @@
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove.isPresent()">
         <polyline [attr.points]="getHexaCoordsAt(lastMove.get().coord)"
-                  class="base no-fill last-move"/>
+                  class="base no-fill last-move-stroke"/>
         <polyline [attr.points]="getHexaCoordsAt(lastMove.get().end)"
-                  class="base no-fill last-move"/>
+                  class="base no-fill last-move-stroke"/>
     </ng-container>
     <!-- Highlight selected piece -->
     <polyline *ngIf="chosen.isPresent()"
               [attr.points]="getHexaCoordsAt(chosen.get())"
-              class="base no-fill selected"/>
+              class="base no-fill selected-stroke"/>
 </svg>

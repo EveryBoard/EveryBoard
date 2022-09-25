@@ -61,7 +61,7 @@ describe('LinesOfActionComponent', () => {
     it('should show selected piece', fakeAsync(async() => {
         await testUtils.expectClickSuccess('#click_2_0');
         const component: LinesOfActionComponent = testUtils.getComponent();
-        expect(component.getPieceClasses(2, 0)).toEqual(['player0', 'selected']);
+        expect(component.getPieceClasses(2, 0)).toEqual(['player0-fill', 'selected-stroke']);
     }));
     it('should show last move cases', fakeAsync(async() => {
         await testUtils.expectClickSuccess('#click_2_0');
@@ -69,8 +69,8 @@ describe('LinesOfActionComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_2', move);
 
         const component: LinesOfActionComponent = testUtils.getComponent();
-        expect(component.getSquareClasses(2, 2)).toEqual(['moved']);
-        expect(component.getSquareClasses(2, 0)).toEqual(['moved']);
+        expect(component.getSquareClasses(2, 2)).toEqual(['moved-fill']);
+        expect(component.getSquareClasses(2, 0)).toEqual(['moved-fill']);
     }));
     it('should show captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
@@ -91,6 +91,6 @@ describe('LinesOfActionComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_2', move);
 
         const component: LinesOfActionComponent = testUtils.getComponent();
-        expect(component.getSquareClasses(2, 2)).toEqual(['captured']);
+        expect(component.getSquareClasses(2, 2)).toEqual(['captured-fill']);
     }));
 });

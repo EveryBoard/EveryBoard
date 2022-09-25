@@ -7,7 +7,7 @@
             [attr.cx]="(x + 1) * PIECE_RADIUS"
             [attr.cy]="PIECE_RADIUS"
             [attr.r]="PIECE_RADIUS - 5"
-            class="base mid-stroke player0"
+            class="base mid-stroke player0-fill"
     />
     <g id="board" [attr.transform]="'translate(0, ' + (2 * PIECE_RADIUS) + ')'">
         <ng-container *ngFor="let square of board; index as x">
@@ -52,6 +52,6 @@
             [attr.cx]="(4 * SPACE_SIZE) - ((x + 1) * PIECE_RADIUS)"
             [attr.cy]="(2.25 * SPACE_SIZE) + (3 * PIECE_RADIUS)"
             [attr.r]="PIECE_RADIUS - 5"
-            class="base mid-stroke player1"
+            class="base mid-stroke player1-fill"
     />
 </svg>

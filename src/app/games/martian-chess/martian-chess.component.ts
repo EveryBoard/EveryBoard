@@ -198,9 +198,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getPieceClasses(x: number, y: number): string[] {
         const clickedCoord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        classes.push(y <= 3 ? 'player0' : 'player1');
+        classes.push(y <= 3 ? 'player0-fill' : 'player1-fill');
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         if (this.rules.node.move.isPresent()) {
             const move: MartianChessMove = this.rules.node.move.get();
@@ -211,7 +211,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                 if (wasOccupied) {
                     const landingHome: boolean = this.rules.node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('last-move');
+                        classes.push('last-move-stroke');
                     }
                 }
             }
@@ -328,7 +328,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getClockCircleClasses(): string[] {
         const classes: string[] = ['base'];
         if (this.callTheClock) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         if (this.getCurrentPlayer() === Player.ZERO) {
             classes.push('player0-stroke');
@@ -344,18 +344,18 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const node: MartianChessNode = this.rules.node;
             const move: MartianChessMove = node.move.get();
             if (move.coord.equals(square)) {
-                classes.push('moved');
+                classes.push('moved-fill');
             } else if (move.end.equals(square)) {
                 const previousPiece: MartianChessPiece = node.mother.get().gameState.getPieceAt(square);
                 const wasEmpty: boolean = previousPiece === MartianChessPiece.EMPTY;
                 if (wasEmpty) {
-                    classes.push('moved');
+                    classes.push('moved-fill');
                 } else {
                     const landingHome: boolean = node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('moved');
+                        classes.push('moved-fill');
                     } else {
-                        classes.push('captured');
+                        classes.push('captured-fill');
                     }
                 }
             }

@@ -371,7 +371,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         if (this.firstPiece.equalsValue(coord) ||
             this.lastPiece.equalsValue(coord) ||
             this.phalanxMiddles.some((c: Coord) => c.equals(coord))) {
-            return ['selected'];
+            return ['selected-stroke'];
         } else {
             return [];
         }
@@ -379,9 +379,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     public getRectClasses(x: number, y: number): string[] {
         const clicked: Coord = new Coord(x, y);
         if (this.captureds.some((c: Coord) => c.equals(clicked))) {
-            return ['captured'];
+            return ['captured-fill'];
         } else if (this.moveds.some((c: Coord) => c.equals(clicked))) {
-            return ['moved'];
+            return ['moved-fill'];
         }
         return [];
     }

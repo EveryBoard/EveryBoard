@@ -382,7 +382,7 @@ export class LodestoneComponent
             info.movingClass = this.getPlayerClass(lodestone.owner);
         }
         if (this.selectedLodestone.equalsValue(lodestone)) {
-            info.selectedClass = 'selected';
+            info.selectedClass = 'selected-stroke';
         }
         return info;
     }
@@ -475,7 +475,7 @@ export class LodestoneComponent
                     const oldPiece: LodestonePiece = actualOldPlate.getPieceAt(i);
                     const newPiece: LodestonePiece = actualNewPlate.getPieceAt(i);
                     if (oldPiece.equals(newPiece) === false) {
-                        plateInfo.coords[i].squareClasses.push('moved');
+                        plateInfo.coords[i].squareClasses.push('moved-fill');
                         plateInfo.coords[i].temporary = temporary;
                         if (temporary) {
                             plateInfo.coords[i].pieceClasses.push('semi-transparent');
@@ -485,17 +485,17 @@ export class LodestoneComponent
             } else {
                 // Pressure plate has crumbled, show all squares as moved
                 for (const info of plateInfo.coords) {
-                    info.squareClasses.push('moved');
+                    info.squareClasses.push('moved-fill');
                 }
             }
         }
     }
     private showMovedAndCaptured(infos: LodestoneInfos): void {
         for (const moved of infos.moved) {
-            this.viewInfo.boardInfo[moved.y][moved.x].squareClasses.push('moved');
+            this.viewInfo.boardInfo[moved.y][moved.x].squareClasses.push('moved-fill');
         }
         for (const captured of infos.captures) {
-            this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured');
+            this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured-fill');
         }
     }
     private computePressurePlateShift(): void {

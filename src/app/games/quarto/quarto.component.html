@@ -143,7 +143,7 @@
                           [attr.y]="SPACE_SIZE * y"
                           [attr.width]="SPACE_SIZE"
                           [attr.height]="SPACE_SIZE"
-                          class="base selected"
+                          class="base selected-stroke"
                     />
                     <rect *ngIf="((4*y)+x) % 4 < 2 else circle"
                           [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"

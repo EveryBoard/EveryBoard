@@ -322,7 +322,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         if (this.moveds.some((c: Coord) => c.equals(coord))) {
-            classes.push('moved');
+            classes.push('moved-fill');
         }
         return classes;
     }
@@ -331,7 +331,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const player: Player = Player.of(this.hexaBoard[y][x].value);
         const classes: string[] = [this.getPlayerClass(player)];
         if (this.selecteds.some((c: Coord) => c.equals(coord))) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         return classes;
     }

@@ -124,8 +124,8 @@ describe('SiamComponent', () => {
         await expectMoveToBeLegal(Player.ZERO, move);
 
         // Then the moved piece and departed square should be highlighted
-        testUtils.expectElementToHaveClasses('#square_4_4', ['base', 'moved']);
-        testUtils.expectElementToHaveClasses('#square_3_4', ['base', 'moved']);
+        testUtils.expectElementToHaveClasses('#square_4_4', ['base', 'moved-fill']);
+        testUtils.expectElementToHaveClasses('#square_3_4', ['base', 'moved-fill']);
         testUtils.expectElementToHaveClasses('#square_2_4', ['base']);
     }));
     it('should decide exit orientation automatically', fakeAsync(async() => {

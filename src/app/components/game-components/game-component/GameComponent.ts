@@ -87,8 +87,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public getPlayerClass(player: PlayerOrNone): string {
         switch (player) {
-            case Player.ZERO: return 'player0';
-            case Player.ONE: return 'player1';
+            case Player.ZERO: return 'player0-fill';
+            case Player.ONE: return 'player1-fill';
             default:
                 Utils.expectToBe(player, PlayerOrNone.NONE);
                 return '';

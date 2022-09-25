@@ -336,11 +336,11 @@ describe('EpaminondasComponent', () => {
         const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
-        expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('selected');
-        expect(epaminondasComponent.getPieceClasses(0, 8)).not.toContain('selected');
-        expect(epaminondasComponent.getPieceClasses(0, 9)).toContain('selected');
-        expect(epaminondasComponent.getPieceClasses(0, 10)).toContain('selected');
-        expect(epaminondasComponent.getPieceClasses(0, 11)).toContain('selected');
+        expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('selected-stroke');
+        expect(epaminondasComponent.getPieceClasses(0, 8)).not.toContain('selected-stroke');
+        expect(epaminondasComponent.getPieceClasses(0, 9)).toContain('selected-stroke');
+        expect(epaminondasComponent.getPieceClasses(0, 10)).toContain('selected-stroke');
+        expect(epaminondasComponent.getPieceClasses(0, 11)).toContain('selected-stroke');
     }));
     describe('third click behaviour', () => {
         beforeEach(fakeAsync(async() => {
@@ -439,10 +439,10 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectMoveSuccess('#click_0_8', move);
 
         // Then it should display what has been captured and moved
-        expect(epaminondasComponent.getRectClasses(0, 7)).toEqual(['captured']);
-        expect(epaminondasComponent.getRectClasses(0, 8)).toEqual(['captured']);
-        expect(epaminondasComponent.getRectClasses(0, 9)).toEqual(['moved']);
-        expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved']);
-        expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved']);
+        expect(epaminondasComponent.getRectClasses(0, 7)).toEqual(['captured-fill']);
+        expect(epaminondasComponent.getRectClasses(0, 8)).toEqual(['captured-fill']);
+        expect(epaminondasComponent.getRectClasses(0, 9)).toEqual(['moved-fill']);
+        expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved-fill']);
+        expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved-fill']);
     }));
 });

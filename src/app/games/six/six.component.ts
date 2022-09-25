@@ -240,9 +240,9 @@ export class SixComponent
     }
     public getSelectedPieceClass(): string {
         if (this.chosenLanding.isPresent()) {
-            return 'moved';
+            return 'moved-fill';
         } else {
-            return 'selected';
+            return 'selected-stroke';
         }
     }
 }

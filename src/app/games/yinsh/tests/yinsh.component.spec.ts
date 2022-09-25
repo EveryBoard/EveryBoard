@@ -34,7 +34,7 @@ describe('YinshComponent', () => {
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
             // Then it should place a ring and show it
             await testUtils.expectMoveSuccess('#click_3_2', move, undefined, [0, 0]);
-            testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'moved']);
+            testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'moved-fill']);
         }));
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
             // Given a state in placement phase with at least one occupied space
@@ -203,10 +203,10 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_6_2', move, undefined, [0, 0]);
 
             // Then the markers and the ring should be shown as moved
-            testUtils.expectElementToHaveClass('#space_3_2', 'moved'); // the new marker
-            testUtils.expectElementToHaveClass('#space_4_2', 'moved'); // a flipped marker
-            testUtils.expectElementToHaveClass('#space_5_2', 'moved'); // another flipped marker
-            testUtils.expectElementToHaveClass('#space_6_2', 'moved'); // the moved ring
+            testUtils.expectElementToHaveClass('#space_3_2', 'moved-fill'); // the new marker
+            testUtils.expectElementToHaveClass('#space_4_2', 'moved-fill'); // a flipped marker
+            testUtils.expectElementToHaveClass('#space_5_2', 'moved-fill'); // another flipped marker
+            testUtils.expectElementToHaveClass('#space_6_2', 'moved-fill'); // the moved ring
         }));
         it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
             // Given a board with a ring
@@ -229,7 +229,7 @@ describe('YinshComponent', () => {
             // When clicking on the ring
             await testUtils.expectClickSuccess('#click_3_2');
             // Then it should show a marker there now
-            testUtils.expectElementToHaveClass('#marker_3_2', 'player0');
+            testUtils.expectElementToHaveClass('#marker_3_2', 'player0-fill');
             testUtils.expectElementToHaveClass('#ring_3_2', 'player0-stroke');
         }));
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
@@ -280,10 +280,10 @@ describe('YinshComponent', () => {
             testUtils.setupState(state);
             // Then it should show the pieces as capturable
             testUtils.expectElementToExist('#selectable_3_3');
-            testUtils.expectElementToHaveClass('#selectable_3_3', 'capturable');
-            testUtils.expectElementToHaveClass('#selectable_3_4', 'capturable');
-            testUtils.expectElementToHaveClass('#selectable_3_5', 'capturable');
-            testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable');
+            testUtils.expectElementToHaveClass('#selectable_3_3', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable_3_4', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable_3_5', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable-stroke');
         }));
         it('should show selected captures, and remove highlight upon cancellation', fakeAsync(async() => {
             // Given a board with a possible capture
@@ -313,10 +313,10 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_2'); // click the first ring
 
             // Then the capture should be selected
-            testUtils.expectElementToHaveClass('#selected_3_3', 'selected');
-            testUtils.expectElementToHaveClass('#selected_3_4', 'selected');
-            testUtils.expectElementToHaveClass('#selected_3_5', 'selected');
-            testUtils.expectElementToHaveClass('#selected_3_6', 'selected');
+            testUtils.expectElementToHaveClass('#selected_3_3', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected_3_4', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected_3_5', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected_3_6', 'selected-stroke');
 
             // When clicking on something else than a ring to cancel move
             await testUtils.expectClickFailure('#click_5_5', YinshFailure.SHOULD_SELECT_PLAYER_RING());

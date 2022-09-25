@@ -29,10 +29,10 @@ describe('QuixoComponent', () => {
     });
     it('should style piece correctly', () => {
         testUtils.getComponent().chosenCoord = MGPOptional.of(new Coord(0, 0));
-        expect(testUtils.getComponent().getPieceClasses(0, 0)).toContain('selected');
+        expect(testUtils.getComponent().getPieceClasses(0, 0)).toContain('selected-stroke');
 
         testUtils.getComponent().lastMoveCoord = MGPOptional.of(new Coord(4, 4));
-        expect(testUtils.getComponent().getPieceClasses(4, 4)).toContain('last-move');
+        expect(testUtils.getComponent().getPieceClasses(4, 4)).toContain('last-move-stroke');
     });
     it('should give correct direction', () => {
         testUtils.getComponent().chosenCoord = MGPOptional.of(new Coord(0, 0));

@@ -49,7 +49,7 @@
                   id="selected_{{ coord.x }}_{{ coord.y }}"
                   (click)="onClick(coord)"
                   pointer-events="fill"
-                  class="base no-fill selected"
+                  class="base no-fill selected-stroke"
                   stroke-linecap="round" />
     </g>
     <g *ngFor="let coord of viewInfo.selectableCoords">
@@ -58,7 +58,7 @@
                   [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
                   (click)="onClick(coord)"
                   pointer-events="fill"
-                  class="base no-fill capturable"
+                  class="base no-fill capturable-stroke"
                   stroke-linecap="round" />
     </g>
     <g *ngFor="let coord of viewInfo.targets">

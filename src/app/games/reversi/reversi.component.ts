@@ -83,9 +83,9 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
-            return ['captured'];
+            return ['captured-fill'];
         } else if (coord.equals(this.lastMove)) {
-            return ['moved'];
+            return ['moved-fill'];
         } else {
             return [];
         }

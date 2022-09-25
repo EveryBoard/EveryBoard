@@ -522,7 +522,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             tick(11);
 
             // expect highlight to be present
-            testUtils.expectElementToExist('#highlight');
+            testUtils.expectElementToExist('#selected');
         }));
         it('Should show success message after step success', fakeAsync(async() => {
             // Given a TutorialStep with several moves
@@ -841,7 +841,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             testUtils.detectChanges();
 
             // Then the actual click is performed and the solution message is shown
-            testUtils.expectElementToExist('#highlight');
+            testUtils.expectElementToExist('#selected');
             const expectedMessage: string = 'Bravo !';
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;

@@ -68,7 +68,7 @@ describe('DiamComponent', () => {
         // when clicking  on a player piece in game
         await testUtils.expectClickSuccess('#click_0_0');
         // then no move is made and the new piece is selected
-        testUtils.expectElementToHaveClass('#click_0_0', 'selected');
+        testUtils.expectElementToHaveClass('#click_0_0', 'selected-stroke');
     }));
     it('should forbid dropping on a full stack', fakeAsync(async() => {
         // given a state where one stack is already full

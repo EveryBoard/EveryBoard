@@ -30,7 +30,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_2_2');
 
         // Then the piece should have a selected style
-        testUtils.expectElementToHaveClass('#pawn_2_2', 'selected');
+        testUtils.expectElementToHaveClass('#pawn_2_2', 'selected-stroke');
     }));
     it('should show indicators of next possible click once piece is selected', fakeAsync(async() => {
         // Given any board where displacement, capture and promotions are all possible
@@ -76,7 +76,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_3_7');
 
         // Then it should not select the piece but not toast error
-        testUtils.expectElementNotToHaveClass('#queen_3_7', 'selected');
+        testUtils.expectElementNotToHaveClass('#queen_3_7', 'selected-stroke');
     }));
     it('should not select empty case', fakeAsync(async() => {
         // Given the initial board
@@ -92,7 +92,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_2_2');
 
         // Then the piece should be deselected
-        testUtils.expectElementNotToHaveClass('#pawn_2_2', 'selected');
+        testUtils.expectElementNotToHaveClass('#pawn_2_2', 'selected-stroke');
     }));
     it('should not throw when attempting invalid move', fakeAsync(async() => {
         // Given a board where a first click was done
@@ -111,7 +111,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_1_1');
 
         // Then the move should not have been cancelled but the first piece selected changed
-        testUtils.expectElementToHaveClass('#drone_1_1', 'selected');
+        testUtils.expectElementToHaveClass('#drone_1_1', 'selected-stroke');
     }));
     it('should propose illegal move so that a toast is given to explain', fakeAsync(async() => {
         // Given a board where a first click was done
@@ -151,8 +151,8 @@ describe('MartianChessComponent', () => {
         await testUtils.expectMoveSuccess('#click_3_3', move);
 
         // Then left square and landing square should be highlighted
-        testUtils.expectElementToHaveClass('#square_2_2', 'moved');
-        testUtils.expectElementToHaveClass('#square_3_3', 'moved');
+        testUtils.expectElementToHaveClass('#square_2_2', 'moved-fill');
+        testUtils.expectElementToHaveClass('#square_3_3', 'moved-fill');
     }));
     it('should highlight left coord and captured coord', fakeAsync(async() => {
         // Given a board where a capture is about to be done
@@ -174,10 +174,10 @@ describe('MartianChessComponent', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 4), new Coord(2, 3)).get();
         await testUtils.expectMoveSuccess('#click_2_3', move);
 
-        // Then left square and landing square should be 'captured''
-        testUtils.expectElementToHaveClass('#square_1_4', 'moved');
-        testUtils.expectElementNotToHaveClass('#square_2_3', 'moved');
-        testUtils.expectElementToHaveClass('#square_2_3', 'captured');
+        // Then left square and landing square should be captured
+        testUtils.expectElementToHaveClass('#square_1_4', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#square_2_3', 'moved-fill');
+        testUtils.expectElementToHaveClass('#square_2_3', 'captured-fill');
     }));
     it('should highlight left coord and field promotion coord', fakeAsync(async() => {
         // Given a board where a field promotion is about to be done
@@ -200,9 +200,9 @@ describe('MartianChessComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_6', move);
 
         // Then left square and landing square should be highlighted
-        testUtils.expectElementToHaveClass('#square_1_7', 'moved');
-        testUtils.expectElementToHaveClass('#square_2_6', 'moved');
-        testUtils.expectElementToHaveClass('#queen_2_6', 'selectable');
+        testUtils.expectElementToHaveClass('#square_1_7', 'moved-fill');
+        testUtils.expectElementToHaveClass('#square_2_6', 'moved-fill');
+        testUtils.expectElementToHaveClass('#queen_2_6', 'last-move-stroke');
     }));
     describe('clock and countdown interaction and appeareance', () => {
 
@@ -213,7 +213,7 @@ describe('MartianChessComponent', () => {
             await testUtils.expectClickSuccess('#clockOrCountDownView');
 
             // Then the clock circle should be highlighted
-            testUtils.expectElementToHaveClass('#clockOrCountDownCircle', 'selected');
+            testUtils.expectElementToHaveClass('#clockOrCountDownCircle', 'selected-stroke');
         }));
         it('should be possible to unselect the clock when changing your mind', fakeAsync(async() => {
             // Given a board with the clock not called yet but the clock just called (locally)
@@ -223,7 +223,7 @@ describe('MartianChessComponent', () => {
             await testUtils.expectClickSuccess('#clockOrCountDownView');
 
             // Then the clock should no longer be highlighted
-            testUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected');
+            testUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected-stroke');
         }));
         it('should send the move with clock call when doing it with a selected clock', fakeAsync(async() => {
             // Given a board where clock has been clicked a a piece too
@@ -259,7 +259,7 @@ describe('MartianChessComponent', () => {
             await testUtils.expectClickSuccess('#clockOrCountDownView');
 
             // Then the clock should not have been selected
-            testUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected');
+            testUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected-stroke');
         }));
     });
     describe('Visual Modes', () => {

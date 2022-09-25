@@ -26,7 +26,7 @@
                  [attr.transform]="getPieceTransform(x, y)"/>
             <use *ngIf="isMountain(c)"
                  xlink:href="#mountain"
-                 class="nonplayer"
+                 class="nonplayer-fill"
                  (click)="clickSquare(x, y)"
                  [attr.transform]="'translate(' + ((x+1) * SPACE_SIZE) + ' ' + ((y+1) * SPACE_SIZE) + ')'" />
         </g>
@@ -46,7 +46,7 @@
               [attr.y]="SPACE_SIZE * (coord.y + 1)"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
-              class="base no-fill small-stroke clickable" />
+              class="base no-fill small-stroke clickable-stroke" />
     </g>
     <rect *ngIf="selectedLanding.isPresent()"
           (click)="clickSquare(selectedLanding.get().x, selectedLanding.get().y)"
@@ -54,14 +54,14 @@
           [attr.y]="SPACE_SIZE * (selectedLanding.get().y + 1)"
           [attr.width]="SPACE_SIZE"
           [attr.height]="SPACE_SIZE"
-          class="base no-fill small-stroke selected" />
+          class="base no-fill small-stroke selected-stroke" />
     <rect *ngIf="selectedPiece.isPresent()"
           (click)="clickSquare(selectedPiece.get().x, selectedPiece.get().y)"
           [attr.x]="SPACE_SIZE * (selectedPiece.get().x + 1)"
           [attr.y]="SPACE_SIZE * (selectedPiece.get().y + 1)"
           [attr.width]="SPACE_SIZE"
           [attr.height]="SPACE_SIZE"
-          class="base no-fill small-stroke selected" />
+          class="base no-fill small-stroke selected-stroke" />
     <g *ngFor="let player of Player.PLAYERS">
         <g id="remainingPieces_{{ player.value }}"
            (click)="selectPieceForInsertion(player)" >

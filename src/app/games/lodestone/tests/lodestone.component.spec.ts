@@ -76,7 +76,7 @@ describe('LodestoneComponent', () => {
         // When clicking of a lodestone
         await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
         // Then it should be selected
-        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
+        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
     }));
     it('should deselect lodestone and square after move has been made', fakeAsync(async() => {
         // Given a state
@@ -84,9 +84,10 @@ describe('LodestoneComponent', () => {
         // When performing a move
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal');
         await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
-        // Then the selected lodestone and square should not be 'selected', and moved square should be 'moved'
-        testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
+        // Then the selected lodestone and square should not be selected, and moved square should be shown as sh
+        testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
         testUtils.expectElementNotToExist('#selection_0_0');
+        testUtils.expectElementToHaveClass('#square_0_0 > rect', 'moved-fill');
     }));
     it('should highlight moved square', fakeAsync(async() => {
         // Given a state
@@ -94,10 +95,10 @@ describe('LodestoneComponent', () => {
         // When performing a move
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal');
         await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
-        // Then the square part of the move should be shown as 'moved'
-        testUtils.expectElementToHaveClass('#square_0_0 > rect', 'moved');
-        testUtils.expectElementToHaveClass('#square_5_0 > rect', 'moved');
-        testUtils.expectElementToHaveClass('#square_6_0 > rect', 'moved');
+        // Then the square part of the move should be shown as moved
+        testUtils.expectElementToHaveClass('#square_0_0 > rect', 'moved-fill');
+        testUtils.expectElementToHaveClass('#square_5_0 > rect', 'moved-fill');
+        testUtils.expectElementToHaveClass('#square_6_0 > rect', 'moved-fill');
     }));
     it('should show intermediary state before placing captures', fakeAsync(async() => {
         // Given the initial state
@@ -123,8 +124,8 @@ describe('LodestoneComponent', () => {
         await testUtils.expectMoveSuccess('#plate_top_1', move);
         testUtils.expectElementToExist('#platePiece_top_0');
         testUtils.expectElementToExist('#platePiece_top_1');
-        testUtils.expectElementToHaveClass('#plateSquare_top_0', 'moved');
-        testUtils.expectElementToHaveClass('#plateSquare_top_1', 'moved');
+        testUtils.expectElementToHaveClass('#plateSquare_top_0', 'moved-fill');
+        testUtils.expectElementToHaveClass('#plateSquare_top_1', 'moved-fill');
     }));
     it('should remove a temporary capture from pressure plate when it is clicked again', fakeAsync(async() => {
         // Given an intermediary plate where a capture has been placed on a pressure plate

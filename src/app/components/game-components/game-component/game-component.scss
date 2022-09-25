@@ -38,28 +38,28 @@
 .background3 {
     fill: var(--alt-alt-background-fill);
 }
-.player0 {
+.player0-fill {
     fill: var(--player0);
 }
-.player0-alternate {
+.player0-alternate-fill {
     fill: var(--player0-alternate);
 }
 .player0-stroke {
     stroke: var(--player0);
 }
-.player1 {
+.player1-fill {
     fill: var(--player1);
 }
-.player1-alternate {
+.player1-alternate-fill {
     fill: var(--player1-alternate);
 }
 .player1-stroke {
     stroke: var(--player1);
 }
-.nonplayer {
+.nonplayer-fill {
     fill: var(--nonplayer);
 }
-.nonplayer-light {
+.nonplayer-light-fill {
     fill: var(--nonplayer-light);
 }
 .nonplayer-stroke {
@@ -68,19 +68,19 @@
 .dashed-stroke {
     stroke-dasharray: 2;
 }
-.pre-captured {
+.pre-captured-fill {
     fill: var(--pre-captured);
 }
-.captured {
+.captured-fill {
     fill: var(--captured);
 }
-.captured2 {
+.captured-alternate-fill {
     fill: var(--alt-captured);
 }
 .captured-stroke {
     stroke: var(--captured);
 }
-.moved {
+.moved-fill {
     fill: var(--moved);
 }
 .moved-stroke {
@@ -93,41 +93,41 @@
 .indicator-fill {
     fill: var(--indicator);
 }
-.selectable {
-    stroke: var(--selectable);
-}
 .selectable-fill {
     fill: var(--selectable);
+}
+.selectable-stroke {
+    stroke: var(--selectable);
 }
 .selectable > .base-no-stroke {
     fill: var(--selectable);
 }
-.last-move {
+.last-move-stroke {
     stroke: var(--last-move);
 }
-.victory {
+.victory-fill {
     fill: var(--victory);
 }
 .victory-stroke {
     stroke: var(--victory);
 }
-.selected {
-    stroke: var(--selected);
-}
 .selected-fill {
     fill: var(--selected);
 }
-.clickable {
+.selected-stroke {
+    stroke: var(--selected);
+}
+.clickable-stroke {
     stroke: var(--clickable);
 }
-.clickable-hover:hover {
+.clickable-stroke-hover:hover {
     stroke: var(--clickable);
 }
-.capturable {
+.capturable-stroke {
     stroke-width: 2;
     stroke: var(--capturable);
 }
-.capturable:hover {
+.capturable-stroke:hover {
     stroke-width: 8;
 }
 .no-fill {

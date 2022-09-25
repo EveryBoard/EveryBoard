@@ -146,7 +146,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equals(coord)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
 
         return classes;
@@ -156,12 +156,12 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
         const coord: Coord = new Coord(x, y);
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
-            classes.push('captured');
+            classes.push('captured-fill');
         } else if (this.lastMove.isPresent()) {
             const lastStart: Coord = this.lastMove.get().coord;
             const lastEnd: Coord = this.lastMove.get().end;
             if (coord.equals(lastStart) || coord.equals(lastEnd)) {
-                classes.push('moved');
+                classes.push('moved-fill');
             }
         }
 

@@ -57,8 +57,8 @@ describe('ApagosComponent', () => {
             testUtils.setupState(state, previousState, previousMove);
 
             // Then the switch square should be highlighted
-            testUtils.expectElementToHaveClass('#square_1', 'last-move');
-            testUtils.expectElementToHaveClass('#square_2', 'last-move');
+            testUtils.expectElementToHaveClass('#square_1', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#square_2', 'last-move-stroke');
         }));
         it('should show from where the last transfer came from Player.ZERO', fakeAsync(async() => {
             // Given a board with a previous move being a transfer
@@ -78,11 +78,11 @@ describe('ApagosComponent', () => {
             testUtils.setupState(state, previousState, previousMove);
 
             // Then piece 2 should be "captured" as a left piece, belonging to no one
-            testUtils.expectElementNotToHaveClass('#square_3_piece_2_out_of_5', 'player0');
-            testUtils.expectElementNotToHaveClass('#square_3_piece_2_out_of_5', 'player1');
+            testUtils.expectElementNotToHaveClass('#square_3_piece_2_out_of_5', 'player0-fill');
+            testUtils.expectElementNotToHaveClass('#square_3_piece_2_out_of_5', 'player1-fill');
             testUtils.expectElementToHaveClass('#square_3_piece_2_out_of_5', 'captured-stroke');
             // and piece 3 should be untouched
-            testUtils.expectElementToHaveClass('#square_3_piece_3_out_of_5', 'player1');
+            testUtils.expectElementToHaveClass('#square_3_piece_3_out_of_5', 'player1-fill');
         }));
         it('should show from where the last transfer came from Player.ONE', fakeAsync(async() => {
             // Given a board with a previous move being a transfer
@@ -102,8 +102,8 @@ describe('ApagosComponent', () => {
             testUtils.setupState(state, previousState, previousMove);
 
             // Then piece 1 should be "captured" as a left piece, belonging to no one
-            testUtils.expectElementNotToHaveClass('#square_3_piece_3_out_of_5', 'player0');
-            testUtils.expectElementNotToHaveClass('#square_3_piece_3_out_of_5', 'player1');
+            testUtils.expectElementNotToHaveClass('#square_3_piece_3_out_of_5', 'player0-fill');
+            testUtils.expectElementNotToHaveClass('#square_3_piece_3_out_of_5', 'player1-fill');
             testUtils.expectElementToHaveClass('#square_3_piece_3_out_of_5', 'captured-stroke');
         }));
         it('should show last dropped piece (from drop by Player.ZERO)', fakeAsync(async() => {
@@ -120,7 +120,7 @@ describe('ApagosComponent', () => {
             testUtils.setupState(state, previousState, previousMove);
 
             // Then the third square should be filled on top by Player.ZERO
-            testUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0');
+            testUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0-fill');
         }));
         it('should show last dropped piece (from drop on righmost coord)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
@@ -136,7 +136,7 @@ describe('ApagosComponent', () => {
             testUtils.setupState(state, previousState, previousMove);
 
             // Then the third square should be filled on top by Player.ZERO
-            testUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0');
+            testUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0-fill');
         }));
         it('should show last dropped piece (from transfer by Player.ONE)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
@@ -156,8 +156,8 @@ describe('ApagosComponent', () => {
             testUtils.setupState(state, previousState, previousMove);
 
             // Then the second square should be filled on last emplacement by Player.ONE
-            testUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'player1');
-            testUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'last-move');
+            testUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'player1-fill');
+            testUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'last-move-stroke');
         }));
     });
     it('should cancel move when starting move attempt by clicking a square without pieces of player', fakeAsync(async() => {
@@ -206,8 +206,8 @@ describe('ApagosComponent', () => {
         testUtils.expectElementNotToExist('#dropArrow_zero_3');
         testUtils.expectElementNotToExist('#dropArrow_one_3');
         // and square 2 should be selected
-        testUtils.expectElementToHaveClass('#square_2', 'selected');
-        testUtils.expectElementToHaveClass('#square_2_piece_1_out_of_3', 'selected');
+        testUtils.expectElementToHaveClass('#square_2', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#square_2_piece_1_out_of_3', 'selected-stroke');
     }));
     it('should confirm slide down by clicking on a dropping arrow', fakeAsync(async() => {
         // Given a board where a square has been selected
@@ -233,13 +233,13 @@ describe('ApagosComponent', () => {
         ], 5, 5);
         testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_2');
-        testUtils.expectElementToHaveClass('#square_2', 'selected');
+        testUtils.expectElementToHaveClass('#square_2', 'selected-stroke');
 
         // When clicking on the same square
         await testUtils.expectClickSuccess('#square_2');
 
         // Then the piece should have lost its selected style
-        testUtils.expectElementNotToHaveClass('#square_2', 'selected');
+        testUtils.expectElementNotToHaveClass('#square_2', 'selected-stroke');
     }));
     it('should change selected square when clicking on a square with one already selected', fakeAsync(async() => {
         // Given a board with a selected square

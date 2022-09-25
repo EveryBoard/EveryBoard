@@ -104,7 +104,7 @@ describe('ConspirateursComponent', () => {
             // When clicking on another piece of the current player
             await testUtils.expectClickSuccess('#click_7_5');
             // Then the new piece should be selected
-            testUtils.expectElementToHaveClass('#piece_7_5', 'selected');
+            testUtils.expectElementToHaveClass('#piece_7_5', 'selected-stroke');
         }));
         it('should not allow selecting an empty space', fakeAsync(async() => {
             // When clicking on an empty space
@@ -203,6 +203,6 @@ describe('ConspirateursComponent', () => {
         // When the state is displayed
         testUtils.setupState(state);
         // The its pieces are highlighted
-        testUtils.expectElementToHaveClass('#click_0_0', 'victory');
+        testUtils.expectElementToHaveClass('#click_0_0', 'victory-fill');
     }));
 });

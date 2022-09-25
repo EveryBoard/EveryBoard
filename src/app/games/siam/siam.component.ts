@@ -277,7 +277,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(c.getOwner())];
         if (this.selectedPiece.equalsValue(coord)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         return classes;
     }
@@ -285,14 +285,14 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const coord: Coord = new Coord(x, y);
 
         if (this.movedPieces.some((c: Coord) => c.equals(coord))) {
-            return ['moved'];
+            return ['moved-fill'];
         }
         return [];
     }
     public getRemainingPieceClasses(player: Player, pieceIndex: number): string[] {
         const classes: string[] = [this.getPlayerClass(player)];
         if (this.insertingPiece && this.getCurrentPlayer() === player && pieceIndex === this.playerPieces(player)-1) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         return classes;
     }

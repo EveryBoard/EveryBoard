@@ -118,7 +118,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
     public getRectClasses(x: number, y: number): string {
         if (this.isSelected(x, y)) {
-            return 'moved';
+            return 'moved-fill';
         }
         return '';
     }
@@ -161,7 +161,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
         if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
-            pieceClasses.push('clickable ');
+            pieceClasses.push('clickable-stroke');
         }
         return pieceClasses;
     }

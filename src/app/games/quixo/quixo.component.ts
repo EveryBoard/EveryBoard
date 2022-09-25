@@ -58,8 +58,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         const classes: string[] = [];
 
         classes.push(this.getPlayerClass(player));
-        if (this.chosenCoord.equalsValue(coord)) classes.push('selected');
-        else if (this.lastMoveCoord.equalsValue(coord)) classes.push('last-move');
+        if (this.chosenCoord.equalsValue(coord)) classes.push('selected-stroke');
+        else if (this.lastMoveCoord.equalsValue(coord)) classes.push('last-move-stroke');
         if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory-stroke');
         return classes;
     }

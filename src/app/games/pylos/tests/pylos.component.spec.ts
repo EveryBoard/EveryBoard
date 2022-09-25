@@ -142,12 +142,12 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_3_3_0');
             await testUtils.expectClickSuccess('#drop_1_1_1');
 
-            // Then the starting coord of the move should be 'left', and not 'selected'
+            // Then the starting coord of the move should be 'left', and not selected
             testUtils.expectElementNotToExist('#piece_3_3_0');
-            testUtils.expectElementToHaveClass('#drop_3_3_0', 'moved');
+            testUtils.expectElementToHaveClass('#drop_3_3_0', 'moved-fill');
             // And its landing coord should be visible and selected to indicate a capture is to be done
             testUtils.expectElementToExist('#piece_1_1_1');
-            testUtils.expectElementToHaveClass('#piece_1_1_1', 'selected');
+            testUtils.expectElementToHaveClass('#piece_1_1_1', 'selected-stroke');
         }));
         it('should not allow a piece climbing on itself', fakeAsync(async() => {
             // Given a board where a piece could climb on itself then capture
@@ -202,7 +202,7 @@ describe('PylosComponent', () => {
         // When dropping the piece allowing the capture then clicking twice on this piece
         await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
         await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
-        const expectedClasses: string[] = ['base', 'player0', 'selected', 'pre-captured'];
+        const expectedClasses: string[] = ['base', 'player0-fill', 'selected-stroke', 'pre-captured-fill'];
         testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(1, 1, 0)]);
 
@@ -236,7 +236,7 @@ describe('PylosComponent', () => {
 
         // Then capturing two piece should be possible
         await testUtils.expectClickSuccess('#piece_0_0_0');
-        testUtils.expectElementToHaveClasses('#piece_0_0_0', ['base', 'player0', 'pre-captured']);
+        testUtils.expectElementToHaveClasses('#piece_0_0_0', ['base', 'player0-fill', 'pre-captured-fill']);
 
         // and When clicking on the second capture
         const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
@@ -244,8 +244,8 @@ describe('PylosComponent', () => {
         await testUtils.expectMoveSuccess('#piece_0_1_0', move);
 
         // Then the two captures should be displayed as captured
-        testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured');
-        testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured');
+        testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured-fill');
+        testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured-fill');
     }));
     it('should show disappeared square when it has been captured, even if no longer landable', fakeAsync(async() => {
         // Given a board where a capture is possible
