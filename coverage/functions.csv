@@ -4,11 +4,5 @@ BrandhubMove.ts,1
 BrandhubRules.ts,2
 BrandhubState.ts,1
 BrandhubTutorial.ts,1
-ChatDAO.ts,1
-ChatService.ts,2
-ConfigRoomDAO.ts,1
 ConnectedUserService.ts,2
-ErrorDAO.ts,1
 exclusive-online-game-guard.ts,6
-FirestoreDAO.ts,8
-PartDAO.ts,1

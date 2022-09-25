@@ -8,7 +8,7 @@
            (click)="onClick(coord.x, coord.y)">
             <!-- Background -->
             <polyline [attr.points]="getHexaCoordsAt(coord)"
-                      class="base mid-stroke" />
+                      class="base mid-stroke"/>
             <!-- Piece -->
             <circle *ngIf="caseContent.getSize() > 0"
                     [attr.cx]="getCenterAt(coord).x"

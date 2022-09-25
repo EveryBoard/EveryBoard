@@ -80,15 +80,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const actualState: QuartoState = testUtils.getComponent().rules.node.gameState;
             expect(actualState).toEqual(state);
         }));
-        it('Should show previousMove when set', fakeAsync(async() => {
-            // Given a certain TutorialStep
+        it('Should show previousState when set', fakeAsync(async() => {
+            // Given a certain TutorialStep with previousState and previousMove
+            const tutorialPreviousState: QuartoState = QuartoState.getInitialState();
+            const tutorialPreviousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
             const state: QuartoState = new QuartoState([
-                [QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA],
-                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
-                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
-                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
-            ], 0, QuartoPiece.BBAA);
-            const expectedPreviousMove: QuartoMove = new QuartoMove(1, 1, QuartoPiece.AAAB);
+                [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ], 1, QuartoPiece.BBBB);
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
@@ -97,14 +98,18 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     ['#click_0_0'],
                     'Congratulations!',
                     'Perdu.',
-                ).withPreviousMove(expectedPreviousMove),
+                ).withPreviousMove(tutorialPreviousMove)
+                    .withPreviousState(tutorialPreviousState),
             ];
             // When starting tutorial
             wrapper.startTutorial(tutorial);
 
             // expect to see setted previous move
-            const actualMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
-            expect(expectedPreviousMove).toEqual(actualMove);
+            const componentPreviousMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
+            const componentPreviousState: QuartoState =
+                wrapper.gameComponent.rules.node.mother.get().gameState as QuartoState;
+            expect(componentPreviousMove).toEqual(tutorialPreviousMove);
+            expect(componentPreviousState).toEqual(tutorialPreviousState);
         }));
         it('Should show title of the steps, the selected one in bold', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps

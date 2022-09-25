@@ -13,7 +13,7 @@
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
                       [ngClass]="getSquareClasses(x, y)"
-                      class="base" />
+                      class="base"/>
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== EMPTY"
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
@@ -24,12 +24,11 @@
             </g>
         </g>
     </g>
-    <g *ngFor="let coord of targets">
-        <rect [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-              [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-              [attr.width]="INDICATOR_SIZE"
-              [attr.height]="INDICATOR_SIZE"
-              (click)="onClick(coord.x, coord.y)"
-              class="indicator" />
-    </g>
+    <rect *ngFor="let coord of targets"
+          [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.width]="INDICATOR_SIZE"
+          [attr.height]="INDICATOR_SIZE"
+          (click)="onClick(coord.x, coord.y)"
+          class="indicator"/>
 </svg>

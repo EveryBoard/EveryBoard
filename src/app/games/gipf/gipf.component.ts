@@ -111,7 +111,6 @@ export class GipfComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        console.log('onClick during phase', this.movePhase)
         switch (this.movePhase) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
             case GipfComponent.PHASE_FINAL_CAPTURE:
@@ -124,7 +123,6 @@ export class GipfComponent
         }
     }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {
-        console.log('selectCapture')
         const captures: GipfCapture[] = [];
         this.possibleCaptures.forEach((candidate: GipfCapture) => {
             if (candidate.contains(coord)) {
@@ -163,12 +161,10 @@ export class GipfComponent
         }
     }
     private moveToPlacementPhase(): MGPValidation {
-        console.log('moveToPlacementPhase')
         this.movePhase = GipfComponent.PHASE_PLACEMENT_COORD;
         return MGPValidation.SUCCESS;
     }
     private moveToInitialCaptureOrPlacementPhase(): MGPValidation {
-        console.log('moveToInitialCaptureOrPlacementPhase')
         this.possibleCaptures = GipfRules.getPossibleCaptures(this.constructedState);
         if (this.possibleCaptures.length === 0) {
             this.movePhase = GipfComponent.PHASE_PLACEMENT_COORD;
@@ -178,7 +174,6 @@ export class GipfComponent
         return MGPValidation.SUCCESS;
     }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
-        console.log('moveToFinalCapturePhaseOrTryMove')
         this.possibleCaptures = GipfRules.getPossibleCaptures(this.constructedState);
         if (this.possibleCaptures.length === 0) {
             return this.tryMove(this.initialCaptures, this.placement.get(), this.finalCaptures);
@@ -188,7 +183,6 @@ export class GipfComponent
         return MGPValidation.SUCCESS;
     }
     private computeArrows(placement: Coord): void {
-        console.log('computeArrows')
         this.arrows = [];
         for (const dir of GipfRules.getAllDirectionsForEntrance(this.constructedState, placement)) {
             if (GipfRules.isLineComplete(this.constructedState, placement, dir) === false) {
@@ -200,7 +194,6 @@ export class GipfComponent
         }
     }
     private async selectPlacementCoord(coord: Coord): Promise<MGPValidation> {
-        console.log('selectPlacementCoord')
         const validity: MGPValidation = this.rules.placementCoordValidity(this.constructedState, coord);
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
@@ -220,7 +213,6 @@ export class GipfComponent
         return MGPValidation.SUCCESS;
     }
     private async selectPlacementDirection(dir: MGPOptional<HexaDirection>): Promise<MGPValidation> {
-        console.log('selectPlacementDirection')
         this.placement = MGPOptional.of(new GipfPlacement(this.placementEntrance.get(), dir));
         const validity: MGPValidation = this.rules.placementValidity(this.constructedState, this.placement.get());
         if (validity.isFailure()) {
@@ -231,7 +223,6 @@ export class GipfComponent
         return this.moveToFinalCapturePhaseOrTryMove();
     }
     private async doPhasePlacementDirection(coord: Coord): Promise<MGPValidation> {
-        console.log('doPhasePlacementDirection')
         const entrance: Coord = this.placementEntrance.get();
         if (entrance.isAlignedWith(coord) === false ||
             entrance.getDistance(coord) !== 1)
@@ -249,7 +240,6 @@ export class GipfComponent
         return validity;
     }
     public cancelMoveAttempt(): void {
-        console.log('cancelMoveAttempt')
         this.constructedState = this.rules.node.gameState;
         this.captured = [];
         this.moved = [];

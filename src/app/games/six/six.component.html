@@ -8,18 +8,18 @@
               (click)="onPieceClick(piece)"
               [attr.points]="getHexaCoordsAt(piece)"
               [ngClass]="getPieceClass(piece)"
-              class="base round" />
+              class="base round"/>
     <polyline *ngFor="let neighbor of neighbors"
               id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
               (click)="onNeighborClick(neighbor)"
               [attr.points]="getHexaCoordsAt(neighbor)"
-              class="base round" />
+              class="base round"/>
     <polyline *ngIf="chosenLanding.isPresent()"
               id="chosenLanding_{{ chosenLanding.get().x }}_{{ chosenLanding.get().y }}"
               (click)="onPieceClick(chosenLanding.get())"
               [attr.points]="getHexaCoordsAt(chosenLanding.get())"
               [ngClass]="getPlayerClass(state.getCurrentPlayer())"
-              class="base round" />
+              class="base round"/>
     <!-- LAST MOVE -->
     <polyline *ngFor="let disconnected of disconnecteds"
               id="disconnected_{{ disconnected.x }}_{{ disconnected.y }}"
@@ -34,7 +34,7 @@
               id="lastDrop_{{ lastDrop.get().x }}_{{ lastDrop.get().y }}"
               (click)="onPieceClick(lastDrop.get())"
               [attr.points]="getHexaCoordsAt(lastDrop.get())"
-              class="base no-fill round last-move mid-stroke" />
+              class="base no-fill round last-move mid-stroke"/>
     <!-- HIGHLIGHTS -->
     <polyline *ngIf="selectedPiece.isPresent()"
               id="selectedPiece_{{ selectedPiece.get().x }}_{{ selectedPiece.get().y }}"
@@ -45,7 +45,7 @@
     <polyline *ngFor="let victoryCoord of victoryCoords"
               id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
               [attr.points]="getHexaCoordsAt(victoryCoord)"
-              class="base no-fill round highlighted mid-stroke" />
+              class="base no-fill round highlighted mid-stroke"/>
     <g *ngFor="let cuttableGroup of cuttableGroups"
        pointer-events="fill"
        class="capturable">

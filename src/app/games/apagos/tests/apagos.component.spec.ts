@@ -168,7 +168,6 @@ describe('ApagosComponent', () => {
             [7, 5, 3, 1],
         ], 5, 5);
         testUtils.setupState(state);
-
         // When clicking on that square
         // Then click should fail
         const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();

@@ -25,6 +25,91 @@ describe('SaharaComponent', () => {
         expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
+    describe('first click', () => {
+        it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
+            // Given the initial board
+            // When clicking on empty space, expect move to be refused
+            await testUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
+        }));
+        it('should not allow to select opponent pyramid', fakeAsync(async() => {
+            // Given the initial board
+            // When clicking on opponent's pyramid, expect move to be refused
+            await testUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
+        }));
+        it('should show possible landings when selecting a piece', fakeAsync(async() => {
+            // Given the initial board
+            // When clicking on a piece of the current player
+            await testUtils.expectClickSuccess('#click_7_0');
+
+            // Then its differents landing coord should be highlighted
+            testUtils.expectElementToExist('#possible_landing_6_0');
+            testUtils.expectElementToExist('#possible_landing_5_0');
+            testUtils.expectElementToExist('#possible_landing_6_1');
+        }));
+    });
+    describe('second click', () => {
+        it('should not allow to land on opponent pyramid', fakeAsync(async() => {
+            // Given the initial board on which a piece is selected
+            await testUtils.expectClickSuccess('#click_2_0');
+
+            // When clicking on an opponent piece
+            // Then it should have been a failure
+            const move: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 0)).get();
+            await testUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
+        }));
+        it('should not allow to bounce on occupied dark space', fakeAsync(async() => {
+            // Given the initial board
+            await testUtils.expectClickSuccess('#click_7_0');
+            const move: SaharaMove = SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get();
+            await testUtils.expectMoveFailure('#click_8_1', SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE(), move);
+        }));
+        it('should not allow invalid moves', fakeAsync(async() => {
+            // Given the initial board
+            await testUtils.expectClickSuccess('#click_0_3');
+            const reason: string = 'You can move one or two spaces, not 3.';
+            await testUtils.expectClickFailure('#click_2_2', reason);
+        }));
+        it('should change selected piece when clicking twice in a row on different player pieces', fakeAsync(async() => {
+            // Given the initial board with one selected piece
+            await testUtils.expectClickSuccess('#click_2_0');
+            testUtils.expectElementToExist('#chosen_coord_2_0');
+            testUtils.expectElementToExist('#possible_landing_2_1');
+
+            // When clicking another piece of the same player
+            await testUtils.expectClickSuccess('#click_7_0');
+
+            // Then the selected piece should have changed and the possible landings too
+            testUtils.expectElementToExist('#chosen_coord_7_0');
+            testUtils.expectElementToExist('#possible_landing_6_0');
+            testUtils.expectElementToExist('#possible_landing_5_0');
+            testUtils.expectElementToExist('#possible_landing_6_1');
+            // and obviously previous highlight removed
+            testUtils.expectElementNotToExist('chosen_coord_2_0');
+            testUtils.expectElementNotToExist('possible_landing_2_1');
+        }));
+        it('should deselect piece when clicking on it for a second time', fakeAsync(async() => {
+            // Given the initial board with one selected piece
+            await testUtils.expectClickSuccess('#click_2_0');
+            testUtils.expectElementToExist('#chosen_coord_2_0');
+            testUtils.expectElementToExist('#possible_landing_2_1');
+
+            // When clicking that piece again
+            await testUtils.expectClickSuccess('#click_2_0');
+
+            // Then the piece should no longer be selected
+            testUtils.expectElementNotToExist('chosen_coord_2_0');
+            testUtils.expectElementNotToExist('possible_landing_2_1');
+        }));
+        it('should take "false neighbor" as 3-step move', fakeAsync(async() => {
+            // Given the initial board with a first piece selected
+            await testUtils.expectClickSuccess('#click_7_0');
+
+            // When clicking on the false neighbor
+            // Then the correct message should be shown
+            const reason: string = SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS();
+            await testUtils.expectClickFailure('#click_7_1', reason);
+        }));
+    });
     it('Should play correctly shortest victory', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, _, X, _, _, _, O, X, N, N],
@@ -42,70 +127,5 @@ describe('SaharaComponent', () => {
         await testUtils.expectMoveSuccess('#click_1_2', move); // select landing
 
         expect(testUtils.wrapper.endGame).toBeTrue();
-    }));
-    it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
-        // Given the initial board
-        // When clicking on empty space, expect move to be refused
-        await testUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
-    }));
-    it('should not allow to select opponent pyramid', fakeAsync(async() => {
-        // Given the initial board
-        // When clicking on opponent's pyramid, expect move to be refused
-        await testUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
-    }));
-    it('should not allow to land on opponent pyramid', fakeAsync(async() => {
-        // Given the initial board
-        await testUtils.expectClickSuccess('#click_2_0');
-        const move: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 0)).get();
-        await testUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
-    }));
-    it('should not allow to bounce on occupied dark space', fakeAsync(async() => {
-        // Given the initial board
-        await testUtils.expectClickSuccess('#click_7_0');
-        const move: SaharaMove = SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get();
-        await testUtils.expectMoveFailure('#click_8_1', SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE(), move);
-    }));
-    it('should not allow invalid moves', fakeAsync(async() => {
-        // Given the initial board
-        await testUtils.expectClickSuccess('#click_0_3');
-        const reason: string = 'You can move one or two spaces, not 3.';
-        await testUtils.expectClickFailure('#click_2_2', reason);
-    }));
-    it('should change selected piece when clicking twice in a row on different player pieces', fakeAsync(async() => {
-        // Given the initial board with one selected piece
-        await testUtils.expectClickSuccess('#click_2_0');
-        testUtils.expectElementToExist('#chosen_coord_2_0');
-        testUtils.expectElementToExist('#possible_landing_2_1');
-
-        // When clicking another piece of the same player
-        await testUtils.expectClickSuccess('#click_7_0');
-
-        // Then the selected piece should have changed and the possible landings too
-        testUtils.expectElementToExist('#chosen_coord_7_0');
-        testUtils.expectElementToExist('#possible_landing_6_0');
-        testUtils.expectElementToExist('#possible_landing_5_0');
-        testUtils.expectElementToExist('#possible_landing_6_1');
-        // and obviously previous highlight removed
-        testUtils.expectElementNotToExist('chosen_coord_2_0');
-        testUtils.expectElementNotToExist('possible_landing_2_1');
-    }));
-    it('should show possible landings when selecting a piece', fakeAsync(async() => {
-        // Given the initial board
-        // When clicking on a piece of the current player
-        await testUtils.expectClickSuccess('#click_7_0');
-
-        // Then its differents landing coord should be highlighted
-        testUtils.expectElementToExist('#possible_landing_6_0');
-        testUtils.expectElementToExist('#possible_landing_5_0');
-        testUtils.expectElementToExist('#possible_landing_6_1');
-    }));
-    it('should take "false neighbor" as 3-step move', fakeAsync(async() => {
-        // Given the initial board with a first piece selected
-        await testUtils.expectClickSuccess('#click_7_0');
-
-        // When clicking on the false neighbor
-        // Then the correct message should be shown
-        const reason: string = SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS();
-        await testUtils.expectClickFailure('#click_7_1', reason);
     }));
 });

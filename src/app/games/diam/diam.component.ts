@@ -36,8 +36,9 @@ interface PieceInfo {
     actualPiece: DiamPiece,
 }
 
-type Selected = { type: 'pieceFromReserve', piece: DiamPiece }
-    | { type: 'pieceFromBoard', position: Coord }
+type SelectedPiece = { type: 'pieceFromReserve', piece: DiamPiece };
+type SelectedPosition = { type: 'pieceFromBoard', position: Coord };
+type Selected = SelectedPiece | SelectedPosition;
 
 interface LastMoved {
     startDrawPosition: Coord,
@@ -137,9 +138,14 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clickedPiece: DiamPiece = this.getState().getPieceAtXY(x, y);
+        const clicked: Coord = new Coord(x, y);
+        const clickedPiece: DiamPiece = this.getState().getPieceAt(clicked);
         if (clickedPiece.owner === this.getCurrentPlayer()) {
-            this.selected = MGPOptional.of({ type: 'pieceFromBoard', position: new Coord(x, y) });
+            if (this.isSelected(null, clicked)) {
+                this.cancelMoveAttempt();
+            } else {
+                this.selected = MGPOptional.of({ type: 'pieceFromBoard', position: clicked });
+            }
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else if (this.selected.isPresent()) {
@@ -156,7 +162,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         }
 
         if (piece.owner === this.getCurrentPlayer()) {
-            if (this.selected.isPresent() && this.selected.get()['piece'] === piece) {
+            if (this.isSelected(piece)) {
                 this.selected = MGPOptional.empty();
             } else {
                 this.selected = MGPOptional.of({ type: 'pieceFromReserve', piece });
@@ -169,6 +175,18 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
     private getPieceId(piece: DiamPiece, z: number): string {
         return '#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0) + '_' + z;
+    }
+    private isSelected(piece: DiamPiece | null, position?: Coord): boolean {
+        if (this.selected.isAbsent()) {
+            return false;
+        }
+        if (piece == null && this.selected.get().type === 'pieceFromBoard') {
+            const selected: SelectedPosition = this.selected.get() as SelectedPosition;
+            return selected.position.equals(position as Coord);
+        } else {
+            const selected: SelectedPiece = this.selected.get() as SelectedPiece;
+            return selected.piece === piece;
+        }
     }
     public updateBoard(): void {
         this.updateViewInfo();
@@ -294,8 +312,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         if (this.selected.isPresent()) {
             const selected: Selected = this.selected.get();
             return selected.type === 'pieceFromReserve' &&
-                selected.piece === piece &&
-                y === remainingPiecesOfThatType-1;
+                   selected.piece === piece &&
+                   y === remainingPiecesOfThatType-1;
         } else {
             return false;
         }

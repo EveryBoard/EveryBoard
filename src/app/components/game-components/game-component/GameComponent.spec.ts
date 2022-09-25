@@ -102,6 +102,7 @@ describe('GameComponent', () => {
             Quarto: {
                 chooseCoord: [0, 0],
                 choosePiece: [0],
+                deselectDroppedPiece: [],
             },
             Quixo: {
                 onBoardClick: [0, 0],

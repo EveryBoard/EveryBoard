@@ -35,17 +35,17 @@
     </g>
     <polygon *ngFor="let possibleLanding of possibleLandings"
              [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
-             class="base no-fill highlighted" />
+             class="base no-fill highlighted"/>
     <polygon *ngIf="lastStart.isPresent()"
              [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
-             class="base no-fill last-move" />
+             class="base no-fill last-move"/>
     <polygon *ngIf="lastEnd.isPresent()"
              [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
-             class="base no-fill last-move" />
+             class="base no-fill last-move"/>
     <polygon *ngIf="chosenCoord.isPresent()"
              id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
              [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
-             class="base no-fill selected" />
+             class="base no-fill selected"/>
     <g *ngIf="mustShowTilesOf(0)"
        id="tilesCountZero"
     >

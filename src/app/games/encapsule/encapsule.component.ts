@@ -29,7 +29,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private readonly INTER_PIECE_SPACE: number = 20;
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
-    private chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
     private chosenPieceIndex: number;
     public remainingPieceLeftX: number[][] = [];
@@ -86,7 +86,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             }
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
-                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN());
+                this.cancelMoveAttempt();
+                return MGPValidation.SUCCESS;
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord.get(), clickedCoord);
@@ -156,13 +157,6 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 Utils.expectToBe(piece.getSize(), Size.SMALL);
                 return (this.SPACE_SIZE / 2) - (3 * this.STROKE_WIDTH) - 6;
         }
-    }
-    public getHighlightedCases(): Coord[] {
-        const coords: Coord[] = [];
-        if (this.chosenCoord.isPresent()) {
-            coords.push(this.chosenCoord.get());
-        }
-        return coords;
     }
     public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
