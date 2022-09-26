@@ -56,7 +56,7 @@ describe('MartianChessRules', () => {
             new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax'),
         ];
     });
-    it('Should be illegal to choose a piece in the opponent territory', () => {
+    it('should be illegal to choose a piece in the opponent territory', () => {
         // Given any board
         const state: MartianChessState = MartianChessState.getInitialState();
 

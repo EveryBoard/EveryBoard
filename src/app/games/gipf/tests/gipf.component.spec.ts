@@ -37,7 +37,7 @@ describe('GipfComponent', () => {
         expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(testUtils.getComponent()).withContext('GipfComponent should be created').toBeTruthy();
     });
-    describe('first click', () => {
+    describe('First click', () => {
         it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
             // Given a board on which some external space is empty
             // When clicking on that piece
@@ -475,5 +475,15 @@ describe('GipfComponent', () => {
         expectToHaveArrow(new Coord(3, 6), new Coord(2, 6));
         expectToHaveArrow(new Coord(3, 6), new Coord(3, 5));
         expectToHaveArrow(new Coord(3, 6), new Coord(4, 5));
+    }));
+    it('should deselect selected coord when clicking on it again', fakeAsync(async() => {
+        // Given any board on which one piece is selected for push
+        await testUtils.expectClickSuccess('#click_6_3');
+
+        // When clicking on it again
+        await testUtils.expectClickSuccess('#click_6_3');
+
+        // Then it should no longer be selected
+        expect(testUtils.getComponent().arrows.length).toBe(0);
     }));
 });

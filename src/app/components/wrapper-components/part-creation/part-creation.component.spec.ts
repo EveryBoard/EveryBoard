@@ -741,7 +741,7 @@ describe('PartCreationComponent', () => {
 });
 
 describe('PartType', () => {
-    it('Should map correctly with PartType.of', () => {
+    it('should map correctly with PartType.of', () => {
         expect(PartType.of('STANDARD').value).toBe('STANDARD');
         expect(PartType.of('BLITZ').value).toBe('BLITZ');
         expect(PartType.of('CUSTOM').value).toBe('CUSTOM');

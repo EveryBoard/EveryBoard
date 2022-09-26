@@ -68,12 +68,12 @@ describe('SaharaRules', () => {
     it('Bouncing on occupied space should be illegal', () => {
         expect(rules.choose(SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get())).toBeFalse();
     });
-    it('Should forbid moving opponent piece', () => {
+    it('should forbid moving opponent piece', () => {
         const state: SaharaState = SaharaState.getInitialState();
         const move: SaharaMove = SaharaMove.from(new Coord(3, 0), new Coord(4, 0)).get();
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
-    it('Should see that Player.ONE won', () => {
+    it('should see that Player.ONE won', () => {
         const board: FourStatePiece[][] = [
             [N, N, O, _, _, _, X, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],

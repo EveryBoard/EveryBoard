@@ -12,7 +12,7 @@ describe('ApagosDummyMinimax', () => {
         const ruler: ApagosRules = new ApagosRules(ApagosState);
         minimax = new ApagosDummyMinimax(ruler, 'ApagosDummyMinimax');
     });
-    it('Should have all 8 drop as possible move at first turn', () => {
+    it('should have all 8 drop as possible move at first turn', () => {
         // Given initial node
         const initialState: ApagosState = ApagosState.getInitialState();
         const node: ApagosNode = new ApagosNode(initialState);

@@ -26,7 +26,7 @@ describe('P4Rules', () => {
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
-    it('Should drop piece on the lowest case of the column', () => {
+    it('should drop piece on the lowest case of the column', () => {
         // Given the initial board
         const state: P4State = P4State.getInitialState();
 
@@ -103,7 +103,7 @@ describe('P4Rules', () => {
         const node: P4Node = new P4Node(expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('Should be a draw', () => {
+    it('should be a draw', () => {
         // Given a penultian board without victory
         const board: Table<PlayerOrNone> = [
             [O, O, O, _, O, O, O],

@@ -140,7 +140,7 @@ describe('LocalGameWrapperComponent', () => {
         }));
     });
     describe('Using AI', () => {
-        it('Should show level when non-human player is selected, and propose ai to play', async() => {
+        it('should show level when non-human player is selected, and propose ai to play', async() => {
             // 1. Choosing AI
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
             testUtils.expectElementNotToExist('#aiZeroDepthSelect');

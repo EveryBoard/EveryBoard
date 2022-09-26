@@ -39,7 +39,7 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
     private orderMoves(node: AwaleNode, moves: AwaleMove[]): AwaleMove[] {
         const player: number = node.gameState.getCurrentPlayer().value;
         const opponent: number = node.gameState.getCurrentPlayer().getOpponent().value;
-        // sort by captured cases
+        // sort by captured space
         ArrayUtils.sortByDescending(moves, (move: AwaleMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();
             const toDistribute: number = board[player][move.x];

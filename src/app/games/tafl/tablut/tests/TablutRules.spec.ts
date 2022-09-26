@@ -33,7 +33,7 @@ describe('TablutRules', () => {
             new TaflEscapeThenPieceAndControlMinimax(rules, 'Escape > Piece > Control'),
         ];
     });
-    it('Should be created', () => {
+    it('should be created', () => {
         expect(rules).toBeTruthy();
     });
     it('Capture should work', () => {
@@ -285,7 +285,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should forbid soldier to land on the central throne (4, 4)', () => {
+    it('should forbid soldier to land on the central throne (4, 4)', () => {
         // Given a board where a soldier could reach the throne
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
@@ -307,7 +307,7 @@ describe('TablutRules', () => {
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Should not sandwich the king far from throne', () => {
+    it('should not sandwich the king far from throne', () => {
         // Given a board where the king is next to a corner and one move ahead from sandwich
         const board: TaflPawn[][] = [
             [_, _, _, _, _, _, _, _, _],

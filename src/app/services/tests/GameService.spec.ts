@@ -58,7 +58,7 @@ describe('GameService', () => {
     it('should create', () => {
         expect(gameService).toBeTruthy();
     });
-    it('Should delegate updateAndBumpIndex to the DAO update, and bump the index', async() => {
+    it('should delegate updateAndBumpIndex to the DAO update, and bump the index', async() => {
         // Given a part and an update to make to the part
         spyOn(partDAO, 'update').and.resolveTo();
         const update: Partial<Part> = {

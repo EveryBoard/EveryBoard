@@ -25,7 +25,7 @@ describe('SaharaComponent', () => {
         expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    describe('first click', () => {
+    describe('First click', () => {
         it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
             // Given the initial board
             // When clicking on empty space, expect move to be refused
@@ -47,7 +47,7 @@ describe('SaharaComponent', () => {
             testUtils.expectElementToExist('#possible_landing_6_1');
         }));
     });
-    describe('second click', () => {
+    describe('Second click', () => {
         it('should not allow to land on opponent pyramid', fakeAsync(async() => {
             // Given the initial board on which a piece is selected
             await testUtils.expectClickSuccess('#click_2_0');
@@ -110,7 +110,7 @@ describe('SaharaComponent', () => {
             await testUtils.expectClickFailure('#click_7_1', reason);
         }));
     });
-    it('Should play correctly shortest victory', fakeAsync(async() => {
+    it('should play correctly shortest victory', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, _, X, _, _, _, O, X, N, N],
             [N, _, O, _, _, _, _, _, _, _, N],

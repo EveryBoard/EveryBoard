@@ -101,7 +101,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
         }
     });
     describe('Tutorials', () => {
-        it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
@@ -315,7 +315,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 }
             }
         }));
-        it('Should make sure all solutionMove are legal', fakeAsync(async() => {
+        it('should make sure all solutionMove are legal', fakeAsync(async() => {
             for (const gameInfo of GameInfo.ALL_GAMES()) {
                 if (gameInfo.display === false) {
                     continue;

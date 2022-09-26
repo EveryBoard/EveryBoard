@@ -20,7 +20,7 @@ describe('P4Minimax', () => {
         rules = new P4Rules(P4State);
         minimax = new P4Minimax(rules, 'P4Minimax');
     });
-    it('Should know when a column is full or not', () => {
+    it('should know when a column is full or not', () => {
         const board: Table<PlayerOrNone> = [
             [X, _, _, _, _, _, _],
             [O, _, _, _, _, _, _],

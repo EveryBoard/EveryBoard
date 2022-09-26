@@ -12,7 +12,7 @@ describe('TaflMove', () => {
         expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(0, 0)))
             .toThrowError(error);
     });
-    it('Should throw when given out of range coords', () => {
+    it('should throw when given out of range coords', () => {
         const outOfRange: Coord = new Coord(-1, -1);
         const inRange: Coord = new Coord(0, 0);
         expect(() => MyTaflMove.from(outOfRange, inRange))
@@ -28,7 +28,7 @@ describe('TaflMove', () => {
         const error: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
         expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(2, 5))).toThrowError(error);
     });
-    it('Should override equals and toString correctly', () => {
+    it('should override equals and toString correctly', () => {
         const a: Coord = new Coord(0, 0);
         const b: Coord = new Coord(0, 1);
         const c: Coord = new Coord(0, 2);

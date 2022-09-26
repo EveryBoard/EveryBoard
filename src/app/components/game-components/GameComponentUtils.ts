@@ -3,7 +3,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
 
 export class GameComponentUtils {
-    public static getArrowTransform(caseSize: number, coord: Coord, direction: Orthogonal): string {
+    public static getArrowTransform(spaceSize: number, coord: Coord, direction: Orthogonal): string {
         let dx: number;
         let dy: number;
         let angle: number;
@@ -32,8 +32,8 @@ export class GameComponentUtils {
         }
         const rotation: string = `rotate(${angle})`;
         const scaling: string = 'scale(2.5)';
-        const realX: number = coord.x * caseSize + caseSize/2 + dx * caseSize/4;
-        const realY: number = coord.y * caseSize + caseSize/2 + dy * caseSize/4;
+        const realX: number = coord.x * spaceSize + spaceSize/2 + dx * spaceSize/4;
+        const realY: number = coord.y * spaceSize + spaceSize/2 + dy * spaceSize/4;
         const translation: string = `translate(${realX} ${realY})`;
         return [translation, scaling, rotation].join(' ');
     }

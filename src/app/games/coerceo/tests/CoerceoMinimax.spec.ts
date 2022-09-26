@@ -21,7 +21,7 @@ describe('CoerceoMinimax', () => {
         const rules: CoerceoRules = new CoerceoRules(CoerceoState);
         minimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
     });
-    it('Should prefer a board where he has more freedom', () => {
+    it('should prefer a board where he has more freedom', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -53,7 +53,7 @@ describe('CoerceoMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should count correct number of moves', () => {
+    it('should count correct number of moves', () => {
         const board: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

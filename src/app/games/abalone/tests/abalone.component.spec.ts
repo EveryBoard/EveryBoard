@@ -22,7 +22,7 @@ describe('AbaloneComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<AbaloneComponent>('Abalone');
     }));
-    describe('first click', () => {
+    describe('First click', () => {
         it('should highlight selected piece and show legal directions choice when clicking piece', fakeAsync(async() => {
             // Given the initial board
 

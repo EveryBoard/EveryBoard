@@ -252,7 +252,7 @@ describe('GoRules:', () => {
             const reason: string = GoFailure.OCCUPIED_INTERSECTION();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should forbid suicide', () => {
+        it('should forbid suicide', () => {
             // Given a board with a coord without freedom
             const board: Table<GoPiece> = [
                 [_, _, _, _, _],
@@ -582,7 +582,7 @@ describe('GoRules:', () => {
         });
     });
     describe('End Game', () => {
-        it('Should calculate correctly board with dead stones (And Recognize Draw)', () => {
+        it('should calculate correctly board with dead stones (And Recognize Draw)', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
                 [w, w, X, O, b],
@@ -598,7 +598,7 @@ describe('GoRules:', () => {
             // Then it should see the draw
             RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
-        it('Should recognize victory', () => {
+        it('should recognize victory', () => {
             // Given a board where Player.ZERO win
             const board: Table<GoPiece> = [
                 [w, X, _, O, b],
@@ -634,7 +634,7 @@ describe('GoRules:', () => {
         const expectedScore: number[] = [7, 3];
         expect(score).withContext('Score should be 7 vs 3').toEqual(expectedScore);
     });
-    it('Should calculate correctly board with dead stones', () => {
+    it('should calculate correctly board with dead stones', () => {
         const board: Table<GoPiece> = [
             [_, _, X, O, _],
             [_, _, X, O, _],

@@ -26,7 +26,7 @@ describe('ApagosMove', () => {
             NumberEncoderTestUtils.expectToBeCorrect(ApagosMove.encoder, move);
         }
     });
-    it('Should override equals correctly', () => {
+    it('should override equals correctly', () => {
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
         const sameMove: ApagosMove = ApagosMove.drop(ApagosCoord.from(1), Player.fromTurn(0));
         const differentMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ONE).get();

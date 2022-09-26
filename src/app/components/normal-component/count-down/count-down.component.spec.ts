@@ -51,14 +51,14 @@ describe('CountDownComponent', () => {
         });
     });
     describe('pause', () => {
-        it('Should throw when pausing already paused chrono', () => {
+        it('should throw when pausing already paused chrono', () => {
             component.setDuration(1250);
             component.start();
             component.pause();
             const error: string = 'Should not pause already paused chrono (undefined)';
             expect(() => component.pause()).toThrowError(error);
         });
-        it('Should throw when pausing not started chrono', () => {
+        it('should throw when pausing not started chrono', () => {
             const error: string = 'Should not pause not started chrono (undefined)';
             expect(() => component.pause()).toThrowError(error);
         });
@@ -153,22 +153,22 @@ describe('CountDownComponent', () => {
         }));
     });
     describe('Style depending of remaining time', () => {
-        it('Should be safe style when upper than limit', () => {
+        it('should be safe style when upper than limit', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(12 * 1000);
             expect(component.getTimeClass()).toEqual(CountDownComponent.SAFE_TIME);
         });
-        it('Should be first danger style when lower than limit and even remaining second', () => {
+        it('should be first danger style when lower than limit and even remaining second', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(9 * 1000);
             expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_EVEN);
         });
-        it('Should be second danger style when lower than limit and odd remaining second', () => {
+        it('should be second danger style when lower than limit and odd remaining second', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(8 * 1000);
             expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_ODD);
         });
-        it('Should be in passive style when passive', () => {
+        it('should be in passive style when passive', () => {
             // Given a chrono that could be in danger time style
             component.setDuration(8 * 1000);
 

@@ -24,7 +24,7 @@ describe('PylosComponent', () => {
         expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    describe('first click', () => {
+    describe('First click', () => {
         it('should allow droping piece on occupable space', fakeAsync(async() => {
             // Given a board where a drop is possible
 
@@ -86,7 +86,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
     });
-    describe('second click', () => {
+    describe('Second click', () => {
         it('should forbid piece to land lower than they started', fakeAsync(async() => {
             // Given a board with an higher piece and lower space
             const initialBoard: PlayerOrNone[][][] = [

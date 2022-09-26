@@ -16,6 +16,7 @@
                       class="base"/>
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== EMPTY"
+                        id="piece_{{ x }}_{{ y }}"
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
                         [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
                         [ngClass]="getPieceClasses(x, y)"

@@ -18,7 +18,7 @@ describe('SixState', () => {
     const X: number = Player.ONE.value;
 
     describe('toRepresentation/fromRepresentation', () => {
-        it('Should represent correctly board', () => {
+        it('should represent correctly board', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             pieces.put(new Coord(0, 0), Player.ONE);
             pieces.put(new Coord(1, 1), Player.ZERO);
@@ -29,7 +29,7 @@ describe('SixState', () => {
             ];
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
         });
-        it('Should create correctly from representation', () => {
+        it('should create correctly from representation', () => {
             const representation: NumberTable = [
                 [X, _],
                 [_, O],
@@ -41,7 +41,7 @@ describe('SixState', () => {
             const state: SixState = SixState.fromRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);
         });
-        it('Should make 0 the left and upper indexes', () => {
+        it('should make 0 the left and upper indexes', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             pieces.put(new Coord(-1, -1), Player.ONE);
             pieces.put(new Coord(0, 0), Player.ZERO);
@@ -53,7 +53,7 @@ describe('SixState', () => {
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
             expect(state.offset).toEqual(new Vector(1, 1));
         });
-        it('Should make 0 the left and upper indexes (horizontal bug)', () => {
+        it('should make 0 the left and upper indexes (horizontal bug)', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             pieces.put(new Coord(1, 0), Player.ONE);
             pieces.put(new Coord(2, 0), Player.ZERO);
@@ -65,7 +65,7 @@ describe('SixState', () => {
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
             expect(state.offset.equals(new Vector(-1, 0))).toBeTrue();
         });
-        it('Should make 0 the left and upper indexes (vertical bug)', () => {
+        it('should make 0 the left and upper indexes (vertical bug)', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             pieces.put(new Coord(0, 1), Player.ONE);
             pieces.put(new Coord(0, 2), Player.ZERO);

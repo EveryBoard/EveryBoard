@@ -198,6 +198,10 @@ export class GipfComponent
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        if (this.placementEntrance.equalsValue(coord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
         this.placementEntrance = MGPOptional.of(coord);
         const clickedPiece: FourStatePiece = this.constructedState.getPieceAt(coord);
         if (clickedPiece === FourStatePiece.EMPTY) {

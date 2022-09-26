@@ -21,12 +21,12 @@ describe('SixComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<SixComponent>('Six');
     }));
-    it('Should create', () => {
+    it('should create', () => {
         expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    describe('first click (drop/selection)', () => {
-        it('Should cancel move when clicking on opponent piece', fakeAsync(async() => {
+    describe('First click (drop/selection)', () => {
+        it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
             const board: NumberTable = [
                 [O],
             ];
@@ -35,12 +35,12 @@ describe('SixComponent', () => {
 
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
-        it('Should drop before 40th turn', fakeAsync(async() => {
+        it('should drop before 40th turn', fakeAsync(async() => {
             testUtils.fixture.detectChanges(); // TODOTODO what the actual poopz ?
             const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
             await testUtils.expectMoveSuccess('#neighbor_0_2', move);
         }));
-        it('Should cancel move when clicking on empty space as first click after 40th turn', fakeAsync(async() => {
+        it('should cancel move when clicking on empty space as first click after 40th turn', fakeAsync(async() => {
             const board: NumberTable = [
                 [O],
                 [X],
@@ -54,10 +54,10 @@ describe('SixComponent', () => {
 
             await testUtils.expectClickFailure('#neighbor_1_1', SixFailure.CAN_NO_LONGER_DROP());
         }));
-        it('Should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
+        it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
             await testUtils.expectClickFailure('#piece_0_0', SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }));
-        it('Should selected piece when clicking on it (in moving phase)', fakeAsync(async() => {
+        it('should selected piece when clicking on it (in moving phase)', fakeAsync(async() => {
             // Given a board in moving phase
             const board: NumberTable = [
                 [O],
@@ -77,8 +77,8 @@ describe('SixComponent', () => {
             testUtils.expectElementToExist('#selectedPiece_0_0');
         }));
     });
-    describe('second click (landing)', () => {
-        it('Should do movement after the 39th turn and show left coords', fakeAsync(async() => {
+    describe('Second click (landing)', () => {
+        it('should do movement after the 39th turn and show left coords', fakeAsync(async() => {
             const board: NumberTable = [
                 [O],
                 [X],
@@ -100,7 +100,7 @@ describe('SixComponent', () => {
             testUtils.expectElementToExist('#lastDrop_0_5');
             expect(gameComponent.getPieceClass(new Coord(0, 5))).toBe('player0');
         }));
-        it('Should deselect selected piece when clicking on it again', fakeAsync(async() => {
+        it('should deselect selected piece when clicking on it again', fakeAsync(async() => {
             // Given a board in moving phase, where a piece is selected
             const board: NumberTable = [
                 [O],
@@ -121,8 +121,8 @@ describe('SixComponent', () => {
             testUtils.expectElementNotToExist('#selectedPiece_0_0');
         }));
     });
-    describe('thirds click (cutting)', () => {
-        it('Should ask to cut when needed', fakeAsync(async() => {
+    describe('Third click (cutting)', () => {
+        it('should ask to cut when needed', fakeAsync(async() => {
             const board: NumberTable = [
                 [O, _, O],
                 [X, _, O],
@@ -160,7 +160,7 @@ describe('SixComponent', () => {
             testUtils.expectElementToExist('#disconnected_-2_2');
             testUtils.expectElementToExist('#disconnected_-2_3');
         }));
-        it('Should show as disconnected opponent lastDrop if he is dumb enough to do that', fakeAsync(async() => {
+        it('should show as disconnected opponent lastDrop if he is dumb enough to do that', fakeAsync(async() => {
             const board: NumberTable = [
                 [O, _, O],
                 [X, _, O],
@@ -182,7 +182,7 @@ describe('SixComponent', () => {
             testUtils.expectElementToExist('#disconnected_2_2');
             testUtils.expectElementToExist('#disconnected_2_3');
         }));
-        it('Should cancel the move if player clicks on an empty space instead of chosing a group for cutting', fakeAsync(async() => {
+        it('should cancel the move if player clicks on an empty space instead of chosing a group for cutting', fakeAsync(async() => {
             // Given that a cuttable group must be selected by the user
             const board: NumberTable = [
                 [O],
@@ -201,7 +201,7 @@ describe('SixComponent', () => {
             await testUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());
             testUtils.expectElementToExist('#piece_0_2');
         }));
-        it('Should still allow to click on opponent piece after 40th as a third click', fakeAsync(async() => {
+        it('should still allow to click on opponent piece after 40th as a third click', fakeAsync(async() => {
             const board: NumberTable = [
                 [O],
                 [X],
@@ -219,7 +219,7 @@ describe('SixComponent', () => {
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
     });
-    it('Should highlight winning coords', fakeAsync(async() => {
+    it('should highlight winning coords', fakeAsync(async() => {
         const board: number[][] = [
             [O, _, _, _, _, _, _, _, _, _],
             [O, O, O, O, O, X, X, X, X, X],

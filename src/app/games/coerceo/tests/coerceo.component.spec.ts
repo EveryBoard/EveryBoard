@@ -39,14 +39,14 @@ describe('CoerceoComponent', () => {
         expect(testUtils.getComponent()).withContext('CoerceoComponent should be created').toBeTruthy();
     });
     describe('visual features', () => {
-        it('Should show tile when more than zero', fakeAsync(async() => {
+        it('should show tile when more than zero', fakeAsync(async() => {
             const board: Table<FourStatePiece> = CoerceoState.getInitialState().getCopiedBoard();
             const state: CoerceoState = new CoerceoState(board, 0, [1, 0], [0, 0]);
             testUtils.expectElementNotToExist('#playerZeroTilesCount');
             testUtils.setupState(state);
             testUtils.expectElementToExist('#playerZeroTilesCount');
         }));
-        it('Should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
+        it('should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
             // Given a board with just removed pieces
             const previousBoard: Table<FourStatePiece> = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -89,7 +89,7 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementToExist('#tilesCountZero');
             testUtils.expectElementNotToExist('#tilesCountOne');
         }));
-        it('Should show removed tiles, and captured piece (after movement)', fakeAsync(async() => {
+        it('should show removed tiles, and captured piece (after movement)', fakeAsync(async() => {
             // Given a board with just removed pieces
             const previousBoard: Table<FourStatePiece> = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -127,8 +127,8 @@ describe('CoerceoComponent', () => {
             expectCoordToBeOfRemovedFill(10, 7);
         }));
     });
-    describe('first click', () => {
-        it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
+    describe('First click', () => {
+        it('should accept tiles exchange proposal as first click', fakeAsync(async() => {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
             await testUtils.expectMoveFailure('#click_6_9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
@@ -136,7 +136,7 @@ describe('CoerceoComponent', () => {
                                               undefined,
                                               getScores());
         }));
-        it('Should show possibles destination after choosing your own piece', fakeAsync(async() => {
+        it('should show possibles destination after choosing your own piece', fakeAsync(async() => {
             // Given any board
             // When clicking on any piece
             await testUtils.expectClickSuccess('#click_6_2');
@@ -150,20 +150,20 @@ describe('CoerceoComponent', () => {
             expect(component.possibleLandings).toContain(new Coord(5, 3));
             expect(component.possibleLandings).toContain(new Coord(4, 2));
         }));
-        it('Should cancelMove when first click is on empty space', fakeAsync(async() => {
+        it('should cancelMove when first click is on empty space', fakeAsync(async() => {
             // Given any board
             // When clicking on empty space
             // Then it should have been a failure
             await testUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }));
     });
-    describe('second click', () => {
-        it('Should allow simple move', fakeAsync(async() => {
+    describe('Second click', () => {
+        it('should allow simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
             await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
         }));
-        it('Should switch of selected piece when clicking another player piece', fakeAsync(async() => {
+        it('should switch of selected piece when clicking another player piece', fakeAsync(async() => {
             // Given a board where a first piece has been selected
             await testUtils.expectClickSuccess('#click_6_2');
 
@@ -181,7 +181,7 @@ describe('CoerceoComponent', () => {
             expect(component.possibleLandings).toContain(new Coord(10, 2));
             expect(component.possibleLandings).toContain(new Coord(9, 3));
         }));
-        it('Should deselect piece when clicking a second time on it', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board on which a piece is selected
             await testUtils.expectClickSuccess('#click_6_2');
 
@@ -193,7 +193,7 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementNotToExist('#selected_6_2');
             expect(component.possibleLandings.length).toBe(0);
         }));
-        it('Should refuse invalid movement', fakeAsync(async() => {
+        it('should refuse invalid movement', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');
             await testUtils.expectClickFailure('#click_8_4', CoerceoFailure.INVALID_DISTANCE());
         }));
