@@ -18,42 +18,38 @@ import { MinimalUser } from '../domain/MinimalUser';
  */
 export class ActivePartsService {
 
-    private activeParts: PartDocument[] = [];
-
     constructor(private readonly partDAO: PartDAO) {
     }
 
     public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
+        let activeParts: PartDocument[] = [];
         const onDocumentCreated: (createdParts: PartDocument[]) => void = (createdParts: PartDocument[]) => {
-            this.activeParts = this.activeParts.concat(...createdParts);
-            callback(this.activeParts);
+            activeParts = activeParts.concat(...createdParts);
+            callback(activeParts);
         };
         const onDocumentModified: (modifiedParts: PartDocument[]) => void = (modifiedParts: PartDocument[]) => {
-            const result: PartDocument[] = this.activeParts;
+            const result: PartDocument[] = activeParts;
             for (const p of modifiedParts) {
                 result.forEach((part: PartDocument) => {
                     if (part.id === p.id) part.data = p.data;
                 });
             }
-            this.activeParts = result;
-            callback(this.activeParts);
+            activeParts = result;
+            callback(activeParts);
         };
         const onDocumentDeleted: (deletedDocIds: PartDocument[]) => void = (deletedDocs: PartDocument[]) => {
             const result: PartDocument[] = [];
-            for (const p of this.activeParts) {
+            for (const p of activeParts) {
                 if (!deletedDocs.some((part: PartDocument) => part.id === p.id)) {
                     result.push(p);
                 }
             }
-            this.activeParts = result;
-            callback(this.activeParts);
+            activeParts = result;
+            callback(activeParts);
         };
         const partObserver: FirestoreCollectionObserver<Part> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        return this.observeActiveParts(partObserver);
-    }
-    public observeActiveParts(callback: FirestoreCollectionObserver<Part>): Subscription {
-        return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
+        return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], partObserver);
     }
     public async userHasActivePart(user: MinimalUser): Promise<boolean> {
         // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
