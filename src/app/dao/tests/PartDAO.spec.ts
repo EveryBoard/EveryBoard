@@ -1001,7 +1001,9 @@ describe('PartDAO', () => {
                                           return { remainingMsForOne: one + 1000 };
                                       }, true);
             });
-            it('should forbid increasing its own time (as playerZero)', async() => {
+            xit('should forbid increasing its own time (as playerZero)', async() => {
+                // Disabled because we removed it from the rules, otherwise
+                // security rules are too complexed to be checked
                 await checkTimeUpdate(Player.ZERO,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForZero: zero + 1000 };
@@ -1013,7 +1015,9 @@ describe('PartDAO', () => {
                                           return { remainingMsForZero: zero + 1000 };
                                       }, true);
             });
-            it('should forbid increasing its own time (as playerOne)', async() => {
+            xit('should forbid increasing its own time (as playerOne)', async() => {
+                // Disabled because we removed it from the rules, otherwise
+                // security rules are too complexed to be checked
                 await checkTimeUpdate(Player.ONE,
                                       (zero: number, one: number): Partial<Part> => {
                                           return { remainingMsForOne: one + 1000 };
