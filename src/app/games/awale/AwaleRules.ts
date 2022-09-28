@@ -79,7 +79,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
 
         const x: number = move.x;
         if (state.getPieceAtXY(x, player) === 0) {
-            return MGPFallible.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE());
+            return MGPFallible.failure(AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
 
         const opponentIsStarving: boolean = AwaleRules.isStarving(opponent, state.board);

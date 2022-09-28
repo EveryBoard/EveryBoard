@@ -9,21 +9,21 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('P4Component', () => {
 
-    let componentTestUtils: ComponentTestUtils<P4Component>;
+    let testUtils: ComponentTestUtils<P4Component>;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4');
+        testUtils = await ComponentTestUtils.forGame<P4Component>('P4');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should accept simple move', fakeAsync(async() => {
         const move: P4Move = P4Move.THREE;
-        await componentTestUtils.expectMoveSuccess('#click_3', move);
+        await testUtils.expectMoveSuccess('#click_3', move);
     }));
     it('should highlight victory', fakeAsync(async() => {
         // Given a board with a victory
@@ -38,12 +38,12 @@ describe('P4Component', () => {
         const state: P4State = new P4State(board, 0);
 
         // When rendering it
-        componentTestUtils.setupState(state);
+        testUtils.setupState(state);
 
         // Then victorious coords should be shown
-        componentTestUtils.expectElementToHaveClass('#victory_coord_3_2', 'victory-stroke');
-        componentTestUtils.expectElementToHaveClass('#victory_coord_3_3', 'victory-stroke');
-        componentTestUtils.expectElementToHaveClass('#victory_coord_3_4', 'victory-stroke');
-        componentTestUtils.expectElementToHaveClass('#victory_coord_3_5', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory_coord_3_2', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory_coord_3_3', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory_coord_3_4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory_coord_3_5', 'victory-stroke');
     }));
 });

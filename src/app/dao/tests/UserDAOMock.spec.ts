@@ -1,8 +1,6 @@
-import { serverTimestamp } from 'firebase/firestore';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { User, UserDocument } from 'src/app/domain/User';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -23,16 +21,5 @@ export class UserDAOMock extends FirestoreDAOMock<User> {
     }
     public resetStaticDB(): void {
         UserDAOMock.usersDB = new MGPMap();
-    }
-    public observeUserByUsername(username: string, callback: FirestoreCollectionObserver<User>): () => void {
-        return this.observingWhere([['username', '==', username], ['verified', '==', true]], callback);
-    }
-    public observeActiveUsers(callback: FirestoreCollectionObserver<User>): () => void {
-        return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
-    }
-    public updatePresenceToken(userId: string): Promise<void> {
-        return this.update(userId, {
-            last_changed: serverTimestamp(),
-        });
     }
 }

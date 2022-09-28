@@ -18,9 +18,9 @@ import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserServ
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { ChatDAO } from '../../dao/ChatDAO';
-import { JoinerDAOMock } from '../../dao/tests/JoinerDAOMock.spec';
+import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
 import { PartDAO } from '../../dao/PartDAO';
-import { JoinerDAO } from '../../dao/JoinerDAO';
+import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
@@ -40,6 +40,9 @@ import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.direc
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { FirebaseError } from 'firebase/app';
+import { Comparable } from '../Comparable';
+import { Subscription } from 'rxjs';
 
 @Component({})
 export class BlankComponent {}
@@ -100,7 +103,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
@@ -168,9 +171,10 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent> {
-    public fixture: ComponentFixture<GameWrapper>;
-    public wrapper: GameWrapper;
+export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> {
+
+    public fixture: ComponentFixture<GameWrapper<P>>;
+    public wrapper: GameWrapper<P>;
     private debugElement: DebugElement;
     private gameComponent: AbstractGameComponent;
 
@@ -181,12 +185,23 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
 
     public static async forGame<T extends AbstractGameComponent>(
         game: string,
-        wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
         configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
-        const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
-        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        return ComponentTestUtils.forGameWithWrapper(game,
+                                                     LocalGameWrapperComponent,
+                                                     AuthUser.NOT_CONNECTED,
+                                                     configureTestModule);
+    }
+    public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
+        game: string,
+        wrapperKind: Type<GameWrapper<P>>,
+        user: AuthUser = AuthUser.NOT_CONNECTED,
+        configureTestModule: boolean = true)
+    : Promise<ComponentTestUtils<T, P>>
+    {
+        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestModule);
+        ConnectedUserServiceMock.setUser(user);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1);
@@ -194,14 +209,16 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends AbstractGameComponent>(game?: string, configureTestModule: boolean = true)
-    : Promise<ComponentTestUtils<T>>
+    public static async basic<T extends AbstractGameComponent, P extends Comparable>(
+        game?: string,
+        configureTestModule: boolean = true)
+    : Promise<ComponentTestUtils<T, P>>
     {
-        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
+        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestModule) {
             await ComponentTestUtils.configureTestModule(activatedRouteStub);
         }
-        return new ComponentTestUtils<T>(activatedRouteStub);
+        return new ComponentTestUtils<T, P>(activatedRouteStub);
     }
     public static async configureTestModule(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
@@ -218,7 +235,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
@@ -227,7 +244,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
 
     public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
-    public prepareFixture(wrapperKind: Type<GameWrapper>): void {
+    public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
         this.wrapper = this.fixture.debugElement.componentInstance;
         this.debugElement = this.fixture.debugElement;
@@ -475,7 +492,6 @@ export async function setupEmulators(): Promise<unknown> {
             FirebaseProviders.app(),
             FirebaseProviders.firestore(),
             FirebaseProviders.auth(),
-            FirebaseProviders.database(),
         ],
         providers: [
             ConnectedUserService,
@@ -553,4 +569,29 @@ export function expectValidRoutingLink(element: DebugElement, fullPath: string, 
     const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
+}
+
+/**
+ * Checks that a promise resulted in a firestore 'permission-denied' error.
+ * Useful to test that permissions on firestore work as expected.
+ */
+export async function expectPermissionToBeDenied<T>(promise: Promise<T>): Promise<void> {
+    const throwIfFulfilled: () => void = () => {
+        throw new Error('Expected a promise to be rejected but it was resolved');
+    };
+    const checkErrorCode: (actualValue: FirebaseError) => void = (actualValue: FirebaseError) => {
+        expect(actualValue.code).toBe('permission-denied');
+    };
+    await promise.then(throwIfFulfilled, checkErrorCode);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): () => void {
+    let unsubscribed: boolean = false;
+    spyOn(service, subscribeMethod).and.returnValue(new Subscription(() => {
+        unsubscribed = true;
+    }));
+    return () => {
+        expect(unsubscribed).toBeTrue();
+    };
 }

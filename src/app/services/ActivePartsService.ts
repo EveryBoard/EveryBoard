@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { Part, PartDocument } from '../domain/Part';
+import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from '../utils/MGPOptional';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { MinimalUser } from '../domain/MinimalUser';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService
@@ -18,51 +18,47 @@ import { MGPOptional } from '../utils/MGPOptional';
  */
 export class ActivePartsService {
 
-    private readonly activePartsBS: BehaviorSubject<PartDocument[]>;
-
-    private readonly activePartsObs: Observable<PartDocument[]>;
-
-    private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
-
     constructor(private readonly partDAO: PartDAO) {
-        this.activePartsBS = new BehaviorSubject<PartDocument[]>([]);
-        this.activePartsObs = this.activePartsBS.asObservable();
     }
-    public getActivePartsObs(): Observable<PartDocument[]> {
-        return this.activePartsObs;
-    }
-    public startObserving(): void {
-        assert(this.unsubscribe.isAbsent(), 'ActivePartsService: already observing');
+
+    public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
+        let activeParts: PartDocument[] = [];
         const onDocumentCreated: (createdParts: PartDocument[]) => void = (createdParts: PartDocument[]) => {
-            const result: PartDocument[] = this.activePartsBS.value.concat(...createdParts);
-            this.activePartsBS.next(result);
+            activeParts = activeParts.concat(...createdParts);
+            callback(activeParts);
         };
         const onDocumentModified: (modifiedParts: PartDocument[]) => void = (modifiedParts: PartDocument[]) => {
-            const result: PartDocument[] = this.activePartsBS.value;
+            const result: PartDocument[] = activeParts;
             for (const p of modifiedParts) {
                 result.forEach((part: PartDocument) => {
                     if (part.id === p.id) part.data = p.data;
                 });
             }
-            this.activePartsBS.next(result);
+            activeParts = result;
+            callback(activeParts);
         };
         const onDocumentDeleted: (deletedDocIds: PartDocument[]) => void = (deletedDocs: PartDocument[]) => {
             const result: PartDocument[] = [];
-            for (const p of this.activePartsBS.value) {
+            for (const p of activeParts) {
                 if (!deletedDocs.some((part: PartDocument) => part.id === p.id)) {
                     result.push(p);
                 }
             }
-            this.activePartsBS.next(result);
+            activeParts = result;
+            callback(activeParts);
         };
         const partObserver: FirestoreCollectionObserver<Part> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
-        this.unsubscribe = MGPOptional.of(this.partDAO.observeActiveParts(partObserver));
+        return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], partObserver);
     }
-    public stopObserving(): void {
-        assert(this.unsubscribe.isPresent(), 'Cannot stop observing active parts when you have not started observing');
-        this.activePartsBS.next([]);
-        this.unsubscribe.get()();
-        this.unsubscribe = MGPOptional.empty();
+    public async userHasActivePart(user: MinimalUser): Promise<boolean> {
+        // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
+        const userIsFirstPlayer: FirestoreDocument<Part>[] = await this.partDAO.findWhere([
+            ['playerZero', '==', user],
+            ['result', '==', MGPResult.UNACHIEVED.value]]);
+        const userIsSecondPlayer: FirestoreDocument<Part>[] = await this.partDAO.findWhere([
+            ['playerOne', '==', user],
+            ['result', '==', MGPResult.UNACHIEVED.value]]);
+        return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;
     }
 }

@@ -8,7 +8,6 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamTutorial } from './SiamTutorial';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
@@ -71,8 +70,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return this.cancelMove(clickValidity.getReason());
         }
         const piece: SiamPiece = this.board[y][x];
-        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
-        if (piece.getOwner() === opponent) {
+        if (piece.getOwner() !== this.getCurrentPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.chosenCoord = MGPOptional.of(new Coord(x, y));
@@ -124,7 +122,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                 return this.cancelMove(SiamFailure.MUST_INSERT_OR_CHOOSE_YOUR_PIECE());
             }
             this.chosenCoord = MGPOptional.of(clickedCoord);
-            const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gameState);
+            const dir: Orthogonal = SiamRules.getCoordDirection(this.getState(), x, y);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = MGPOptional.of(this.chosenCoord.get().getNext(dir));
             return MGPValidation.SUCCESS;

@@ -3,12 +3,11 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub, ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -29,7 +28,7 @@ describe('GameComponent', () => {
         const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone');
         const component: AbstractGameComponent = testUtils.getComponent();
         expect(component).toBeDefined();
-        testUtils.wrapper.observerRole = 1;
+        testUtils.wrapper.observerRole = Player.ONE;
         testUtils.detectChanges();
         tick(1);
 
@@ -130,9 +129,9 @@ describe('GameComponent', () => {
             }
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
-                await ComponentTestUtils.forGame(gameInfo.urlName, LocalGameWrapperComponent, false);
+                await ComponentTestUtils.forGame(gameInfo.urlName, false);
             const component: AbstractGameComponent = testUtils.getComponent();
-            testUtils.wrapper.observerRole = 2;
+            testUtils.wrapper.observerRole = PlayerOrNone.NONE;
             testUtils.detectChanges();
             tick(1);
             expect(component).toBeDefined();
@@ -153,7 +152,7 @@ describe('GameComponent', () => {
             }
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
-                await ComponentTestUtils.forGame(gameInfo.urlName, LocalGameWrapperComponent, false);
+                await ComponentTestUtils.forGame(gameInfo.urlName, false);
 
             // When displaying the game
             const component: AbstractGameComponent = testUtils.getComponent();

@@ -14,13 +14,15 @@ import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Player } from 'src/app/jscaip/Player';
 
+type TutorialPlayer = 'tutorial-player';
 @Component({
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TutorialGameWrapperComponent extends GameWrapper implements AfterViewInit {
+export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
 
     public static VERBOSE: boolean = false;
 
@@ -44,6 +46,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
+        this.observerRole = Player.ZERO; // The user is playing, not observing
     }
     public getNumberOfSteps(): number {
         return this.steps.length;
@@ -108,8 +111,10 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.gameComponent.updateBoard();
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
+            const previousState: GameState = this.gameComponent.rules.node.mother.get().gameState;
             const resultingState: GameState = this.gameComponent.rules.node.gameState;
-            const moveValidity: MGPValidation = Utils.getNonNullable(currentStep.predicate)(move, resultingState);
+            const moveValidity: MGPValidation =
+                Utils.getNonNullable(currentStep.predicate)(move, previousState, resultingState);
             if (moveValidity.isSuccess()) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
             } else {
@@ -230,7 +235,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         await this.router.navigate(['/play', game]);
     }
-    public getPlayerName(): string {
-        return ''; // Not important for tutorial
+    public getPlayer(): TutorialPlayer {
+        return 'tutorial-player';
     }
 }
