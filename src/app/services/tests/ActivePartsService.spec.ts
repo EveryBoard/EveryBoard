@@ -9,12 +9,26 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
+import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
 
 describe('ActivePartsService', () => {
 
     let service: ActivePartsService;
 
     let partDAO: PartDAO;
+
+    const part: Part = {
+        lastUpdate: {
+            index: 0,
+            player: 0,
+        },
+        listMoves: [],
+        playerZero: UserMocks.CREATOR_MINIMAL_USER,
+        playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+        result: 5,
+        turn: 0,
+        typeGame: 'P4',
+    };
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -40,18 +54,6 @@ describe('ActivePartsService', () => {
                 });
 
             // When a new part is added
-            const part: Part = {
-                lastUpdate: {
-                    index: 0,
-                    player: 0,
-                },
-                listMoves: [],
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            };
             await partDAO.create(part);
 
             // Then the new part should have been observed
@@ -71,18 +73,6 @@ describe('ActivePartsService', () => {
             tick(3000);
 
             // When a new part is added
-            const part: Part = {
-                lastUpdate: {
-                    index: 0,
-                    player: 0,
-                },
-                listMoves: [],
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            };
             await partDAO.create(part);
 
             // Then the new part should not have been observed
@@ -90,18 +80,6 @@ describe('ActivePartsService', () => {
         }));
         it('should notify about deleted parts', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
-            const part: Part = {
-                lastUpdate: {
-                    index: 0,
-                    player: 0,
-                },
-                listMoves: [],
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = service.subscribeToActiveParts(
@@ -119,18 +97,6 @@ describe('ActivePartsService', () => {
         }));
         it('should preserve non-deleted upon a deletion', fakeAsync(async() => {
             // Given a service observing active parts, and there are already multiple parts
-            const part: Part = {
-                lastUpdate: {
-                    index: 0,
-                    player: 0,
-                },
-                listMoves: [],
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            };
             const partToBeDeleted: string = await partDAO.create(part);
             const partThatWillRemain: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
@@ -150,18 +116,6 @@ describe('ActivePartsService', () => {
         }));
         it('should update when a part is modified', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
-            const part: Part = {
-                lastUpdate: {
-                    index: 0,
-                    player: 0,
-                },
-                listMoves: [],
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            };
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = service.subscribeToActiveParts(
@@ -180,18 +134,6 @@ describe('ActivePartsService', () => {
         }));
         it('should update only the modified part', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
-            const part: Part = {
-                lastUpdate: {
-                    index: 0,
-                    player: 0,
-                },
-                listMoves: [],
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            };
             const partToBeModified: string = await partDAO.create(part);
             const partThatWontChange: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
@@ -215,18 +157,43 @@ describe('ActivePartsService', () => {
 
             activePartsSubscription.unsubscribe();
         }));
-    });
-    describe('observeActiveParts', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirestoreCollectionObserver<Part> = new FirestoreCollectionObserver<Part>(
-                () => void { },
-                () => void { },
-                () => void { },
-            );
-            spyOn(partDAO, 'observingWhere');
-            service.observeActiveParts(callback);
-            expect(partDAO.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
+            // Given an ActiveUsersService
+            spyOn(partDAO, 'observingWhere').and.callFake(
+                (query: FirestoreCondition[], callback: FirestoreCollectionObserver<Part>): Subscription => {
+                    const expectedParameters: FirestoreCondition[] = [
+                        ['result', '==', MGPResult.UNACHIEVED.value],
+                    ];
+                    expect(query).toEqual(expectedParameters);
+                    return new Subscription();
+                });
+
+            // When subscribing to the active users
+            const subscription: Subscription = service.subscribeToActiveParts(() => {});
+            // Then it should call observingWhere from the DAO with the right parameters
+            expect(partDAO.observingWhere).toHaveBeenCalledTimes(1);
+            subscription.unsubscribe();
         });
+        it('should not duplicate parts when we subscribe a second time', fakeAsync(async() => {
+            // Given an active part service where we subscribed in the past
+            await partDAO.create(part);
+            let seenActiveParts: PartDocument[] = [];
+            let activePartsSubscription: Subscription = service.subscribeToActiveParts(
+                (activeParts: PartDocument[]) => {
+                    seenActiveParts = activeParts;
+                });
+            activePartsSubscription.unsubscribe();
+
+            // When subscribing a second time
+            activePartsSubscription = service.subscribeToActiveParts(
+                (activeParts: PartDocument[]) => {
+                    seenActiveParts = activeParts;
+                });
+
+            // Then there should be exactly one part seen
+            expect(seenActiveParts.length).toBe(1);
+            activePartsSubscription.unsubscribe();
+        }));
     });
     describe('userHasActivePart', () => {
         const part: Part = {
