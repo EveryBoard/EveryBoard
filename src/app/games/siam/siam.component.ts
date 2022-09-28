@@ -16,6 +16,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { assert } from 'src/app/utils/assert';
+import { SiamFailure } from './SiamFailure';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -85,6 +86,11 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         if (player !== this.getCurrentPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
+        if (this.insertingPiece) {
+            // We were already inserting, we deselect the piece
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
         this.cancelMoveAttempt();
         for (const move of SiamRules.get().getInsertions(this.getState())) {
             const target: Coord = move.coord.getNext(move.direction.get());
@@ -137,7 +143,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                     this.selectedPiece.get(),
                                                     clickedCoord);
                 if (moves.length === 0) {
-                    return this.changeMoveClick(clickedCoord);
+                    return this.changeMoveDestinationClick(clickedCoord);
                 }
                 return this.performMoveOrShowOrientationArrows(moves);
             } else {
@@ -155,7 +161,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     private async insertPiece(clickedCoord: Coord): Promise<MGPValidation> {
         if (this.selectedLanding.isPresent()) {
             // The landing is already selected, we cancel the move to avoid any confusion
-            this.cancelMoveAttempt();
+            this.cancelMove(SiamFailure.MUST_SELECT_ORIENTATION());
             return MGPValidation.SUCCESS;
         }
         // Inserting a new piece, the player just clicked on the landing
@@ -163,19 +169,20 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const insertions: SiamMove[] =
             SiamRules.get().getInsertionsAt(this.getState(), clickedCoord.x, clickedCoord.y);
         if (insertions.length === 0) {
-            return this.changeMoveClick(clickedCoord);
+            return this.changeMoveDestinationClick(clickedCoord);
         }
         return this.performMoveOrShowOrientationArrows(insertions);
     }
-    private async changeMoveClick(clickedCoord: Coord): Promise<MGPValidation> {
+    private async changeMoveDestinationClick(clickedCoord: Coord): Promise<MGPValidation> {
         // The player clicked somewhere where there are no possible move, cancel the move
         this.cancelMoveAttempt();
-        if (this.getState().getPieceAt(clickedCoord) === SiamPiece.EMPTY) {
-            // The click was made on an empty square, likely to just cancel the move
-            return MGPValidation.SUCCESS;
-        } else {
-            // The click was made on another piece, likely to select it
+        const piece: SiamPiece = this.getState().getPieceAt(clickedCoord);
+        if (piece.getOwner() === this.getCurrentPlayer()) {
+            // The click was made on another piece of the player, likely to select it
             return this.clickSquare(clickedCoord.x, clickedCoord.y, true);
+        } else {
+            // The click was made on an invalid destination
+            return this.cancelMove(SiamFailure.MUST_SELECT_VALID_DESTINATION());
         }
     }
     private async performMoveOrShowOrientationArrows(availableMoves: SiamMove[]): Promise<MGPValidation> {

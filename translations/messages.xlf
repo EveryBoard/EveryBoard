@@ -2236,6 +2236,12 @@
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
       </trans-unit>
+      <trans-unit id="6641065739366631527" datatype="html">
+        <source>You must select a valid destination (highlighted on the board) for your piece</source>
+      </trans-unit>
+      <trans-unit id="3129880366808972802" datatype="html">
+        <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
+      </trans-unit>
       <trans-unit id="3753696680821191929" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.

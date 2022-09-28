@@ -11,6 +11,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
+import { SiamFailure } from '../SiamFailure';
 
 describe('SiamComponent', () => {
 
@@ -56,6 +57,15 @@ describe('SiamComponent', () => {
         // When trying to select an opponent's piece for insertion
         // Then it should fail
         await testUtils.expectClickFailure('#remainingPieces_1', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+    }));
+    it('should deselect piece when clicking a second time on the remaining pieces', fakeAsync(async() => {
+        // Given a component where the player has selected a piece for insertion
+        await testUtils.expectClickSuccess('#remainingPieces_0');
+        testUtils.expectElementToHaveClass('#remainingPieces_0_4', 'selected-stroke');
+        // When clicking a second time on the remaining pieces
+        await testUtils.expectClickSuccess('#remainingPieces_0');
+        // Then it should deselect the piece
+        testUtils.expectElementNotToHaveClass('#remainingPieces_0_4', 'selected-stroke');
     }));
     it('should forbid to select opponent pieces for move', fakeAsync(async() => {
         // Given a state with a piece of the opponent
@@ -153,34 +163,30 @@ describe('SiamComponent', () => {
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
         await testUtils.expectClickFailure('#square_2_1', reason);
     }));
-    it('should cancel move when player clicks on the board instead of an orientation arrow', fakeAsync(async() => {
+    it('should fail when player clicks on the board instead of an orientation arrow', fakeAsync(async() => {
         // Given a component on which the player has selected a piece for insertion, and a target,
         // and must select an orientation arrow
         await testUtils.expectClickSuccess('#remainingPieces_0');
         await testUtils.expectClickSuccess('#square_0_0');
-        spyOn(testUtils.getComponent(), 'cancelMoveAttempt').and.callThrough();
         // When clicking somewhere else on the board
-        await testUtils.expectClickSuccess('#square_2_2');
-        // Then it should cancel the move
-        expect(testUtils.getComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        // Then it should fail
+        await testUtils.expectClickFailure('#square_2_2', SiamFailure.MUST_SELECT_ORIENTATION());
     }));
-    it('should cancel move when player selects an invalid target for insertion (empty)', fakeAsync(async() => {
+    it('should fail when player selects an invalid target for insertion (empty)', fakeAsync(async() => {
         // Given a component on which the player has selected a piece for insertion,
         // and must select the target for a move
         await testUtils.expectClickSuccess('#remainingPieces_0');
         // When the player clicks on an empty target which would result in an impossible move
-        spyOn(testUtils.getComponent(), 'cancelMoveAttempt').and.callThrough();
-        await testUtils.expectClickSuccess('#square_1_1');
-        // Then the move should be canceled
-        expect(testUtils.getComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        // Then it should fail
+        await testUtils.expectClickFailure('#square_1_1', SiamFailure.MUST_SELECT_VALID_DESTINATION());
     }));
-    it('should cancel move when player selects an invalid target for insertion (mountain)', fakeAsync(async() => {
+    it('should fail when player selects an invalid target for insertion (mountain)', fakeAsync(async() => {
         // Given a component on which the player has selected a piece for insertion,
         // and must select the target for a move
         await testUtils.expectClickSuccess('#remainingPieces_0');
         // When the player clicks on an invalid target which would result in an impossible move
         // Then the move should be canceled
-        await testUtils.expectClickFailure('#square_2_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#square_2_2', SiamFailure.MUST_SELECT_VALID_DESTINATION());
     }));
     it('should select the other piece when player selects another piece instead of a target', fakeAsync(async() => {
         // Given a state with a piece, and the player being in the middle of creating a move
@@ -236,9 +242,9 @@ describe('SiamComponent', () => {
         testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
 
-        // When the player clicks on an empty square which is not a valid target
+        // When the player clicks on a mountain
         // Then the move should be cancelled and an error should be toasted
-        await testUtils.expectClickFailure('#square_2_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#square_2_2', SiamFailure.MUST_SELECT_VALID_DESTINATION());
     }));
     it('should directly insert the piece in the desired direction when clicking on an indicator arrow', fakeAsync(async() => {
         // Given a state with a piece in a corner
