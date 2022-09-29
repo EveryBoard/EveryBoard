@@ -731,9 +731,6 @@
       <trans-unit id="5001561383056924621" datatype="html">
         <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
       </trans-unit>
-      <trans-unit id="7341165560842722107" datatype="html">
-        <source>You must select a different landing square than the square where the move originates from.</source>
-      </trans-unit>
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
       </trans-unit>
@@ -895,9 +892,6 @@
       </trans-unit>
       <trans-unit id="1025279631840419081" datatype="html">
         <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
-      </trans-unit>
-      <trans-unit id="3154742766975304650" datatype="html">
-        <source>You must click on an arrow to select your destination.</source>
       </trans-unit>
       <trans-unit id="8708684300793667483" datatype="html">
         <source>You cannot insert a piece here, as all lines are full. Select another space.</source>

@@ -1602,10 +1602,6 @@
         <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
         <target>Veuillez sélectionner une de vos pièces restantes, ou une case sur le plateau où vous avez la pièce la plus grande.</target>
       </trans-unit>
-      <trans-unit id="7341165560842722107" datatype="html">
-        <source>You must select a different landing square than the square where the move originates from.</source>
-        <target>Veuillez sélectionner une case différente de la case d&apos;origine du mouvement.</target>
-      </trans-unit>
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
         <target>Vous effectuez un déplacement, choisissez votre case de destination.</target>
@@ -1848,10 +1844,6 @@
       <trans-unit id="1025279631840419081" datatype="html">
         <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
         <target>Veuillez sélectionner une autre case de la capture que vous souhaitez prendre, celle-ci appartient à deux captures.</target>
-      </trans-unit>
-      <trans-unit id="3154742766975304650" datatype="html">
-        <source>You must click on an arrow to select your destination.</source>
-        <target>Veuillez cliquer sur une flèche pour sélectionner votre destination.</target>
       </trans-unit>
       <trans-unit id="8708684300793667483" datatype="html">
         <source>You cannot insert a piece here, as all lines are full. Select another space.</source>

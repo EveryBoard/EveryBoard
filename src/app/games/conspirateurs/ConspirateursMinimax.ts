@@ -123,7 +123,6 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                 }
             }
         }
-        // return new NodeUnheritance(score);
-        return new NodeUnheritance(0);
+        return new NodeUnheritance(score);
     }
 }

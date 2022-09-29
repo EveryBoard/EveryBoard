@@ -11,7 +11,7 @@ import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-fdescribe('YinshComponent', () => {
+describe('YinshComponent', () => {
 
     let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;
@@ -821,7 +821,7 @@ fdescribe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#indicator_2_3'); // The two in the down-left diagonal
             testUtils.expectElementNotToExist('#indicator_1_4');
         }));
-        fit('should change selected ring when clicking on another ring', fakeAsync(async() => {
+        it('should change selected ring when clicking on another ring', fakeAsync(async() => {
             // Given a board where all ring are down already and one is selected
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],

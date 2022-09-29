@@ -166,7 +166,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             const firstTurnMoves: M[] = minimax
                 .getListMoves(rules.node)
                 .map((move: TaflMove) => {
-                    return entries.moveProvider(move.coord, move.end)
+                    return entries.moveProvider(move.coord, move.end);
                 });
             for (const move of firstTurnMoves) {
                 NumberEncoderTestUtils.expectToBeCorrect(encoder as NumberEncoder<M>, move);
