@@ -52,23 +52,23 @@
                   class="base no-fill selected"
                   stroke-linecap="round"/>
     </g>
-    <g *ngFor="let coord of viewInfo.selectableCoords">
+    <g *ngIf="isPlayerTurn()">
         <polyline id="selectable_{{ coord.x }}_{{ coord.y }}"
-                  *ngIf="isPlayerTurn()"
-                  [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
+                  *ngFor="let coord of viewInfo.selectableCoords"
                   (click)="onClick(coord)"
-                  pointer-events="fill"
                   class="base no-fill capturable"
+                  [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
+                  pointer-events="fill"
                   stroke-linecap="round"/>
     </g>
-    <g *ngFor="let coord of viewInfo.targets">
-        <rect [attr.x]="viewInfo.spaceInfo[coord.y][coord.x].center.x - viewInfo.indicatorSize/2"
-              [attr.y]="viewInfo.spaceInfo[coord.y][coord.x].center.y - viewInfo.indicatorSize/2"
-              [attr.width]="viewInfo.indicatorSize"
-              [attr.height]="viewInfo.indicatorSize"
-              (click)="onClick(coord)"
-              class="indicator"/>
-    </g>
+    <rect *ngFor="let coord of viewInfo.targets"
+          id="indicator_{{ coord.x }}_{{ coord.y }}"
+          [attr.x]="viewInfo.spaceInfo[coord.y][coord.x].center.x - viewInfo.indicatorSize/2"
+          [attr.y]="viewInfo.spaceInfo[coord.y][coord.x].center.y - viewInfo.indicatorSize/2"
+          [attr.width]="viewInfo.indicatorSize"
+          [attr.height]="viewInfo.indicatorSize"
+          (click)="onClick(coord)"
+          class="indicator"/>
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let _ of [].constructor(viewInfo.sideRings[player.value]); index as ring">
             <circle id="player_{{ player.value }}_sideRing_{{ ring+1 }}"

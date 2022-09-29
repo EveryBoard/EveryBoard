@@ -11,7 +11,7 @@ import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('YinshComponent', () => {
+fdescribe('YinshComponent', () => {
 
     let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;
@@ -767,6 +767,88 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToHaveClass('#pieceGroup_3_3', 'semi-transparent');
             testUtils.expectElementNotToExist('#ring_3_2');
             testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'semi-transparent');
+        }));
+        it('should show indicator when selecting your ring', fakeAsync(async() => {
+            // Given an initial board on which a ring are all put
+            const board: Table<YinshPiece> = [
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, B, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ];
+            const state: YinshState = new YinshState(board, [0, 0], 10);
+            testUtils.setupState(state);
+
+            // When clicking on the ring
+            await testUtils.expectClickSuccess('#click_3_2');
+
+            // Then there should be indicators
+            testUtils.expectElementToExist('#indicator_4_1'); // The one in the up-right diagonal
+            testUtils.expectElementToExist('#indicator_2_3'); // The two in the down-left diagonal
+            testUtils.expectElementToExist('#indicator_1_4');
+        }));
+        it('should cancel move attempt chosen ring when clicking on it again', fakeAsync(async() => {
+            // Given an initial board on which a ring has been clicked (hence, helper displayed)
+            const board: Table<YinshPiece> = [
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, B, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ];
+            const state: YinshState = new YinshState(board, [0, 0], 10);
+            testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click_3_2');
+
+            // When clicking again on the ring
+            await testUtils.expectClickSuccess('#click_3_2');
+
+            // Then there should no longer be indicators
+            testUtils.expectElementNotToExist('#indicator_4_1'); // The one in the up-right diagonal
+            testUtils.expectElementNotToExist('#indicator_2_3'); // The two in the down-left diagonal
+            testUtils.expectElementNotToExist('#indicator_1_4');
+        }));
+        fit('should change selected ring when clicking on another ring', fakeAsync(async() => {
+            // Given a board where all ring are down already and one is selected
+            const board: Table<YinshPiece> = [
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, B, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ];
+            const state: YinshState = new YinshState(board, [0, 0], 10);
+            testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click_3_2');
+
+            // When clicking on another ring of current player
+            await testUtils.expectClickSuccess('#click_4_2');
+
+            // Then that new one should be selected
+            testUtils.expectElementToExist('#indicator_5_1'); // The two in the up-right diagonal
+            testUtils.expectElementToExist('#indicator_6_0');
+            testUtils.expectElementToExist('#indicator_4_3'); // Some of the one below
+            testUtils.expectElementToExist('#indicator_4_4');
+            testUtils.expectElementToExist('#indicator_4_5');
         }));
     });
 });

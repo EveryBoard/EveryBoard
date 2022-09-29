@@ -17,6 +17,25 @@ describe('PylosComponent', () => {
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
+    const climbableBoard: PlayerOrNone[][][] = [
+        [
+            [O, X, _, _],
+            [X, O, _, _],
+            [_, _, _, _],
+            [_, _, _, O],
+        ], [
+            [_, _, _],
+            [_, _, _],
+            [_, _, _],
+        ], [
+            [_, _],
+            [_, _],
+        ], [
+            [_],
+        ],
+    ];
+    const climbableState: PylosState = new PylosState(climbableBoard, 0);
+
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<PylosComponent>('Pylos');
     }));
@@ -27,7 +46,6 @@ describe('PylosComponent', () => {
     describe('First click', () => {
         it('should allow droping piece on occupable space', fakeAsync(async() => {
             // Given a board where a drop is possible
-
             // When clicking on it
             // Then the move should be accepted
             const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
@@ -85,6 +103,16 @@ describe('PylosComponent', () => {
             // Then the move should be cancelled
             await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
+        it('should select coord and display directions when clicking on it', fakeAsync(async() => {
+            // Given a board on which there is pieces
+            testUtils.setupState(climbableState);
+
+            // When clicking on a space
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+
+            // Then it should be selected
+            testUtils.expectElementToHaveClass('#piece_0_0_0', 'selected');
+        }));
     });
     describe('Second click', () => {
         it('should forbid piece to land lower than they started', fakeAsync(async() => {
@@ -117,25 +145,7 @@ describe('PylosComponent', () => {
         }));
         it('should allow climbing', fakeAsync(async() => {
             // Given an board where climbing is possible
-            const initialBoard: PlayerOrNone[][][] = [
-                [
-                    [O, X, _, _],
-                    [X, O, _, _],
-                    [_, _, _, _],
-                    [_, _, _, O],
-                ], [
-                    [_, _, _],
-                    [_, _, _],
-                    [_, _, _],
-                ], [
-                    [_, _],
-                    [_, _],
-                ], [
-                    [_],
-                ],
-            ];
-            const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            testUtils.setupState(climbableState);
 
             // When clicking the first piece then its landing place
             await testUtils.expectClickSuccess('#piece_3_3_0');
@@ -143,6 +153,17 @@ describe('PylosComponent', () => {
 
             // Then the climb should be legal
             await testUtils.expectMoveSuccess('#drop_0_0_1', move);
+        }));
+        it('should cancel piece selection when clicking on it again', fakeAsync(async() => {
+            // Given a board on which a piece is selected
+            testUtils.setupState(climbableState);
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+
+            // When clicking on it again
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+
+            // Then it should no longer be selected
+            testUtils.expectElementNotToHaveClass('#piece_0_0_0', 'selected');
         }));
     });
     describe('climbing', () => {
