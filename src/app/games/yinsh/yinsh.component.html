@@ -8,11 +8,11 @@
                *ngIf="spaceInfo != null"
                (click)="onClick(spaceInfo.coord)"
             >
-                <polyline id="space_{{ x }}_{{ y }}"
-                          [attr.points]="spaceInfo.coordinates"
-                          [ngClass]="spaceInfo.spaceClasses"
-                          class="base"
-                          stroke-linecap="round"/>
+                <polygon id="space_{{ x }}_{{ y }}"
+                         [attr.points]="spaceInfo.coordinates"
+                         [ngClass]="spaceInfo.spaceClasses"
+                         class="base"
+                         stroke-linecap="round"/>
                 <g id="pieceGroup_{{ x }}_{{ y }}"
                    [ngClass]="spaceInfo.removedClass"
                 >
@@ -44,22 +44,21 @@
             </g>
         </g>
     </g>
-    <g *ngFor="let coord of viewInfo.selectedCoords">
-        <polyline [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
-                  id="selected_{{ coord.x }}_{{ coord.y }}"
-                  (click)="onClick(coord)"
-                  pointer-events="fill"
-                  class="base no-fill selected"
-                  stroke-linecap="round"/>
-    </g>
+    <polygon *ngFor="let coord of viewInfo.selectedCoords"
+             id="selected_{{ coord.x }}_{{ coord.y }}"
+             (click)="onClick(coord)"
+             class="base no-fill selected"
+             [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
+             pointer-events="fill"
+             stroke-linecap="round"/>
     <g *ngIf="isPlayerTurn()">
-        <polyline id="selectable_{{ coord.x }}_{{ coord.y }}"
-                  *ngFor="let coord of viewInfo.selectableCoords"
-                  (click)="onClick(coord)"
-                  class="base no-fill capturable"
-                  [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
-                  pointer-events="fill"
-                  stroke-linecap="round"/>
+        <polygon *ngFor="let coord of viewInfo.selectableCoords"
+                 id="selectable_{{ coord.x }}_{{ coord.y }}"
+                 (click)="onClick(coord)"
+                 class="base no-fill capturable"
+                 [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
+                 pointer-events="fill"
+                 stroke-linecap="round"/>
     </g>
     <rect *ngFor="let coord of viewInfo.targets"
           id="indicator_{{ coord.x }}_{{ coord.y }}"

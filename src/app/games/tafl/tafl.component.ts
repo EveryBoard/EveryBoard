@@ -142,7 +142,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return this.rules.isThrone(state, new Coord(x, y));
     }
     public isCentralThrone(x: number, y: number): boolean {
-        return this.rules.node.gameState.isCentralThrone(new Coord(x, y)) === false;
+        return this.rules.node.gameState.isCentralThrone(new Coord(x, y));
     }
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];

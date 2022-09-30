@@ -11,7 +11,7 @@ const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.INVADERS;
 const i: TaflPawn = TaflPawn.DEFENDERS;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-const state: BrandhubState = new BrandhubState([
+const stateReadyForCapture: BrandhubState = new BrandhubState([
     [_, A, _, _, _, _, _],
     [_, x, x, _, _, _, _],
     [_, _, i, _, _, _, _],
@@ -29,11 +29,11 @@ const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, Brandhu
     moveProvider: BrandhubMove.of,
     validSecondCoord: new Coord(2, 0),
     diagonalSecondCoord: new Coord(2, 1),
-    stateReadyForCapture: state,
+    stateReadyForCapture,
     capture: BrandhubMove.of(new Coord(1, 0), new Coord(2, 0)),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(3, 1),
-    stateReadyForJumpOver: state,
+    stateReadyForJumpOver: stateReadyForCapture,
     jumpOver: BrandhubMove.of(new Coord(1, 0), new Coord(1, 4)),
 };
 DoTaflTests(brandhubEntries);

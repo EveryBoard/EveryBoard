@@ -18,6 +18,7 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Comparable } from 'src/app/utils/Comparable';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -80,7 +81,63 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const actualState: QuartoState = testUtils.getComponent().rules.node.gameState;
             expect(actualState).toEqual(state);
         }));
+        it('should show previousMove when set', fakeAsync(async() => {
+            // Given a certain TutorialStep with previousMove set and no previousState
+            const tutorialPreviousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+            const tutorialState: QuartoState = new QuartoState([
+                [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ], 1, QuartoPiece.BBBB);
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'instruction',
+                    tutorialState,
+                    ['#click_0_0'],
+                    'Congratulations!',
+                    'Perdu.',
+                ).withPreviousMove(tutorialPreviousMove),
+            ];
+
+            // When starting tutorial
+            wrapper.startTutorial(tutorial);
+
+            // expect to see setted previous move but no mother to the node
+            const componentPreviousMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
+            expect(componentPreviousMove).toEqual(tutorialPreviousMove);
+            expect(wrapper.gameComponent.rules.node.mother.isAbsent()).toBeTrue();
+        }));
         it('should show previousState when set', fakeAsync(async() => {
+            // Given a certain TutorialStep with previousState but no previousMove
+            const tutorialPreviousState: QuartoState = QuartoState.getInitialState();
+            const state: QuartoState = new QuartoState([
+                [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ], 1, QuartoPiece.BBBB);
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'instruction',
+                    state,
+                    ['#click_0_0'],
+                    'Congratulations!',
+                    'Perdu.',
+                ).withPreviousState(tutorialPreviousState),
+            ];
+            // When starting tutorial
+            wrapper.startTutorial(tutorial);
+
+            // expect to see setted previous state but no previous move
+            const componentPreviousState: QuartoState =
+                wrapper.gameComponent.rules.node.mother.get().gameState as QuartoState;
+            expect(wrapper.gameComponent.rules.node.move.isAbsent()).toBeTrue();
+            expect(componentPreviousState).toEqual(tutorialPreviousState);
+        }));
+        it('should show previousState and previousMove when both are set', fakeAsync(async() => {
             // Given a certain TutorialStep with previousState and previousMove
             const tutorialPreviousState: QuartoState = QuartoState.getInitialState();
             const tutorialPreviousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);

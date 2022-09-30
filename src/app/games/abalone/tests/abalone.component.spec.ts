@@ -192,7 +192,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_4_6');
 
             // When clicking on not aligned piece
-            // Then expect failure
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_4_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should cancel move then select clicked piece as first piece when it is not aligned with second piece', fakeAsync(async() => {
@@ -201,7 +201,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_4_6');
 
             // When clicking on not aligned piece
-            // Then expect failure
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_2_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should recognize line extension and show new directions (1-2-3)', fakeAsync(async() => {

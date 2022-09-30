@@ -276,7 +276,7 @@ describe('HnefataflRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
-    it('King should be authorised to come back on the throne', () => {
+    it('should allow King to come back on the throne', () => {
         // Given a board where the king is not on his throne but can go back
         const board: TaflPawn[][] = [
             [_, _, O, _, _, _, _, _, _, _, _],

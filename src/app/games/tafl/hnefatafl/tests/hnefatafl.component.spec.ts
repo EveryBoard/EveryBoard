@@ -11,7 +11,7 @@ const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.INVADERS;
 const i: TaflPawn = TaflPawn.DEFENDERS;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-const state: HnefataflState = new HnefataflState([
+const stateReadyForCapture: HnefataflState = new HnefataflState([
     [_, A, _, _, _, _, _, _, _, _, _],
     [_, x, x, _, _, _, _, _, _, _, _],
     [_, _, i, _, _, _, _, _, _, _, _],
@@ -33,11 +33,11 @@ const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, Hnef
     moveProvider: HnefataflMove.of,
     validSecondCoord: new Coord(2, 0),
     diagonalSecondCoord: new Coord(2, 1),
-    stateReadyForCapture: state,
+    stateReadyForCapture,
     capture: HnefataflMove.of(new Coord(1, 0), new Coord(2, 0)),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(7, 0),
-    stateReadyForJumpOver: state,
+    stateReadyForJumpOver: stateReadyForCapture,
     jumpOver: HnefataflMove.of(new Coord(1, 0), new Coord(1, 4)),
 };
 DoTaflTests(hnefataflEntries);

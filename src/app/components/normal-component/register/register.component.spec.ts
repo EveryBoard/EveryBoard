@@ -155,7 +155,7 @@ describe('RegisterComponent', () => {
             // Given a google user
             spyOn(authService, 'doGoogleLogin').and.resolveTo(MGPValidation.SUCCESS);
 
-            // When that persons registers on the website with google
+            // When that user registers on the website with google
             await testUtils.clickElement('#googleButton');
 
             // Then the corresponding service method is called

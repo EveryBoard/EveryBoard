@@ -62,7 +62,7 @@ describe('GameComponent', () => {
             Diam: {
                 onSpaceClick: [0],
                 onPieceInGameClick: [0, 0],
-                onRemainingPieceClick: [DiamPiece.ZERO_FIRST, 7],
+                onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
             },
             Dvonn: { onClick: [0, 0] },
             Encapsule: {

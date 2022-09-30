@@ -24,6 +24,7 @@ type PartInfo = {
     creator: MinimalUser,
     candidate: MinimalUser,
 }
+
 describe('PartDAO', () => {
 
     let partDAO: PartDAO;

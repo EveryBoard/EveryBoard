@@ -6,12 +6,12 @@
     <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isBoard(c)">
-                <polyline id="space_{{ x }}_{{ y }}"
-                          (click)="onSpaceClick(x, y)"
-                          [ngClass]="getSquareClasses(x, y)"
-                          class="base"
-                          [attr.points]="getHexaCoordsBy(x, y)"
-                          stroke-linecap="round"
+                <polygon id="space_{{ x }}_{{ y }}"
+                         (click)="onSpaceClick(x, y)"
+                         [ngClass]="getSquareClasses(x, y)"
+                         class="base"
+                         [attr.points]="getHexaCoordsBy(x, y)"
+                         stroke-linecap="round"
                 />
                 <circle *ngIf="isPiece(c)"
                         id="piece_{{ x }}_{{ y }}"
