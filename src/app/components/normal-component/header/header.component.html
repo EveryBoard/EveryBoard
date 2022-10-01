@@ -3,7 +3,13 @@
         <a class="navbar-item" [routerLink]="['/']">
             <img src="assets/images/logo.png" width="28" height="28">
         </a>
-        <a role="button" class="navbar-burger" [ngClass]="showMenu ? 'is-active' : ''" aria-label="menu" aria-expanded="false" data-target="menu" (click)="showMenu = !showMenu">
+        <a role="button"
+           class="navbar-burger"
+           [ngClass]="showMenu ? 'is-active' : ''"
+           aria-label="menu"
+           aria-expanded="false"
+           data-target="menu"
+           (click)="showMenu = !showMenu">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -34,6 +40,7 @@
             <a *ngIf="observedPart.isPresent()"
                id="observedPartLink"
                class="navbar-item"
+               [routerLink]="['/play', observedPart.get().typeGame, observedPart.get().id]"
                 ><ng-container *ngIf="observedPart.get().role === 'Observer' || observedPart.get().role === 'Candidate' else activeUser" i18n>{{ observedPart.get().typeGame }} by {{ observedPart.get().opponent?.name }}</ng-container
                 ><ng-template #activeUser
                     ><ng-container *ngIf="observedPart.get().opponent else waitingForOpponent" i18n>{{ observedPart.get().typeGame }} against {{ observedPart.get().opponent?.name }}</ng-container

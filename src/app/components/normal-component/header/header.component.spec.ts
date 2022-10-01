@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { FocusedPart } from 'src/app/domain/User';
@@ -67,6 +68,22 @@ describe('HeaderComponent', () => {
         ConnectedUserServiceMock.setUser(new AuthUser('id', MGPOptional.of(email), MGPOptional.empty(), false));
         testUtils.detectChanges();
         expect(testUtils.getComponent().username).toEqual(MGPOptional.of(email));
+    }));
+    it('should redirect to your current part when clicking on it', fakeAsync(async() => {
+        // Given a component where connected user is observing a part
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITH_OPPONENT;
+        ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+        testUtils.detectChanges();
+        tick();
+
+        // When clicking on the info about the part
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo(true);
+        await testUtils.clickElement('#observedPartLink');
+
+        // Then it should redirect to the part
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/play', observedPart.typeGame, observedPart.id]);
     }));
     describe('observedPart', () => {
         it('should display "<TypeGame> (waiting for opponent)" when creator without chosenOpponent', fakeAsync(async() => {
