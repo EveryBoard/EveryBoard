@@ -16,10 +16,12 @@ export abstract class AccountGuard implements CanActivate, OnDestroy {
     constructor(protected readonly connectedUserService: ConnectedUserService) {
     }
 
-    public async canActivate(): Promise<boolean | UrlTree > {
+    public async canActivate(): Promise<boolean | UrlTree> {
+        console.log('(1) AccountGuard.canActivate YONDU')
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
             this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
-                await this.evaluateUserPermission(user).then(resolve);
+                console.log('(2) AccountGuard.canActivate inside CUS.subscription', JSON.stringify(user))
+                return resolve(await this.evaluateUserPermission(user));
             });
         });
     }

@@ -87,6 +87,21 @@ export class AuthUser {
             name: this.username.get(),
         };
     }
+    public equals(other: AuthUser): boolean {
+        if (this.id !== other.id) {
+            return false;
+        }
+        if (this.email.equals(other.email) === false) {
+            return false;
+        }
+        if (this.username.equals(other.username) === false) {
+            return false;
+        }
+        if (this.verified !== other.verified) {
+            return false;
+        }
+        return true;
+    }
 }
 
 @Injectable({
@@ -142,8 +157,11 @@ export class ConnectedUserService implements OnDestroy {
                                                                         MGPOptional.ofNullable(user.email),
                                                                         MGPOptional.ofNullable(username),
                                                                         userHasFinalizedVerification);
-                                this.user = MGPOptional.of(authUser);
-                                this.userRS.next(authUser);
+                                if (this.user.equalsValue(authUser) === false) {
+                                    this.user = MGPOptional.of(authUser);
+                                    console.log('CUS has change', JSON.stringify(doc))
+                                    this.userRS.next(authUser);
+                                }
                             }
                         });
                 }

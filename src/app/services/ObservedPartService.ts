@@ -61,6 +61,7 @@ export class ObservedPartService implements OnDestroy {
                                                previousObservedPart.equalsValue(newObservedPart);
         const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
         if (valueChanged) {
+            console.log('value changed to i change eh, scum', JSON.stringify(this.observedPart), " EIS NAW ", JSON.stringify(newObservedPart))
             this.observedPart = MGPOptional.ofNullable(newObservedPart);
             this.observedPartRS.next(this.observedPart);
         }

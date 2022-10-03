@@ -10,6 +10,9 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('ExclusiveOnlineGameGuard', () => {
 
@@ -30,19 +33,22 @@ describe('ExclusiveOnlineGameGuard', () => {
             ],
             providers: [
                 { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
+        const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
         observedPartService = TestBed.inject(ObservedPartService);
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        guard = new ExclusiveOnlineGameGuard(observedPartService, messageDisplayer, router);
+        guard = new ExclusiveOnlineGameGuard(connectedUserService, messageDisplayer, observedPartService, router);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();
     });
     it('should refuse to go to creation component when you have any observed part and redirect to it', fakeAsync(async() => {
         // Given a connected user service indicating user is already player
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         ObservedPartServiceMock.setObservedPart(MGPOptional.of({
             id: startedPartUserPlay.id,
             role: 'Player',
@@ -55,6 +61,7 @@ describe('ExclusiveOnlineGameGuard', () => {
     }));
     it('shoud allow to activate when you are not doing anything', async() => {
         // Given a connected user not observing any part
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
 
         // When asking if user can go to this component
@@ -63,16 +70,17 @@ describe('ExclusiveOnlineGameGuard', () => {
     });
     it('should unsubscribe from observedPartSubscription upon destruction', fakeAsync(async() => {
         // Given a guard that has resolved
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
         await guard.canActivate();
         // eslint-disable-next-line dot-notation
-        spyOn(guard['observedPartSubscription'], 'unsubscribe').and.callThrough();
+        spyOn(guard['observedPartSubscription'].get(), 'unsubscribe').and.callThrough();
 
         // When destroying the guard
         guard.ngOnDestroy();
 
         // Then unsubscribe is called
         // eslint-disable-next-line dot-notation
-        expect(guard['observedPartSubscription'].unsubscribe).toHaveBeenCalledWith();
+        expect(guard['observedPartSubscription'].get().unsubscribe).toHaveBeenCalledWith();
     }));
 });

@@ -16,6 +16,7 @@ export class VerifiedAccountGuard extends AccountGuard {
             // Redirects the user to the account verification page
             return router.parseUrl('/verify-account');
         } else {
+            console.log('(5) VerifiedAccountGuard.allezGo')
             return true;
         }
     }
@@ -24,6 +25,7 @@ export class VerifiedAccountGuard extends AccountGuard {
         super(connectedUserService);
     }
     public async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
+        console.log('(4) Verified.evaluateUserPermission')
         return VerifiedAccountGuard.evaluateUserPermission(this.router, user);
     }
 }
