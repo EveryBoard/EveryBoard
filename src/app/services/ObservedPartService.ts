@@ -22,10 +22,11 @@ export class ObservedPartService implements OnDestroy {
         { key: 'Player', value: GameActionFailure.YOU_ARE_ALREADY_PLAYING },
         { key: 'Observer', value: GameActionFailure.YOU_ARE_ALREADY_OBSERVING },
     ]);
-    private readonly authSubscription!: Subscription;
+    private readonly authSubscription: Subscription;
 
     private userSubscription: Subscription = new Subscription();
 
+    private observedPartLoading: boolean = true;
     private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
     private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
     private readonly observedPartObs: Observable<MGPOptional<FocusedPart>>;
@@ -34,7 +35,6 @@ export class ObservedPartService implements OnDestroy {
                        private readonly connectedUserService: ConnectedUserService)
     {
         this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
-        this.observedPartRS.next(MGPOptional.empty());
         this.observedPartObs = this.observedPartRS.asObservable();
         this.authSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.onUserUpdate(user);
@@ -47,20 +47,21 @@ export class ObservedPartService implements OnDestroy {
         } else { // new user logged in
             this.userSubscription =
                 this.userDAO.subscribeToChanges(user.id, (docOpt: MGPOptional<User>) => {
-                    if (docOpt.isPresent()) {
-                        const doc: User = docOpt.get();
-                        this.updateObservedPartWithDoc(doc.observedPart);
-                    }
+                    assert(docOpt.isPresent(), 'When observing part service, user was expected to already have a document!');
+                    const doc: User = docOpt.get();
+                    this.updateObservedPartWithDoc(doc.observedPart);
                 });
         }
     }
     private updateObservedPartWithDoc(newObservedPart: FocusedPart | null | undefined): void {
+        // Undefined if the user had no observedPart, null if it has been removed
         const previousObservedPart: MGPOptional<FocusedPart> = this.observedPart;
         const stayedNull: boolean = newObservedPart == null && previousObservedPart.isAbsent();
         const stayedItselfAsNonNull: boolean = newObservedPart != null &&
                                                previousObservedPart.equalsValue(newObservedPart);
         const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
-        if (valueChanged) {
+        if (valueChanged || this.observedPartLoading) {
+            this.observedPartLoading = false;
             this.observedPart = MGPOptional.ofNullable(newObservedPart);
             this.observedPartRS.next(this.observedPart);
         }
@@ -89,8 +90,6 @@ export class ObservedPartService implements OnDestroy {
         }
     }
     public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
-        // TODO FOR REVIEW: du coup maintenant observedPartService.canUserJoin ça a moins de sens à lire que
-        //  [connected]UserService.canUserJoin non x) ?
         if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
             // If user is in no part, he can join one
             // If he is onne part and want to join it again, he can

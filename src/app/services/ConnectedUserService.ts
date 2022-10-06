@@ -25,7 +25,7 @@ export class GameActionFailure {
 
     public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
 
-    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing in another game.`;
+    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing another game.`;
 }
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
@@ -78,7 +78,7 @@ export class AuthUser {
                 public verified: boolean) {
     }
     public isConnected(): boolean {
-        // Only a user that is connected has its email set pour éviter les confusions futures !
+        // Only a user that is connected has its email set
         return this.email.isPresent();
     }
     public toMinimalUser(): MinimalUser {
@@ -86,6 +86,12 @@ export class AuthUser {
             id: this.id,
             name: this.username.get(),
         };
+    }
+    public equals(other: AuthUser): boolean {
+        return this.id === other.id &&
+               this.email.equals(other.email) &&
+               this.username.equals(other.username) &&
+               this.verified === other.verified;
     }
 }
 
@@ -96,7 +102,7 @@ export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    private readonly authSubscription!: Subscription;
+    private readonly authSubscription: Subscription;
 
     /**
      * This is the current user, if there is one.
@@ -112,14 +118,14 @@ export class ConnectedUserService implements OnDestroy {
                 private readonly userService: UserService,
                 private readonly auth: FireAuth.Auth)
     {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
+        display(ConnectedUserService.VERBOSE || true, 'ConnectedUserService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.authSubscription =
             new Subscription(FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
-                    display(ConnectedUserService.VERBOSE, 'User is not connected');
+                    display(ConnectedUserService.VERBOSE || true, 'User is not connected');
                     this.userSubscription.unsubscribe();
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
@@ -142,8 +148,10 @@ export class ConnectedUserService implements OnDestroy {
                                                                         MGPOptional.ofNullable(user.email),
                                                                         MGPOptional.ofNullable(username),
                                                                         userHasFinalizedVerification);
-                                this.user = MGPOptional.of(authUser);
-                                this.userRS.next(authUser);
+                                if (this.user.equalsValue(authUser) === false) {
+                                    this.user = MGPOptional.of(authUser);
+                                    this.userRS.next(authUser);
+                                }
                             }
                         });
                 }

@@ -534,7 +534,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
 
                 spyOn(gameService, 'deletePart').and.callThrough();
-                spyOn(configRoomService, 'deleteConfigRoom').and.callFake(async(_a: string, _c: MinimalUser[]) => {return;});
+                spyOn(configRoomService, 'deleteConfigRoom').and.resolveTo();
                 spyOn(chatService, 'deleteChat').and.callThrough();
 
                 // When clicking on cancel

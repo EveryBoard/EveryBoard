@@ -106,7 +106,6 @@ export const routes: Route[] = [
     { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
-
     { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
     { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },

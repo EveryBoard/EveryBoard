@@ -138,8 +138,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private checkInputs() {
         const user: MGPOptional<AuthUser> = this.connectedUserService.user;
-        assert(user.isPresent() && (user.get() !== AuthUser.NOT_CONNECTED),
-               'PartCreationComponent should not be created with an empty userName');
+        assert(user.isPresent(), 'PartCreationComponent should not be called without connected user');
+        assert(user.get() !== AuthUser.NOT_CONNECTED, 'PartCreationComponent should not be created with an empty userName');
         assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
     private createForms() {

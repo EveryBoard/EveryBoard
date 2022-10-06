@@ -521,11 +521,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     describe('ObservedPart Change', () => {
         it('should redirect to lobby when role and partId change', fakeAsync(async() => {
-            // Given a part where you are observer
+            // Given a part where the user is observer
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
-            // When observedPart update to inform component that user is now candidate in a game
+            // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
@@ -536,11 +536,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not redirect to lobby when role stay "observer" but partId change', fakeAsync(async() => {
-            // Given a part where you are observer
+            // Given a part where the user is observer
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
-            // When observedPart update to inform component that user is now candidate in a game
+            // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             const observedPart: FocusedPart = FocusedPartMocks.OTHER_OBSERVER;
@@ -551,11 +551,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not do anything particular when observer leaves this part from another tab', fakeAsync(async() => {
-            // Given a part where you are observer
+            // Given a part where the user is observer
             await prepareStartedGameFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
-            // When observedPart update to inform component that user stopped observing some part in another tab
+            // When observedPart is updated to inform component that user stopped observing some part in another tab
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
@@ -2074,7 +2074,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part component where user is observer
             await prepareStartedGameFor(USER_OBSERVER);
 
-            // When observedPart update to inform component that user is now candidate in anothergame
+            // When observedPart is updated to inform component that user is now candidate in anothergame
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;

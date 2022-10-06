@@ -68,7 +68,7 @@ html {
 }
 .tabs .disabled-tab:hover {
     color: grey;
-    cursor: none;
+    cursor: default;
     background-color: var(--background-color) !important;
     border-color: var(--tab-highlight-on-hover) !important;
 }

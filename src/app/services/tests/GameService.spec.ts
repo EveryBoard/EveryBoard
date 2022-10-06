@@ -113,7 +113,7 @@ describe('GameService', () => {
     }));
     it('should delegate delete to PartDAO', fakeAsync(async() => {
         // Given the service at any moment
-        spyOn(partDAO, 'delete').and.callFake(async(_id: string) => {return;});
+        spyOn(partDAO, 'delete').and.resolveTo();
 
         // When calling deletePart
         await gameService.deletePart('partId');
@@ -461,7 +461,7 @@ describe('GameService', () => {
         for (const player of Player.PLAYERS) {
             it('should send AGREED_DRAW_BY_ZERO/ONE when call as ZERO/ONE', async() => {
                 // Given any state of service
-                spyOn(partDAO, 'update').and.callFake(async(_id: string, _update: Partial<Part>) => {return;});
+                spyOn(partDAO, 'update').and.resolveTo();
 
                 // When calling acceptDraw as the player
                 await gameService.acceptDraw('configRoomId', 5, player);

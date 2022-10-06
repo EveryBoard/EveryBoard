@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ReplaySubject, Subscription } from 'rxjs';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';

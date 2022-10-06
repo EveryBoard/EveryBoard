@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -7,13 +7,15 @@ import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PartDocument } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('ExclusiveOnlineGameGuard', () => {
 
-    let guard: ExclusiveOnlineGameGuard;
+    let exclusiveOnlineGameGuard: ExclusiveOnlineGameGuard;
 
     let observedPartService: ObservedPartService;
 
@@ -30,49 +32,69 @@ describe('ExclusiveOnlineGameGuard', () => {
             ],
             providers: [
                 { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         observedPartService = TestBed.inject(ObservedPartService);
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        guard = new ExclusiveOnlineGameGuard(observedPartService, messageDisplayer, router);
+        exclusiveOnlineGameGuard = new ExclusiveOnlineGameGuard(observedPartService, router);
     }));
     it('should create', () => {
-        expect(guard).toBeDefined();
+        expect(exclusiveOnlineGameGuard).toBeDefined();
     });
-    it('should refuse to go to creation component when you have any observed part and redirect to it', fakeAsync(async() => {
-        // Given a connected user service indicating user is already player
+    it('shoud allow to activate when you are not doing anything', async() => {
+        // Given a connected user not observing any part
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+
+        // When asking if user can go to some part id
+        const route: ActivatedRouteSnapshot = {
+            params: { id: 'any id' },
+        } as unknown as ActivatedRouteSnapshot;
+
+        // Then it should be accepted
+        await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(true);
+    });
+    it(`should allow to go to user's part`, fakeAsync(async() => {
+        // Given a connected user service indicating user is player
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         ObservedPartServiceMock.setObservedPart(MGPOptional.of({
             id: startedPartUserPlay.id,
             role: 'Player',
             typeGame: 'P4',
         }));
-        // When asking if user can go to this page
+
+        // When asking if user can go to a different part
+        const route: ActivatedRouteSnapshot = {
+            params: { id: startedPartUserPlay.id },
+        } as unknown as ActivatedRouteSnapshot;
+
         // Then it should be refused
-        await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
+        await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(true);
         tick(3000);
     }));
-    it('shoud allow to activate when you are not doing anything', async() => {
-        // Given a connected user not observing any part
-        ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+    it(`should refuse to go to another part and redirect to user's part`, fakeAsync(async() => {
+        // Given a connected user service indicating user is already player
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+            id: startedPartUserPlay.id,
+            role: 'Player',
+            typeGame: 'P4',
+        }));
 
-        // When asking if user can go to this component
-        // Then it should be accepted
-        await expectAsync(guard.canActivate()).toBeResolvedTo(true);
-    });
-    it('should unsubscribe from observedPartSubscription upon destruction', fakeAsync(async() => {
-        // Given a guard that has resolved
-        ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
-        await guard.canActivate();
-        // eslint-disable-next-line dot-notation
-        spyOn(guard['observedPartSubscription'], 'unsubscribe').and.callThrough();
+        // When asking if user can go to a different part
+        const route: ActivatedRouteSnapshot = {
+            params: { id: 'some other part blbl' },
+        } as unknown as ActivatedRouteSnapshot;
 
-        // When destroying the guard
-        guard.ngOnDestroy();
-
-        // Then unsubscribe is called
-        // eslint-disable-next-line dot-notation
-        expect(guard['observedPartSubscription'].unsubscribe).toHaveBeenCalledWith();
+        // Then it should be refused
+        await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
+        tick(3000);
+    }));
+    xit('should unsubscribe from observedPartSubscription upon destruction', fakeAsync(async() => {
+        // TODO FOR REVIEW: maintenant comme tu le sais, on se désabonne immédiatement
+        // vu que de toute façon c'est du code dans une promise
+        // on "promisifie" un observable, aller jusqu'au bout c'est s'en désabonner au plus tôt ?
     }));
 });

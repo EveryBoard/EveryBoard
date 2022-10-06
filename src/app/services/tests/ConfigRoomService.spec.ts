@@ -72,10 +72,10 @@ describe('ConfigRoomService', () => {
     }));
     describe('joinGame', () => {
         it('should call dao.addCandidate even when called while already in the game', fakeAsync(async() => {
-            // Given a
-            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER); // A connected user
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL); // ConfigRoom
-            await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER); // That is candidate in the room
+            // Given a configRoom and a connected user that is candidate in the room
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
 
             // When calling joinGame to join the game one more time
             spyOn(configRoomService, 'addCandidate').and.callThrough();

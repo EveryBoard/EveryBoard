@@ -64,7 +64,7 @@ describe('LobbyComponent', () => {
             testUtils.detectChanges();
             // where you are forbidden by connectedUserService
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-            spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
+            spyOn(messageDisplayer, 'criticalMessage').and.resolveTo();
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
             const error: string = `Si je dit non, c'est non!!!`;
             spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
@@ -72,7 +72,6 @@ describe('LobbyComponent', () => {
             // When clicking on the 'create game' tab
             await testUtils.clickElement('#tab-create');
             await testUtils.whenStable();
-            tick(3000);
 
             // Then online-game-selection component should not be visible and an error should be toasted
             testUtils.expectElementNotToExist('#online-game-selection');

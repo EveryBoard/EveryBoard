@@ -15,6 +15,7 @@ import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { Part } from 'src/app/domain/Part';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 
 export class ObservedPartServiceMock {
 
@@ -373,23 +374,33 @@ describe('ObservedPartService', () => {
             await shouldAllowJoinPart(observedPart, 'some-id', true);
         }));
     });
+    it('should unsubscribe from userDAO when destroying service', fakeAsync(async() => {
+        // Given a service on which user is logged in
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(userDAO, 'subscribeToChanges');
+        // Since the subscription is done in the constructor, we need to spy it before
+        observedPartService = new ObservedPartService(userDAO, connectedUserService);
 
-    it('should unsubscribe from subscriptions upon destruction', () => {
-        // eslint-disable-next-line dot-notation
-        spyOn(observedPartService['authSubscription'], 'unsubscribe').and.callThrough();
-        // eslint-disable-next-line dot-notation
-        spyOn(observedPartService['userSubscription'], 'unsubscribe').and.callThrough();
-
-        // when the service is destroyed
+        // When the service is destroyed
         observedPartService.ngOnDestroy();
         alreadyDestroyed = true;
 
-        // then it unsubscribed
-        // eslint-disable-next-line dot-notation
-        expect(observedPartService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
-        // eslint-disable-next-line dot-notation
-        expect(observedPartService['userSubscription'].unsubscribe).toHaveBeenCalledWith();
-    });
+        // Then it should have unsubscribed from active users
+        expectUnsubscribeToHaveBeenCalled();
+    }));
+    it('should unsubscribe from connectedUserService when destroying service', fakeAsync(async() => {
+        // Given a service
+        const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(connectedUserService, 'subscribeToUser');
+        // Since the subscription is done in the constructor, we need to spy it before
+        observedPartService = new ObservedPartService(userDAO, connectedUserService);
+
+        // When the service is destroyed
+        observedPartService.ngOnDestroy();
+        alreadyDestroyed = true;
+
+        // Then it should have unsubscribed from active users
+        expectUnsubscribeToHaveBeenCalled();
+    }));
 
     afterEach(async() => {
         if (alreadyDestroyed === false) {

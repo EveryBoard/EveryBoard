@@ -11,6 +11,7 @@ export interface User extends FirestoreJSONObject {
     username?: string; // may not be set initially for google users
     lastUpdateTime?: FirestoreTime,
     verified: boolean,
+    // Observed part can be undefined if the user has never had an observedPart, null if it has been removed
     observedPart?: FocusedPart | null,
 }
 

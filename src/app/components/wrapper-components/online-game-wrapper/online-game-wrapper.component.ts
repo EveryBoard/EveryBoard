@@ -330,7 +330,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             if (diff.isPresent('listMoves').state === 'added' && update.data.turn > 0) {
                 updatesTypes.push(this.getMoveUpdateType(update, diff));
             }
-        } else if (this.updateHasMoves(this.currentPart.data.turn, update.data.turn, update.data.listMoves)) {
+        } else if (this.turnHasIncreased(this.currentPart.data.turn, update.data.turn, update.data.listMoves)) {
             updatesTypes.push(this.getMoveUpdateType(update, diff));
         }
         if (update.data.beginning == null) {
@@ -364,7 +364,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         }
     }
-    public updateHasMoves(previousTurn: number, newTurn: number, listMoves: readonly JSONValueWithoutArray[]): boolean {
+    public turnHasIncreased(previousTurn: number, newTurn: number, listMoves: readonly JSONValueWithoutArray[])
+    : boolean
+    {
         assert(listMoves.length === newTurn, 'ListMoves size and newTurn do not match, it is impossible!');
         return previousTurn < newTurn;
     }
@@ -661,7 +663,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.observerRole = PlayerOrNone.NONE;
         }
         await this.observedPartService.updateObservedPart({
-            // ...this.observedPart,
             role: this.observerRole === PlayerOrNone.NONE ? 'Observer' : 'Player',
         });
         return opponentName;

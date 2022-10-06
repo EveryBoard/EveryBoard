@@ -2681,7 +2681,7 @@
         <source>You are already candidate in another game.</source>
       </trans-unit>
       <trans-unit id="5008299983443424976" datatype="html">
-        <source>You are already observing in another game.</source>
+        <source>You are already observing another game.</source>
       </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>

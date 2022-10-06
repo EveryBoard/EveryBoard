@@ -59,12 +59,12 @@ describe('utils', () => {
 
     describe('display', () => {
         it('should log if verbose is true', () => {
-            spyOn(console, 'log').and.callThrough();
+            spyOn(console, 'log').and.callFake((_: string) => {});
             display(true, 'foo');
             expect(console.log).toHaveBeenCalledTimes(1);
         });
         it('should not log if verbose is false', () => {
-            spyOn(console, 'log').and.callThrough();
+            spyOn(console, 'log').and.callFake((_: string) => {});
             display(false, 'foo');
             expect(console.log).not.toHaveBeenCalled();
         });
