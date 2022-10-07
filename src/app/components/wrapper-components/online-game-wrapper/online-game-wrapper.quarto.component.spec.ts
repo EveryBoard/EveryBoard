@@ -45,7 +45,7 @@ import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -2084,7 +2084,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectValidRouting(router, ['/lobby'], LobbyComponent);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
+        fit('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
             // Given a part component where user was observer
             // then receive an update telling that user is now non-observer-elsewhere
             await prepareStartedGameFor(USER_OBSERVER);
@@ -2093,7 +2093,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
 
-            // When destroying after that the component (should normally be triggered once router is triggered)
+            // When destroying the component (should normally be triggered once router is triggered)
             testUtils.fixture.destroy();
 
             // Then the observedPart should have been removed

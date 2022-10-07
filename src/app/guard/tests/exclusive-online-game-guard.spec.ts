@@ -88,7 +88,7 @@ describe('ExclusiveOnlineGameGuard', () => {
             params: { id: 'some other part blbl' },
         } as unknown as ActivatedRouteSnapshot;
 
-        // Then it should be refused
+        // Then it should be refused and redirected
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
         tick(3000);
     }));
