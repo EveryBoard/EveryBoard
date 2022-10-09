@@ -113,6 +113,10 @@ export abstract class GameWrapper<P extends Comparable> {
     public setRole(role: PlayerOrNone): void {
         this.role = role;
         this.gameComponent.role = this.role;
+        if (this.gameComponent.hasAsymetricBoard) {
+            this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
+            console.log('here then we rotate like so', this.gameComponent.rotation)
+        }
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,

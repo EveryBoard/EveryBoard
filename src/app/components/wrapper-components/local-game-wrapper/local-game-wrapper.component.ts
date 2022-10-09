@@ -14,7 +14,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -61,7 +61,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }, 1);
     }
     public updatePlayer(player: Player): void {
+        console.log('update player ' + player.toString() + ' with [' + this.playerSelection[0] + ', ' + this.playerSelection[1] + ']');
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
+        if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
+            this.setRole(Player.ONE);
+        } else {
+            this.setRole(Player.ZERO);
+        }
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {

@@ -28,6 +28,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 {
     public encoder: MoveEncoder<M>;
 
+    public Player: typeof Player = Player;
+
     public SPACE_SIZE: number = 100;
 
     public readonly STROKE_WIDTH: number = 8;
@@ -44,7 +46,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public imagesLocation: string = 'assets/images/';
 
-    public mustRotateBoard: boolean = false;
+    public hasAsymetricBoard: boolean = false;
 
     public rotation: string = '';
 

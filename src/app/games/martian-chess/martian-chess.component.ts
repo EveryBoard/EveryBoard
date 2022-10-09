@@ -147,7 +147,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.mustRotateBoard = true;
+        this.hasAsymetricBoard = true;
         this.rules = new MartianChessRules(MartianChessState);
         this.availableMinimaxes = [
             new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),
@@ -199,7 +199,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getPieceClasses(x: number, y: number): string[] {
         const clickedCoord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        classes.push(y <= 3 ? 'player0' : 'player1');
+        classes.push(y > 3 ? 'player0' : 'player1');
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
             classes.push('highlighted');
         }

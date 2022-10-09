@@ -48,7 +48,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.mustRotateBoard = true;
+        this.hasAsymetricBoard = true;
         this.rules = new EpaminondasRules(EpaminondasState);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),

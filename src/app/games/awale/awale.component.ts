@@ -29,7 +29,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.mustRotateBoard = true;
+        this.hasAsymetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new AwaleRules(AwaleState);
         this.availableMinimaxes = [

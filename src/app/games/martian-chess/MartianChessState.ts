@@ -43,9 +43,9 @@ export class MartianChessCapture {
 }
 export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
 
-    public static readonly PLAYER_ZERO_TERRITORY: MGPSet<number> = new MGPSet([0, 1, 2, 3]);
+    public static readonly PLAYER_ZERO_TERRITORY: MGPSet<number> = new MGPSet([4, 5, 6, 7]);
 
-    public static readonly PLAYER_ONE_TERRITORY: MGPSet<number> = new MGPSet([4, 5, 6, 7]);
+    public static readonly PLAYER_ONE_TERRITORY: MGPSet<number> = new MGPSet([0, 1, 2, 3]);
 
     public static getInitialState(): MartianChessState {
         const _: MartianChessPiece = MartianChessPiece.EMPTY;

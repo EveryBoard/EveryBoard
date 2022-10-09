@@ -169,12 +169,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.setCurrentPartIdOrRedirect();
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
-    public setRole(role: PlayerOrNone): void {
-        super.setRole(role);
-        if (this.gameComponent.mustRotateBoard) {
-            this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
-        }
-    }
+    // public setRole(role: PlayerOrNone): void {
+    //     super.setRole(role);
+    //     if (this.gameComponent.hasAsymetricBoard) {
+    //         this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
+    //     }
+    // }
     public async startGame(configRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
