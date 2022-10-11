@@ -48,6 +48,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public hasAsymetricBoard: boolean = false;
 
+    // Will contain, once the wrapper change the userRole, the valide orientation (180° when you play Player.ONE)
     public rotation: string = '';
 
     public tutorial: TutorialStep[];

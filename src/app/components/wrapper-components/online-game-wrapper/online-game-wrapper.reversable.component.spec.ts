@@ -12,8 +12,8 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
 
     let testUtils: ComponentTestUtils<AwaleComponent, MinimalUser>;
 
-    it('Should have a rotation not applied for player one', fakeAsync(async() => {
-        // Given a game started for opponent (player two)
+    it('should have a rotation not applied for player zero', fakeAsync(async() => {
+        // Given a game started for opponent (Player.ZERO)
         testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.CREATOR_AUTH_USER, 'Awale', false, false)).testUtils;
 
         // When displaying the component
@@ -25,8 +25,8 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         expect(wrapper.gameComponent.rotation).toBe('rotate(0)');
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    it('Should have a rotation applied for player two', fakeAsync(async() => {
-        // Given a game started for opponent (player two)
+    it('should have a rotation applied for player one', fakeAsync(async() => {
+        // Given a game started for opponent (Player.ONE)
         testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.OPPONENT_AUTH_USER, 'Awale', false, false)).testUtils;
 
         // When displaying the component
