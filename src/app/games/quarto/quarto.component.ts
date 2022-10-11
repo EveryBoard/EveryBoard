@@ -38,11 +38,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         ];
         this.encoder = QuartoMove.encoder;
         this.tutorial = new QuartoTutorial().tutorial;
-        this.pieceInHand = this.rules.node.gameState.pieceInHand;
+        this.pieceInHand = this.getState().pieceInHand;
         this.updateBoard();
     }
     public updateBoard(): void {
-        const state: QuartoState = this.rules.node.gameState;
+        const state: QuartoState = this.getState();
         const move: MGPOptional<QuartoMove> = this.rules.node.move;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
@@ -62,17 +62,17 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (this.board[y][x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(x, y); // let's show the user his decision
-            if (this.rules.node.gameState.turn === 15) {
+            if (this.getState().turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.EMPTY);
-                return this.chooseMove(chosenMove, this.rules.node.gameState);
+                return this.chooseMove(chosenMove, this.getState());
             } else if (this.pieceToGive === QuartoPiece.EMPTY) {
                 return MGPValidation.SUCCESS; // the user has just chosen his coord
             } else {
                 // the user has already chosen his piece before his coord
                 const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive);
-                return this.chooseMove(chosenMove, this.rules.node.gameState);
+                return this.chooseMove(chosenMove, this.getState());
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
@@ -94,7 +94,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             // the user has chosen the coord before the piece
             const chosen: Coord = this.chosen.get();
             const chosenMove: QuartoMove = new QuartoMove(chosen.x, chosen.y, this.pieceToGive);
-            return this.chooseMove(chosenMove, this.rules.node.gameState);
+            return this.chooseMove(chosenMove, this.getState());
         }
     }
     private hideLastMove(): void {

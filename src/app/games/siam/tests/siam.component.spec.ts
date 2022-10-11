@@ -58,10 +58,16 @@ describe('SiamComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#remainingPieces_1', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
+    it('should select piece when clicking first time', fakeAsync(async() => {
+        // Given a component
+        // When the player clicks on a piece for insertion
+        await testUtils.expectClickSuccess('#remainingPieces_0');
+        // Then it should be selected
+        testUtils.expectElementToHaveClass('#remainingPieces_0_4', 'selected-stroke');
+    }));
     it('should deselect piece when clicking a second time on the remaining pieces', fakeAsync(async() => {
         // Given a component where the player has selected a piece for insertion
         await testUtils.expectClickSuccess('#remainingPieces_0');
-        testUtils.expectElementToHaveClass('#remainingPieces_0_4', 'selected-stroke');
         // When clicking a second time on the remaining pieces
         await testUtils.expectClickSuccess('#remainingPieces_0');
         // Then it should deselect the piece

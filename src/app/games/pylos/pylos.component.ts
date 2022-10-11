@@ -192,7 +192,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.justClimbed(coord)) {
             return false;
         }
-        const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord).isPlayer();
+        const reallyOccupied: boolean = this.getState().getPieceAt(coord).isPlayer();
         const landingCoord: boolean = this.chosenLandingCoord.equalsValue(coord);
         return reallyOccupied || landingCoord;
     }
@@ -228,7 +228,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return pieces;
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.constructedState = this.state;
         this.lastMove = this.rules.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();

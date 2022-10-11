@@ -44,7 +44,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.updateBoard();
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.board = this.state.board;
         this.lastMoveCoord = this.rules.node.move.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
@@ -103,7 +103,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
                                               chosenCoord.y,
                                               this.chosenDirection);
         this.cancelMove();
-        return this.chooseMove(move, this.rules.node.gameState);
+        return this.chooseMove(move, this.getState());
     }
     public getArrowTransform(coord: Coord, orientation: string): string {
         return GameComponentUtils.getArrowTransform(this.SPACE_SIZE,

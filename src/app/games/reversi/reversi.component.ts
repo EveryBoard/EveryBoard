@@ -48,10 +48,10 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: ReversiMove = new ReversiMove(x, y);
-        return await this.chooseMove(chosenMove, this.rules.node.gameState, this.scores.get());
+        return await this.chooseMove(chosenMove, this.getState(), this.scores.get());
     }
     public updateBoard(): void {
-        const state: ReversiState = this.rules.node.gameState;
+        const state: ReversiState = this.getState();
 
         this.board = state.getCopiedBoard();
         this.captureds = [];
@@ -67,12 +67,12 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     }
     private showPreviousMove() {
         this.lastMove = this.rules.node.move.get().coord;
-        const player: Player = this.rules.node.gameState.getCurrentPlayer();
-        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+        const player: Player = this.getState().getCurrentPlayer();
+        const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
             while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
-                   this.rules.node.gameState.getPieceAt(captured) === opponent &&
+                   this.getState().getPieceAt(captured) === opponent &&
                    this.rules.node.mother.get().gameState.getPieceAt(captured) === player)
             {
                 this.captureds.push(captured);

@@ -111,8 +111,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.updateBoard();
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
-            const previousState: GameState = this.gameComponent.rules.node.mother.get().gameState;
-            const resultingState: GameState = this.gameComponent.rules.node.gameState;
+            const previousState: GameState = this.gameComponent.getPreviousState();
+            const resultingState: GameState = this.gameComponent.getState();
             const moveValidity: MGPValidation =
                 Utils.getNonNullable(currentStep.predicate)(move, previousState, resultingState);
             if (moveValidity.isSuccess()) {

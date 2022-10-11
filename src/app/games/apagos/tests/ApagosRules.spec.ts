@@ -25,7 +25,7 @@ describe('ApagosRules', () => {
         ], ApagosState.PIECES_PER_PLAYER - 2, ApagosState.PIECES_PER_PLAYER - 1);
     });
     beforeEach(() => {
-        rules = new ApagosRules(ApagosState);
+        rules = ApagosRules.get();
         minimaxes = [
             new ApagosDummyMinimax(rules, 'ApagosDummyMinimax'),
         ];

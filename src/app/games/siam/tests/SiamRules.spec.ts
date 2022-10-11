@@ -447,6 +447,16 @@ describe('SiamRules:', () => {
         // Then there should be no moves
         expect(moves).toEqual([]);
     });
+    it('should compute empty list of moves between aligned squares that are too far away', () => {
+        // Given two coordinatess that are aligned but of a distance greater than one
+        const state: SiamState = SiamState.getInitialState();
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(2, 0);
+        // When computing the list of moves between these coords
+        const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
+        // Then there should be no moves
+        expect(moves).toEqual([]);
+    });
     it('should compute the pusher player even with a mountain amongs the pushers', () => {
         // Given a board where there is a mountain amongst the pusher,
         // and a winning move

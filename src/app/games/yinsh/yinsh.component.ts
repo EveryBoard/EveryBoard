@@ -105,7 +105,7 @@ export class YinshComponent
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.constructedState.allCoords().forEach((coord: Coord): void => {
             if (this.viewInfo.spaceInfo[coord.y] == null) {
                 this.viewInfo.spaceInfo[coord.y] = [];
@@ -125,7 +125,7 @@ export class YinshComponent
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
-        const state: YinshState = this.rules.node.gameState;
+        const state: YinshState = this.getState();
         this.scores = MGPOptional.of(state.countScores());
     }
     public updateViewInfo(): void {
@@ -162,7 +162,7 @@ export class YinshComponent
                     this.constructedState.getRingCoords(this.constructedState.getCurrentPlayer());
                 break;
             case 'MOVE_START':
-                if (this.rules.node.gameState.isInitialPlacementPhase() === false) {
+                if (this.getState().isInitialPlacementPhase() === false) {
                     this.viewInfo.selectableCoords =
                         this.constructedState.getRingCoords(this.constructedState.getCurrentPlayer());
                 }
@@ -213,7 +213,7 @@ export class YinshComponent
         }
     }
     public cancelMoveAttempt(): void {
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
@@ -258,12 +258,12 @@ export class YinshComponent
         for (const coord of capture.capturedSpaces) {
             this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['captured-fill'];
             if (alsoShowPiece) {
-                this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer().getOpponent());
+                this.markRemovedMarker(coord, this.getState().getCurrentPlayer().getOpponent());
             }
         }
         this.viewInfo.spaceInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].spaceClasses = ['captured-fill'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentPlayer().getOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
@@ -366,11 +366,11 @@ export class YinshComponent
     private markCurrentCapture(capture: YinshCapture): void {
         for (const coord of capture.capturedSpaces) {
             this.viewInfo.selectedCoords.push(coord);
-            this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer());
+            this.markRemovedMarker(coord, this.getState().getCurrentPlayer());
         }
         if (capture.ringTaken.isPresent()) {
             this.viewInfo.selectedCoords.push(capture.ringTaken.get());
-            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer());
+            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentPlayer());
         }
     }
     private markRemovedMarker(coord: Coord, player: Player): void {
@@ -424,7 +424,7 @@ export class YinshComponent
                                               this.moveStart.get(),
                                               this.moveEnd,
                                               this.finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
+        const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {

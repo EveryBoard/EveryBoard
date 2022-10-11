@@ -96,7 +96,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // No AI is playing when the game is finished
             return MGPOptional.empty();
         }
-        const playerIndex: number = this.gameComponent.rules.node.gameState.turn % 2;
+        const playerIndex: number = this.gameComponent.getTurn() % 2;
         if (this.aiDepths[playerIndex] === '0') {
             // No AI is playing if its level is set to 0
             return MGPOptional.empty();
@@ -125,7 +125,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
     public canTakeBack(): boolean {
-        return this.gameComponent.rules.node.gameState.turn > 0;
+        return this.gameComponent.getTurn() > 0;
     }
     public takeBack(): void {
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();

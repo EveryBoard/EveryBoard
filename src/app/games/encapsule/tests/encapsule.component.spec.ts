@@ -149,7 +149,7 @@ describe('EncapsuleComponent', () => {
         const component: EncapsuleComponent = testUtils.getComponent();
         const minimax: EncapsuleMinimax = new EncapsuleMinimax(component.rules, 'EncapsuleMinimax');
 
-        const node: EncapsuleNode = new EncapsuleNode(component.rules.node.gameState,
+        const node: EncapsuleNode = new EncapsuleNode(component.getState(),
                                                       MGPOptional.empty(),
                                                       MGPOptional.of(move));
         expect(minimax.getBoardValue(node).value).toBe(Number.MIN_SAFE_INTEGER);

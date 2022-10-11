@@ -42,7 +42,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');
         this.lastMove = this.rules.node.move;
-        this.board = this.rules.node.gameState.getCopiedBoard();
+        this.board = this.getState().getCopiedBoard();
         this.captureds = [];
         if (this.lastMove.isPresent()) {
             this.showPreviousMove();
@@ -51,13 +51,13 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     private showPreviousMove(): void {
         const previousState: S = this.rules.node.mother.get().gameState;
-        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+        const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.get().end.getNext(orthogonal, 1);
             if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
-                const currentPiece: TaflPawn = this.rules.node.gameState.getPieceAt(captured);
+                const currentPiece: TaflPawn = this.getState().getPieceAt(captured);
                 const isEmpty: boolean = currentPiece === TaflPawn.UNOCCUPIED;
                 if (wasOpponent && isEmpty) {
                     this.captureds.push(captured);
@@ -102,7 +102,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
         if (move.isSuccess()) {
             this.cancelMove();
-            return await this.chooseMove(move.get(), this.rules.node.gameState);
+            return await this.chooseMove(move.get(), this.getState());
         } else {
             return this.cancelMove(move.getReason());
         }
@@ -123,7 +123,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return MGPValidation.SUCCESS;
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): boolean {
-        const state: S = this.rules.node.gameState;
+        const state: S = this.getState();
         const player: Player = state.getCurrentPlayer();
         const coord: Coord = new Coord(x, y);
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
@@ -132,17 +132,17 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.chosen = new Coord(-1, -1);
     }
     public isThrone(x: number, y: number): boolean {
-        const state: S = this.rules.node.gameState;
+        const state: S = this.getState();
         return this.rules.isThrone(state, new Coord(x, y));
     }
     public isCentralThrone(x: number, y: number): boolean {
-        return this.rules.node.gameState.isCentralThrone(new Coord(x, y)) === false;
+        return this.getState().isCentralThrone(new Coord(x, y)) === false;
     }
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
 
-        const owner: PlayerOrNone = this.rules.node.gameState.getAbsoluteOwner(coord);
+        const owner: PlayerOrNone = this.getState().getAbsoluteOwner(coord);
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equals(coord)) {

@@ -183,7 +183,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return up + ', ' + center + ', ' + right;
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.board = this.state.board;
         const scoreZero: number = this.state.getScoreOf(Player.ZERO);
         const scoreOne: number = this.state.getScoreOf(Player.ONE);
@@ -209,7 +209,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                     this.rules.node.mother.get().gameState.getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
                 if (wasOccupied) {
-                    const landingHome: boolean = this.rules.node.gameState.isInOpponentTerritory(new Coord(0, y));
+                    const landingHome: boolean = this.getState().isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
                         classes.push('last-move-stroke');
                     }
@@ -292,7 +292,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const move: MGPFallible<MartianChessMove> =
                 MartianChessMove.from(info.selectedPiece, endCoord, this.callTheClock);
             assert(move.isSuccess(), 'MartianChessComponent or Rules did a mistake thinking this would have been a legal move!');
-            const state: MartianChessState = this.rules.node.gameState;
+            const state: MartianChessState = this.getState();
             return this.chooseMove(move.get(), state);
         } else if (this.isOneOfUsersPieces(endCoord)) {
             return this.selectAsFirstPiece(endCoord);

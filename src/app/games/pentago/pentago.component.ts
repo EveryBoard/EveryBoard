@@ -55,8 +55,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        this.board = this.rules.node.gameState.getCopiedBoard();
-        this.victoryCoords = this.rules.getVictoryCoords(this.rules.node.gameState);
+        this.board = this.getState().getCopiedBoard();
+        this.victoryCoords = this.rules.getVictoryCoords(this.getState());
         this.showLastMove();
     }
     public showLastMove(): void {
@@ -132,7 +132,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);
-        const state: PentagoState = this.rules.node.gameState;
+        const state: PentagoState = this.getState();
         const postDropState: PentagoState = state.applyLegalDrop(drop);
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop, state);
@@ -182,7 +182,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
         const currentDrop: Coord = this.currentDrop.get();
         const move: PentagoMove = PentagoMove.withRotation(currentDrop.x, currentDrop.y, arrow[1], arrow[2]);
-        return this.chooseMove(move, this.rules.node.gameState);
+        return this.chooseMove(move, this.getState());
     }
     public async skipRotation(): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#skipRotation');
@@ -191,6 +191,6 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
         const currentDrop: Coord = this.currentDrop.get();
         const drop: PentagoMove = PentagoMove.rotationless(currentDrop.x, currentDrop.y);
-        return this.chooseMove(drop, this.rules.node.gameState);
+        return this.chooseMove(drop, this.getState());
     }
 }

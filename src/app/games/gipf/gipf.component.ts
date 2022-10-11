@@ -58,7 +58,7 @@ export class GipfComponent
         this.encoder = GipfMove.encoder;
         this.tutorial = new GipfTutorial().tutorial;
         this.SPACE_SIZE = 40;
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
@@ -234,11 +234,11 @@ export class GipfComponent
                           placement: GipfPlacement,
                           finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
+        const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
         return validity;
     }
     public cancelMoveAttempt(): void {
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.captured = [];
         this.moved = [];
 

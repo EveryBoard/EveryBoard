@@ -86,6 +86,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const componentRef: ComponentRef<AbstractGameComponent> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
         this.gameComponent = componentRef.instance;
+        this.gameComponent.rules.setInitialBoard();
 
         this.gameComponent.chooseMove = // so that when the game component do a move
             (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {
@@ -158,7 +159,7 @@ export abstract class GameWrapper<P extends Comparable> {
             // This can happen if called before the component has been set up
             return false;
         }
-        const turn: number = this.gameComponent.rules.node.gameState.turn;
+        const turn: number = this.gameComponent.getTurn();
         const indexPlayer: number = turn % 2;
         const player: P = this.getPlayer();
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
@@ -183,7 +184,7 @@ export abstract class GameWrapper<P extends Comparable> {
             return ['endgame-bg'];
         }
         if (this.isPlayerTurn()) {
-            const turn: number = this.gameComponent.rules.node.gameState.turn;
+            const turn: number = this.gameComponent.getTurn();
             return ['player' + (turn % 2) + '-bg'];
         }
         return [];

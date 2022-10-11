@@ -117,17 +117,17 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, GameState, unknown>, TutorialStep, Move, MGPValidation][] = [
                 [
-                    new ApagosRules(ApagosState),
+                    ApagosRules.get(),
                     apagosTutorial[2],
                     ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
                     MGPValidation.failure(`This move is a drop, please do a transfer!`),
                 ], [
-                    new ApagosRules(ApagosState),
+                    ApagosRules.get(),
                     apagosTutorial[3],
                     ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
                     MGPValidation.failure(`You actively made your opponent win!`),
                 ], [
-                    new ApagosRules(ApagosState),
+                    ApagosRules.get(),
                     apagosTutorial[3],
                     ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
                     MGPValidation.failure(`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),

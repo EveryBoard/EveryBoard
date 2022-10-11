@@ -258,14 +258,18 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const closenessFactor: number = 3;
         const maxRemainingPieces: number = 5;
         let x: number = (maxRemainingPieces+1)/closenessFactor;
-        if (player === Player.ZERO) {
+        let y: number;
+        let orientation: Orthogonal;
+        if (player === Player.ONE) {
             // Player zero pieces are stacked right-to-left for better visuals
             x += (remainingPieces - piece + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
+            y = -1;
+            orientation = Orthogonal.RIGHT;
         } else {
             x += ((piece + 1) + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
+            y = 7;
+            orientation = Orthogonal.LEFT;
         }
-        const y: number = player === Player.ZERO ? -1 : 7;
-        const orientation: Orthogonal = player === Player.ZERO ? Orthogonal.RIGHT : Orthogonal.LEFT;
         return this.getArrowTransform(x, y, orientation);
     }
     public getOrientationTransform(orientation: Orthogonal): string {

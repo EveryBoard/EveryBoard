@@ -113,7 +113,7 @@ export class LodestoneComponent
         const radius20: number = this.PIECE_RADIUS * 0.2;
         this.TRIANGLE_OUT = `${radius80},0 ${radius30},${radius20} ${radius30},-${radius20}`;
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
-        this.displayedState = this.rules.node.gameState;
+        this.displayedState = this.getState();
         this.scores = MGPOptional.of([0, 0]);
     }
     public ngOnInit(): void {
