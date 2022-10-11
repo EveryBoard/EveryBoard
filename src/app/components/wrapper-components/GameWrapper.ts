@@ -87,6 +87,7 @@ export abstract class GameWrapper<P extends Comparable> {
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
         this.gameComponent = componentRef.instance;
         this.gameComponent.rules.setInitialBoard();
+        this.gameComponent.updateBoard();
 
         this.gameComponent.chooseMove = // so that when the game component do a move
             (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {

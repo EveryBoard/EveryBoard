@@ -21,7 +21,7 @@ export class SiamState extends GameStateWithTable<SiamPiece> {
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
                 if (this.board[y][x] !== SiamPiece.EMPTY) {
-                    counts[this.board[y][x].getOwner().value]++;
+                    counts[this.getPieceAtXY(x, y).getOwner().value]++;
                 }
             }
         }

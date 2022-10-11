@@ -139,8 +139,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public restartGame(): void {
         // eslint-disable-next-line dot-notation
-        const state: GameState = this.gameComponent.rules.stateType['getInitialState']();
-        this.gameComponent.rules.node = new MGPNode(state);
+        this.gameComponent.rules.setInitialBoard();
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = MGPOptional.empty();
