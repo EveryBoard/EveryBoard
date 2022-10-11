@@ -118,14 +118,14 @@ export class ConnectedUserService implements OnDestroy {
                 private readonly userService: UserService,
                 private readonly auth: FireAuth.Auth)
     {
-        display(ConnectedUserService.VERBOSE || true, 'ConnectedUserService constructor');
+        display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.authSubscription =
             new Subscription(FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
-                    display(ConnectedUserService.VERBOSE || true, 'User is not connected');
+                    display(ConnectedUserService.VERBOSE, 'User is not connected');
                     this.userSubscription.unsubscribe();
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();

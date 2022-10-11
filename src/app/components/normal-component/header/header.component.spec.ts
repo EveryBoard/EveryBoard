@@ -71,7 +71,7 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent().username).toEqual(MGPOptional.of(email));
     }));
-    xit('should redirect to your current part when clicking on it', fakeAsync(async() => {
+    xit('should redirect to your current part when clicking on its reference on the header', fakeAsync(async() => {
         // Given a component where connected user is observing a part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITH_OPPONENT;

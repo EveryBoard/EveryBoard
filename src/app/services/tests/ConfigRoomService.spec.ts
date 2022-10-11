@@ -71,7 +71,7 @@ describe('ConfigRoomService', () => {
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL);
     }));
     describe('joinGame', () => {
-        it('should call dao.addCandidate even when called while already in the game', fakeAsync(async() => {
+        it('should call configRoomService.addCandidate even when called while already in the game', fakeAsync(async() => {
             // Given a configRoom and a connected user that is candidate in the room
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);

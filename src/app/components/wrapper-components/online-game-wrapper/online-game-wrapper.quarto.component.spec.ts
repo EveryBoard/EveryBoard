@@ -45,7 +45,7 @@ import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -2084,7 +2084,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expectValidRouting(router, ['/lobby'], LobbyComponent);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        fit('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
+        it('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
             // Given a part component where user was observer
             // then receive an update telling that user is now non-observer-elsewhere
             await prepareStartedGameFor(USER_OBSERVER);

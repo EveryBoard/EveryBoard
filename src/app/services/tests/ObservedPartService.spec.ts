@@ -95,7 +95,7 @@ describe('ObservedPartService', () => {
         alreadyDestroyed = false;
     });
     it('should remove the observedPart when user is disconnected', async() => {
-        // given a registered and connected user observing a game
+        // Given a registered and connected user observing a game
         ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
         let resolvePromise: () => void;
         const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
@@ -111,10 +111,10 @@ describe('ObservedPartService', () => {
         await userHasUpdated;
         expect(observedPart).toEqual(MGPOptional.of({ id: '1234', typeGame: 'P4' }));
 
-        // when connected user service push "NOT_CONNECTED" throught the observable
+        // When connected user service push "NOT_CONNECTED" throught the observable
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
 
-        // then it should have removed the observedPart
+        // Then it should have removed the observedPart
         expect(observedPart.isAbsent()).toBeTrue();
         subscription.unsubscribe();
     });

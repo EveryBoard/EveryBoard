@@ -35,7 +35,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('PartCreationComponent', () => {
 
@@ -794,9 +793,6 @@ describe('PartCreationComponent', () => {
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-        });
-        describe('Someone else is chosen', () => {
-            it('should update');
         });
         describe('Leaving', () => {
             it('should remove yourself when leaving the room and empty user.observedPart', fakeAsync(async() => {

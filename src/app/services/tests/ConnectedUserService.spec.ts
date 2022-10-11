@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ReplaySubject, Subscription } from 'rxjs';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
@@ -444,16 +444,16 @@ describe('ConnectedUserService', () => {
             expect(result).toEqual(MGPValidation.failure('Cannot disconnect a non-connected user'));
         });
         it('should succeed if a user is connected, and disconnected the user', async() => {
-            // given a registered and connected user
+            // Given a registered and connected user
             const registrationResult: MGPFallible<FireAuth.User> =
                 await connectedUserService.doRegister(username, email, password);
             expect(registrationResult.isSuccess()).toBeTrue();
             await connectedUserService.doEmailLogin(email, password);
 
-            // when trying to disconnect
+            // When trying to disconnect
             const result: MGPValidation = await connectedUserService.disconnect();
 
-            // then it succeeds
+            // Then it succeeds
             expect(result).toBe(MGPValidation.SUCCESS);
 
             // and there is no current user
