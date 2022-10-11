@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '../Player';
+import { Player, PlayerOrNone } from '../Player';
 
 describe('Player', () => {
 
@@ -10,5 +10,8 @@ describe('Player', () => {
     it('should define opponent of each player', () => {
         expect(Player.ONE.getOpponent()).toBe(Player.ZERO);
         expect(Player.ZERO.getOpponent()).toBe(Player.ONE);
+    });
+    it('should have an alternative toString', () => {
+        expect(PlayerOrNone.NONE.TO_STRING()).toBe('PLAYER_NONE');
     });
 });

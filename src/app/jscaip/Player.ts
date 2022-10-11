@@ -1,11 +1,13 @@
 import { Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from '../utils/Encoder';
-import { assert } from '../utils/assert';
 
 class PlayerNone implements ComparableObject {
+
     public static NONE: PlayerNone = new PlayerNone();
+
     public value: number = 2;
+
     private constructor() {
     }
     public isPlayer(): this is Player {
@@ -13,6 +15,9 @@ class PlayerNone implements ComparableObject {
     }
     public toString(): string {
         return 'PlayerNone';
+    }
+    public TO_STRING(): string {
+        return 'PLAYER_NONE';
     }
     public equals(other: PlayerOrNone): boolean {
         return this === other;
