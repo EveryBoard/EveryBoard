@@ -10,7 +10,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-describe('SixComponent', () => {
+fdescribe('SixComponent', () => {
 
     let testUtils: ComponentTestUtils<SixComponent>;
 
@@ -36,7 +36,6 @@ describe('SixComponent', () => {
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
         it('should drop before 40th turn', fakeAsync(async() => {
-            testUtils.fixture.detectChanges(); // TODOTODO what the actual poopz ?
             const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
             await testUtils.expectMoveSuccess('#neighbor_0_2', move);
         }));

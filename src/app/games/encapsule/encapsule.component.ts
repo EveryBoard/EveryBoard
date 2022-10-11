@@ -31,7 +31,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
-    private chosenPieceIndex: number;
+    private chosenPieceIndex: MGPOptional<number>;
     public remainingPieceLeftX: number[][] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -98,7 +98,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.chosenPiece = MGPOptional.empty();
-        this.chosenPieceIndex = -1;
+        this.chosenPieceIndex = MGPOptional.empty();
     }
     public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
         const clickedId: string = '#piece_' + player + '_' + piece.toString() + '_' + index;
@@ -111,12 +111,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         if (state.isDroppable(piece) === false) {
             return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());
         } else if (this.chosenCoord.isAbsent()) {
-            if (this.chosenPiece.equalsValue(piece) && this.chosenPieceIndex === index) {
+            if (this.chosenPiece.equalsValue(piece) && this.chosenPieceIndex.equalsValue(index)) {
                 this.chosenPiece = MGPOptional.empty();
-                this.chosenPieceIndex = -1;
+                this.chosenPieceIndex = MGPOptional.empty();
             } else {
                 this.chosenPiece = MGPOptional.of(piece);
-                this.chosenPieceIndex = index;
+                this.chosenPieceIndex = MGPOptional.of(index);
             }
             return MGPValidation.SUCCESS;
         } else {
@@ -160,7 +160,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
     public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
-        if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
+        if (this.isSelectedPiece(piece) && this.chosenPieceIndex.equalsValue(index)) {
             pieceClasses.push('selected');
         }
         return pieceClasses;

@@ -9,6 +9,7 @@ import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { DirectionFailure } from 'src/app/jscaip/Direction';
 
 describe('LinesOfActionComponent', () => {
 
@@ -61,7 +62,7 @@ describe('LinesOfActionComponent', () => {
         }));
         it('should forbid moving in an invalid direction', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');
-            await testUtils.expectClickFailure('#click_4_5', LinesOfActionFailure.INVALID_DIRECTION());
+            await testUtils.expectClickFailure('#click_4_5', DirectionFailure.DIRECTION_MUST_BE_LINEAR());
         }));
         it('should show last move spaces', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');

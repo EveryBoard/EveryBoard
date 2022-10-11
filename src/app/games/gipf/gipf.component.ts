@@ -119,7 +119,7 @@ export class GipfComponent
                 return this.selectPlacementCoord(coord);
             default:
                 Utils.expectToBe(this.movePhase, GipfComponent.PHASE_PLACEMENT_DIRECTION);
-                return this.doPhasePlacementDirection(coord);
+                return this.selectPlacementDirectionOrPlacementCoord(coord);
         }
     }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {
@@ -226,7 +226,7 @@ export class GipfComponent
         this.constructedState = GipfRules.applyPlacement(this.placement.get(), this.constructedState);
         return this.moveToFinalCapturePhaseOrTryMove();
     }
-    private async doPhasePlacementDirection(coord: Coord): Promise<MGPValidation> {
+    private async selectPlacementDirectionOrPlacementCoord(coord: Coord): Promise<MGPValidation> {
         const entrance: Coord = this.placementEntrance.get();
         if (entrance.isAlignedWith(coord) === false ||
             entrance.getDistance(coord) !== 1)

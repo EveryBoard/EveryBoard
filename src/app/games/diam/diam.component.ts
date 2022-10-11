@@ -174,7 +174,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         }
     }
     private getPieceId(piece: DiamPiece, z: number): string {
-        return '#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0) + '_' + z;
+        const owner: Player = piece.owner as Player;
+        return '#piece_' + owner.TO_STRING() + '_' + (piece.otherPieceType ? 1 : 0) + '_' + z;
     }
     private isSelected(piece: DiamPiece | null, position?: Coord): boolean {
         if (this.selected.isAbsent()) {

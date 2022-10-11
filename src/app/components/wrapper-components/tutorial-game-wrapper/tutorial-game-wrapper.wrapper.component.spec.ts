@@ -18,7 +18,6 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Comparable } from 'src/app/utils/Comparable';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {

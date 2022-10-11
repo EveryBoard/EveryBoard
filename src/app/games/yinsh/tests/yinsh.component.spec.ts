@@ -795,7 +795,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToExist('#indicator_1_4');
         }));
         it('should cancel move attempt chosen ring when clicking on it again', fakeAsync(async() => {
-            // Given an initial board on which a ring has been clicked (hence, helper displayed)
+            // Given an initial board on which a ring has been clicked (hence, the indicators are displayed)
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],

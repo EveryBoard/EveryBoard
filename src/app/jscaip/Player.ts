@@ -1,6 +1,7 @@
 import { Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from '../utils/Encoder';
+import { assert } from '../utils/assert';
 
 class PlayerNone implements ComparableObject {
     public static NONE: PlayerNone = new PlayerNone();
@@ -47,7 +48,15 @@ export class Player implements ComparableObject {
         return true;
     }
     public toString(): string {
-        return 'Player ' + this.value; // TODOTODO write THIS (or PLAYER_ZERO) in diam _x_x_
+        return 'Player ' + this.value;
+    }
+    public TO_STRING(): string {
+        switch (this) {
+            case Player.ZERO: return 'PLAYER_ZERO';
+            default:
+                Utils.expectToBe(this, Player.ONE, 'Player should not be something else than Player.ZERO and Player.ONE');
+                return 'PLAYER_ONE';
+        }
     }
     public equals(other: PlayerOrNone): boolean {
         return this === other;

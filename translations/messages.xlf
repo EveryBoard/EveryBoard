@@ -30,7 +30,7 @@
         <source>The international version of the famous African strategy game!</source>
       </trans-unit>
       <trans-unit id="4553628047523274326" datatype="html">
-        <source>The Irish version of the Tafl game family!</source>
+        <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
@@ -99,7 +99,7 @@
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
       </trans-unit>
       <trans-unit id="1630279386552419361" datatype="html">
-        <source>Lapland version of the Tafl game family!</source>
+        <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>

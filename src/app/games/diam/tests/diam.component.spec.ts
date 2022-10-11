@@ -9,7 +9,7 @@ import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamState } from '../DiamState';
 
-describe('DiamComponent', () => {
+fdescribe('DiamComponent', () => {
     const __: DiamPiece = DiamPiece.EMPTY;
     const O1: DiamPiece = DiamPiece.ZERO_FIRST;
     const O2: DiamPiece = DiamPiece.ZERO_SECOND;
@@ -30,7 +30,7 @@ describe('DiamComponent', () => {
             // Given the initial state
             // When clicking on a piece of the opponent
             // Then the corresponding error is shown
-            await testUtils.expectClickFailure('#piece_1_1_7', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            await testUtils.expectClickFailure('#piece_PLAYER_ONE_1_7', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }));
         it('should forbid transferring from a piece not owned by the player', fakeAsync(async() => {
             // Given a state with opponent piece on it
@@ -54,10 +54,10 @@ describe('DiamComponent', () => {
         it('should mark remaining piece as selected when clicked on', fakeAsync(async() => {
             // Given any board with remainingPiece
             // When clicking one of them
-            await testUtils.expectClickSuccess('#piece_0_1_7');
+            await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
 
             // Then the piece should be selected
-            testUtils.expectElementToHaveClass('#piece_0_1_7', 'selected');
+            testUtils.expectElementToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected');
         }));
         it('should mark piece on board as selected when clicked on', fakeAsync(async() => {
             // Given a board with piece on
@@ -79,7 +79,7 @@ describe('DiamComponent', () => {
     describe('Second click', () => {
         it('should allow simple drops by clicking the piece and then the target', fakeAsync(async() => {
             // Given a board on which a piece is selected
-            await testUtils.expectClickSuccess('#piece_0_1_7');
+            await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
 
             // When clicking on a piece and then on a space
             const move: DiamMove = new DiamMoveDrop(2, DiamPiece.ZERO_SECOND);
@@ -96,7 +96,7 @@ describe('DiamComponent', () => {
                 [O1, __, __, __, __, __, __, __],
             ], 0);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#piece_0_0_0');
+            await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_0_0');
 
             // When clicking on an opponent piece on the top of a column
             const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
@@ -113,10 +113,9 @@ describe('DiamComponent', () => {
                 [O1, __, __, __, __, __, __, __],
             ], 0);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#piece_0_0_0');
+            await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_0_0');
 
             // When dropping a piece on the full stack
-            // TODO FOR REVIEW: ([A-Z])\s\s([A-Z]) ehehehehehehe
             const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
 
             // Then the move should be illegal
@@ -194,7 +193,7 @@ describe('DiamComponent', () => {
                 [O1, __, __, __, __, __, __, __],
             ], 0);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#piece_0_0_0');
+            await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_0_0');
 
             // When clicking on a player piece in game
             await testUtils.expectClickSuccess('#click_0_0');
@@ -204,13 +203,13 @@ describe('DiamComponent', () => {
         }));
         it('should deselect remaining piece when clicking on it again', fakeAsync(async() => {
             // Given a board on which a remaining piece is selected
-            await testUtils.expectClickSuccess('#piece_0_1_7');
+            await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#piece_0_1_7');
+            await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#piece_0_1_7', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected');
         }));
         it('should deselect piece on board when clicking on it again', fakeAsync(async() => {
             // Given a board with piece on, one of them selected
@@ -244,7 +243,7 @@ describe('DiamComponent', () => {
             testUtils.setupState(state);
 
             // Then this piece should not rendered
-            testUtils.expectElementNotToExist('#piece_0_0');
+            testUtils.expectElementNotToExist('#piece_PLAYER_ZERO_0');
         }));
         it('should display the right number of remainig pieces', fakeAsync(async() => {
             // Given a state
@@ -259,15 +258,15 @@ describe('DiamComponent', () => {
             testUtils.setupState(state);
 
             // Then we should see the number of remaining pieces
-            testUtils.expectElementToExist('#piece_1_1_2'); // X2 remains (third of them)
-            testUtils.expectElementToExist('#piece_1_1_1'); // X2 remains (second of them)
-            testUtils.expectElementToExist('#piece_1_1_0'); // X2 remains (first of them)
-            testUtils.expectElementNotToExist('#piece_1_0_0'); // X1 does not
+            testUtils.expectElementToExist('#piece_PLAYER_ONE_1_2'); // X2 remains (third of them)
+            testUtils.expectElementToExist('#piece_PLAYER_ONE_1_1'); // X2 remains (second of them)
+            testUtils.expectElementToExist('#piece_PLAYER_ONE_1_0'); // X2 remains (first of them)
+            testUtils.expectElementNotToExist('#piece_PLAYER_ONE_0_0'); // X1 does not
 
-            testUtils.expectElementToExist('#piece_0_1_3'); // O2 third piece
-            testUtils.expectElementToExist('#piece_0_1_2'); // O2 second piece
-            testUtils.expectElementToExist('#piece_0_1_1'); // O2 first piece
-            testUtils.expectElementToExist('#piece_0_0_0'); // O1 remains (one of them)
+            testUtils.expectElementToExist('#piece_PLAYER_ZERO_1_3'); // O2 third piece
+            testUtils.expectElementToExist('#piece_PLAYER_ZERO_1_2'); // O2 second piece
+            testUtils.expectElementToExist('#piece_PLAYER_ZERO_1_1'); // O2 first piece
+            testUtils.expectElementToExist('#piece_PLAYER_ZERO_0_0'); // O1 remains (one of them)
         }));
         it('should show winning configuration clearly', fakeAsync(async() => {
             // Given a winning state

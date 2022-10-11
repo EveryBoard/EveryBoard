@@ -165,7 +165,7 @@ describe('RegisterComponent', () => {
             // Given a user that will fail to register
             spyOn(authService, 'doGoogleLogin').and.resolveTo(MGPValidation.failure('Error message'));
 
-            // When he user registers
+            // When the user registers
             await testUtils.clickElement('#googleButton');
 
             // Then the error message is shown

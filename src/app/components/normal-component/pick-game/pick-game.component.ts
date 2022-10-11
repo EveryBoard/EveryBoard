@@ -39,7 +39,7 @@ class GameDescription {
 
     public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
 
-    public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family!`;
+    public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
 
@@ -85,7 +85,7 @@ class GameDescription {
 
     public static readonly SIX: Localized = () => $localize`Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!`;
 
-    public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family!`;
+    public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 

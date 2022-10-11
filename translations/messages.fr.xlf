@@ -143,8 +143,8 @@
         <target>La version internationale du fameux jeu de stratégie africain !</target>
       </trans-unit>
       <trans-unit id="4553628047523274326" datatype="html">
-        <source>The Irish version of the Tafl game family!</source>
-        <target>La version irlandaise de la famille de jeu Tafl !</target>
+        <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
+        <target>La version irlandaise de la famille de jeu Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
@@ -231,8 +231,8 @@
         <target>Placez vos pièces hexagonales les unes à côté des autres et soyez le premier à créer une des trois formes requises pour gagner !</target>
       </trans-unit>
       <trans-unit id="1630279386552419361" datatype="html">
-        <source>Lapland version of the Tafl game family!</source>
-        <target>La version lapone de la famille de jeux Tafl</target>
+        <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
+        <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>

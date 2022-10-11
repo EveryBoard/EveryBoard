@@ -10,7 +10,8 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EncapsuleNode } from '../EncapsuleRules';
+import { EncapsuleLegalityInformation, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('EncapsuleComponent', () => {
 
@@ -23,9 +24,15 @@ describe('EncapsuleComponent', () => {
         [_, _, _],
     ];
     const P0Turn: number = 6;
+    let minimaxes: Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation>[];
+    let rules: EncapsuleRules;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<EncapsuleComponent>('Encapsule');
+        rules = testUtils.getComponent().rules;
+        minimaxes = [
+            new EncapsuleMinimax(rules, 'EncapsuleMinimax'),
+        ];
     }));
     it('should create', () => {
         expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
@@ -225,13 +232,10 @@ describe('EncapsuleComponent', () => {
         const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.MEDIUM_DARK, new Coord(2, 1));
         await testUtils.expectMoveSuccess('#click_2_1', move);
 
-        const component: EncapsuleComponent = testUtils.getComponent();
-        const minimax: EncapsuleMinimax = new EncapsuleMinimax(component.rules, 'EncapsuleMinimax');
-
-        const node: EncapsuleNode = new EncapsuleNode(component.rules.node.gameState,
+        const node: EncapsuleNode = new EncapsuleNode(rules.node.gameState,
                                                       MGPOptional.empty(),
                                                       MGPOptional.of(move));
-        expect(minimax.getBoardValue(node).value).toBe(Number.MIN_SAFE_INTEGER);
+        expect(minimaxes[0].getBoardValue(node).value).toBe(Number.MIN_SAFE_INTEGER);
         // TODOTODO OH NO NO, minimaxes ! USE CENTRALISED METHOD!
     }));
 });

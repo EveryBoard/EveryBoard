@@ -9,7 +9,7 @@
                     [attr.cx]="(SPACE_SIZE * 0.5) + (((800 - SPACE_SIZE) / 14) * p)"
                     [attr.cy]="850 + 10 + ((SPACE_SIZE + 10) * player.value)"
                     [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-                    [ngClass]="getPlayerPieceClass(player)"
+                    [ngClass]="getPlayerClass(player)"
                     class="base small-stroke"
             />
         </g>

@@ -68,7 +68,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         if (move.isSuccess()) {
             return this.chooseMove(move.get(), this.rules.node.gameState);
         } else {
-            return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION());
+            return this.cancelMove(move.getReason());
         }
     }
     private async select(coord: Coord): Promise<MGPValidation> {
