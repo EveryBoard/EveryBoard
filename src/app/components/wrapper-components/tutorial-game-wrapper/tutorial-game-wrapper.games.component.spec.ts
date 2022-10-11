@@ -19,7 +19,6 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
-import { ApagosState } from 'src/app/games/apagos/ApagosState';
 import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
 import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
 
