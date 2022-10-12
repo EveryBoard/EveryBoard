@@ -9,7 +9,7 @@ import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamState } from '../DiamState';
 
-fdescribe('DiamComponent', () => {
+describe('DiamComponent', () => {
     const __: DiamPiece = DiamPiece.EMPTY;
     const O1: DiamPiece = DiamPiece.ZERO_FIRST;
     const O2: DiamPiece = DiamPiece.ZERO_SECOND;

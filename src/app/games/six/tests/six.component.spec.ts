@@ -10,7 +10,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('SixComponent', () => {
+describe('SixComponent', () => {
 
     let testUtils: ComponentTestUtils<SixComponent>;
 
