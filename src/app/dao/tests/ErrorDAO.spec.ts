@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { ErrorDAO } from '../ErrorDAO';
 
-xdescribe('ErrorDAO', () => {
+describe('ErrorDAO', () => {
 
     let dao: ErrorDAO;
 
