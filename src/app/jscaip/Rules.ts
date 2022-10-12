@@ -106,14 +106,10 @@ export abstract class Rules<M extends Move,
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
     public setInitialBoard(): void {
-        if (this.node == null) {
-            // eslint-disable-next-line dot-notation
-            const initialState: S = this.stateType['getInitialState']();
-            MGPNode.ruler = this;
-            this.node = new MGPNode(initialState);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
+        // eslint-disable-next-line dot-notation
+        const initialState: S = this.stateType['getInitialState']();
+        MGPNode.ruler = this;
+        this.node = new MGPNode(initialState);
     }
     public applyMoves(encodedMoves: number[], state: S, moveDecoder: (em: number) => M): S {
         let i: number = 0;

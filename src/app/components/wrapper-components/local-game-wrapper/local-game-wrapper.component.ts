@@ -138,7 +138,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.getPlayingAI().isPresent();
     }
     public restartGame(): void {
-        // eslint-disable-next-line dot-notation
         this.gameComponent.rules.setInitialBoard();
         this.gameComponent.updateBoard();
         this.endGame = false;
