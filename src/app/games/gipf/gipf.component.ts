@@ -33,6 +33,12 @@ export class GipfComponent
     public captured: Coord[] = [];
     public moved: Coord[] = [];
 
+    public HEXAGON_WIDTH: number = this.SPACE_SIZE;
+    public SHARED_HEXAGON_X: number = Math.cos(30) * this.HEXAGON_WIDTH * 0.5;
+    public BOARD_WIDTH: number = this.HEXAGON_WIDTH +
+                                 (6 * (this.HEXAGON_WIDTH - this.SHARED_HEXAGON_X)) +
+                                 (3 * this.STROKE_WIDTH / 2);
+    public BOARD_HEIGHT: number = (7 * this.HEXAGON_WIDTH) + (4.5 * this.STROKE_WIDTH);
     private static readonly PHASE_INITIAL_CAPTURE: number = 0;
     private static readonly PHASE_PLACEMENT_COORD: number = 1;
     private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
@@ -50,6 +56,7 @@ export class GipfComponent
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.hasAsymetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [
@@ -60,7 +67,8 @@ export class GipfComponent
         this.SPACE_SIZE = 40;
         this.constructedState = this.rules.node.gameState;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
-                                         new Coord(this.SPACE_SIZE * 2, 0),
+                                         new Coord((this.HEXAGON_WIDTH / 2) + (3 * this.STROKE_WIDTH/ 4),
+                                                   - this.HEXAGON_WIDTH),
                                          FlatHexaOrientation.INSTANCE);
     }
     public updateBoard(): void {
@@ -91,8 +99,8 @@ export class GipfComponent
     public getAllCoords(): Coord[] {
         return this.constructedState.allCoords();
     }
-    public getPlayerSidePieces(player: number): number[] {
-        const nPieces: number = this.constructedState.getNumberOfPiecesToPlace(Player.of(player));
+    public getPlayerSidePieces(player: Player): number[] {
+        const nPieces: number = this.constructedState.getNumberOfPiecesToPlace(player);
         const pieces: number[] = [];
         for (let i: number = 0; i < nPieces; i += 1) {
             pieces.push(i);
@@ -273,7 +281,20 @@ export class GipfComponent
         const piece: FourStatePiece = this.getPiece(coord);
         return this.getPlayerClass(Player.of(piece.value));
     }
-    public getSidePieceClass(player: number): string {
-        return this.getPlayerClass(Player.of(player));
+    public getRemainingPieceCy(player: Player): number {
+        const absoluteY: number = 25;
+        if (player === Player.ONE) {
+            return absoluteY;
+        } else {
+            return this.BOARD_HEIGHT - absoluteY;
+        }
+    }
+    public getRemainingPieceCx(player: Player, p: number): number {
+        const absoluteX: number = 20 + (p * this.SPACE_SIZE * 0.5);
+        if (player === Player.ONE) {
+            return absoluteX;
+        } else {
+            return this.BOARD_WIDTH - (15 + absoluteX);
+        }
     }
 }

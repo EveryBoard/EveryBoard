@@ -1014,14 +1014,14 @@
         <source>Sowing</source>
         <target>Égrénage</target>
       </trans-unit>
-      <trans-unit id="6972413011819423487" datatype="html">
+      <trans-unit id="7949092417505357162" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
          Let&apos;s see how seeds are sown.
-         As you&apos;re playing first, the 6 houses on the top are yours.&lt;br/&gt;&lt;br&gt;
+         As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
         <target>L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
         Nous allons voir comment s'égrènent (se distribuent) les graines.
-        Comme vous jouez en premier, les 6 maisons du haut vous appartiennent.&lt;br/&gt;&lt;br/&gt;
+        Comme vous jouez en premier, les 6 maisons du bas vous appartiennent.&lt;br/&gt;&lt;br/&gt;
         Cliquez sur l&apos;une d&apos;entre elles pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d&apos;une graine par maison.</target>
       </trans-unit>
       <trans-unit id="8638152355669938683" datatype="html">
@@ -1035,11 +1035,11 @@
         <source>Big sowing</source>
         <target>Gros égrénage</target>
       </trans-unit>
-      <trans-unit id="278639697286568585" datatype="html">
-        <source>You are now the second player (on the bottom).
+      <trans-unit id="6117558662745355702" datatype="html">
+        <source>You are still the first player.
         When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
         Sow the house that contains 12 seeds.</source>
-        <target>Vous êtes maintenant le joueur 2 (en bas).
+        <target>Vous êtes toujours le premier joueur.
         Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
         Distribuez la maison qui contient 12 graines.</target>
       </trans-unit>
@@ -1051,16 +1051,16 @@
         <source>Simple capture</source>
         <target>Capture simple</target>
       </trans-unit>
-      <trans-unit id="1376466164144182842" datatype="html">
+      <trans-unit id="4987331245309360880" datatype="html">
         <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.
          Then, the player looks at the preceding house:
          if it is still in the opponent&apos;s side and contains two or three seeds, they are also captured.
          This continues until we reach either the player&apos;s side or a house containing neither two nor three seeds.&lt;br/&gt;&lt;br/&gt;
-         You are the second player, try to capture some pieces!</source>
+         You are the first player, try to capture some pieces!</source>
         <target>Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu&apos;il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.
         Ensuite il regarde la case précédente :
         si elle est dans le camp adverse et contient deux ou trois graines, il les capture aussi, et ainsi de suite jusqu&apos;à ce qu&apos;il arrive à son camp ou jusqu&apos;à ce qu&apos;il y ait un nombre de graines différent de deux ou trois.&lt;br/&gt;&lt;br/&gt;
-        Vous êtes le deuxième joueur, faites une capture !</target>
+        Vous êtes le premier joueur, faites une capture !</target>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
@@ -1140,9 +1140,8 @@
         <source>Feeding is mandatory</source>
         <target>Nourrir est obligatoire</target>
       </trans-unit>
-      <trans-unit id="6914881509682724797" datatype="html">
-        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;
-        Go ahead!</source>
+      <trans-unit id="6501764281568922792" datatype="html">
+        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;Go ahead!</source>
         <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.&lt;br/&gt;&lt;br/&gt;
         Allez-y !</target>
       </trans-unit>

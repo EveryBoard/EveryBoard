@@ -9,7 +9,7 @@ export class AwaleTutorial {
             $localize`Sowing`,
             $localize`Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
          Let's see how seeds are sown.
-         As you're playing first, the 6 houses on the top are yours.<br/><br>
+         As you're playing first, the 6 houses on the bottom are yours.<br/><br>
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
             AwaleState.getInitialState(),
             AwaleMove.ZERO,
@@ -19,13 +19,13 @@ export class AwaleTutorial {
         ),
         TutorialStep.anyMove(
             $localize`Big sowing`,
-            $localize`You are now the second player (on the bottom).
+            $localize`You are still the first player.
         When there are enough seeds to make a full turn, something else happens.<br/><br/>
         Sow the house that contains 12 seeds.`,
             new AwaleState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 12, 0, 0, 0, 0],
-            ], 1, [0, 0]),
+            ], 0, [0, 0]),
             AwaleMove.ONE,
             $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).`,
         ),
@@ -35,11 +35,11 @@ export class AwaleTutorial {
          Then, the player looks at the preceding house:
          if it is still in the opponent's side and contains two or three seeds, they are also captured.
          This continues until we reach either the player's side or a house containing neither two nor three seeds.<br/><br/>
-         You are the second player, try to capture some pieces!`,
+         You are the first player, try to capture some pieces!`,
             new AwaleState([
                 [1, 0, 0, 0, 1, 0],
                 [1, 0, 0, 0, 1, 0],
-            ], 1, [0, 0]),
+            ], 0, [0, 0]),
             [AwaleMove.ZERO],
             $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
             $localize`Failed. Try again and sow from the leftmost house.`,
@@ -95,12 +95,11 @@ export class AwaleTutorial {
         ),
         TutorialStep.anyMove(
             $localize`Feeding is mandatory`,
-            $localize`You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.<br/><br/>
-        Go ahead!`,
+            $localize`You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.<br/><br/>Go ahead!`,
             new AwaleState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 1, 2, 4, 4, 5],
-            ], 1, [0, 0]),
+            ], 0, [0, 0]),
             AwaleMove.THREE,
             $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
         It is often a good way to have easy captures!`,

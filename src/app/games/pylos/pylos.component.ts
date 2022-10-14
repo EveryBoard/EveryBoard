@@ -23,6 +23,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public static VERBOSE: boolean = false;
 
+    public BOARD_WIDTH: number = 800 + 8; // 4*200 for each pieces at z=0 level + 2*4 for each direction there is stroke
+    public PIECE_ROW_HEIGHT: number = this.SPACE_SIZE;
+    public BOARD_HEIGHT: number = this.BOARD_WIDTH + 2 * this.PIECE_ROW_HEIGHT;
     public state: PylosState;
     public constructedState: PylosState;
 
@@ -42,6 +45,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.hasAsymetricBoard = true;
         this.rules = new PylosRules(PylosState);
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
@@ -51,6 +55,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.tutorial = new PylosTutorial().tutorial;
         this.SPACE_SIZE = this.getPieceRadius(0);
         this.updateBoard();
+    }
+    public getPiecesCyForPlayer(player: Player): number {
+        if (player === Player.ONE) {
+            return this.PIECE_ROW_HEIGHT / 2;
+        } else {
+            return this.BOARD_WIDTH + ( 1.5 * this.PIECE_ROW_HEIGHT);
+        }
     }
     public getLevelRange(z: number): number[] {
         return PylosState.getLevelRange(z);
@@ -214,13 +225,10 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.chosenLandingCoord.equalsValue(c)) {
             return this.getPlayerClass(this.state.getCurrentPlayer());
         }
-        return this.getPlayerPieceClass(this.state.getPieceAt(c).value);
+        return this.getPlayerClass(this.state.getPieceAt(c));
     }
-    public getPlayerPieceClass(player: number): string {
-        return this.getPlayerClass(Player.of(player));
-    }
-    public getPlayerSidePieces(player: number): number[] {
-        const nPieces: number = this.remainingPieces[player];
+    public getPlayerSidePieces(player: Player): number[] {
+        const nPieces: number = this.remainingPieces[player.value];
         const pieces: number[] = [];
         for (let i: number = 0; i < nPieces; i++) {
             pieces.push(i);

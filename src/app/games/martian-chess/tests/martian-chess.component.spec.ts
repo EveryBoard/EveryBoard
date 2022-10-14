@@ -27,10 +27,10 @@ describe('MartianChessComponent', () => {
     it('should show selected piece when clicking on it', fakeAsync(async() => {
         // Given the initial board
         // When clicking on on of your pieces
-        await testUtils.expectClickSuccess('#click_2_2');
+        await testUtils.expectClickSuccess('#click_1_5');
 
         // Then the piece should have a highlighted style
-        testUtils.expectElementToHaveClass('#pawn_2_2', 'highlighted');
+        testUtils.expectElementToHaveClass('#pawn_1_5', 'highlighted');
     }));
     it('should show indicators of next possible click once piece is selected', fakeAsync(async() => {
         // Given any board where displacement, capture and promotions are all possible
@@ -39,13 +39,12 @@ describe('MartianChessComponent', () => {
             [_, _, _, _],
             [C, C, B, _],
             [_, _, _, _],
-
             [_, _, B, A],
             [_, B, _, _],
             [_, _, _, _],
             [_, _, _, _],
         ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = new MartianChessState(board, 0);
         testUtils.setupState(state);
 
         // When selecting a piece able to do capture/promotion/displacement
@@ -73,86 +72,86 @@ describe('MartianChessComponent', () => {
         // Given the initial board
 
         // When clicking an opponent piece
-        await testUtils.expectClickSuccess('#click_3_7');
+        await testUtils.expectClickSuccess('#click_0_0');
 
         // Then it should not select the piece but not toast error
-        testUtils.expectElementNotToHaveClass('#queen_3_7', 'highlighted');
+        testUtils.expectElementNotToHaveClass('#queen_0_0', 'highlighted');
     }));
     it('should not select empty case', fakeAsync(async() => {
         // Given the initial board
         // When clicking an empty case immediately
         // Then it should not toast
-        await testUtils.expectClickSuccess('#click_0_3');
+        await testUtils.expectClickSuccess('#click_3_4');
     }));
     it('should cancel move attempt when clicking twice on the same piece', fakeAsync(async() => {
         // Given a board with a selected piece
-        await testUtils.expectClickSuccess('#click_2_2');
+        await testUtils.expectClickSuccess('#click_1_5');
 
         // When clicking on the piece again
-        await testUtils.expectClickSuccess('#click_2_2');
+        await testUtils.expectClickSuccess('#click_1_5');
 
         // Then the piece should be deselected
-        testUtils.expectElementNotToHaveClass('#pawn_2_2', 'highlighted');
+        testUtils.expectElementNotToHaveClass('#pawn_1_5', 'highlighted');
     }));
     it('should not throw when attempting invalid move', fakeAsync(async() => {
         // Given a board where a first click was done
-        await testUtils.expectClickSuccess('#click_2_2');
+        await testUtils.expectClickSuccess('#click_1_5');
 
         // When cliking on a invalid second coord
         // Then the move should have been illegal
         const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
-        await testUtils.expectClickFailure('#click_3_4', reason);
+        await testUtils.expectClickFailure('#click_0_3', reason);
     }));
     it('should change selectedPiece when second clicking on a non-landable friendly piece', fakeAsync(async() => {
         // Given a board where a first click was done
-        await testUtils.expectClickSuccess('#click_0_0');
+        await testUtils.expectClickSuccess('#click_3_7');
 
         // When cliking on one of your other piece that cannot be your landing coord
-        await testUtils.expectClickSuccess('#click_1_1');
+        await testUtils.expectClickSuccess('#click_2_6');
 
         // Then the move should not have been cancelled but the first piece selected changed
-        testUtils.expectElementToHaveClass('#drone_1_1', 'highlighted');
+        testUtils.expectElementToHaveClass('#drone_2_6', 'highlighted');
     }));
     it('should propose illegal move so that a toast is given to explain', fakeAsync(async() => {
         // Given a board where a first click was done
-        await testUtils.expectClickSuccess('#click_0_0');
+        await testUtils.expectClickSuccess('#click_3_7');
 
         // When clicking on a fully illegal coord
         // Then the move should be illegal
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
-        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(3, 3)).get();
-        await testUtils.expectMoveFailure('#click_3_3', reason, move);
+        const move: MartianChessMove = MartianChessMove.from(new Coord(3, 7), new Coord(0, 4)).get();
+        await testUtils.expectMoveFailure('#click_0_4', reason, move);
     }));
     it('should toast the move invalidity', fakeAsync(async() => {
         // Given a board where a first click was done
-        await testUtils.expectClickSuccess('#click_0_0');
+        await testUtils.expectClickSuccess('#click_3_7');
 
         // When finishing an invalid move creation
         // Then the move failure reason should have been toasted
         const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
-        await testUtils.expectClickFailure('#click_3_4', reason);
+        await testUtils.expectClickFailure('#click_0_3', reason);
     }));
     it('should attempt the move when doing the second click (success)', fakeAsync(async() => {
         // Given a board where a first click was done
-        await testUtils.expectClickSuccess('#click_2_2');
+        await testUtils.expectClickSuccess('#click_1_5');
 
         // When cliking on a invalid second coord
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
+        const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
 
         // Then the move should be legal and the board changed
-        await testUtils.expectMoveSuccess('#click_3_3', move);
+        await testUtils.expectMoveSuccess('#click_0_4', move);
     }));
     it('should highlight left coord and landing coord (empty landing coord)', fakeAsync(async() => {
         // Given a board where a move is about to be done
-        await testUtils.expectClickSuccess('#click_2_2');
+        await testUtils.expectClickSuccess('#click_1_5');
 
         // When finalizing the move
-        const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
-        await testUtils.expectMoveSuccess('#click_3_3', move);
+        const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
+        await testUtils.expectMoveSuccess('#click_0_4', move);
 
         // Then left square and landing square should be highlighted
-        testUtils.expectElementToHaveClass('#square_2_2', 'moved');
-        testUtils.expectElementToHaveClass('#square_3_3', 'moved');
+        testUtils.expectElementToHaveClass('#square_1_5', 'moved');
+        testUtils.expectElementToHaveClass('#square_0_4', 'moved');
     }));
     it('should highlight left coord and captured coord', fakeAsync(async() => {
         // Given a board where a capture is about to be done
@@ -166,7 +165,7 @@ describe('MartianChessComponent', () => {
             [_, _, B, A],
             [_, A, _, _],
         ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = new MartianChessState(board, 0);
         testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_1_4');
 
@@ -191,7 +190,7 @@ describe('MartianChessComponent', () => {
             [_, _, B, A],
             [_, A, _, _],
         ];
-        const state: MartianChessState = new MartianChessState(board, 1);
+        const state: MartianChessState = new MartianChessState(board, 0);
         testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_1_7');
 
@@ -228,22 +227,22 @@ describe('MartianChessComponent', () => {
         it('should send the move with clock call when doing it with a selected clock', fakeAsync(async() => {
             // Given a board where clock has been clicked a a piece too
             await testUtils.expectClickSuccess('#clockOrCountDownView');
-            await testUtils.expectClickSuccess('#click_2_2');
+            await testUtils.expectClickSuccess('#click_1_5');
 
             // When clicking on a legal landing coord for your piece
-            const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 1), true).get();
+            const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 6), true).get();
 
             // Then a move with 'call the clock' should have been sent
-            await testUtils.expectMoveSuccess('#click_3_1', move);
+            await testUtils.expectMoveSuccess('#click_0_6', move);
         }));
         it('should replace the clock by the count down when calling the clock', fakeAsync(async() => {
             // Given a board where the clock is present, called, and move about to be submitted
             await testUtils.expectClickSuccess('#clockOrCountDownView');
-            await testUtils.expectClickSuccess('#click_2_2');
+            await testUtils.expectClickSuccess('#click_1_5');
 
             // When doing the move
-            const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 1), true).get();
-            await testUtils.expectMoveSuccess('#click_3_1', move);
+            const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 6), true).get();
+            await testUtils.expectMoveSuccess('#click_0_6', move);
 
             // Then the clock should be replace by the count down (7 turn remaining)
             const countDownText: DebugElement = testUtils.findElement('#countDownText');

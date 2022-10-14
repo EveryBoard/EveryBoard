@@ -46,7 +46,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
-        this.observerRole = Player.ZERO; // The user is playing, not observing
+        this.role = Player.ZERO; // The user is playing, not observing
     }
     public getNumberOfSteps(): number {
         return this.steps.length;
