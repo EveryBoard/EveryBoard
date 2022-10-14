@@ -14,9 +14,6 @@ class PlayerNone implements ComparableObject {
         return false;
     }
     public toString(): string {
-        return 'PlayerNone';
-    }
-    public TO_STRING(): string {
         return 'PLAYER_NONE';
     }
     public equals(other: PlayerOrNone): boolean {
@@ -53,9 +50,6 @@ export class Player implements ComparableObject {
         return true;
     }
     public toString(): string {
-        return 'Player ' + this.value;
-    }
-    public TO_STRING(): string {
         switch (this) {
             case Player.ZERO: return 'PLAYER_ZERO';
             default:

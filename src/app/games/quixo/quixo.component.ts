@@ -84,21 +84,21 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
             return MGPValidation.SUCCESS;
         }
     }
-    public getPossiblesDirections(): string[] {
-        const directions: string[] = [];
+    public getPossiblesDirections(): Orthogonal[] {
+        const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
-        if (chosenCoord.x !== 4) directions.push('RIGHT');
-        if (chosenCoord.x !== 0) directions.push('LEFT');
-        if (chosenCoord.y !== 4) directions.push('DOWN');
-        if (chosenCoord.y !== 0) directions.push('UP');
+        if (chosenCoord.x !== 4) directions.push(Orthogonal.RIGHT);
+        if (chosenCoord.x !== 0) directions.push(Orthogonal.LEFT);
+        if (chosenCoord.y !== 4) directions.push(Orthogonal.DOWN);
+        if (chosenCoord.y !== 0) directions.push(Orthogonal.UP);
         return directions;
     }
-    public async chooseDirection(direction: string): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction);
+    public async chooseDirection(direction: Orthogonal): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.chosenDirection = Orthogonal.factory.fromString(direction).get();
+        this.chosenDirection = direction;
         return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {
@@ -109,9 +109,9 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gameState);
     }
-    public getArrowTransform(coord: Coord, orientation: string): string {
-        return GameComponentUtils.getArrowTransform(this.SPACE_SIZE,
-                                                    coord,
-                                                    Orthogonal.factory.fromString(orientation).get());
+    public getArrowTransform(orientation: Orthogonal): string {
+        return GameComponentUtils.getArrowTransform(5 * this.SPACE_SIZE,
+                                                    new Coord(0, 0),
+                                                    orientation);
     }
 }
