@@ -20,7 +20,7 @@ describe('LinesOfActionMinimax', () => {
         const node: LinesOfActionNode = new LinesOfActionNode(state);
         expect(minimax.getListMoves(node).length).toBe(6 * 3 * 2);
     });
-    it('should have 0 moves on a victory state', () => {
+    it('should have 0 moves on a victory state (for Player.ZERO)', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [X, _, _, _, O, _, _, X],
@@ -32,6 +32,21 @@ describe('LinesOfActionMinimax', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
+        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        expect(minimax.getListMoves(node).length).toBe(0);
+    });
+    it('should have 0 moves on a victory state (for Player.ONE)', () => {
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _, _],
+            [O, _, _, _, X, _, _, O],
+            [_, _, X, X, O, _, _, _],
+            [_, _, _, X, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const state: LinesOfActionState = new LinesOfActionState(board, 1);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
         expect(minimax.getListMoves(node).length).toBe(0);
     });

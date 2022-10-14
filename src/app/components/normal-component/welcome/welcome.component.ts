@@ -13,7 +13,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     templateUrl: './welcome.component.html',
 })
 export class WelcomeComponent {
-    public readonly numberOfColumns: number = 4;
+    public readonly numberOfColumns: number = 5;
     public readonly games: GameInfo[][] = [];
     public readonly theme: 'dark' | 'light';
     public readonly iconOnlineGame: IconDefinition = faNetworkWired;

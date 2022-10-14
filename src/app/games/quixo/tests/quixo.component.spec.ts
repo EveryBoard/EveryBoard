@@ -36,10 +36,10 @@ describe('QuixoComponent', () => {
     });
     it('should give correct direction', () => {
         testUtils.getComponent().chosenCoord = MGPOptional.of(new Coord(0, 0));
-        expect(testUtils.getComponent().getPossiblesDirections()).toEqual(['RIGHT', 'DOWN']);
+        expect(testUtils.getComponent().getPossiblesDirections()).toEqual([Orthogonal.RIGHT, Orthogonal.DOWN]);
 
         testUtils.getComponent().onBoardClick(4, 4);
-        expect(testUtils.getComponent().getPossiblesDirections()).toEqual(['LEFT', 'UP']);
+        expect(testUtils.getComponent().getPossiblesDirections()).toEqual([Orthogonal.LEFT, Orthogonal.UP]);
     });
     it('should cancel move when trying to select opponent piece', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [

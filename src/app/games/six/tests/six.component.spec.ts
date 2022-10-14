@@ -35,7 +35,7 @@ describe('SixComponent', () => {
         await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('Should drop before 40th turn', fakeAsync(async() => {
-        testUtils.fixture.detectChanges();
+        testUtils.detectChanges();
         const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
         await testUtils.expectMoveSuccess('#neighbor_0_2', move);
     }));

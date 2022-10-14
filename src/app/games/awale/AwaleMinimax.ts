@@ -7,6 +7,7 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Player } from 'src/app/jscaip/Player';
 
 export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
 
@@ -14,7 +15,7 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
         const moves: AwaleMove[] = [];
         const state: AwaleState = node.gameState;
         const turn: number = state.turn;
-        const player: number = turn % 2;
+        const player: number = (turn + 1) % 2; // So player zero is on row 1
         let newMove: AwaleMove;
         let x: number = 0;
         do {
@@ -37,22 +38,23 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
         return this.orderMoves(node, moves);
     }
     private orderMoves(node: AwaleNode, moves: AwaleMove[]): AwaleMove[] {
-        const player: number = node.gameState.getCurrentPlayer().value;
-        const opponent: number = node.gameState.getCurrentPlayer().getOpponent().value;
+        const player: Player = node.gameState.getCurrentPlayer();
+        const playerY: number = node.gameState.getCurrentOpponent().value;
+        const opponentY: number = player.value;
         // sort by captured cases
         ArrayUtils.sortByDescending(moves, (move: AwaleMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();
-            const toDistribute: number = board[player][move.x];
-            const endCase: Coord = AwaleRules.distribute(move.x, player, board);
+            const toDistribute: number = board[playerY][move.x];
+            const endCase: Coord = AwaleRules.distribute(move.x, playerY, board);
             let captured: number;
             let sameTerritoryValue: number = 0;
-            if (endCase.y === player) {
+            if (endCase.y === playerY) {
                 captured = 0;
                 if (toDistribute <= 6) {
                     sameTerritoryValue = 10;
                 }
             } else {
-                captured = AwaleRules.capture(endCase.x, opponent, player, board);
+                captured = AwaleRules.capture(endCase.x, opponentY, player, board);
             }
             // Prioritise captured, then moves in same territory, then tries to minimise number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;
