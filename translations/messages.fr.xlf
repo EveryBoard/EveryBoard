@@ -2778,6 +2778,10 @@
         <source>Your second capture is invalid.</source>
         <target>Votre seconde capture est invalide.</target>
       </trans-unit>
+      <trans-unit id="4266790809431335414" datatype="html">
+        <source>Must capture one or two pieces, not more.</source>
+        <target>Vous devez capturer une ou deux pièces, pas plus.</target>
+      </trans-unit>
       <trans-unit id="3567680797279323593" datatype="html">
         <source>At Pylos, the goal is to be the last to play.
         To do this, you have to save up your pieces.

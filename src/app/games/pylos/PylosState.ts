@@ -8,6 +8,12 @@ import { Utils } from 'src/app/utils/utils';
 export class PylosState extends GameState {
 
     public static getInitialState(): PylosState {
+        // const board0: PlayerOrNone[][] = [
+        //     [PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.NONE],
+        //     [PlayerOrNone.ZERO, PlayerOrNone.NONE, PlayerOrNone.ZERO, PlayerOrNone.NONE],
+        //     [PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.NONE],
+        //     [PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE],
+        // ];
         const board0: PlayerOrNone[][] = ArrayUtils.createTable(4, 4, PlayerOrNone.NONE);
         const board1: PlayerOrNone[][] = ArrayUtils.createTable(3, 3, PlayerOrNone.NONE);
         const board2: PlayerOrNone[][] = ArrayUtils.createTable(2, 2, PlayerOrNone.NONE);
@@ -110,6 +116,13 @@ export class PylosState extends GameState {
             value: PlayerOrNone.NONE,
         };
         return this.setBoardAts([removeCoord], this.turn);
+    }
+    public addCoord(coord: PylosCoord): PylosState {
+        const addedCoord: {coord: PylosCoord, value: PlayerOrNone} = {
+            coord,
+            value: this.getCurrentPlayer(),
+        };
+        return this.setBoardAts([addedCoord], this.turn);
     }
     public applyDrop(coord: PylosCoord): PylosState {
         const addCurrentPlayer: {coord: PylosCoord, value: PlayerOrNone} = {

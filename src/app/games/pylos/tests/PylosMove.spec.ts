@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { PylosCoord } from '../PylosCoord';
-import { PylosMove } from '../PylosMove';
+import { PylosMove, PylosMoveFailure } from '../PylosMove';
 
 describe('PylosMove', () => {
 
@@ -22,7 +22,7 @@ describe('PylosMove', () => {
         expect(() => PylosMove.checkCaptures([coord, coord]))
             .toThrowError('PylosMove: should not capture twice same piece.');
         expect(() => PylosMove.checkCaptures([coord, highCoord, coord]))
-            .toThrowError(`PylosMove: can't capture that much piece.`);
+            .toThrowError(PylosMoveFailure.MUST_CAPTURE_MAXIMUM_TWO_PIECES());
         expect(() => PylosMove.checkCaptures([coord, highCoord])).not.toThrowError();
 
         // Change capture

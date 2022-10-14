@@ -2,6 +2,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Move } from 'src/app/jscaip/Move';
 import { PylosCoord } from './PylosCoord';
 import { NumberEncoder } from 'src/app/utils/Encoder';
+import { Localized } from 'src/app/utils/LocaleUtils';
+
+export class PylosMoveFailure {
+    public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`Must capture one or two pieces, not more.`;
+}
 
 export class PylosMove extends Move {
     public static encoder: NumberEncoder<PylosMove> = new class extends NumberEncoder<PylosMove> {
@@ -69,7 +74,7 @@ export class PylosMove extends Move {
                     secondCapture = MGPOptional.of(captures[0]);
                 }
                 if (captures.length > 2) {
-                    throw new Error(`PylosMove: can't capture that much piece.`);
+                    throw new Error(PylosMoveFailure.MUST_CAPTURE_MAXIMUM_TWO_PIECES());
                 }
             }
         }
