@@ -23,8 +23,8 @@ type PartInfo = {
     part: Part,
     creator: MinimalUser,
     candidate: MinimalUser,
- }
-xdescribe('PartDAO', () => {
+}
+describe('PartDAO', () => {
 
     let partDAO: PartDAO;
     let userDAO: UserDAO;

@@ -9,7 +9,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
 
-fdescribe('PylosComponent', () => {
+describe('PylosComponent', () => {
 
     let testUtils: ComponentTestUtils<PylosComponent>;
 
