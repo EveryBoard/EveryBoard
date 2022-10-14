@@ -175,6 +175,37 @@ describe('MartianChessRules', () => {
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+    it('should be legal to move a drone of two orthogonals steps', () => {
+        // Given the initial board
+        const board: Table<MartianChessPiece> = [
+            [C, C, B, _],
+            [C, B, A, _],
+            [B, A, A, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, A, A, B],
+            [_, A, B, C],
+            [B, _, C, C],
+        ];
+        const state: MartianChessState = new MartianChessState(board, 0);
+
+        // When moving vertically of two step one drone
+        const move: MartianChessMove = MartianChessMove.from(new Coord(0, 7), new Coord(0, 5)).get();
+
+        // Then the move should be legal and the board changed
+        const expectedBoard: Table<MartianChessPiece> = [
+            [C, C, B, _],
+            [C, B, A, _],
+            [B, A, A, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [B, A, A, B],
+            [_, A, B, C],
+            [_, _, C, C],
+        ];
+        const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
     it('should be legal to move a drone of one diagonal step', () => {
         // Given any board
         const board: Table<MartianChessPiece> = [

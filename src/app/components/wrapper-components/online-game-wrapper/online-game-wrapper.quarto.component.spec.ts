@@ -39,10 +39,10 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
-
     testUtils: ComponentTestUtils<T, MinimalUser>;
     role: PlayerOrNone;
 }
+
 export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promise<void> {
     const partDAO: PartDAO = TestBed.inject(PartDAO);
     const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
@@ -64,6 +64,7 @@ export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promi
     await userDAO.set(USER_OBSERVER.id, OBSERVER);
     return;
 }
+
 export async function prepareWrapper<T extends AbstractGameComponent>(user: AuthUser, component: string)
 : Promise<ComponentTestUtils<T, MinimalUser>>
 {
@@ -73,6 +74,7 @@ export async function prepareWrapper<T extends AbstractGameComponent>(user: Auth
     ConnectedUserServiceMock.setUser(user);
     return testUtils;
 }
+
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
     component: string,
