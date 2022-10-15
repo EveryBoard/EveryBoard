@@ -49,6 +49,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.hasAsymetricBoard = true;
         this.rules = new PylosRules(PylosState);
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
@@ -57,6 +58,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
         this.updateBoard();
+    }
+    public getPiecesCyForPlayer(player: Player): number {
+        if (player === Player.ONE) {
+            return this.PIECE_ROW_HEIGHT / 2;
+        } else {
+            return this.BOARD_WIDTH + ( 1.5 * this.PIECE_ROW_HEIGHT);
+        }
     }
     public getLevelRange(z: number): number[] {
         return PylosState.getLevelRange(z);

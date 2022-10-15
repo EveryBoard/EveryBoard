@@ -11,6 +11,7 @@ import { GipfState } from 'src/app/games/gipf/GipfState';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('GipfComponent', () => {
 
@@ -278,8 +279,8 @@ describe('GipfComponent', () => {
 
         await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [0, 0]);
 
-        expect(testUtils.getComponent().getPlayerSidePieces(0).length).toBe(8);
-        expect(testUtils.getComponent().getPlayerSidePieces(1).length).toBe(5);
+        expect(testUtils.getComponent().getPlayerSidePieces(Player.ZERO).length).toBe(8);
+        expect(testUtils.getComponent().getPlayerSidePieces(Player.ONE).length).toBe(5);
     }));
     it('should not accept placement on a complete line', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
