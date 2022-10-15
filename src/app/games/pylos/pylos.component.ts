@@ -148,7 +148,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     private updateCapturableList(): void {
         this.capturables = this.constructedState.getFreeToMoves();
-        console.log('HENCEORTH', this.capturables)
     }
     public getCaptureValidationButtonClasses(): string {
         if (this.chosenFirstCapture.isPresent() || this.chosenSecondCapture.isPresent()) {
@@ -265,13 +264,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public getPieceCyByCoord(coord: PylosCoord): number {
         return this.getPieceCy(coord.x, coord.y, coord.z);
-    }
-    public getPiecesCyForPlayer(player: Player): number {
-        if (player === Player.ONE) {
-            return this.PIECE_ROW_HEIGHT / 2;
-        } else {
-            return this.BOARD_WIDTH + ( 1.5 * this.PIECE_ROW_HEIGHT);
-        }
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);

@@ -5,7 +5,7 @@ import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class PylosMoveFailure {
-    public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`Must capture one or two pieces, not more.`;
+    public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`You must capture one or two pieces, not more.`;
 }
 
 export class PylosMove extends Move {

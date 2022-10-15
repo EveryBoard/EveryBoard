@@ -316,10 +316,10 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="6972413011819423487" datatype="html">
+      <trans-unit id="7949092417505357162" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
          Let&apos;s see how seeds are sown.
-         As you&apos;re playing first, the 6 houses on the top are yours.&lt;br/&gt;&lt;br&gt;
+         As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
       </trans-unit>
       <trans-unit id="8638152355669938683" datatype="html">
@@ -330,8 +330,8 @@
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
       </trans-unit>
-      <trans-unit id="278639697286568585" datatype="html">
-        <source>You are now the second player (on the bottom).
+      <trans-unit id="6117558662745355702" datatype="html">
+        <source>You are still the first player.
         When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
         Sow the house that contains 12 seeds.</source>
       </trans-unit>
@@ -341,12 +341,12 @@
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>
       </trans-unit>
-      <trans-unit id="1376466164144182842" datatype="html">
+      <trans-unit id="4987331245309360880" datatype="html">
         <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.
          Then, the player looks at the preceding house:
          if it is still in the opponent&apos;s side and contains two or three seeds, they are also captured.
          This continues until we reach either the player&apos;s side or a house containing neither two nor three seeds.&lt;br/&gt;&lt;br/&gt;
-         You are the second player, try to capture some pieces!</source>
+         You are the first player, try to capture some pieces!</source>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
@@ -404,9 +404,8 @@
       <trans-unit id="6033788914683606777" datatype="html">
         <source>Feeding is mandatory</source>
       </trans-unit>
-      <trans-unit id="6914881509682724797" datatype="html">
-        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;
-        Go ahead!</source>
+      <trans-unit id="6501764281568922792" datatype="html">
+        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;Go ahead!</source>
       </trans-unit>
       <trans-unit id="3908210272037108493" datatype="html">
         <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
@@ -1520,8 +1519,8 @@
       <trans-unit id="8839913211108039860" datatype="html">
         <source>Your second capture is invalid.</source>
       </trans-unit>
-      <trans-unit id="4266790809431335414" datatype="html">
-        <source>Must capture one or two pieces, not more.</source>
+      <trans-unit id="2207725255932699379" datatype="html">
+        <source>You must capture one or two pieces, not more.</source>
       </trans-unit>
       <trans-unit id="3567680797279323593" datatype="html">
         <source>At Pylos, the goal is to be the last to play.
@@ -1564,14 +1563,14 @@
       <trans-unit id="2195961423433457989" datatype="html">
         <source>Square (1/2)</source>
       </trans-unit>
-      <trans-unit id="9180306786651380094" datatype="html">
+      <trans-unit id="4680796250621023786" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
         A chosen piece can be the piece you just placed.
         You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Form a square, then click on one of the four pieces, the click on the V symbol on the bottom right to finalize your move.</source>
+        Form a square, then click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
       </trans-unit>
       <trans-unit id="4722414845520402682" datatype="html">
         <source>Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.</source>

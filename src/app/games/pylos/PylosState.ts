@@ -8,12 +8,6 @@ import { Utils } from 'src/app/utils/utils';
 export class PylosState extends GameState {
 
     public static getInitialState(): PylosState {
-        // const board0: PlayerOrNone[][] = [
-        //     [PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.NONE],
-        //     [PlayerOrNone.ZERO, PlayerOrNone.NONE, PlayerOrNone.ZERO, PlayerOrNone.NONE],
-        //     [PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.ZERO, PlayerOrNone.NONE],
-        //     [PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE],
-        // ];
         const board0: PlayerOrNone[][] = ArrayUtils.createTable(4, 4, PlayerOrNone.NONE);
         const board1: PlayerOrNone[][] = ArrayUtils.createTable(3, 3, PlayerOrNone.NONE);
         const board2: PlayerOrNone[][] = ArrayUtils.createTable(2, 2, PlayerOrNone.NONE);
