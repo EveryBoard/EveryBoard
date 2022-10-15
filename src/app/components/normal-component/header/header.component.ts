@@ -50,6 +50,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         await this.connectedUserService.disconnect();
         await this.router.navigate(['/']);
     }
+    public async navigateToPart(): Promise<boolean> {
+        return this.router.navigate(['/play', this.observedPart.get().typeGame, this.observedPart.get().id]);
+    }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
         this.observedPartSubscription.unsubscribe();

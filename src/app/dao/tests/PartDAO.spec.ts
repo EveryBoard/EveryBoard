@@ -27,7 +27,7 @@ type PartInfo = {
     candidate: MinimalUser,
 }
 
-describe('PartDAO', () => {
+xdescribe('PartDAO', () => {
 
     let partDAO: PartDAO;
     let userDAO: UserDAO;

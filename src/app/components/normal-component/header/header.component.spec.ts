@@ -11,9 +11,8 @@ import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Utils } from 'src/app/utils/utils';
-import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -71,7 +70,7 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent().username).toEqual(MGPOptional.of(email));
     }));
-    xit('should redirect to your current part when clicking on its reference on the header', fakeAsync(async() => {
+    it('should redirect to your current part when clicking on its reference on the header', fakeAsync(async() => {
         // Given a component where connected user is observing a part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITH_OPPONENT;
@@ -84,9 +83,8 @@ describe('HeaderComponent', () => {
         spyOn(router, 'navigate').and.resolveTo(true);
         await testUtils.clickElement('#observedPartLink');
 
-        // Then it should redirect to the part
-        // TODO FOR REVIEW: an idea on how to make click on routerLink testable ?
-        expectValidRouting(router, ['/play', observedPart.typeGame, observedPart.id], OnlineGameWrapperComponent);
+        // Then it should have redirect to the part
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/play', observedPart.typeGame, observedPart.id]);
     }));
     describe('observedPart', () => {
         it('should display "<TypeGame> (waiting for opponent)" when creator without chosenOpponent', fakeAsync(async() => {

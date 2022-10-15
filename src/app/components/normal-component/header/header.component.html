@@ -40,7 +40,7 @@
             <a *ngIf="observedPart.isPresent()"
                id="observedPartLink"
                class="navbar-item"
-               [routerLink]="['/play', observedPart.get().typeGame, observedPart.get().id]">
+               (click)="navigateToPart()">
                 <ng-container *ngIf="observedPart.get().role === 'Observer' || observedPart.get().role === 'Candidate' else activeUser" i18n>{{ observedPart.get().typeGame }} by {{ observedPart.get().opponent?.name }}</ng-container>
                 <ng-template #activeUser>
                     <ng-container *ngIf="observedPart.get().opponent else waitingForOpponent" i18n>{{ observedPart.get().typeGame }} against {{ observedPart.get().opponent?.name }}</ng-container>
