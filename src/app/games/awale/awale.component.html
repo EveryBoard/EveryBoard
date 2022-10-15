@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
      viewBox="-45 -20 700 260"
+     [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet"
      >
     <rect x="-40" y="-15"
@@ -13,15 +14,16 @@
         <g *ngFor="let content of line; index as x">
             <circle id="click_{{ x }}_{{ y }}"
                     (click)="onClick(x, y)"
-                    [attr.cx]="50 + 100*x"
-                    [attr.cy]="50 + 120*y"
-                    r="46"
                     [ngClass]="getSquareClasses(x, y)"
                     class="base"
+                    [attr.cx]="getPieceCx(x)"
+                    [attr.cy]="getPieceCy(y)"
+                    r="46"
             />
             <text (click)="onClick(x, y)"
                   [attr.x]="50 + 100*x"
                   [attr.y]="66 + 120*y"
+                  [attr.transform]="getPieceRotation(x, y)"
                   class="text-big text-center"
             >
                 {{ content }}

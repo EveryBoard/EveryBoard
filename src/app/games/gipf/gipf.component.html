@@ -1,7 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 -12 708 854"
+     [attr.viewBox]="(-STROKE_WIDTH) + ' 0 ' + BOARD_WIDTH + ' ' + BOARD_HEIGHT"
+     [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
+
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"
                 refX="5" refY="3.5" orient="auto">
@@ -52,10 +54,10 @@
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player.value }}_{{ p }}"
-                    [attr.cx]="10 + (p * SPACE_SIZE * 0.5)"
-                    [attr.cy]="10 + (SPACE_SIZE + 10) * player.value"
+                    [attr.cx]="getRemainingPieceCx(player, p)"
+                    [attr.cy]="getRemainingPieceCy(player)"
                     [attr.r]="SPACE_SIZE * 0.5"
-                    [ngClass]="getSidePieceClass(player)"
+                    [ngClass]="getPlayerClass(player)"
                     class="base small-stroke"
             />
         </g>

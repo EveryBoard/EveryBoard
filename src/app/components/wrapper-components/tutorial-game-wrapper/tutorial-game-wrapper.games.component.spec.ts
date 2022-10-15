@@ -199,12 +199,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new MartianChessRules(MartianChessState),
                     martianChessTutorial[2],
-                    MartianChessMove.from(new Coord(2, 0), new Coord(3, 1)).get(),
+                    MartianChessMove.from(new Coord(1, 7), new Coord(0, 6)).get(),
                     MGPValidation.failure(`This is not a pawn!`),
                 ], [
                     new MartianChessRules(MartianChessState),
                     martianChessTutorial[3],
-                    MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get(),
+                    MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get(),
                     MGPValidation.failure(`This is not a drone!`),
                 ], [
                     new MartianChessRules(MartianChessState),
@@ -219,7 +219,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new MartianChessRules(MartianChessState),
                     martianChessTutorial[8],
-                    MartianChessMove.from(new Coord(1, 2), new Coord(0, 3)).get(),
+                    MartianChessMove.from(new Coord(2, 5), new Coord(3, 4)).get(),
                     MGPValidation.failure(`You did not call the clock!`),
                 ], [
                     new MartianChessRules(MartianChessState),

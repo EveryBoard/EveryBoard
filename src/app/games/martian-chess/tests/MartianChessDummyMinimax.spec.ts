@@ -64,7 +64,7 @@ describe('MartianChessDummyMinimax', () => {
             [_, _, _, _],
             [_, _, _, _],
         ];
-        const state: MartianChessState = new MartianChessState(board, 0);
+        const state: MartianChessState = new MartianChessState(board, 1);
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
@@ -88,7 +88,7 @@ describe('MartianChessDummyMinimax', () => {
             [_, _, _, _],
             [_, _, _, _],
         ];
-        const state: MartianChessState = new MartianChessState(board, 0, MGPOptional.empty(), MGPOptional.of(1));
+        const state: MartianChessState = new MartianChessState(board, 1, MGPOptional.empty(), MGPOptional.of(1));
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
@@ -115,7 +115,7 @@ describe('MartianChessDummyMinimax', () => {
         ];
         const last: MartianChessMove = MartianChessMove.from(new Coord(1, 4), new Coord(0, 3)).get();
         const optLast: MGPOptional<MartianChessMove> = MGPOptional.of(last);
-        const state: MartianChessState = new MartianChessState(board, 0, optLast, MGPOptional.of(1));
+        const state: MartianChessState = new MartianChessState(board, 1, optLast, MGPOptional.of(1));
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
@@ -137,7 +137,7 @@ describe('MartianChessDummyMinimax', () => {
             [_, _, C, _],
             [_, _, _, _],
         ];
-        const state: MartianChessState = new MartianChessState(board, 0, MGPOptional.empty(), MGPOptional.of(4));
+        const state: MartianChessState = new MartianChessState(board, 1, MGPOptional.empty(), MGPOptional.of(4));
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves

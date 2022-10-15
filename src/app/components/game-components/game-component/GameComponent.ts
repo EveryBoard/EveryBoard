@@ -28,6 +28,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 {
     public encoder: MoveEncoder<M>;
 
+    public Player: typeof Player = Player;
+
     public SPACE_SIZE: number = 100;
 
     public readonly STROKE_WIDTH: number = 8;
@@ -44,6 +46,11 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public imagesLocation: string = 'assets/images/';
 
+    public hasAsymetricBoard: boolean = false;
+
+    // Will contain, once the wrapper change the userRole, the valid orientation (180° when you play Player.ONE)
+    public rotation: string = '';
+
     public tutorial: TutorialStep[];
 
     public isPlayerTurn: () => boolean;
@@ -56,7 +63,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public Player: typeof Player = Player;
+    public role: PlayerOrNone;
 
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow
@@ -82,7 +89,6 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-
     public abstract updateBoard(): void;
 
     public getPlayerClass(player: PlayerOrNone): string {
@@ -122,7 +128,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, unknown>,
                                                                   Move,
-                                                                  GameState, unknown>
+                                                                  GameState,
+                                                                  unknown>
 {
 }
 
