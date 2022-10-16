@@ -29,20 +29,19 @@ describe('ApagosDummyMinimax', () => {
         expect(isThereTransfer).toBeFalse();
     });
     it('should consider having advantage has a higher value board', () => {
-        // Given two states each with more pieces of one specific player
+        // Given two states with the second having more pieces of the current player in the rightmost space
         const weakerState: ApagosState = ApagosState.fromRepresentation(0, [
             [0, 0, 0, 0],
-            [7, 0, 0, 1],
+            [0, 0, 0, 1],
             [7, 5, 3, 1],
-        ], 10, 2);
+        ], 10, 9);
         const strongerState: ApagosState = ApagosState.fromRepresentation(0, [
-            [7, 0, 0, 1],
+            [0, 0, 0, 0],
             [0, 0, 0, 0],
             [7, 5, 3, 1],
-        ], 2, 10);
+        ], 10, 10);
 
-        // When computing the value of the boards
-        // Then the state with the most pieces of the player should have a higher value
+        // Then the second state should be deemed advantageous for the current player
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            weakerState,
                                                            MGPOptional.empty(),
