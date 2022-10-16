@@ -3,15 +3,18 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from '../utils/Encoder';
 
 class PlayerNone implements ComparableObject {
+
     public static NONE: PlayerNone = new PlayerNone();
+
     public value: number = 2;
+
     private constructor() {
     }
     public isPlayer(): this is Player {
         return false;
     }
     public toString(): string {
-        return 'PlayerNone';
+        return 'PLAYER_NONE';
     }
     public equals(other: PlayerOrNone): boolean {
         return this === other;
@@ -47,7 +50,12 @@ export class Player implements ComparableObject {
         return true;
     }
     public toString(): string {
-        return 'Player ' + this.value;
+        switch (this) {
+            case Player.ZERO: return 'PLAYER_ZERO';
+            default:
+                Utils.expectToBe(this, Player.ONE, 'Player should not be something else than Player.ZERO and Player.ONE');
+                return 'PLAYER_ONE';
+        }
     }
     public equals(other: PlayerOrNone): boolean {
         return this === other;

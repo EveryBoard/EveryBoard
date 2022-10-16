@@ -9,28 +9,28 @@ import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('CoerceoMove', () => {
 
-    it('Should distinguish move and capture based on presence or not of capture', () => {
+    it('should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(move.isTileExchange()).toBeFalse();
         const capture: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 4));
         expect(capture.isTileExchange()).toBeTrue();
     });
     describe('fromMove', () => {
-        it('Should not create move of invalid distance', () => {
+        it('should not create move of invalid distance', () => {
             expect(() => CoerceoMove.fromCoordToCoord(new Coord(2, 2), new Coord(9, 9)))
                 .toThrowError(CoerceoFailure.INVALID_DISTANCE());
         });
-        it('Should not allow out of range starting coord', () => {
+        it('should not allow out of range starting coord', () => {
             expect(() => CoerceoMove.fromMovement(new Coord(-1, 0), CoerceoStep.LEFT))
                 .toThrowError('Starting coord cannot be out of range (width: 15, height: 10).');
         });
-        it('Should not allow out of range landing coord', () => {
+        it('should not allow out of range landing coord', () => {
             expect(() => CoerceoMove.fromMovement(new Coord(0, 0), CoerceoStep.LEFT))
                 .toThrowError('Landing coord cannot be out of range (width: 15, height: 10).');
         });
     });
     describe('fromTilesExchange', () => {
-        it('Should not allow out of range capture coord', () => {
+        it('should not allow out of range capture coord', () => {
             const reason: string = 'Captured coord cannot be out of range (width: 15, height: 10).';
             expect(() => CoerceoMove.fromTilesExchange(new Coord(-1, 16))).toThrowError(reason);
         });
@@ -54,7 +54,7 @@ describe('CoerceoMove', () => {
             expect(movement.equals(differentEnd)).toBeFalse();
             expect(movement.equals(movement)).toBeTrue();
         });
-        it('Should forbid non integer number to decode', () => {
+        it('should forbid non integer number to decode', () => {
             expect(() => CoerceoMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
         });
         it('should stringify nicely', () => {

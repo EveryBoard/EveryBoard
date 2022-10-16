@@ -259,7 +259,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (alignement.isSuccess()) {
             const secondAlignement: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
             if (alignement.equals(secondAlignement)) {
-                // then it's an extension of the line
+                // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);
                 const secondDistance: number = lastPiece.getDistance(clicked);
                 if (Math.max(firstDistance, secondDistance) === 2) {
@@ -302,8 +302,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
         return this.chooseMove(move, state, this.scores.get());
     }
-    public async onCaseClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#case_' + x + '_' + y);
+    public async onSpaceClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

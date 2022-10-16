@@ -74,7 +74,6 @@ export class GipfComponent
     public updateBoard(): void {
         this.showLastMove();
         this.cancelMoveAttempt();
-        this.moveToInitialCaptureOrPlacementPhase();
     }
     public showLastMove(): void {
         this.inserted = MGPOptional.empty();
@@ -128,15 +127,7 @@ export class GipfComponent
                 return this.selectPlacementCoord(coord);
             default:
                 Utils.expectToBe(this.movePhase, GipfComponent.PHASE_PLACEMENT_DIRECTION);
-                const entrance: Coord = this.placementEntrance.get();
-                if (entrance.isAlignedWith(coord) === false) {
-                    return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION());
-                }
-                if (entrance.getDistance(coord) !== 1) {
-                    return this.cancelMove(GipfFailure.CLICK_FURTHER_THAN_ONE_COORD());
-                }
-                const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
-                return this.selectPlacementDirection(direction.toOptional());
+                return this.selectPlacementDirectionOrPlacementCoord(coord);
         }
     }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {
@@ -215,8 +206,13 @@ export class GipfComponent
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        if (this.placementEntrance.equalsValue(coord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
         this.placementEntrance = MGPOptional.of(coord);
-        if (this.constructedState.getPieceAt(coord) === FourStatePiece.EMPTY) {
+        const clickedPiece: FourStatePiece = this.constructedState.getPieceAt(coord);
+        if (clickedPiece === FourStatePiece.EMPTY) {
             // Because the coord of insertion is empty, there is no need for the user to choose a direction.
             return this.selectPlacementDirection(MGPOptional.empty());
         } else {
@@ -237,6 +233,16 @@ export class GipfComponent
         this.arrows = [];
         this.constructedState = GipfRules.applyPlacement(this.placement.get(), this.constructedState);
         return this.moveToFinalCapturePhaseOrTryMove();
+    }
+    private async selectPlacementDirectionOrPlacementCoord(coord: Coord): Promise<MGPValidation> {
+        const entrance: Coord = this.placementEntrance.get();
+        if (entrance.isAlignedWith(coord) === false ||
+            entrance.getDistance(coord) !== 1)
+        {
+            return this.selectPlacementCoord(coord);
+        }
+        const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
+        return this.selectPlacementDirection(direction.toOptional());
     }
     private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
                           placement: GipfPlacement,

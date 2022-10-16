@@ -5,23 +5,23 @@ import { SixMove } from '../SixMove';
 
 describe('SixMove', () => {
 
-    it('Should allow dropping', () => {
+    it('should allow dropping', () => {
         const move: SixMove = SixMove.fromDrop(new Coord(0, 0));
         expect(move).toBeTruthy();
     });
-    it('Should allow move without mentionned "keep"', () => {
+    it('should allow move without mentionned "keep"', () => {
         const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(1, 1));
         expect(move).toBeTruthy();
     });
-    it('Should throw when creating static movement', () => {
+    it('should throw when creating static movement', () => {
         const error: string = 'Deplacement cannot be static!';
         expect(() => SixMove.fromMovement(new Coord(0, 0), new Coord(0, 0))).toThrowError(error);
     });
-    it('Should allow move with mentionned "keep"', () => {
+    it('should allow move with mentionned "keep"', () => {
         const move: SixMove = SixMove.fromCut(new Coord(0, 0), new Coord(2, 2), new Coord(1, 1));
         expect(move).toBeTruthy();
     });
-    it('Should throw when creating movement keeping starting coord', () => {
+    it('should throw when creating movement keeping starting coord', () => {
         const error: string = 'Cannot keep starting coord, since it will always be empty after move!';
         expect(() => SixMove.fromCut(new Coord(0, 0), new Coord(1, 1), new Coord(0, 0)))
             .toThrowError(error);
@@ -41,7 +41,7 @@ describe('SixMove', () => {
             expect(drop.equals(movement)).toBeFalse();
             expect(movement.equals(cuttingDeplacement)).toBeFalse();
         });
-        it('Should forbid non object to decode', () => {
+        it('should forbid non object to decode', () => {
             expect(() => SixMove.encoder.decode(0.5)).toThrowError('Invalid encodedMove of type number!');
         });
         it('should stringify nicely', () => {

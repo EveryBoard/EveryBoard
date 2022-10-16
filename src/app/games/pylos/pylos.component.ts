@@ -96,6 +96,10 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.isSupporting(clickedCoord)) {
             return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }
+        if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
         if (this.chosenLandingCoord.isAbsent()) {
             return this.onClimbClick(clickedCoord);
         }

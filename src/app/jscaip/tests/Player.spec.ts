@@ -3,9 +3,9 @@ import { Player } from '../Player';
 
 describe('Player', () => {
 
-    it('Should override toString correctly', () => {
+    it('should override toString correctly', () => {
         const player: Player = Player.ONE;
-        expect(player.toString()).toBe('Player 1');
+        expect(player.toString()).toBe('PLAYER_ONE');
     });
     it('should define opponent of each player', () => {
         expect(Player.ONE.getOpponent()).toBe(Player.ZERO);

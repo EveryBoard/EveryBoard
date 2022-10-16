@@ -11,6 +11,7 @@ import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component'
 import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.component';
 import { GipfComponent } from 'src/app/games/gipf/gipf.component';
 import { GoComponent } from 'src/app/games/go/go.component';
+import { HnefataflComponent } from 'src/app/games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from 'src/app/games/lodestone/lodestone.component';
@@ -38,7 +39,7 @@ class GameDescription {
 
     public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
 
-    public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family!`;
+    public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
 
@@ -55,6 +56,8 @@ class GameDescription {
     public static readonly GIPF: Localized = () => $localize`A hexagonal game of alignment. Insert your pieces on the board to capture your opponent's pieces!`;
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
+
+    public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
@@ -82,7 +85,7 @@ class GameDescription {
 
     public static readonly SIX: Localized = () => $localize`Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!`;
 
-    public static readonly TABLUT: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
+    public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 
@@ -124,6 +127,7 @@ export class GameInfo {
 
         new GameInfo($localize`Lodestone`, 'Lodestone', LodestoneComponent, new Date('2022-06-24'), GameDescription.LODESTONE()),
         new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()),
+        new GameInfo($localize`Hnefatafl`, 'Hnefatafl', HnefataflComponent, new Date('2022-09-21'), GameDescription.HNEFATAFL()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

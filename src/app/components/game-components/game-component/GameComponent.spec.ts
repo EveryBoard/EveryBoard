@@ -23,7 +23,7 @@ describe('GameComponent', () => {
         await ComponentTestUtils.configureTestModule(activatedRouteStub);
     }));
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
-        // given such a game, like Abalone
+        // Given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
         const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone');
         const component: AbstractGameComponent = testUtils.getComponent();
@@ -34,21 +34,21 @@ describe('GameComponent', () => {
 
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
-        // when the player tries to pass
+        // When the player tries to pass
         const result: MGPValidation = await component.pass();
 
-        // then should fail and call logError
+        // Then should fail and call logError
         const errorMessage: string = 'pass() called on a game that does not redefine it';
         const errorData: JSONValue = { gameName: 'AbaloneComponent' };
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
-    it('Clicks method should refuse when observer click', fakeAsync(async() => {
+    it('clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Abalone: {
                 onPieceClick: [0, 0],
-                onCaseClick: [0, 0],
+                onSpaceClick: [0, 0],
                 chooseDirection: [Direction.UP],
             },
             Apagos: {
@@ -72,6 +72,7 @@ describe('GameComponent', () => {
             Epaminondas: { onClick: [0, 0] },
             Gipf: { onClick: [0, 0] },
             Go: { onClick: [0, 0] },
+            Hnefatafl: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },
             Lodestone: {
@@ -101,6 +102,7 @@ describe('GameComponent', () => {
             Quarto: {
                 chooseCoord: [0, 0],
                 choosePiece: [0],
+                deselectDroppedPiece: [],
             },
             Quixo: {
                 onBoardClick: [0, 0],

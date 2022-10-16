@@ -48,7 +48,7 @@ describe('TaflRules', () => {
         ];
     });
     describe('getSurroundings', () => {
-        it('Should return neighborings cases', () => {
+        it('should return neighborings cases', () => {
             const startingState: TaflState = rules.node.gameState;
             const { backCoord } =
                 rules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingState);
@@ -99,7 +99,7 @@ describe('TaflRules', () => {
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Should consider defender winner when all invaders are dead', () => {
+    it('should consider defender winner when all invaders are dead', () => {
         // Given a board where the last invader is about to be slaughter on an altar dedicated to Thor
         const board: Table<TaflPawn> = [
             [_, O, _, A, _, _, _, _, _],
@@ -134,7 +134,7 @@ describe('TaflRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('Should consider invader winner when all defender are immobilized', () => {
+    it('should consider invader winner when all defender are immobilized', () => {
         // Given a board where the last invader is about to be slaughter on an altar dedicated to Thor
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],

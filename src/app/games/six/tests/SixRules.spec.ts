@@ -28,7 +28,7 @@ describe('SixRules', () => {
         ];
     });
     describe('dropping', () => {
-        it('Should forbid landing/dropping on existing piece (drop)', () => {
+        it('should forbid landing/dropping on existing piece (drop)', () => {
             // Given a board in Phase 1 with pieces
             const board: NumberTable = [
                 [_, _, O],
@@ -44,7 +44,7 @@ describe('SixRules', () => {
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should forbid landing/dropping on existing piece (movement)', () => {
+        it('should forbid landing/dropping on existing piece (movement)', () => {
             // Given a board in Phase 1 with pieces
             const board: NumberTable = [
                 [X, _, O],
@@ -60,7 +60,7 @@ describe('SixRules', () => {
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should forbid drop after 40th turn', () => {
+        it('should forbid drop after 40th turn', () => {
             // Given a [fake] 40th turn board
             const board: NumberTable = [
                 [_, _, O],
@@ -76,7 +76,7 @@ describe('SixRules', () => {
             const reason: string = SixFailure.CAN_NO_LONGER_DROP();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should allow drop outside the current range', () => {
+        it('should allow drop outside the current range', () => {
             // Given a board in a certain range (5 by 5 when put in a square)
             const board: NumberTable = [
                 [X, X, O, _, X],
@@ -102,7 +102,7 @@ describe('SixRules', () => {
             const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('Should forbid dropping coord to be not connected to any piece', () => {
+        it('should forbid dropping coord to be not connected to any piece', () => {
             // Given a board
             const board: NumberTable = [
                 [_, _, O],
@@ -120,7 +120,7 @@ describe('SixRules', () => {
         });
     });
     describe('Deplacement', () => {
-        it('Should forbid movement before 40th turn', () => {
+        it('should forbid movement before 40th turn', () => {
             // Given a board in phase 1
             const board: NumberTable = [
                 [_, _, O],
@@ -136,7 +136,7 @@ describe('SixRules', () => {
             const reason: string = SixFailure.NO_MOVEMENT_BEFORE_TURN_40();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should forbid moving opponent piece', () => {
+        it('should forbid moving opponent piece', () => {
             // Given a board in Phase 2 with pieces
             const board: NumberTable = [
                 [_, _, O],
@@ -152,7 +152,7 @@ describe('SixRules', () => {
             const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should forbid moving empty piece', () => {
+        it('should forbid moving empty piece', () => {
             // Given a board in second phase
             const board: NumberTable = [
                 [_, _, O],
@@ -168,7 +168,7 @@ describe('SixRules', () => {
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should refuse dropping piece where its only neighbor is herself last turn', () => {
+        it('should refuse dropping piece where its only neighbor is herself last turn', () => {
             // Given a board in phase 2
             const board: NumberTable = [
                 [_, _, O],
@@ -186,7 +186,7 @@ describe('SixRules', () => {
         });
     });
     describe('Deconnection', () => {
-        it('Should deconnect smaller group automatically', () => {
+        it('should deconnect smaller group automatically', () => {
             // Given a board where two piece could be disconnected
             const board: NumberTable = [
                 [X, X, O, _, _],
@@ -211,7 +211,7 @@ describe('SixRules', () => {
             const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 43);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('Should refuse deconnection of same sized group when no group is mentionned in move', () => {
+        it('should refuse deconnection of same sized group when no group is mentionned in move', () => {
             // Given a board where a equal cut is possible
             const board: NumberTable = [
                 [X, X, _, O, _],
@@ -229,7 +229,7 @@ describe('SixRules', () => {
             const reason: string = SixFailure.MUST_CUT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should refuse deconnection of different sized group with group mentionned in move', () => {
+        it('should refuse deconnection of different sized group with group mentionned in move', () => {
             // Given a board with a cut possible
             const board: NumberTable = [
                 [X, X, _, _, _],
@@ -247,7 +247,7 @@ describe('SixRules', () => {
             const reason: string = SixFailure.CANNOT_CHOOSE_TO_KEEP();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should refuse deconnection where captured coord is empty', () => {
+        it('should refuse deconnection where captured coord is empty', () => {
             // Given a board with an equal cut possible
             const board: NumberTable = [
                 [X, X, _, O, _],
@@ -265,7 +265,7 @@ describe('SixRules', () => {
             const reason: string = SixFailure.CANNOT_KEEP_EMPTY_COORD();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should refuse deconnection where captured coord is in a smaller group', () => {
+        it('should refuse deconnection where captured coord is in a smaller group', () => {
             // Given a board with three group splitted, one of them beeing too small to be chosen
             const board: NumberTable = [
                 [_, X, X, _],
@@ -306,7 +306,7 @@ describe('SixRules', () => {
             });
         });
         describe('Shape Victories', () => {
-            it('Should consider winner player who align 6 pieces (playing on border)', () => {
+            it('should consider winner player who align 6 pieces (playing on border)', () => {
                 // Given a board in pre-victory
                 const board: number[][] = [
                     [O, _, _, _, _],
@@ -340,7 +340,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
-            it('Should consider winner player who align 6 pieces (playing in the middle)', () => {
+            it('should consider winner player who align 6 pieces (playing in the middle)', () => {
                 // Given a board where player zero is about to win
                 const board: number[][] = [
                     [_, _, _, _, _, O],
@@ -369,7 +369,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
-            it('Should consider winner player who draw a circle/hexagon of his pieces', () => {
+            it('should consider winner player who draw a circle/hexagon of his pieces', () => {
                 // Given a board close to be a victory
                 const board: number[][] = [
                     [_, _, _, _, X],
@@ -398,7 +398,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
-            it('Should consider winner player who draw a triangle of his pieces (corner drop)', () => {
+            it('should consider winner player who draw a triangle of his pieces (corner drop)', () => {
                 // Given a bboard about to have a triangle victory
                 const board: number[][] = [
                     [O, X, _, X, _],
@@ -425,7 +425,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
-            it('Should consider winner player who draw a triangle of his pieces (edge drop)', () => {
+            it('should consider winner player who draw a triangle of his pieces (edge drop)', () => {
                 // Given a board where a triangle is about to be created
                 const board: number[][] = [
                     [O, _, _, _, X],
@@ -452,7 +452,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
-            it('Should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
+            it('should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
                 // Given a board with an hexagon about to be created
                 const board: number[][] = [
                     [O, _, _, _, _],
@@ -481,7 +481,7 @@ describe('SixRules', () => {
             });
         });
         describe('Disconnection Victories', () => {
-            it('Should consider looser PLAYER.ZERO when he drop bellow 6 pieces on phase two', () => {
+            it('should consider looser PLAYER.ZERO when he drop bellow 6 pieces on phase two', () => {
                 // Given a board in phase two
                 const board: NumberTable = [
                     [O, O, X, _, _],
@@ -508,7 +508,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
-            it('Should consider looser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
+            it('should consider looser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
                 // Given a board in phase 2
                 const board: NumberTable = [
                     [X, X, O, _, _],
@@ -535,7 +535,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
-            it('Should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ZERO)', () => {
+            it('should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ZERO)', () => {
                 // Given a board in phase 2
                 const board: number[][] = [
                     [_, _, _, _, _, O, X, X],
@@ -557,7 +557,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
-            it('Should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ONE)', () => {
+            it('should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ONE)', () => {
                 // Given a board in phase 2
                 const board: number[][] = [
                     [_, _, _, _, _, X, O],

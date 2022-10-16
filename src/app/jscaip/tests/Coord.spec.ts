@@ -21,7 +21,7 @@ describe('Coord', () => {
         const downRight: Coord = new Coord(9, 9);
         expect(middle.isBetween(upLeft, downRight)).toBeTrue();
     });
-    it('Should override equals correctly', () => {
+    it('should override equals correctly', () => {
         const coord: Coord = new Coord(0, 0);
         const horizontalNeighbors: Coord = new Coord(1, 0);
         const verticalNeighbors: Coord = new Coord(0, 1);
@@ -29,7 +29,7 @@ describe('Coord', () => {
         expect(coord.equals(horizontalNeighbors)).toBeFalse();
         expect(coord.equals(verticalNeighbors)).toBeFalse();
     });
-    it('Should vectorise correctly', () => {
+    it('should vectorise correctly', () => {
         const c: Coord = new Coord(3, -11);
         expect(c.toVector()).toEqual(c);
 
@@ -39,7 +39,7 @@ describe('Coord', () => {
         const c1: Coord = new Coord(-3, -9);
         expect(c1.toVector()).toEqual(new Coord(-1, -3));
     });
-    it('Should give correct coords between this and other coord', () => {
+    it('should give correct coords between this and other coord', () => {
         const coord: Coord = new Coord(0, 0);
         const notAligned: Coord = new Coord(2, 1);
         const neighbors: Coord = new Coord(1, 1);
@@ -49,7 +49,7 @@ describe('Coord', () => {
         expect(coord.getCoordsToward(neighbors)).toEqual([]);
         expect(coord.getCoordsToward(alignedFar)).toEqual([new Coord(1, 1)]);
     });
-    it('Should throw when asked distance toward an unaligned coord', () => {
+    it('should throw when asked distance toward an unaligned coord', () => {
         const coord: Coord = new Coord(0, 0);
         const unalignedCoord: Coord = new Coord(1, 2);
         expect(() => coord.getDistance(unalignedCoord))
@@ -63,12 +63,12 @@ describe('Coord', () => {
         expect(coord.isHexagonallyAlignedWith(new Coord(5, 4))).toBeFalse();
     });
     describe('getDirectionToward', () => {
-        it('Should give direction', () => {
+        it('should give direction', () => {
             const center: Coord = new Coord(0, 0);
             const lowRight: Coord = new Coord(2, 2);
             expect(center.getDirectionToward(lowRight).get()).toEqual(Direction.DOWN_RIGHT);
         });
-        it('Should fail when given invalid direction', () => {
+        it('should fail when given invalid direction', () => {
             const center: Coord = new Coord(0, 0);
             const lowRight: Coord = new Coord(2, 4);
             expect(() => center.getDirectionToward(lowRight).get()).toThrow();

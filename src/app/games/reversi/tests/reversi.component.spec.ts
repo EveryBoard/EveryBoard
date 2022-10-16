@@ -65,10 +65,10 @@ describe('ReversiComponent', () => {
             [O, X, _, _, _, _, _, _],
         ], 1);
 
-        // when displaying the board
+        // When displaying the board
         testUtils.setupState(state);
 
-        // then the player can pass
+        // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);
     }));
 });

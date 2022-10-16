@@ -10,6 +10,6 @@ describe('DiamPiece', () => {
         }
     });
     it('should have redefined toString', () => {
-        expect(DiamPiece.ZERO_FIRST.toString()).toBe('DiamPiece(Player 0, false)');
+        expect(DiamPiece.ZERO_FIRST.toString()).toBe('DiamPiece(PLAYER_ZERO, false)');
     });
 });

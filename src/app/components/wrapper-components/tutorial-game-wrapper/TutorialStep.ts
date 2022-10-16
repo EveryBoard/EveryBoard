@@ -54,8 +54,10 @@ export abstract class TutorialStep {
     {
         return new TutorialStepInformational(title, instruction, state);
     }
-
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
+
+    public previousState: MGPOptional<GameState> = MGPOptional.empty();
+
     protected constructor(public title: string,
                           public instruction: string,
                           public state: GameState) {
@@ -80,6 +82,10 @@ export abstract class TutorialStep {
     }
     public withPreviousMove(previousMove: Move): this {
         this.previousMove = MGPOptional.of(previousMove);
+        return this;
+    }
+    public withPreviousState(previousState: GameState): this {
+        this.previousState = MGPOptional.of(previousState);
         return this;
     }
 }
