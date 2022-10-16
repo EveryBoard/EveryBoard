@@ -45,7 +45,8 @@
               [attr.y]="SPACE_SIZE * (coord.y + 1)"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
-              class="base no-fill small-stroke clickable-stroke"/>
+              class="base no-fill small-stroke clickable-stroke"
+              (click)="clickSquare(coord.x, coord.y)"/>
     </g>
     <rect *ngIf="selectedLanding.isPresent()"
           (click)="clickSquare(selectedLanding.get().x, selectedLanding.get().y)"
