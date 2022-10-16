@@ -29,9 +29,9 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private readonly INTER_PIECE_SPACE: number = 20;
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
-    private chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
-    private chosenPieceIndex: number;
+    private chosenPieceIndex: MGPOptional<number>;
     public remainingPieceLeftX: number[][] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -86,7 +86,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             }
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
-                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN());
+                this.cancelMoveAttempt();
+                return MGPValidation.SUCCESS;
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord.get(), clickedCoord);
@@ -97,10 +98,11 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.chosenPiece = MGPOptional.empty();
-        this.chosenPieceIndex = -1;
+        this.chosenPieceIndex = MGPOptional.empty();
     }
     public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + player + '_' + piece.toString());
+        const clickedId: string = '#piece_' + player + '_' + piece.toString() + '_' + index;
+        const clickValidity: MGPValidation = this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -109,8 +111,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         if (state.isDroppable(piece) === false) {
             return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());
         } else if (this.chosenCoord.isAbsent()) {
-            this.chosenPiece = MGPOptional.of(piece);
-            this.chosenPieceIndex = index;
+            if (this.chosenPiece.equalsValue(piece) && this.chosenPieceIndex.equalsValue(index)) {
+                this.chosenPiece = MGPOptional.empty();
+                this.chosenPieceIndex = MGPOptional.empty();
+            } else {
+                this.chosenPiece = MGPOptional.of(piece);
+                this.chosenPieceIndex = MGPOptional.of(index);
+            }
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE());
@@ -151,17 +158,10 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 return (this.SPACE_SIZE / 2) - (3 * this.STROKE_WIDTH) - 6;
         }
     }
-    public getHighlightedCases(): Coord[] {
-        const coords: Coord[] = [];
-        if (this.chosenCoord.isPresent()) {
-            coords.push(this.chosenCoord.get());
-        }
-        return coords;
-    }
     public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
-        if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
-            pieceClasses.push('clickable ');
+        if (this.isSelectedPiece(piece) && this.chosenPieceIndex.equalsValue(index)) {
+            pieceClasses.push('selected');
         }
         return pieceClasses;
     }

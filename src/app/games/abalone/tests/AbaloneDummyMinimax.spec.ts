@@ -17,15 +17,15 @@ describe('AbaloneDummyMinimax', () => {
         minimax = new AbaloneDummyMinimax(new AbaloneRules(AbaloneState), 'dummy');
     });
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
-        // given initial node
+        // Given initial node
         const initialState: AbaloneState = AbaloneState.getInitialState();
         const initialNode: AbaloneNode = new AbaloneNode(initialState);
 
-        // then we should have 42 moves
+        // Then we should have 42 moves
         expect(minimax.getListMoves(initialNode).length).toEqual(44);
     });
     it('should include pushing moves', () => {
-        // given a simple node
+        // Given a simple node
         const board: Table<FourStatePiece> = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],
@@ -40,7 +40,7 @@ describe('AbaloneDummyMinimax', () => {
         const initialState: AbaloneState = new AbaloneState(board, 0);
         const initialNode: AbaloneNode = new AbaloneNode(initialState);
 
-        // then we should have 42 moves
+        // Then we should have 42 moves
         expect(minimax.getListMoves(initialNode).length).toEqual(15);
     });
 });

@@ -140,7 +140,7 @@ describe('AwaleRules', () => {
         ];
         const state: AwaleState = new AwaleState(board, 1, [23, 23]);
 
-        // when performing a move that does not feed the opponent
+        // When performing a move that does not feed the opponent
         const move: AwaleMove = AwaleMove.ZERO;
 
         // Then the move should be illegal
@@ -154,7 +154,7 @@ describe('AwaleRules', () => {
         ];
         const state: AwaleState = new AwaleState(board, 1, [23, 23]);
 
-        // when performing a move that feeds the opponent
+        // When performing a move that feeds the opponent
         const move: AwaleMove = AwaleMove.FIVE;
         const expectedBoard: Table<number> = [
             [1, 0, 0, 0, 0, 0],

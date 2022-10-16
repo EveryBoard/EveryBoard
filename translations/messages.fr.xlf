@@ -142,9 +142,9 @@
         <source>The international version of the famous African strategy game!</source>
         <target>La version internationale du fameux jeu de stratégie africain !</target>
       </trans-unit>
-      <trans-unit id="4553628047523274326" datatype="html">
-        <source>The Irish version of the Tafl game family!</source>
-        <target>La version irlandaise de la famille de jeu Tafl !</target>
+      <trans-unit id="5716165296000343717" datatype="html">
+        <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
+        <target>La version irlandaise de la famille de jeu Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
@@ -229,6 +229,10 @@
       <trans-unit id="5737474371494262748" datatype="html">
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
         <target>Placez vos pièces hexagonales les unes à côté des autres et soyez le premier à créer une des trois formes requises pour gagner !</target>
+      </trans-unit>
+      <trans-unit id="1177593339964527523" datatype="html">
+        <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
+        <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
@@ -337,6 +341,10 @@
       <trans-unit id="4371580300145721044" datatype="html">
         <source>Martian Chess</source>
         <target>Échecs Martiens</target>
+      </trans-unit>
+      <trans-unit id="5306696079242551443" datatype="html">
+        <source>Hnefatafl</source>
+        <target>Hnefatafl</target>
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
@@ -1433,8 +1441,8 @@
         <source>Types of move</source>
         <target>Types de mouvements</target>
       </trans-unit>
-      <trans-unit id="7844462253208284371" datatype="html">
-        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+      <trans-unit id="357682192015415742" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
         <target>Vous pouvez effectuer deux types de mouvement : soit déposer une de vos pièces comme vous l'avez fait à l'étape précédente, soit déplacer une de vos pièces sur le plateau, sur une case voisine. Vous pouvez choisir n'importe laquelle de vos pièces, même s'il y a déjà d'autres pièces au dessus. Une seule condition s'applique : ne pas créer une pile de plus de 4 pièces. Quand vous sélectionnez une pièce avec d'autres dessus, toutes les autres pièces se déplacent avec la votre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, essayez de déplacer une de vos pièces déjà sur le plateau.</target>
       </trans-unit>
       <trans-unit id="4809034034760688818" datatype="html">
@@ -1592,10 +1600,6 @@
       <trans-unit id="5001561383056924621" datatype="html">
         <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
         <target>Veuillez sélectionner une de vos pièces restantes, ou une case sur le plateau où vous avez la pièce la plus grande.</target>
-      </trans-unit>
-      <trans-unit id="7341165560842722107" datatype="html">
-        <source>You must select a different landing square than the square where the move originates from.</source>
-        <target>Veuillez sélectionner une case différente de la case d&apos;origine du mouvement.</target>
       </trans-unit>
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
@@ -1839,10 +1843,6 @@
       <trans-unit id="1025279631840419081" datatype="html">
         <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
         <target>Veuillez sélectionner une autre case de la capture que vous souhaitez prendre, celle-ci appartient à deux captures.</target>
-      </trans-unit>
-      <trans-unit id="3154742766975304650" datatype="html">
-        <source>You must click on an arrow to select your destination.</source>
-        <target>Veuillez cliquer sur une flèche pour sélectionner votre destination.</target>
       </trans-unit>
       <trans-unit id="8708684300793667483" datatype="html">
         <source>You cannot insert a piece here, as all lines are full. Select another space.</source>
@@ -2281,10 +2281,6 @@
       <trans-unit id="1376498600372177047" datatype="html">
         <source>This piece has no possible move, select another one.</source>
         <target>Cette pièce n&apos;a aucun mouvement possible, choisissez-en une autre.</target>
-      </trans-unit>
-      <trans-unit id="2976242446104349974" datatype="html">
-        <source>A move must be orthogonal or diagonal.</source>
-        <target>Un mouvement dois se faire selon une direction orthogonale ou diagonale.</target>
       </trans-unit>
       <trans-unit id="6241913890536717263" datatype="html">
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
@@ -3470,51 +3466,13 @@
         <source>Tafl moves must be orthogonal.</source>
         <target>Les mouvements aux jeux de Tafl doivent être orthogonaux.</target>
       </trans-unit>
-      <trans-unit id="1634828513961256784" datatype="html">
-        <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="3469374446011769111" datatype="html">
+        <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Brandhub est la version irlandaise du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
       </trans-unit>
-      <trans-unit id="3703259835450002878" datatype="html">
-        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
-        <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de cases que souhaité ;&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce ;&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins ;&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, il ne peut plus y retourner, les autres pièces non plus.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Ceci est le plateau initial, faites le premier coup.</target>
-      </trans-unit>
-      <trans-unit id="2643653187802774042" datatype="html">
-        <source>Tablut is a strategy game that was played by the Vikings.
-        The goal of the game is different for each player.
-        The attacker plays first. Its pieces (dark) are close to the edges.
-        Its goal is to capture the king, which is in the center of the board.
-        The defender plays second. Its pieces (light) are in the middle.
-        Its goal is to move the king on one of the 4 thrones in the corners.
-        Note that the square in which the king starts, in the center of the board, is also a throne.</source>
-        <target>Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
-        Le but du jeu pour les deux joueurs n&apos;est pas le même.
-        L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords.
-        Son but est de capturer le roi, qui est tout au centre du plateau.
-        Le défenseur joue en deuxième, ses pièces (claires) sont au centre.
-        Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins.
-        Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
-      </trans-unit>
-      <trans-unit id="5152957749531280485" datatype="html">
-        <source>All pieces move the same way.
-        Similarly to a rook in chess, a piece can move:
-        &lt;ol&gt;
-            &lt;li&gt;By as many squares as you want.&lt;/li&gt;
-            &lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;
-            &lt;li&gt;Horizontally or vertically.&lt;/li&gt;
-            &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
-        &lt;/ol&gt;
-        To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, do the first move.</source>
-        <target>Au Tablut, toutes les pièces se déplacent de la même façon.
-        De façon équivalente aux tours aux échecs, une pièce se déplace :
-        &lt;ol&gt;
-            &lt;li&gt;D&apos;autant de cases qu&apos;elle veut.&lt;/li&gt;
-            &lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;
-            &lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;
-            &lt;li&gt;Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;
-        &lt;/ol&gt;
-        Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;
-        Ceci est le plateau initial, faites le premier mouvement.</target>
+      <trans-unit id="4948014485926272515" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, no piece can land on it, but all can pass over it.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
+        <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de cases que souhaité ;&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce ;&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins ;&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, plus aucunes pièces ne peut s'arrêter dessus, mais toutes peuvent le survoler.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier coup.</target>
       </trans-unit>
       <trans-unit id="6012770625680782650" datatype="html">
         <source>Capturing a soldier (1/2)</source>
@@ -3560,15 +3518,9 @@
         <source>Capturing the king (1/2)</source>
         <target>Capturer le roi (1/2)</target>
       </trans-unit>
-      <trans-unit id="4467961188268409561" datatype="html">
-        <source>To capture the king, two soldiers are not enough.
-        For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.
-        This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;
-        Capture the king.</source>
-        <target>Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
-        Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.
-        Ceci fonctionne également si le roi est assis sur son trône.&lt;br/&gt;&lt;br/&gt;
-        Capturez le roi.</target>
+      <trans-unit id="8109622767341644037" datatype="html">
+        <source>To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus. Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats. Ceci fonctionne également si le roi est assis sur son trône.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2543567724882527416" datatype="html">
         <source>Failed, you let the king run away.</source>
@@ -3586,13 +3538,13 @@
         <source>Capturing the king (2/2)</source>
         <target>Capturer le roi (2/2)</target>
       </trans-unit>
-      <trans-unit id="3153592495756621475" datatype="html">
-        <source>Another way to capture the king is to immobilize it against an edge of the board.
-        Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;
-        Capture the king.</source>
-        <target>Un autre moyen de capturer le roi est de l&apos;immobiliser à 3 contre un bord.
-        Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;
-        Capturez le roi.</target>
+      <trans-unit id="3205871514812378752" datatype="html">
+        <source>Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Un autre moyen de capturer le roi est de l&apos;immobiliser à 3 contre un bord. Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      </trans-unit>
+      <trans-unit id="2541472060697733126" datatype="html">
+        <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+        <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">
         <source>The king is dead, long live the king. Congratulations, you won.</source>
@@ -3605,6 +3557,14 @@
       <trans-unit id="3108682754212137830" datatype="html">
         <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
         <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé comme un soldat.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      </trans-unit>
+      <trans-unit id="2511498870151087692" datatype="html">
+        <source>Hnefatafl is a strategy game that was played by the vikings, it&apos;s part of a larger family of games called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+        <target>Hnefatafl est la version lapone du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
+      </trans-unit>
+      <trans-unit id="439785126864846458" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move:&lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a throne.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
+        <target>Toutes les pièces se déplacent de la même façon. De façon équivalente aux tours aux échecs, une pièce se déplace :&lt;ol&gt;&lt;li&gt;D&apos;autant de cases qu&apos;elle veut.&lt;/li&gt;&lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;&lt;li&gt;Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>

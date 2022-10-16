@@ -2,22 +2,17 @@
      width="100%" height="auto"
      viewBox="0 250 1065 1060"
      preserveAspectRatio="xMidYMid meet">
-    <rect [attr.x]="0"
-          [attr.y]="250"
-          [attr.width]="1065"
-          [attr.height]="1060"
-          fill="green" />
     <g *ngFor="let line of viewInfo.spaceInfo; index as y">
         <g *ngFor="let spaceInfo of line; index as x">
             <g id="click_{{ x }}_{{ y }}"
                *ngIf="spaceInfo != null"
                (click)="onClick(spaceInfo.coord)"
             >
-                <polyline id="space_{{ x }}_{{ y }}"
-                          [attr.points]="spaceInfo.coordinates"
-                          [ngClass]="spaceInfo.spaceClasses"
-                          class="base"
-                          stroke-linecap="round"/>
+                <polygon id="space_{{ x }}_{{ y }}"
+                         [attr.points]="spaceInfo.coordinates"
+                         [ngClass]="spaceInfo.spaceClasses"
+                         class="base"
+                         stroke-linecap="round"/>
                 <g id="pieceGroup_{{ x }}_{{ y }}"
                    [ngClass]="spaceInfo.removedClass"
                 >
@@ -32,12 +27,12 @@
                             [attr.cy]="spaceInfo.center.y"
                             [attr.r]="viewInfo.ringMidSize"
                             [ngClass]="spaceInfo.ringClasses"
-                            class="base no-fill" />
+                            class="base no-fill"/>
                     <circle *ngIf="spaceInfo.isRing"
                             [attr.cx]="spaceInfo.center.x"
                             [attr.cy]="spaceInfo.center.y"
                             [attr.r]="viewInfo.ringInnerSize"
-                            class="base no-fill mid-stroke" />
+                            class="base no-fill mid-stroke"/>
                     <circle id="marker_{{ x }}_{{ y }}"
                             *ngIf="spaceInfo.isMarker"
                             [attr.cx]="spaceInfo.center.x"
@@ -49,31 +44,30 @@
             </g>
         </g>
     </g>
-    <g *ngFor="let coord of viewInfo.selectedCoords">
-        <polyline [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
-                  id="selected_{{ coord.x }}_{{ coord.y }}"
-                  (click)="onClick(coord)"
-                  pointer-events="fill"
-                  class="base no-fill selected"
-                  stroke-linecap="round" />
+    <polygon *ngFor="let coord of viewInfo.selectedCoords"
+             id="selected_{{ coord.x }}_{{ coord.y }}"
+             (click)="onClick(coord)"
+             class="base no-fill selected"
+             [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
+             pointer-events="fill"
+             stroke-linecap="round"/>
+    <g *ngIf="isPlayerTurn()">
+        <polygon *ngFor="let coord of viewInfo.selectableCoords"
+                 id="selectable_{{ coord.x }}_{{ coord.y }}"
+                 (click)="onClick(coord)"
+                 class="base no-fill capturable"
+                 [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
+                 pointer-events="fill"
+                 stroke-linecap="round"/>
     </g>
-    <g *ngFor="let coord of viewInfo.selectableCoords">
-        <polyline id="selectable_{{ coord.x }}_{{ coord.y }}"
-                  *ngIf="isPlayerTurn()"
-                  [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
-                  (click)="onClick(coord)"
-                  pointer-events="fill"
-                  class="base no-fill capturable"
-                  stroke-linecap="round" />
-    </g>
-    <g *ngFor="let coord of viewInfo.targets">
-        <rect [attr.x]="viewInfo.spaceInfo[coord.y][coord.x].center.x - viewInfo.indicatorSize/2"
-              [attr.y]="viewInfo.spaceInfo[coord.y][coord.x].center.y - viewInfo.indicatorSize/2"
-              [attr.width]="viewInfo.indicatorSize"
-              [attr.height]="viewInfo.indicatorSize"
-              (click)="onClick(coord)"
-              class="indicator" />
-    </g>
+    <rect *ngFor="let coord of viewInfo.targets"
+          id="indicator_{{ coord.x }}_{{ coord.y }}"
+          [attr.x]="viewInfo.spaceInfo[coord.y][coord.x].center.x - viewInfo.indicatorSize/2"
+          [attr.y]="viewInfo.spaceInfo[coord.y][coord.x].center.y - viewInfo.indicatorSize/2"
+          [attr.width]="viewInfo.indicatorSize"
+          [attr.height]="viewInfo.indicatorSize"
+          (click)="onClick(coord)"
+          class="indicator"/>
     <g *ngFor="let player of Player.PLAYERS"
        [attr.transform]="'rotate(' + (role.value * 180) + ' 532.5 780)'">
         <g *ngFor="let _ of [].constructor(viewInfo.sideRings[player.value]); index as ring">

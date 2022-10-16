@@ -24,7 +24,7 @@ describe('DiamMinimax', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(16);
     });
     it('should detect shift moves', () => {
-        // given a state there can be a shift
+        // Given a state there can be a shift
         const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, A1],
@@ -32,11 +32,11 @@ describe('DiamMinimax', () => {
             [A1, __, __, __, __, __, __, A2],
         ], 4);
         rules.node = new DiamNode(state);
-        // then there are 16 + 4 move
+        // Then there are 16 + 4 move
         expect(minimax.getListMoves(rules.node).length).toBe(20);
     });
     it('should correctly filter moves to full columns', () => {
-        // given a state there can be a shift
+        // Given a state there can be a shift
         const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, A1],
             [__, __, __, __, __, __, __, B1],
@@ -44,7 +44,7 @@ describe('DiamMinimax', () => {
             [__, __, __, __, __, __, __, B2],
         ], 4);
         rules.node = new DiamNode( state);
-        // then there are 14 + 4 move
+        // Then there are 14 + 4 move
         expect(minimax.getListMoves(rules.node).length).toBe(18);
     });
 });

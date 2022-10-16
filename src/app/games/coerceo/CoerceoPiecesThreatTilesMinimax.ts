@@ -138,7 +138,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 const tileCoord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
                 if (state.getPieceAt(tileCoord).is(OPPONENT)) {
                     if (this.pieceCouldLeaveTheTile(tileCoord, state)) {
-                        // then add it to the threat list
+                        // Then add it to the threat list
                         uniqueThreat = MGPOptional.of(tileCoord);
                     } else {
                         return false;

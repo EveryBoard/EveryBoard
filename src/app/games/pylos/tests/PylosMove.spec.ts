@@ -8,7 +8,7 @@ describe('PylosMove', () => {
     const coord: PylosCoord = new PylosCoord(0, 0, 0);
     const highCoord: PylosCoord = new PylosCoord(0, 0, 2);
 
-    it('Should allow move creation', () => {
+    it('should allow move creation', () => {
         // From Climb
         expect(() => PylosMove.fromClimb(coord, coord, []))
             .toThrowError('PylosMove: When piece move it must move upward.');
@@ -17,7 +17,7 @@ describe('PylosMove', () => {
         // From Drop
         expect(PylosMove.fromDrop(coord, [coord])).toBeDefined();
     });
-    it('Should check and change captures correctly', () => {
+    it('should check and change captures correctly', () => {
         // Check capture
         expect(() => PylosMove.checkCaptures([coord, coord]))
             .toThrowError('PylosMove: should not capture twice same piece.');
@@ -43,13 +43,13 @@ describe('PylosMove', () => {
             NumberEncoderTestUtils.expectToBeCorrect(PylosMove.encoder, move);
         }
     });
-    it('Should override toString correctly', () => {
+    it('should override toString correctly', () => {
         const lightMove: PylosMove = PylosMove.fromDrop(coord, []);
         const heavyMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [highCoord, coord]);
         expect(lightMove.toString()).toEqual('PylosMove(-, (0, 0, 0), -, -)');
         expect(heavyMove.toString()).toEqual('PylosMove((0, 0, 0), (0, 0, 2), (0, 0, 2), (0, 0, 0))');
     });
-    it('Should override equals correctly', () => {
+    it('should override equals correctly', () => {
         const badCoord: PylosCoord = new PylosCoord(1, 1, 1);
         const move: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
         const sameMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
@@ -65,7 +65,7 @@ describe('PylosMove', () => {
         expect(move.equals(otherMove3)).toBeFalse();
         expect(move.equals(otherMove4)).toBeFalse();
     });
-    it('Should create [low, high] equal to [high, low]', () => {
+    it('should create [low, high] equal to [high, low]', () => {
         const moveAB: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
         expect(moveAB.firstCapture.get()).toEqual(highCoord);
     });

@@ -37,7 +37,7 @@ describe('P4Component', () => {
         ];
         const state: P4State = new P4State(board, 0);
 
-        // When rendering it
+        // When rendering the board
         testUtils.setupState(state);
 
         // Then victorious coords should be shown

@@ -39,7 +39,7 @@ describe('MGPMap', () => {
         });
     });
     describe('delete', () => {
-        it('Should delete element', () => {
+        it('should delete element', () => {
             const map: MGPMap<string, number> = new MGPMap();
             map.set('first', 0);
             map.set('second', 1);
@@ -48,7 +48,7 @@ describe('MGPMap', () => {
 
             expect(map.get('first')).toEqual(MGPOptional.empty());
         });
-        it('Should throw when unexisting key passed', () => {
+        it('should throw when unexisting key passed', () => {
             const map: MGPMap<string, number> = new MGPMap();
             map.set('first', 0);
             expect(() => map.delete('second')).toThrowError('No Value to delete for key "second"!');
@@ -61,7 +61,7 @@ describe('MGPMap', () => {
         map.set('third', 2);
         expect(map.getByIndex(1).value).toBe(1);
     });
-    it('Should throw when calling set after making immutable', () => {
+    it('should throw when calling set after making immutable', () => {
         const map: MGPMap<string, number> = new MGPMap();
         map.set('first', 0);
         map.set('second', 1);

@@ -33,7 +33,7 @@ export class DiamTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Types of move`,
-            $localize`You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.<br/><br/>You're playing Dark, try to move one of your piece that is already on the board.`,
+            $localize`You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.<br/><br/>You're playing Dark, try to move one of your piece that is already on the board.`,
             DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, B2, __, __, __],

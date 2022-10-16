@@ -137,6 +137,44 @@ describe('PylosComponent', () => {
             const initialBoard: PlayerOrNone[][][] = [
                 [
                     [O, X, _, _],
+                    [X, O, O, _],
+                    [_, O, _, _],
+                    [_, _, _, _],
+                ], [
+                    [O, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
+
+            // When clicking on the supporting piece
+            // Then the move should be cancelled
+            await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
+        }));
+        it('should select coord and display directions when clicking on it', fakeAsync(async() => {
+            // Given a board on which there is pieces
+            testUtils.setupState(climbableState);
+
+            // When clicking on a space
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+
+            // Then it should be selected
+            testUtils.expectElementToHaveClass('#piece_0_0_0', 'selected');
+        }));
+    });
+    describe('Second click', () => {
+        it('should forbid piece to land lower than they started', fakeAsync(async() => {
+            // Given a board with an higher piece and lower space
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [O, X, _, _],
                     [X, O, _, _],
                     [_, _, _, _],
                     [_, _, _, _],

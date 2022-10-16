@@ -21,10 +21,10 @@ describe('AttackEpaminondasMinimax:', () => {
         rules = new EpaminondasRules(EpaminondasState);
         minimax = new AttackEpaminondasMinimax(rules, 'AttackEpaminondasMinimax');
     });
-    it('Should propose 114 moves at first turn', () => {
+    it('should propose 114 moves at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(114);
     });
-    it('Should consider possible capture the best move', () => {
+    it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
             [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
@@ -45,7 +45,7 @@ describe('AttackEpaminondasMinimax:', () => {
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(expectedMove);
     });
-    it('Should go forward', () => {
+    it('should go forward', () => {
         const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],

@@ -22,7 +22,7 @@ describe('TaflMinimax:', () => {
         rules = TablutRules.get();
         rules.node = rules.node.getInitialNode();
     });
-    it('Should try to make the king escape when it can', () => {
+    it('should try to make the king escape when it can', () => {
         const board: Table<TaflPawn> = [
             [_, _, O, A, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -42,7 +42,7 @@ describe('TaflMinimax:', () => {
         const bestMove: TablutMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(winnerMove);
     });
-    it('Should not propose to King to go back on the throne when its forbidden', () => {
+    it('should not propose to King to go back on the throne when its forbidden', () => {
         // Given a board where king could go back on his throne but the rules forbid it
         const brandhubRules: BrandhubRules = BrandhubRules.get();
         const minimax: TaflMinimax = new TaflMinimax(brandhubRules, 'Brandhub Minimax');

@@ -177,8 +177,12 @@ export class ConspirateursComponent
 
         const state: ConspirateursState = this.getState();
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
-            this.selected = MGPOptional.of(coord);
-            this.jumpInConstruction = MGPOptional.empty();
+            if (this.selected.equalsValue(coord)) {
+                this.cancelMoveAttempt();
+            } else {
+                this.selected = MGPOptional.of(coord);
+                this.jumpInConstruction = MGPOptional.empty();
+            }
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else if (this.jumpInConstruction.isPresent()) {

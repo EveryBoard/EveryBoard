@@ -280,7 +280,7 @@ describe('BrandhubRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('Should forbid soldier to land on the central throne (3, 3)', () => {
+    it('should forbid soldier to land on the central throne (3, 3)', () => {
         // Given a board where a soldier could land on the throne
         const board: Table<TaflPawn> = [
             [_, _, O, O, _, _, _],
@@ -300,7 +300,7 @@ describe('BrandhubRules', () => {
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Should not allow capturing the king with 4 soldiers if one is an ally', () => {
+    it('should not allow capturing the king with 4 soldiers if one is an ally', () => {
         // Given a board where the king is surrounded by 2 opponents and 1 ally
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
@@ -329,7 +329,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should not allow capturing the king with one piece next to central throne', () => {
+    it('should not allow capturing the king with one piece next to central throne', () => {
         // Given a board where the king next to his throne
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
@@ -358,7 +358,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should not allow capturing the king with two pieces next to central throne', () => {
+    it('should not allow capturing the king with two pieces next to central throne', () => {
         // Given a board where the king next to his throne and to one opponent
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
