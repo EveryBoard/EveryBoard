@@ -2282,10 +2282,6 @@
         <source>This piece has no possible move, select another one.</source>
         <target>Cette pièce n&apos;a aucun mouvement possible, choisissez-en une autre.</target>
       </trans-unit>
-      <trans-unit id="2976242446104349974" datatype="html">
-        <source>A move must be orthogonal or diagonal.</source>
-        <target>Un mouvement dois se faire selon une direction orthogonale ou diagonale.</target>
-      </trans-unit>
       <trans-unit id="6241913890536717263" datatype="html">
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
         Here, Dark wins the game:
