@@ -2849,21 +2849,21 @@
         <source>Square (1/2)</source>
         <target>Carré (1/2)</target>
       </trans-unit>
-      <trans-unit id="4680796250621023786" datatype="html">
+      <trans-unit id="6362834810107211217" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
         A chosen piece can be the piece you just placed.
         You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Form a square, then click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
+        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
         <target>Quand la pièce que vous venez de poser est la quatrième d&apos;un carré de pièces de votre couleur,
         vous pouvez choisir alors n&apos;importe où sur le plateau une où deux de vos pièces.
         Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant de les économiser.
         Une pièce choisie pour être enlevée ne peut pas être en dessous d&apos;autres pièces.
         Une pièce choisie peut être la pièce que vous venez de placer.
         Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Formez un carré, puis cliquez sur une des quatres pièces, puis cliquez sur le V en bas à droite pour finaliser votre mouvement.</target>
+        Formez un carré, cliquez sur une des quatres pièces, puis cliquez sur le V en bas à droite pour finaliser votre mouvement.</target>
       </trans-unit>
       <trans-unit id="4722414845520402682" datatype="html">
         <source>Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.</source>

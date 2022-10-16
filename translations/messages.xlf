@@ -1563,14 +1563,14 @@
       <trans-unit id="2195961423433457989" datatype="html">
         <source>Square (1/2)</source>
       </trans-unit>
-      <trans-unit id="4680796250621023786" datatype="html">
+      <trans-unit id="6362834810107211217" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
         A chosen piece can be the piece you just placed.
         You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Form a square, then click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
+        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
       </trans-unit>
       <trans-unit id="4722414845520402682" datatype="html">
         <source>Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.</source>

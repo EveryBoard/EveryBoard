@@ -77,7 +77,7 @@ export class PylosTutorial {
         A chosen piece must not be directly below another piece.
         A chosen piece can be the piece you just placed.
         You're playing Dark.<br/><br/>
-        Form a square, then click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.`,
+        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.`,
             new PylosState([
                 [
                     [O, O, _, _],
