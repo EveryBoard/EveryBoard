@@ -116,31 +116,31 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private async onClimbClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         // Starting do describe a climbing move
         this.chosenStartingCoord = MGPOptional.of(clickedCoord);
-        this.constructedState = this.constructedState.removeCoord(clickedCoord);
+        this.constructedState = this.constructedState.removePieceAt(clickedCoord);
         return MGPValidation.SUCCESS;
     }
     private async onCaptureClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (this.chosenFirstCapture.equalsValue(clickedCoord)) {
             this.chosenFirstCapture = MGPOptional.empty();
-            this.constructedState = this.constructedState.addCoord(clickedCoord);
+            this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(clickedCoord);
             this.updateCapturableList();
             return MGPValidation.SUCCESS;
         }
         if (this.chosenSecondCapture.equalsValue(clickedCoord)) {
             this.chosenSecondCapture = MGPOptional.empty();
-            this.constructedState = this.constructedState.addCoord(clickedCoord);
+            this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(clickedCoord);
             this.updateCapturableList();
             return MGPValidation.SUCCESS;
         }
         if (this.chosenFirstCapture.isAbsent()) { // First capture
             this.chosenFirstCapture = MGPOptional.of(clickedCoord);
-            this.constructedState = this.constructedState.removeCoord(clickedCoord);
+            this.constructedState = this.constructedState.removePieceAt(clickedCoord);
             this.updateCapturableList();
             return MGPValidation.SUCCESS;
         }
         if (this.chosenSecondCapture.isAbsent()) { // Last capture
             this.chosenSecondCapture = MGPOptional.of(clickedCoord);
-            this.constructedState = this.constructedState.removeCoord(clickedCoord);
+            this.constructedState = this.constructedState.removePieceAt(clickedCoord);
             this.updateCapturableList();
             return MGPValidation.SUCCESS;
         }
@@ -203,7 +203,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
         if (PylosRules.canCapture(this.constructedState, clickedCoord)) {
             this.chosenLandingCoord = MGPOptional.of(clickedCoord);
-            this.constructedState = this.constructedState.applyDrop(clickedCoord);
+            this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(clickedCoord);
             this.updateCapturableList();
             return MGPValidation.SUCCESS; // now player can click on his captures
         } else {

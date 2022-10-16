@@ -50,9 +50,9 @@ export class PylosState extends GameState {
         } else {
             turn = this.turn;
         }
-        return this.setBoardAts(updateValues, turn);
+        return this.setBoardAtCoords(updateValues, turn);
     }
-    public setBoardAts(coordValues: {coord: PylosCoord, value: PlayerOrNone}[], turn: number): PylosState {
+    public setBoardAtCoords(coordValues: {coord: PylosCoord, value: PlayerOrNone}[], turn: number): PylosState {
         const newBoard: PlayerOrNone[][][] = [
             ArrayUtils.copyBiArray(this.boards[0]),
             ArrayUtils.copyBiArray(this.boards[1]),
@@ -104,26 +104,19 @@ export class PylosState extends GameState {
         }
         return ownershipMap;
     }
-    public removeCoord(coord: PylosCoord): PylosState {
+    public removePieceAt(coord: PylosCoord): PylosState {
         const removeCoord: {coord: PylosCoord, value: PlayerOrNone} = {
             coord,
             value: PlayerOrNone.NONE,
         };
-        return this.setBoardAts([removeCoord], this.turn);
+        return this.setBoardAtCoords([removeCoord], this.turn);
     }
-    public addCoord(coord: PylosCoord): PylosState {
+    public dropCurrentPlayersPieceAt(coord: PylosCoord): PylosState {
         const addedCoord: {coord: PylosCoord, value: PlayerOrNone} = {
             coord,
             value: this.getCurrentPlayer(),
         };
-        return this.setBoardAts([addedCoord], this.turn);
-    }
-    public applyDrop(coord: PylosCoord): PylosState {
-        const addCurrentPlayer: {coord: PylosCoord, value: PlayerOrNone} = {
-            coord,
-            value: this.getCurrentPlayer(),
-        };
-        return this.setBoardAts([addCurrentPlayer], this.turn);
+        return this.setBoardAtCoords([addedCoord], this.turn);
     }
     public getFreeToMoves(): PylosCoord[] {
         const freeToMove: PylosCoord[] = [];
