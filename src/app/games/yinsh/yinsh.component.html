@@ -2,11 +2,6 @@
      width="100%" height="auto"
      viewBox="0 250 1065 1060"
      preserveAspectRatio="xMidYMid meet">
-    <rect [attr.x]="0"
-          [attr.y]="250"
-          [attr.width]="1065"
-          [attr.height]="1060"
-          fill="green" />
     <g *ngFor="let line of viewInfo.spaceInfo; index as y">
         <g *ngFor="let spaceInfo of line; index as x">
             <g id="click_{{ x }}_{{ y }}"
