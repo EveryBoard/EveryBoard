@@ -1,12 +1,12 @@
 import { PlayerOrNone } from './Player';
 
-export class NodeUnheritance {
+export class BoardValue {
 
-    public static fromWinner(player: PlayerOrNone): NodeUnheritance {
+    public static fromWinner(player: PlayerOrNone): BoardValue {
         if (player.isPlayer()) {
-            return new NodeUnheritance(player.getVictoryValue());
+            return new BoardValue(player.getVictoryValue());
         } else {
-            return new NodeUnheritance(0);
+            return new BoardValue(0);
         }
     }
     public toString(): string {

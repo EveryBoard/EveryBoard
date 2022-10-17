@@ -5,12 +5,12 @@ import { Player } from 'src/app/jscaip/Player';
 import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
 
-    public getBoardValue(node: SiamNode): NodeUnheritance {
-        return new NodeUnheritance(SiamRules.getBoardValueInfo(node.move, node.gameState).boardValue);
+    public getBoardValue(node: SiamNode): BoardValue {
+        return new BoardValue(SiamRules.getBoardValueInfo(node.move, node.gameState).boardValue);
     }
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];

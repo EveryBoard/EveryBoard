@@ -6,7 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -16,7 +16,7 @@ export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, 
 export class TaflMinimax extends Minimax<TaflMove,
                                          TaflState,
                                          void,
-                                         NodeUnheritance,
+                                         BoardValue,
                                          TaflRules<TaflMove, TaflState>>
 {
     public getListMoves(node: TaflNode): TaflMove[] {
@@ -49,7 +49,7 @@ export class TaflMinimax extends Minimax<TaflMove,
         }
         return listMoves;
     }
-    public getBoardValue(node: TaflNode): NodeUnheritance {
+    public getBoardValue(node: TaflNode): BoardValue {
         const state: TaflState = node.gameState;
         // 1. has the king escaped ?
         // 2. is the king captured ?
@@ -58,7 +58,7 @@ export class TaflMinimax extends Minimax<TaflMove,
 
         const victory: MGPOptional<Player> = this.ruler.getWinner(state);
         if (victory.isPresent()) {
-            return new NodeUnheritance(victory.get().getVictoryValue());
+            return new BoardValue(victory.get().getVictoryValue());
         }
         const nbPlayerZeroPawns: number = this.ruler.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.ruler.getPlayerListPawns(Player.ONE, state).length;
@@ -68,6 +68,6 @@ export class TaflMinimax extends Minimax<TaflMove,
         oneMult *= Player.ONE.getScoreModifier();
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;
         const scoreOne: number = nbPlayerOnePawns * oneMult;
-        return new NodeUnheritance(scoreZero + scoreOne);
+        return new BoardValue(scoreZero + scoreOne);
     }
 }

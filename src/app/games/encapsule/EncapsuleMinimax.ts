@@ -6,16 +6,16 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
-    public getBoardValue(node: EncapsuleNode): NodeUnheritance {
+    public getBoardValue(node: EncapsuleNode): BoardValue {
         const gameStatus: GameStatus = EncapsuleRules.getGameStatus(node);
-        return new NodeUnheritance(gameStatus.toBoardValue());
+        return new BoardValue(gameStatus.toBoardValue());
     }
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];

@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
@@ -128,11 +128,11 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
             biggestZero * Player.ZERO.getScoreModifier() +
             biggestOne * Player.ONE.getScoreModifier()) * this.MOBILITY_FACTOR;
     }
-    public getBoardValue(node: EpaminondasNode): NodeUnheritance {
+    public getBoardValue(node: EpaminondasNode): BoardValue {
         const state: EpaminondasState = node.gameState;
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
         const dominance: number = this.getDominance(state);
         const defense: number = this.getDefense(state);
@@ -140,6 +140,6 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         const center: number = this.getCenter(state);
         const winning: number = this.getOffense(state);
         const mobility: number = this.getMobility(state);
-        return new NodeUnheritance(dominance + defense + territory + center + winning + mobility);
+        return new BoardValue(dominance + defense + territory + center + winning + mobility);
     }
 }

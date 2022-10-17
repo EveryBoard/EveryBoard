@@ -2,7 +2,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
 import { Minimax } from './Minimax';
 import { Move } from './Move';
-import { NodeUnheritance } from './NodeUnheritance';
+import { BoardValue } from './BoardValue';
 import { SCORE } from './SCORE';
 import { GameState } from './GameState';
 
@@ -16,7 +16,7 @@ export abstract class AlignementMinimax<M extends Move,
                                         S extends GameState,
                                         L,
                                         V,
-                                        U extends NodeUnheritance = NodeUnheritance>
+                                        U extends BoardValue = BoardValue>
     extends Minimax<M, S, L, U>
 {
 
