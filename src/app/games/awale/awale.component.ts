@@ -10,6 +10,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { AwaleTutorial } from './AwaleTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 @Component({
     selector: 'app-awale-component',
@@ -23,9 +24,11 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 {
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
-    private captured: Coord[] = [];
-
-    private moved: Coord[] = [];
+    private captured: number[][] = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+    ];
+    private filledCoords: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -56,24 +59,26 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         }
     }
     private hidePreviousMove(): void {
-        this.captured = [];
-        this.moved = [];
+        this.captured = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ];
+        this.filledCoords = [];
     }
     private showPreviousMove(): void {
+        const previousMove: AwaleMove = this.rules.node.mother.get().move.get();
         const previousState: AwaleState = this.rules.node.mother.get().gameState;
-        for (let y: number = 0; y <= 1; y++) {
-            for (let x: number = 0; x <= 5; x++) {
-                const coord: Coord = new Coord(x, y);
-                const currentValue: number = this.board[y][x];
-                const oldValue: number = previousState.getPieceAt(coord);
-                if (!this.last.equalsValue(coord)) {
-                    if (currentValue < oldValue) {
-                        this.captured.push(coord);
-                    } else if (currentValue > oldValue) {
-                        this.moved.push(coord);
-                    }
-                }
-            }
+        const previousBoard: number[][] = ArrayUtils.copyBiArray(previousState.board);
+        const previousY: number = previousState.getCurrentPlayer().value;
+        this.filledCoords = AwaleRules.distribute(previousMove.x,
+                                                  previousY,
+                                                  previousBoard);
+        const landingCoord: Coord = this.filledCoords[this.filledCoords.length - 1];
+        if (landingCoord.y !== previousY) {
+            this.captured = AwaleRules.capture(landingCoord.x,
+                                               landingCoord.y,
+                                               previousState.getCurrentPlayer(),
+                                               previousBoard);
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -92,11 +97,11 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
     }
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.captured.some((c: Coord) => c.equals(coord))) {
+        if (this.captured[y][x] > 0) {
             return ['captured'];
         } else if (this.last.equalsValue(coord)) {
             return ['moved', 'highlighted'];
-        } else if (this.moved.some((c: Coord) => c.equals(coord))) {
+        } else if (this.filledCoords.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
         } else {
             return [];

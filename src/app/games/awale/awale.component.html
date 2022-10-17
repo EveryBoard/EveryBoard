@@ -20,9 +20,10 @@
                     [attr.cy]="getPieceCy(y)"
                     r="46"
             />
-            <text (click)="onClick(x, y)"
-                  [attr.x]="50 + 100*x"
-                  [attr.y]="66 + 120*y"
+            <text id="number_{{ x }}__{{ y }}"
+                  (click)="onClick(x, y)"
+                  [attr.x]="50 + 100 * x"
+                  [attr.y]="66 + 120 * y"
                   [attr.transform]="getPieceRotation(x, y)"
                   class="text-big text-center"
             >

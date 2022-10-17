@@ -5,7 +5,7 @@ import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('AwaleMinimax:', () => {
+fdescribe('AwaleMinimax:', () => {
 
     let rules: AwaleRules;
 

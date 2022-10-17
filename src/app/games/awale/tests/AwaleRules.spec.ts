@@ -9,7 +9,7 @@ import { AwaleFailure } from '../AwaleFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('AwaleRules', () => {
+fdescribe('AwaleRules', () => {
 
     let rules: AwaleRules;
     let minimaxes: AwaleMinimax[];

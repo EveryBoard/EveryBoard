@@ -25,7 +25,8 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         let resultingBoard: number[][] = state.getCopiedBoard();
 
         // distribute and retrieve the landing coord of the last stone
-        const lastSpace: Coord = AwaleRules.distribute(x, playerY, resultingBoard);
+        const filledCoords: Coord[] = AwaleRules.distribute(x, playerY, resultingBoard);
+        const lastSpace: Coord = filledCoords[filledCoords.length - 1];
         const landingCamp: number = lastSpace.y;
         if (landingCamp === playerY) {
             // we finish sowing on our own side, nothing else to do
@@ -34,7 +35,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
             // we finish sowing on the opponent's side, we therefore check the captures
             let captured: [number, number] = [0, 0];
             const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
-            captured[player.value] = AwaleRules.capture(lastSpace.x, lastSpace.y, player, resultingBoard);
+            captured[player.value] = AwaleRules.captureAndReturnSum(lastSpace.x, lastSpace.y, player, resultingBoard);
             if (captured[player.value] > 0 && AwaleRules.isStarving(opponent, resultingBoard)) {
                 /**
                  * if the distribution would capture all seeds
@@ -123,12 +124,13 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Does not make the capture nor verify the legality of the move
      * Returns the coord of the last landing space of the move
      */
-    public static distribute(x: number, y: number, board: number[][]): Coord {
+    public static distribute(x: number, y: number, board: number[][]): Coord[] {
         // iy and ix are the initial spaces
         const ix: number = x;
         const iy: number = y;
         // to remember in order not to sow in the starting space if we make a full turn
         let inHand: number = board[y][x];
+        const filled: Coord[] = [];
         board[y][x] = 0;
         while (inHand > 0) {
             // get next space
@@ -148,11 +150,11 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
             if ((x !== ix) || (y !== iy)) {
                 // not to distribute on our starting space
                 board[y][x] += 1;
+                filled.push(new Coord(x, y));
                 inHand--; // drop in this space a piece we have in hand
             }
         }
-
-        return new Coord(x, y);
+        return filled;
     }
     /**
      * Only called if y and player are not equal.
@@ -160,15 +162,19 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Captures and return the number of captured
      * Captures even if this could mean doing an illegal starvation
      */
-    public static capture(x: number, y: number, player: Player, board: number[][]): number {
+    public static capture(x: number, y: number, player: Player, board: number[][]): number[][] {
         const playerY: number = player.getOpponent().value;
         assert(y !== playerY, 'AwaleRules.capture cannot capture the players house');
         let target: number = board[y][x];
+        const captured: number[][] = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ];
         if ((target < 2) || (target > 3)) {
-            return 0; // first space not capturable
+            // first space not capturable
+            return captured;
         }
 
-        let captured: number = 0;
         let direction: number = -1; // by defaut, capture from right to left
         let limit: number = -1;
         if (player === Player.ONE) {
@@ -181,12 +187,19 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         }
 
         do {
-            captured += target; // we addPart to the player score the captured seeds
+            captured[y][x] = target; // we addPart to the player score the captured seeds
             board[y][x] = 0; // since now they're capture, we get them off the board
             x += direction;
             target = board[y][x];
         } while ((x !== limit) && ((target === 2) || (target === 3)));
         return captured;
+    }
+    public static captureAndReturnSum(x: number, y: number, player: Player, board: number[][]): number {
+        const captureMap: number[][] = AwaleRules.capture(x, y, player, board);
+        const totalCaptureBySide: number[] = captureMap.map((array: number[]) => {
+            return array.reduce((a: number, b: number) => a + b);
+        });
+        return totalCaptureBySide.reduce((a: number, b: number) => a + b);
     }
     public static getGameStatus(node: AwaleNode): GameStatus {
         const state: AwaleState = node.gameState;

@@ -5,7 +5,7 @@ import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
 import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
-describe('AwaleMove', () => {
+fdescribe('AwaleMove', () => {
 
     it('AwaleMove.encoder should be correct', () => {
         const rules: AwaleRules = new AwaleRules(AwaleState);
