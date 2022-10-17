@@ -120,45 +120,7 @@ describe('PylosComponent', () => {
             // Then the move should be cancelled
             await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
-        it('should select coord and display directions when clicking on it', fakeAsync(async() => {
-            // Given a board on which there is pieces
-            testUtils.setupState(climbableState);
-
-            // When clicking on a space
-            await testUtils.expectClickSuccess('#piece_0_0_0');
-
-            // Then it should be selected
-            testUtils.expectElementToHaveClass('#piece_0_0_0', 'selected');
-        }));
-    });
-    describe('Second click', () => {
-        it('should forbid piece to land lower than they started', fakeAsync(async() => {
-            // Given a board with an higher piece and lower space
-            const initialBoard: PlayerOrNone[][][] = [
-                [
-                    [O, X, _, _],
-                    [X, O, O, _],
-                    [_, O, _, _],
-                    [_, _, _, _],
-                ], [
-                    [O, _, _],
-                    [_, _, _],
-                    [_, _, _],
-                ], [
-                    [_, _],
-                    [_, _],
-                ], [
-                    [_],
-                ],
-            ];
-            const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
-
-            // When clicking on the supporting piece
-            // Then the move should be cancelled
-            await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
-        }));
-        it('should select coord and display directions when clicking on it', fakeAsync(async() => {
+        it('should select coord when clicking on it', fakeAsync(async() => {
             // Given a board on which there is pieces
             testUtils.setupState(climbableState);
 
@@ -197,17 +159,6 @@ describe('PylosComponent', () => {
 
             // Then dropping lower should warn the user that it's illegal
             await testUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD());
-        }));
-        it('should allow climbing', fakeAsync(async() => {
-            // Given an board where climbing is possible
-            testUtils.setupState(climbableState);
-
-            // When clicking the first piece then its landing place
-            await testUtils.expectClickSuccess('#piece_3_3_0');
-            const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), []);
-
-            // Then the climb should be legal
-            await testUtils.expectMoveSuccess('#drop_0_0_1', move);
         }));
         it('should cancel piece selection when clicking on it again', fakeAsync(async() => {
             // Given a board on which a piece is selected
@@ -282,6 +233,17 @@ describe('PylosComponent', () => {
 
             // Then landing on itself should not even be suggested
             testUtils.expectElementNotToExist('#drop_1_1_1');
+        }));
+        it('should allow climbing', fakeAsync(async() => {
+            // Given an board where climbing is possible
+            testUtils.setupState(climbableState);
+
+            // When clicking the first piece then its landing place
+            await testUtils.expectClickSuccess('#piece_3_3_0');
+            const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), []);
+
+            // Then the climb should be legal
+            await testUtils.expectMoveSuccess('#drop_0_0_1', move);
         }));
     });
     describe('capture', () => {
