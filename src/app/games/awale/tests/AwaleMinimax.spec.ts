@@ -25,7 +25,7 @@ describe('AwaleMinimax:', () => {
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 1],
         ];
-        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(1, minimax);
@@ -38,7 +38,7 @@ describe('AwaleMinimax:', () => {
             [0, 0, 0, 0, 3, 1],
             [0, 0, 0, 0, 1, 0],
         ];
-        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
@@ -51,7 +51,7 @@ describe('AwaleMinimax:', () => {
             [1, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, 0],
         ];
-        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When listing the moves
         const moves: AwaleMove[] = minimax.getListMoves(node);
@@ -65,7 +65,7 @@ describe('AwaleMinimax:', () => {
             [1, 0, 0, 0, 0, 7],
             [0, 1, 0, 0, 0, 0],
         ];
-        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(1, minimax);

@@ -23,11 +23,14 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                                                               QuartoPiece>
 {
     public EMPTY: QuartoPiece = QuartoPiece.EMPTY;
+    public QuartoPiece: typeof QuartoPiece = QuartoPiece;
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
-    public pieceInHand: QuartoPiece = QuartoPiece.EMPTY; // the piece that the current user must place on the board
-    public pieceToGive: QuartoPiece = QuartoPiece.EMPTY; // the piece that the user wants to give to the opponent
+    // the piece that the current user must place on the board
+    public pieceInHand: QuartoPiece = QuartoPiece.EMPTY;
+    // the piece that the user wants to give to the opponent
+    public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -67,11 +70,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.EMPTY);
                 return this.chooseMove(chosenMove, this.rules.node.gameState);
-            } else if (this.pieceToGive === QuartoPiece.EMPTY) {
+            } else if (this.pieceToGive.isAbsent()) {
                 return MGPValidation.SUCCESS; // the user has just chosen his coord
             } else {
                 // the user has already chosen his piece before his coord
-                const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive);
+                const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive.get());
                 return this.chooseMove(chosenMove, this.rules.node.gameState);
             }
         } else {
@@ -87,13 +90,17 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
-        this.pieceToGive = QuartoPiece.fromInt(givenPiece);
+        if (this.pieceToGive.equalsValue(QuartoPiece.fromInt(givenPiece))) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
+        this.pieceToGive = MGPOptional.of(QuartoPiece.fromInt(givenPiece));
         if (this.chosen.isAbsent()) {
             return MGPValidation.SUCCESS; // the user has just chosen his piece
         } else {
             // the user has chosen the coord before the piece
             const chosen: Coord = this.chosen.get();
-            const chosenMove: QuartoMove = new QuartoMove(chosen.x, chosen.y, this.pieceToGive);
+            const chosenMove: QuartoMove = new QuartoMove(chosen.x, chosen.y, this.pieceToGive.get());
             return this.chooseMove(chosenMove, this.rules.node.gameState);
         }
     }
@@ -102,7 +109,19 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public cancelMoveAttempt(): void {
         this.hideLastMove();
-        this.pieceToGive = QuartoPiece.EMPTY;
+        this.pieceToGive = MGPOptional.empty();
+        this.chosen = MGPOptional.empty();
+    }
+    public deselectDroppedPiece(): MGPValidation {
+        // So it does not throw when there is no dese chosen piece (used in clickValidity test)
+        const chosen: Coord = this.chosen.getOrElse(new Coord(404, 404));
+        const droppedPieceName: string = '#droppedPiece_' + chosen.x + '_' + chosen.y;
+        const clickValidity: MGPValidation = this.canUserPlay(droppedPieceName);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+        this.cancelMoveAttempt();
+        return MGPValidation.SUCCESS;
     }
     private showPieceInHandOnBoard(x: number, y: number): void {
         this.chosen = MGPOptional.of(new Coord(x, y));

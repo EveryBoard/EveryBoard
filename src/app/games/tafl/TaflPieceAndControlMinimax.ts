@@ -3,7 +3,6 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TaflPawn } from './TaflPawn';
@@ -19,17 +18,6 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
 
     public static SCORE_BY_SAFE_PIECE: number = (16 * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE) + 1;
 
-    public static CONTROL_VALUE: NumberTable = [
-        [64, 8, 8, 8, 8, 8, 8, 8, 64],
-        [8, 1, 1, 1, 1, 1, 1, 1, 8],
-        [8, 1, 1, 1, 1, 1, 1, 1, 8],
-        [8, 1, 1, 1, 1, 1, 1, 1, 8],
-        [8, 1, 1, 1, 1, 1, 1, 1, 8],
-        [8, 1, 1, 1, 1, 1, 1, 1, 8],
-        [8, 1, 1, 1, 1, 1, 1, 1, 8],
-        [8, 1, 1, 1, 1, 1, 1, 1, 8],
-        [64, 8, 8, 8, 8, 8, 8, 8, 64],
-    ];
     public getBoardValue(node: TaflNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
@@ -62,10 +50,20 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
                 }
             }
             for (const controlled of controlledSquares) {
-                const controlledValue: number = TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
+                const controlledValue: number = this.getControlledPieceValue(controlled.x, controlled.y, width);
                 score += owner.getScoreModifier() * controlledValue;
             }
         }
         return new NodeUnheritance(score);
+    }
+    public getControlledPieceValue(x: number, y: number, width: number): number {
+        let value: number = 1;
+        if (x === 0 || x === width - 1) {
+            value *= width;
+        }
+        if (y === 0 || y === width - 1) {
+            value *= width;
+        }
+        return value;
     }
 }

@@ -63,8 +63,7 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
                 }
             }
             for (const controlled of controlledSquares) {
-                const controlledValue: number =
-                    TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
+                const controlledValue: number = this.getControlledPieceValue(controlled.x, controlled.y, width);
                 controlScore += owner.getScoreModifier() * controlledValue;
             }
         }

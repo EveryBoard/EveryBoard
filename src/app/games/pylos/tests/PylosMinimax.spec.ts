@@ -20,10 +20,10 @@ describe('PylosMinimax:', () => {
         rules = new PylosRules(PylosState);
         minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
-    it('Should provide 16 drops at first turn', () => {
+    it('should provide 16 drops at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(16);
     });
-    it('Should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {
+    it('should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {
         // Given a board on which all kind of moves are possible
         const board: PlayerOrNone[][][] = [
             [
@@ -84,7 +84,7 @@ describe('PylosMinimax:', () => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         expect(minimax.getBoardValue(new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move))).value).toBe(0);
     });
-    it('Should not include uncapturable pieces in captures', () => {
+    it('should not include uncapturable pieces in captures', () => {
         // Given a node of a board with a climbing as last move
         const board: PlayerOrNone[][][] = [
             [
