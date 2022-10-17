@@ -39,7 +39,7 @@ describe('MinimaxTestingMinimax', () => {
         }
         expect(initialNode.countDescendants()).toEqual(6);
     });
-    it('Should not go further than the end game', () => {
+    it('should not go further than the end game', () => {
         MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_0;
         const initialNode: MinimaxTestingNode = rules.node;
         spyOn(minimax, 'getBoardValue').and.callThrough();

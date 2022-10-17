@@ -25,7 +25,7 @@ describe('PylosOrderedMinimax', () => {
         expect(PylosMinimax.getListMoves).toHaveBeenCalledTimes(1);
     });
     describe('orderMoves', () => {
-        it('Should order move from lowest stone use to highest', () => {
+        it('should order move from lowest stone use to highest', () => {
             const moves: PylosMove[] = [
                 PylosMove.fromClimb(coord0, coord1, [coord1]), // -1 stone used
                 PylosMove.fromClimb(coord0, coord1, [coord1, coord2]), // -2 stone used

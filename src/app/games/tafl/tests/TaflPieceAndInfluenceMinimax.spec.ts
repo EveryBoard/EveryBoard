@@ -27,7 +27,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
         rules.node = rules.node.getInitialNode();
         minimax = new TaflPieceAndInfluenceMinimax(rules, 'TablutPieceAndInfluenceMinimax');
     });
-    it('Should be better of with more piece', () => {
+    it('should be better of with more piece', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, O, A, O, _, _, _, _],
@@ -57,7 +57,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should be better of with more influence (at piece number equal)', () => {
+    it('should be better of with more influence (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -87,7 +87,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should be better of with non threatened piece (at piece number equal)', () => {
+    it('should be better of with non threatened piece (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -117,7 +117,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
+    it('should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -147,7 +147,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should be better of with more kill than influence', () => {
+    it('should be better of with more kill than influence', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _],
@@ -318,7 +318,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
         });
     });
     describe('Victory', () => {
-        it('Should choose king escape, at depth 1 and more', () => {
+        it('should choose king escape, at depth 1 and more', () => {
             const board: Table<TaflPawn> = [
                 [_, A, _, _, _, _, _, O, _],
                 [_, O, _, O, _, _, _, _, _],

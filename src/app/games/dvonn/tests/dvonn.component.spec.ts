@@ -36,7 +36,7 @@ describe('DvonnComponent', () => {
         // Given that the user has selected a valid piece
         await testUtils.expectClickSuccess('#click_2_0');
         // When the user selects a valid destination
-        // Then the move is made
+        // Then the move should be made
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
         await testUtils.expectMoveSuccess('#click_2_1', move);
     }));
@@ -61,7 +61,7 @@ describe('DvonnComponent', () => {
         await testUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE());
     }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {
-        // given board with ready disconnection
+        // Given board with ready disconnection
         const board: Table<DvonnPieceStack> = [
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, W_, W_, __, __, __, __, __, __],
