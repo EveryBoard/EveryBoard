@@ -98,6 +98,7 @@ describe('GameComponent', () => {
             Pylos: {
                 onPieceClick: [0, 0, 0],
                 onDrop: [0, 0, 0],
+                validateCapture: [],
             },
             Quarto: {
                 chooseCoord: [0, 0],

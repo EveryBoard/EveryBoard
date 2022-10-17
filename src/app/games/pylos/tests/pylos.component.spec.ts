@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { PylosComponent } from '../pylos.component';
-import { PylosMove } from 'src/app/games/pylos/PylosMove';
+import { PylosMove, PylosMoveFailure } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -23,6 +23,23 @@ describe('PylosComponent', () => {
             [X, O, _, _],
             [_, _, _, _],
             [_, _, _, O],
+        ], [
+            [_, _, _],
+            [_, _, _],
+            [_, _, _],
+        ], [
+            [_, _],
+            [_, _],
+        ], [
+            [_],
+        ],
+    ];
+    const preCaptureBoard: PlayerOrNone[][][] = [
+        [
+            [O, O, _, _],
+            [O, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
         ], [
             [_, _, _],
             [_, _, _],
@@ -103,7 +120,7 @@ describe('PylosComponent', () => {
             // Then the move should be cancelled
             await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
-        it('should select coord and display directions when clicking on it', fakeAsync(async() => {
+        it('should select coord when clicking on it', fakeAsync(async() => {
             // Given a board on which there is pieces
             testUtils.setupState(climbableState);
 
@@ -142,17 +159,6 @@ describe('PylosComponent', () => {
 
             // Then dropping lower should warn the user that it's illegal
             await testUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD());
-        }));
-        it('should allow climbing', fakeAsync(async() => {
-            // Given an board where climbing is possible
-            testUtils.setupState(climbableState);
-
-            // When clicking the first piece then its landing place
-            await testUtils.expectClickSuccess('#piece_3_3_0');
-            const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), []);
-
-            // Then the climb should be legal
-            await testUtils.expectMoveSuccess('#drop_0_0_1', move);
         }));
         it('should cancel piece selection when clicking on it again', fakeAsync(async() => {
             // Given a board on which a piece is selected
@@ -224,80 +230,189 @@ describe('PylosComponent', () => {
 
             // When selecting the piece and making it climg on itsef
             await testUtils.expectClickSuccess('#piece_2_2_0');
+
             // Then landing on itself should not even be suggested
             testUtils.expectElementNotToExist('#drop_1_1_1');
         }));
+        it('should allow climbing', fakeAsync(async() => {
+            // Given an board where climbing is possible
+            testUtils.setupState(climbableState);
+
+            // When clicking the first piece then its landing place
+            await testUtils.expectClickSuccess('#piece_3_3_0');
+            const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), []);
+
+            // Then the climb should be legal
+            await testUtils.expectMoveSuccess('#drop_0_0_1', move);
+        }));
     });
     describe('capture', () => {
-        it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
-            // Given a board where capture is possible
-            const initialBoard: PlayerOrNone[][][] = [
-                [
-                    [O, O, _, _],
-                    [O, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                ], [
-                    [_, _, _],
-                    [_, _, _],
-                    [_, _, _],
-                ], [
-                    [_, _],
-                    [_, _],
-                ], [
-                    [_],
-                ],
-            ];
-            const initialState: PylosState = new PylosState(initialBoard, 0);
+        it('should display a disabled capture-validation button when capture start to be possible', fakeAsync(async() => {
+            // Given a board where a capture is about to be possible
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
             testUtils.setupState(initialState);
 
-            // When dropping the piece allowing the capture then clicking twice on this piece
+            // When doing the drop just before the capture
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
-            await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
-            const expectedClasses: string[] = ['base', 'player0', 'selected', 'pre-captured'];
-            testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
-            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(1, 1, 0)]);
 
-            // Then clicking a second time on this piece should confirm the single capture move
-            await testUtils.expectMoveSuccess('#piece_1_1_0', move); // confirm single capture
+            // Then a disabled capture-validation button should be displayed
+            testUtils.expectElementToExist('#capture_validation');
+            testUtils.expectElementToHaveClass('#capture_validation > circle', 'semi-transparent');
         }));
-        it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
-            // Given a board where a capture can be done
-            const initialBoard: PlayerOrNone[][][] = [
-                [
-                    [O, O, _, _],
-                    [O, _, _, _],
-                    [_, _, _, _],
-                    [_, _, _, _],
-                ], [
-                    [_, _, _],
-                    [_, _, _],
-                    [_, _, _],
-                ], [
-                    [_, _],
-                    [_, _],
-                ], [
-                    [_],
-                ],
-            ];
-            const initialState: PylosState = new PylosState(initialBoard, 0);
+        it('should show capturable piece when capture start to be possible', fakeAsync(async() => {
+            // Given a board where a capture is about to be possible
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
             testUtils.setupState(initialState);
 
-            // When dropping the piece allowing you to capture
-            await testUtils.expectClickSuccess('#drop_1_1_0');
+            // When doing the drop just before the capture
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
 
-            // Then capturing two piece should be possible
+            // Then "capturable" indicator should be displayed
+            testUtils.expectElementToExist('#capturable_0_0_0');
+            testUtils.expectElementToExist('#capturable_0_1_0');
+            testUtils.expectElementToExist('#capturable_1_0_0');
+            testUtils.expectElementToExist('#capturable_1_1_0');
+        }));
+        it('should nor cancelMove nor chooseMove when clicking on disabled capture-validation button', fakeAsync(async() => {
+            // Given a board where a capture has started
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
+
+            // When doing clicking on the capture-validation button
+            // Then nothing should happned
+            await testUtils.expectClickSuccess('#capture_validation');
+        }));
+        it('should highlight selected first capture when clicking on it', fakeAsync(async() => {
+            // Given a board on which a capture can be done
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
+
+            // When clicking on the first captured piece
+            await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
+
+            // Then it should be highlighted
+            const expectedClasses: string[] = ['base', 'player0', 'selected', 'pre-captured', 'small-stroke'];
+            testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
+        }));
+        it('should highlight selected second capture when clicking on it', fakeAsync(async() => {
+            // Given a board on which a capture has started
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
+            await testUtils.expectClickSuccess('#piece_0_1_0'); // first capture
+
+            // When clicking on the second captured piece
             await testUtils.expectClickSuccess('#piece_0_0_0');
-            testUtils.expectElementToHaveClasses('#piece_0_0_0', ['base', 'player0', 'pre-captured']);
 
-            // and When clicking on the second capture
+            // Then both should be highlighted
+            const expectedClasses: string[] = ['base', 'player0', 'pre-captured', 'small-stroke'];
+            testUtils.expectElementToHaveClasses('#piece_0_0_0', expectedClasses);
+            testUtils.expectElementToHaveClasses('#piece_0_1_0', expectedClasses);
+        }));
+        it('should enable capture-validation button when one captured piece has been selected', fakeAsync(async() => {
+            // Given a board on which a capture can be done
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
+
+            // When clicking on the first captured piece
+            await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
+
+            // Then capture-validation button should be no longer transparent
+            testUtils.expectElementNotToHaveClass('#capture_validation > circle', 'semi-transparent');
+        }));
+        it('should deselect pre-captured (first) piece when clicking on it again', fakeAsync(async() => {
+            // Given a board where capture has started
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
+            await testUtils.expectClickSuccess('#piece_0_0_0'); // capture
+
+            // When clicking a second time on the captured piece
+            await testUtils.expectClickSuccess('#piece_0_0_0'); // un-capture
+
+            // Then it should no longer be selected
+            const expectedClasses: string[] = ['base', 'player0', 'small-stroke']; // No longer 'selected' and 'pre-captured'
+            testUtils.expectElementToHaveClasses('#piece_0_0_0', expectedClasses);
+        }));
+        it('should deselect pre-captured (second) piece when clicking on it again', fakeAsync(async() => {
+            // Given a board where capture has started (with two capture)
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
+            await testUtils.expectClickSuccess('#piece_0_0_0'); // first capture
+            await testUtils.expectClickSuccess('#piece_0_1_0'); // first capture
+
+            // When clicking a second time on the second captured piece
+            await testUtils.expectClickSuccess('#piece_0_1_0'); // un-capture
+
+            // Then it should no longer be selected
+            const expectedClasses: string[] = ['base', 'player0', 'small-stroke']; // No longer 'selected' and 'pre-captured'
+            testUtils.expectElementToHaveClasses('#piece_0_1_0', expectedClasses);
+        }));
+        it('should allow to capture two pieces, and show capture during move and after', fakeAsync(async() => {
+            // Given a board where two captures has been selected
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0');
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+            await testUtils.expectClickSuccess('#piece_0_1_0');
+
+            // When clicking on the capture validation button
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
             const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
-            await testUtils.expectMoveSuccess('#piece_0_1_0', move);
+            await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the two captures should be displayed as captured
             testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured');
             testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured');
+        }));
+        it('should allow to capture first piece', fakeAsync(async() => {
+            // Given a board where one capture has been selected
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0');
+            await testUtils.expectClickSuccess('#piece_0_0_0'); // selecting first
+
+            // When clicking on the capture validation button
+            const captures: PylosCoord[] = [new PylosCoord(0, 0, 0)];
+            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
+            await testUtils.expectMoveSuccess('#capture_validation', move);
+
+            // Then the second capture should be displayed as captured (but not the first, eh !)
+            testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured');
+        }));
+        it('should allow to capture second piece', fakeAsync(async() => {
+            // Given a board where two captures has been selected then the first deselected
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0');
+            await testUtils.expectClickSuccess('#piece_0_0_0'); // selecting first
+            await testUtils.expectClickSuccess('#piece_0_1_0'); // selecting second
+            await testUtils.expectClickSuccess('#piece_0_0_0'); // deselecting first
+
+            // When clicking on the capture validation button
+            const captures: PylosCoord[] = [new PylosCoord(0, 1, 0)];
+            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
+            await testUtils.expectMoveSuccess('#capture_validation', move);
+
+            // Then the second capture should be displayed as captured (but not the first, eh !)
+            testUtils.expectElementNotToExist('#drop_0_0_0');
+            testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured');
+        }));
+        it('should fail when clicking on a third capturable piece', fakeAsync(async() => {
+            // Given a board on which two captured piece has been selected but the capture not finalised
+            const initialState: PylosState = new PylosState(preCaptureBoard, 0);
+            testUtils.setupState(initialState);
+            await testUtils.expectClickSuccess('#drop_1_1_0');
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+            await testUtils.expectClickSuccess('#piece_0_1_0');
+
+            // When clicking on a third piece to capture
+            // Then it should fail
+            await testUtils.expectClickFailure('#piece_1_0_0', PylosMoveFailure.MUST_CAPTURE_MAXIMUM_TWO_PIECES());
         }));
         it('should show disappeared square when it has been captured, even if no longer landable', fakeAsync(async() => {
             // Given a board where a capture is possible
@@ -325,8 +440,9 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#drop_2_2_0');
             await testUtils.expectClickSuccess('#piece_0_0_1');
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(1, 1, 0)];
+            await testUtils.expectClickSuccess('#piece_1_1_0');
             const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 0), captures);
-            await testUtils.expectMoveSuccess('#piece_1_1_0', move);
+            await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the non longer landable square should be displayed
             testUtils.expectElementToExist('#highCapture_0_0_1');
@@ -385,11 +501,12 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#drop_1_1_1');
             await testUtils.expectClickSuccess('#piece_0_0_1');
 
-            // When clicking on the newly capturable piece
+            // When clicking on the newly capturable piece then validating the capture
             // Then the move should be legal
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)];
             const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(1, 1, 1), captures);
-            await testUtils.expectMoveSuccess('#piece_0_0_0', move);
+            await testUtils.expectClickSuccess('#piece_0_0_0');
+            await testUtils.expectMoveSuccess('#capture_validation', move);
         }));
         it('should no longer show drop during capture phase', fakeAsync(async() => {
             // Given a board where a capture is about to be possible

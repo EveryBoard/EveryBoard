@@ -2773,6 +2773,10 @@
         <source>Your second capture is invalid.</source>
         <target>Votre seconde capture est invalide.</target>
       </trans-unit>
+      <trans-unit id="2207725255932699379" datatype="html">
+        <source>You must capture one or two pieces, not more.</source>
+        <target>Vous devez capturer une ou deux pièces, pas plus.</target>
+      </trans-unit>
       <trans-unit id="3567680797279323593" datatype="html">
         <source>At Pylos, the goal is to be the last to play.
         To do this, you have to save up your pieces.
@@ -2841,35 +2845,35 @@
         <source>Square (1/2)</source>
         <target>Carré (1/2)</target>
       </trans-unit>
-      <trans-unit id="7156552420001155973" datatype="html">
+      <trans-unit id="6362834810107211217" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
         A chosen piece can be the piece you just placed.
         You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Form a square, then click twice on one of the four pieces to remove only that one.</source>
+        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
         <target>Quand la pièce que vous venez de poser est la quatrième d&apos;un carré de pièces de votre couleur,
-        vous pouvez choisir alors n&apos;importe où sur le plateau, une à deux de vos pièces.
-        Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant d&apos;économiser 1 ou 2 pièces.
+        vous pouvez choisir alors n&apos;importe où sur le plateau une où deux de vos pièces.
+        Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant de les économiser.
         Une pièce choisie pour être enlevée ne peut pas être en dessous d&apos;autres pièces.
         Une pièce choisie peut être la pièce que vous venez de placer.
         Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Formez un carré, puis cliquez deux fois sur l&apos;une des quatre pièces pour n&apos;enlever que celle-là.</target>
+        Formez un carré, cliquez sur une des quatres pièces, puis cliquez sur le V en bas à droite pour finaliser votre mouvement.</target>
       </trans-unit>
-      <trans-unit id="5456823255724159144" datatype="html">
-        <source>Congratulations, you have saved up one piece.</source>
-        <target>Bravo, vous avez économisé une pièce.</target>
+      <trans-unit id="4722414845520402682" datatype="html">
+        <source>Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.</source>
+        <target>Bravo, vous avez économisé une pièce. Note, vous pouvez annuler la sélection en cliquant à nouveau sur la pièce.</target>
       </trans-unit>
       <trans-unit id="3444837986058371302" datatype="html">
         <source>Square (2/2)</source>
         <target>Carré (2/2)</target>
       </trans-unit>
-      <trans-unit id="635645551351663738" datatype="html">
+      <trans-unit id="4122674190040152445" datatype="html">
         <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Do like in the previous step, but this time click on two different pieces.</source>
+        Do like in the previous step, but this time click on two different pieces before validating.</source>
         <target>Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur deux pièces différentes.</target>
+        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur deux pièces différentes avant de valider.</target>
       </trans-unit>
       <trans-unit id="8313533670567464817" datatype="html">
         <source>Failed, you only captured one piece.</source>
