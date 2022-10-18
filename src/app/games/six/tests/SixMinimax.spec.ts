@@ -7,6 +7,7 @@ import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
 import { SixMinimax, SixNodeUnheritance } from '../SixMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 describe('SixMinimax', () => {
 
@@ -254,5 +255,19 @@ describe('SixMinimax', () => {
             // Then the list should have all the possible deplacements and only them
             expect(listMoves.some((move: SixMove) => move.isCut())).toBeTrue();
         });
+    });
+    it('should assign a value of 0 in case of draw', () => {
+        // Given a state in a draw in phase 2
+        const state: SixState = SixState.fromRepresentation([
+            [O, O, X, X],
+            [O, O, X, X],
+        ], 42);
+        const node: SixNode = new SixNode(state);
+
+        // When calculating the board value
+        const boardValue: NodeUnheritance = minimax.getBoardValue(node);
+
+        // Then it should be 0
+        expect(boardValue.value).toBe(0);
     });
 });
