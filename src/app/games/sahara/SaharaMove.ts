@@ -47,7 +47,7 @@ export class SaharaMove extends MoveCoordToCoord {
                 return MGPValidation.failure(SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS());
             }
         } else if (distance === 2) {
-            if ((start.x + start.y) % 2 === 0) {
+            if (TriangularCheckerBoard.isSpaceDark(start)) {
                 return MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
             }
             if (start.x === end.x) {

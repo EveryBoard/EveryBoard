@@ -4,7 +4,7 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { assert } from '../assert';
 
 describe('assert', () => {
-    it('Should log error and throw when condition is false', () => {
+    it('should log error and throw when condition is false', () => {
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         expect(() => assert(false, 'error')).toThrowError('Assertion failure: error');
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'error');

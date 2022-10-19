@@ -25,7 +25,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
         const rules: CoerceoRules = new CoerceoRules(CoerceoState);
         minimax = new CoerceoPiecesThreatTilesMinimax(rules, 'Pieces > Threats > Tiles');
     });
-    it('Should prefer board with more pieces', () => {
+    it('should prefer board with more pieces', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -57,7 +57,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should prefer board with more safe pieces', () => {
+    it('should prefer board with more safe pieces', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -89,7 +89,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should distinguish fake and true threats', () => {
+    it('should distinguish fake and true threats', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -121,7 +121,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should prefer board with more tiles (with safe board config)', () => {
+    it('should prefer board with more tiles (with safe board config)', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -153,7 +153,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should prefer current player to be falsely threatened than really threatened (direct threat is fake)', () => {
+    it('should prefer current player to be falsely threatened than really threatened (direct threat is fake)', () => {
         // Given a weakBoard where current player is really threatened
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -187,7 +187,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                                                            strongState, MGPOptional.empty(),
                                                            Player.ZERO);
     });
-    it('Should prefer current player to be falsely threatened than really threatened (moving threat is fake)', () => {
+    it('should prefer current player to be falsely threatened than really threatened (moving threat is fake)', () => {
         // Given a weakBoard where current player is really threatened
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

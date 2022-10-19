@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
      viewBox="0 0 1410 1210"
+     [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">

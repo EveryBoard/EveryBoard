@@ -42,8 +42,10 @@
                 </g>
             </g>
         </g>
-        <g #chosenPiece
+        <g #droppedPiece
            *ngIf="chosen.isPresent()"
+           id="droppedPiece_{{ chosen.get().x }}_{{ chosen.get().y }}"
+           (click)="deselectDroppedPiece()"
            [attr.transform]="'translate(' + (chosen.get().x * SPACE_SIZE) + ' ' + (chosen.get().y * SPACE_SIZE) + ')'"
         >
             <rect id="highlight"
@@ -134,16 +136,17 @@
                   class="base no-fill"
             />
             <g *ngFor="let caseContent of line; index as x">
-                <g *ngIf="isRemaining((4*y) + x)"
-                   (click)="choosePiece((4*y)+x)"
-                   id="choosePiece_{{(4*y)+x}}"
+                <g *ngIf="isRemaining((4 * y) + x)"
+                   (click)="choosePiece((4 * y) + x)"
+                   id="choosePiece_{{ (4 * y) + x }}"
                 >
-                    <rect *ngIf="pieceToGive.value === (4*y)+x"
+                    <rect *ngIf="pieceToGive.equalsValue(QuartoPiece.fromInt((4 * y) + x))"
+                          id="chosenPiece_{{ (4 * y) + x }}"
                           [attr.x]="SPACE_SIZE * x"
                           [attr.y]="SPACE_SIZE * y"
                           [attr.width]="SPACE_SIZE"
                           [attr.height]="SPACE_SIZE"
-                          class="base highlighted"
+                          class="base selected"
                     />
                     <rect *ngIf="((4*y)+x) % 4 < 2 else circle"
                           [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"

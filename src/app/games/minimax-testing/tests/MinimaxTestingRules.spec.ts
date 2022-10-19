@@ -31,7 +31,7 @@ describe('MinimaxTestingRules', () => {
         // Given a board where you are on the right
         const state: MinimaxTestingState = new MinimaxTestingState(3, new Coord(3, 0));
 
-        // when attempting to go right
+        // When attempting to go right
         const move: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
 
         // should refuse
@@ -41,7 +41,7 @@ describe('MinimaxTestingRules', () => {
         // Given a board where you are on the right
         const state: MinimaxTestingState = new MinimaxTestingState(3, new Coord(0, 3));
 
-        // when attempting to go right
+        // When attempting to go right
         const move: MinimaxTestingMove = MinimaxTestingMove.DOWN;
 
         // should refuse

@@ -25,7 +25,7 @@ describe('QuartoMinimax:', () => {
             new QuartoMinimax(rules, 'QuartoMinimax'),
         ];
     });
-    it('Should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
+    it('should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
         // Given a state with a pre-victory
         const board: Table<QuartoPiece> = [
             [NULL, ABBB, AABB, AAAB],
@@ -38,7 +38,7 @@ describe('QuartoMinimax:', () => {
         // Then the minimax should detect the previctory
         RulesUtils.expectStateToBePreVictory(state, new QuartoMove(1, 0, AAAA), Player.ONE, minimaxes);
     });
-    it('Should only propose one move at last turn', () => {
+    it('should only propose one move at last turn', () => {
         // Given a board at the last turn
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],

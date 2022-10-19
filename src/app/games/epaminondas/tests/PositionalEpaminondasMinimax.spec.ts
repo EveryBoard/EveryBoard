@@ -21,10 +21,10 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules = new EpaminondasRules(EpaminondasState);
         minimax = new PositionalEpaminondasMinimax(rules, 'EpaminondasMinimax');
     });
-    it('Should filter number of choices', () => {
+    it('should filter number of choices', () => {
         expect(minimax.getListMoves(rules.node).length).toBeLessThan(114);
     });
-    it('Should consider possible capture the best move', () => {
+    it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
             [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
@@ -46,7 +46,7 @@ describe('PositionalEpaminondasMinimax:', () => {
 
         expect(bestMove).toEqual(expectedMove);
     });
-    it('Should prefer to get near the opponent line', () => {
+    it('should prefer to get near the opponent line', () => {
         const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -82,7 +82,7 @@ describe('PositionalEpaminondasMinimax:', () => {
                                                            greaterState, MGPOptional.empty(),
                                                            Player.ONE);
     });
-    it('Should prefer to have aligned piece than higher piece', () => {
+    it('should prefer to have aligned piece than higher piece', () => {
         const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, _, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, _, X],

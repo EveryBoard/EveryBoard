@@ -84,7 +84,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         for (const freeToMoveFirst of freeToMoveFirsts) {
             possiblesCapturesSet.add(new MGPSet([freeToMoveFirst]));
 
-            const secondState: PylosState = state.removeCoord(freeToMoveFirst);
+            const secondState: PylosState = state.removePieceAt(freeToMoveFirst);
             const freeToMoveThens: PylosCoord[] = secondState.getFreeToMoves();
             for (const freeToMoveThen of freeToMoveThens) {
                 const captures: MGPSet<PylosCoord> = new MGPSet([freeToMoveFirst, freeToMoveThen]);
@@ -153,7 +153,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             const supportedPieces: PylosCoord[] = startingCoord.getHigherCoords()
                 .filter((p: PylosCoord) => initialState.getPieceAt(p).isPlayer());
             if (supportedPieces.length === 0) {
-                const stateWithLeftStartingCoord: PylosState = initialState.removeCoord(move.startingCoord.get());
+                const stateWithLeftStartingCoord: PylosState = initialState.removePieceAt(move.startingCoord.get());
                 return MGPFallible.success(stateWithLeftStartingCoord);
             } else {
                 return MGPFallible.failure(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
@@ -166,7 +166,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (stateAfterClimbStart.isLandable(move.landingCoord)) {
-            return MGPFallible.success(stateAfterClimbStart.applyDrop(move.landingCoord));
+            return MGPFallible.success(stateAfterClimbStart.dropCurrentPlayersPieceAt(move.landingCoord));
         } else {
             return MGPFallible.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
         }
@@ -179,7 +179,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return MGPFallible.failure(PylosFailure.CANNOT_CAPTURE());
         }
         if (PylosRules.isValidCapture(postMoveState, move, move.firstCapture.get())) {
-            const afterFirstCapture: PylosState = postMoveState.removeCoord(move.firstCapture.get());
+            const afterFirstCapture: PylosState = postMoveState.removePieceAt(move.firstCapture.get());
             if (move.secondCapture.isAbsent()) {
                 return MGPFallible.success(undefined);
             }

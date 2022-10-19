@@ -49,20 +49,26 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
 
         const coord: Coord = new Coord(x, y);
-        if (this.selected.isPresent()) {
-            if (this.getState().getPieceAt(coord) === this.getState().getCurrentPlayer()) {
-                return this.select(coord);
-            } else {
-                const move: MGPFallible<LinesOfActionMove> =
-                    LinesOfActionMove.of(this.selected.get(), new Coord(x, y));
-                if (move.isSuccess()) {
-                    return this.chooseMove(move.get(), this.rules.node.gameState);
-                } else {
-                    return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION());
-                }
-            }
-        } else {
+        if (this.selected.equalsValue(coord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
+        const currentPlayer: PlayerOrNone = this.getState().getCurrentPlayer();
+        if (this.selected.isAbsent() ||
+            this.getState().getPieceAt(coord) === currentPlayer)
+        {
             return this.select(coord);
+        } else {
+            return this.concludeMove(coord);
+        }
+    }
+    private async concludeMove(coord: Coord): Promise<MGPValidation> {
+        const move: MGPFallible<LinesOfActionMove> =
+            LinesOfActionMove.of(this.selected.get(), coord);
+        if (move.isSuccess()) {
+            return this.chooseMove(move.get(), this.rules.node.gameState);
+        } else {
+            return this.cancelMove(move.getReason());
         }
     }
     private async select(coord: Coord): Promise<MGPValidation> {

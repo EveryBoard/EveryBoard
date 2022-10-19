@@ -1,7 +1,8 @@
-<svg  xmlns="http://www.w3.org/2000/svg"
-      width="100%" height="auto"
-      viewBox="0 -4 800 808"
-      preserveAspectRatio="xMidYMid meet">
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 -4 800 808"
+     preserveAspectRatio="xMidYMid meet"
+>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x">
             <g id="click_{{ x }}_{{ y }}"
@@ -12,9 +13,10 @@
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
                       [ngClass]="getSquareClasses(x, y)"
-                      class="base" />
+                      class="base"/>
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== EMPTY"
+                        id="piece_{{ x }}_{{ y }}"
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
                         [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
                         [ngClass]="getPieceClasses(x, y)"
@@ -23,12 +25,11 @@
             </g>
         </g>
     </g>
-    <g *ngFor="let coord of targets">
-        <rect [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-              [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-              [attr.width]="INDICATOR_SIZE"
-              [attr.height]="INDICATOR_SIZE"
-              (click)="onClick(coord.x, coord.y)"
-              class="indicator" />
-    </g>
+    <rect *ngFor="let coord of targets"
+          [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.width]="INDICATOR_SIZE"
+          [attr.height]="INDICATOR_SIZE"
+          (click)="onClick(coord.x, coord.y)"
+          class="indicator"/>
 </svg>
