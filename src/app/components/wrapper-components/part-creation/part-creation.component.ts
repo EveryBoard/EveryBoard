@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -100,7 +100,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private configRoomSubscription: Subscription = new Subscription();
     private candidatesSubscription: Subscription = new Subscription();
 
-    public configFormGroup: UntypedFormGroup;
+    public configFormGroup: FormGroup;
 
     public allDocDeleted: boolean = false;
 
@@ -110,7 +110,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public readonly configRoomService: ConfigRoomService,
                        public readonly chatService: ChatService,
                        public readonly userService: UserService,
-                       public readonly formBuilder: UntypedFormBuilder,
+                       public readonly formBuilder: FormBuilder,
                        public readonly messageDisplayer: MessageDisplayer)
     {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed');
