@@ -278,7 +278,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
         // When placing a lodestone to pull the A
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'pull', 'diagonal');
-        // Then the move is legal, and A is pulled, but not B
+        // Then the move should be legal, and A is pulled, but not B
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'pull', orientation: 'diagonal' });
         const expectedBoard: Table<LodestonePiece> = [
@@ -325,7 +325,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
         // When placing a lodestone to pull the two As
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'pull', 'orthogonal');
-        // Then the move is legal, and no player pieces have moved
+        // Then the move should be legal, and no player pieces have moved
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'pull', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
@@ -360,7 +360,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
         // When placing a lodestone to push the B
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', 'orthogonal');
-        // Then the move is legal, and B is pushed, but not A
+        // Then the move should be legal, and B is pushed, but not A
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
@@ -395,7 +395,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
         // When placing a lodestone to push the B
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'push', 'diagonal');
-        // Then the move is legal, and B is pushed, but not A
+        // Then the move should be legal, and B is pushed, but not A
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'push', orientation: 'diagonal' });
         const expectedBoard: Table<LodestonePiece> = [
@@ -433,7 +433,7 @@ describe('LodestoneRules', () => {
                                                       'push',
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
-        // Then the move is legal, and B is pushed and captured, but not A
+        // Then the move should be legal, and B is pushed and captured, but not A
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
                                                              { direction: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [

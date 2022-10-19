@@ -8,13 +8,13 @@ import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('EpaminondasMove: ', () => {
 
-    it('Should forbid out of range coords', () => {
+    it('should forbid out of range coords', () => {
         expect(() => new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT))
             .toThrowError('Illegal coord outside of board (-1, 0).');
         expect(() => new EpaminondasMove(0, 13, 1, 1, Direction.UP_RIGHT))
             .toThrowError('Illegal coord outside of board (0, 13).');
     });
-    it('Should forbid invalid step size and number of selected piece', () => {
+    it('should forbid invalid step size and number of selected piece', () => {
         expect(() => new EpaminondasMove(0, 0, 2, 3, Direction.UP))
             .toThrowError('Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
         expect(() => new EpaminondasMove(0, 0, -1, 0, Direction.UP))
@@ -30,10 +30,10 @@ describe('EpaminondasMove: ', () => {
             NumberEncoderTestUtils.expectToBeCorrect(EpaminondasMove.encoder, move);
         }
     });
-    it('Should forbid non integer number to decode', () => {
+    it('should forbid non integer number to decode', () => {
         expect(() => EpaminondasMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
     });
-    it('Should override correctly equals and toString', () => {
+    it('should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
         const neighbor: EpaminondasMove = new EpaminondasMove(0, 0, 2, 1, Direction.UP);
         const twin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);

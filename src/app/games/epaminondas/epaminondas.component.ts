@@ -48,6 +48,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.hasAsymetricBoard = true;
         this.rules = new EpaminondasRules(EpaminondasState);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
@@ -292,23 +293,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
         }
         if (this.board[y][x] === player) {
-            this.lastPiece = MGPOptional.of(clicked);
-            const phalanxSize: number = this.firstPiece.get().getDistance(clicked) + 1;
-            const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.get().x,
-                                                                        this.firstPiece.get().y,
-                                                                        phalanxSize,
-                                                                        1,
-                                                                        phalanxDirection);
-            const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.getState(),
-                                                                                       incompleteMove);
-            if (phalanxValidity.isFailure()) {
-                return this.cancelMove(phalanxValidity.getReason());
-            } else {
-                this.phalanxMiddles = this.firstPiece.get().getCoordsToward(this.lastPiece.get());
-                this.validExtensions = this.getValidExtensions(player);
-                this.phalanxValidLandings = this.getPhalanxValidLandings();
-                return MGPValidation.SUCCESS;
-            }
+            return this.thirdClickOnPlayerPiece(clicked, phalanxDirection, player);
         } else {
             const phalanxSize: number = this.firstPiece.get().getDistance(this.lastPiece.get()) + 1;
             const stepSize: number = this.lastPiece.get().getDistance(clicked);
@@ -318,6 +303,29 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                               stepSize,
                                                               phalanxDirection);
             return this.tryMove(move);
+        }
+    }
+    private async thirdClickOnPlayerPiece(clicked: Coord,
+                                          phalanxDirection: Direction,
+                                          player: Player)
+    : Promise<MGPValidation>
+    {
+        this.lastPiece = MGPOptional.of(clicked);
+        const phalanxSize: number = this.firstPiece.get().getDistance(clicked) + 1;
+        const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.get().x,
+                                                                    this.firstPiece.get().y,
+                                                                    phalanxSize,
+                                                                    1,
+                                                                    phalanxDirection);
+        const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.rules.node.gameState,
+                                                                                   incompleteMove);
+        if (phalanxValidity.isFailure()) {
+            return this.cancelMove(phalanxValidity.getReason());
+        } else {
+            this.phalanxMiddles = this.firstPiece.get().getCoordsToward(this.lastPiece.get());
+            this.validExtensions = this.getValidExtensions(player);
+            this.phalanxValidLandings = this.getPhalanxValidLandings();
+            return MGPValidation.SUCCESS;
         }
     }
     private async moveFirstPiece(player: Player): Promise<MGPValidation> {

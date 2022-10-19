@@ -32,7 +32,7 @@ export class MartianChessTutorial {
             $localize`Moving pawns`,
             $localize`Pawns are worth one point. They can move one step diagonally.<br/><br/>You're playing Dark, move a pawn.`,
             MartianChessState.getInitialState(),
-            MartianChessMove.from(new Coord(1, 2), new Coord(2, 3)).get(),
+            MartianChessMove.from(new Coord(2, 5), new Coord(1, 4)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
                 if (result.getPieceAt(move.end) === MartianChessPiece.PAWN) {
                     return MGPValidation.SUCCESS;
@@ -46,7 +46,7 @@ export class MartianChessTutorial {
             $localize`Moving drones`,
             $localize`Drones are worth two points. They can move one or two steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a drone.`,
             MartianChessState.getInitialState(),
-            MartianChessMove.from(new Coord(2, 0), new Coord(3, 0)).get(),
+            MartianChessMove.from(new Coord(1, 7), new Coord(0, 7)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
                 if (result.getPieceAt(move.end) === MartianChessPiece.DRONE) {
                     return MGPValidation.SUCCESS;
@@ -68,7 +68,7 @@ export class MartianChessTutorial {
                 [_, _, _, _],
                 [_, _, _, _],
                 [C, B, A, _],
-            ], 0),
+            ], 1),
             MartianChessMove.from(new Coord(2, 3), new Coord(2, 7)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
                 if (result.getPieceAt(move.end) === MartianChessPiece.QUEEN) {
@@ -91,7 +91,7 @@ export class MartianChessTutorial {
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, B, A, _],
-            ], 0),
+            ], 1),
             [MartianChessMove.from(new Coord(0, 2), new Coord(2, 4)).get()],
             $localize`Congratulations! By capturing that pawn, you won one point.`,
             TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE(),
@@ -108,7 +108,7 @@ export class MartianChessTutorial {
                 [_, _, _, C],
                 [_, _, B, _],
                 [_, A, _, _],
-            ], 0),
+            ], 1),
             [
                 MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
                 MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get(),
@@ -128,7 +128,7 @@ export class MartianChessTutorial {
                 [_, _, _, _],
                 [_, _, B, _],
                 [_, A, _, _],
-            ], 1),
+            ], 0),
             MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
                 const landed: MartianChessPiece = result.getPieceAt(move.end);
@@ -144,7 +144,7 @@ export class MartianChessTutorial {
             $localize`Call the clock`,
             $localize`When the game seems to be going nowhere, you can "call the clock" during your turn. To do so, click on the clock symbol on the right, then perform your move. Once the clock is called, seven more turn will be played.<br/><br/>You're playing Dark. Call the clock and perform a move.`,
             MartianChessState.getInitialState(),
-            MartianChessMove.from(new Coord(2, 2), new Coord(3, 3), true).get(),
+            MartianChessMove.from(new Coord(1, 5), new Coord(0, 4), true).get(),
             (move: MartianChessMove, _previous: MartianChessState, _result: MartianChessState) => {
                 if (move.calledTheClock) {
                     return MGPValidation.SUCCESS;
@@ -166,7 +166,7 @@ export class MartianChessTutorial {
                 [_, _, _, A],
                 [_, _, B, _],
                 [_, A, _, _],
-            ], 14, MGPOptional.empty(), MGPOptional.of(1)),
+            ], 15, MGPOptional.empty(), MGPOptional.of(1)),
             [MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get()],
             $localize`Congratulations!`,
             $localize`This is not a capture, the game is now over, please retry!`,
@@ -183,7 +183,7 @@ export class MartianChessTutorial {
                 [B, _, _, _],
                 [_, _, _, _],
                 [_, B, _, _],
-            ], 14, MGPOptional.empty(), MGPOptional.of(1)),
+            ], 15, MGPOptional.empty(), MGPOptional.of(1)),
             MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
             $localize`Congratulations!`,
         ),
@@ -199,7 +199,7 @@ export class MartianChessTutorial {
                 [_, _, _, _],
                 [_, _, _, _],
                 [_, _, _, _],
-            ], 1),
+            ], 0),
             MartianChessMove.from(new Coord(2, 4), new Coord(1, 3)).get(),
             (move: MartianChessMove, _previous: MartianChessState, _result: MartianChessState) => {
                 if (move.end.y === 3) {

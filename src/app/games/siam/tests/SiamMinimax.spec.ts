@@ -404,7 +404,7 @@ describe('SiamMinimax:', () => {
                 coord: new Coord(3, 4),
             }));
         });
-        it('Should not count unpushable mountains', () => {
+        it('should not count unpushable mountains', () => {
             // Given a board with unpushable mountains, such as the initial board
             const state: SiamState = SiamState.getInitialState();
             // When computing the closest pusher horizontally

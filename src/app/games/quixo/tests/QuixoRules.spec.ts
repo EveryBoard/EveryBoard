@@ -26,7 +26,7 @@ describe('QuixoRules:', () => {
             new QuixoMinimax(rules, 'QuixoMinimax'),
         ];
     });
-    it('Should forbid player to start a move with opponents piece', () => {
+    it('should forbid player to start a move with opponents piece', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -38,7 +38,7 @@ describe('QuixoRules:', () => {
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
-    it('Should always put moved piece to currentPlayer symbol', () => {
+    it('should always put moved piece to currentPlayer symbol', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -58,7 +58,7 @@ describe('QuixoRules:', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should declare winner player zero when he create a line of his symbol', () => {
+    it('should declare winner player zero when he create a line of his symbol', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, O],
             [_, _, _, _, O],
@@ -80,7 +80,7 @@ describe('QuixoRules:', () => {
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('Should declare winner player one when he create a line of his symbol', () => {
+    it('should declare winner player one when he create a line of his symbol', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, X],
             [_, _, _, _, X],
@@ -102,7 +102,7 @@ describe('QuixoRules:', () => {
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('Should declare looser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
+    it('should declare looser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
         const board: Table<PlayerOrNone> = [
             [X, _, _, _, O],
             [X, _, _, _, O],
@@ -124,7 +124,7 @@ describe('QuixoRules:', () => {
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('Should declare looser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
+    it('should declare looser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
         const board: Table<PlayerOrNone> = [
             [O, _, _, _, X],
             [O, _, _, _, X],

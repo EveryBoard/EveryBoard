@@ -12,10 +12,17 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
     public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
-            return this.getListMovesDrop(node.gameState);
+            return this.sortByNumberOfJump(this.getListMovesDrop(node.gameState));
         } else {
-            return this.getListMovesAfterDrop(node.gameState);
+            return this.sortByNumberOfJump(this.getListMovesAfterDrop(node.gameState));
         }
+    }
+    public sortByNumberOfJump(moves: ConspirateursMove[]): ConspirateursMove[] {
+        return moves.sort((a: ConspirateursMove, b: ConspirateursMove) => {
+            const leftSize: number = a.isDrop() ? 1 : (a.isSimple() ? 2 : a.coords.length);
+            const rightSize: number = b.isDrop() ? 1 : (b.isSimple() ? 2 : b.coords.length);
+            return rightSize - leftSize;
+        });
     }
     private getListMovesDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];

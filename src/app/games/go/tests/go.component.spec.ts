@@ -26,14 +26,14 @@ describe('GoComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
-    it('Should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
+    it('should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
         await testUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Passed
         await testUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Counting
         await testUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Accept
         await testUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Finished
         testUtils.expectPassToBeForbidden();
     }));
-    it('Should show captures', fakeAsync(async() => {
+    it('should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [
             [O, X, _, _, _],
             [_, _, _, _, _],
@@ -49,7 +49,7 @@ describe('GoComponent', () => {
         const goComponent: GoComponent = testUtils.getComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
-    it('Should allow simple clicks', fakeAsync(async() => {
+    it('should allow simple clicks', fakeAsync(async() => {
         const move: GoMove = new GoMove(1, 1);
         await testUtils.expectMoveSuccess('#click_1_1', move, undefined, [0, 0]);
         const secondMove: GoMove = new GoMove(2, 2);

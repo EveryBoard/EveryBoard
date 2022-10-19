@@ -1,36 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-8 -8 416 350"
+     [attr.viewBox]="(- STROKE_WIDTH / 2) + ' ' + (- STROKE_WIDTH / 2) + ' ' + (BOARD_WIDTH + STROKE_WIDTH) + ' ' + (BOARD_HEIGHT + STROKE_WIDTH)"
      preserveAspectRatio="xMidYMid meet"
 >
-    <circle *ngFor="let x of range(remainingZero)"
-            [attr.cx]="(x + 1) * PIECE_RADIUS"
-            [attr.cy]="PIECE_RADIUS"
-            [attr.r]="PIECE_RADIUS - 5"
-            class="base mid-stroke player0-fill"
-    />
-    <g id="board" [attr.transform]="'translate(0, ' + (2 * PIECE_RADIUS) + ')'">
-        <ng-container *ngFor="let square of board; index as x">
-            <polygon id="dropArrow_zero_{{ x }}"
-                     (click)="onArrowClick(x, PlayerOrNone.ZERO)"
-                     *ngIf="canDisplayArrow(x, PlayerOrNone.ZERO)"
-                     [attr.points]="ARROW_COORD"
+    <g [attr.transform]="'rotate(' + this.role.value * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
+        <circle *ngFor="let x of range(remainingOne)"
+                [attr.cx]="getRemainingPieceCx(x)"
+                [attr.cy]="PIECE_RADIUS"
+                [attr.r]="PIECE_RADIUS - 5"
+                class="base mid-stroke player1-fill"/>
+        <circle *ngFor="let x of range(remainingZero)"
+                [attr.cx]="BOARD_WIDTH - getRemainingPieceCx(x)"
+                [attr.cy]="BOARD_HEIGHT - PIECE_RADIUS"
+                [attr.r]="PIECE_RADIUS - 5"
+                class="base mid-stroke player0-fill"/>
+    </g>
+
+    <g id="board">
+        <g *ngFor="let square of board; index as x"
+           [attr.transform]="getBlockTransform(x)">
+            <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ZERO)"
+                     id="dropArrow_zero_{{ x }}"
+                     class="base mid-stroke"
                      [ngClass]="getArrowClasses(x, PlayerOrNone.ZERO)"
-                     [attr.transform]="getArrowTransform(x, PlayerOrNone.ZERO)"
-                     class="base mid-stroke"
-            />
-            <polygon id="dropArrow_one_{{ x }}"
-                     (click)="onArrowClick(x, PlayerOrNone.ONE)"
-                     *ngIf="canDisplayArrow(x, PlayerOrNone.ONE)"
+                     (click)="onArrowClick(x, PlayerOrNone.ZERO)"
                      [attr.points]="ARROW_COORD"
-                     [ngClass]="getArrowClasses(x, PlayerOrNone.ONE)"
-                     [attr.transform]="getArrowTransform(x, PlayerOrNone.ONE)"
+                     [attr.transform]="'translate(' + (SPACE_SIZE / 2) + ' ' + (-SPACE_SIZE / 2) + ')'"
+            />
+            <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ONE)"
+                     id="dropArrow_one_{{ x }}"
                      class="base mid-stroke"
+                     [ngClass]="getArrowClasses(x, PlayerOrNone.ONE)"
+                     (click)="onArrowClick(x, PlayerOrNone.ONE)"
+                     [attr.points]="ARROW_COORD"
+                     [attr.transform]="'translate(0 ' + (-SPACE_SIZE / 2) + ')'"
             />
             <rect id="square_{{ x }}"
                   (click)="onSquareClick(x)"
-                  [attr.x]="x * SPACE_SIZE"
-                  [attr.y]="(5 - x) * SPACE_SIZE * 0.25"
+                  x="0"
+                  y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   [ngClass]="getSquareClasses(x)"
@@ -46,12 +54,6 @@
                         class="base mid-stroke"
                 />
             </ng-container>
-        </ng-container>
+        </g>
     </g>
-    <circle *ngFor="let x of range(remainingOne)"
-            [attr.cx]="(4 * SPACE_SIZE) - ((x + 1) * PIECE_RADIUS)"
-            [attr.cy]="(2.25 * SPACE_SIZE) + (3 * PIECE_RADIUS)"
-            [attr.r]="PIECE_RADIUS - 5"
-            class="base mid-stroke player1-fill"
-    />
 </svg>

@@ -20,7 +20,7 @@ describe('QuixoMinimax:', () => {
         minimax = new QuixoMinimax(rules, 'QuixoMinimax');
     });
 
-    it('Should calcule board value according to longest line differences', () => {
+    it('should compute board value according to longest line differences', () => {
         const board: Table<PlayerOrNone> = [
             [X, _, _, _, O],
             [X, _, _, _, O],

@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 500 500"
+     [attr.viewBox]="'0 0 ' + (5 * SPACE_SIZE) + ' ' + (5 * SPACE_SIZE)"
      preserveAspectRatio="xMidYMid meet">
     <defs>
-        <polygon id="triangle" points="0 -3.5, 10 0, 0 3.5"/>
+        <polygon id="triangle" points="0 0, 100 50, 0 100"/>
     </defs>
 
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
             <circle id="click_{{ x }}_{{ y }}"
                     (click)="onBoardClick(x, y)"
-                    r="45"
-                    [attr.cx]="50 + 100*x"
-                    [attr.cy]="50 + 100*y"
+                    [attr.r]="0.45 * SPACE_SIZE"
+                    [attr.cx]="(x + 0.5) * SPACE_SIZE"
+                    [attr.cy]="(y + 0.5) * SPACE_SIZE"
                     [ngClass]="getPieceClasses(x, y)"
                     class="base"
             />
@@ -23,6 +23,7 @@
              xlink:href="#triangle"
              id="chooseDirection_{{ direction }}"
              (click)="chooseDirection(direction)"
-             [attr.transform]="getArrowTransform(chosenCoord.get(), direction)"/>
+             [attr.transform]="getArrowTransform(direction)"
+             class="semi-transparent"/>
     </g>
 </svg>

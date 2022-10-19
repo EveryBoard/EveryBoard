@@ -296,13 +296,20 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
+        const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.fixture.detectChanges();
-        expect(this.cancelMoveSpy).not.toHaveBeenCalled();
-        expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-        expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
+        expect(this.cancelMoveSpy).not
+            .withContext(context)
+            .toHaveBeenCalledWith();
+        expect(this.chooseMoveSpy).not
+            .withContext(context)
+            .toHaveBeenCalledWith();
+        expect(this.onLegalUserMoveSpy).not
+            .withContext(context)
+            .toHaveBeenCalledWith();
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);

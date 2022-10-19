@@ -37,6 +37,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
 {
     public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
 
+    public readonly BOARD_WIDTH: number = 4 * this.SPACE_SIZE;
+    public readonly BOARD_HEIGHT: number = 4.5 * this.SPACE_SIZE;
     public board: readonly ApagosSquare[];
 
     public remainingZero: number;
@@ -73,12 +75,13 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = ApagosRules.get();
+        this.hasAsymetricBoard = true;
         this.availableMinimaxes = [
             new ApagosDummyMinimax(this.rules, 'ApagosDummyMinimax'),
         ];
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;
-        this.PIECE_RADIUS = 200 / (this.PIECES_PER_PLAYER + 1);
+        this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
         this.updateBoard();
     }
     public cancelMoveAttempt(): void {
@@ -169,8 +172,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         }
     }
     public getCircleCenter(x: number, i: number, square: ApagosSquare): Coord {
-        const bx: number = (x * this.SPACE_SIZE) + (0.5 * this.SPACE_SIZE);
-        const by: number = ((5 - x) * this.SPACE_SIZE * 0.25) + (0.5 * this.SPACE_SIZE);
+        const bx: number = this.SPACE_SIZE / 2;
+        const by: number = this.SPACE_SIZE / 2;
         if (square.count(PlayerOrNone.NONE) === 1) {
             return new Coord(bx, by);
         }
@@ -188,10 +191,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const classes: string[] = [this.getPlayerClass(player)];
         return classes;
     }
-    public getArrowTransform(x: number, player: Player): string {
-        const yOffset: number = (3 - x) * this.SPACE_SIZE * 0.25;
-        let xOffset: number = player === Player.ZERO ? 0 : (this.SPACE_SIZE * 0.5);
-        xOffset += (x * this.SPACE_SIZE);
+    public getBlockTransform(x: number): string {
+        const yOffset: number = ((3 - x) * this.SPACE_SIZE) + (0.5 * this.SPACE_SIZE);
+        const xOffset: number = x * this.SPACE_SIZE;
         return 'translate(' + xOffset + ', ' + yOffset + ')';
     }
     public getSquareClasses(x: number): string[] {
@@ -293,5 +295,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             landingX--;
         }
         return this.displayableArrow;
+    }
+    public getRemainingPieceCx(x: number): number {
+        return (x + 0.5) * this.PIECE_RADIUS * 1.5;
     }
 }

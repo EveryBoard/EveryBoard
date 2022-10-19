@@ -228,14 +228,6 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         return MGPOptional.empty();
     }
-    public getInitialNode(): MGPNode<R, M, S, L, U> {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let almightyMom: MGPNode<R, M, S, L, U> = this;
-        while (almightyMom.mother.isPresent()) {
-            almightyMom = almightyMom.mother.get();
-        }
-        return almightyMom;
-    }
     public getHopedValue(minimax: Minimax<M, S, L, U>): number {
         return this.hopedValue.get(minimax.name).get();
     }
