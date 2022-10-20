@@ -1,4 +1,4 @@
-import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
+import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, ElementRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
@@ -33,9 +33,9 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public static VERBOSE: boolean = false;
 
-    // component loading
-    @ViewChild(GameIncluderComponent)
-    public gameIncluder: GameIncluderComponent;
+    // This holds the #board html element
+    @ViewChild('board', { read: ViewContainerRef })
+    public boardRef: ViewContainerRef | null;
 
     public gameComponent: AbstractGameComponent;
 
@@ -55,7 +55,7 @@ export abstract class GameWrapper<P extends Comparable> {
                 protected readonly router: Router,
                 protected readonly messageDisplayer: MessageDisplayer)
     {
-        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
+        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.boardRef != null));
     }
     public getMatchingComponent(gameName: string) : MGPOptional<Type<AbstractGameComponent>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
@@ -80,11 +80,11 @@ export abstract class GameWrapper<P extends Comparable> {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
             return false;
         }
-        assert(this.gameIncluder != null, 'GameIncluder should be present');
+        assert(this.boardRef != null, 'Board element should be present');
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component.get());
         const componentRef: ComponentRef<AbstractGameComponent> =
-            this.gameIncluder.viewContainerRef.createComponent(componentFactory);
+            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
         this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
