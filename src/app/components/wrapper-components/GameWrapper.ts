@@ -1,6 +1,5 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, ElementRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -63,8 +62,8 @@ export abstract class GameWrapper<P extends Comparable> {
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
-    protected async afterGameIncluderViewInit(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
+    protected async afterViewInit(): Promise<boolean> {
+        display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.rules.setInitialBoard();

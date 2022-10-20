@@ -53,7 +53,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
-            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            const createdSuccessfully: boolean = await this.afterViewInit();
             if (createdSuccessfully) {
                 this.restartGame();
                 this.cdr.detectChanges();

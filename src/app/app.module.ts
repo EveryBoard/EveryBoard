@@ -17,6 +17,7 @@ import { ConfigRoomService } from './services/ConfigRoomService';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
@@ -30,7 +31,6 @@ import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { TutorialGameWrapperComponent }
     from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
@@ -114,6 +114,7 @@ export const routes: Route[] = [
     { path: 'tutorial', component: TutorialGameCreationComponent },
     { path: 'tutorial/:compo', component: TutorialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
+    { path: 'demo', component: DemoPageComponent },
     { path: '**', component: NotFoundComponent },
 ];
 
@@ -163,7 +164,6 @@ export class FirebaseProviders {
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
         TutorialGameWrapperComponent,
-        GameIncluderComponent,
         LocalGameCreationComponent,
         OnlineGameSelectionComponent,
         TutorialGameCreationComponent,

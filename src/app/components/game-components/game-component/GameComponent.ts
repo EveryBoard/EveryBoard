@@ -132,4 +132,3 @@ export abstract class AbstractGameComponent extends GameComponent<Rules<Move, Ga
                                                                   unknown>
 {
 }
-

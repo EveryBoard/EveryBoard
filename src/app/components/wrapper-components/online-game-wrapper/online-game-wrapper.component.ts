@@ -178,7 +178,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameStarted = true;
         window.setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
-            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            const createdSuccessfully: boolean = await this.afterViewInit();
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             this.startPart();
         }, 1);

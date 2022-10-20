@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AwaleRules } from './AwaleRules';
+import { AwaleNode, AwaleRules } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from './AwaleState';
@@ -112,5 +112,21 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         return 'rotate(' + this.role.value * 180 + ' ' +
                this.getPieceCx(x) + ' ' +
                this.getPieceCy(y) + ')';
+    }
+
+    public static getDemoNodes(): AwaleNode[] {
+        return [
+            new AwaleNode(AwaleState.getInitialState()),
+            new AwaleNode(
+                new AwaleState([
+                    [0, 0, 0, 0, 3, 4],
+                    [0, 0, 0, 0, 0, 1],
+                ], 1, [0, 0]),
+                MGPOptional.of(new AwaleNode(new AwaleState([
+                    [0, 0, 0, 0, 2, 3],
+                    [0, 0, 0, 0, 2, 0],
+                ], 1, [0, 0]))),
+                MGPOptional.of(AwaleMove.FOUR)),
+        ];
     }
 }
