@@ -280,7 +280,7 @@ describe('DiamComponent', () => {
             // When rendering the board
             testUtils.setupState(state);
 
-            // Then only the winning pieces should be highlighted
+            // Then only the winning pieces should be shown as victory
             testUtils.expectElementToHaveClass('#click_0_1', 'victory-stroke');
             testUtils.expectElementToHaveClass('#click_4_1', 'victory-stroke');
             testUtils.expectElementNotToHaveClass('#click_0_0', 'victory-stroke');

@@ -149,7 +149,7 @@ describe('MartianChessComponent', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
         await testUtils.expectMoveSuccess('#click_0_4', move);
 
-        // Then left square and landing square should be highlighted
+        // Then left square and landing square should be shown as moved
         testUtils.expectElementToHaveClass('#square_1_5', 'moved-fill');
         testUtils.expectElementToHaveClass('#square_0_4', 'moved-fill');
     }));
@@ -198,7 +198,7 @@ describe('MartianChessComponent', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get();
         await testUtils.expectMoveSuccess('#click_2_6', move);
 
-        // Then left square and landing square should be highlighted
+        // Then left square and landing square should be shown as moved
         testUtils.expectElementToHaveClass('#square_1_7', 'moved-fill');
         testUtils.expectElementToHaveClass('#square_2_6', 'moved-fill');
         testUtils.expectElementToHaveClass('#queen_2_6', 'last-move-stroke');
@@ -211,7 +211,7 @@ describe('MartianChessComponent', () => {
             // When clicking on the clock
             await testUtils.expectClickSuccess('#clockOrCountDownView');
 
-            // Then the clock circle should be highlighted
+            // Then the clock circle should be selected
             testUtils.expectElementToHaveClass('#clockOrCountDownCircle', 'selected-stroke');
         }));
         it('should be possible to unselect the clock when changing your mind', fakeAsync(async() => {
@@ -221,7 +221,7 @@ describe('MartianChessComponent', () => {
             // When clicking on the clock again
             await testUtils.expectClickSuccess('#clockOrCountDownView');
 
-            // Then the clock should no longer be highlighted
+            // Then the clock should no longer be selected
             testUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected-stroke');
         }));
         it('should send the move with clock call when doing it with a selected clock', fakeAsync(async() => {

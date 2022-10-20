@@ -56,7 +56,7 @@ describe('ApagosComponent', () => {
             // When rendering the board
             testUtils.setupState(state, previousState, previousMove);
 
-            // Then the switch square should be highlighted
+            // Then the switch square should be shown as last move
             testUtils.expectElementToHaveClass('#square_1', 'last-move-stroke');
             testUtils.expectElementToHaveClass('#square_2', 'last-move-stroke');
         }));

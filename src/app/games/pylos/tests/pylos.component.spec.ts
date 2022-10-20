@@ -292,7 +292,7 @@ describe('PylosComponent', () => {
             // When clicking on the first captured piece
             await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
 
-            // Then it should be highlighted
+            // Then it should be selected
             const expectedClasses: string[] = ['base', 'player0-fill', 'selected-stroke', 'pre-captured-fill', 'small-stroke'];
             testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
         }));
@@ -306,7 +306,7 @@ describe('PylosComponent', () => {
             // When clicking on the second captured piece
             await testUtils.expectClickSuccess('#piece_0_0_0');
 
-            // Then both should be highlighted
+            // Then both should be shown as captured
             const expectedClasses: string[] = ['base', 'player0-fill', 'pre-captured-fill', 'small-stroke'];
             testUtils.expectElementToHaveClasses('#piece_0_0_0', expectedClasses);
             testUtils.expectElementToHaveClasses('#piece_0_1_0', expectedClasses);

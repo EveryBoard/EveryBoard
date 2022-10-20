@@ -298,8 +298,13 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     foregroundClasses.push('clickable-stroke-hover');
                 }
                 const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner).get();
+                const backgroundClasses: string[] = [];
+                if (piece.otherPieceType) {
+                    backgroundClasses.push(`player${piece.owner.value}-alternate`);
+                } else {
+                    backgroundClasses.push(`player${piece.owner.value}`);
                 pieceInfos.push({
-                    backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '') + '-fill'],
+                    backgroundClasses,
                     foregroundClasses,
                     y,
                     drawPosition: this.getDrawPositionRemainingPiece(piece, y),

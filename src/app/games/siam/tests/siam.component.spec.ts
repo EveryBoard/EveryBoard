@@ -139,7 +139,7 @@ describe('SiamComponent', () => {
         const move: SiamMove = SiamMove.of(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
         await expectMoveToBeLegal(Player.ZERO, move);
 
-        // Then the moved piece and departed square should be highlighted
+        // Then the moved piece and departed square should be shown as moved
         testUtils.expectElementToHaveClasses('#square_4_4', ['base', 'moved-fill']);
         testUtils.expectElementToHaveClasses('#square_3_4', ['base', 'moved-fill']);
         testUtils.expectElementToHaveClasses('#square_2_4', ['base']);

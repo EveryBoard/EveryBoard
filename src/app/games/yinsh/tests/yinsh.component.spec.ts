@@ -90,7 +90,7 @@ describe('YinshComponent', () => {
             // When rendering the board
             testUtils.setupState(state);
 
-            // Then the player's ring should be highlighted
+            // Then the player's ring should be selectable
             testUtils.expectElementToExist('#selectable_3_3');
             testUtils.expectElementNotToExist('#selectable_4_4');
         }));
@@ -116,7 +116,7 @@ describe('YinshComponent', () => {
             // When rendering the board
             testUtils.setupState(state);
 
-            // Then the rings should not be highlighted
+            // Then the rings should not be selectable
             testUtils.expectElementNotToExist('#selectable_3_3');
             testUtils.expectElementNotToExist('#selectable_4_4');
         }));
