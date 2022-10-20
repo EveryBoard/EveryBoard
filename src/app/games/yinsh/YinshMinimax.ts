@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { Combinatorics } from 'src/app/utils/Combinatorics';
@@ -13,14 +13,14 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
 
 export class YinshMinimax
-    extends Minimax<YinshMove, YinshState, YinshLegalityInformation, NodeUnheritance, YinshRules> {
+    extends Minimax<YinshMove, YinshState, YinshLegalityInformation, BoardValue, YinshRules> {
 
-    public getBoardValue(node: YinshNode): NodeUnheritance {
+    public getBoardValue(node: YinshNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return NodeUnheritance.fromWinner(gameStatus.winner);
+            return BoardValue.fromWinner(gameStatus.winner);
         } else {
-            return new NodeUnheritance(node.gameState.sideRings[0] * Player.ZERO.getScoreModifier() +
+            return new BoardValue(node.gameState.sideRings[0] * Player.ZERO.getScoreModifier() +
                 node.gameState.sideRings[1] * Player.ONE.getScoreModifier());
         }
     }

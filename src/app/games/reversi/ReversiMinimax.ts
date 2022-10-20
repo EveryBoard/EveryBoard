@@ -2,7 +2,7 @@ import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiLegalityInformation } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -16,10 +16,10 @@ export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLe
         new Coord(ReversiState.BOARD_WIDTH - 1, 0),
         new Coord(ReversiState.BOARD_WIDTH - 1, ReversiState.BOARD_HEIGHT - 1),
     ];
-    public getBoardValue(node: ReversiNode): NodeUnheritance {
+    public getBoardValue(node: ReversiNode): BoardValue {
         const gameStatus: GameStatus = ReversiRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return NodeUnheritance.fromWinner(gameStatus.winner);
+            return BoardValue.fromWinner(gameStatus.winner);
         }
         const state: ReversiState = node.gameState;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
@@ -41,7 +41,7 @@ export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLe
         }
         player0Count *= Player.ZERO.getScoreModifier();
         player1Count *= Player.ONE.getScoreModifier();
-        return new NodeUnheritance(player1Count + player0Count);
+        return new BoardValue(player1Count + player0Count);
     }
     public getListMoves(n: ReversiNode): ReversiMove[] {
         const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(n.gameState);

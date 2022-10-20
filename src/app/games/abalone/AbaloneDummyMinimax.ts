@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { AbaloneState } from './AbaloneState';
@@ -66,12 +66,12 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
             return false;
         }
     }
-    public getBoardValue(node: AbaloneNode): NodeUnheritance {
+    public getBoardValue(node: AbaloneNode): BoardValue {
         const gameStatus: GameStatus = AbaloneRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
         const scores: [number, number] = node.gameState.getScores();
-        return new NodeUnheritance(scores[1] - scores[0]);
+        return new BoardValue(scores[1] - scores[0]);
     }
 }

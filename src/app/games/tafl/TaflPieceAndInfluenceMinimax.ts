@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -31,10 +31,10 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
-    public getBoardValue(node: TaflNode): NodeUnheritance {
+    public getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -63,7 +63,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 }
             }
         }
-        return new NodeUnheritance(score);
+        return new BoardValue(score);
     }
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;

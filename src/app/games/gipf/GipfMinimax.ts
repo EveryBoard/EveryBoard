@@ -4,7 +4,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { GipfRules, GipfNode, GipfLegalityInformation } from './GipfRules';
 
 export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInformation> {
@@ -67,16 +67,16 @@ export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInform
         return intersections;
     }
 
-    public getBoardValue(node: GipfNode): NodeUnheritance {
+    public getBoardValue(node: GipfNode): BoardValue {
         const state: GipfState = node.gameState;
         const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
         const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
         if (score0.isAbsent()) {
-            return new NodeUnheritance(Player.ONE.getVictoryValue());
+            return new BoardValue(Player.ONE.getVictoryValue());
         } else if (score1.isAbsent()) {
-            return new NodeUnheritance(Player.ZERO.getVictoryValue());
+            return new BoardValue(Player.ZERO.getVictoryValue());
         } else {
-            return new NodeUnheritance(score0.get() - score1.get());
+            return new BoardValue(score0.get() - score1.get());
         }
     }
     public getListMoves(node: GipfNode): GipfMove[] {
