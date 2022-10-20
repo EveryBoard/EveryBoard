@@ -303,6 +303,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     backgroundClasses.push(`player${piece.owner.value}-alternate`);
                 } else {
                     backgroundClasses.push(`player${piece.owner.value}`);
+                }
                 pieceInfos.push({
                     backgroundClasses,
                     foregroundClasses,
