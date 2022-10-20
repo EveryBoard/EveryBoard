@@ -1,5 +1,5 @@
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
@@ -10,16 +10,16 @@ export class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActi
     public getListMoves(node: LinesOfActionNode): LinesOfActionMove[] {
         return LinesOfActionRules.getListMovesFromState(node.gameState);
     }
-    public getBoardValue(node: LinesOfActionNode): NodeUnheritance {
+    public getBoardValue(node: LinesOfActionNode): BoardValue {
         const state: LinesOfActionState = node.gameState;
         const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (zero === 1 && one > 1) {
-            return new NodeUnheritance(Player.ZERO.getVictoryValue());
+            return new BoardValue(Player.ZERO.getVictoryValue());
         } else if (zero > 1 && one === 1) {
-            return new NodeUnheritance(Player.ONE.getVictoryValue());
+            return new BoardValue(Player.ONE.getVictoryValue());
         } else {
             // More groups = less score
-            return new NodeUnheritance((100 / zero) * Player.ZERO.getScoreModifier() +
+            return new BoardValue((100 / zero) * Player.ZERO.getScoreModifier() +
                 (100 / one) * Player.ONE.getScoreModifier());
         }
     }

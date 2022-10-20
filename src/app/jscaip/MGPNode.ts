@@ -4,7 +4,7 @@ import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { NodeUnheritance } from './NodeUnheritance';
+import { BoardValue } from './BoardValue';
 import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -21,7 +21,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
                      S extends GameState,
                      L = void,
-                     U extends NodeUnheritance = NodeUnheritance> {
+                     U extends BoardValue = BoardValue> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
     // TODO: check for the proper use of LinkedList to optimise the stuff
     // TODO: when AI has all choice at bestHopedValue equality, she must split by average?

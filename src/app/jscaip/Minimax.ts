@@ -1,13 +1,13 @@
 import { MGPNode } from './MGPNode';
 import { Move } from './Move';
-import { NodeUnheritance } from './NodeUnheritance';
+import { BoardValue } from './BoardValue';
 import { Rules } from './Rules';
 import { GameState } from './GameState';
 
 export abstract class Minimax<M extends Move,
                               S extends GameState,
                               L = void,
-                              U extends NodeUnheritance = NodeUnheritance,
+                              U extends BoardValue = BoardValue,
                               R extends Rules<M, S, L> = Rules<M, S, L>>
 {
 

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -39,12 +39,12 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         return state.board[landing.y][landing.x] === state.getCurrentOpponent();
     }
-    public getBoardValue(node: EpaminondasNode): NodeUnheritance {
+    public getBoardValue(node: EpaminondasNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
-        return new NodeUnheritance(this.getPieceCountThenSupportThenAdvancement(node.gameState));
+        return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
         const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * 12;

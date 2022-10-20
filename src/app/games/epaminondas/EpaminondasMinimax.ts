@@ -3,7 +3,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -72,12 +72,12 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
         });
         return moves;
     }
-    public getBoardValue(node: EpaminondasNode): NodeUnheritance {
+    public getBoardValue(node: EpaminondasNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
-        return new NodeUnheritance(this.getPieceCountPlusRowDomination(node.gameState));
+        return new BoardValue(this.getPieceCountPlusRowDomination(node.gameState));
     }
     public getPieceCountPlusRowDomination(state: EpaminondasState): number {
         const SCORE_BY_PIECE: number = 14*13*11;
