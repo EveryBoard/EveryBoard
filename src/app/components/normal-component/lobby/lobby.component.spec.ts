@@ -44,7 +44,7 @@ describe('LobbyComponent', () => {
         // Then online-game-selection component is on the page
         testUtils.expectElementToExist('#online-game-selection');
     }));
-    it('Should redirect to /play when clicking a game', fakeAsync(async() => {
+    it('should redirect to /play when clicking a game', fakeAsync(async() => {
         // Given a lobby with one active part
         const activePart: PartDocument = new PartDocument('some-part-id', PartMocks.INITIAL);
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
@@ -102,7 +102,7 @@ describe('LobbyComponent', () => {
         void testUtils.clickElement('#tab-chat');
         tick();
 
-        // When rendering it
+        // When rendering the board
         testUtils.detectChanges();
 
         // Then the date should be written in format HH:mm:ss

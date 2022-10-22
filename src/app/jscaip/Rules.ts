@@ -7,7 +7,7 @@ import { Player, PlayerOrNone } from './Player';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
-import { NodeUnheritance } from './NodeUnheritance';
+import { BoardValue } from './BoardValue';
 
 export class GameStatus {
 
@@ -47,7 +47,7 @@ export class GameStatus {
 export abstract class Rules<M extends Move,
                             S extends GameState,
                             L = void,
-                            U extends NodeUnheritance = NodeUnheritance>
+                            U extends BoardValue = BoardValue>
 {
 
     public constructor(public readonly stateType: Type<S>) {

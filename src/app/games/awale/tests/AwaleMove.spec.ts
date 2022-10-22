@@ -15,7 +15,7 @@ describe('AwaleMove', () => {
             NumberEncoderTestUtils.expectToBeCorrect(AwaleMove.encoder, move);
         }
     });
-    it('Should override equals correctly', () => {
+    it('should override equals correctly', () => {
         const move: AwaleMove = AwaleMove.ZERO;
         const other: AwaleMove = AwaleMove.ONE;
         expect(move.equals(move)).toBeTrue();

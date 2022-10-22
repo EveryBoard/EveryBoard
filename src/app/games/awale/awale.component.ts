@@ -82,7 +82,6 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
                                                                            previousBoard);
             this.captured = captureResult.captureMap;
             const player: Player = this.getState().getCurrentPlayer();
-            console.log('le move precedent a p-e capturé, doit il moissonner le cul!?', { opponent: player.getOpponent(), rezBor: captureResult.resultingBoard })
             if (AwaleRules.mustMansoon(player.getOpponent(), captureResult.resultingBoard)) {
                 this.captured = AwaleRules.mansoon(player, captureResult.resultingBoard).captureMap;
             }

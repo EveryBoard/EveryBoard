@@ -67,7 +67,7 @@ describe('ConspirateursComponent', () => {
             ], 1);
             // When it is displayed
             testUtils.setupState(state);
-            // Then player 0 should have 19 pieces (0 to 18) and player 1 should have 20 (0 to 19)
+            // Then player 0 Should have 19 pieces (0 to 18) and player 1 should have 20 (0 to 19)
             testUtils.expectElementNotToExist('#sidePiece_0_19');
             testUtils.expectElementToExist('#sidePiece_0_18');
             testUtils.expectElementToExist('#sidePiece_1_19');
@@ -101,8 +101,10 @@ describe('ConspirateursComponent', () => {
             // Given a jump being in construction
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
+
             // When clicking on another piece of the current player
             await testUtils.expectClickSuccess('#click_7_5');
+
             // Then the new piece should be selected
             testUtils.expectElementToHaveClass('#piece_7_5', 'selected');
         }));
@@ -114,6 +116,7 @@ describe('ConspirateursComponent', () => {
         it('should allow performing a simple move by clicking on a piece and then on its destination', fakeAsync(async() => {
             // Given a player piece that is selected
             await testUtils.expectClickSuccess('#click_5_4');
+
             // When clicking on its destination
             // Then the simple move should be performed
             const move: ConspirateursMoveSimple = ConspirateursMoveSimple.of(new Coord(5, 4), new Coord(4, 4)).get();
@@ -130,6 +133,7 @@ describe('ConspirateursComponent', () => {
         it('should allow performing a jump in two clicks if this is the only choice', fakeAsync(async() => {
             // When clicking on a player piece and then on a jump destination
             await testUtils.expectClickSuccess('#click_5_4');
+
             // Then the jump should be directly performed
             const move: ConspirateursMoveJump = ConspirateursMoveJump.of([new Coord(5, 4), new Coord(5, 6)]).get();
             await testUtils.expectMoveSuccess('#click_5_6', move);
@@ -138,6 +142,7 @@ describe('ConspirateursComponent', () => {
             // When clicking on a piece and then on all jump steps up to the final one
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
+
             // Then the jump should be performed
             const move: ConspirateursMoveJump =
                 ConspirateursMoveJump.of([new Coord(5, 4), new Coord(5, 2), new Coord(7, 2)]).get();
@@ -147,6 +152,7 @@ describe('ConspirateursComponent', () => {
             // When clicking on the desired jump steps and then a second time on the final step
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
+
             // Then the jump should be performed
             const move: ConspirateursMoveJump = ConspirateursMoveJump.of([new Coord(5, 4), new Coord(5, 2)]).get();
             await testUtils.expectMoveSuccess('#click_5_2', move);
@@ -177,6 +183,17 @@ describe('ConspirateursComponent', () => {
         it('should not display any remaining piece', fakeAsync(async() => {
             testUtils.expectElementNotToExist('#sidePiece_0_0');
             testUtils.expectElementNotToExist('#sidePiece_1_0');
+        }));
+        it('should deselect piece when double clicking it', fakeAsync(async() => {
+            // Given a board on which a piece is selected
+            await testUtils.expectClickSuccess('#click_5_4');
+            testUtils.expectElementToHaveClass('#piece_5_4', 'selected');
+
+            // When clicking on it again
+            await testUtils.expectClickSuccess('#click_5_4');
+
+            // Then it should no longer be selected
+            testUtils.expectElementNotToHaveClass('#piece_5_4', 'selected');
         }));
     });
     it('should highlight shelters of victorious pieces upon victory', fakeAsync(async() => {

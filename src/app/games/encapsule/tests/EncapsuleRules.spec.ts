@@ -89,10 +89,10 @@ describe('EncapsuleRules', () => {
             X0, X1, X2,
         ]);
 
-        // when doing that "actively loosing move"
+        // When doing that "actively loosing move"
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0));
 
-        // then the active player should have lost
+        // Then the active player should have lost
         const expectedBoard: EncapsuleCase[][] = [
             [X__, _O_, ___],
             [___, _X_, ___],
@@ -137,10 +137,10 @@ describe('EncapsuleRules', () => {
         ];
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
 
-        // when moving a single piece elsewhere
+        // When moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
 
-        // then the piece should have been moved
+        // Then the piece should have been moved
         const expectedBoard: EncapsuleCase[][] = [
             [___, ___, ___],
             [___, X__, ___],
@@ -159,10 +159,10 @@ describe('EncapsuleRules', () => {
         const remainingPieces: EncapsulePiece[] = [X0, X1, X1, X2, X2, O0, O0, O1, O1, O2, O2];
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
 
-        // when moving a single piece elsewhere
+        // When moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
 
-        // then the piece should have been moved over the smaller one
+        // Then the piece should have been moved over the smaller one
         const expectedBoard: EncapsuleCase[][] = [
             [___, ___, ___],
             [___, ___, ___],

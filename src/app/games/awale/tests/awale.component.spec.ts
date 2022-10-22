@@ -118,7 +118,6 @@ describe('AwaleComponent', () => {
 
         // Then the space in question should be marked as "captured"
         const content: DebugElement = testUtils.findElement('#captured_5_1');
-        console.log({ content })
         expect(content.nativeElement.innerHTML).toBe(' -5 ');
         testUtils.expectElementToHaveClass('#click_5_1', 'captured');
     }));

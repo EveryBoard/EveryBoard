@@ -1,7 +1,7 @@
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { AwaleNode, AwaleRules } from './AwaleRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -62,16 +62,16 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
         });
         return moves;
     }
-    public getBoardValue(node: AwaleNode): NodeUnheritance {
+    public getBoardValue(node: AwaleNode): BoardValue {
         const gameStatus: GameStatus = AwaleRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return NodeUnheritance.fromWinner(gameStatus.winner);
+            return BoardValue.fromWinner(gameStatus.winner);
         }
 
         const state: AwaleState = node.gameState;
         const captured: number[] = state.getCapturedCopy();
         const c1: number = captured[1];
         const c0: number = captured[0];
-        return new NodeUnheritance(c1 - c0);
+        return new BoardValue(c1 - c0);
     }
 }

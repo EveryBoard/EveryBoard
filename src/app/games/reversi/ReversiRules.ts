@@ -158,7 +158,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
             }
         }
         if (moves.length === 0) {
-            // when the user cannot start, his only move is to pass, which he cannot do otherwise
+            // When the user cannot start, his only move is to pass, which he cannot do otherwise
             // board unchanged, only the turn changed "pass"
             moves.push(new ReversiMoveWithSwitched(ReversiMove.PASS, 0));
         }

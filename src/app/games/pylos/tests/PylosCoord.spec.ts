@@ -5,7 +5,7 @@ import { PylosCoord } from '../PylosCoord';
 
 describe('PylosCoord:', () => {
 
-    it('Should encode optional and decode should be symetrical', () => {
+    it('should encode optional and decode should be symetrical', () => {
         const initialValues: MGPOptional<PylosCoord>[] = [
             MGPOptional.empty(),
             MGPOptional.of(new PylosCoord(0, 0, 0)),
@@ -19,14 +19,14 @@ describe('PylosCoord:', () => {
         expect(decodedValues).toEqual(initialValues);
     });
 
-    it('Should forbid invalid coord creation', () => {
+    it('should forbid invalid coord creation', () => {
         expect(() => new PylosCoord(-1, 0, 0)).toThrowError('PylosCoord: Invalid X: -1.');
         expect(() => new PylosCoord(0, -1, 0)).toThrowError('PylosCoord: Invalid Y: -1.');
         expect(() => new PylosCoord(0, 0, -1)).toThrowError('PylosCoord: Invalid Z: -1.');
         expect(() => new PylosCoord(3, 3, 3)).toThrowError('PylosCoord(3, 3, 3) is not in range.');
     });
 
-    it('Should override equals correctly', () => {
+    it('should override equals correctly', () => {
         const coord: PylosCoord = new PylosCoord(0, 0, 0);
         const close1: PylosCoord = new PylosCoord(1, 0, 0);
         const close2: PylosCoord = new PylosCoord(0, 1, 0);
@@ -39,13 +39,13 @@ describe('PylosCoord:', () => {
         expect(coord.equals(twin)).toBeTrue();
     });
 
-    it('Should compare Z correctly', () => {
+    it('should compare Z correctly', () => {
         const coord: PylosCoord = new PylosCoord(0, 0, 0);
         const upperCoord: PylosCoord = new PylosCoord(0, 0, 1);
         expect(coord.isUpperThan(upperCoord)).toBeFalse();
     });
 
-    it('Should give list of lower pieces, except for floor coord', () => {
+    it('should give list of lower pieces, except for floor coord', () => {
         const upLeft: PylosCoord = new PylosCoord(0, 0, 0);
         const upRight: PylosCoord = new PylosCoord(1, 0, 0);
         const downLeft: PylosCoord = new PylosCoord(0, 1, 0);
@@ -57,7 +57,7 @@ describe('PylosCoord:', () => {
         expect(lowerPieces).toEqual(expectedLowerPieces);
     });
 
-    it('Should give list of higher pieces, except out of range ones, and expect for top pieces', () => {
+    it('should give list of higher pieces, except out of range ones, and expect for top pieces', () => {
         const topPiece: PylosCoord = new PylosCoord(0, 0, 3);
         const upLeft: PylosCoord = new PylosCoord(0, 0, 1);
         const upRight: PylosCoord = new PylosCoord(1, 0, 1);
@@ -70,7 +70,7 @@ describe('PylosCoord:', () => {
         expect(lowerPieces).toEqual(expectedLowerPieces);
     });
 
-    it('Should give optional next piece in direction', () => {
+    it('should give optional next piece in direction', () => {
         const piece: PylosCoord = new PylosCoord(0, 0, 0);
         const right: PylosCoord = new PylosCoord(1, 0, 0);
         expect(piece.getNextValid(Orthogonal.LEFT)).toEqual(MGPOptional.empty());

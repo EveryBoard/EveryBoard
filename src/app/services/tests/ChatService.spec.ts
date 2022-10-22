@@ -39,55 +39,55 @@ describe('ChatService', () => {
     describe('deleteChat', () => {
         it('should delete the chat through the DAO', fakeAsync(async() => {
             spyOn(chatDAO, 'delete');
-            // given a chat that exists
+            // Given a chat that exists
             await service.createNewChat('id');
 
-            // when calling deleteChat
+            // When calling deleteChat
             await service.deleteChat('id');
 
-            // then the chat has been removed
+            // Then the chat has been removed
             expect(chatDAO.delete).toHaveBeenCalledWith('id');
         }));
     });
     describe('createNewChat', () => {
         it('should create the chat through the DAO', fakeAsync(async() => {
             spyOn(chatDAO, 'set');
-            // when calling createNewChat
+            // When calling createNewChat
             await service.createNewChat('id');
-            // then the chat has been initialized with the DAO
+            // Then the chat has been initialized with the DAO
             expect(chatDAO.set).toHaveBeenCalledWith('id', {});
         }));
     });
     describe('sendMessage', () => {
         it('should not send message if the user is not allowed to send a message in the chat', fakeAsync(async() => {
-            // given a chat
+            // Given a chat
             await service.createNewChat('id');
-            // when sending a message without a username
+            // When sending a message without a username
             const sender: MinimalUser = { name: '', id: 'fooId' };
             const result: Promise<MGPValidation> = service.sendMessage('id', sender, 'foo', 2);
-            // then the message is rejected
+            // Then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE()));
         }));
         it('should not send message if it is empty', fakeAsync(async() => {
-            // given a chat
+            // Given a chat
             await service.createNewChat('id');
-            // when sending an empty message
+            // When sending an empty message
             const sender: MinimalUser = { name: 'sender', id: 'senderId' };
             const result: Promise<MGPValidation> = service.sendMessage('id', sender, '', 2);
-            // then the message is rejected
+            // Then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE()));
         }));
         it('should update the chat with the new message in the DAO', fakeAsync(async() => {
             spyOn(Date, 'now').and.returnValue(42);
             spyOn(service, 'addMessage');
-            // given an empty chat
+            // Given an empty chat
             await service.createNewChat('id');
 
-            // when a message is sent on that chat
+            // When a message is sent on that chat
             const sender: MinimalUser = { name: 'sender', id: 'senderId' };
             await service.sendMessage('id', sender, 'foo', 2);
 
-            // then the chat should be updated with the new message
+            // Then the chat should be updated with the new message
             expect(service.addMessage).toHaveBeenCalledWith('id', MESSAGE);
         }));
     });

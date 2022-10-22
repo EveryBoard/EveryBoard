@@ -25,22 +25,22 @@ describe('ToggleVisibilityDirective', () => {
     }));
 
     it('should change the type to text when clicked, and back to password when clicked a second time', () => {
-        // given an element with the toggleVisibility directive
+        // Given an element with the toggleVisibility directive
         expect(testUtils.findElement('#password').nativeElement.getAttribute('type')).toBe('password');
         testUtils.detectChanges();
 
-        // when the component is clicked a first time
+        // When the component is clicked a first time
         testUtils.findElement('#toggle').nativeElement.dispatchEvent(new Event('click'));
         testUtils.detectChanges();
 
-        // then the input is now of type text
+        // Then the input is now of type text
         expect(testUtils.findElement('#password').nativeElement.getAttribute('type')).toBe('text');
 
-        // when the component is clicked a second time
+        // When the component is clicked a second time
         testUtils.findElement('#toggle').nativeElement.dispatchEvent(new Event('click'));
         testUtils.detectChanges();
 
-        // then the input is again a password
+        // Then the input is again a password
         expect(testUtils.findElement('#password').nativeElement.getAttribute('type')).toBe('password');
     });
 });

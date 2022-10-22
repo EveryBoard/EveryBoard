@@ -67,13 +67,6 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         }
     }
     public static mustMansoon(player: Player, postCaptureBoard: Table<number>): boolean {
-        console.log({
-            __fuu: 'mustMansoon ?',
-            player,
-            postCaptureBoard,
-            isStarving: AwaleRules.isStarving(player, postCaptureBoard),
-            canNOTDistribute: AwaleRules.canDistribute(player.getOpponent(), postCaptureBoard) === false,
-        })
         return AwaleRules.isStarving(player, postCaptureBoard) &&
                AwaleRules.canDistribute(player.getOpponent(), postCaptureBoard) === false;
     }
@@ -84,7 +77,6 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Is called when a game is over because of starvation
      */
     public static mansoon(mansooningPlayer: Player, board: Table<number>): CaptureResult {
-        console.log({ __fu: 'mansoon', param: { mansooningPlayer, board }})
         const resultingBoard: number[][] = ArrayUtils.copyBiArray(board);
         let capturedSum: number = 0;
         const captureMap: number[][] = [

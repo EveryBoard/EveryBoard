@@ -180,8 +180,11 @@ export class SixComponent
         } else if (this.chosenLanding.isAbsent()) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            } else if (this.selectedPiece.equalsValue(piece)) {
+                this.selectedPiece = MGPOptional.empty();
+            } else {
+                this.selectedPiece = MGPOptional.of(piece);
             }
-            this.selectedPiece = MGPOptional.of(piece);
             return MGPValidation.SUCCESS;
         } else {
             const cuttingMove: SixMove = SixMove.fromCut(this.selectedPiece.get(),

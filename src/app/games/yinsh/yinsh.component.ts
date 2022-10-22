@@ -51,8 +51,8 @@ interface ViewInfo {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class YinshComponent
-    extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation> {
-
+    extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation>
+{
     private static readonly RING_OUTER_SIZE: number = 40;
     private static readonly RING_MID_SIZE: number = 34;
     private static readonly RING_INNER_SIZE: number = 28;
@@ -449,6 +449,15 @@ export class YinshComponent
         return MGPValidation.SUCCESS;
     }
     private async selectMoveEnd(coord: Coord): Promise<MGPValidation> {
+        if (this.moveStart.equalsValue(coord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
+        const currentPlayerRing: YinshPiece = YinshPiece.RINGS[this.getState().getCurrentPlayer().value];
+        if (this.constructedState.getPieceAt(coord) === currentPlayerRing) {
+            this.cancelMoveAttempt();
+            return this.selectMoveStart(coord);
+        }
         const validity: MGPValidation = this.rules.moveValidity(this.constructedState, this.moveStart.get(), coord);
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
