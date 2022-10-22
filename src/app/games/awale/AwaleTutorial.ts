@@ -8,7 +8,7 @@ export class AwaleTutorial {
         TutorialStep.anyMove(
             $localize`Sowing`,
             $localize`Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let's see how seeds are sown.
+         Let's see how seeds are sown. The space in Awalé are called the houses.
          As you're playing first, the 6 houses on the bottom are yours.<br/><br>
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
             AwaleState.getInitialState(),
@@ -52,7 +52,7 @@ export class AwaleTutorial {
             new AwaleState([
                 [2, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
-            ], 1, [0, 0]),
+            ], 0, [0, 0]),
             [AwaleMove.ZERO],
             $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
             $localize`Failed. Try again.`,
@@ -60,22 +60,22 @@ export class AwaleTutorial {
         TutorialStep.fromMove(
             $localize`Interrupted capture`,
             $localize`By clicking on your leftmost house, you end up on the 3rd house, which is capturable.<br/><br/>
-        Do it.`,
+        The houses on the bottom are yours, do a capture!`,
             new AwaleState([
                 [1, 0, 1, 0, 0, 1],
                 [3, 0, 0, 0, 1, 0],
-            ], 1, [0, 0]),
+            ], 0, [0, 0]),
             [AwaleMove.ZERO],
             $localize`Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.`,
             $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Capture on the other side only`,
-            $localize`Try to capture the two leftmost houses of the opponent.`,
+            $localize`Your house are the one bellow. Try to capture the two leftmost houses of the opponent.`,
             new AwaleState([
                 [2, 2, 0, 0, 1, 0],
                 [1, 3, 0, 0, 0, 0],
-            ], 1, [0, 0]),
+            ], 0, [0, 0]),
             [AwaleMove.ONE],
             $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,
             $localize`You have only captured one house, try again!`,
@@ -83,11 +83,11 @@ export class AwaleTutorial {
         TutorialStep.fromMove(
             $localize`Do not starve`,
             $localize`You have a very nice capture that seems possible: it seems that you can capture all the opponent's seeds!<br/><br/>
-        Try it.`,
+        Your houses are the one bellow. Try it.`,
             new AwaleState([
                 [1, 1, 1, 1, 1, 0],
                 [5, 0, 0, 1, 0, 0],
-            ], 1, [0, 0]),
+            ], 0, [0, 0]),
             [AwaleMove.ZERO],
             $localize`Sadly, you cannot capture here, otherwise the opponent could not play after you.
         When this happens, the move can be made, but no capture takes place!`,

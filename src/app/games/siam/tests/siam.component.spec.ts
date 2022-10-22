@@ -133,8 +133,8 @@ describe('SiamComponent', () => {
         await expectMoveLegality(move);
 
         // Then the moved piece and departed square should be highlighted
-        testUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved']);
-        testUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved']);
+        testUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved-fill']);
+        testUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved-fill']);
         testUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']);
     }));
     it('should decide exit orientation automatically', fakeAsync(async() => {

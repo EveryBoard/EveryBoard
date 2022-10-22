@@ -14,7 +14,7 @@
         <g *ngFor="let content of line; index as x">
             <circle id="click_{{ x }}_{{ y }}"
                     (click)="onClick(x, y)"
-                    [ngClass]="getSquareClasses(x, y)"
+                    [ngClass]="getSpaceClasses(x, y)"
                     class="base"
                     [attr.cx]="getPieceCx(x)"
                     [attr.cy]="getPieceCy(y)"
@@ -28,6 +28,16 @@
                   class="text-big text-center"
             >
                 {{ content }}
+            </text>
+            <text id="captured_{{ x }}_{{ y }}"
+                  *ngIf="captured[y][x] > 0"
+                  (click)="onClick(x, y)"
+                  [attr.x]="65 + 100 * x"
+                  [attr.y]="81 + 120 * y"
+                  [attr.transform]="getPieceRotation(x, y)"
+                  class="text-20 text-center"
+            >
+                {{ - captured[y][x] }}
             </text>
         </g>
     </g>

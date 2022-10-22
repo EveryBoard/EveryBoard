@@ -1014,13 +1014,13 @@
         <source>Sowing</source>
         <target>Égrénage</target>
       </trans-unit>
-      <trans-unit id="7949092417505357162" datatype="html">
+      <trans-unit id="2215026289039876217" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown.
+         Let&apos;s see how seeds are sown. The space in Awalé are called the houses.
          As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
         <target>L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
-        Nous allons voir comment s'égrènent (se distribuent) les graines.
+        Nous allons voir comment s'égrènent (se distribuent) les graines. Les cases à l'Awalé sont appelées les maisons.
         Comme vous jouez en premier, les 6 maisons du bas vous appartiennent.&lt;br/&gt;&lt;br/&gt;
         Cliquez sur l&apos;une d&apos;entre elles pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d&apos;une graine par maison.</target>
       </trans-unit>
@@ -1028,8 +1028,8 @@
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
         This is how seeds are sown:
         one by one from the house next to the one they come from, clockwise.</source>
-        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horlogé, elle comptent maintenant 5 graines.
-         C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horlogé depuis la maison d’où elles viennent.</target>
+        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horaire, elle comptent maintenant 5 graines.
+         C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horaire depuis la maison d’où elles viennent.</target>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
@@ -1080,7 +1080,7 @@
         Capture them.</source>
         <target>En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
         Ces deux maisons, étant consécutives, seront donc toutes les deux capturées.&lt;br/&gt;&lt;br/&gt;
-        Capturez les.</target>
+        Capturez-les.</target>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -1094,11 +1094,11 @@
         <source>Interrupted capture</source>
         <target>Capture interrompue</target>
       </trans-unit>
-      <trans-unit id="2140233800611707867" datatype="html">
+      <trans-unit id="418082927212218889" datatype="html">
         <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+        The houses on the bottom are yours, do a capture!</source>
         <target>En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.&lt;br/&gt;&lt;br/&gt;
-        Faites-le.</target>
+        Les maisons du bas sont les votre, faites une capture !</target>
       </trans-unit>
       <trans-unit id="3933505566350744698" datatype="html">
         <source>Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.</source>
@@ -1108,9 +1108,9 @@
         <source>Capture on the other side only</source>
         <target>Capture chez l&apos;adversaire uniquement</target>
       </trans-unit>
-      <trans-unit id="6181593302991158317" datatype="html">
-        <source>Try to capture the two leftmost houses of the opponent.</source>
-        <target>Essayez de capturer les deux maisons les plus à gauche de l’adversaire.</target>
+      <trans-unit id="7930770052624466073" datatype="html">
+        <source>Your house are the one bellow. Try to capture the two leftmost houses of the opponent.</source>
+        <target>Vos maisons sont celles du bas. Essayez de capturer les deux maisons les plus à gauche de l’adversaire.</target>
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
@@ -1124,11 +1124,11 @@
         <source>Do not starve</source>
         <target>Ne pas affamer</target>
       </trans-unit>
-      <trans-unit id="1389121325319402395" datatype="html">
+      <trans-unit id="3516990499700476332" datatype="html">
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        Try it.</source>
+        Your houses are the one bellow. Try it.</source>
         <target>Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;
-        Lancez-vous !</target>
+        Vos maisons sont celles du bas. Lancez-vous !</target>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.

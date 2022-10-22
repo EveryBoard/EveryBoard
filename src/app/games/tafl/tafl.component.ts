@@ -161,7 +161,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             const lastStart: Coord = this.lastMove.get().coord;
             const lastEnd: Coord = this.lastMove.get().end;
             if (coord.equals(lastStart) || coord.equals(lastEnd)) {
-                classes.push('moved');
+                classes.push('moved-fill');
             }
         }
 

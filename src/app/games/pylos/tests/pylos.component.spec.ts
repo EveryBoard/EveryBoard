@@ -144,7 +144,7 @@ describe('PylosComponent', () => {
 
             // Then the starting coord of the move should be 'left', and not 'selected'
             testUtils.expectElementNotToExist('#piece_3_3_0');
-            testUtils.expectElementToHaveClass('#drop_3_3_0', 'moved');
+            testUtils.expectElementToHaveClass('#drop_3_3_0', 'moved-fill');
             // And its landing coord should be visible and selected to indicate a capture is to be done
             testUtils.expectElementToExist('#piece_1_1_1');
             testUtils.expectElementToHaveClass('#piece_1_1_1', 'selected');

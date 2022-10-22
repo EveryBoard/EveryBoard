@@ -176,11 +176,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             if (move.firstCapture.equalsValue(coord) || move.secondCapture.equalsValue(coord)) {
                 return ['captured'];
             } else if (coord.equals(move.landingCoord) || move.startingCoord.equalsValue(coord)) {
-                return ['moved'];
+                return ['moved-fill'];
             }
         } else {
             if (this.justClimbed(coord)) {
-                return ['moved'];
+                return ['moved-fill'];
             }
         }
         return [];

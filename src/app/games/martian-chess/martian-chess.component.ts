@@ -345,16 +345,16 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const node: MartianChessNode = this.rules.node;
             const move: MartianChessMove = node.move.get();
             if (move.coord.equals(square)) {
-                classes.push('moved');
+                classes.push('moved-fill');
             } else if (move.end.equals(square)) {
                 const previousPiece: MartianChessPiece = node.mother.get().gameState.getPieceAt(square);
                 const wasEmpty: boolean = previousPiece === MartianChessPiece.EMPTY;
                 if (wasEmpty) {
-                    classes.push('moved');
+                    classes.push('moved-fill');
                 } else {
                     const landingHome: boolean = node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('moved');
+                        classes.push('moved-fill');
                     } else {
                         classes.push('captured');
                     }

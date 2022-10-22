@@ -229,10 +229,10 @@ describe('AbaloneComponent', () => {
 
             // then three pieces should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getSquareClasses(1, 6)).toEqual(['moved']);
-            expect(compo.getSquareClasses(2, 6)).toEqual(['moved']);
-            expect(compo.getSquareClasses(3, 6)).toEqual(['moved']);
-            expect(compo.getSquareClasses(4, 6)).toEqual(['moved']);
+            expect(compo.getSquareClasses(1, 6)).toEqual(['moved-fill']);
+            expect(compo.getSquareClasses(2, 6)).toEqual(['moved-fill']);
+            expect(compo.getSquareClasses(3, 6)).toEqual(['moved-fill']);
+            expect(compo.getSquareClasses(4, 6)).toEqual(['moved-fill']);
         }));
         it('should refuse too long extension', fakeAsync(async() => {
             // Given the initial board with two space selected
@@ -319,8 +319,8 @@ describe('AbaloneComponent', () => {
 
             // when ? then expect to see left and moved space
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getSquareClasses(0, 7)).toEqual(['moved']);
-            expect(compo.getSquareClasses(0, 8)).toEqual(['moved']);
+            expect(compo.getSquareClasses(0, 7)).toEqual(['moved-fill']);
+            expect(compo.getSquareClasses(0, 8)).toEqual(['moved-fill']);
         }));
     });
 });

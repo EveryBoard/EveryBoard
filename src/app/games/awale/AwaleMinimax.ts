@@ -55,7 +55,7 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
                     sameTerritoryValue = 10;
                 }
             } else {
-                captured = AwaleRules.captureAndReturnSum(endCase.x, opponentY, player, board);
+                captured = AwaleRules.captureIfLegal(endCase.x, opponentY, player, board).capturedSum;
             }
             // Prioritise captured, then moves in same territory, then tries to minimise number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;

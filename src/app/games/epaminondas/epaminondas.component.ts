@@ -389,7 +389,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         if (this.captureds.some((c: Coord) => c.equals(clicked))) {
             return ['captured'];
         } else if (this.moveds.some((c: Coord) => c.equals(clicked))) {
-            return ['moved'];
+            return ['moved-fill'];
         }
         return [];
     }

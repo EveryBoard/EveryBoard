@@ -50,7 +50,7 @@ describe('ReversiComponent', () => {
         expect(tablutGameComponent.getRectClasses(1, 5)).toEqual(['captured']);
         expect(tablutGameComponent.getRectClasses(2, 6)).toEqual(['captured']);
 
-        expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved']);
+        expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved-fill']);
     }));
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
         // Given a fictitious board on which player can only pass

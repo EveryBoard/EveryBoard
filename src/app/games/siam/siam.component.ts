@@ -188,7 +188,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const coord: Coord = new Coord(x, y);
 
         if (this.movedPieces.some((c: Coord) => c.equals(coord))) {
-            return ['moved'];
+            return ['moved-fill'];
         }
         return [];
     }

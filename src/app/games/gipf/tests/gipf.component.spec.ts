@@ -208,9 +208,9 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_1_6');
         await testUtils.expectMoveSuccess('#click_2_5', move, undefined, [0, 0]);
 
-        expect(testUtils.getComponent().getSpaceClass(new Coord(1, 6))).toEqual('moved');
-        expect(testUtils.getComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved');
-        expect(testUtils.getComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved');
+        expect(testUtils.getComponent().getSpaceClass(new Coord(1, 6))).toEqual('moved-fill');
+        expect(testUtils.getComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved-fill');
+        expect(testUtils.getComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved-fill');
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [

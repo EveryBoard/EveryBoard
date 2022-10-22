@@ -272,7 +272,7 @@ export class GipfComponent
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return 'captured';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return 'moved';
+            return 'moved-fill';
         } else {
             return '';
         }

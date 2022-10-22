@@ -316,9 +316,9 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="7949092417505357162" datatype="html">
+      <trans-unit id="2215026289039876217" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown.
+         Let&apos;s see how seeds are sown. The space in Awalé are called the houses.
          As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
       </trans-unit>
@@ -371,9 +371,9 @@
       <trans-unit id="437214181691581058" datatype="html">
         <source>Interrupted capture</source>
       </trans-unit>
-      <trans-unit id="2140233800611707867" datatype="html">
+      <trans-unit id="418082927212218889" datatype="html">
         <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+        The houses on the bottom are yours, do a capture!</source>
       </trans-unit>
       <trans-unit id="3933505566350744698" datatype="html">
         <source>Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.</source>
@@ -381,8 +381,8 @@
       <trans-unit id="5352377142224231024" datatype="html">
         <source>Capture on the other side only</source>
       </trans-unit>
-      <trans-unit id="6181593302991158317" datatype="html">
-        <source>Try to capture the two leftmost houses of the opponent.</source>
+      <trans-unit id="7930770052624466073" datatype="html">
+        <source>Your house are the one bellow. Try to capture the two leftmost houses of the opponent.</source>
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
@@ -393,9 +393,9 @@
       <trans-unit id="2796272222228002710" datatype="html">
         <source>Do not starve</source>
       </trans-unit>
-      <trans-unit id="1389121325319402395" datatype="html">
+      <trans-unit id="3516990499700476332" datatype="html">
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        Try it.</source>
+        Your houses are the one bellow. Try it.</source>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.

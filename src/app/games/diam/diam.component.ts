@@ -225,11 +225,11 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             const classes: string[] = [];
             if (lastMove.isDrop()) {
                 if (lastMove.getTarget() === x) {
-                    classes.push('moved');
+                    classes.push('moved-fill');
                 }
             } else {
                 if (lastMove.getTarget() === x || lastMove.start.x === x) {
-                    classes.push('moved');
+                    classes.push('moved-fill');
                 }
             }
             this.viewInfo.boardInfo[x].spaceClasses = classes;

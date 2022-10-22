@@ -150,8 +150,8 @@ describe('MartianChessComponent', () => {
         await testUtils.expectMoveSuccess('#click_0_4', move);
 
         // Then left square and landing square should be highlighted
-        testUtils.expectElementToHaveClass('#square_1_5', 'moved');
-        testUtils.expectElementToHaveClass('#square_0_4', 'moved');
+        testUtils.expectElementToHaveClass('#square_1_5', 'moved-fill');
+        testUtils.expectElementToHaveClass('#square_0_4', 'moved-fill');
     }));
     it('should highlight left coord and captured coord', fakeAsync(async() => {
         // Given a board where a capture is about to be done
@@ -174,8 +174,8 @@ describe('MartianChessComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_3', move);
 
         // Then left square and landing square should be 'captured''
-        testUtils.expectElementToHaveClass('#square_1_4', 'moved');
-        testUtils.expectElementNotToHaveClass('#square_2_3', 'moved');
+        testUtils.expectElementToHaveClass('#square_1_4', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#square_2_3', 'moved-fill');
         testUtils.expectElementToHaveClass('#square_2_3', 'captured');
     }));
     it('should highlight left coord and field promotion coord', fakeAsync(async() => {
@@ -199,8 +199,8 @@ describe('MartianChessComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_6', move);
 
         // Then left square and landing square should be highlighted
-        testUtils.expectElementToHaveClass('#square_1_7', 'moved');
-        testUtils.expectElementToHaveClass('#square_2_6', 'moved');
+        testUtils.expectElementToHaveClass('#square_1_7', 'moved-fill');
+        testUtils.expectElementToHaveClass('#square_2_6', 'moved-fill');
         testUtils.expectElementToHaveClass('#queen_2_6', 'highlighted');
     }));
     describe('clock and countdown interaction and appeareance', () => {

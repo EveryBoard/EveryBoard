@@ -89,8 +89,8 @@ describe('BrandhubComponent', () => {
 
         const brandhubGameComponent: BrandhubComponent = testUtils.getComponent();
         expect(brandhubGameComponent.getRectClasses(2, 1)).toContain('captured');
-        expect(brandhubGameComponent.getRectClasses(1, 0)).toContain('moved');
-        expect(brandhubGameComponent.getRectClasses(2, 0)).toContain('moved');
+        expect(brandhubGameComponent.getRectClasses(1, 0)).toContain('moved-fill');
+        expect(brandhubGameComponent.getRectClasses(2, 0)).toContain('moved-fill');
     }));
     it('encoder should be correct', () => {
         const encoder: MoveEncoder<BrandhubMove> = testUtils.getComponent().encoder;

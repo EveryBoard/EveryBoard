@@ -109,7 +109,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
                 return ['captured'];
             }
             if (coord.equals(lastMoveStart) || coord.equals(lastMoveEnd)) {
-                return ['moved'];
+                return ['moved-fill'];
             }
         }
         return [];

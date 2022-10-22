@@ -127,7 +127,7 @@ export class ConspirateursComponent
                     [this.getPlayerClass(this.getCurrentPlayer()), 'selected'];
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPiece = true;
                 for (const coord of jump.coords) {
-                    this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved');
+                    this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 }
             } else {
                 const selected: Coord = this.selected.get();
@@ -149,14 +149,14 @@ export class ConspirateursComponent
     private showLastMove(): void {
         const lastMove: ConspirateursMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
-            this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved');
+            this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');
         } else if (lastMove.isSimple()) {
-            this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved');
-            this.viewInfo.boardInfo[lastMove.end.y][lastMove.end.x].squareClasses.push('moved');
+            this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');
+            this.viewInfo.boardInfo[lastMove.end.y][lastMove.end.x].squareClasses.push('moved-fill');
         } else {
             this.viewInfo.lastMoveArrow = '';
             for (const coord of lastMove.coords) {
-                this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved');
+                this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 this.viewInfo.lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
                 this.viewInfo.lastMoveArrow += ' ';
                 this.viewInfo.lastMoveArrow += (coord.y * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;

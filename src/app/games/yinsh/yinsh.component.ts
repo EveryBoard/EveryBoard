@@ -186,7 +186,7 @@ export class YinshComponent
     }
     private getSpaceClasses(coord: Coord): string[] {
         if (this.currentlyMoved.some((c: Coord) => c.equals(coord))) {
-            return ['moved'];
+            return ['moved-fill'];
         } else {
             return [];
         }
@@ -230,10 +230,10 @@ export class YinshComponent
         if (moveOptional.isPresent()) {
             const move: YinshMove = moveOptional.get();
             if (move.isInitialPlacement()) {
-                this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved'];
+                this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
             } else {
                 for (const coord of this.coordsBetween(move.start, move.end.get())) {
-                    this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['moved'];
+                    this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['moved-fill'];
                 }
                 const nothingSelectedThisTurn: boolean =
                     this.currentCapture.isAbsent() &&

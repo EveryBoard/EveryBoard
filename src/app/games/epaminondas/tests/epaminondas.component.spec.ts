@@ -441,8 +441,8 @@ describe('EpaminondasComponent', () => {
         // Then it should display what has been captured and moved
         expect(epaminondasComponent.getRectClasses(0, 7)).toEqual(['captured']);
         expect(epaminondasComponent.getRectClasses(0, 8)).toEqual(['captured']);
-        expect(epaminondasComponent.getRectClasses(0, 9)).toEqual(['moved']);
-        expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved']);
-        expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved']);
+        expect(epaminondasComponent.getRectClasses(0, 9)).toEqual(['moved-fill']);
+        expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved-fill']);
+        expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved-fill']);
     }));
 });

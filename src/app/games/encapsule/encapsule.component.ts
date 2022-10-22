@@ -118,7 +118,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
     public getRectClasses(x: number, y: number): string {
         if (this.isSelected(x, y)) {
-            return 'moved';
+            return 'moved-fill';
         }
         return '';
     }

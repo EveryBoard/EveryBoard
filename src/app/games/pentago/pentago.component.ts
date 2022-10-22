@@ -161,7 +161,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public getBlockClasses(x: number, y: number): string[] {
         const blockIndex: number = x + 2 * y;
         if (this.movedBlock.equalsValue(blockIndex)) {
-            return ['moved'];
+            return ['moved-fill'];
         }
         return [];
     }

@@ -113,7 +113,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.lastMove.equalsValue(coord)) {
-            return ['moved'];
+            return ['moved-fill'];
         }
         return [];
     }
