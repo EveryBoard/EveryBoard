@@ -17,7 +17,7 @@ import { ConfigRoomService } from './services/ConfigRoomService';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
-import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
+import { DemoCardComponent, DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
@@ -170,6 +170,8 @@ export class FirebaseProviders {
         VerifyAccountComponent,
         ResetPasswordComponent,
         SettingsComponent,
+        DemoCardComponent,
+        DemoPageComponent,
 
         AbaloneComponent,
         ApagosComponent,

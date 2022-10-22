@@ -16,7 +16,7 @@ import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
+import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -334,5 +334,27 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             classes.push('highlighted');
         }
         return classes;
+    }
+
+    public static getDemoNodes(): AbaloneNode[] {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+
+        return [
+            new AbaloneNode(AbaloneState.getInitialState()),
+            new AbaloneNode(new AbaloneState([
+                [N, N, N, N, _, O, O, X, X],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, O, O, O, X, O, _],
+                [N, _, _, _, _, _, _, _, _],
+                [_, _, _, _, O, O, O, X, X],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, O, X, _, N, N],
+                [_, _, _, O, _, _, N, N, N],
+                [_, _, O, _, _, N, N, N, N],
+            ], 0)),
+        ];
     }
 }
