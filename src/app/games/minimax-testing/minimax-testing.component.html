@@ -1,8 +1,8 @@
 <table>
     <tr *ngFor="let line of board; index as y">
-        <td *ngFor="let currentCase of line; index as x">
+        <td *ngFor="let currentSpace of line; index as x">
             <ng-container *ngIf="coord.x === x && coord.y === y">(</ng-container>
-            {{ currentCase }}
+            {{ currentSpace }}
             <ng-container *ngIf="coord.x === x && coord.y === y">)</ng-container>
         </td>
     </tr>

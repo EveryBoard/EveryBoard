@@ -28,7 +28,7 @@ describe('EncapsuleMinimax', () => {
             drop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
             drop(EncapsulePiece.SMALL_LIGHT, new Coord(1, 0));
             // Drops medium = 9, drops big = 9, drops small = 7
-            // Moving the piece on board = 7 possible landing cases
+            // Moving the piece on board = 7 possible landing space
             // Total: 32
             expect(minimax.getListMoves(rules.node).length).toBe(32);
         });

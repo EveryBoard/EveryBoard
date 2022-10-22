@@ -77,9 +77,9 @@ describe('MartianChessComponent', () => {
         // Then it should not select the piece but not toast error
         testUtils.expectElementNotToHaveClass('#queen_0_0', 'highlighted');
     }));
-    it('should not select empty case', fakeAsync(async() => {
+    it('should not select empty space', fakeAsync(async() => {
         // Given the initial board
-        // When clicking an empty case immediately
+        // When clicking an empty space immediately
         // Then it should not toast
         await testUtils.expectClickSuccess('#click_3_4');
     }));

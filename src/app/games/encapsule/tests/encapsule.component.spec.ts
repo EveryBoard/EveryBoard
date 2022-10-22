@@ -2,7 +2,7 @@
 import { EncapsuleComponent } from '../encapsule.component';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncapsuleCase, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
+import { EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -13,8 +13,8 @@ describe('EncapsuleComponent', () => {
 
     let testUtils: ComponentTestUtils<EncapsuleComponent>;
 
-    const _: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-    const emptyBoard: EncapsuleCase[][] = [
+    const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+    const emptyBoard: EncapsuleSpace[][] = [
         [_, _, _],
         [_, _, _],
         [_, _, _],
@@ -43,8 +43,8 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickFailure('#piece_1_SMALL_LIGHT_0', EncapsuleFailure.NOT_DROPPABLE());
         }));
         it('should forbid moving from a space that the player is not controlling', fakeAsync(async() => {
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, _, _],
                 [_, _, _],
@@ -63,8 +63,8 @@ describe('EncapsuleComponent', () => {
         }));
         it('should select starting coord when clicking on occupied coord', fakeAsync(async() => {
             // Given a board on which one piece is owned by current player
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, _, _],
                 [_, _, _],
@@ -86,8 +86,8 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectMoveSuccess('#click_0_0', move);
         }));
         it('should allow dropping a piece on a smaller one', fakeAsync(async() => {
-            const x: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, _, _],
                 [_, _, _],
@@ -99,8 +99,8 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectMoveSuccess('#click_0_1', move);
         }));
         it('should forbid dropping a piece on a bigger one', fakeAsync(async() => {
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, _, _],
                 [_, _, _],
@@ -112,8 +112,8 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectMoveFailure('#click_0_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
         }));
         it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, _, _],
                 [_, _, _],
@@ -126,9 +126,9 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectMoveSuccess('#click_0_2', move);
         }));
         it('should allow moving a piece on top of a smaller one', fakeAsync(async() => {
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
-            const X: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+            const X: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, X, _],
                 [_, _, _],
@@ -141,9 +141,9 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectMoveSuccess('#click_0_1', move);
         }));
         it('should forbid moving a piece on top of a bigger one', fakeAsync(async() => {
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
-            const X: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+            const X: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, X, _],
                 [_, _, _],
@@ -156,8 +156,8 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectMoveFailure('#click_1_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
         }));
         it('should forbid selecting a remaining piece when a move is being constructed', fakeAsync(async() => {
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, _, _],
                 [_, _, _],
@@ -191,8 +191,8 @@ describe('EncapsuleComponent', () => {
         }));
         it('should deselect starting coord when clicking on it again', fakeAsync(async() => {
             // Given a board on which one piece is owned by current player and one is selected
-            const x: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
-            const board: EncapsuleCase[][] = [
+            const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
+            const board: EncapsuleSpace[][] = [
                 [_, _, _],
                 [x, _, _],
                 [_, _, _],
