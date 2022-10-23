@@ -322,9 +322,9 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="2215026289039876217" datatype="html">
+      <trans-unit id="2110548298430403036" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown. The space in Awalé are called the houses.
+         Let&apos;s see how seeds are sown. The spaces in Awalé are called the houses.
          As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
       </trans-unit>
@@ -387,8 +387,8 @@
       <trans-unit id="5352377142224231024" datatype="html">
         <source>Capture on the other side only</source>
       </trans-unit>
-      <trans-unit id="7930770052624466073" datatype="html">
-        <source>Your house are the one bellow. Try to capture the two leftmost houses of the opponent.</source>
+      <trans-unit id="6544432318052544187" datatype="html">
+        <source>Your houses are the one below. Try to capture the two leftmost houses of the opponent.</source>
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
@@ -399,9 +399,9 @@
       <trans-unit id="2796272222228002710" datatype="html">
         <source>Do not starve</source>
       </trans-unit>
-      <trans-unit id="3516990499700476332" datatype="html">
+      <trans-unit id="6918764867191654456" datatype="html">
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        Your houses are the one bellow. Try it.</source>
+        Your houses are the one below. Try it.</source>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.

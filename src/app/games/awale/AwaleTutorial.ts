@@ -8,7 +8,7 @@ export class AwaleTutorial {
         TutorialStep.anyMove(
             $localize`Sowing`,
             $localize`Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let's see how seeds are sown. The space in Awalé are called the houses.
+         Let's see how seeds are sown. The spaces in Awalé are called the houses.
          As you're playing first, the 6 houses on the bottom are yours.<br/><br>
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
             AwaleState.getInitialState(),
@@ -71,7 +71,7 @@ export class AwaleTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capture on the other side only`,
-            $localize`Your house are the one bellow. Try to capture the two leftmost houses of the opponent.`,
+            $localize`Your houses are the one below. Try to capture the two leftmost houses of the opponent.`,
             new AwaleState([
                 [2, 2, 0, 0, 1, 0],
                 [1, 3, 0, 0, 0, 0],
@@ -83,7 +83,7 @@ export class AwaleTutorial {
         TutorialStep.fromMove(
             $localize`Do not starve`,
             $localize`You have a very nice capture that seems possible: it seems that you can capture all the opponent's seeds!<br/><br/>
-        Your houses are the one bellow. Try it.`,
+        Your houses are the one below. Try it.`,
             new AwaleState([
                 [1, 1, 1, 1, 1, 0],
                 [5, 0, 0, 1, 0, 0],

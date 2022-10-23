@@ -91,7 +91,6 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
             resultingBoard[mansoonedY][x] = 0;
             x++;
         } while (x < 6);
-        console.table(captureMap)
         return { capturedSum, captureMap, resultingBoard };
     }
     /**
