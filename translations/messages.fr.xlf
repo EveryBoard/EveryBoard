@@ -3278,27 +3278,43 @@
         <source>Failed, the piece is still on the board.</source>
         <target>Raté, la pièce est encore sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="3027382203175982711" datatype="html">
+      <trans-unit id="8483955670337077136" datatype="html">
+        <source>Pushing (1/2)</source>
+        <target>Pousser (1/2)</target>
+      </trans-unit>
+      <trans-unit id="5017134997515199928" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
-        In order to push, the following conditions must hold:
+        In order to push player pieces, the following conditions must hold:
         &lt;ol&gt;
             &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
             &lt;li&gt;Along the line that you are pushing, the number of pieces (yours or your opponent&apos;s) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.&lt;/li&gt;
-            &lt;li&gt;Each mountain in that line requires the strength of one extra pusher.&lt;/li&gt;
         &lt;/ol&gt;
-        Your piece on the top right cannot push because there is one mountain too much.
-        Your piece on the bottom right can push.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+        Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
+        On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;
+        Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
-        Pour pousser, plusieurs critères doivent être vérifiés :
+        Pour pousser des pièces, plusieurs critères doivent être vérifiés :
         &lt;ol&gt;
             &lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;
             &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face..&lt;/li&gt;
-            &lt;li&gt;Chaque montagne dans cette ligne requiert la force d'un pousseur supplémentaire..&lt;/li&gt;
         &lt;/ol&gt;
-        Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
-        Votre pièce tout en bas à droite, elle, peut pousser.&lt;br/&gt;&lt;br/&gt;
-        Faites-le !</target>
+        Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée.
+        Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;
+        Verticalement, vous pouvez poussez avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="6284799875777459303" datatype="html">
+        <source>Pushing (2/2)</source>
+        <target>Pousser (2/2)</target>
+      </trans-unit>
+      <trans-unit id="6098079699000729384" datatype="html">
+        <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
+        On the following board, you can push the mountain on the first row.
+        On the second and third row, because of the resistant, you cannot push.&lt;br/&gt;&lt;br/&gt;
+        On the fourth row, you can push as there is one more pusher than resistants. Do it.</source>
+        <target>Pour pousser une montane, vous avez besoin d'un pièce pousseuse par montagne. Chaque résistant (pièce dans la direction opposée) annule la force d'une pousseuse.
+        Sur le plateau, vous pouvez pousser la montagne de la première ligne.
+        Sur la deuxième et troisième, vous ne pouvez pas pousser à cause des pièces résistantes.&lt;br/&gt;&lt;br/&gt;
+        Sur la quatrième ligne, vous pouvez pousser car il y a une pousseuse de plus que de résistantes. Faites-le.</target>
       </trans-unit>
       <trans-unit id="6651584028213138803" datatype="html">
         <source>The game ends when a mountain is pushed out of the board.

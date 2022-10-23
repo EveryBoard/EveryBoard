@@ -87,25 +87,41 @@ export class SiamTutorial {
             $localize`Failed, the piece is still on the board.`,
         ),
         TutorialStep.fromMove(
-            $localize`Pushing`,
+            $localize`Pushing (1/2)`,
             $localize`When the landing square of your move is occupied, we use the term "push".
-        In order to push, the following conditions must hold:
+        In order to push player pieces, the following conditions must hold:
         <ol>
             <li>Your piece must already be oriented in the direction of the push.</li>
             <li>Along the line that you are pushing, the number of pieces (yours or your opponent's) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.</li>
-            <li>Each mountain in that line requires the strength of one extra pusher.</li>
         </ol>
-        Your piece on the top right cannot push because there is one mountain too much.
-        Your piece on the bottom right can push.<br/><br/>
-        Do it.`,
+        Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
+        On the second row, you can push because there are two pieces against one.<br/><br/>
+        Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.`,
             new SiamState([
-                [R, M, M, l, L],
+                [_, R, l, _, _],
+                [R, r, L, _, _],
+                [_, _, U, _, _],
                 [_, _, _, _, _],
-                [_, _, _, M, _],
                 [_, _, _, _, _],
-                [_, _, r, l, L],
             ], 0),
-            [SiamMove.of(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get()],
+            [SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get()],
+            $localize`Congratulations!`,
+            $localize`Failed!`,
+        ),
+        TutorialStep.fromMove(
+            $localize`Pushing (2/2)`,
+            $localize`To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
+        On the following board, you can push the mountain on the first row.
+        On the second and third row, because of the resistant, you cannot push.<br/><br/>
+        On the fourth row, you can push as there is one more pusher than resistants. Do it.`,
+            new SiamState([
+                [_, _, R, M, _],
+                [_, _, R, M, L],
+                [_, R, L, M, _],
+                [_, R, r, l, M],
+                [_, _, _, _, _],
+            ], 0),
+            [SiamMove.of(1, 3, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get()],
             $localize`Congratulations!`,
             $localize`Failed!`,
         ),
