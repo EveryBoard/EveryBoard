@@ -8,15 +8,15 @@
           class="base mid-small-stroke"
     />
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let caseContent of line; index as x">
-            <g *ngIf="caseIsFull(x, y) else empty">
+        <g *ngFor="let spaceContent of line; index as x">
+            <g *ngIf="spaceIsFull(x, y) else empty">
                 <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="22"
                         (click)="onClick(x, y)"
                         [ngClass]="getSpaceClass(x, y)"
                         class="base mid-stroke"
                 />
-                <circle *ngIf="isLastCase(x, y)"
+                <circle *ngIf="isLastSpace(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="22"
                         class="base no-fill mid-stroke highlighted"
@@ -47,7 +47,7 @@
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
-                        [attr.class]="caseContent === GoPiece.LIGHT_TERRITORY ? 'player1' : 'player0'"
+                        [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1' : 'player0'"
                         (click)="onClick(x, y)"
                 />
             </ng-template>

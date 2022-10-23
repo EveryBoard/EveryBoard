@@ -1,4 +1,4 @@
-import { EncapsuleState, EncapsuleCase } from './EncapsuleState';
+import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Sets } from 'src/app/utils/Sets';
 import { Player } from 'src/app/jscaip/Player';
@@ -20,7 +20,7 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, Enc
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
         const state: EncapsuleState = n.gameState;
-        const board: Table<EncapsuleCase> = state.getCopiedBoard();
+        const board: Table<EncapsuleSpace> = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         const puttablePieces: EncapsulePiece[] = Sets.toComparableObjectSet(state.getPlayerRemainingPieces());
         for (let y: number = 0; y < 3; y++) {

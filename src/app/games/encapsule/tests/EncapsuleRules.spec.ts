@@ -3,7 +3,7 @@ import { EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleMinimax } from '../EncapsuleMinimax';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncapsuleCase, EncapsuleState } from '../EncapsuleState';
+import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,7 +15,7 @@ describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
 
-    let minimaxes: Minimax<EncapsuleMove, EncapsuleState, EncapsuleCase>[];
+    let minimaxes: Minimax<EncapsuleMove, EncapsuleState, EncapsuleSpace>[];
 
     const drop: (piece: EncapsulePiece, coord: Coord) => boolean = (piece: EncapsulePiece, coord: Coord) => {
         const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
@@ -25,14 +25,14 @@ describe('EncapsuleRules', () => {
         const move: EncapsuleMove = EncapsuleMove.fromMove(start, end);
         return rules.choose(move);
     };
-    const ___: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-    const X__: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-    const _X_: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
-    const __X: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ONE);
-    const O__: EncapsuleCase = new EncapsuleCase(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
-    const _O_: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
-    const __O: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
-    const XO_: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
+    const ___: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+    const X__: EncapsuleSpace = new EncapsuleSpace(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+    const _X_: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ONE, PlayerOrNone.NONE);
+    const __X: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ONE);
+    const O__: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
+    const _O_: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+    const __O: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
+    const XO_: EncapsuleSpace = new EncapsuleSpace(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
     const O0: EncapsulePiece = EncapsulePiece.SMALL_DARK;
     const O1: EncapsulePiece = EncapsulePiece.MEDIUM_DARK;
     const O2: EncapsulePiece = EncapsulePiece.BIG_DARK;
@@ -51,7 +51,7 @@ describe('EncapsuleRules', () => {
     });
     describe('isVictory', () => {
         it('should detect victory', () => {
-            const board: EncapsuleCase[][] = [
+            const board: EncapsuleSpace[][] = [
                 [O__, ___, ___],
                 [___, _O_, ___],
                 [___, ___, __O],
@@ -63,7 +63,7 @@ describe('EncapsuleRules', () => {
             expect(EncapsuleRules.isVictory(state).isPresent()).toBeTrue();
         });
         it('should not consider a non-victory as a victory', () => {
-            const board: EncapsuleCase[][] = [
+            const board: EncapsuleSpace[][] = [
                 [O__, ___, ___],
                 [___, _X_, ___],
                 [___, ___, __X],
@@ -79,7 +79,7 @@ describe('EncapsuleRules', () => {
     });
     it('should know winner even when he was not playing', () => {
         // Given a board on which active player could loose by acting
-        const board: EncapsuleCase[][] = [
+        const board: EncapsuleSpace[][] = [
             [XO_, ___, ___],
             [___, _X_, ___],
             [___, ___, __X],
@@ -93,7 +93,7 @@ describe('EncapsuleRules', () => {
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0));
 
         // Then the active player should have lost
-        const expectedBoard: EncapsuleCase[][] = [
+        const expectedBoard: EncapsuleSpace[][] = [
             [X__, _O_, ___],
             [___, _X_, ___],
             [___, ___, __X],
@@ -126,7 +126,7 @@ describe('EncapsuleRules', () => {
     });
     it('should allow moving pieces on empty coord', () => {
         // Given a board with piece on it
-        const board: EncapsuleCase[][] = [
+        const board: EncapsuleSpace[][] = [
             [O__, ___, ___],
             [___, X__, ___],
             [___, ___, ___],
@@ -141,7 +141,7 @@ describe('EncapsuleRules', () => {
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
 
         // Then the piece should have been moved
-        const expectedBoard: EncapsuleCase[][] = [
+        const expectedBoard: EncapsuleSpace[][] = [
             [___, ___, ___],
             [___, X__, ___],
             [___, ___, O__],
@@ -151,7 +151,7 @@ describe('EncapsuleRules', () => {
     });
     it('should allow moving piece on a smaller piece', () => {
         // Given a board with small and bigger piece on it
-        const board: EncapsuleCase[][] = [
+        const board: EncapsuleSpace[][] = [
             [_O_, ___, ___],
             [___, ___, ___],
             [___, ___, X__],
@@ -163,7 +163,7 @@ describe('EncapsuleRules', () => {
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
 
         // Then the piece should have been moved over the smaller one
-        const expectedBoard: EncapsuleCase[][] = [
+        const expectedBoard: EncapsuleSpace[][] = [
             [___, ___, ___],
             [___, ___, ___],
             [___, ___, XO_],
@@ -177,7 +177,7 @@ describe('EncapsuleRules', () => {
         expect(move(new Coord(2, 0), new Coord(2, 1))).toBeFalse();
     });
     it('should forbid dropping a piece on a bigger piece', () => {
-        const board: EncapsuleCase[][] = [
+        const board: EncapsuleSpace[][] = [
             [__X, ___, ___],
             [___, ___, ___],
             [___, ___, ___],

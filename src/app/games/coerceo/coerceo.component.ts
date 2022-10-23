@@ -113,8 +113,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
     public isPyramid(x: number, y: number): boolean {
-        const caseContent: FourStatePiece = this.board[y][x];
-        return caseContent.isPlayer() || this.wasOpponent(x, y);
+        const spaceContent: FourStatePiece = this.board[y][x];
+        return spaceContent.isPlayer() || this.wasOpponent(x, y);
     }
     private wasOpponent(x: number, y: number): boolean {
         const mother: MGPOptional<CoerceoNode> = this.rules.node.mother;
@@ -122,24 +122,24 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                mother.get().gameState.getPieceAtXY(x, y).is(mother.get().gameState.getCurrentOpponent());
     }
     public getPyramidClass(x: number, y: number): string {
-        const caseContent: FourStatePiece = this.board[y][x];
-        if (caseContent === FourStatePiece.ZERO) {
+        const spaceContent: FourStatePiece = this.board[y][x];
+        if (spaceContent === FourStatePiece.ZERO) {
             return this.getPlayerClass(Player.ZERO);
-        } else if (caseContent === FourStatePiece.ONE) {
+        } else if (spaceContent === FourStatePiece.ONE) {
             return this.getPlayerClass(Player.ONE);
         } else {
             return 'captured';
         }
     }
-    public isEmptyCase(x: number, y: number): boolean {
-        const caseContent: FourStatePiece = this.board[y][x];
-        return caseContent === FourStatePiece.EMPTY ||
+    public isEmptySpace(x: number, y: number): boolean {
+        const spaceContent: FourStatePiece = this.board[y][x];
+        return spaceContent === FourStatePiece.EMPTY ||
                this.wasRemoved(x, y);
     }
     private wasRemoved(x: number, y: number): boolean {
-        const caseContent: FourStatePiece = this.board[y][x];
+        const spaceContent: FourStatePiece = this.board[y][x];
         const mother: MGPOptional<CoerceoNode> = this.rules.node.mother;
-        if (caseContent === FourStatePiece.UNREACHABLE && mother.isPresent()) {
+        if (spaceContent === FourStatePiece.UNREACHABLE && mother.isPresent()) {
             const previousContent: FourStatePiece = mother.get().gameState.getPieceAtXY(x, y);
             return previousContent === FourStatePiece.EMPTY ||
                    previousContent.is(mother.get().gameState.getCurrentPlayer());
@@ -148,8 +148,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
     public getEmptyClass(x: number, y: number): string {
-        const caseContent: FourStatePiece = this.board[y][x];
-        if (caseContent === FourStatePiece.EMPTY) {
+        const spaceContent: FourStatePiece = this.board[y][x];
+        if (spaceContent === FourStatePiece.EMPTY) {
             if ((x+y)%2 === 1) {
                 return 'background';
             } else {
