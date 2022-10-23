@@ -136,8 +136,14 @@ export class SimpleComponentTestUtils<T> {
     public findElement(elementName: string): DebugElement {
         return this.fixture.debugElement.query(By.css(elementName));
     }
+    public findElements(elementName: string): DebugElement[] {
+        return this.fixture.debugElement.queryAll(By.css(elementName));
+    }
     public findElementByDirective(directive: Type<unknown>): DebugElement {
         return this.fixture.debugElement.query(By.directive(directive));
+    }
+    public querySelector(query: string): DebugElement {
+        return this.fixture.debugElement.nativeElement.querySelector(query);
     }
     public destroy(): void {
         return this.fixture.destroy();

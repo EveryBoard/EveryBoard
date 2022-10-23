@@ -1,0 +1,29 @@
+<form>
+    <div class="field">
+        <label class="label" for="numberOfColumns">
+            <ng-container i18n>Number of columns: </ng-container>
+            <output>{{ numberOfColumns.value }}</output>
+        </label>
+        <div class="control">
+            <input class="slider is-circle is-primary"
+                   step="1"
+                   min="1" max="10"
+                   name="maximalMoveDuration"
+                   [formControl]="numberOfColumns" type="range">
+        </div>
+    </div>
+</form>
+<div class="columns">
+    <div *ngFor="let column of columns" class="column">
+        <div *ngFor="let game of column" class="card">
+            <div class="card-header">
+                <p class="card-header-title">{{ game.name }}</p>
+            </div>
+            <div class="card-image game-card">
+                <figure class="image">
+                    <app-demo-card [demoNodeInfo]="game"></app-demo-card>
+                </figure>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,73 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Player } from 'src/app/jscaip/Player';
-import { Utils } from 'src/app/utils/utils';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameInfo } from '../pick-game/pick-game.component';
-
-type DemoNodeInfo = {
-    name: string, // The name of the game
-    component: any, // The component
-    node: any, // The demo node (TODO: type it)
-}
-
-@Component({
-    selector: 'app-demo-card',
-    template: `<div #board></div>`,
-})
-export class DemoCardComponent implements AfterViewInit {
-    @Input() public demoNodeInfo: DemoNodeInfo;
-
-    @ViewChild('board', { read: ViewContainerRef })
-    public boardRef: ViewContainerRef | null;
-
-    public constructor(private readonly componentFactoryResolver: ComponentFactoryResolver) {
-    }
-
-    public ngAfterViewInit(): void {
-        const componentFactory: ComponentFactory<AbstractGameComponent> =
-            this.componentFactoryResolver.resolveComponentFactory(this.demoNodeInfo.component);
-        const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
-        componentRef.instance.rules.node = this.demoNodeInfo.node;
-        // The demo node is shown from the point of the player corresponding to the current turn
-        componentRef.instance.role = componentRef.instance.getCurrentPlayer();
-        // The board needs to be updated to account for the changed node
-        componentRef.instance.updateBoard();
-    }
-}
+import { DemoNodeInfo } from './demo-card.component';
 
 @Component({
     selector: 'app-demo-page',
-    template: `
-<form>
-    <div class="field">
-        <label class="label" for="numberOfColumns">
-             <ng-container i18n>Number of columns: </ng-container>
-             <output>{{ numberOfColumns.value }}</output>
-         </label>
-         <div class="control">
-             <input class="slider is-circle is-primary"
-                    step="1"
-                    min="1" max="10"
-                    name="maximalMoveDuration"
-                    [formControl]="numberOfColumns" type="range">
-         </div>
-    </div>
-</form>
-<div class="columns">
-    <div *ngFor="let column of columns" class="column">
-        <div *ngFor="let game of column" class="card">
-        <div class="card-header">
-            <p class="card-header-title">{{ game.name }}</p>
-        </div>
-        <div class="card-image game-card">
-            <figure class="image">
-                <app-demo-card [demoNodeInfo]="game"></app-demo-card>
-            </figure>
-        </div>
-    </div>
-</div>`,
+    templateUrl: './demo-page.component.html',
 })
 export class DemoPageComponent {
     public numberOfColumns: FormControl = new FormControl(5);

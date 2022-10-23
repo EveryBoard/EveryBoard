@@ -9,7 +9,7 @@ import { ApagosCoord } from './ApagosCoord';
 import { ApagosDummyMinimax } from './ApagosDummyMinimax';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
-import { ApagosRules } from './ApagosRules';
+import { ApagosNode, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { ApagosTutorial } from './ApagosTutorial';
@@ -298,5 +298,22 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     }
     public getRemainingPieceCx(x: number): number {
         return (x + 0.5) * this.PIECE_RADIUS * 1.5;
+    }
+
+    public static getDemoNodes(): ApagosNode[] {
+        return [
+            new ApagosNode(
+                ApagosState.fromRepresentation(3, [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [7, 5, 3, 1],
+                ], 9, 9),
+                MGPOptional.of(new ApagosNode(ApagosState.fromRepresentation(2, [
+                    [0, 0, 1, 0],
+                    [0, 1, 0, 0],
+                    [7, 5, 3, 1],
+                ], 9, 9))),
+                MGPOptional.of(ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ZERO).get())),
+        ];
     }
 }

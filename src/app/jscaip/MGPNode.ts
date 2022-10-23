@@ -280,3 +280,6 @@ export class MGPNode<R extends Rules<M, S, L>,
         return nbDescendants;
     }
 }
+
+export abstract class AbstractNode extends MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> {
+}

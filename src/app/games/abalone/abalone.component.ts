@@ -343,18 +343,32 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const X: FourStatePiece = FourStatePiece.ONE;
 
         return [
-            new AbaloneNode(AbaloneState.getInitialState()),
-            new AbaloneNode(new AbaloneState([
-                [N, N, N, N, _, O, O, X, X],
-                [N, N, N, _, _, _, _, _, _],
-                [N, N, _, O, O, O, X, O, _],
-                [N, _, _, _, _, _, _, _, _],
-                [_, _, _, _, O, O, O, X, X],
-                [_, _, _, _, _, _, _, _, N],
-                [_, _, _, _, O, X, _, N, N],
-                [_, _, _, O, _, _, N, N, N],
-                [_, _, O, _, _, N, N, N, N],
-            ], 0)),
+            new AbaloneNode(
+                new AbaloneState([
+                    [N, N, N, N, _, O, O, O, X],
+                    [N, N, N, _, _, _, _, _, _],
+                    [N, N, _, O, O, O, X, O, _],
+                    [N, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, O, O, O, X, X],
+                    [_, _, _, _, _, _, _, _, N],
+                    [_, _, _, _, O, X, _, N, N],
+                    [_, _, _, O, _, _, N, N, N],
+                    [_, _, O, _, _, N, N, N, N],
+                ], 1),
+                MGPOptional.of(new AbaloneNode(new AbaloneState([
+                    [N, N, N, N, O, O, O, X, X],
+                    [N, N, N, _, _, _, _, _, _],
+                    [N, N, _, O, O, O, X, O, _],
+                    [N, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, O, O, O, X, X],
+                    [_, _, _, _, _, _, _, _, N],
+                    [_, _, _, _, O, X, _, N, N],
+                    [_, _, _, O, _, _, N, N, N],
+                    [_, _, O, _, _, N, N, N, N],
+                ], 0))),
+                MGPOptional.of(
+                    AbaloneMove.fromDoubleCoord(new Coord(4, 0), new Coord(6, 0),
+                                                HexaDirection.RIGHT).get())),
         ];
     }
 }

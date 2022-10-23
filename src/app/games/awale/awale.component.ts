@@ -116,17 +116,6 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
     public static getDemoNodes(): AwaleNode[] {
         return [
-            new AwaleNode(AwaleState.getInitialState()),
-            new AwaleNode(
-                new AwaleState([
-                    [0, 0, 0, 0, 3, 4],
-                    [0, 0, 0, 0, 0, 1],
-                ], 1, [0, 0]),
-                MGPOptional.of(new AwaleNode(new AwaleState([
-                    [0, 0, 0, 0, 2, 3],
-                    [0, 0, 0, 0, 2, 0],
-                ], 0, [0, 0]))),
-                MGPOptional.of(AwaleMove.FOUR)),
             new AwaleNode(
                 new AwaleState([
                     [0, 0, 0, 2, 0, 0],
