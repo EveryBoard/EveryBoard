@@ -98,7 +98,6 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.last = MGPOptional.empty(); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = AwaleMove.from(x);
-        // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gameState);
     }
     public getSpaceClasses(x: number, y: number): string[] {

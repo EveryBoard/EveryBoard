@@ -31,14 +31,10 @@ export class AwaleTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.
-         Then, the player looks at the preceding house:
-         if it is still in the opponent's side and contains two or three seeds, they are also captured.
-         This continues until we reach either the player's side or a house containing neither two nor three seeds.<br/><br/>
-         You are the first player, try to capture some pieces!`,
+            $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.<br/><br/>The houses on the bottom are yours, do a capture!`,
             new AwaleState([
-                [1, 0, 0, 0, 1, 0],
-                [1, 0, 0, 0, 1, 0],
+                [0, 1, 0, 0, 1, 0],
+                [2, 0, 0, 0, 1, 0],
             ], 0, [0, 0]),
             [AwaleMove.ZERO],
             $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
@@ -46,9 +42,7 @@ export class AwaleTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Multiple captures`,
-            $localize`By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
-        As these are consecutive houses, all seeds in them will be captured.<br/><br/>
-        Capture them.`,
+            $localize`By sowing from your leftmost house, you will end in the opponent's second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!<br/><br/>The houses on the bottom are yours, do a capture!`,
             new AwaleState([
                 [2, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
@@ -59,14 +53,13 @@ export class AwaleTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Interrupted capture`,
-            $localize`By clicking on your leftmost house, you end up on the 3rd house, which is capturable.<br/><br/>
-        The houses on the bottom are yours, do a capture!`,
+            $localize`By clicking on your leftmost house, you end up on the 3rd house, which is capturable.<br/><br/>The houses on the bottom are yours, do a capture!`,
             new AwaleState([
                 [1, 0, 1, 0, 0, 1],
                 [3, 0, 0, 0, 1, 0],
             ], 0, [0, 0]),
             [AwaleMove.ZERO],
-            $localize`Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.`,
+            $localize`Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.`,
             $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
@@ -106,11 +99,10 @@ export class AwaleTutorial {
         ),
         TutorialStep.anyMove(
             $localize`End of the game`,
-            $localize`A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.<br/><br/>
-         Sow the house on the top right.`,
+            $localize`A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.<br/><br/>Your houses are still the bottom one, sow the leftmost house.`,
             new AwaleState([
-                [0, 0, 0, 0, 0, 1],
-                [0, 1, 2, 3, 4, 4],
+                [4, 4, 3, 2, 1, 0],
+                [1, 0, 0, 0, 0, 0],
             ], 0, [0, 0]),
             AwaleMove.FIVE,
             $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side.

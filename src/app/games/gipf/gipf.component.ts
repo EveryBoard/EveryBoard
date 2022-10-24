@@ -194,10 +194,10 @@ export class GipfComponent
         this.arrows = [];
         for (const dir of GipfRules.getAllDirectionsForEntrance(this.constructedState, placement)) {
             if (GipfRules.isLineComplete(this.constructedState, placement, dir) === false) {
-                const nextCase: Coord = placement.getNext(dir);
+                const nextSpace: Coord = placement.getNext(dir);
                 const center1: Coord = this.getCenterAt(placement);
-                const center2: Coord = this.getCenterAt(nextCase);
-                this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
+                const center2: Coord = this.getCenterAt(nextSpace);
+                this.arrows.push(new Arrow(placement, nextSpace, center1.x, center1.y, center2.x, center2.y));
             }
         }
     }

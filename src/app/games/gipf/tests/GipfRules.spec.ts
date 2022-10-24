@@ -54,7 +54,7 @@ describe('GipfRules:', () => {
         });
     });
     describe('isLegal and applyLegalMove', () => {
-        it('should forbid placements on non-border cases', () => {
+        it('should forbid placements on non-border spaces', () => {
             const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);

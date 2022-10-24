@@ -129,13 +129,13 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         const groups: GoGroupDatas[] = [];
         let coord: Coord;
         let group: GoGroupDatas;
-        let currentCase: GoPiece;
+        let currentSpace: GoPiece;
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 coord = new Coord(x, y);
-                currentCase = board[y][x];
-                if (condition(currentCase)) {
+                currentSpace = board[y][x];
+                if (condition(currentSpace)) {
                     if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfContains(coord))) {
                         group = goGroupDatasFactory.getGroupDatas(coord, board) as GoGroupDatas;
                         groups.push(group);
@@ -149,13 +149,13 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         const captured: number[] = state.getCapturedCopy();
         let playerOneScore: number = captured[1];
         let playerZeroScore: number = captured[0];
-        let currentCase: GoPiece;
+        let currentSpace: GoPiece;
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[0].length; x++) {
-                currentCase = state.getPieceAtXY(x, y);
-                if (currentCase === GoPiece.DEAD_DARK) {
+                currentSpace = state.getPieceAtXY(x, y);
+                if (currentSpace === GoPiece.DEAD_DARK) {
                     playerOneScore++;
-                } else if (currentCase === GoPiece.DEAD_LIGHT) {
+                } else if (currentSpace === GoPiece.DEAD_LIGHT) {
                     playerZeroScore++;
                 }
             }

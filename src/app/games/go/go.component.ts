@@ -103,11 +103,11 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }
-    public caseIsFull(x: number, y: number): boolean {
+    public spaceIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
     }
-    public isLastCase(x: number, y: number): boolean {
+    public isLastSpace(x: number, y: number): boolean {
         if (this.last.isPresent()) {
             const last: Coord = this.last.get();
             return x === last.x && y === last.y;

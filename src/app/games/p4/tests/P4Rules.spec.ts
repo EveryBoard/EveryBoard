@@ -26,7 +26,7 @@ describe('P4Rules', () => {
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
-    it('should drop piece on the lowest case of the column', () => {
+    it('should drop piece on the lowest space of the column', () => {
         // Given the initial board
         const state: P4State = P4State.getInitialState();
 
@@ -159,8 +159,8 @@ describe('P4Rules', () => {
             [_, _, X, X, _, _, _],
             [_, _, O, O, _, _, _],
         ];
-        expect(P4Rules.getLowestUnoccupiedCase(board, 0)).toBe(5);
-        expect(P4Rules.getLowestUnoccupiedCase(board, 2)).toBe(0);
-        expect(P4Rules.getLowestUnoccupiedCase(board, 3)).toBe(-1);
+        expect(P4Rules.getLowestUnoccupiedSpace(board, 0)).toBe(5);
+        expect(P4Rules.getLowestUnoccupiedSpace(board, 2)).toBe(0);
+        expect(P4Rules.getLowestUnoccupiedSpace(board, 3)).toBe(-1);
     });
 });

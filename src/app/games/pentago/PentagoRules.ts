@@ -23,7 +23,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         return PentagoRules.singleton.get();
     }
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
-        // [ firstCoordToTest, directionToTest, shouldLookTheCaseBeforeAsWellAsCaseAfter]
+        // [ firstCoordToTest, directionToTest, shouldLookTheSpaceBeforeAsWellAsSpaceAfter]
         [new Coord(1, 0), new Vector(1, 1), false], // 4 short diagonals
         [new Coord(0, 1), new Vector(1, 1), false],
         [new Coord(4, 0), new Vector(-1, 1), false],

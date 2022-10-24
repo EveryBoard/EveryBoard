@@ -23,7 +23,7 @@ describe('CoerceoComponent', () => {
     }
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = testUtils.getComponent();
-        expect(gameComponent.isEmptyCase(x, y)).toBeTrue();
+        expect(gameComponent.isEmptySpace(x, y)).toBeTrue();
         expect(gameComponent.getEmptyClass(x, y)).toBe('captured2');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {

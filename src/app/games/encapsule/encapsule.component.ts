@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
-import { EncapsuleState, EncapsuleCase } from 'src/app/games/encapsule/EncapsuleState';
+import { EncapsuleState, EncapsuleSpace } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -23,7 +23,7 @@ import { assert } from 'src/app/utils/assert';
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
                                                                  EncapsuleState,
-                                                                 EncapsuleCase,
+                                                                 EncapsuleSpace,
                                                                  EncapsuleLegalityInformation>
 {
     private readonly INTER_PIECE_SPACE: number = 20;
@@ -58,7 +58,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             this.lastStartingCoord = MGPOptional.empty();
         }
     }
-    public getListPieces(content: EncapsuleCase): EncapsulePiece[] {
+    public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
         return content.toList();
     }
     public getRemainingPieces(player: number): EncapsulePiece[] {

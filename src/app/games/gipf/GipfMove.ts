@@ -34,7 +34,7 @@ export class GipfCapture {
         this.capturedSpaces = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
             if (coord1.x === coord2.x) {
                 if (coord1.y === coord2.y) {
-                    throw new Error('Cannot create a GipfCapture with duplicate cases');
+                    throw new Error('Cannot create a GipfCapture with duplicate coords');
                 }
                 return coord1.y > coord2.y ? 1 : -1;
             } else {
@@ -42,10 +42,10 @@ export class GipfCapture {
             }
         });
         let previous: MGPOptional<Coord> = MGPOptional.empty();
-        // Captured cases must be consecutive
+        // Captured coords must be consecutive
         for (const coord of this.capturedSpaces) {
             if (previous.isPresent() && previous.get().getDistance(coord) !== 1) {
-                throw new Error('Cannot create a GipfCapture with non-consecutive cases');
+                throw new Error('Cannot create a GipfCapture with non-consecutive coords');
             }
             previous = MGPOptional.of(coord);
         }

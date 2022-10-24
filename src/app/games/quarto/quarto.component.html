@@ -7,7 +7,7 @@
         <g #boardDiv
            *ngFor="let line of board; index as y"
         >
-            <g *ngFor="let caseContent of line; index as x">
+            <g *ngFor="let spaceContent of line; index as x">
                 <rect id="chooseCoord_{{ x }}_{{ y }}"
                       (click)="chooseCoord(x, y)"
                       [attr.x]="SPACE_SIZE * x"
@@ -17,24 +17,24 @@
                       [ngClass]="getSquareClasses(x, y)"
                       class="base"
                 />
-                <g *ngIf="caseContent !== EMPTY">
-                    <rect *ngIf="caseContent.isRectangle() else circle"
-                          [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE/2 - getPieceSize(caseContent.value))"
-                          [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE/2 - getPieceSize(caseContent.value))"
-                          [attr.width]="getPieceSize(caseContent.value)*2"
-                          [attr.height]="getPieceSize(caseContent.value)*2"
-                          [ngClass]="getPieceClasses(caseContent.value)"
+                <g *ngIf="spaceContent !== EMPTY">
+                    <rect *ngIf="spaceContent.isRectangle() else circle"
+                          [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE/2 - getPieceSize(spaceContent.value))"
+                          [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE/2 - getPieceSize(spaceContent.value))"
+                          [attr.width]="getPieceSize(spaceContent.value)*2"
+                          [attr.height]="getPieceSize(spaceContent.value)*2"
+                          [ngClass]="getPieceClasses(spaceContent.value)"
                           class="base"
                     />
                     <ng-template #circle>
                         <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
                                 [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-                                [attr.r]="getPieceSize(caseContent.value)"
-                                [ngClass]="getPieceClasses(caseContent.value)"
+                                [attr.r]="getPieceSize(spaceContent.value)"
+                                [ngClass]="getPieceClasses(spaceContent.value)"
                                 class="base"
                         />
                     </ng-template>
-                    <circle *ngIf="pieceHasDot(caseContent.value)"
+                    <circle *ngIf="pieceHasDot(spaceContent.value)"
                             [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
                             [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
                             [attr.r]="10"
@@ -135,7 +135,7 @@
                   stroke-dasharray="10, 10"
                   class="base no-fill"
             />
-            <g *ngFor="let caseContent of line; index as x">
+            <g *ngFor="let spaceContent of line; index as x">
                 <g *ngIf="isRemaining((4 * y) + x)"
                    (click)="choosePiece((4 * y) + x)"
                    id="choosePiece_{{ (4 * y) + x }}"

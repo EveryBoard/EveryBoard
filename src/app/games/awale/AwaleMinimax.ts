@@ -41,21 +41,21 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
         const player: Player = node.gameState.getCurrentPlayer();
         const playerY: number = node.gameState.getCurrentOpponent().value;
         const opponentY: number = player.value;
-        // sort by captured cases
+        // sort by captured houses
         ArrayUtils.sortByDescending(moves, (move: AwaleMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();
             const toDistribute: number = board[playerY][move.x];
             const filledCoords: Coord[] = AwaleRules.distribute(move.x, playerY, board);
-            const endCase: Coord = filledCoords[filledCoords.length - 1];
+            const endHouse: Coord = filledCoords[filledCoords.length - 1];
             let captured: number;
             let sameTerritoryValue: number = 0;
-            if (endCase.y === playerY) {
+            if (endHouse.y === playerY) {
                 captured = 0;
                 if (toDistribute <= 6) {
                     sameTerritoryValue = 10;
                 }
             } else {
-                captured = AwaleRules.captureIfLegal(endCase.x, opponentY, player, board).capturedSum;
+                captured = AwaleRules.captureIfLegal(endHouse.x, opponentY, player, board).capturedSum;
             }
             // Prioritise captured, then moves in same territory, then tries to minimise number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;

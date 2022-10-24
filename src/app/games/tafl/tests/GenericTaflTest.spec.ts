@@ -100,7 +100,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 const secondClick: string = '#click_' + entries.diagonalSecondCoord.x + '_' + entries.diagonalSecondCoord.y;
                 expect(async() => await testUtils.expectClickFailure(secondClick, message)).not.toThrow();
             }));
-            it('should show captured piece and left cases', fakeAsync(async() => {
+            it('should show captured piece and left spaces', fakeAsync(async() => {
                 // Given a board where a capture is ready to be made
                 testUtils.setupState(entries.stateReadyForCapture);
                 const firstCoord: Coord = entries.capture.coord;

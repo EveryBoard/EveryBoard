@@ -24,9 +24,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const coords: Coord[] = [];
         for (let x: number = 0; x < 7; x++) {
             for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
-                const caseScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
-                if (caseScore === Player.ZERO.getVictoryValue() ||
-                    caseScore === Player.ONE.getVictoryValue())
+                const spaceScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
+                if (spaceScore === Player.ZERO.getVictoryValue() ||
+                    spaceScore === Player.ONE.getVictoryValue())
                 {
                     coords.push(new Coord(x, y));
                 }
@@ -55,7 +55,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return new BoardValue(score);
     }
-    public static getLowestUnoccupiedCase(board: Table<PlayerOrNone>, x: number): number {
+    public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
         while (y < 6 && board[y][x] === PlayerOrNone.NONE) {
             y++;
@@ -79,17 +79,17 @@ export class P4Rules extends Rules<P4Move, P4State> {
         let coord: Coord = new Coord(i.x + dir.x, i.y + dir.y);
         while (coord.isInRange(7, 6) && freeSpaces !== 3) {
             // while we're on the board
-            const currentCase: PlayerOrNone = board[coord.y][coord.x];
-            if (currentCase === opponent) {
+            const currentSpace: PlayerOrNone = board[coord.y][coord.x];
+            if (currentSpace === opponent) {
                 return [freeSpaces, allies];
             }
-            if (currentCase === ally && allAlliesAreSideBySide) {
+            if (currentSpace === ally && allAlliesAreSideBySide) {
                 allies++;
             } else {
                 allAlliesAreSideBySide = false; // we stop counting the allies on this line
             }
             // as soon as there is a hole
-            if (currentCase !== opponent && currentCase !== ally) {
+            if (currentSpace !== opponent && currentSpace !== ally) {
                 // TODO: this condition was not there before, check that it makes sense (but the body was there)
                 freeSpaces++;
             }
@@ -168,7 +168,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
-        const y: number = P4Rules.getLowestUnoccupiedCase(board, x);
+        const y: number = P4Rules.getLowestUnoccupiedSpace(board, x);
 
         const turn: number = state.turn;
 

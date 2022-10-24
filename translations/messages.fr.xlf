@@ -1059,16 +1059,9 @@
         <source>Simple capture</source>
         <target>Capture simple</target>
       </trans-unit>
-      <trans-unit id="4987331245309360880" datatype="html">
-        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.
-         Then, the player looks at the preceding house:
-         if it is still in the opponent&apos;s side and contains two or three seeds, they are also captured.
-         This continues until we reach either the player&apos;s side or a house containing neither two nor three seeds.&lt;br/&gt;&lt;br/&gt;
-         You are the first player, try to capture some pieces!</source>
-        <target>Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu&apos;il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.
-        Ensuite il regarde la case précédente :
-        si elle est dans le camp adverse et contient deux ou trois graines, il les capture aussi, et ainsi de suite jusqu&apos;à ce qu&apos;il arrive à son camp ou jusqu&apos;à ce qu&apos;il y ait un nombre de graines différent de deux ou trois.&lt;br/&gt;&lt;br/&gt;
-        Vous êtes le premier joueur, faites une capture !</target>
+      <trans-unit id="3870488699470511412" datatype="html">
+        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
+        <target>Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu&apos;il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votre, faites une capture !</target>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
@@ -1082,13 +1075,9 @@
         <source>Multiple captures</source>
         <target>Capture composée</target>
       </trans-unit>
-      <trans-unit id="1710205648645078210" datatype="html">
-        <source>By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
-        As these are consecutive houses, all seeds in them will be captured.&lt;br/&gt;&lt;br/&gt;
-        Capture them.</source>
-        <target>En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
-        Ces deux maisons, étant consécutives, seront donc toutes les deux capturées.&lt;br/&gt;&lt;br/&gt;
-        Capturez-les.</target>
+      <trans-unit id="887019765676174793" datatype="html">
+        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
+        <target>En distribuant la maison la plus à gauche, vous terminerez dans la deuxième maison la plus à gauche, qui en contient maintenant 3, donc ce sera une capture. Mais maintenant, la maison immédiatement précédente en contient 2, ce qui est également capturable, donc cette maison sera capturée aussi !&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votres, faites une capture !</target>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -1102,14 +1091,12 @@
         <source>Interrupted capture</source>
         <target>Capture interrompue</target>
       </trans-unit>
-      <trans-unit id="418082927212218889" datatype="html">
-        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;
-        The houses on the bottom are yours, do a capture!</source>
-        <target>En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.&lt;br/&gt;&lt;br/&gt;
-        Les maisons du bas sont les votre, faites une capture !</target>
+      <trans-unit id="1079008869838849535" datatype="html">
+        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
+        <target>En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votre, faites une capture !</target>
       </trans-unit>
-      <trans-unit id="3933505566350744698" datatype="html">
-        <source>Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.</source>
+      <trans-unit id="2820925339032006267" datatype="html">
+        <source>Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.</source>
         <target>Constatez que la 2ème maison n’étant pas capturable, la capture a été interrompue et vous n’avez pas pu capturer la 1ère maison.</target>
       </trans-unit>
       <trans-unit id="5352377142224231024" datatype="html">
@@ -1163,11 +1150,9 @@
         <source>End of the game</source>
         <target>Fin de partie</target>
       </trans-unit>
-      <trans-unit id="2996486651978672921" datatype="html">
-        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;
-         Sow the house on the top right.</source>
-        <target>Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.&lt;br/&gt;&lt;br/&gt;
-        Distribuez la maison en haut à droite.</target>
+      <trans-unit id="5221665367101424107" datatype="html">
+        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;Your houses are still the bottom one, sow the leftmost house.</source>
+        <target>Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.&lt;br/&gt;&lt;br/&gt;Vos maisons sont toujours celles du bas, distribuez la maison la plus à gauche.</target>
       </trans-unit>
       <trans-unit id="51867831368251774" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
