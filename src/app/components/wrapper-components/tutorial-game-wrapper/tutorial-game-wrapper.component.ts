@@ -160,8 +160,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
+            console.log('setting timeout 5!')
             window.setTimeout(() => {
                 this.cdr.detectChanges();
+                console.log('finish 5')
             }, 10);
             return MGPValidation.SUCCESS;
         } else {

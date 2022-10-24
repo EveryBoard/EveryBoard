@@ -105,6 +105,7 @@ describe('ObservedPartService', () => {
         const subscription: Subscription =
             observedPartService.subscribeToObservedPart((newValue: MGPOptional<FocusedPart>) => {
                 observedPart = newValue;
+                console.log('setting timeout 8!')
                 window.setTimeout(resolvePromise, 2000);
             });
         await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
@@ -131,6 +132,7 @@ describe('ObservedPartService', () => {
             const subscription: Subscription =
                 observedPartService.subscribeToObservedPart((observedPart: MGPOptional<FocusedPart>) => {
                     lastValue = observedPart;
+                    console.log('setting timeout 9!')
                     window.setTimeout(resolvePromise, 2000);
                 });
             // When the UserDAO modify observedPart in the user document

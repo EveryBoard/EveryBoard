@@ -215,11 +215,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.configRoom = configRoom;
 
         this.gameStarted = true;
+        console.log('setting timeout 3!')
         window.setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             this.startPart();
+            console.log('finish 3')
         }, 1);
     }
     protected startPart(): void {
@@ -244,7 +246,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.onCurrentUpdateOngoing) {
             attempt -= 1;
             assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
-            window.setTimeout(async() => await this.onCurrentPartUpdate(update, attempt), 1000);
+            console.log('setting timeout 4!')
+            window.setTimeout(async() => {
+                await this.onCurrentPartUpdate(update, attempt);
+                console.log('finish 4')
+            }, 1000);
             return;
         } else {
             this.onCurrentUpdateOngoing = true;

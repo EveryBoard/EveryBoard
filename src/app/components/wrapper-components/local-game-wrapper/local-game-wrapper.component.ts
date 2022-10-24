@@ -91,8 +91,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
             // bot's turn
+            console.log('setting timeout 2!')
             window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
+                console.log('finish 2')
             }, this.botTimeOut);
         }
     }

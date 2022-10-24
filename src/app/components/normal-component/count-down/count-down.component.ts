@@ -86,8 +86,10 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.startTime = Date.now();
         const remainingTimeOnResume: number = this.remainingMs;
         this.isPaused = false;
+        console.log('setting timeout 1!')
         this.timeoutHandleGlobal = window.setTimeout(() => {
             this.onEndReached();
+            console.log('finish 1')
         }, remainingTimeOnResume);
         this.countSeconds();
     }
@@ -101,8 +103,10 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.outOfTimeAction.emit();
     }
     private countSeconds(): void {
+        console.log('setting timeout 11!')
         this.timeoutHandleSec = window.setTimeout(() => {
             this.updateShownTime();
+            console.log('finish 11')
         }, 1000);
     }
     public isIdle(): boolean {

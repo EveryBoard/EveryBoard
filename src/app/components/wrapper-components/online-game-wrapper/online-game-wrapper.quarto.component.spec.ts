@@ -151,7 +151,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -2051,8 +2051,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should have called acceptRematch
             expect(gameService.acceptRematch).toHaveBeenCalledTimes(1);
         }));
-        it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
+        fit('should redirect to new part when rematch is accepted', fakeAsync(async() => {
             // Given a part lost with rematch request send by user
+            console.log('>>>> 1')
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
             await testUtils.expectInterfaceClickSuccess('#resignButton');
@@ -2061,11 +2062,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When opponent accepts it
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
+            console.log('>>>> 2')
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'), 3);
 
             // Then it should redirect to new part
             expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, { otherRoutes: true });
             expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, { otherRoutes: true });
+
+            console.log('>>>> 3')
+            tick();
+            console.log('>>>> 4')
         }));
     });
     describe('Non Player Experience', () => {
