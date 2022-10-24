@@ -3296,11 +3296,11 @@
         Pour pousser des pièces, plusieurs critères doivent être vérifiés :
         &lt;ol&gt;
             &lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;
-            &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face..&lt;/li&gt;
+            &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face.&lt;/li&gt;
         &lt;/ol&gt;
         Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée.
         Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;
-        Verticalement, vous pouvez poussez avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
+        Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
       </trans-unit>
       <trans-unit id="6284799875777459303" datatype="html">
         <source>Pushing (2/2)</source>

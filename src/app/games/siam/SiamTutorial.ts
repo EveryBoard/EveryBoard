@@ -111,18 +111,19 @@ export class SiamTutorial {
         TutorialStep.fromMove(
             $localize`Pushing (2/2)`,
             $localize`To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
+        In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains.
         On the following board, you can push the mountain on the first row.
-        On the second and third row, because of the resistant, you cannot push.<br/><br/>
-        On the fourth row, you can push as there is one more pusher than resistants. Do it.`,
+        On the second and third row, because of the resisting forces, you cannot push.<br/><br/>
+        On the fourth row, you can push as there is one more pusher than resistant pieces. Do it.`,
             new SiamState([
                 [_, _, R, M, _],
                 [_, _, R, M, L],
-                [_, R, L, M, _],
+                [_, R, M, M, _],
                 [_, R, r, l, M],
                 [_, _, _, _, _],
             ], 0),
             [SiamMove.of(1, 3, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get()],
-            $localize`Congratulations!`,
+            $localize`Congratulations! Note that this move made you lose the game, you will see why in the next step.`,
             $localize`Failed!`,
         ),
         TutorialStep.fromMove(
