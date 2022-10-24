@@ -3293,7 +3293,7 @@
         On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;
         Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
-        Pour pousser des pièces, plusieurs critères doivent être vérifiés :
+        Pour pousser des pièces d'un joueur, plusieurs critères doivent être vérifiés :
         &lt;ol&gt;
             &lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;
             &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face.&lt;/li&gt;

@@ -7,7 +7,6 @@ import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
 import { SixMinimax, SixBoardValue } from '../SixMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 describe('SixMinimax', () => {
 
