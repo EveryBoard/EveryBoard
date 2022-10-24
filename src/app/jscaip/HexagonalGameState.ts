@@ -23,11 +23,11 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
                        public readonly board: Table<P>,
                        public readonly width: number,
                        public readonly height: number,
-                       public readonly excludedCases: ReadonlyArray<number>,
+                       public readonly excludedSpaces: ReadonlyArray<number>,
                        public readonly empty: P)
     {
         super(board, turn);
-        assert(this.excludedCases.length < (this.height/2)+1, 'Invalid excluded cases specification for HexagonalGameState.');
+        assert(this.excludedSpaces.length < (this.height/2)+1, 'Invalid excluded spaces specification for HexagonalGameState.');
     }
     public abstract setAtUnsafe(coord: Coord, v: P): this
     public setAt(coord: Coord, v: P): this {
@@ -50,11 +50,11 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
         if (equal(this.empty, other.empty) === false) {
             return false;
         }
-        if (this.excludedCases.length !== other.excludedCases.length) {
+        if (this.excludedSpaces.length !== other.excludedSpaces.length) {
             return false;
         }
-        for (let i: number = 0; i < this.excludedCases.length; i++) {
-            if (this.excludedCases[i] !== other.excludedCases[i]) {
+        for (let i: number = 0; i < this.excludedSpaces.length; i++) {
+            if (this.excludedSpaces[i] !== other.excludedSpaces[i]) {
                 return false;
             }
         }
@@ -80,7 +80,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
         for (let i: number = 0; i < this.height; i++) {
             lines.push(HexaLine.constantR(i));
         }
-        for (let i: number = this.excludedCases.length; i < this.height+this.excludedCases.length; i++) {
+        for (let i: number = this.excludedSpaces.length; i < this.height+this.excludedSpaces.length; i++) {
             lines.push(HexaLine.constantS(i));
         }
         return lines;
@@ -90,15 +90,15 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
         let y: number;
         switch (line.constant) {
             case 'q':
-                if (this.excludedCases[line.offset] != null) {
-                    y = this.excludedCases[line.offset];
+                if (this.excludedSpaces[line.offset] != null) {
+                    y = this.excludedSpaces[line.offset];
                 } else {
                     y = 0;
                 }
                 return this.findEntranceFrom(line, new Coord(line.offset, y));
             case 'r':
-                if (this.excludedCases[line.offset] != null) {
-                    x = this.excludedCases[line.offset];
+                if (this.excludedSpaces[line.offset] != null) {
+                    x = this.excludedSpaces[line.offset];
                 } else {
                     x = 0;
                 }

@@ -26,7 +26,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
-    public disconnecteds: { coord: Coord, caseContent: DvonnPieceStack }[] = [];
+    public disconnecteds: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
     constructor(messageDisplayer: MessageDisplayer) {
@@ -75,8 +75,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
                         const coord: Coord = new Coord(x, y);
-                        const disconnected: { coord: Coord, caseContent: DvonnPieceStack } =
-                            { coord, caseContent: previousStack };
+                        const disconnected: { coord: Coord, spaceContent: DvonnPieceStack } =
+                            { coord, spaceContent: previousStack };
                         this.disconnecteds.push(disconnected);
                     }
                 }

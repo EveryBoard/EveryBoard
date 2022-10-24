@@ -54,18 +54,18 @@ export class FlatHexaOrientation extends HexaOrientation {
         return coord.y === board.height-1;
     }
     public isOnTopLeftBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
-        if (board.excludedCases[coord.y] != null) {
-            return coord.x === board.excludedCases[coord.y];
-        } else if (coord.y === board.excludedCases.length) {
+        if (board.excludedSpaces[coord.y] != null) {
+            return coord.x === board.excludedSpaces[coord.y];
+        } else if (coord.y === board.excludedSpaces.length) {
             return coord.x === 0;
         } else {
             return false;
         }
     }
     public isOnBottomRightBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
-        if (board.excludedCases[board.height-1 - coord.y] != null) {
-            return board.width-1 - coord.x === board.excludedCases[board.height-1 - coord.y];
-        } else if (board.height-1 - coord.y === board.excludedCases.length) {
+        if (board.excludedSpaces[board.height-1 - coord.y] != null) {
+            return board.width-1 - coord.x === board.excludedSpaces[board.height-1 - coord.y];
+        } else if (board.height-1 - coord.y === board.excludedSpaces.length) {
             return coord.x === board.width-1;
         } else {
             return false;

@@ -48,7 +48,7 @@ describe('TaflRules', () => {
         ];
     });
     describe('getSurroundings', () => {
-        it('should return neighborings cases', () => {
+        it('should return neighborings spaces', () => {
             const startingState: TaflState = rules.node.gameState;
             const { backCoord } =
                 rules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingState);

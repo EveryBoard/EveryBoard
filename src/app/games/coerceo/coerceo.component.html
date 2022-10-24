@@ -3,30 +3,30 @@
      [attr.viewBox]="'-5 -5 ' + (10 + SPACE_SIZE * 8) + ' ' + (10 + SPACE_SIZE * 10)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let caseContent of line; index as x"
+        <g *ngFor="let spaceContent of line; index as x"
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y)"
         >
-            <polygon *ngIf="isPyramid(x, y) else emptyCase"
+            <polygon *ngIf="isPyramid(x, y) else emptySpace"
                      [attr.points]="getPyramidCoordinate(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
                      class="base mid-stroke"
                      stroke-linecap="round"
             />
-            <ng-template #emptyCase>
-                <polygon *ngIf="isEmptyCase(x, y)"
+            <ng-template #emptySpace>
+                <polygon *ngIf="isEmptySpace(x, y)"
                          [attr.points]="getTriangleCoordinate(x, y)"
                          [ngClass]="getEmptyClass(x, y)"
                          class="base small-stroke"
                          stroke-linecap="round"
                 />
             </ng-template>
-            <polygon *ngIf="caseContent !== NONE"
+            <polygon *ngIf="spaceContent !== NONE"
                      id="dark_line_{{ x }}_{{ y }}"
                      [attr.points]="getLineCoordinate(x, y)"
                      class="base"
             />
-            <polygon *ngIf="caseContent !== NONE"
+            <polygon *ngIf="spaceContent !== NONE"
                      id="dark_line_{{ x }}_{{ y }}"
                      [attr.points]="getLineCoordinate(x, y)"
                      class="white-stroke"

@@ -1,20 +1,20 @@
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { EncapsuleCase, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
+import { EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-const s: EncapsuleCase = new EncapsuleCase(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
-const m: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
-const b: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
-const S: EncapsuleCase = new EncapsuleCase(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-const B: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ONE);
+const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+const s: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
+const m: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
+const b: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
+const S: EncapsuleSpace = new EncapsuleSpace(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+const B: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ONE);
 
-const Sm: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
-const sm: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ZERO, PlayerOrNone.NONE);
+const Sm: EncapsuleSpace = new EncapsuleSpace(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
+const sm: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, Player.ZERO, PlayerOrNone.NONE);
 
 export class EncapsuleTutorial {
 

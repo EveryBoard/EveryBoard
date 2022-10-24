@@ -72,6 +72,7 @@
                      class="base-no-fill small-stroke"/>
         </g>
         <g *ngFor="let capturable of capturables"
+           (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"
            id="capturable_{{ capturable.x }}_{{ capturable.y }}_{{ capturable.z }}"
            [attr.transform]="'translate(' + getPieceCxByCoord(capturable) + ' ' + getPieceCyByCoord(capturable) + ')'">
             <line [attr.x1]="-0.25 * getPieceRadius(capturable.z)"

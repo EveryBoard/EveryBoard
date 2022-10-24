@@ -172,10 +172,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             const landingsBackward: Coord[] = this.getLandingsToward(landingBackward, direction, phalanxSize);
             return landingsBackward.concat(landingsForward);
         } else {
-            return this.getNeighboringEmptyCases();
+            return this.getNeighboringEmptySpaces();
         }
     }
-    private getNeighboringEmptyCases(): Coord[] {
+    private getNeighboringEmptySpaces(): Coord[] {
         const neighbors: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.get().getNext(direction, 1);
