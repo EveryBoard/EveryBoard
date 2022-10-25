@@ -104,7 +104,7 @@ export class AwaleTutorial {
                 [4, 4, 3, 2, 1, 0],
                 [1, 0, 0, 0, 0, 0],
             ], 0, [0, 0]),
-            AwaleMove.FIVE,
+            AwaleMove.ZERO,
             $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
          Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
         ),
