@@ -9,17 +9,17 @@ describe('MGPSet', () => {
         expect(set.size()).toBe(0);
     });
     describe('equals', () => {
-        it('Should test size', () => {
+        it('should test size', () => {
             const one: MGPSet<string> = new MGPSet(['salut']);
             const two: MGPSet<string> = new MGPSet(['salut', 'kutentak']);
             expect(one.equals(two)).toBeFalse();
         });
-        it('Should not care about order', () => {
+        it('should not care about order', () => {
             const one: MGPSet<string> = new MGPSet(['un', 'deux']);
             const two: MGPSet<string> = new MGPSet(['deux', 'un']);
             expect(one.equals(two)).toBeTrue();
         });
-        it('Should detect inequality', () => {
+        it('should detect inequality', () => {
             const one: MGPSet<string> = new MGPSet(['un', 'deux']);
             const two: MGPSet<string> = new MGPSet(['deux', 'trois']);
             expect(one.equals(two)).toBeFalse();
@@ -66,6 +66,16 @@ describe('MGPSet', () => {
         it('should not return anything if the set is empty', () => {
             const emptySet: MGPSet<number> = new MGPSet();
             expect(emptySet.getAnyElement().isAbsent()).toBeTrue();
+        });
+    });
+    describe('isEmpty', () => {
+        it('should return true for the empty set', () => {
+            const set: MGPSet<number> = new MGPSet();
+            expect(set.isEmpty()).toBeTrue();
+        });
+        it('should return false for any non-empty set', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            expect(set.isEmpty()).toBeFalse();
         });
     });
 });

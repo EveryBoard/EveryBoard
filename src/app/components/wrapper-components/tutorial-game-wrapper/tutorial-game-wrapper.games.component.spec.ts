@@ -19,7 +19,6 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
-import { ApagosState } from 'src/app/games/apagos/ApagosState';
 import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
 import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
 
@@ -101,7 +100,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
         }
     });
     describe('Tutorials', () => {
-        it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
@@ -117,17 +116,17 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, GameState, unknown>, TutorialStep, Move, MGPValidation][] = [
                 [
-                    new ApagosRules(ApagosState),
+                    ApagosRules.get(),
                     apagosTutorial[2],
                     ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
                     MGPValidation.failure(`This move is a drop, please do a transfer!`),
                 ], [
-                    new ApagosRules(ApagosState),
+                    ApagosRules.get(),
                     apagosTutorial[3],
                     ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
                     MGPValidation.failure(`You actively made your opponent win!`),
                 ], [
-                    new ApagosRules(ApagosState),
+                    ApagosRules.get(),
                     apagosTutorial[3],
                     ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
                     MGPValidation.failure(`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
@@ -315,7 +314,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 }
             }
         }));
-        it('Should make sure all solutionMove are legal', fakeAsync(async() => {
+        it('should make sure all solutionMove are legal', fakeAsync(async() => {
             for (const gameInfo of GameInfo.ALL_GAMES()) {
                 if (gameInfo.display === false) {
                     continue;
@@ -337,7 +336,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                                         .toEqual(MGPValidation.SUCCESS);
                                 }
                             } else {
-                                const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
+                                const context: string = 'Solution move should be legal but failed in "' + gameInfo.name + ': '+ step.title + '"';
                                 expect(moveResult.getReason()).withContext(context).toBeNull();
                             }
                         }

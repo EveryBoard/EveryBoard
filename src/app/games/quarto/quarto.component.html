@@ -7,7 +7,7 @@
         <g #boardDiv
            *ngFor="let line of board; index as y"
         >
-            <g *ngFor="let caseContent of line; index as x">
+            <g *ngFor="let spaceContent of line; index as x">
                 <rect id="chooseCoord_{{ x }}_{{ y }}"
                       (click)="chooseCoord(x, y)"
                       [attr.x]="SPACE_SIZE * x"
@@ -17,24 +17,24 @@
                       [ngClass]="getSquareClasses(x, y)"
                       class="base"
                 />
-                <g *ngIf="caseContent !== EMPTY">
-                    <rect *ngIf="caseContent.isRectangle() else circle"
-                          [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE/2 - getPieceSize(caseContent.value))"
-                          [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE/2 - getPieceSize(caseContent.value))"
-                          [attr.width]="getPieceSize(caseContent.value)*2"
-                          [attr.height]="getPieceSize(caseContent.value)*2"
-                          [ngClass]="getPieceClasses(caseContent.value)"
+                <g *ngIf="spaceContent !== EMPTY">
+                    <rect *ngIf="spaceContent.isRectangle() else circle"
+                          [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE/2 - getPieceSize(spaceContent.value))"
+                          [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE/2 - getPieceSize(spaceContent.value))"
+                          [attr.width]="getPieceSize(spaceContent.value)*2"
+                          [attr.height]="getPieceSize(spaceContent.value)*2"
+                          [ngClass]="getPieceClasses(spaceContent.value)"
                           class="base"
                     />
                     <ng-template #circle>
                         <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
                                 [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-                                [attr.r]="getPieceSize(caseContent.value)"
-                                [ngClass]="getPieceClasses(caseContent.value)"
+                                [attr.r]="getPieceSize(spaceContent.value)"
+                                [ngClass]="getPieceClasses(spaceContent.value)"
                                 class="base"
                         />
                     </ng-template>
-                    <circle *ngIf="pieceHasDot(caseContent.value)"
+                    <circle *ngIf="pieceHasDot(spaceContent.value)"
                             [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
                             [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
                             [attr.r]="10"
@@ -42,15 +42,17 @@
                 </g>
             </g>
         </g>
-        <g #chosenPiece
+        <g #droppedPiece
            *ngIf="chosen.isPresent()"
+           id="droppedPiece_{{ chosen.get().x }}_{{ chosen.get().y }}"
+           (click)="deselectDroppedPiece()"
            [attr.transform]="'translate(' + (chosen.get().x * SPACE_SIZE) + ' ' + (chosen.get().y * SPACE_SIZE) + ')'"
         >
-            <rect id="highlight"
+            <rect id="selected"
                   x="0" y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
-                  class="base highlighted mid-stroke"
+                  class="base selected mid-stroke"
             />
             <rect *ngIf="pieceInHand.isRectangle() else circle"
                   x="0" y="0"
@@ -133,17 +135,18 @@
                   stroke-dasharray="10, 10"
                   class="base no-fill"
             />
-            <g *ngFor="let caseContent of line; index as x">
-                <g *ngIf="isRemaining((4*y) + x)"
-                   (click)="choosePiece((4*y)+x)"
-                   id="choosePiece_{{(4*y)+x}}"
+            <g *ngFor="let spaceContent of line; index as x">
+                <g *ngIf="isRemaining((4 * y) + x)"
+                   (click)="choosePiece((4 * y) + x)"
+                   id="choosePiece_{{ (4 * y) + x }}"
                 >
-                    <rect *ngIf="pieceToGive.value === (4*y)+x"
+                    <rect *ngIf="pieceToGive.equalsValue(QuartoPiece.fromInt((4 * y) + x))"
+                          id="chosenPiece_{{ (4 * y) + x }}"
                           [attr.x]="SPACE_SIZE * x"
                           [attr.y]="SPACE_SIZE * y"
                           [attr.width]="SPACE_SIZE"
                           [attr.height]="SPACE_SIZE"
-                          class="base highlighted"
+                          class="base selected-stroke"
                     />
                     <rect *ngIf="((4*y)+x) % 4 < 2 else circle"
                           [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"

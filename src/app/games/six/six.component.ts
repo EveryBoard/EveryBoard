@@ -132,7 +132,7 @@ export class SixComponent
         } else {
             this.leftCoord = MGPOptional.empty();
         }
-        const state: SixState = this.rules.node.gameState;
+        const state: SixState = this.getState();
         if (this.rules.getGameStatus(this.rules.node).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(lastMove, state);
         }
@@ -140,7 +140,7 @@ export class SixComponent
     }
     private getDisconnected(): Coord[] {
         const oldPieces: Coord[] = this.rules.node.mother.get().gameState.pieces.listKeys();
-        const newPieces: Coord[] = this.rules.node.gameState.pieces.listKeys();
+        const newPieces: Coord[] = this.getState().pieces.listKeys();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
             const start: MGPOptional<Coord> = this.rules.node.move.get().start;
@@ -167,7 +167,7 @@ export class SixComponent
         return legalLandings;
     }
     public getPieceClass(coord: Coord): string {
-        const player: PlayerOrNone = this.rules.node.gameState.getPieceAt(coord);
+        const player: PlayerOrNone = this.getState().getPieceAt(coord);
         return this.getPlayerClass(player);
     }
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
@@ -180,8 +180,11 @@ export class SixComponent
         } else if (this.chosenLanding.isAbsent()) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            } else if (this.selectedPiece.equalsValue(piece)) {
+                this.selectedPiece = MGPOptional.empty();
+            } else {
+                this.selectedPiece = MGPOptional.of(piece);
             }
-            this.selectedPiece = MGPOptional.of(piece);
             return MGPValidation.SUCCESS;
         } else {
             const cuttingMove: SixMove = SixMove.fromCut(this.selectedPiece.get(),
@@ -240,9 +243,9 @@ export class SixComponent
     }
     public getSelectedPieceClass(): string {
         if (this.chosenLanding.isPresent()) {
-            return 'moved';
+            return 'moved-fill';
         } else {
-            return 'selected';
+            return 'selected-stroke';
         }
     }
 }

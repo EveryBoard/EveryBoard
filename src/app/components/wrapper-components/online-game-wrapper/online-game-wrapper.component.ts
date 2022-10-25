@@ -422,24 +422,24 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.switchPlayer();
         const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.data.listMoves);
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
-        while (rules.node.gameState.turn < listMoves.length) {
-            const currentPartTurn: number = rules.node.gameState.turn;
+        while (this.gameComponent.getTurn() < listMoves.length) {
+            const currentPartTurn: number = this.gameComponent.getTurn();
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
-            const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, rules.node.gameState);
+            const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
                                     ' in ' + listMoves + ' at turn ' + currentPartTurn +
                                     'because "' + legality.getReasonOr('') + '"';
             assert(legality.isSuccess(), message);
             rules.choose(chosenMove);
         }
-        this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2].get();
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer at turn ' + this.currentPart.data.turn);
         const part: PartDocument = this.currentPart;
         const currentPlayer: Player = Player.fromTurn(part.data.turn);
-        this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2].get();
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         const currentOpponent: Player = currentPlayer.getOpponent();
         this.pauseCountDownsFor(currentOpponent);
         if (this.didUserPlay(currentPlayer)) {
@@ -629,7 +629,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public takeBackTo(turn: number): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackTo');
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
-        if (this.gameComponent.rules.node.gameState.turn === turn) {
+        if (this.gameComponent.getTurn() === turn) {
             this.switchPlayer();
         } else {
             // Second time to make sure it end up on player's turn

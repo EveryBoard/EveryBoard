@@ -15,7 +15,7 @@
                   [attr.y]="y * SPACE_SIZE"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
-                  [ngClass]="getSquareClasses(x, y)" />
+                  [ngClass]="getSquareClasses(x, y)"/>
             <!-- Pieces -->
             <g *ngIf="piece !== pieces.EMPTY"
                [attr.transform]="getPieceLocation(x, y)">
@@ -23,17 +23,17 @@
                    app-martian-chess-pawn
                    mainShapeId="pawn_{{ x }}_{{ y }}"
                    [pieceClasses]="getPieceClasses(x, y)"
-                   [style]="style" />
+                   [style]="style"/>
                 <g *ngIf="piece === pieces.DRONE"
                    app-martian-chess-drone
                    [pieceClasses]="getPieceClasses(x, y)"
                    mainShapeId="drone_{{ x }}_{{ y }}"
-                   [style]="style" />
+                   [style]="style"/>
                 <g *ngIf="piece === pieces.QUEEN"
                    app-martian-chess-queen
                    mainShapeId="queen_{{ x }}_{{ y }}"
                    [pieceClasses]="getPieceClasses(x, y)"
-                   [style]="style" />
+                   [style]="style"/>
             </g>
         </g>
         <g *ngIf="selectedPieceInfo.isPresent()">
@@ -45,7 +45,7 @@
                       [attr.width]="INDICATOR_SIZE"
                       [attr.height]="INDICATOR_SIZE"
                       (click)="onClick(possibleLanding.x, possibleLanding.y)"
-                      class="indicator" />
+                      class="indicator"/>
             </g>
         </g>
     </g>
@@ -60,7 +60,7 @@
                 [attr.cx]="0.5 * SPACE_SIZE"
                 [attr.cy]="0.5 * SPACE_SIZE"
                 [attr.r]="0.4 * SPACE_SIZE"
-                [ngClass]="getClockCircleClasses()" />
+                [ngClass]="getClockCircleClasses()"/>
         <text *ngIf="countDown.isPresent()"
               id="countDownText"
               class="text-giant text-center"
@@ -72,13 +72,13 @@
                   class="base"
                   [attr.points]="clockNeedlesPoints"
                   [ngClass]="getClockCircleClasses()"
-                  stroke-linecap="round" />
+                  stroke-linecap="round"/>
     </g>
     <line id="canal"
           [attr.x1]="SPACE_SIZE"     [attr.y1]="(5 * SPACE_SIZE) + 8"
           [attr.x2]="5 * SPACE_SIZE" [attr.y2]="(5 * SPACE_SIZE) + 8"
           [ngClass]="'player' + getCurrentPlayer().value"
-          [attr.stroke-width]="2 * STROKE_WIDTH" />
+          [attr.stroke-width]="2 * STROKE_WIDTH"/>
     <g id="modeCogView"
        [attr.transform]="configViewTranslation">
         <g id="modeCog"
@@ -86,10 +86,10 @@
             <rect x="0" y="0"
                   class="transparent"
                   [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE" />
-            <path [ngClass]="'player' + getCurrentPlayer().value"
+                  [attr.height]="SPACE_SIZE"/>
+            <path [ngClass]="getPlayerClass(getCurrentPlayer())"
                   [attr.transform]="configCogTransformation"
-                  d="M35.497,15.111h-1.656c-0.282-0.924-0.653-1.807-1.102-2.646l1.176-1.175c1.364-1.366,1.366-3.582,0-4.949l-1.258-1.258 c-0.656-0.656-1.548-1.025-2.476-1.025l0,0c-0.93,0-1.818,0.369-2.477,1.025l-1.176,1.175c-0.838-0.446-1.721-0.817-2.645-1.102 V3.501c0-1.934-1.566-3.5-3.5-3.5h-1.778c-1.934,0-3.5,1.566-3.5,3.5v1.655c-0.923,0.282-1.807,0.653-2.645,1.102l-1.174-1.175 c-1.367-1.367-3.584-1.367-4.951,0L5.081,6.34c-1.367,1.366-1.367,3.583,0,4.949l1.174,1.175c-0.446,0.84-0.818,1.723-1.102,2.646 H3.5c-1.934,0-3.5,1.566-3.5,3.5v1.778c0,1.932,1.566,3.5,3.5,3.5h1.654c0.283,0.922,0.654,1.807,1.102,2.645l-1.175,1.176 c-1.366,1.365-1.366,3.582-0.001,4.949l1.258,1.258c0.656,0.654,1.547,1.023,2.475,1.023h0.001c0.929,0,1.818-0.369,2.475-1.023 l1.176-1.176c0.837,0.447,1.722,0.818,2.644,1.102v1.656c0,1.932,1.566,3.5,3.5,3.5h1.778c1.934,0,3.5-1.568,3.5-3.5v-1.656 c0.924-0.283,1.807-0.654,2.645-1.102l1.177,1.176c0.655,0.656,1.547,1.023,2.476,1.023c0.93,0,1.817-0.369,2.477-1.023 l1.256-1.258c1.366-1.367,1.365-3.582,0-4.949l-1.176-1.174c0.447-0.84,0.818-1.725,1.102-2.646h1.656c1.934,0,3.5-1.568,3.5-3.5 v-1.777C38.997,16.679,37.43,15.111,35.497,15.111z M19.499,27.499c-4.41,0-8-3.588-8-8c0-4.411,3.59-8,8-8c4.412,0,8,3.589,8,8 C27.499,23.911,23.911,27.499,19.499,27.499z" />
+                  d="M35.497,15.111h-1.656c-0.282-0.924-0.653-1.807-1.102-2.646l1.176-1.175c1.364-1.366,1.366-3.582,0-4.949l-1.258-1.258 c-0.656-0.656-1.548-1.025-2.476-1.025l0,0c-0.93,0-1.818,0.369-2.477,1.025l-1.176,1.175c-0.838-0.446-1.721-0.817-2.645-1.102 V3.501c0-1.934-1.566-3.5-3.5-3.5h-1.778c-1.934,0-3.5,1.566-3.5,3.5v1.655c-0.923,0.282-1.807,0.653-2.645,1.102l-1.174-1.175 c-1.367-1.367-3.584-1.367-4.951,0L5.081,6.34c-1.367,1.366-1.367,3.583,0,4.949l1.174,1.175c-0.446,0.84-0.818,1.723-1.102,2.646 H3.5c-1.934,0-3.5,1.566-3.5,3.5v1.778c0,1.932,1.566,3.5,3.5,3.5h1.654c0.283,0.922,0.654,1.807,1.102,2.645l-1.175,1.176 c-1.366,1.365-1.366,3.582-0.001,4.949l1.258,1.258c0.656,0.654,1.547,1.023,2.475,1.023h0.001c0.929,0,1.818-0.369,2.475-1.023 l1.176-1.176c0.837,0.447,1.722,0.818,2.644,1.102v1.656c0,1.932,1.566,3.5,3.5,3.5h1.778c1.934,0,3.5-1.568,3.5-3.5v-1.656 c0.924-0.283,1.807-0.654,2.645-1.102l1.177,1.176c0.655,0.656,1.547,1.023,2.476,1.023c0.93,0,1.817-0.369,2.477-1.023 l1.256-1.258c1.366-1.367,1.365-3.582,0-4.949l-1.176-1.174c0.447-0.84,0.818-1.725,1.102-2.646h1.656c1.934,0,3.5-1.568,3.5-3.5 v-1.777C38.997,16.679,37.43,15.111,35.497,15.111z M19.499,27.499c-4.41,0-8-3.588-8-8c0-4.411,3.59-8,8-8c4.412,0,8,3.589,8,8 C27.499,23.911,23.911,27.499,19.499,27.499z"/>
             </g>
         <g *ngIf="displayModePanel"
            id="modePanel">
@@ -98,44 +98,44 @@
                   [attr.y]="(- listOfStyles.length * SPACE_SIZE)"
                   [attr.width]="1 * SPACE_SIZE"
                   [attr.height]="listOfStyles.length * SPACE_SIZE"
-                  stroke-width="8" />
+                  stroke-width="8"/>
             <ng-container *ngFor="let proposedStyle of listOfStyles; index as y;">
                 <g [id]="proposedStyle.name"
                    app-martian-chess-queen
                    (click)="chooseStyle(y)"
                    [attr.transform]="'translate(0, ' + (-(y+1) * SPACE_SIZE) + ')'"
                    [pieceClasses]="['player' + getCurrentPlayer().value]"
-                   [style]="proposedStyle.style" />
+                   [style]="proposedStyle.style"/>
             </ng-container>
         </g>
     </g>
     <g id="captures">
-        <g *ngFor="let player of [0, 1]">
-            <g id="capture_of_player_{{ player }}"
-               [attr.transform]="'scale(0.5, 0.5) translate(' + (- SPACE_SIZE / 2) + ', ' + ((SPACE_SIZE / 2) + (player * ((10 * SPACE_SIZE) + (4 * STROKE_WIDTH)))) + ')'">
+        <g *ngFor="let player of Player.PLAYERS">
+            <g id="capture_of_player_{{ player.value }}"
+               [attr.transform]="'scale(0.5, 0.5) translate(' + (- SPACE_SIZE / 2) + ', ' + ((SPACE_SIZE / 2) + (player.value * ((10 * SPACE_SIZE) + (4 * STROKE_WIDTH)))) + ')'">
                 <g *ngFor="let value of state.getCapturesOf(player); index as piece">
                     <g *ngIf="value > 0"
                         [attr.transform]="'translate(0, ' + (2 * piece * SPACE_SIZE) + ')'">
                         <text *ngIf="value > 1"
                                class="text-giant text-center"
-                               [ngClass]="'player' + (player === 0 ? 1 : 0)"
+                               [ngClass]="'player' + (player.value === 0 ? 1 : 0)"
                                [attr.x]="SPACE_SIZE / 2"
                                [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
-                        <g id="piece_{{ piece }}_player_{{ player }}"
+                        <g id="piece_{{ piece }}_player_{{ player.value }}"
                            [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn
-                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
-                               [style]="style" />
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [style]="style"/>
                             <g *ngIf="piece === 1"
                                app-martian-chess-drone
-                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
-                               [style]="style" />
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [style]="style"/>
                             <g *ngIf="piece === 2"
                                app-martian-chess-queen
-                               [pieceClasses]="['player' + (player === 0 ? 1 : 0)]"
-                               [style]="style" />
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [style]="style"/>
                         </g>
                     </g>
                 </g>

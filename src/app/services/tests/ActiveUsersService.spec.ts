@@ -30,7 +30,7 @@ describe('ActiveUsersService', () => {
     it('should create', () => {
         expect(activeUsersService).toBeTruthy();
     });
-    it('Should update list of users when one change', fakeAsync(async() => {
+    it('should update list of users when one change', fakeAsync(async() => {
         await activeUsersService.userDAO.set('playerDocId', {
             username: 'premier',
             state: 'online',

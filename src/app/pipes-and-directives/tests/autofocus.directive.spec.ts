@@ -17,14 +17,14 @@ describe('AutofocusDirective', () => {
     }));
 
     it('should autofocus components decorated with the directive', () => {
-        // given an element with the autofocus directive
+        // Given an element with the autofocus directive
         const element: HTMLElement = testUtils.findElementByDirective(AutofocusDirective).nativeElement;
         spyOn(element, 'focus').and.callThrough();
 
-        // when the component is loaded
+        // When the component is loaded
         testUtils.detectChanges();
 
-        // then the element is focused
+        // Then the element is focused
         expect(element.focus).toHaveBeenCalledTimes(1);
     });
 });

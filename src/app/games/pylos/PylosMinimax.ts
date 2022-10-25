@@ -3,7 +3,7 @@ import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { PylosNode, PylosRules } from './PylosRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -35,13 +35,13 @@ export class PylosMinimax extends Minimax<PylosMove, PylosState> {
     public getListMoves(node: PylosNode): PylosMove[] {
         return PylosMinimax.getListMoves(node);
     }
-    public getBoardValue(node: PylosNode): NodeUnheritance {
+    public getBoardValue(node: PylosNode): BoardValue {
         const gameStatus: GameStatus = PylosRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         } else {
             const ownershipMap: { [owner: number]: number; } = node.gameState.getPiecesRepartition();
-            return new NodeUnheritance(ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value]);
+            return new BoardValue(ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value]);
         }
     }
 }

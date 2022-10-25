@@ -15,15 +15,15 @@ describe('QuixoMove:', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
-    it('Should forbid move creation for invalid x or y coord', () => {
+    it('should forbid move creation for invalid x or y coord', () => {
         expect(() => new QuixoMove(-1, 0, Orthogonal.UP))
             .toThrowError('Invalid coord for QuixoMove: (-1, 0) is outside the board.');
     });
-    it('Should forbid move creation from coord not on the side', () => {
+    it('should forbid move creation from coord not on the side', () => {
         expect(() => new QuixoMove(1, 1, Orthogonal.UP))
             .toThrowError(QuixoFailure.NO_INSIDE_CLICK());
     });
-    it('Should forbid move creation from board whose side is the same as the direction', () => {
+    it('should forbid move creation from board whose side is the same as the direction', () => {
         expect(() => new QuixoMove(0, 2, Orthogonal.LEFT))
             .toThrowError(`Invalid direction: pawn on the left side can't be moved to the left.`);
         expect(() => new QuixoMove(4, 2, Orthogonal.RIGHT))
@@ -51,7 +51,7 @@ describe('QuixoMove:', () => {
             NumberEncoderTestUtils.expectToBeCorrect(QuixoMove.encoder, move);
         }
     });
-    it('Should override equals and toString correctly', () => {
+    it('should override correctly equals and toString', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
         const neighbor: QuixoMove = new QuixoMove(0, 1, Orthogonal.RIGHT);
         const twin: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);

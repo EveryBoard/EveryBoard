@@ -55,10 +55,13 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
+        const currentPlayer: Player = this.getState().getCurrentPlayer();
         const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
-        if (this.chosenCoord.isAbsent() ||
-            this.board[y][x] === player)
+        if (this.chosenCoord.equalsValue(new Coord(x, y))) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        } else if (this.chosenCoord.isAbsent() ||
+                  this.board[y][x] === player)
         { // Must select pyramid
             return this.choosePiece(x, y);
         } else { // Must choose empty landing space
@@ -86,13 +89,13 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         if (newMove.isFailure()) {
             return this.cancelMove(newMove.getReason());
         }
-        return await this.chooseMove(newMove.get(), this.rules.node.gameState);
+        return await this.chooseMove(newMove.get(), this.getState());
     }
     public updateBoard(): void {
         const move: MGPOptional<SaharaMove> = this.rules.node.move;
         this.lastCoord = move.map((move: SaharaMove) => move.coord);
         this.lastMoved = move.map((move: SaharaMove) => move.end);
-        this.board = this.rules.node.gameState.board;
+        this.board = this.getState().board;
     }
     public getPlayerClassFor(x: number, y: number): string {
         const piece: FourStatePiece = this.board[y][x];

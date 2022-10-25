@@ -44,7 +44,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.updateBoard();
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.board = this.state.board;
         this.lastMoveCoord = this.rules.node.move.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
@@ -58,8 +58,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         const classes: string[] = [];
 
         classes.push(this.getPlayerClass(player));
-        if (this.chosenCoord.equalsValue(coord)) classes.push('selected');
-        else if (this.lastMoveCoord.equalsValue(coord)) classes.push('last-move');
+        if (this.chosenCoord.equalsValue(coord)) classes.push('selected-stroke');
+        else if (this.lastMoveCoord.equalsValue(coord)) classes.push('last-move-stroke');
         if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory-stroke');
         return classes;
     }
@@ -76,7 +76,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         if (this.board[y][x] === this.state.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
-            this.chosenCoord = MGPOptional.of(clickedCoord);
+            if (this.chosenCoord.equalsValue(clickedCoord)) {
+                this.cancelMoveAttempt();
+            } else {
+                this.chosenCoord = MGPOptional.of(clickedCoord);
+            }
             return MGPValidation.SUCCESS;
         }
     }
@@ -103,7 +107,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
                                               chosenCoord.y,
                                               this.chosenDirection);
         this.cancelMove();
-        return this.chooseMove(move, this.rules.node.gameState);
+        return this.chooseMove(move, this.getState());
     }
     public getArrowTransform(orientation: Orthogonal): string {
         return GameComponentUtils.getArrowTransform(5 * this.SPACE_SIZE,

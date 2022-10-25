@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { SandwichThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
@@ -31,10 +31,10 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
         [8, 1, 1, 1, 1, 1, 1, 1, 8],
         [64, 8, 8, 8, 8, 8, 8, 8, 64],
     ];
-    public getBoardValue(node: TaflNode): NodeUnheritance {
+    public getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
         const state: TaflState = node.gameState;
         const width: number = this.ruler.config.WIDTH;
@@ -63,13 +63,12 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
                 }
             }
             for (const controlled of controlledSquares) {
-                const controlledValue: number =
-                    TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
+                const controlledValue: number = this.getControlledPieceValue(controlled.x, controlled.y, width);
                 controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
         const stepForEscape: number = this.getStepForEscape(state);
-        return new NodeUnheritance((stepForEscape * 531 * 17 * 17) +
+        return new BoardValue((stepForEscape * 531 * 17 * 17) +
                                    (safeScore * 531 * 17) +
                                    (threatenedScore * 531) +
                                    controlScore);

@@ -52,6 +52,7 @@ import { EncapsuleComponent } from './games/encapsule/encapsule.component';
 import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
+import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
@@ -183,6 +184,7 @@ export class FirebaseProviders {
         EpaminondasComponent,
         GipfComponent,
         GoComponent,
+        HnefataflComponent,
         KamisadoComponent,
         LinesOfActionComponent,
         LodestoneComponent,

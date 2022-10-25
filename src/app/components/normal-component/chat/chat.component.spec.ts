@@ -74,7 +74,7 @@ describe('ChatComponent', () => {
             expect(switchButton.nativeElement.innerText).toEqual('Hide chat'.toUpperCase());
             expect(chat).withContext('Chat should be visible on init').toBeTruthy();
 
-            // when switching the chat visibility
+            // When switching the chat visibility
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
 
@@ -96,11 +96,11 @@ describe('ChatComponent', () => {
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
             expect(chat).withContext('Chat should be hidden').toBeFalsy();
 
-            // when showing the chat
+            // When showing the chat
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
 
-            // then the chat is shown
+            // Then the chat is shown
             switchButton = testUtils.findElement('#switchChatVisibilityButton');
             chat = testUtils.findElement('#chatForm');
             expect(switchButton.nativeElement.innerText).toEqual('Hide chat'.toUpperCase());
@@ -115,11 +115,11 @@ describe('ChatComponent', () => {
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
 
-            // when new messages are received
+            // When new messages are received
             await addMessages('fauxChat', 3);
             testUtils.detectChanges();
 
-            // then the button shows how many new messages there are
+            // Then the button shows how many new messages there are
             switchButton = testUtils.findElement('#switchChatVisibilityButton');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (3 new messages)'.toUpperCase());
         }));
@@ -129,7 +129,7 @@ describe('ChatComponent', () => {
             spyOn(component, 'scrollTo').and.callThrough();
             await addMessages('fauxChat', 100);
 
-            // when the chat is initialized
+            // When the chat is initialized
             testUtils.detectChanges();
 
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
@@ -148,11 +148,11 @@ describe('ChatComponent', () => {
             chatDiv.nativeElement.dispatchEvent(new Event('scroll'));
             testUtils.detectChanges();
 
-            // when a new message is received
+            // When a new message is received
             await addMessages('fauxChat', 1);
             testUtils.detectChanges();
 
-            // then the scroll value did not change
+            // Then the scroll value did not change
             expect(chatDiv.nativeElement.scrollTop).toBe(SCROLL);
             // and the indicator shows t hat there is a new message
             const indicator: DebugElement = testUtils.findElement('#scrollToBottomIndicator');
@@ -173,13 +173,13 @@ describe('ChatComponent', () => {
             await addMessages('fauxChat', 1); // new message has been received
             testUtils.detectChanges();
 
-            // when the indicator is clicked
+            // When the indicator is clicked
             spyOn(component, 'scrollToBottom').and.callThrough();
             await testUtils.clickElement('#scrollToBottomIndicator');
             testUtils.detectChanges();
             await testUtils.whenStable();
 
-            // then the view is scrolled to the bottom
+            // Then the view is scrolled to the bottom
             expect(component.scrollToBottom).toHaveBeenCalledOnceWith();
             // and the indicator has disappeared
             testUtils.expectElementNotToExist('#scrollToBottomIndicator');
@@ -211,11 +211,11 @@ describe('ChatComponent', () => {
         }));
         it('should send messages using the chat service', fakeAsync(async() => {
             spyOn(chatService, 'sendMessage').and.callThrough();
-            // given a chat
+            // Given a chat
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
 
-            // when the form is filled and the send button clicked
+            // When the form is filled and the send button clicked
             const messageInput: DebugElement = testUtils.findElement('#message');
             messageInput.nativeElement.value = 'hello';
             messageInput.nativeElement.dispatchEvent(new Event('input'));
@@ -225,26 +225,26 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
             await testUtils.whenStable();
 
-            // then the message is sent
+            // Then the message is sent
             const user: MinimalUser = UserMocks.CONNECTED_MINIMAL_USER;
             expect(chatService.sendMessage).toHaveBeenCalledWith('fauxChat', user, 'hello', 2);
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));
         it('should scroll to bottom when sending a message', fakeAsync(async() => {
-            // given a chat with many messages
+            // Given a chat with many messages
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             await addMessages('fauxChat', 100);
             testUtils.detectChanges();
             spyOn(component, 'scrollTo').and.callThrough();
 
-            // when a message is sent
+            // When a message is sent
             component.userMessage = 'hello there';
             testUtils.detectChanges();
             await component.sendMessage();
             testUtils.detectChanges();
 
-            // then we scroll to the bottom
+            // Then we scroll to the bottom
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
         }));
@@ -270,7 +270,7 @@ describe('ChatComponent', () => {
             const messageId: string = await chatService.addMessage('fauxChat', MSG);
             testUtils.detectChanges();
 
-            // when a message is deleted
+            // When a message is deleted
             await chatDAO.subCollectionDAO('fauxChat', 'messages').delete(messageId);
 
             // Then no error must have been encountered

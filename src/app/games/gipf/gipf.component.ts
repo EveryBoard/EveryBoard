@@ -65,7 +65,7 @@ export class GipfComponent
         this.encoder = GipfMove.encoder;
         this.tutorial = new GipfTutorial().tutorial;
         this.SPACE_SIZE = 40;
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord((this.HEXAGON_WIDTH / 2) + (3 * this.STROKE_WIDTH/ 4),
                                                    - this.HEXAGON_WIDTH),
@@ -74,7 +74,6 @@ export class GipfComponent
     public updateBoard(): void {
         this.showLastMove();
         this.cancelMoveAttempt();
-        this.moveToInitialCaptureOrPlacementPhase();
     }
     public showLastMove(): void {
         this.inserted = MGPOptional.empty();
@@ -128,15 +127,7 @@ export class GipfComponent
                 return this.selectPlacementCoord(coord);
             default:
                 Utils.expectToBe(this.movePhase, GipfComponent.PHASE_PLACEMENT_DIRECTION);
-                const entrance: Coord = this.placementEntrance.get();
-                if (entrance.isAlignedWith(coord) === false) {
-                    return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION());
-                }
-                if (entrance.getDistance(coord) !== 1) {
-                    return this.cancelMove(GipfFailure.CLICK_FURTHER_THAN_ONE_COORD());
-                }
-                const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
-                return this.selectPlacementDirection(direction.toOptional());
+                return this.selectPlacementDirectionOrPlacementCoord(coord);
         }
     }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {
@@ -203,10 +194,10 @@ export class GipfComponent
         this.arrows = [];
         for (const dir of GipfRules.getAllDirectionsForEntrance(this.constructedState, placement)) {
             if (GipfRules.isLineComplete(this.constructedState, placement, dir) === false) {
-                const nextCase: Coord = placement.getNext(dir);
+                const nextSpace: Coord = placement.getNext(dir);
                 const center1: Coord = this.getCenterAt(placement);
-                const center2: Coord = this.getCenterAt(nextCase);
-                this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
+                const center2: Coord = this.getCenterAt(nextSpace);
+                this.arrows.push(new Arrow(placement, nextSpace, center1.x, center1.y, center2.x, center2.y));
             }
         }
     }
@@ -215,8 +206,13 @@ export class GipfComponent
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        if (this.placementEntrance.equalsValue(coord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
         this.placementEntrance = MGPOptional.of(coord);
-        if (this.constructedState.getPieceAt(coord) === FourStatePiece.EMPTY) {
+        const clickedPiece: FourStatePiece = this.constructedState.getPieceAt(coord);
+        if (clickedPiece === FourStatePiece.EMPTY) {
             // Because the coord of insertion is empty, there is no need for the user to choose a direction.
             return this.selectPlacementDirection(MGPOptional.empty());
         } else {
@@ -238,15 +234,25 @@ export class GipfComponent
         this.constructedState = GipfRules.applyPlacement(this.placement.get(), this.constructedState);
         return this.moveToFinalCapturePhaseOrTryMove();
     }
+    private async selectPlacementDirectionOrPlacementCoord(coord: Coord): Promise<MGPValidation> {
+        const entrance: Coord = this.placementEntrance.get();
+        if (entrance.isAlignedWith(coord) === false ||
+            entrance.getDistance(coord) !== 1)
+        {
+            return this.selectPlacementCoord(coord);
+        }
+        const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
+        return this.selectPlacementDirection(direction.toOptional());
+    }
     private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
                           placement: GipfPlacement,
                           finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
+        const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
         return validity;
     }
     public cancelMoveAttempt(): void {
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.captured = [];
         this.moved = [];
 
@@ -270,9 +276,9 @@ export class GipfComponent
     }
     public getSpaceClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return 'captured';
+            return 'captured-fill';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return 'moved';
+            return 'moved-fill';
         } else {
             return '';
         }

@@ -4,7 +4,7 @@ import { FirestoreJSONObject, FirestoreJSONValue } from '../utils';
 
 describe('ObjectDifference', () => {
 
-    it('Should detect differences in a modified object', () => {
+    it('should detect differences in a modified object', () => {
         const before: FirestoreJSONObject = {
             same: 5,
             changed: {
@@ -24,7 +24,7 @@ describe('ObjectDifference', () => {
         const diff: ObjectDifference = ObjectDifference.from(before, after);
         expect(diff).toEqual(expectedDiff);
     });
-    it('Should compare json inside a list deeply', () => {
+    it('should compare json inside a list deeply', () => {
         const before: FirestoreJSONObject = {
             liste: [
                 {

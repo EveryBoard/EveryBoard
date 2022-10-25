@@ -2,7 +2,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub, ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -14,6 +14,8 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
+import { SiamMove } from 'src/app/games/siam/SiamMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('GameComponent', () => {
 
@@ -23,7 +25,7 @@ describe('GameComponent', () => {
         await ComponentTestUtils.configureTestModule(activatedRouteStub);
     }));
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
-        // given such a game, like Abalone
+        // Given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
         const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone');
         const component: AbstractGameComponent = testUtils.getComponent();
@@ -34,21 +36,21 @@ describe('GameComponent', () => {
 
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
-        // when the player tries to pass
+        // When the player tries to pass
         const result: MGPValidation = await component.pass();
 
-        // then should fail and call logError
+        // Then should fail and call logError
         const errorMessage: string = 'pass() called on a game that does not redefine it';
         const errorData: JSONValue = { gameName: 'AbaloneComponent' };
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
-    it('Clicks method should refuse when observer click', fakeAsync(async() => {
+    it('clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Abalone: {
                 onPieceClick: [0, 0],
-                onCaseClick: [0, 0],
+                onSpaceClick: [0, 0],
                 chooseDirection: [Direction.UP],
             },
             Apagos: {
@@ -72,6 +74,7 @@ describe('GameComponent', () => {
             Epaminondas: { onClick: [0, 0] },
             Gipf: { onClick: [0, 0] },
             Go: { onClick: [0, 0] },
+            Hnefatafl: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },
             Lodestone: {
@@ -97,10 +100,12 @@ describe('GameComponent', () => {
             Pylos: {
                 onPieceClick: [0, 0, 0],
                 onDrop: [0, 0, 0],
+                validateCapture: [],
             },
             Quarto: {
                 chooseCoord: [0, 0],
                 choosePiece: [0],
+                deselectDroppedPiece: [],
             },
             Quixo: {
                 onBoardClick: [0, 0],
@@ -109,10 +114,15 @@ describe('GameComponent', () => {
             Reversi: { onClick: [0, 0] },
             Sahara: { onClick: [0, 0] },
             Siam: {
-                insertAt: [0, 0],
-                clickPiece: [0, 0],
-                chooseDirection: [0],
-                chooseOrientation: [0],
+                selectPieceForInsertion: [Player.ZERO, 0],
+                selectOrientation: [SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
+                clickSquare: [0, 0],
+                clickArrow: [{
+                    source: MGPOptional.empty(),
+                    target: new Coord(0, 0),
+                    direction: Orthogonal.DOWN,
+                    move: SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
+                }],
             },
             Six: {
                 onPieceClick: [0, 0],

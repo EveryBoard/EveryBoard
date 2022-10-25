@@ -13,12 +13,12 @@ import { display } from 'src/app/utils/utils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { SixNodeUnheritance } from './SixMinimax';
+import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
-export class SixNode extends MGPNode<SixRules, SixMove, SixState, SixLegalityInformation, SixNodeUnheritance> {
+export class SixNode extends MGPNode<SixRules, SixMove, SixState, SixLegalityInformation, SixBoardValue> {
 }
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
@@ -28,7 +28,7 @@ export interface SixVictorySource {
 export class SixRules extends Rules<SixMove,
                                     SixState,
                                     SixLegalityInformation,
-                                    SixNodeUnheritance>
+                                    SixBoardValue>
 {
 
     public VERBOSE: boolean = false;

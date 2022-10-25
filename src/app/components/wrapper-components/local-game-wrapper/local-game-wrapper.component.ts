@@ -6,7 +6,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
+import { MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -103,7 +103,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // No AI is playing when the game is finished
             return MGPOptional.empty();
         }
-        const playerIndex: number = this.gameComponent.rules.node.gameState.turn % 2;
+        const playerIndex: number = this.gameComponent.getTurn() % 2;
         if (this.aiDepths[playerIndex] === '0') {
             // No AI is playing if its level is set to 0
             return MGPOptional.empty();
@@ -132,7 +132,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
     public canTakeBack(): boolean {
-        return this.gameComponent.rules.node.gameState.turn > 0;
+        return this.gameComponent.getTurn() > 0;
     }
     public takeBack(): void {
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
@@ -145,9 +145,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.getPlayingAI().isPresent();
     }
     public restartGame(): void {
-        // eslint-disable-next-line dot-notation
-        const state: GameState = this.gameComponent.rules.stateType['getInitialState']();
-        this.gameComponent.rules.node = new MGPNode(state);
+        this.gameComponent.rules.setInitialBoard();
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = MGPOptional.empty();

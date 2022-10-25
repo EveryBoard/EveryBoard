@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
@@ -21,10 +21,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
     public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
 
-    public getBoardValue(node: CoerceoNode): NodeUnheritance {
+    public getBoardValue(node: CoerceoNode): BoardValue {
         const gameStatus: GameStatus = CoerceoRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return NodeUnheritance.fromWinner(gameStatus.winner);
+            return BoardValue.fromWinner(gameStatus.winner);
         }
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
@@ -41,7 +41,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             }
         }
         score += state.tiles[1] - state.tiles[0];
-        return new NodeUnheritance(score);
+        return new BoardValue(score);
     }
     public getPiecesMap(state: CoerceoState): MGPMap<Player, MGPSet<Coord>> {
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
@@ -138,7 +138,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 const tileCoord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
                 if (state.getPieceAt(tileCoord).is(OPPONENT)) {
                     if (this.pieceCouldLeaveTheTile(tileCoord, state)) {
-                        // then add it to the threat list
+                        // Then add it to the threat list
                         uniqueThreat = MGPOptional.of(tileCoord);
                     } else {
                         return false;

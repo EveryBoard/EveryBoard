@@ -23,41 +23,41 @@ describe('VerifyAccountComponent', () => {
     });
     describe('google user', () => {
         beforeEach(() => {
-            // given a user that registered through google
+            // Given a user that registered through google
             ConnectedUserServiceMock.setUser(new AuthUser('kd5457d', MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), true));
             testUtils.detectChanges();
         });
         it('should ask the username if the user has none', fakeAsync(async() => {
-            // when the user visits the page
-            // then the username is asked
+            // When the user visits the page
+            // Then the username is asked
             testUtils.expectElementToExist('#askUsername');
         }));
         it('should let user know if setting the username succeeds', fakeAsync(async() => {
             const username: string = 'jeanjaja';
             testUtils.expectElementNotToExist('#success');
 
-            // when a valid username is picked
+            // When a valid username is picked
             spyOn(connectedUserService, 'setUsername').and.resolveTo(MGPValidation.SUCCESS);
             testUtils.fillInput('#username', username);
             testUtils.detectChanges();
             await testUtils.clickElement('#pickUsername');
             await testUtils.whenStable();
 
-            // then the success message is shown
+            // Then the success message is shown
             testUtils.expectElementToExist('#success');
             testUtils.expectElementNotToExist('#askUsername');
             expect(connectedUserService.setUsername).toHaveBeenCalledWith(username);
         }));
         it('should show error if setting the username fails', fakeAsync(async() => {
             const failure: string = 'Invalid username';
-            // when an invalid username is picked
+            // When an invalid username is picked
             spyOn(connectedUserService, 'setUsername').and.resolveTo(MGPValidation.failure(failure));
             testUtils.fillInput('#username', 'jeanjiji');
             testUtils.detectChanges();
             await testUtils.clickElement('#pickUsername');
             await testUtils.whenStable();
 
-            // then the failure message is shown
+            // Then the failure message is shown
             testUtils.expectElementNotToExist('#success');
             testUtils.expectElementToExist('#errorMessage');
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
@@ -65,7 +65,7 @@ describe('VerifyAccountComponent', () => {
     });
     describe('email user', () => {
         beforeEach(() => {
-            // given a user that registered through its email
+            // Given a user that registered through its email
             const user: AuthUser = new AuthUser('jeanjaja8946sd54q',
                                                 MGPOptional.of('jean@jaja.europe'),
                                                 MGPOptional.of('jeanjaja'),
@@ -76,33 +76,33 @@ describe('VerifyAccountComponent', () => {
         it('should resend email verification if asked by the user and show that it succeeded', fakeAsync(async() => {
             testUtils.expectElementNotToExist('#success');
 
-            // when the user asks for sending the email
+            // When the user asks for sending the email
             spyOn(connectedUserService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
             testUtils.expectElementToExist('#verificationEmail');
             await testUtils.clickElement('#sendEmail');
 
-            // then the success message is shown
+            // Then the success message is shown
             testUtils.expectElementToExist('#success');
             expect(connectedUserService.sendEmailVerification).toHaveBeenCalledWith();
         }));
         it('should show error if sending the verification email failed', fakeAsync(async() => {
             const failure: string = 'I cannot send emails!';
 
-            // when the user asks for sending the email
+            // When the user asks for sending the email
             spyOn(connectedUserService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(failure));
             await testUtils.clickElement('#sendEmail');
 
-            // then the success message is shown
+            // Then the success message is shown
             testUtils.expectElementNotToExist('#success');
             testUtils.expectElementToExist('#errorMessage');
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
         }));
         it('should not finalize verification if the user did not verify its email', fakeAsync(async() => {
             spyOn(window, 'open').and.returnValue(null);
-            // when the user clicks on "finalize" without having verified its account
+            // When the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
 
-            // then a failure message is shown
+            // Then a failure message is shown
             testUtils.expectElementNotToExist('#success');
             testUtils.expectElementToExist('#errorMessage');
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(`You have not verified your email! Click on the link in the verification email.`);
@@ -115,10 +115,10 @@ describe('VerifyAccountComponent', () => {
             // ... and given a user that verified its email
             ConnectedUserServiceMock.setUser(new AuthUser('5d8t6d', MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true), false);
 
-            // when the user clicks on "finalize" without having verified its account
+            // When the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
 
-            // then no failure message is shown and user is redirected to the lobby
+            // Then no failure message is shown and user is redirected to the lobby
             testUtils.expectElementNotToExist('#errorMessage');
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));

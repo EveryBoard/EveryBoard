@@ -25,7 +25,7 @@ describe('ReversiMinimax', () => {
     });
     it('should not throw at first choice', () => {
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
-        expect(rules.isLegal(bestMove, rules.node.gameState).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, ReversiState.getInitialState()).isSuccess()).toBeTrue();
     });
     it('should prioritize taking control of the corners', () => {
         const board: Table<PlayerOrNone> = [
@@ -43,7 +43,7 @@ describe('ReversiMinimax', () => {
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
         expect(bestMove.equals(new ReversiMove(0, 0))).toBeTrue();
     });
-    it('Should propose passing move when no other moves are possible', () => {
+    it('should propose passing move when no other moves are possible', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -61,7 +61,7 @@ describe('ReversiMinimax', () => {
         expect(moves[0]).toBe(ReversiMove.PASS);
     });
     describe('getBoardValue', () => {
-        it('Should get 16 points for corner', () => {
+        it('should get 16 points for corner', () => {
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -77,7 +77,7 @@ describe('ReversiMinimax', () => {
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(16);
         });
-        it('Should get 4 points for edges', () => {
+        it('should get 4 points for edges', () => {
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -93,7 +93,7 @@ describe('ReversiMinimax', () => {
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(4);
         });
-        it('Should get 1 points for normal square', () => {
+        it('should get 1 points for normal square', () => {
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],

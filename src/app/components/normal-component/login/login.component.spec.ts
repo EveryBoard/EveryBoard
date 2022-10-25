@@ -43,27 +43,27 @@ describe('LoginComponent', () => {
         it('should redirect upon logged-in user change', fakeAsync(async() => {
             spyOn(router, 'navigate').and.resolveTo();
 
-            // given an existing user
+            // Given an existing user
             const user: AuthUser = UserMocks.CONNECTED_AUTH_USER;
 
-            // when the user gets connected
+            // When the user gets connected
             userRS.next(user);
             testUtils.detectChanges();
 
-            // then a redirection happens
+            // Then a redirection happens
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect if it sees a non logged-in user', fakeAsync(async() => {
             spyOn(router, 'navigate').and.resolveTo();
 
-            // given that no user is connected
+            // Given that no user is connected
             const user: AuthUser = AuthUser.NOT_CONNECTED;
 
-            // when a non-connected visitor visits this component
+            // When a non-connected visitor visits this component
             userRS.next(user);
             testUtils.detectChanges();
 
-            // then there is no redirection
+            // Then there is no redirection
             expect(router.navigate).not.toHaveBeenCalled();
         }));
     });
@@ -78,25 +78,25 @@ describe('LoginComponent', () => {
         }
 
         it('should dispatch email login to authentication service', fakeAsync(async() => {
-            // given an existing user and a loaded component
+            // Given an existing user and a loaded component
             spyOn(connectedUserService, 'doEmailLogin').and.resolveTo(MGPValidation.SUCCESS);
             testUtils.detectChanges();
 
-            // when the user logs in
+            // When the user logs in
             await login();
 
-            // then email login has been performed
+            // Then email login has been performed
             expect(connectedUserService.doEmailLogin).toHaveBeenCalledWith(email, password);
         }));
         it('should show an error if login fails', fakeAsync(async() => {
-            // given a user that will fail to login and a loaded component
+            // Given a user that will fail to login and a loaded component
             spyOn(connectedUserService, 'doEmailLogin').and.resolveTo(MGPValidation.failure('Error message'));
             testUtils.detectChanges();
 
-            // when the user logs in
+            // When the user logs in
             await login();
 
-            // then the error message is shown
+            // Then the error message is shown
             expect(getShownError()).toEqual('Error message');
         }));
     });
@@ -105,23 +105,23 @@ describe('LoginComponent', () => {
             return testUtils.clickElement('#googleButton');
         }
         it('should dispatch google login to authentication service', fakeAsync(async() => {
-            // given a google user
+            // Given a google user
             spyOn(connectedUserService, 'doGoogleLogin').and.resolveTo(MGPValidation.SUCCESS);
 
-            // when the user logs in
+            // When the user logs in
             await login();
 
-            // then google login has been performed
+            // Then google login has been performed
             expect(connectedUserService.doGoogleLogin).toHaveBeenCalledWith();
         }));
         it('should show an error if login fails', fakeAsync(async() => {
-            // given a user that will fail to login
+            // Given a user that will fail to login
             spyOn(connectedUserService, 'doGoogleLogin').and.resolveTo(MGPValidation.failure('Error message'));
 
-            // when the user logs in
+            // When the user logs in
             await login();
 
-            // then the error message is shown
+            // Then the error message is shown
             expect(getShownError()).toEqual('Error message');
         }));
     });

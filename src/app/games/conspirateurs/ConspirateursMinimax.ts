@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -12,10 +12,17 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
     public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
-            return this.getListMovesDrop(node.gameState);
+            return this.sortByNumberOfJump(this.getListMovesDrop(node.gameState));
         } else {
-            return this.getListMovesAfterDrop(node.gameState);
+            return this.sortByNumberOfJump(this.getListMovesAfterDrop(node.gameState));
         }
+    }
+    public sortByNumberOfJump(moves: ConspirateursMove[]): ConspirateursMove[] {
+        return moves.sort((a: ConspirateursMove, b: ConspirateursMove) => {
+            const leftSize: number = a.isDrop() ? 1 : (a.isSimple() ? 2 : a.coords.length);
+            const rightSize: number = b.isDrop() ? 1 : (b.isSimple() ? 2 : b.coords.length);
+            return rightSize - leftSize;
+        });
     }
     private getListMovesDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];
@@ -85,7 +92,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         }
         return jumps;
     }
-    public getBoardValue(node: ConspirateursNode): NodeUnheritance {
+    public getBoardValue(node: ConspirateursNode): BoardValue {
         const state: ConspirateursState = node.gameState;
         let score: number = 0;
         const piecesInShelters: MGPMap<Player, number> = new MGPMap([
@@ -101,7 +108,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                         score += player.getScoreModifier() * 20;
                         piecesInShelters.replace(player, piecesInShelters.get(player).get() + 1);
                         if (piecesInShelters.get(player).get() === 20) {
-                            return new NodeUnheritance(player.getVictoryValue());
+                            return new BoardValue(player.getVictoryValue());
                         }
                     } else {
                         let minEmptyShelterDistance: number = 100;
@@ -116,6 +123,6 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                 }
             }
         }
-        return new NodeUnheritance(score);
+        return new BoardValue(score);
     }
 }

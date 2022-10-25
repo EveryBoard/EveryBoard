@@ -7,50 +7,49 @@
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"
                 refX="5" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" />
+            <polygon points="0 0, 10 3.5, 0 7"/>
         </marker>
         <marker id="arrowhead-moved" markerWidth="10" markerHeight="7"
                 refX="5" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" class="moved moved-stroke"/>
+            <polygon points="0 0, 10 3.5, 0 7" class="moved-fill moved-stroke"/>
         </marker>
     </defs>
 
-    <g *ngFor="let space of getAllCoords()">
-        <g (click)="onClick(space)"
-           id="click_{{ space.x }}_{{ space.y }}">
-           <polygon id="case_{{ space.x }}_{{ space.y }}"
-                    class="base"
-                    [ngClass]="getSpaceClass(space)"
-                    [attr.points]="getHexaCoordsAt(space)"
-                    stroke-linecap="round"/>
-            <circle *ngIf="isPiece(space)"
-                    class="base"
-                    [ngClass]="getPieceClass(space)"
-                    [attr.cx]="getCenterAt(space).x"
-                    [attr.cy]="getCenterAt(space).y"
-                    [attr.r]="SPACE_SIZE"/>
-        </g>
+    <g *ngFor="let space of getAllCoords()"
+       (click)="onClick(space)"
+       id="click_{{ space.x }}_{{ space.y }}">
+
+        <polygon [attr.points]="getHexaCoordsAt(space)"
+                 id="space_{{ space.x }}_{{ space.y }}"
+                 [ngClass]="getSpaceClass(space)"
+                 class="base"
+                 stroke-linecap="round"/>
+        <circle *ngIf="isPiece(space)"
+                [attr.cx]="getCenterAt(space).x"
+                [attr.cy]="getCenterAt(space).y"
+                [attr.r]="SPACE_SIZE"
+                [ngClass]="getPieceClass(space)"
+                class="base"/>
     </g>
 
     <g *ngFor="let capture of possibleCaptures; index as i"
-       class="capturable"
-       pointer-events="fill">
+       pointer-events="fill"
+       class="capturable-stroke">
         <polygon *ngFor="let space of capture.capturedSpaces"
-                 class="no-fill"
-                 (click)="onClick(space)"
                  [attr.points]="getHexaCoordsAt(space)"
-                 stroke-linecap="round" />
+                 (click)="onClick(space)"
+                 class="no-fill"
+                 stroke-linecap="round"/>
     </g>
 
-    <g *ngFor="let arrow of arrows">
-        <line [attr.x1]="arrow.x1"
-              [attr.y1]="arrow.y1"
-              [attr.x2]="arrow.x2"
-              [attr.y2]="arrow.y2"
-              class="arrow"
-              marker-end="url(#arrowhead)"
-              (click)="onClick(arrow.destination)"/>
-    </g>
+    <line *ngFor="let arrow of arrows"
+          [attr.x1]="arrow.x1"
+          [attr.y1]="arrow.y1"
+          [attr.x2]="arrow.x2"
+          [attr.y2]="arrow.y2"
+          class="arrow"
+          marker-end="url(#arrowhead)"
+          (click)="onClick(arrow.destination)"/>
 
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let p of getPlayerSidePieces(player)">

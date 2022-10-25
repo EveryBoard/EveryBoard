@@ -13,15 +13,18 @@ export class SiamState extends GameStateWithTable<SiamPiece> {
 
         return new SiamState(board, 0);
     }
-    public countPlayerPawn(): number {
-        let count: number = 0;
+    public countCurrentPlayerPawn(): number {
+        return this.countPlayersPawn()[this.getCurrentPlayer().value];
+    }
+    public countPlayersPawn(): [number, number] {
+        const counts: [number, number] = [0, 0];
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
-                if (this.board[y][x].belongTo(this.getCurrentPlayer())) {
-                    count++;
+                if (this.board[y][x] !== SiamPiece.EMPTY) {
+                    counts[this.getPieceAtXY(x, y).getOwner().value]++;
                 }
             }
         }
-        return count;
+        return counts;
     }
 }

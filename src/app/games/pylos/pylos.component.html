@@ -7,18 +7,20 @@
     <g *ngFor="let player of Player.PLAYERS">
         <circle *ngFor="let p of getPlayerSidePieces(player)"
                 id="piece_{{ player.value }}_{{ p }}"
-                [attr.cx]="(SPACE_SIZE / 2) + (STROKE_WIDTH / 2) + (((800 - SPACE_SIZE) / 14) * p)"
+                [attr.cx]="(SPACE_SIZE / 4) + ((BOARD_WIDTH - (SPACE_SIZE / 4)) * (p / 15))"
                 [attr.cy]="getPiecesCyForPlayer(player)"
-                [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
                 [ngClass]="getPlayerClass(player)"
-                class="base mid-stroke"/>
+                class="base small-stroke"/>
     </g>
 
     <g #boardInItself
        [attr.transform]="'translate(' + (STROKE_WIDTH / 2) + ' ' + ((STROKE_WIDTH / 2) + PIECE_ROW_HEIGHT) + ')'">
-        <rect x="0" y="0"
-              width="800" height="800"
-              class="base"
+        <rect x="0"
+              y="0"
+              [attr.width]="4 * SPACE_SIZE"
+              [attr.height]="4 * SPACE_SIZE"
+              class="base small-stroke"
         />
         <g *ngFor="let z of [0, 1, 2]">
             <g *ngFor="let y of getLevelRange(z)">
@@ -31,7 +33,7 @@
                                 [attr.cx]="getPieceCx(x, y, z)"
                                 [attr.cy]="getPieceCy(x, y, z)"
                                 [ngClass]="getPieceClasses(x, y, z)"
-                                class="base"
+                                class="base small-stroke"
                         />
                         <ng-template #onlyRect>
                             <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
@@ -41,7 +43,7 @@
                                   [attr.x]="getPieceCx(x, y, z) - getPieceRadius(z)"
                                   [attr.y]="getPieceCy(x, y, z) - getPieceRadius(z)"
                                   [ngClass]="getSquareClasses(x, y, z)"
-                                  class="base"
+                                  class="base small-stroke"
                             />
                         </ng-template>
                     </ng-container>
@@ -52,10 +54,39 @@
               id="highCapture_{{ highCapture.get().x }}_{{ highCapture.get().y }}_{{ highCapture.get().z }}"
               [attr.width]="getPieceRadius(highCapture.get().z) * 2"
               [attr.height]="getPieceRadius(highCapture.get().z) * 2"
-              [attr.x]="getPieceCx(highCapture.get().x, highCapture.get().y, highCapture.get().z) - getPieceRadius(highCapture.get().z)"
-              [attr.y]="getPieceCy(highCapture.get().x, highCapture.get().y, highCapture.get().z) - getPieceRadius(highCapture.get().z)"
-              class="base captured"
-        />
+              [attr.x]="getPieceCxByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
+              [attr.y]="getPieceCyByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
+              class="base captured small-stroke"/>
+        <g *ngIf="chosenLandingCoord.isPresent()"
+           id="capture_validation"
+           (click)="validateCapture()"
+           [attr.transform]="'translate(' + (4 * SPACE_SIZE) + ' ' + (4 * SPACE_SIZE) + ')'">
+            <circle [attr.cx]="STROKE_WIDTH / 2"
+                    [attr.cy]="STROKE_WIDTH / 2"
+                    [attr.r]="SPACE_SIZE / 2"
+                    fill="red"
+                    class="base-no-fill small-stroke"
+                    [ngClass]="getCaptureValidationButtonClasses()"/>
+            <polygon points="-32.5,-2.5 -32.5,12.5 -10,35 -2.5,35 35,-21.25 25,-21.275 -5,25 -32.5,-2.5"
+                     fill="green"
+                     class="base-no-fill small-stroke"/>
+        </g>
+        <g *ngFor="let capturable of capturables"
+           (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"
+           id="capturable_{{ capturable.x }}_{{ capturable.y }}_{{ capturable.z }}"
+           [attr.transform]="'translate(' + getPieceCxByCoord(capturable) + ' ' + getPieceCyByCoord(capturable) + ')'">
+            <line [attr.x1]="-0.25 * getPieceRadius(capturable.z)"
+                  [attr.y1]="-0.25 * getPieceRadius(capturable.z)"
+                  [attr.x2]="+0.25 * getPieceRadius(capturable.z)"
+                  [attr.y2]="+0.25 * getPieceRadius(capturable.z)"
+                  stroke-width="8"
+                  stroke="red"/>
+            <line [attr.x1]="+0.25 * getPieceRadius(capturable.z)"
+                  [attr.y1]="-0.25 * getPieceRadius(capturable.z)"
+                  [attr.x2]="-0.25 * getPieceRadius(capturable.z)"
+                  [attr.y2]="+0.25 * getPieceRadius(capturable.z)"
+                  stroke-width="8"
+                  stroke="red"/>
+        </g>
     </g>
 </svg>
-

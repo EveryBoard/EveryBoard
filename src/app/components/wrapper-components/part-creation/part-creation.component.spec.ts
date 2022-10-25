@@ -484,7 +484,7 @@ describe('PartCreationComponent', () => {
                 // When setting the part type back to standard
                 await clickElement('#partTypeStandard');
 
-                // Then  the timings are updated
+                // Then the timings are updated
                 const maximalMoveDuration: number = Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value;
                 expect(maximalMoveDuration).toBe(PartType.NORMAL_MOVE_DURATION);
                 const totalPartDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value;
@@ -574,7 +574,7 @@ describe('PartCreationComponent', () => {
                 await clickElement('#cancel');
                 tick(3000);
 
-                // then observedPart should be emptied
+                // Then observedPart should be emptied
                 expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 await partDAO.set('configRoomId', PartMocks.INITIAL);
