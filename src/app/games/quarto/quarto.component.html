@@ -48,11 +48,11 @@
            (click)="deselectDroppedPiece()"
            [attr.transform]="'translate(' + (chosen.get().x * SPACE_SIZE) + ' ' + (chosen.get().y * SPACE_SIZE) + ')'"
         >
-            <rect id="highlight"
+            <rect id="selected"
                   x="0" y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
-                  class="base highlighted mid-stroke"
+                  class="base selected mid-stroke"
             />
             <rect *ngIf="pieceInHand.isRectangle() else circle"
                   x="0" y="0"
@@ -146,7 +146,7 @@
                           [attr.y]="SPACE_SIZE * y"
                           [attr.width]="SPACE_SIZE"
                           [attr.height]="SPACE_SIZE"
-                          class="base selected"
+                          class="base selected-stroke"
                     />
                     <rect *ngIf="((4*y)+x) % 4 < 2 else circle"
                           [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"

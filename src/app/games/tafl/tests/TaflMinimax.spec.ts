@@ -20,7 +20,7 @@ describe('TaflMinimax:', () => {
 
     beforeEach(() => {
         rules = TablutRules.get();
-        rules.node = rules.node.getInitialNode();
+        rules.setInitialBoard();
     });
     it('should try to make the king escape when it can', () => {
         const board: Table<TaflPawn> = [

@@ -1,68 +1,96 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 700 700"
+     viewBox="0 -100 700 900"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <polygon id="triangle" points="0 -6, 10 0, 0 6"/>
-        <polygon id="arrow" points="30 7, 30 50, 10 50, 50 93, 90 50, 70 50, 70 7, 27.5 7"/>
+        <polygon id="arrow" points="30 7, 30 50, 10 50, 50 90, 90 50, 70 50, 70 7"/>
         <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95"/>
     </defs>
-    <ng-container *ngIf="isPlayerTurn()">
-        <g *ngFor="let n of [0, 1, 2, 3, 4]">
-            <use *ngFor="let orientation of [{ dir: 'DOWN', x: n, y: -1 }, { dir: 'UP', x: n, y: 5}, { dir: 'RIGHT', x: -1, y: n }, { dir: 'LEFT', x: 5, y: n }]"
-                 xlink:href="#arrow"
-                 id="insertAt_{{orientation.x}}_{{orientation.y}}"
-                 (click)="insertAt(orientation.x, orientation.y)"
-                 [attr.transform]="getInsertionArrowTransform(orientation.x+1, orientation.y+1, orientation.dir)"
-                 class="base mid-stroke"/>
-        </g>
-    </ng-container>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
-            <rect id="insertAt_{{ x }}_{{ y }}"
-                  (click)="insertAt(x, y)"
+            <rect id="square_{{ x }}_{{ y }}"
+                  (click)="clickSquare(x, y)"
                   [attr.x]="SPACE_SIZE * (x + 1)"
                   [attr.y]="SPACE_SIZE * (y + 1)"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   [ngClass]="getSquareClasses(x, y)"
-                  class="base"
-            />
-            <g *ngIf="c.isPiece()">
-                <use id="clickPiece_{{x}}_{{y}}"
-                     class="base mid-stroke"
-                     [ngClass]="getPieceClasses(c)"
-                     (click)="clickPiece(x, y)"
-                     xlink:href="#arrow"
-                     [attr.transform]="getPieceTransform(x, y)"/>
-                <g *ngIf="choosingDirection(x, y)">
-                    <circle id="chooseDirection_"
-                            class="arrow selected-fill no-stroke"
-                            (click)="chooseDirection('')"
-                            [attr.cx]="((x+1) * SPACE_SIZE) + SPACE_SIZE/2"
-                            [attr.cy]="((y+1) * SPACE_SIZE) + SPACE_SIZE/2"
-                            r="8"/>
-                    <use *ngFor="let direction of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
-                         id="chooseDirection_{{direction}}"
-                         class="arrow selected-fill no-stroke"
-                         (click)="chooseDirection(direction)"
-                         xlink:href="#triangle"
-                         [attr.transform]="getArrowTransform(x+1, y+1, direction)"/>
-                </g>
-            </g>
+                  class="base"/>
+            <use *ngIf="c.isPiece()"
+                 id="piece_{{x}}_{{y}}"
+                 class="base mid-stroke"
+                 [ngClass]="getPieceClasses(x, y, c)"
+                 (click)="clickSquare(x, y)"
+                 xlink:href="#arrow"
+                 [attr.transform]="getPieceTransform(x, y)"/>
             <use *ngIf="isMountain(c)"
                  xlink:href="#mountain"
-                 (click)="clickPiece(x, y)"
-                 [attr.transform]="'translate(' + ((x+1) * SPACE_SIZE) + ' ' + ((y+1) * SPACE_SIZE) + ')'"
-                 fill="brown"/>
-            <g *ngIf="choosingOrientation(x, y)">
-                <use *ngFor="let orientation of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
-                     id="chooseOrientation_{{ orientation }}"
-                     class="arrow selected-fill no-stroke"
-                     (click)="chooseOrientation(orientation)"
-                     xlink:href="#triangle"
-                     [attr.transform]="getArrowTransform(x+1, y+1, orientation)"/>
-            </g>
+                 class="nonplayer-fill"
+                 (click)="clickSquare(x, y)"
+                 [attr.transform]="'translate(' + ((x+1) * SPACE_SIZE) + ' ' + ((y+1) * SPACE_SIZE) + ')'"/>
         </g>
     </g>
+    <g *ngFor="let coord of clickableCoords">
+        <rect *ngIf="coord.isInRange(5, 5) === false"
+              id="square_{{ coord.x }}_{{ coord.y }}"
+              (click)="clickSquare(coord.x, coord.y)"
+              [attr.x]="SPACE_SIZE * (coord.x + 1)"
+              [attr.y]="SPACE_SIZE * (coord.y + 1)"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              [ngClass]="getSquareClasses(coord.x, coord.y)"
+              class="base semi-transparent"/>
+        <rect [attr.x]="SPACE_SIZE * (coord.x + 1)"
+              [attr.y]="SPACE_SIZE * (coord.y + 1)"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="base no-fill small-stroke clickable-stroke"
+              (click)="clickSquare(coord.x, coord.y)"/>
+    </g>
+    <rect *ngIf="selectedLanding.isPresent()"
+          (click)="clickSquare(selectedLanding.get().x, selectedLanding.get().y)"
+          [attr.x]="SPACE_SIZE * (selectedLanding.get().x + 1)"
+          [attr.y]="SPACE_SIZE * (selectedLanding.get().y + 1)"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE"
+          class="base no-fill small-stroke selected-stroke"/>
+    <rect *ngIf="selectedPiece.isPresent()"
+          (click)="clickSquare(selectedPiece.get().x, selectedPiece.get().y)"
+          [attr.x]="SPACE_SIZE * (selectedPiece.get().x + 1)"
+          [attr.y]="SPACE_SIZE * (selectedPiece.get().y + 1)"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE"
+          class="base no-fill small-stroke selected-stroke"/>
+    <g *ngFor="let player of Player.PLAYERS"
+       id="remainingPieces_{{ player.value }}"
+       (click)="selectPieceForInsertion(player)" >
+        <use *ngFor="let x of range(playerPieces(player))"
+             id="remainingPieces_{{ player.value }}_{{ x }}"
+             class="base mid-stroke"
+             [ngClass]="getRemainingPieceClasses(player, x)"
+             xlink:href="#arrow"
+             [attr.transform]="getRemainingPieceTransform(x, player)"/>
+    </g>
+    <g *ngFor="let arrow of indicatorArrows">
+        <use id="indicator_{{ arrow.target.x }}_{{ arrow.target.y }}_{{ arrow.direction.toString() }}"
+             class="base mid-stroke indicator-fill"
+             (click)="clickArrow(arrow)"
+             xlink:href="#arrow"
+             [attr.transform]="getIndicatorTransform(arrow)"/>
+        <!-- Need to redraw the source piece, if it is not an insertion -->
+        <use *ngIf="arrow.source.isPresent()"
+             class="base mid-stroke"
+             [ngClass]="getPieceClasses(arrow.source.get().coord.x, arrow.source.get().coord.y, arrow.source.get().piece)"
+             (click)="clickSquare(arrow.source.get().coord.x, arrow.source.get().coord.y)"
+             xlink:href="#arrow"
+             [attr.transform]="getPieceTransform(arrow.source.get().coord.x, arrow.source.get().coord.y)"/>
+    </g>
+    <use *ngFor="let move of orientations"
+         id="orientation_{{ move.landingOrientation }}"
+         class="base mid-stroke semi-transparent"
+         [ngClass]="getCurrentPlayerClass()"
+         (click)="selectOrientation(move)"
+         xlink:href="#arrow"
+         [attr.transform]="getOrientationTransform(move.landingOrientation)"/>
 </svg>

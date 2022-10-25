@@ -3,22 +3,17 @@
      [attr.viewBox]="(- STROKE_WIDTH / 2) + ' ' + (- STROKE_WIDTH / 2) + ' ' + (BOARD_WIDTH + STROKE_WIDTH) + ' ' + (BOARD_HEIGHT + STROKE_WIDTH)"
      preserveAspectRatio="xMidYMid meet"
 >
-    <!-- <rect [attr.x]="- STROKE_WIDTH / 2"
-          [attr.y]="- STROKE_WIDTH / 2"
-          [attr.width]="BOARD_WIDTH + STROKE_WIDTH"
-          [attr.height]="BOARD_HEIGHT + STROKE_WIDTH" fill="green" /> -->
-
     <g [attr.transform]="'rotate(' + this.role.value * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
         <circle *ngFor="let x of range(remainingOne)"
                 [attr.cx]="getRemainingPieceCx(x)"
                 [attr.cy]="PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"
-                class="base mid-stroke player1"/>
+                class="base mid-stroke player1-fill"/>
         <circle *ngFor="let x of range(remainingZero)"
                 [attr.cx]="BOARD_WIDTH - getRemainingPieceCx(x)"
                 [attr.cy]="BOARD_HEIGHT - PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"
-                class="base mid-stroke player0"/>
+                class="base mid-stroke player0-fill"/>
     </g>
 
     <g id="board">
@@ -61,15 +56,4 @@
             </ng-container>
         </g>
     </g>
-
-    <!-- <line [attr.x1]="- STROKE_WIDTH / 2"
-          [attr.y1]="- STROKE_WIDTH / 2"
-          [attr.x2]="BOARD_WIDTH + STROKE_WIDTH"
-          [attr.y2]="BOARD_HEIGHT + STROKE_WIDTH"
-          stroke="red" />
-    <line [attr.x1]="BOARD_WIDTH + STROKE_WIDTH"
-          [attr.y1]="- STROKE_WIDTH / 2"
-          [attr.x2]="- STROKE_WIDTH / 2"
-          [attr.y2]="BOARD_HEIGHT + STROKE_WIDTH"
-          stroke="red" /> -->
 </svg>

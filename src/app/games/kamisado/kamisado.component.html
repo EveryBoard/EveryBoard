@@ -44,12 +44,12 @@
               [attr.y]="lastPieceMove.get().coord.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
-              class="base no-fill mid-stroke highlighted"/>
+              class="base no-fill mid-stroke last-move-stroke"/>
         <rect [attr.x]="lastPieceMove.get().end.x * SPACE_SIZE"
               [attr.y]="lastPieceMove.get().end.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
-              class="base no-fill mid-stroke highlighted"/>
+              class="base no-fill mid-stroke last-move-stroke"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen.isPresent()"
@@ -57,5 +57,5 @@
             [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
             [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
             [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-            class="base mid-stroke no-fill highlighted"/>
+            class="base mid-stroke no-fill selected-stroke"/>
 </svg>

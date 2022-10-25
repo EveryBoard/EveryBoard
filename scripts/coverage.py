@@ -18,7 +18,7 @@ def to_missing(x):
     return int(high)-int(low)
 
 def load_coverage_data():
-    files = glob("coverage/**/*.ts.html", recursive=True)
+    files = glob("coverage/src/**/*.ts.html", recursive=True)
     data = {
         'statements': {},
         'branches': {},

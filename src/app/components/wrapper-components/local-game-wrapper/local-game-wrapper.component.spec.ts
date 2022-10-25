@@ -79,16 +79,16 @@ describe('LocalGameWrapperComponent', () => {
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
     }));
     it('should allow to go back one move', fakeAsync(async() => {
-        const state: P4State = testUtils.getComponent().rules.node.gameState;
+        const state: P4State = testUtils.getComponent().getState();
         expect(state.turn).toBe(0);
 
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-        expect(testUtils.getComponent().rules.node.gameState.turn).toBe(1);
+        expect(testUtils.getComponent().getTurn()).toBe(1);
 
         spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
         await testUtils.expectInterfaceClickSuccess('#takeBack');
 
-        expect(testUtils.getComponent().rules.node.gameState.turn).toBe(0);
+        expect(testUtils.getComponent().getTurn()).toBe(0);
         expect(testUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
     }));
     it('should show draw', fakeAsync(async() => {
@@ -140,7 +140,7 @@ describe('LocalGameWrapperComponent', () => {
 
             await testUtils.expectInterfaceClickSuccess('#restartButton');
 
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(0);
+            expect(testUtils.getComponent().getTurn()).toBe(0);
             testUtils.expectElementNotToExist('#draw');
             tick(1000);
         }));
@@ -270,22 +270,22 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.detectChanges();
             await testUtils.fixture.whenStable();
 
-            const state: P4State = testUtils.getComponent().rules.node.gameState;
+            const state: P4State = testUtils.getComponent().getState();
             expect(state.turn).toBe(0);
 
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(1);
+            expect(testUtils.getComponent().getTurn()).toBe(1);
 
             // eslint-disable-next-line dot-notation
             tick(testUtils.wrapper['botTimeOut']);
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(2);
+            expect(testUtils.getComponent().getTurn()).toBe(2);
 
             // // When taking back
             spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#takeBack');
 
             // // expect to be back two turn, not one
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(0);
+            expect(testUtils.getComponent().getTurn()).toBe(0);
 
             tick(1000);
         }));
@@ -339,7 +339,7 @@ describe('LocalGameWrapperComponent', () => {
             wrapper.aiDepths[0] = '1';
 
             // When receiveValidMove is called
-            const state: P4State = testUtils.getComponent().rules.node.gameState;
+            const state: P4State = testUtils.getComponent().getState();
             const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
 
             // Then it should display a message

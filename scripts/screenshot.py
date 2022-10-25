@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import os
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 options = Options()
 options.headless = True

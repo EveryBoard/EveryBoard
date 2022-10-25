@@ -41,7 +41,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        const state: AwaleState = this.rules.node.gameState;
+        const state: AwaleState = this.getState();
         this.scores = MGPOptional.of(state.getCapturedCopy());
         this.hidePreviousMove();
         const lastMove: MGPOptional<AwaleMove> = this.rules.node.move;
@@ -81,23 +81,23 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (y === this.rules.node.gameState.getCurrentPlayer().value) {
+        if (y === this.getState().getCurrentPlayer().value) {
             return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
         }
         this.last = MGPOptional.empty(); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = AwaleMove.from(x);
         // let's confirm on java-server-side that the move is legal
-        return this.chooseMove(chosenMove, this.rules.node.gameState, this.scores.get());
+        return this.chooseMove(chosenMove, this.getState(), this.scores.get());
     }
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return ['captured'];
+            return ['captured-fill'];
         } else if (this.last.equalsValue(coord)) {
-            return ['moved', 'highlighted'];
+            return ['moved-fill', 'last-move-stroke'];
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return ['moved'];
+            return ['moved-fill'];
         } else {
             return [];
         }

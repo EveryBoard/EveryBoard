@@ -54,12 +54,12 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.last = MGPOptional.empty(); // now that the user stopped trying to do a move
         // we stop showing the user the last move
         const resultlessMove: GoMove = new GoMove(x, y);
-        return this.chooseMove(resultlessMove, this.rules.node.gameState, this.scores.get());
+        return this.chooseMove(resultlessMove, this.getState(), this.scores.get());
     }
     public updateBoard(): void {
         display(GoComponent.VERBOSE, 'updateBoard');
 
-        const state: GoState = this.rules.node.gameState;
+        const state: GoState = this.getState();
         const move: MGPOptional<GoMove> = this.rules.node.move;
         const phase: Phase = state.phase;
 
@@ -91,7 +91,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         }
     }
     public async pass(): Promise<MGPValidation> {
-        const phase: Phase = this.rules.node.gameState.phase;
+        const phase: Phase = this.getState().phase;
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         }
@@ -100,11 +100,11 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
     }
     public getSpaceClass(x: number, y: number): string {
-        const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
+        const piece: GoPiece = this.getState().getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }
     public spaceIsFull(x: number, y: number): boolean {
-        const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
+        const piece: GoPiece = this.getState().getPieceAtXY(x, y);
         return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
     }
     public isLastSpace(x: number, y: number): boolean {
@@ -116,9 +116,9 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         }
     }
     public isDead(x: number, y: number): boolean {
-        return this.rules.node.gameState.isDead(new Coord(x, y));
+        return this.getState().isDead(new Coord(x, y));
     }
     public isTerritory(x: number, y: number): boolean {
-        return this.rules.node.gameState.isTerritory(new Coord(x, y));
+        return this.getState().isTerritory(new Coord(x, y));
     }
 }

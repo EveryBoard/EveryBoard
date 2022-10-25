@@ -3166,10 +3166,6 @@
         <source>Failed! You have made a single step.</source>
         <target>Raté ! Vous avez fait un simple pas.</target>
       </trans-unit>
-      <trans-unit id="5300676389075722498" datatype="html">
-        <source>You cannot insert a piece when you have already selected a piece.</source>
-        <target>Vous ne pouvez pas insérer une pièce si vous avez déjà sélectionné une pièce.</target>
-      </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
         <target>Vous ne pouvez plus insérer, toutes vos pièces sont déjà sur le plateau !</target>
@@ -3186,25 +3182,31 @@
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
         <target>Votre poussée est invalide : elle n'est pas droite, ne pousse rien, ou sort du plateau.</target>
       </trans-unit>
-      <trans-unit id="5868009287424458246" datatype="html">
-        <source>You should insert or choose one of your pieces!</source>
-        <target>Vous devez insérez ou choisir une de vos pièces !</target>
+      <trans-unit id="6641065739366631527" datatype="html">
+        <source>You must select a valid destination (highlighted on the board) for your piece</source>
+        <target>Vous devez sélectionner une destination valide (mise en évidence sur le plateau) pour votre pièce.</target>
       </trans-unit>
-      <trans-unit id="4223815631577991732" datatype="html">
+      <trans-unit id="3129880366808972802" datatype="html">
+        <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
+        <target>Vous devez sélectionner une orientation pour votre pièce en cliquant sur une des flèches.</target>
+      </trans-unit>
+      <trans-unit id="3753696680821191929" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following three actions:
+        During its turn, a player can do one of the following actions:
         &lt;ol&gt;
             &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece, and optionally move it.&lt;/li&gt;
+            &lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;
+            &lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;
             &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
         &lt;/ol&gt;</source>
         <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau.
         Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau.
-        Durant son tour de jeu un joueur peut effectuer l&apos;une des trois actions suivantes :
+        Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :
         &lt;ol&gt;
             &lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;
-            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces et optionnellement la déplacer.&lt;/li&gt;
+            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;
+            &lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;
             &lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -3212,47 +3214,47 @@
         <source>Inserting a piece</source>
         <target>Insérer une pièce</target>
       </trans-unit>
-      <trans-unit id="870234930796108332" datatype="html">
+      <trans-unit id="3137783298375495022" datatype="html">
         <source>Each player has 5 pieces in total.
-        As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
+        As long as you have remaining pieces next to the board, you can insert new pieces. To do so:
         &lt;ol&gt;
-            &lt;li&gt;Click on one of the big arrows alongside the board.&lt;/li&gt;
-            &lt;li&gt;Click on one of the small arrows that appeared on the landing square of your piece.
-                This is the direction in which your piece will be oriented.&lt;/li&gt;
+            &lt;li&gt;Click on one of your pieces from your reserve, next to board.&lt;/li&gt;
+            &lt;li&gt;Click on one of the highlighted squares to select a landing for your piece.&lt;/li&gt;
+            &lt;li&gt;Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Insert a piece on the board.</source>
+        You&apos;re playing Light, insert a piece on the board.</source>
         <target>Chaque joueur a en tout 5 pièces.
-        Tant qu&apos;il n&apos;en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire :
+        Tant qu&apos;il vous reste des pièces de réserves sur le côté du plateau, vous pouvez en insérer une. Pour ce faire :
         &lt;ol&gt;
-            &lt;li&gt;Appuyez sur une des grosses flèches autour du plateau.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur une des 4 petites flèches apparues sur la case d&apos;arrivée de la pièce insérée.
-                Cela indiquera la direction dans laquelle sera orientée votre pièce.&lt;/li&gt;
+            &lt;li&gt;Sélectionnez une pièces depuis votre réserve, située à côté du plateau.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une des cases mises en avant pour sélectionner une case de destination pour votre pièce.&lt;/li&gt;
+            &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Insérez une pièce sur le plateau.</target>
+        Vous jouez Clair, insérez une pièce sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="5200908153537449128" datatype="html">
+      <trans-unit id="6681876930126126119" datatype="html">
         <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
         A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically.
-        During that move, you can also move the piece out of the board.
+        You can also move a piece out of the board.
         To move a piece:
         &lt;ol&gt;
             &lt;li&gt;Click on it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows to pick the direction in which it will move.
-                You can also click on the middle dot to change the piece&apos;s orientation without moving it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows on the landing square to pick its orientation.&lt;/li&gt;
+            &lt;li&gt;Click on the square on which you want the piece to move.
+                You can also click a second time on your piece to change its orientation without moving it.&lt;/li&gt;
+            &lt;li&gt;Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Try to move the piece that is on the board one square upwards and to orient it downwards.</source>
+        Try to move your piece that is already on the board one square upwards and to orient it to the left.</source>
         <target>Nous distinguerons ici &quot;déplacer&quot; et &quot;pousser&quot;.
         Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement.
-        Lors de ce déplacement on peut aussi faire sortir la pièce du plateau.
-        Pour déplacer la pièce :
+        Il est également possible de faire sortir une pièce du plateau.
+        Pour déplacer une pièce :
         &lt;ol&gt;
             &lt;li&gt;Cliquez dessus.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur l&apos;une des 5 flèches pour choisir la direction dans laquelle elle va se déplacer.
-                En cliquant sur celle au milieu, vous décidez de juste changer l&apos;orientation de la pièce, sans la déplacer.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur l&apos;une des 4 flèches sur la case d&apos;arrivée de votre pièce pour choisir son orientation.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la destination voulue de la pièce.
+              Vous pouvez aussi cliquer une seconde fois sur votre pièce pour changer son orientation sans la déplacer.&lt;/li&gt;
+            &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Essayer de déplacer la pièce sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers le bas.</target>
+        Essayer de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
         <source>Congratulations, you made a side-slip!</source>
@@ -3276,41 +3278,61 @@
         <source>Failed, the piece is still on the board.</source>
         <target>Raté, la pièce est encore sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="7012941605576384729" datatype="html">
+      <trans-unit id="8483955670337077136" datatype="html">
+        <source>Pushing (1/2)</source>
+        <target>Pousser (1/2)</target>
+      </trans-unit>
+      <trans-unit id="5017134997515199928" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
-        In order to push, multiple conditions must hold:
+        In order to push player pieces, the following conditions must hold:
         &lt;ol&gt;
             &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
-            &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
-                must be smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
-            &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
+            &lt;li&gt;Along the line that you are pushing, the number of pieces (yours or your opponent&apos;s) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.&lt;/li&gt;
         &lt;/ol&gt;
-        Your piece on the top right cannot push because there is one mountain too much.
-        Your piece on the bottom right can push.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+        Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
+        On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;
+        Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
-        Pour pousser il faut plusieurs critères :
+        Pour pousser des pièces d'un joueur, plusieurs critères doivent être vérifiés :
         &lt;ol&gt;
-            &lt;li&gt;Être déjà orienté dans le sens de la poussée.&lt;/li&gt;
-            &lt;li&gt;Que le nombre de pièces (adverses ou non) qui font face à la votre (les résistants)
-                soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).&lt;/li&gt;
-            &lt;li&gt;Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.&lt;/li&gt;
+            &lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;
+            &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face.&lt;/li&gt;
         &lt;/ol&gt;
-        Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
-        Votre pièce tout en bas à droite, elle, peut pousser.&lt;br/&gt;&lt;br/&gt;
-        Faites-le !</target>
+        Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée.
+        Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;
+        Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
       </trans-unit>
-      <trans-unit id="4320644310018984490" datatype="html">
+      <trans-unit id="6284799875777459303" datatype="html">
+        <source>Pushing (2/2)</source>
+        <target>Pousser (2/2)</target>
+      </trans-unit>
+      <trans-unit id="5293434509291141449" datatype="html">
+        <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
+        In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains.
+        On the following board, you can push the mountain on the first row.
+        On the second and third row, because of the resisting forces, you cannot push.&lt;br/&gt;&lt;br/&gt;
+        On the fourth row, you can push as there is one more pusher than resistant pieces. Do it.</source>
+        <target>Pour pousser une montane, vous avez besoin d'un pièce pousseuse par montagne. Chaque résistant (pièce dans la direction opposée) annule la force d'une pousseuse.
+        En résumé, s'il n'y a pas de montagne vous devez avoir strictement plus de pousseurs que de résistants. S'il y a une montagne, vous devez avoir autant de pousseurs qu'il y a de résistants et montagnes.
+        Sur le plateau, vous pouvez pousser la montagne de la première ligne.
+        Sur la deuxième et troisième, vous ne pouvez pas pousser à cause des pièces et montagnes résistantes.&lt;br/&gt;&lt;br/&gt;
+        Sur la quatrième ligne, vous pouvez pousser car il y a une pousseuse de plus que de pièces résistantes. Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="709861006710076010" datatype="html">
+        <source>Congratulations! Note that this move made you lose the game, you will see why in the next step.</source>
+        <target>Bravo ! Notez que ce mouvement vous fait perdre, comme vous allez le voir dans l'étape suivante.</target>
+      </trans-unit>
+      <trans-unit id="6651584028213138803" datatype="html">
         <source>The game ends when a mountain is pushed out of the board.
         If you pushed it and nobody is in front of you, you&apos;re the winner.
         However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
         However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;
-        You have two ways of ending the game here: you can either win, or lose. Choose correctly!</source>
+        Here, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
         <target>Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
         Si vous l&apos;avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.
         Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
         En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.&lt;br/&gt;&lt;br/&gt;
-        Vous avez deux moyen de finir la partie, un gagnant, un perdant, choisissez !</target>
+        Ici, vous pouvez pousser une montagne hors du plateau et soit gagner, soit perdre. Choisissez consciencieusement !</target>
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>

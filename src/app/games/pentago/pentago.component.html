@@ -44,7 +44,7 @@
             [attr.cx]="getCenter(currentDrop.get().x)"
             [attr.cy]="getCenter(currentDrop.get().y)"
             [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-            [ngClass]="getPlayerClass(rules.node.gameState.getCurrentPlayer())"
+            [ngClass]="getPlayerClass(getCurrentPlayer())"
             class="base"
             pointer-events="fill"
     />

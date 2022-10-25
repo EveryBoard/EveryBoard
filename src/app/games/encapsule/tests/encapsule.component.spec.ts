@@ -59,7 +59,7 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_5');
 
             // Then that piece should be selected
-            testUtils.expectElementToHaveClass('#piece_0_SMALL_DARK_5', 'selected');
+            testUtils.expectElementToHaveClass('#piece_0_SMALL_DARK_5', 'selected-stroke');
         }));
         it('should select starting coord when clicking on occupied coord', fakeAsync(async() => {
             // Given a board on which one piece is owned by current player
@@ -176,7 +176,7 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_5');
 
             // Then that piece should be selected no more
-            testUtils.expectElementNotToHaveClass('#piece_0_SMALL_DARK_5', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_0_SMALL_DARK_5', 'selected-stroke');
         }));
         it('should change select piece when clicking another', fakeAsync(async() => {
             // Given any state with a remaining pieces selected
@@ -186,8 +186,8 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_4');
 
             // Then that other piece should be selected
-            testUtils.expectElementNotToHaveClass('#piece_0_SMALL_DARK_5', 'selected');
-            testUtils.expectElementToHaveClass('#piece_0_SMALL_DARK_4', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_0_SMALL_DARK_5', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#piece_0_SMALL_DARK_4', 'selected-stroke');
         }));
         it('should deselect starting coord when clicking on it again', fakeAsync(async() => {
             // Given a board on which one piece is owned by current player and one is selected

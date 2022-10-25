@@ -47,7 +47,7 @@
     <polygon *ngFor="let coord of viewInfo.selectedCoords"
              id="selected_{{ coord.x }}_{{ coord.y }}"
              (click)="onClick(coord)"
-             class="base no-fill selected"
+             class="base no-fill selected-stroke"
              [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
              pointer-events="fill"
              stroke-linecap="round"/>
@@ -55,7 +55,7 @@
         <polygon *ngFor="let coord of viewInfo.selectableCoords"
                  id="selectable_{{ coord.x }}_{{ coord.y }}"
                  (click)="onClick(coord)"
-                 class="base no-fill capturable"
+                 class="base no-fill capturable-stroke"
                  [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
                  pointer-events="fill"
                  stroke-linecap="round"/>

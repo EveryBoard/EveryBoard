@@ -19,7 +19,7 @@
                 <circle *ngIf="isLastSpace(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="22"
-                        class="base no-fill mid-stroke highlighted"
+                        class="base no-fill mid-stroke last-move-stroke"
                 />
                 <line *ngIf="isDead(x, y)"
                       (click)="onClick(x, y)"
@@ -47,7 +47,7 @@
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
-                        [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1' : 'player0'"
+                        [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
                         (click)="onClick(x, y)"
                 />
             </ng-template>
@@ -62,6 +62,6 @@
             (click)="onClick(capture.x, capture.y)"
             [attr.cx]="25 + 50 * capture.x" [attr.cy]="25 + 50 * capture.y"
             [attr.r]="7"
-            class="captured"
+            class="captured-fill"
     />
 </svg>
