@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Move } from 'src/app/jscaip/Move';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { DemoNodeInfo } from './demo-card.component';
+import { AbstractNode } from 'src/app/jscaip/MGPNode';
+import { AbstractRules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-demo-page',
@@ -25,20 +31,37 @@ export class DemoPageComponent {
         this.columns = [];
         // Create a game card for each demo node of each game
         for (const game of allGames) {
-            // We only show the demo nodes for games that define them in their components
+            let demoNodes: AbstractNode[] = [];
             // eslint-disable-next-line dot-notation
             if (game.component['getDemoNodes'] != null) {
                 // eslint-disable-next-line dot-notation
-                for (const node of game.component['getDemoNodes']()) {
-                    // We fill from right to left, one node per column at a time
-                    if (i < numberOfColumns) {
-                        // We need to create the columns the first time we access them
-                        this.columns.push([]);
+                demoNodes = game.component['getDemoNodes']();
+            }
+            // eslint-disable-next-line dot-notation
+            const rules: AbstractRules = game.component['rules'];
+            // eslint-disable-next-line dot-notation
+            if (game.component['tutorial'] != null) {
+                // eslint-disable-next-line dot-notation
+                const steps: TutorialStep[] = game.component['tutorial'];
+                for (const step of steps) {
+                    if (step.isMove()) {
+                        const move: Move = step.acceptedMoves[0];
+                        demoNodes.push(new MGPNode(rules.applyLegalMove(move, step.state,
+                                                                        rules.isLegal(move, step.state)),
+                                                   MGPOptional.of(new MGPNode(step.state)),
+                                                   MGPOptional.of(move)));
                     }
-                    this.columns[column].push({ name: game.name, component: game.component, node });
-                    i++;
-                    column = (column+1) % numberOfColumns;
                 }
+            }
+            for (const node of demoNodes) {
+                // We fill from right to left, one node per column at a time
+                if (i < numberOfColumns) {
+                    // We need to create the columns the first time we access them
+                    this.columns.push([]);
+                }
+                this.columns[column].push({ name: game.name, component: game.component, node });
+                i++;
+                column = (column+1) % numberOfColumns;
             }
         }
     }
