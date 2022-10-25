@@ -149,10 +149,7 @@ describe('GameComponent', () => {
     }));
     it('should have an encoder and a tutorial for every game', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {
-            // Given a displayable game
-            if (gameInfo.display === false) {
-                continue;
-            }
+            // Given a game
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameInfo.urlName, false);

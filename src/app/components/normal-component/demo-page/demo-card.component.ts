@@ -30,6 +30,7 @@ export class DemoCardComponent implements AfterViewInit {
         componentRef.instance.rules.node = this.demoNodeInfo.node;
         // The demo node is shown from the point of the player corresponding to the current turn
         componentRef.instance.role = componentRef.instance.getCurrentPlayer();
+        componentRef.instance.isPlayerTurn = function() { return true; };
         // The board needs to be updated to account for the changed node
         componentRef.instance.updateBoard();
     }

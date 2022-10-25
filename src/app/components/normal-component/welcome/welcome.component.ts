@@ -23,7 +23,7 @@ export class WelcomeComponent {
                        themeService: ThemeService)
     {
         this.theme = themeService.getTheme();
-        const allGames: GameInfo[] = GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true);
+        const allGames: GameInfo[] = GameInfo.ALL_GAMES();
         let column: number = 0;
         for (let i: number = 0; i < allGames.length; i++) {
             if (i < this.numberOfColumns) {

@@ -128,3 +128,6 @@ export abstract class Rules<M extends Move,
     }
     public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
 }
+
+export abstract class AbstractRules extends Rules<Move, GameState, unknown> {
+}

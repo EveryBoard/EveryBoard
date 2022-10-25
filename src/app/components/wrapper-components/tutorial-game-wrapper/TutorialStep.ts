@@ -185,3 +185,7 @@ export class TutorialStepInformational extends TutorialStep {
         return true;
     }
 }
+
+export abstract class Tutorial {
+    public abstract tutorial: TutorialStep[];
+}

@@ -4,7 +4,7 @@ import { EncapsuleCase, EncapsuleState } from 'src/app/games/encapsule/Encapsule
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 const s: EncapsuleCase = new EncapsuleCase(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -16,7 +16,7 @@ const B: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE,
 const Sm: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
 const sm: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ZERO, PlayerOrNone.NONE);
 
-export class EncapsuleTutorial {
+export class EncapsuleTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
