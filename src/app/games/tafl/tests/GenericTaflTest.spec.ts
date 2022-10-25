@@ -72,7 +72,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // Then it should have selected the piece
-                testUtils.expectElementToHaveClass('#piece_' + playersCoord, 'selected');
+                testUtils.expectElementToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
         });
         describe('Second click', () => {
@@ -112,7 +112,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
 
                 // Then captured and move highlight should be shown
                 const component: C = testUtils.getComponent();
-                expect(component.getRectClasses(entries.firstCaptured.x, entries.firstCaptured.y)).toContain('captured');
+                expect(component.getRectClasses(entries.firstCaptured.x, entries.firstCaptured.y)).toContain('captured-fill');
                 expect(component.getRectClasses(firstCoord.x, firstCoord.y)).toContain('moved-fill');
                 expect(component.getRectClasses(secondCoord.x, secondCoord.y)).toContain('moved-fill');
             }));
@@ -126,8 +126,8 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 await testUtils.expectClickSuccess('#click_' + otherCoord);
 
                 // Then that piece should be selected and the previous unselected
-                testUtils.expectElementToHaveClass('#piece_' + otherCoord, 'selected');
-                testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected');
+                testUtils.expectElementToHaveClass('#piece_' + otherCoord, 'selected-stroke');
+                testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
             it('should deselect clicked piece when it is click for the second time in a row', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
@@ -138,7 +138,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // Then that piece should be deselected
-                testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected');
+                testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
             it('should cancelMove when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
@@ -154,14 +154,14 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 const secondCoord: string = entries.jumpOver.end.x + '_' + entries.jumpOver.end.y;
                 await testUtils.expectMoveFailure('#click_' + secondCoord, reason, move);
                 // And the piece should be unselected
-                testUtils.expectElementNotToHaveClass('#piece_' + firstCoord, 'selected');
+                testUtils.expectElementNotToHaveClass('#piece_' + firstCoord, 'selected-stroke');
             }));
         });
         it('encoder should be correct', () => {
             const rules: R = testUtils.getComponent().rules;
             MGPNode.ruler = rules;
             const encoder: MoveEncoder<M> = testUtils.getComponent().encoder;
-            rules.node = rules.node.getInitialNode();
+            rules.setInitialBoard();
             const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
             const firstTurnMoves: M[] = minimax
                 .getListMoves(rules.node)

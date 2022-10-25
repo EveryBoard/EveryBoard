@@ -68,15 +68,15 @@ describe('AbaloneComponent', () => {
             // When clicking a piece
             await testUtils.expectClickSuccess('#piece_2_7');
 
-            // Then it should be highlighted
+            // Then it should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(2, 7)).toEqual(['player0', 'highlighted']);
+            expect(compo.getPieceClasses(2, 7)).toEqual(['player0-fill', 'selected-stroke']);
 
             // When reclicking it
             await testUtils.expectClickSuccess('#piece_2_7');
 
-            // Then it should no longer be highlighted
-            expect(compo.getPieceClasses(2, 7)).toEqual(['player0']);
+            // Then it should no longer be selected
+            expect(compo.getPieceClasses(2, 7)).toEqual(['player0-fill']);
         }));
         it('should select clicked piece when not aligned with first (non dir)', fakeAsync(async() => {
             // Given the initial board with first click
@@ -87,8 +87,8 @@ describe('AbaloneComponent', () => {
 
             // expect first to be unselected and new to be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(2, 6)).toEqual(['player0']);
-            expect(compo.getPieceClasses(4, 7)).toEqual(['player0', 'highlighted']);
+            expect(compo.getPieceClasses(2, 6)).toEqual(['player0-fill']);
+            expect(compo.getPieceClasses(4, 7)).toEqual(['player0-fill', 'selected-stroke']);
         }));
         it('should select clicked piece when not aligned with first (non hexa dir)', fakeAsync(async() => {
             // Given the initial board with first click
@@ -99,8 +99,8 @@ describe('AbaloneComponent', () => {
 
             // expect first to be unselected and new to be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(2, 6)).toEqual(['player0']);
-            expect(compo.getPieceClasses(3, 7)).toEqual(['player0', 'highlighted']);
+            expect(compo.getPieceClasses(2, 6)).toEqual(['player0-fill']);
+            expect(compo.getPieceClasses(3, 7)).toEqual(['player0-fill', 'selected-stroke']);
         }));
         it('should change first coord to clicked coord if valid extension side but hole in the extension', fakeAsync(async() => {
             // Given a board with a possible "holed line" selection
@@ -124,8 +124,8 @@ describe('AbaloneComponent', () => {
 
             // Then the old piece should be unselected and the new one selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(1, 5)).toEqual(['player0']);
-            expect(compo.getPieceClasses(1, 7)).toEqual(['player0', 'highlighted']);
+            expect(compo.getPieceClasses(1, 5)).toEqual(['player0-fill']);
+            expect(compo.getPieceClasses(1, 7)).toEqual(['player0-fill', 'selected-stroke']);
         }));
         it('should cancel move when trying to select more than three pieces', fakeAsync(async() => {
             // Given the initial board with one piece selected
@@ -150,8 +150,8 @@ describe('AbaloneComponent', () => {
 
             // Then only one piece should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(2, 6)).toEqual(['player0']);
-            expect(compo.getPieceClasses(3, 6)).toEqual(['player0', 'highlighted']);
+            expect(compo.getPieceClasses(2, 6)).toEqual(['player0-fill']);
+            expect(compo.getPieceClasses(3, 6)).toEqual(['player0-fill', 'selected-stroke']);
         }));
         it('should deselect last piece selected when reclicked', fakeAsync(async() => {
             // Given the initial board with 2 pieces selected
@@ -163,8 +163,8 @@ describe('AbaloneComponent', () => {
 
             // Then only one piece should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(2, 6)).toEqual(['player0', 'highlighted']);
-            expect(compo.getPieceClasses(3, 6)).toEqual(['player0']);
+            expect(compo.getPieceClasses(2, 6)).toEqual(['player0-fill', 'selected-stroke']);
+            expect(compo.getPieceClasses(3, 6)).toEqual(['player0-fill']);
         }));
         it('should cancel move when clicking middle piece of a 3 piece column and selecting middle', fakeAsync(async() => {
             // Given the initial board
@@ -172,19 +172,19 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_2_7');
             await testUtils.expectClickSuccess('#piece_4_7');
 
-            // Then three pieces should be highlighted
+            // Then three pieces should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(2, 7)).toEqual(['player0', 'highlighted']);
-            expect(compo.getPieceClasses(3, 7)).toEqual(['player0', 'highlighted']);
-            expect(compo.getPieceClasses(4, 7)).toEqual(['player0', 'highlighted']);
+            expect(compo.getPieceClasses(2, 7)).toEqual(['player0-fill', 'selected-stroke']);
+            expect(compo.getPieceClasses(3, 7)).toEqual(['player0-fill', 'selected-stroke']);
+            expect(compo.getPieceClasses(4, 7)).toEqual(['player0-fill', 'selected-stroke']);
 
             // When reclicking middle one
             await testUtils.expectClickSuccess('#piece_3_7');
 
             // Then all three pieces should be unselected
-            expect(compo.getPieceClasses(2, 7)).toEqual(['player0']);
-            expect(compo.getPieceClasses(3, 7)).toEqual(['player0']);
-            expect(compo.getPieceClasses(4, 7)).toEqual(['player0']);
+            expect(compo.getPieceClasses(2, 7)).toEqual(['player0-fill']);
+            expect(compo.getPieceClasses(3, 7)).toEqual(['player0-fill']);
+            expect(compo.getPieceClasses(4, 7)).toEqual(['player0-fill']);
         }));
         it('should cancel move then select clicked piece as first piece when it is not aligned with first piece', fakeAsync(async() => {
             // Given the initial board with a line selected
@@ -214,9 +214,9 @@ describe('AbaloneComponent', () => {
 
             // Then three pieces should be selected
             const compo: AbaloneComponent = testUtils.getComponent();
-            expect(compo.getPieceClasses(2, 6)).toEqual(['player0', 'highlighted']);
-            expect(compo.getPieceClasses(3, 6)).toEqual(['player0', 'highlighted']);
-            expect(compo.getPieceClasses(4, 6)).toEqual(['player0', 'highlighted']);
+            expect(compo.getPieceClasses(2, 6)).toEqual(['player0-fill', 'selected-stroke']);
+            expect(compo.getPieceClasses(3, 6)).toEqual(['player0-fill', 'selected-stroke']);
+            expect(compo.getPieceClasses(4, 6)).toEqual(['player0-fill', 'selected-stroke']);
         }));
         it('should recognize line extension and show new directions (M-2-1-3) and move it as one', fakeAsync(async() => {
             // Given the initial board with an extendable two piece line selected

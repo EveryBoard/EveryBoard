@@ -45,7 +45,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        const state: AwaleState = this.rules.node.gameState;
+        const state: AwaleState = this.getState();
         this.scores = MGPOptional.of(state.getCapturedCopy());
         this.hidePreviousMove();
         const lastMove: MGPOptional<AwaleMove> = this.rules.node.move;
@@ -92,19 +92,19 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (y === this.rules.node.gameState.getCurrentPlayer().value) {
+        if (y === this.getState().getCurrentPlayer().value) {
             return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
         }
         this.last = MGPOptional.empty(); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = AwaleMove.from(x);
-        return this.chooseMove(chosenMove, this.rules.node.gameState);
+        return this.chooseMove(chosenMove, this.getState());
     }
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const homeColor: string = 'player' + (y + 1) % 2;
         if (this.captured[y][x] > 0) {
-            return ['captured', 'moved-stroke'];
+            return ['captured-fill', 'moved-stroke'];
         } else if (this.last.equalsValue(coord)) {
             return ['moved-stroke', 'highlighted', homeColor];
         } else if (this.filledCoords.some((c: Coord) => c.equals(coord))) {

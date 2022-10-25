@@ -7,7 +7,6 @@ import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
 import { SixMinimax, SixBoardValue } from '../SixMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 describe('SixMinimax', () => {
 
@@ -265,7 +264,7 @@ describe('SixMinimax', () => {
         const node: SixNode = new SixNode(state);
 
         // When calculating the board value
-        const boardValue: BoardValue = minimax.getBoardValue(node);
+        const boardValue: SixBoardValue = minimax.getBoardValue(node);
 
         // Then it should be 0
         expect(boardValue.value).toBe(0);

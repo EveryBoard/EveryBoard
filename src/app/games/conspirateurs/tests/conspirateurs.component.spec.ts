@@ -106,7 +106,7 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_7_5');
 
             // Then the new piece should be selected
-            testUtils.expectElementToHaveClass('#piece_7_5', 'selected');
+            testUtils.expectElementToHaveClass('#piece_7_5', 'selected-stroke');
         }));
         it('should not allow selecting an empty space', fakeAsync(async() => {
             // When clicking on an empty space
@@ -187,13 +187,13 @@ describe('ConspirateursComponent', () => {
         it('should deselect piece when double clicking it', fakeAsync(async() => {
             // Given a board on which a piece is selected
             await testUtils.expectClickSuccess('#click_5_4');
-            testUtils.expectElementToHaveClass('#piece_5_4', 'selected');
+            testUtils.expectElementToHaveClass('#piece_5_4', 'selected-stroke');
 
             // When clicking on it again
             await testUtils.expectClickSuccess('#click_5_4');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#piece_5_4', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_5_4', 'selected-stroke');
         }));
     });
     it('should highlight shelters of victorious pieces upon victory', fakeAsync(async() => {
@@ -220,6 +220,6 @@ describe('ConspirateursComponent', () => {
         // When the state is displayed
         testUtils.setupState(state);
         // The its pieces are highlighted
-        testUtils.expectElementToHaveClass('#click_0_0', 'victory');
+        testUtils.expectElementToHaveClass('#click_0_0', 'victory-fill');
     }));
 });

@@ -227,7 +227,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.lastMove.isPresent()) {
             const move: PylosMove = this.lastMove.get();
             if (move.firstCapture.equalsValue(coord) || move.secondCapture.equalsValue(coord)) {
-                return ['captured'];
+                return ['captured-fill'];
             } else if (coord.equals(move.landingCoord) || move.startingCoord.equalsValue(coord)) {
                 return ['moved-fill'];
             }
@@ -270,7 +270,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.justClimbed(coord)) {
             return false;
         }
-        const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord).isPlayer();
+        const reallyOccupied: boolean = this.getState().getPieceAt(coord).isPlayer();
         const landingCoord: boolean = this.chosenLandingCoord.equalsValue(coord);
         return reallyOccupied || landingCoord;
     }
@@ -278,13 +278,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const c: PylosCoord = new PylosCoord(x, y, z);
         const classes: string[] = [this.getPieceFillClass(c)];
         if (this.lastLandingCoord.equalsValue(c) || this.lastStartingCoord.equalsValue(c)) {
-            classes.push('highlighted');
+            classes.push('last-move-stroke');
         }
         if (this.chosenStartingCoord.equalsValue(c) || this.chosenLandingCoord.equalsValue(c)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         if (this.isCaptured(c)) {
-            classes.push('pre-captured');
+            classes.push('pre-captured-fill');
         }
         return classes;
     }
@@ -303,7 +303,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return pieces;
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.constructedState = this.state;
         this.lastMove = this.rules.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();

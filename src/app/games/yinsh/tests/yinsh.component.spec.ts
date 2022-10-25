@@ -90,7 +90,7 @@ describe('YinshComponent', () => {
             // When rendering the board
             testUtils.setupState(state);
 
-            // Then the player's ring should be highlighted
+            // Then the player's ring should be selectable
             testUtils.expectElementToExist('#selectable_3_3');
             testUtils.expectElementNotToExist('#selectable_4_4');
         }));
@@ -116,7 +116,7 @@ describe('YinshComponent', () => {
             // When rendering the board
             testUtils.setupState(state);
 
-            // Then the rings should not be highlighted
+            // Then the rings should not be selectable
             testUtils.expectElementNotToExist('#selectable_3_3');
             testUtils.expectElementNotToExist('#selectable_4_4');
         }));
@@ -231,7 +231,7 @@ describe('YinshComponent', () => {
             // When clicking on the ring
             await testUtils.expectClickSuccess('#click_3_2');
             // Then it should show a marker there now
-            testUtils.expectElementToHaveClass('#marker_3_2', 'player0');
+            testUtils.expectElementToHaveClass('#marker_3_2', 'player0-fill');
             testUtils.expectElementToHaveClass('#ring_3_2', 'player0-stroke');
         }));
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
@@ -284,10 +284,10 @@ describe('YinshComponent', () => {
 
             // Then it should show the pieces as capturable
             testUtils.expectElementToExist('#selectable_3_3');
-            testUtils.expectElementToHaveClass('#selectable_3_3', 'capturable');
-            testUtils.expectElementToHaveClass('#selectable_3_4', 'capturable');
-            testUtils.expectElementToHaveClass('#selectable_3_5', 'capturable');
-            testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable');
+            testUtils.expectElementToHaveClass('#selectable_3_3', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable_3_4', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable_3_5', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable-stroke');
         }));
         it('should show selected captures, and remove highlight upon cancellation', fakeAsync(async() => {
             // Given a board with a possible capture
@@ -317,10 +317,10 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_2'); // click the first ring
 
             // Then the capture should be selected
-            testUtils.expectElementToHaveClass('#selected_3_3', 'selected');
-            testUtils.expectElementToHaveClass('#selected_3_4', 'selected');
-            testUtils.expectElementToHaveClass('#selected_3_5', 'selected');
-            testUtils.expectElementToHaveClass('#selected_3_6', 'selected');
+            testUtils.expectElementToHaveClass('#selected_3_3', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected_3_4', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected_3_5', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected_3_6', 'selected-stroke');
 
             // When clicking on something else than a ring to cancel move
             await testUtils.expectClickFailure('#click_5_5', YinshFailure.SHOULD_SELECT_PLAYER_RING());

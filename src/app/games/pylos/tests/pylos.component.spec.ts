@@ -128,7 +128,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_0');
 
             // Then it should be selected
-            testUtils.expectElementToHaveClass('#piece_0_0_0', 'selected');
+            testUtils.expectElementToHaveClass('#piece_0_0_0', 'selected-stroke');
         }));
     });
     describe('Second click', () => {
@@ -169,7 +169,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_0');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#piece_0_0_0', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_0_0_0', 'selected-stroke');
         }));
     });
     describe('climbing', () => {
@@ -199,12 +199,12 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_3_3_0');
             await testUtils.expectClickSuccess('#drop_1_1_1');
 
-            // Then the starting coord of the move should be 'left', and not 'selected'
+            // Then the starting coord of the move should be 'left', and not selected
             testUtils.expectElementNotToExist('#piece_3_3_0');
             testUtils.expectElementToHaveClass('#drop_3_3_0', 'moved-fill');
             // And its landing coord should be visible and selected to indicate a capture is to be done
             testUtils.expectElementToExist('#piece_1_1_1');
-            testUtils.expectElementToHaveClass('#piece_1_1_1', 'selected');
+            testUtils.expectElementToHaveClass('#piece_1_1_1', 'selected-stroke');
         }));
         it('should not allow a piece climbing on itself', fakeAsync(async() => {
             // Given a board where a piece could climb on itself then capture
@@ -292,8 +292,8 @@ describe('PylosComponent', () => {
             // When clicking on the first captured piece
             await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
 
-            // Then it should be highlighted
-            const expectedClasses: string[] = ['base', 'player0', 'selected', 'pre-captured', 'small-stroke'];
+            // Then it should be selected
+            const expectedClasses: string[] = ['base', 'player0-fill', 'selected-stroke', 'pre-captured-fill', 'small-stroke'];
             testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
         }));
         it('should highlight selected second capture when clicking on it', fakeAsync(async() => {
@@ -306,8 +306,8 @@ describe('PylosComponent', () => {
             // When clicking on the second captured piece
             await testUtils.expectClickSuccess('#piece_0_0_0');
 
-            // Then both should be highlighted
-            const expectedClasses: string[] = ['base', 'player0', 'pre-captured', 'small-stroke'];
+            // Then both should be shown as captured
+            const expectedClasses: string[] = ['base', 'player0-fill', 'pre-captured-fill', 'small-stroke'];
             testUtils.expectElementToHaveClasses('#piece_0_0_0', expectedClasses);
             testUtils.expectElementToHaveClasses('#piece_0_1_0', expectedClasses);
         }));
@@ -334,7 +334,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_0'); // un-capture
 
             // Then it should no longer be selected
-            const expectedClasses: string[] = ['base', 'player0', 'small-stroke']; // No longer 'selected' and 'pre-captured'
+            const expectedClasses: string[] = ['base', 'player0-fill', 'small-stroke']; // No longer 'selected' and 'pre-captured'
             testUtils.expectElementToHaveClasses('#piece_0_0_0', expectedClasses);
         }));
         it('should deselect pre-captured (second) piece when clicking on it again', fakeAsync(async() => {
@@ -349,7 +349,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_1_0'); // un-capture
 
             // Then it should no longer be selected
-            const expectedClasses: string[] = ['base', 'player0', 'small-stroke']; // No longer 'selected' and 'pre-captured'
+            const expectedClasses: string[] = ['base', 'player0-fill', 'small-stroke']; // No longer 'selected' and 'pre-captured'
             testUtils.expectElementToHaveClasses('#piece_0_1_0', expectedClasses);
         }));
         it('should allow to capture two pieces, and show capture during move and after', fakeAsync(async() => {
@@ -366,8 +366,8 @@ describe('PylosComponent', () => {
             await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the two captures should be displayed as captured
-            testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured');
-            testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured');
+            testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured-fill');
+            testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured-fill');
         }));
         it('should allow to capture first piece', fakeAsync(async() => {
             // Given a board where one capture has been selected
@@ -382,7 +382,7 @@ describe('PylosComponent', () => {
             await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the second capture should be displayed as captured (but not the first, eh !)
-            testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured');
+            testUtils.expectElementToHaveClass('#drop_0_0_0', 'captured-fill');
         }));
         it('should allow to capture second piece', fakeAsync(async() => {
             // Given a board where two captures has been selected then the first deselected
@@ -400,7 +400,7 @@ describe('PylosComponent', () => {
 
             // Then the second capture should be displayed as captured (but not the first, eh !)
             testUtils.expectElementNotToExist('#drop_0_0_0');
-            testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured');
+            testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured-fill');
         }));
         it('should fail when clicking on a third capturable piece', fakeAsync(async() => {
             // Given a board on which two captured piece has been selected but the capture not finalised

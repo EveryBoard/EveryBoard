@@ -138,7 +138,7 @@ export class LodestoneComponent
         const radius20: number = this.PIECE_RADIUS * 0.2;
         this.TRIANGLE_OUT = `${radius80},0 ${radius30},${radius20} ${radius30},-${radius20}`;
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
-        this.displayedState = this.rules.node.gameState;
+        this.displayedState = this.getState();
         this.scores = MGPOptional.of([0, 0]);
     }
     public ngOnInit(): void {
@@ -414,7 +414,7 @@ export class LodestoneComponent
             info.movingClass = this.getPlayerClass(lodestone.owner);
         }
         if (this.selectedLodestone.equalsValue(lodestone)) {
-            info.selectedClass = 'selected';
+            info.selectedClass = 'selected-stroke';
         }
         return info;
     }
@@ -503,7 +503,7 @@ export class LodestoneComponent
             this.viewInfo.boardInfo[moved.y][moved.x].squareClasses.push('moved-fill');
         }
         for (const captured of infos.captures) {
-            this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured');
+            this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured-fill');
         }
     }
     private computePressurePlateShift(): void {

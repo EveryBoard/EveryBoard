@@ -76,17 +76,11 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = LinesOfActionRules.possibleTargets(this.rules.node.gameState, this.selected.get());
+        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get());
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
         return MGPValidation.SUCCESS;
-    }
-    public getState(): LinesOfActionState {
-        return this.rules.node.gameState;
-    }
-    public getPreviousState(): LinesOfActionState {
-        return this.rules.node.mother.get().gameState;
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
@@ -112,7 +106,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             const lastMoveStart: Coord = this.lastMove.get().coord;
             const lastMoveEnd: Coord = this.lastMove.get().end;
             if (this.captured.isPresent() && coord.equals(this.captured.get())) {
-                return ['captured'];
+                return ['captured-fill'];
             }
             if (coord.equals(lastMoveStart) || coord.equals(lastMoveEnd)) {
                 return ['moved-fill'];
@@ -125,7 +119,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(content)];
         if (this.selected.isPresent() && this.selected.get().equals(coord)) {
-            classes.push('selected');
+            classes.push('selected-stroke');
         }
         return classes;
     }

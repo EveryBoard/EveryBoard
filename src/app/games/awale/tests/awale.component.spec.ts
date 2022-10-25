@@ -38,7 +38,7 @@ describe('AwaleComponent', () => {
         // The space between initial coord and captured coord
         testUtils.expectElementToHaveClasses('#click_0_0', ['base', 'moved-stroke', 'player1']);
         // as well as the captured spaces
-        testUtils.expectElementToHaveClasses('#click_1_0', ['base', 'moved-stroke', 'captured']);
+        testUtils.expectElementToHaveClasses('#click_1_0', ['base', 'moved-stroke', 'captured-fill']);
     }));
     it('should show moved house after a move', fakeAsync(async() => {
         // Given any state (initial here by default)
@@ -101,7 +101,7 @@ describe('AwaleComponent', () => {
         // Then the space in question should be marked as "captured"
         const content: DebugElement = testUtils.findElement('#captured_5_0');
         expect(content.nativeElement.innerHTML).toBe(' -2 ');
-        testUtils.expectElementToHaveClass('#click_5_0', 'captured');
+        testUtils.expectElementToHaveClass('#click_5_0', 'captured-fill');
     }));
     it('should display mansoon capture', fakeAsync(async() => {
         // Given a board where the player is about to give his last seed to the opponent
@@ -119,6 +119,6 @@ describe('AwaleComponent', () => {
         // Then the space in question should be marked as "captured"
         const content: DebugElement = testUtils.findElement('#captured_5_1');
         expect(content.nativeElement.innerHTML).toBe(' -5 ');
-        testUtils.expectElementToHaveClass('#click_5_1', 'captured');
+        testUtils.expectElementToHaveClass('#click_5_1', 'captured-fill');
     }));
 });

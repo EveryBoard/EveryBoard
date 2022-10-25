@@ -53,7 +53,7 @@ describe('DvonnRules:', () => {
         expect(rules.node.gameState.turn).withContext('Game should start at turn 0').toBe(0);
     });
     it('initial stacks should be of size 1', () => {
-        const state: DvonnState = rules.node.gameState;
+        const state: DvonnState = DvonnState.getInitialState();
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
             for (let x: number = 0; x < DvonnState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
@@ -71,7 +71,7 @@ describe('DvonnRules:', () => {
         // the edge of the board may move. The pieces that are not positioned at
         // the edge remain blocked for as long as they remain completely
         // surrounded (see diagram below).
-        const state: DvonnState = rules.node.gameState;
+        const state: DvonnState = DvonnState.getInitialState();
         const firstTurnMovablePieces: Coord[] = DvonnRules.getMovablePieces(state);
         expect(firstTurnMovablePieces.length).toEqual(11);
     });
@@ -80,7 +80,7 @@ describe('DvonnRules:', () => {
         expect(firstTurnMoves.length).toEqual(41);
     });
     it('should only allow moves from the current player color', () => {
-        const state: DvonnState = rules.node.gameState;
+        const state: DvonnState = DvonnState.getInitialState();
         const movablePieces: Coord[] = DvonnRules.getMovablePieces(state);
         for (const coord of movablePieces) {
             expect(state.getPieceAt(coord).belongsTo(Player.ZERO)).toBeTrue();
@@ -95,7 +95,7 @@ describe('DvonnRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.NOT_PLAYER_PIECE());
     });
     it('should forbid moves for pieces with more than 6 neighbors', () => {
-        const state: DvonnState = rules.node.gameState;
+        const state: DvonnState = DvonnState.getInitialState();
         const move: DvonnMove = DvonnMove.of(new Coord(1, 3), new Coord(1, 2));
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.TOO_MANY_NEIGHBORS());
     });
@@ -143,7 +143,7 @@ describe('DvonnRules:', () => {
             [_, O, X, O, O, X, X, X, O, O, N],
             [O, S, O, X, X, O, O, O, X, N, N],
         ];
-        const state: DvonnState = rules.node.gameState;
+        const state: DvonnState = DvonnState.getInitialState();
         const move: DvonnMove = DvonnMove.of(new Coord(0, 3), new Coord(0, 2));
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -215,7 +215,7 @@ describe('DvonnRules:', () => {
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.INVALID_MOVE_LENGTH());
     });
     it('should not allow to pass turns if moves are possible', () => {
-        const state: DvonnState = rules.node.gameState;
+        const state: DvonnState = DvonnState.getInitialState();
         const move: DvonnMove = DvonnMove.PASS;
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_PASS());
     });

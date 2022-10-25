@@ -19,10 +19,14 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
     public static get(): ApagosRules {
         if (ApagosRules.singleton.isAbsent()) {
-            ApagosRules.singleton = MGPOptional.of(new ApagosRules(ApagosState));
+            ApagosRules.singleton = MGPOptional.of(new ApagosRules());
         }
-        return this.singleton.get();
+        return ApagosRules.singleton.get();
     }
+    private constructor() {
+        super(ApagosState);
+    }
+
     public applyLegalMove(move: ApagosMove, state: ApagosState, _info: void): ApagosState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);

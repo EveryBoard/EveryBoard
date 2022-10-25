@@ -1,75 +1,70 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal, OrthogonalNumberEncoder } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptionalNumberEncoder } from 'src/app/utils/MGPOptionalEncoder';
 
 export class SiamMove extends MoveCoord {
-    public static encoder: NumberEncoder<SiamMove> = new class extends NumberEncoder<SiamMove> {
-        public maxValue(): number {
-            return 245 * 8 + 49 * 8 + 7 * 7 + 7;
-        }
-        public encodeNumber(move: SiamMove): number {
-            const y: number = move.coord.y + 1; // 0 to 6
-            const x: number = move.coord.x + 1; // 0 to 6
-            const moveDirection: number =
-                move.moveDirection.isAbsent() ? 4 : move.moveDirection.get().toInt(); // 0 to 4
-            const landingOrientation: number = move.landingOrientation.toInt();
-            return (245 * landingOrientation) + (49 * moveDirection) + (7 * x) + y;
-        }
-        public decodeNumber(encodedMove: number): SiamMove {
-            const y: number = encodedMove%7;
-            encodedMove -= y;
-            encodedMove/= 7;
-            const x: number = encodedMove%7;
-            encodedMove -= x;
-            encodedMove/= 7;
-            const moveDirectionInt: number = encodedMove % 5;
-            const moveDirection: MGPOptional<Orthogonal> = moveDirectionInt === 4 ?
-                MGPOptional.empty() :
-                Orthogonal.factory.fromInt(moveDirectionInt).toOptional();
-            encodedMove -= moveDirectionInt;
-            encodedMove /= 5;
-            const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove).get();
-            return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
-        }
-    };
-    constructor(
+    public static encoder: NumberEncoder<SiamMove> = NumberEncoder.tuple(
+        [
+            NumberEncoder.numberEncoder(6), // x (from -1 to 5)
+            NumberEncoder.numberEncoder(6), // y (from -1 to 5)
+            MGPOptionalNumberEncoder<Orthogonal>(new OrthogonalNumberEncoder()), // direction
+            new OrthogonalNumberEncoder(), // orientation
+        ],
+        (move: SiamMove): [number, number, MGPOptional<Orthogonal>, Orthogonal] => {
+            return [move.x+1, move.y+1, move.direction, move.landingOrientation];
+        },
+        (fields: [number, number, MGPOptional<Orthogonal>, Orthogonal]): SiamMove => {
+            return SiamMove.of(fields[0]-1, fields[1]-1, fields[2], fields[3]).get();
+        },
+    );
+
+    private constructor(
         readonly x: number,
         readonly y: number,
-        public readonly moveDirection: MGPOptional<Orthogonal>,
-        public readonly landingOrientation: Orthogonal) {
+        public readonly direction: MGPOptional<Orthogonal>,
+        public readonly landingOrientation: Orthogonal)
+    {
         super(x, y);
-        this.checkValidity();
     }
-    public checkValidity(): void {
-        const startedInside: boolean = this.coord.isInRange(5, 5);
-        if (this.isRotation()) {
-            if (!startedInside) {
-                throw new Error('Cannot rotate piece outside the board: ' + this.toString() + '.');
+    public static of(x: number,
+                     y: number,
+                     direction: MGPOptional<Orthogonal>,
+                     landingOrientation: Orthogonal)
+    : MGPFallible<SiamMove>
+    {
+        const move: SiamMove = new SiamMove(x, y, direction, landingOrientation);
+        const startedOutside: boolean = move.coord.isNotInRange(5, 5);
+        if (move.isRotation()) {
+            if (startedOutside) {
+                return MGPFallible.failure('Cannot rotate piece outside the board: ' + move.toString());
             }
         } else {
-            const finishedOutside: boolean = this.coord.getNext(this.moveDirection.get()).isNotInRange(5, 5);
+            const finishedOutside: boolean = move.coord.getNext(move.direction.get()).isNotInRange(5, 5);
             if (finishedOutside) {
-                if (!startedInside) {
-                    throw new Error('SiamMove should end or start on the board: ' + this.toString() + '.');
+                if (startedOutside) {
+                    return MGPFallible.failure('SiamMove should end or start on the board: ' + move.toString());
                 }
-                if (this.moveDirection.get() !== this.landingOrientation) {
-                    throw new Error('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: ' + this.toString() + '.');
+                if (move.direction.get() !== move.landingOrientation) {
+                    return MGPFallible.failure('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: ' + move.toString());
                 }
             }
         }
+        return MGPFallible.success(move);
     }
     public isRotation(): boolean {
-        return this.moveDirection.isAbsent();
+        return this.direction.isAbsent();
     }
-    public equals(o: SiamMove): boolean {
-        if (this === o) return true;
-        if (!this.coord.equals(o.coord)) return false;
-        if (this.moveDirection.equals(o.moveDirection) === false) return false;
-        return this.landingOrientation === o.landingOrientation;
+    public equals(other: SiamMove): boolean {
+        if (this === other) return true;
+        if (!this.coord.equals(other.coord)) return false;
+        if (this.direction.equals(other.direction) === false) return false;
+        return this.landingOrientation === other.landingOrientation;
     }
     public toString(): string {
-        const moveDirection: string = this.moveDirection.isAbsent() ? '-' : this.moveDirection.get().toString();
+        const moveDirection: string = this.direction.isAbsent() ? '-' : this.direction.get().toString();
         return 'SiamMove(' + this.coord.x + ', ' +
                            this.coord.y + ', ' +
                            moveDirection + ', ' +

@@ -99,10 +99,10 @@ describe('GipfComponent', () => {
             await testUtils.expectClickSuccess('#click_3_3');
 
             // Then the capture should already be shown (the piece "captured")
-            testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'captured']);
-            testUtils.expectElementToHaveClasses('#space_3_3', ['base', 'captured']);
-            testUtils.expectElementToHaveClasses('#space_3_4', ['base', 'captured']);
-            testUtils.expectElementToHaveClasses('#space_3_5', ['base', 'captured']);
+            testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'captured-fill']);
+            testUtils.expectElementToHaveClasses('#space_3_3', ['base', 'captured-fill']);
+            testUtils.expectElementToHaveClasses('#space_3_4', ['base', 'captured-fill']);
+            testUtils.expectElementToHaveClasses('#space_3_5', ['base', 'captured-fill']);
         }));
         it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
             // Given a board where a capture must be done immediately
@@ -289,10 +289,10 @@ describe('GipfComponent', () => {
 
         await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [0, 0]);
 
-        testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#space_3_3', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#space_3_4', ['base', 'captured']);
-        testUtils.expectElementToHaveClasses('#space_3_5', ['base', 'captured']);
+        testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#space_3_3', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#space_3_4', ['base', 'captured-fill']);
+        testUtils.expectElementToHaveClasses('#space_3_5', ['base', 'captured-fill']);
     }));
     it('should update the number of pieces available', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [

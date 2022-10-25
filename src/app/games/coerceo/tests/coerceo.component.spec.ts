@@ -24,12 +24,12 @@ describe('CoerceoComponent', () => {
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = testUtils.getComponent();
         expect(gameComponent.isEmptySpace(x, y)).toBeTrue();
-        expect(gameComponent.getEmptyClass(x, y)).toBe('captured2');
+        expect(gameComponent.getEmptyClass(x, y)).toBe('captured-alternate-fill');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = testUtils.getComponent();
         expect(gameComponent.isPyramid(x, y)).toBeTrue();
-        expect(gameComponent.getPyramidClass(x, y)).toBe('captured');
+        expect(gameComponent.getPyramidClass(x, y)).toBe('captured-fill');
     }
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
@@ -143,7 +143,7 @@ describe('CoerceoComponent', () => {
 
             // Then its destinations should be displayed
             const component: CoerceoComponent = testUtils.getComponent();
-            testUtils.expectElementToHaveClass('#selected_6_2', 'selected');
+            testUtils.expectElementToHaveClass('#selected_6_2', 'selected-stroke');
             expect(component.possibleLandings.length).toBe(4);
             expect(component.possibleLandings).toContain(new Coord(7, 1));
             expect(component.possibleLandings).toContain(new Coord(7, 3));
@@ -173,7 +173,7 @@ describe('CoerceoComponent', () => {
             // Then second piece should be selected
             const component: CoerceoComponent = testUtils.getComponent();
             testUtils.expectElementNotToExist('#selected_6_2');
-            testUtils.expectElementToHaveClass('#selected_8_2', 'selected');
+            testUtils.expectElementToHaveClass('#selected_8_2', 'selected-stroke');
             expect(component.possibleLandings).toContain(new Coord(7, 1));
             expect(component.possibleLandings).toContain(new Coord(7, 3));
             expect(component.possibleLandings).not.toContain(new Coord(5, 3));

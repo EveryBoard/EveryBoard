@@ -40,10 +40,10 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: P4Move = P4Move.of(x);
-        return await this.chooseMove(chosenMove, this.rules.node.gameState);
+        return await this.chooseMove(chosenMove, this.getState());
     }
     public updateBoard(): void {
-        const state: P4State = this.rules.node.gameState;
+        const state: P4State = this.getState();
         const lastMove: MGPOptional<P4Move> = this.rules.node.move;
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
@@ -55,7 +55,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         }
     }
     private showLastMove() {
-        const state: P4State = this.rules.node.gameState;
+        const state: P4State = this.getState();
         const lastMove: MGPOptional<P4Move> = this.rules.node.move;
         const y: number = P4Rules.getLowestUnoccupiedSpace(state.board, lastMove.get().x) + 1;
         this.last = MGPOptional.of(new Coord(lastMove.get().x, y));

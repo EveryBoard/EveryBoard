@@ -34,7 +34,7 @@
 
     <g *ngFor="let capture of possibleCaptures; index as i"
        pointer-events="fill"
-       class="capturable">
+       class="capturable-stroke">
         <polygon *ngFor="let space of capture.capturedSpaces"
                  [attr.points]="getHexaCoordsAt(space)"
                  (click)="onClick(space)"

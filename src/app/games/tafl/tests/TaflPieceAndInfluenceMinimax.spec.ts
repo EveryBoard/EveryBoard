@@ -24,7 +24,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
 
     beforeEach(() => {
         const rules: TablutRules = TablutRules.get();
-        rules.node = rules.node.getInitialNode();
+        rules.setInitialBoard();
         minimax = new TaflPieceAndInfluenceMinimax(rules, 'TablutPieceAndInfluenceMinimax');
     });
     it('should be better of with more piece', () => {

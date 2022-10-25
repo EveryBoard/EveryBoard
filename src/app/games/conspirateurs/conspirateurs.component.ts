@@ -112,7 +112,7 @@ export class ConspirateursComponent
             const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
             squareInfo.isShelter = true;
             if (squareInfo.hasPiece) {
-                squareInfo.shelterClasses.push('highlighted');
+                squareInfo.shelterClasses.push('selectable-stroke');
             }
         }
     }
@@ -124,14 +124,14 @@ export class ConspirateursComponent
                 const jumpCurrent: Coord = jump.getEndingCoord();
                 this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPiece = false;
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].pieceClasses =
-                    [this.getPlayerClass(this.getCurrentPlayer()), 'selected'];
+                    [this.getPlayerClass(this.getCurrentPlayer()), 'selected-stroke'];
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPiece = true;
                 for (const coord of jump.coords) {
                     this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 }
             } else {
                 const selected: Coord = this.selected.get();
-                this.viewInfo.boardInfo[selected.y][selected.x].pieceClasses.push('selected');
+                this.viewInfo.boardInfo[selected.y][selected.x].pieceClasses.push('selected-stroke');
             }
         }
     }
@@ -141,7 +141,7 @@ export class ConspirateursComponent
         if (gameStatus.isEndGame === true) {
             for (const shelter of ConspirateursState.ALL_SHELTERS) {
                 if (state.getPieceAt(shelter) === gameStatus.winner) {
-                    this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory');
+                    this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory-fill');
                 }
             }
         }

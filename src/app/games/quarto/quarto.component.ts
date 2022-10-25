@@ -41,11 +41,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         ];
         this.encoder = QuartoMove.encoder;
         this.tutorial = new QuartoTutorial().tutorial;
-        this.pieceInHand = this.rules.node.gameState.pieceInHand;
+        this.pieceInHand = this.getState().pieceInHand;
         this.updateBoard();
     }
     public updateBoard(): void {
-        const state: QuartoState = this.rules.node.gameState;
+        const state: QuartoState = this.getState();
         const move: MGPOptional<QuartoMove> = this.rules.node.move;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
@@ -65,17 +65,17 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (this.board[y][x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(x, y); // let's show the user his decision
-            if (this.rules.node.gameState.turn === 15) {
+            if (this.getState().turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.EMPTY);
-                return this.chooseMove(chosenMove, this.rules.node.gameState);
+                return this.chooseMove(chosenMove, this.getState());
             } else if (this.pieceToGive.isAbsent()) {
                 return MGPValidation.SUCCESS; // the user has just chosen his coord
             } else {
                 // the user has already chosen his piece before his coord
                 const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive.get());
-                return this.chooseMove(chosenMove, this.rules.node.gameState);
+                return this.chooseMove(chosenMove, this.getState());
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
@@ -139,9 +139,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public getPieceClasses(piece: number): string[] {
         const classes: string[] = [];
         if (piece % 2 === 0) {
-            classes.push('player0');
+            classes.push('player0-fill');
         } else {
-            classes.push('player1');
+            classes.push('player1-fill');
         }
         return classes;
     }

@@ -184,7 +184,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return up + ', ' + center + ', ' + right;
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.board = this.state.board;
         const scoreZero: number = this.state.getScoreOf(Player.ZERO);
         const scoreOne: number = this.state.getScoreOf(Player.ONE);
@@ -199,9 +199,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getPieceClasses(x: number, y: number): string[] {
         const clickedCoord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        classes.push(y > 3 ? 'player0' : 'player1');
+        classes.push(y > 3 ? 'player0-fill' : 'player1-fill');
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
-            classes.push('highlighted');
+            classes.push('selected-stroke');
         }
         if (this.rules.node.move.isPresent()) {
             const move: MartianChessMove = this.rules.node.move.get();
@@ -210,9 +210,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                     this.rules.node.mother.get().gameState.getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
                 if (wasOccupied) {
-                    const landingHome: boolean = this.rules.node.gameState.isInOpponentTerritory(new Coord(0, y));
+                    const landingHome: boolean = this.getState().isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('highlighted');
+                        classes.push('last-move-stroke');
                     }
                 }
             }
@@ -293,7 +293,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const move: MGPFallible<MartianChessMove> =
                 MartianChessMove.from(info.selectedPiece, endCoord, this.callTheClock);
             assert(move.isSuccess(), 'MartianChessComponent or Rules did a mistake thinking this would have been a legal move!');
-            const state: MartianChessState = this.rules.node.gameState;
+            const state: MartianChessState = this.getState();
             return this.chooseMove(move.get(), state);
         } else if (this.isOneOfUsersPieces(endCoord)) {
             return this.selectAsFirstPiece(endCoord);
@@ -329,7 +329,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getClockCircleClasses(): string[] {
         const classes: string[] = ['base'];
         if (this.callTheClock) {
-            classes.push('highlighted');
+            classes.push('selected-stroke');
         }
         if (this.getCurrentPlayer() === Player.ZERO) {
             classes.push('player0-stroke');
@@ -356,7 +356,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                     if (landingHome) {
                         classes.push('moved-fill');
                     } else {
-                        classes.push('captured');
+                        classes.push('captured-fill');
                     }
                 }
             }

@@ -61,7 +61,7 @@ describe('LodestoneComponent', () => {
             // When clicking of a lodestone
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
             // Then it should be selected
-            testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
+            testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
         }));
     });
     describe('second click', () => {
@@ -90,7 +90,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
 
             // Then the selected lodestone and square should not be 'selected'
-            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
+            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
             testUtils.expectElementNotToExist('#selection_0_0');
         }));
         it('should highlight moved square', fakeAsync(async() => {
@@ -131,7 +131,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected');
+            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
         }));
     });
     describe('post move captures', () => {
