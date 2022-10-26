@@ -155,19 +155,22 @@
 .round {
     stroke-linecap: round;
 }
-.text-big {
-    font: 50px sans-serif;
-}
 .text-giant {
     font: 3.7rem sans-serif;
     stroke-width: 0.37rem;
     dominant-baseline: central;
 }
-.text-bold {
-    font-weight: bold;
+.text-big {
+    font: 50px sans-serif;
 }
 .text-medium {
     font: 35px sans-serif;
+}
+.text-20 {
+    font: 20px sans-serif;
+}
+.text-bold {
+    font-weight: bold;
 }
 .text-center {
     text-anchor: middle;
