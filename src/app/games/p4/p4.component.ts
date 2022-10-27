@@ -10,7 +10,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 @Component({
     selector: 'app-p4',
@@ -68,7 +67,4 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         const content: PlayerOrNone = this.board[y][x];
         return [this.getPlayerClass(content)];
     }
-
-    public static rules: P4Rules = new P4Rules(P4State);
-    public static tutorial: TutorialStep[] = new P4Tutorial().tutorial;
 }

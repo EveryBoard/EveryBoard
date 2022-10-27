@@ -1,4 +1,4 @@
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -21,7 +21,7 @@ const allPressurePlates: LodestonePressurePlates = {
     right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
 };
 
-export class LodestoneTutorial {
+export class LodestoneTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

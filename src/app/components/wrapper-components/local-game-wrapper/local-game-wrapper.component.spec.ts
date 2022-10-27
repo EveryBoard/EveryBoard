@@ -64,9 +64,9 @@ describe('LocalGameWrapperComponent', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     });
     it('should have game included after view init', () => {
-        let p4Tag: DebugElement = testUtils.querySelector('app-p4');
+        let p4Tag: DebugElement = testUtils.findElement('app-p4');
 
-        p4Tag = testUtils.querySelector('app-p4');
+        p4Tag = testUtils.findElement('app-p4');
         expect(p4Tag).withContext('app-p4 tag should be present after view init').toBeTruthy();
 
         expect(testUtils.wrapper.gameComponent)

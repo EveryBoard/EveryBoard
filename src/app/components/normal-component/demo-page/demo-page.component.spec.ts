@@ -2,7 +2,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DemoPageComponent } from './demo-page.component';
 
-fdescribe('DemoPageComponent', () => {
+describe('DemoPageComponent', () => {
     let testUtils: SimpleComponentTestUtils<DemoPageComponent>;
 
     beforeEach(fakeAsync(async() => {
@@ -13,7 +13,7 @@ fdescribe('DemoPageComponent', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     });
     it('should display demo nodes', () => {
-        expect(testUtils.querySelector('app-demo-card')).withContext('app-demo-card should be present').toBeTruthy();
+        expect(testUtils.findElement('app-demo-card')).withContext('app-demo-card should be present').toBeTruthy();
     });
     it('should adapt the number of columns upon change', () => {
         // Given a demo page component

@@ -19,6 +19,8 @@ export class DemoCardComponent implements AfterViewInit {
     @ViewChild('board', { read: ViewContainerRef })
     public boardRef: ViewContainerRef | null;
 
+    public gameComponent: AbstractGameComponent | null;
+
     public constructor(private readonly componentFactoryResolver: ComponentFactoryResolver) {
     }
 
@@ -27,11 +29,16 @@ export class DemoCardComponent implements AfterViewInit {
             this.componentFactoryResolver.resolveComponentFactory(this.demoNodeInfo.component);
         const componentRef: ComponentRef<AbstractGameComponent> =
             Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
-        componentRef.instance.rules.node = this.demoNodeInfo.node;
+        this.gameComponent = componentRef.instance;
+        this.gameComponent.rules.node = this.demoNodeInfo.node;
         // The demo node is shown from the point of the player corresponding to the current turn
-        componentRef.instance.role = componentRef.instance.getCurrentPlayer();
-        componentRef.instance.isPlayerTurn = function() { return true; };
+        this.gameComponent.role = this.gameComponent.getCurrentPlayer();
+        this.gameComponent.isPlayerTurn = function() {
+            return true;
+        };
         // The board needs to be updated to account for the changed node
-        componentRef.instance.updateBoard();
+        this.gameComponent.updateBoard();
+        // Need to detect changes, otherwise we'll get an angular exception in our tests
+        //componentRef.changeDetectorRef.detectChanges();
     }
 }

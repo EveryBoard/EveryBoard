@@ -142,9 +142,6 @@ export class SimpleComponentTestUtils<T> {
     public findElementByDirective(directive: Type<unknown>): DebugElement {
         return this.fixture.debugElement.query(By.directive(directive));
     }
-    public querySelector(query: string): DebugElement {
-        return this.fixture.debugElement.nativeElement.querySelector(query);
-    }
     public destroy(): void {
         return this.fixture.destroy();
     }
@@ -256,6 +253,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.debugElement = this.fixture.debugElement;
     }
     public bindGameComponent(): void {
+        expect(this.wrapper.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
         this.gameComponent = this.wrapper.gameComponent;
     }
     public prepareSpies(): void {
@@ -484,9 +482,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public findElement(elementName: string): DebugElement {
         return this.debugElement.query(By.css(elementName));
-    }
-    public querySelector(query: string): DebugElement {
-        return this.debugElement.nativeElement.querySelector(query);
     }
 }
 

@@ -57,7 +57,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
      * ngOnInit (triggered by detectChanges)
      * stage 1: PartCreationComponent appear
      * startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
-     * stage 2: PartCreationComponent disappear, GameIncluderComponent appear
+     * stage 2: PartCreationComponent disappear, game component appear
      * tick(1): the async part of startGame is now finished
      * stage 3: P4Component appear
      * differents scenarios
@@ -126,7 +126,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
 
             testUtils.detectChanges();
-            // Needed so PartCreation is destroyed and GameIncluder Component created
+            // Needed so PartCreation is destroyed and game component created
 
             tick(1);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -134,14 +134,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('Some tags are needed before initialisation', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.INITIAL, PartMocks.INITIAL);
             expect(wrapper).toBeTruthy();
-            const partCreationTag: DebugElement = testUtils.querySelector('app-part-creation');
-            const gameIncluderTag: DebugElement = testUtils.querySelector('app-game-includer');
-            const p4Tag: DebugElement = testUtils.querySelector('app-p4');
-            const chatTag: DebugElement = testUtils.querySelector('app-chat');
+            const partCreationTag: DebugElement = testUtils.findElement('app-part-creation');
+            const p4Tag: DebugElement = testUtils.findElement('app-p4');
+            const chatTag: DebugElement = testUtils.findElement('app-chat');
 
             expect(wrapper.gameStarted).toBeFalse();
             expect(partCreationTag).withContext('app-part-creation tag should be absent at start').toBeFalsy();
-            expect(gameIncluderTag).withContext('app-game-includer tag should be absent at start').toBeFalsy();
             expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
             expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
 
@@ -176,7 +174,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
-        it('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
+        it('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
             testUtils.detectChanges();
             tick();
@@ -185,7 +183,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             const gameId: DebugElement = testUtils.findElement('#game');
-            const p4Tag: DebugElement = testUtils.querySelector('app-p4');
+            const p4Tag: DebugElement = testUtils.findElement('app-p4');
 
             expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
             expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
@@ -199,13 +197,13 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick();
 
             testUtils.detectChanges();
-            expect(testUtils.querySelector('app-p4'))
+            expect(testUtils.findElement('app-p4'))
                 .withContext(`p4Tag id should be absent before startGame's async method has complete`)
                 .toBeNull();
 
             tick(1);
 
-            expect(testUtils.querySelector('app-p4'))
+            expect(testUtils.findElement('app-p4'))
                 .withContext(`p4Tag id should be present after startGame's async method has complete`)
                 .toBeTruthy();
             tick(1000);
@@ -219,7 +217,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             testUtils.prepareFixture(OnlineGameWrapperComponent);
             wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         });
-        xit('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
+        xit('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             // Given a component loaded with non creator
             await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
             testUtils.detectChanges();
@@ -229,7 +227,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             const gameId: DebugElement = testUtils.findElement('#game');
-            const p4Tag: DebugElement = testUtils.querySelector('app-p4');
+            const p4Tag: DebugElement = testUtils.findElement('app-p4');
 
             expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
             expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();

@@ -49,7 +49,6 @@ export class DemoPageComponent {
                 }
             }
             for (const node of demoNodes) {
-                console.log(game.name)
                 // We fill from right to left, one node per column at a time
                 if (i < numberOfColumns) {
                     // We need to create the columns the first time we access them
