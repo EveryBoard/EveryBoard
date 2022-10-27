@@ -38,49 +38,49 @@
 .background3 {
     fill: var(--alt-alt-background-fill);
 }
-.player0 {
+.player0-fill {
     fill: var(--player0);
 }
-.player0-alternate {
+.player0-alternate-fill {
     fill: var(--player0-alternate);
 }
 .player0-stroke {
     stroke: var(--player0);
 }
-.player1 {
+.player1-fill {
     fill: var(--player1);
 }
-.player1-alternate {
+.player1-alternate-fill {
     fill: var(--player1-alternate);
 }
 .player1-stroke {
     stroke: var(--player1);
 }
-.other-piece {
+.nonplayer-fill {
     fill: var(--nonplayer);
 }
-.other-piece-light {
+.nonplayer-light-fill {
     fill: var(--nonplayer-light);
 }
-.other-piece-stroke {
+.nonplayer-stroke {
     stroke: var(--nonplayer);
 }
 .dashed-stroke {
     stroke-dasharray: 2;
 }
-.pre-captured {
+.pre-captured-fill {
     fill: var(--pre-captured);
 }
-.captured {
+.captured-fill {
     fill: var(--captured);
 }
-.captured2 {
+.captured-alternate-fill {
     fill: var(--alt-captured);
 }
 .captured-stroke {
     stroke: var(--captured);
 }
-.moved {
+.moved-fill {
     fill: var(--moved);
 }
 .moved-stroke {
@@ -90,38 +90,44 @@
     fill: var(--indicator);
     stroke: none;
 }
-.highlighted {
-    stroke: var(--selectable);
+.indicator-fill {
+    fill: var(--indicator);
 }
-.highlighted > .base-no-stroke {
+.selectable-fill {
     fill: var(--selectable);
 }
-.last-move {
+.selectable-stroke {
+    stroke: var(--selectable);
+}
+.selectable > .base-no-stroke {
+    fill: var(--selectable);
+}
+.last-move-stroke {
     stroke: var(--last-move);
 }
-.victory {
+.victory-fill {
     fill: var(--victory);
 }
 .victory-stroke {
     stroke: var(--victory);
 }
-.selected {
-    stroke: var(--selected);
-}
 .selected-fill {
     fill: var(--selected);
 }
-.clickable {
+.selected-stroke {
+    stroke: var(--selected);
+}
+.clickable-stroke {
     stroke: var(--clickable);
 }
-.clickable-hover:hover {
+.clickable-stroke-hover:hover {
     stroke: var(--clickable);
 }
-.capturable {
+.capturable-stroke {
     stroke-width: 2;
     stroke: var(--capturable);
 }
-.capturable:hover {
+.capturable-stroke:hover {
     stroke-width: 8;
 }
 .no-fill {
@@ -149,19 +155,22 @@
 .round {
     stroke-linecap: round;
 }
-.text-big {
-    font: 50px sans-serif;
-}
 .text-giant {
     font: 3.7rem sans-serif;
     stroke-width: 0.37rem;
     dominant-baseline: central;
 }
-.text-bold {
-    font-weight: bold;
+.text-big {
+    font: 50px sans-serif;
 }
 .text-medium {
     font: 35px sans-serif;
+}
+.text-20 {
+    font: 20px sans-serif;
+}
+.text-bold {
+    font-weight: bold;
 }
 .text-center {
     text-anchor: middle;

@@ -1,5 +1,10 @@
 #!/usr/bin/python3
 from lxml import etree
+import sys
+
+if len(sys.argv) < 2 or sys.argv[1] != 'script':
+    print('Do not run check-translations.py directly, run check-translations.sh instead')
+    exit(1)
 
 failed = False
 

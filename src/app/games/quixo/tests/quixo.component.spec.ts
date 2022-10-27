@@ -69,7 +69,7 @@ describe('QuixoComponent', () => {
             await testUtils.expectClickSuccess('#click_0_0');
 
             // Then it should be selected
-            testUtils.expectElementToHaveClass('#click_0_0', 'selected');
+            testUtils.expectElementToHaveClass('#click_0_0', 'selected-stroke');
         }));
     });
     describe('second click', () => {
@@ -81,7 +81,7 @@ describe('QuixoComponent', () => {
             await testUtils.expectMoveSuccess('#chooseDirection_LEFT', new QuixoMove(4, 0, Orthogonal.LEFT));
 
             // Then the move should be accepted and displayed
-            testUtils.expectElementToHaveClass('#click_4_0', 'last-move');
+            testUtils.expectElementToHaveClass('#click_4_0', 'last-move-stroke');
         }));
         it('should allow a simple move upwards', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_4_4');
@@ -95,7 +95,7 @@ describe('QuixoComponent', () => {
             await testUtils.expectClickSuccess('#click_0_0');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#click_0_0', 'selected');
+            testUtils.expectElementNotToHaveClass('#click_0_0', 'selected-stroke');
         }));
     });
     describe('visuals', () => {

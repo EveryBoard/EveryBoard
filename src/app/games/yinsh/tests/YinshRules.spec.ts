@@ -33,7 +33,7 @@ describe('YinshRules', () => {
     describe('isLegal and applyLegalMove', () => {
         it('should initially allow placing rings', () => {
             // Given the initial state
-            const state: YinshState = rules.node.gameState;
+            const state: YinshState = YinshState.getInitialState();
             // When placing a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
 
@@ -56,7 +56,7 @@ describe('YinshRules', () => {
         });
         it('should initially forbid placing markers', () => {
             // Given the initial state
-            const state: YinshState = rules.node.gameState;
+            const state: YinshState = YinshState.getInitialState();
             // When trying to place a marker
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.of(new Coord(3, 4)), []);
             // Then it should fail

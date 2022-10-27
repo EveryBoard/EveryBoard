@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -18,10 +18,10 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
 
     public static SCORE_BY_SAFE_PIECE: number = (16 * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE) + 1;
 
-    public getBoardValue(node: TaflNode): NodeUnheritance {
+    public getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
         const state: TaflState = node.gameState;
         const width: number = this.ruler.config.WIDTH;
@@ -54,7 +54,7 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
                 score += owner.getScoreModifier() * controlledValue;
             }
         }
-        return new NodeUnheritance(score);
+        return new BoardValue(score);
     }
     public getControlledPieceValue(x: number, y: number, width: number): number {
         let value: number = 1;

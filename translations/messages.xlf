@@ -322,9 +322,9 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="7949092417505357162" datatype="html">
+      <trans-unit id="2110548298430403036" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown.
+         Let&apos;s see how seeds are sown. The spaces in Awalé are called the houses.
          As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
       </trans-unit>
@@ -347,12 +347,8 @@
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>
       </trans-unit>
-      <trans-unit id="4987331245309360880" datatype="html">
-        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.
-         Then, the player looks at the preceding house:
-         if it is still in the opponent&apos;s side and contains two or three seeds, they are also captured.
-         This continues until we reach either the player&apos;s side or a house containing neither two nor three seeds.&lt;br/&gt;&lt;br/&gt;
-         You are the first player, try to capture some pieces!</source>
+      <trans-unit id="3870488699470511412" datatype="html">
+        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
@@ -363,10 +359,8 @@
       <trans-unit id="3104604410220998192" datatype="html">
         <source>Multiple captures</source>
       </trans-unit>
-      <trans-unit id="1710205648645078210" datatype="html">
-        <source>By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
-        As these are consecutive houses, all seeds in them will be captured.&lt;br/&gt;&lt;br/&gt;
-        Capture them.</source>
+      <trans-unit id="887019765676174793" datatype="html">
+        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -377,18 +371,17 @@
       <trans-unit id="437214181691581058" datatype="html">
         <source>Interrupted capture</source>
       </trans-unit>
-      <trans-unit id="2140233800611707867" datatype="html">
-        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+      <trans-unit id="1079008869838849535" datatype="html">
+        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
       </trans-unit>
-      <trans-unit id="3933505566350744698" datatype="html">
-        <source>Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.</source>
+      <trans-unit id="2820925339032006267" datatype="html">
+        <source>Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.</source>
       </trans-unit>
       <trans-unit id="5352377142224231024" datatype="html">
         <source>Capture on the other side only</source>
       </trans-unit>
-      <trans-unit id="6181593302991158317" datatype="html">
-        <source>Try to capture the two leftmost houses of the opponent.</source>
+      <trans-unit id="6544432318052544187" datatype="html">
+        <source>Your houses are the one below. Try to capture the two leftmost houses of the opponent.</source>
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
@@ -399,9 +392,9 @@
       <trans-unit id="2796272222228002710" datatype="html">
         <source>Do not starve</source>
       </trans-unit>
-      <trans-unit id="1389121325319402395" datatype="html">
+      <trans-unit id="6918764867191654456" datatype="html">
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        Try it.</source>
+        Your houses are the one below. Try it.</source>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
@@ -420,9 +413,8 @@
       <trans-unit id="2281492801612237310" datatype="html">
         <source>End of the game</source>
       </trans-unit>
-      <trans-unit id="2996486651978672921" datatype="html">
-        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;
-         Sow the house on the top right.</source>
+      <trans-unit id="5221665367101424107" datatype="html">
+        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;Your houses are still the bottom one, sow the leftmost house.</source>
       </trans-unit>
       <trans-unit id="51867831368251774" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
@@ -1764,9 +1756,6 @@
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
       </trans-unit>
-      <trans-unit id="5300676389075722498" datatype="html">
-        <source>You cannot insert a piece when you have already selected a piece.</source>
-      </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
       </trans-unit>
@@ -1779,44 +1768,48 @@
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
       </trans-unit>
-      <trans-unit id="5868009287424458246" datatype="html">
-        <source>You should insert or choose one of your pieces!</source>
+      <trans-unit id="6641065739366631527" datatype="html">
+        <source>You must select a valid destination (highlighted on the board) for your piece</source>
       </trans-unit>
-      <trans-unit id="4223815631577991732" datatype="html">
+      <trans-unit id="3129880366808972802" datatype="html">
+        <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
+      </trans-unit>
+      <trans-unit id="3753696680821191929" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following three actions:
+        During its turn, a player can do one of the following actions:
         &lt;ol&gt;
             &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece, and optionally move it.&lt;/li&gt;
+            &lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;
+            &lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;
             &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
         &lt;/ol&gt;</source>
       </trans-unit>
       <trans-unit id="4040000701091542987" datatype="html">
         <source>Inserting a piece</source>
       </trans-unit>
-      <trans-unit id="870234930796108332" datatype="html">
+      <trans-unit id="3137783298375495022" datatype="html">
         <source>Each player has 5 pieces in total.
-        As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
+        As long as you have remaining pieces next to the board, you can insert new pieces. To do so:
         &lt;ol&gt;
-            &lt;li&gt;Click on one of the big arrows alongside the board.&lt;/li&gt;
-            &lt;li&gt;Click on one of the small arrows that appeared on the landing square of your piece.
-                This is the direction in which your piece will be oriented.&lt;/li&gt;
+            &lt;li&gt;Click on one of your pieces from your reserve, next to board.&lt;/li&gt;
+            &lt;li&gt;Click on one of the highlighted squares to select a landing for your piece.&lt;/li&gt;
+            &lt;li&gt;Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Insert a piece on the board.</source>
+        You&apos;re playing Light, insert a piece on the board.</source>
       </trans-unit>
-      <trans-unit id="5200908153537449128" datatype="html">
+      <trans-unit id="6681876930126126119" datatype="html">
         <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
         A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically.
-        During that move, you can also move the piece out of the board.
+        You can also move a piece out of the board.
         To move a piece:
         &lt;ol&gt;
             &lt;li&gt;Click on it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows to pick the direction in which it will move.
-                You can also click on the middle dot to change the piece&apos;s orientation without moving it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows on the landing square to pick its orientation.&lt;/li&gt;
+            &lt;li&gt;Click on the square on which you want the piece to move.
+                You can also click a second time on your piece to change its orientation without moving it.&lt;/li&gt;
+            &lt;li&gt;Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Try to move the piece that is on the board one square upwards and to orient it downwards.</source>
+        Try to move your piece that is already on the board one square upwards and to orient it to the left.</source>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
         <source>Congratulations, you made a side-slip!</source>
@@ -1834,25 +1827,39 @@
       <trans-unit id="2311226881614577495" datatype="html">
         <source>Failed, the piece is still on the board.</source>
       </trans-unit>
-      <trans-unit id="7012941605576384729" datatype="html">
+      <trans-unit id="8483955670337077136" datatype="html">
+        <source>Pushing (1/2)</source>
+      </trans-unit>
+      <trans-unit id="5017134997515199928" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
-        In order to push, multiple conditions must hold:
+        In order to push player pieces, the following conditions must hold:
         &lt;ol&gt;
             &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
-            &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
-                must be smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
-            &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
+            &lt;li&gt;Along the line that you are pushing, the number of pieces (yours or your opponent&apos;s) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.&lt;/li&gt;
         &lt;/ol&gt;
-        Your piece on the top right cannot push because there is one mountain too much.
-        Your piece on the bottom right can push.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+        Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
+        On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;
+        Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
       </trans-unit>
-      <trans-unit id="4320644310018984490" datatype="html">
+      <trans-unit id="6284799875777459303" datatype="html">
+        <source>Pushing (2/2)</source>
+      </trans-unit>
+      <trans-unit id="5293434509291141449" datatype="html">
+        <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
+        In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains.
+        On the following board, you can push the mountain on the first row.
+        On the second and third row, because of the resisting forces, you cannot push.&lt;br/&gt;&lt;br/&gt;
+        On the fourth row, you can push as there is one more pusher than resistant pieces. Do it.</source>
+      </trans-unit>
+      <trans-unit id="709861006710076010" datatype="html">
+        <source>Congratulations! Note that this move made you lose the game, you will see why in the next step.</source>
+      </trans-unit>
+      <trans-unit id="6651584028213138803" datatype="html">
         <source>The game ends when a mountain is pushed out of the board.
         If you pushed it and nobody is in front of you, you&apos;re the winner.
         However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
         However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;
-        You have two ways of ending the game here: you can either win, or lose. Choose correctly!</source>
+        Here, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>
@@ -2384,7 +2391,7 @@
         <source>The game has ended.</source>
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
-        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.rules.node.gameState.turn + 1 }}"/></source>
+        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.getTurn() + 1 }}"/></source>
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>

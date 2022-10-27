@@ -23,7 +23,7 @@ describe('BrandhubRules', () => {
 
     beforeEach(() => {
         rules = BrandhubRules.get();
-        rules.node = rules.node.getInitialNode();
+        rules.setInitialBoard();
         minimaxes = [
         ];
     });

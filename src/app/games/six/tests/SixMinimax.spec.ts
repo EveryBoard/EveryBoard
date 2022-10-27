@@ -5,7 +5,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
-import { SixMinimax, SixNodeUnheritance } from '../SixMinimax';
+import { SixMinimax, SixBoardValue } from '../SixMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('SixMinimax', () => {
@@ -25,7 +25,7 @@ describe('SixMinimax', () => {
         it('should have boardInfo after first move', () => {
             let moveSuccess: boolean = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
             expect(moveSuccess).toBeTrue();
-            let unheritance: SixNodeUnheritance = rules.node.getOwnValue(minimax);
+            let unheritance: SixBoardValue = rules.node.getOwnValue(minimax);
             expect(unheritance.preVictory.isAbsent()).toBeTrue();
 
             moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
@@ -66,7 +66,7 @@ describe('SixMinimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
             rules.node = new SixNode(state);
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            const boardValue: SixNodeUnheritance = minimax.getBoardValue(node);
+            const boardValue: SixBoardValue = minimax.getBoardValue(node);
             expect(boardValue.preVictory.isAbsent()).toBeTrue();
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
@@ -79,7 +79,7 @@ describe('SixMinimax', () => {
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 0));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            const boardValue: SixNodeUnheritance = minimax.getBoardValue(node);
+            const boardValue: SixBoardValue = minimax.getBoardValue(node);
             expect(boardValue.preVictory.equalsValue(new Coord(2, 0))).toBeTrue();
         });
     });
@@ -254,5 +254,19 @@ describe('SixMinimax', () => {
             // Then the list should have all the possible deplacements and only them
             expect(listMoves.some((move: SixMove) => move.isCut())).toBeTrue();
         });
+    });
+    it('should assign a value of 0 in case of draw', () => {
+        // Given a state in a draw in phase 2
+        const state: SixState = SixState.fromRepresentation([
+            [O, O, X, X],
+            [O, O, X, X],
+        ], 42);
+        const node: SixNode = new SixNode(state);
+
+        // When calculating the board value
+        const boardValue: SixBoardValue = minimax.getBoardValue(node);
+
+        // Then it should be 0
+        expect(boardValue.value).toBe(0);
     });
 });

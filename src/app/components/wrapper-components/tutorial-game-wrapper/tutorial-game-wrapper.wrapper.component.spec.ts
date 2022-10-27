@@ -77,7 +77,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const expectedMessage: string = 'instruction';
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualState: QuartoState = testUtils.getComponent().rules.node.gameState;
+            const actualState: QuartoState = testUtils.getComponent().getState();
             expect(actualState).toEqual(state);
         }));
         it('should show previousMove when set', fakeAsync(async() => {
@@ -257,7 +257,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(testUtils.getComponent().rules.node.gameState)
+            expect(testUtils.getComponent().getState())
                 .toEqual(QuartoState.getInitialState());
         }));
         it('should start step again after clicking "retry" on step success', fakeAsync(async() => {
@@ -285,7 +285,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(testUtils.getComponent().rules.node.gameState)
+            expect(testUtils.getComponent().getState())
                 .toEqual(QuartoState.getInitialState());
         }));
         it('should forbid clicking again on the board after success', fakeAsync(async() => {
@@ -345,7 +345,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
-            expect(testUtils.getComponent().rules.node.gameState)
+            expect(testUtils.getComponent().getState())
                 .toEqual(QuartoState.getInitialState());
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
@@ -583,7 +583,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             tick(11);
 
             // expect highlight to be present
-            testUtils.expectElementToExist('#highlight');
+            testUtils.expectElementToExist('#selected');
         }));
         it('should show success message after step success', fakeAsync(async() => {
             // Given a TutorialStep with several moves
@@ -763,7 +763,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // Expect the first awaited move to have been done
             expect(testUtils.getComponent().rules.node.move.get()).toEqual(awaitedMove);
-            expect(testUtils.getComponent().rules.node.gameState.turn).toEqual(stepInitialTurn + 1);
+            expect(testUtils.getComponent().getTurn()).toEqual(stepInitialTurn + 1);
             // expect 'solution' message to be shown
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -902,7 +902,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             testUtils.detectChanges();
 
             // Then the actual click is performed and the solution message is shown
-            testUtils.expectElementToExist('#highlight');
+            testUtils.expectElementToExist('#selected');
             const expectedMessage: string = 'Bravo !';
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -1047,7 +1047,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // Expect the step proposed move to have been done
             expect(testUtils.getComponent().rules.node.move.get()).toEqual(solutionMove);
-            expect(testUtils.getComponent().rules.node.gameState.turn).toEqual(1);
+            expect(testUtils.getComponent().getTurn()).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;

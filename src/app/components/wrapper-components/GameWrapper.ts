@@ -67,6 +67,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.rules.setInitialBoard();
+            this.gameComponent.updateBoard();
         }
         return gameCreatedSuccessfully;
     }
@@ -164,7 +165,7 @@ export abstract class GameWrapper<P extends Comparable> {
             // This can happen if called before the component has been set up
             return false;
         }
-        const turn: number = this.gameComponent.rules.node.gameState.turn;
+        const turn: number = this.gameComponent.getTurn();
         const indexPlayer: number = turn % 2;
         const player: P = this.getPlayer();
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
@@ -189,7 +190,7 @@ export abstract class GameWrapper<P extends Comparable> {
             return ['endgame-bg'];
         }
         if (this.isPlayerTurn()) {
-            const turn: number = this.gameComponent.rules.node.gameState.turn;
+            const turn: number = this.gameComponent.getTurn();
             return ['player' + (turn % 2) + '-bg'];
         }
         return [];

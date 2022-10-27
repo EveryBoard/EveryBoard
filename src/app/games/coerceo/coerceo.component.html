@@ -3,30 +3,30 @@
      [attr.viewBox]="'-5 -5 ' + (10 + SPACE_SIZE * 8) + ' ' + (10 + SPACE_SIZE * 10)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let caseContent of line; index as x"
+        <g *ngFor="let spaceContent of line; index as x"
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y)"
         >
-            <polygon *ngIf="isPyramid(x, y) else emptyCase"
+            <polygon *ngIf="isPyramid(x, y) else emptySpace"
                      [attr.points]="getPyramidCoordinate(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
                      class="base mid-stroke"
                      stroke-linecap="round"
             />
-            <ng-template #emptyCase>
-                <polygon *ngIf="isEmptyCase(x, y)"
+            <ng-template #emptySpace>
+                <polygon *ngIf="isEmptySpace(x, y)"
                          [attr.points]="getTriangleCoordinate(x, y)"
                          [ngClass]="getEmptyClass(x, y)"
                          class="base small-stroke"
                          stroke-linecap="round"
                 />
             </ng-template>
-            <polygon *ngIf="caseContent !== NONE"
+            <polygon *ngIf="spaceContent !== NONE"
                      id="dark_line_{{ x }}_{{ y }}"
                      [attr.points]="getLineCoordinate(x, y)"
                      class="base"
             />
-            <polygon *ngIf="caseContent !== NONE"
+            <polygon *ngIf="spaceContent !== NONE"
                      id="dark_line_{{ x }}_{{ y }}"
                      [attr.points]="getLineCoordinate(x, y)"
                      class="white-stroke"
@@ -35,23 +35,23 @@
     </g>
     <polygon *ngFor="let possibleLanding of possibleLandings"
              [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
-             class="base no-fill highlighted"/>
+             class="base no-fill selectable-stroke"/>
     <polygon *ngIf="lastStart.isPresent()"
              [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
-             class="base no-fill last-move"/>
+             class="base no-fill last-move-stroke"/>
     <polygon *ngIf="lastEnd.isPresent()"
              [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
-             class="base no-fill last-move"/>
+             class="base no-fill last-move-stroke"/>
     <polygon *ngIf="chosenCoord.isPresent()"
              id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
              [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
-             class="base no-fill selected"/>
+             class="base no-fill selected-stroke"/>
     <g *ngIf="mustShowTilesOf(0)"
        id="tilesCountZero"
     >
         <polygon [attr.points]="getTilesCountCoordinate(0, 0)"
                  [attr.stroke]="lastTurnWasTilesExchange(0) ? 'yellow' : 'black'"
-                 class="base player0"
+                 class="base player0-fill"
                  stroke-linecap="round"
         />
         <text id="playerZeroTilesCount"
@@ -67,7 +67,7 @@
     >
         <polygon [attr.points]="getTilesCountCoordinate(0, 9)"
                  [attr.stroke]="lastTurnWasTilesExchange(1) ? 'yellow' : 'black'"
-                 class="base player1"
+                 class="base player1-fill"
                  stroke-linecap="round"
         />
         <text id="playerOneTilesCount"

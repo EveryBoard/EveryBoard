@@ -362,7 +362,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -390,7 +390,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -417,7 +417,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (passButton == null) {
             return;
         } else {
-            const state: GameState = this.gameComponent.rules.node.gameState;
+            const state: GameState = this.gameComponent.getState();
             passButton.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
