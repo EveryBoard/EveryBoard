@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
@@ -65,11 +65,11 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState> {
         }
         return sources;
     }
-    public getBoardValue(node: DiamNode): NodeUnheritance {
+    public getBoardValue(node: DiamNode): BoardValue {
         const gameStatus: GameStatus = DiamRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
-        else return new NodeUnheritance(0);
+        else return new BoardValue(0);
     }
 }

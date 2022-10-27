@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { DvonnMinimax } from './DvonnMinimax';
 import { DvonnState } from './DvonnState';
 import { DvonnNode, DvonnRules } from './DvonnRules';
@@ -28,10 +28,10 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
         });
         return moves;
     }
-    public getBoardValue(node: DvonnNode): NodeUnheritance {
+    public getBoardValue(node: DvonnNode): BoardValue {
         const gameStatus: GameStatus = DvonnRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
         const state: DvonnState = node.gameState;
         // Board value is percentage of the stacks controlled by the player
@@ -44,6 +44,6 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
             state.getPieceAt(c).belongsTo(Player.ONE)).length;
         const zeroControlled: number = player0Stacks * scores[0];
         const oneControlled: number = player1Stacks * scores[1];
-        return new NodeUnheritance((oneControlled - zeroControlled) / numberOfStacks);
+        return new BoardValue((oneControlled - zeroControlled) / numberOfStacks);
     }
 }

@@ -23,7 +23,8 @@ type PartInfo = {
     part: Part,
     creator: MinimalUser,
     candidate: MinimalUser,
- }
+}
+
 describe('PartDAO', () => {
 
     let partDAO: PartDAO;

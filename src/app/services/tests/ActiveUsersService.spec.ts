@@ -30,7 +30,7 @@ describe('ActiveUsersService', () => {
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    it('Should update list of users when one change', fakeAsync(async() => {
+    it('should update list of users when one change', fakeAsync(async() => {
         await service.userDAO.set('playerDocId', {
             username: 'premier',
             state: 'online',
@@ -90,20 +90,48 @@ describe('ActiveUsersService', () => {
         const orderedUserDocs: UserDocument[] = service.sort(userDocs);
         expect(expectedOrder).toEqual(orderedUserDocs);
     });
-    describe('observeActiveUsers', () => {
+    describe('subscribeToActiveUsers', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirestoreCollectionObserver<User> = new FirestoreCollectionObserver<User>(
-                () => void { },
-                () => void { },
-                () => void { },
-            );
-            spyOn(userDAO, 'observingWhere');
-            service.observeActiveUsers(callback);
-            const parameters: FirestoreCondition[] = [
-                ['state', '==', 'online'],
-                ['verified', '==', true],
-            ];
-            expect(userDAO.observingWhere).toHaveBeenCalledWith(parameters, callback);
+            // Given an ActiveUsersService
+            spyOn(userDAO, 'observingWhere').and.callFake(
+                (query: FirestoreCondition[], callback: FirestoreCollectionObserver<User>): Subscription => {
+                    const expectedParameters: FirestoreCondition[] = [
+                        ['state', '==', 'online'],
+                        ['verified', '==', true],
+                    ];
+                    expect(query).toEqual(expectedParameters);
+                    return new Subscription();
+                });
+
+            // When subscribing to the active users
+            const subscription: Subscription = service.subscribeToActiveUsers(() => {});
+            // Then it should call observingWhere from the DAO with the right parameters
+            expect(userDAO.observingWhere).toHaveBeenCalledTimes(1);
+            subscription.unsubscribe();
         });
+        it('should not duplicate users when we subscribe a second time', fakeAsync(async() => {
+            // Given an active users service where we subscribed in the past
+            await userDAO.set('userId', {
+                username: 'premier',
+                state: 'online',
+                verified: true,
+            });
+            let seenActiveUsers: UserDocument[] = [];
+            let activeUsersSubscription: Subscription = service.subscribeToActiveUsers(
+                (activeUsers: UserDocument[]) => {
+                    seenActiveUsers = activeUsers;
+                });
+            activeUsersSubscription.unsubscribe();
+
+            // When subscribing a second time
+            activeUsersSubscription = service.subscribeToActiveUsers(
+                (activeUsers: UserDocument[]) => {
+                    seenActiveUsers = activeUsers;
+                });
+
+            // Then there should be exactly one part seen
+            expect(seenActiveUsers.length).toBe(1);
+            activeUsersSubscription.unsubscribe();
+        }));
     });
 });

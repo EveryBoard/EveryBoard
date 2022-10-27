@@ -2,6 +2,7 @@ import { Coord } from './Coord';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export class TriangularCheckerBoard {
+
     public static getNeighbors(c: Coord): Coord[] {
         let neighbors: Coord[];
         const left: Coord = new Coord(c.x - 1, c.y);
@@ -36,5 +37,8 @@ export class TriangularCheckerBoard {
             i++;
         }
         return MGPOptional.empty();
+    }
+    public static isSpaceDark(coord: Coord): boolean {
+        return (coord.x + coord.y) % 2 === 0;
     }
 }

@@ -46,11 +46,11 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             if (coord.isNotInRange(14, 12)) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
-            const caseContent: PlayerOrNone = state.getPieceAt(coord);
-            if (caseContent === PlayerOrNone.NONE) {
+            const spaceContent: PlayerOrNone = state.getPieceAt(coord);
+            if (spaceContent === PlayerOrNone.NONE) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_SQUARE());
             }
-            if (caseContent === opponent) {
+            if (spaceContent === opponent) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
             }
             coord = coord.getNext(move.direction, 1);

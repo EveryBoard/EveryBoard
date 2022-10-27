@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -128,7 +128,7 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     private getLandingCoordsForQueen(startingCoord: Coord, state: MartianChessState): Coord[] {
         return this.getLandingCoordsForLinearMove(startingCoord, state, 8);
     }
-    public getBoardValue(node: MartianChessNode): NodeUnheritance {
+    public getBoardValue(node: MartianChessNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         let score: number;
         if (gameStatus.isEndGame) {
@@ -138,6 +138,6 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
             const oneScore: number = node.gameState.getScoreOf(Player.ONE);
             score = oneScore - zeroScore;
         }
-        return new NodeUnheritance(score);
+        return new BoardValue(score);
     }
 }

@@ -12,6 +12,8 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
 
@@ -56,8 +58,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         if (movedPawn.value !== state.getCurrentPlayer().value) {
             return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
-        const landingCase: FourStatePiece = state.getPieceAt(move.end);
-        if (landingCase !== FourStatePiece.EMPTY) {
+        const landingSpace: FourStatePiece = state.getPieceAt(move.end);
+        if (landingSpace !== FourStatePiece.EMPTY) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const commonNeighbor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighbor(move.coord, move.end);
@@ -76,6 +78,27 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
         return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
+    }
+    public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
+        const isOnBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
+            return coord.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT) &&
+                   board[coord.y][coord.x] === FourStatePiece.EMPTY;
+        };
+        const landings: MGPSet<Coord> =
+            new MGPSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
+        if (TriangularCheckerBoard.isSpaceDark(coord) === true) {
+            return landings.toList();
+        } else {
+            const farLandings: MGPSet<Coord> = new MGPSet(landings.toList()); // Deep copy
+            for (const neighbor of landings) {
+                const secondStepNeighbors: Coord[] =
+                    TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
+                for (const secondStepNeighbor of secondStepNeighbors) {
+                    farLandings.add(secondStepNeighbor);
+                }
+            }
+            return farLandings.toList();
+        }
     }
     public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
         if (zeroFreedoms[0] === 0) {

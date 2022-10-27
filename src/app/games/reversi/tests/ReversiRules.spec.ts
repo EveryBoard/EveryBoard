@@ -49,7 +49,7 @@ describe('ReversiRules', () => {
 
         expect(moveLegality).toBeFalse();
     });
-    it('Should allow player to pass when no other moves are possible', () => {
+    it('should allow player to pass when no other moves are possible', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -65,7 +65,7 @@ describe('ReversiRules', () => {
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
     describe('Endgames', () => {
-        it('Should consider the player with the more point the winner at the end', () => {
+        it('should consider the player with the more point the winner at the end', () => {
             const board: Table<PlayerOrNone> = [
                 [O, X, X, X, X, X, X, O],
                 [O, X, X, O, O, X, X, O],
@@ -93,7 +93,7 @@ describe('ReversiRules', () => {
             const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
-        it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
+        it('should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
             const board: Table<PlayerOrNone> = [
                 [X, O, O, O, O, O, O, X],
                 [X, O, O, X, X, O, O, X],
@@ -121,7 +121,7 @@ describe('ReversiRules', () => {
             const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
-        it('Should recognize draws', () => {
+        it('should recognize draws', () => {
             const board: Table<PlayerOrNone> = [
                 [O, O, O, O, X, X, X, X],
                 [X, O, O, O, X, X, X, X],

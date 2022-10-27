@@ -1,7 +1,8 @@
 #!/bin/sh
-python ./scripts/check-translations.py
+python ./scripts/check-translations.py script
 if [ "$?" -eq 0 ]; then
     echo 'Translations are OK!'
+    echo 'Generating fr.json'
     BEFORE=$(sha256sum src/assets/fr.json)
     npx xlf-merge translations/messages.fr.xlf --convert json -o src/assets/fr.json
     AFTER=$(sha256sum src/assets/fr.json)

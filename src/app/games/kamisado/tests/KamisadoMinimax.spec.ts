@@ -24,7 +24,7 @@ describe('KamisadoMinimax', () => {
     });
     it('should provide 102 possible moves at turn 0', () => {
         // Each piece on the side can do 6 vertical moves and 6 diagonal ones = 12 moves per piece * 2 side pieces
-        // Other pieces  can do 6 vertical and 7 diagonal = 13 moves per piece * 6 pieces
+        // Other pieces can do 6 vertical and 7 diagonal = 13 moves per piece * 6 pieces
         // In total, that makes 102 possible moves
 
         // Given the initial board

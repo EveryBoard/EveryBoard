@@ -65,11 +65,11 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         const opponent: Player = player.getOpponent();
 
         for (const direction of Direction.DIRECTIONS) {
-            const firstCase: Coord = move.coord.getNext(direction);
-            if (firstCase.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
-                if (board[firstCase.y][firstCase.x] === opponent) {
+            const firstSpace: Coord = move.coord.getNext(direction);
+            if (firstSpace.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
+                if (board[firstSpace.y][firstSpace.x] === opponent) {
                     // let's test this direction
-                    const switchedInDir: Coord[] = ReversiRules.getSandwicheds(player, direction, firstCase, board);
+                    const switchedInDir: Coord[] = ReversiRules.getSandwicheds(player, direction, firstSpace, board);
                     for (const switched of switchedInDir) {
                         switcheds.push(switched);
                     }
@@ -136,7 +136,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         for (let y: number = 0; y < 8; y++) {
             for (let x: number = 0; x < 8; x++) {
                 if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
-                    // For each empty cases
+                    // For each empty spaces
                     nextBoard = state.getCopiedBoard();
                     const opponentNeighbors: Coord[] = ReversiState.getNeighboringPawnLike(nextBoard, opponent, x, y);
                     if (opponentNeighbors.length > 0) {
@@ -158,7 +158,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
             }
         }
         if (moves.length === 0) {
-            // when the user cannot start, his only move is to pass, which he cannot do otherwise
+            // When the user cannot start, his only move is to pass, which he cannot do otherwise
             // board unchanged, only the turn changed "pass"
             moves.push(new ReversiMoveWithSwitched(ReversiMove.PASS, 0));
         }

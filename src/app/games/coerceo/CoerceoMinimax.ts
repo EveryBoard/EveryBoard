@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -53,17 +53,17 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
         }
         return movements;
     }
-    public getBoardValue(node: CoerceoNode): NodeUnheritance {
+    public getBoardValue(node: CoerceoNode): BoardValue {
         const gameStatus: GameStatus = CoerceoRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return NodeUnheritance.fromWinner(gameStatus.winner);
+            return BoardValue.fromWinner(gameStatus.winner);
         }
         const state: CoerceoState = node.gameState;
         const piecesByFreedom: number[][] = state.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);
         const scoreZero: number = (2 * state.captures[0]) + piecesScores[0];
         const scoreOne: number = (2 * state.captures[1]) + piecesScores[1];
-        return new NodeUnheritance(scoreOne - scoreZero);
+        return new BoardValue(scoreOne - scoreZero);
     }
     public getPiecesScore(piecesByFreedom: number[][]): number[] {
         return [

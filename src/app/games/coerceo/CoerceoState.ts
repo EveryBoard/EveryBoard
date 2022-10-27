@@ -129,10 +129,10 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             resultingState = this.deconnectTile(currentTile, countTiles);
             const neighbors: Coord[] = CoerceoState.getPresentNeighborEntrances(currentTile);
             for (const neighbor of neighbors) {
-                const caseContent: FourStatePiece = resultingState.getPieceAt(neighbor);
-                if (caseContent === FourStatePiece.EMPTY) {
+                const spaceContent: FourStatePiece = resultingState.getPieceAt(neighbor);
+                if (spaceContent === FourStatePiece.EMPTY) {
                     resultingState = resultingState.removeTilesIfNeeded(neighbor, countTiles);
-                } else if (caseContent.is(this.getCurrentOpponent()) &&
+                } else if (spaceContent.is(this.getCurrentOpponent()) &&
                            resultingState.isSurrounded(neighbor))
                 {
                     resultingState = resultingState.capture(neighbor);

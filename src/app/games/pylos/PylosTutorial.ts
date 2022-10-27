@@ -77,7 +77,7 @@ export class PylosTutorial {
         A chosen piece must not be directly below another piece.
         A chosen piece can be the piece you just placed.
         You're playing Dark.<br/><br/>
-        Form a square, then click twice on one of the four pieces to remove only that one.`,
+        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.`,
             new PylosState([
                 [
                     [O, O, _, _],
@@ -101,13 +101,13 @@ export class PylosTutorial {
                 PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 0, 0)]),
                 PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
             ],
-            $localize`Congratulations, you have saved up one piece.`,
+            $localize`Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.`,
             $localize`Failed!`,
         ),
         TutorialStep.fromPredicate(
             $localize`Square (2/2)`,
             $localize`You're playing Dark.<br/><br/>
-        Do like in the previous step, but this time click on two different pieces.`,
+        Do like in the previous step, but this time click on two different pieces before validating.`,
             new PylosState([
                 [
                     [O, O, _, _],

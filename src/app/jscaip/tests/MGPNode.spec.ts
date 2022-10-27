@@ -3,7 +3,7 @@ import { GameState } from '../GameState';
 import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
 import { Move } from '../Move';
-import { NodeUnheritance } from '../NodeUnheritance';
+import { BoardValue } from '../BoardValue';
 import { GameStatus, Rules } from '../Rules';
 
 class GameStateMock extends GameState {
@@ -37,8 +37,8 @@ class MockMinimax extends Minimax<MoveMock, GameStateMock> {
     public getListMoves(node: MGPNode<RulesMock, MoveMock, GameStateMock>): MoveMock[] {
         throw new Error('MockMinimax.getListMoves method not implemented.');
     }
-    public getBoardValue(node: MGPNode<RulesMock, MoveMock, GameStateMock>): NodeUnheritance {
-        return new NodeUnheritance(0);
+    public getBoardValue(node: MGPNode<RulesMock, MoveMock, GameStateMock>): BoardValue {
+        return new BoardValue(0);
     }
 }
 

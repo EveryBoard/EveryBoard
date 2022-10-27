@@ -47,21 +47,21 @@
             [attr.cx]="-PIECE_RADIUS"
             [attr.cy]="1670 - y * PIECE_RADIUS"
             [attr.r]="PIECE_RADIUS - 5"
-            class="base mid-stroke player0" />
+            class="base mid-stroke player0-fill"/>
     <circle *ngFor="let y of range(viewInfo.sidePieces[1])"
             id="sidePiece_1_{{ y }}"
             [attr.cx]="1715 + PIECE_RADIUS"
             [attr.cy]="1670 - y * PIECE_RADIUS"
             [attr.r]="PIECE_RADIUS - 5"
-            class="base mid-stroke player1" />
+            class="base mid-stroke player1-fill"/>
     <rect *ngIf="viewInfo.dropPhase"
           [attr.x]="(SPACE_SIZE * CENTRAL_ZONE_START.x) + STROKE_WIDTH"
           [attr.y]="(SPACE_SIZE * CENTRAL_ZONE_START.y) + STROKE_WIDTH"
           [attr.width]="CENTRAL_ZONE_SIZE.x * SPACE_SIZE"
           [attr.height]="CENTRAL_ZONE_SIZE.y * SPACE_SIZE"
-          class="base no-fill highlighted mid-stroke"
+          class="base no-fill selectable-stroke mid-stroke"
     />
     <polyline id="lastJump"
               class="base no-fill"
-              [attr.points]="viewInfo.lastMoveArrow" />
+              [attr.points]="viewInfo.lastMoveArrow"/>
 </svg>
