@@ -102,7 +102,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
     }
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const homeColor: string = 'player' + (y + 1) % 2;
+        const homeColor: string = 'player' + (y + 1) % 2 + '-fill';
         if (this.captured[y][x] > 0) {
             return ['captured-fill', 'moved-stroke'];
         } else if (this.last.equalsValue(coord)) {

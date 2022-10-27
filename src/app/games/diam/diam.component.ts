@@ -300,7 +300,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                 const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner).get();
                 const backgroundClasses: string[] = [];
                 if (piece.otherPieceType) {
-                    backgroundClasses.push(`player${piece.owner.value}-alternate`);
+                    backgroundClasses.push(`player${piece.owner.value}-alternate-fill`);
                 } else {
                     backgroundClasses.push(`player${piece.owner.value}`);
                 }
