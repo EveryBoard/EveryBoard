@@ -29,7 +29,7 @@ import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { Tutorial, TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { P4Tutorial } from 'src/app/games/p4/P4Tutorial';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
@@ -52,7 +52,6 @@ import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { SiamTutorial } from 'src/app/games/siam/SiamTutorial';
 import { SiamRules } from 'src/app/games/siam/SiamRules';
-import { SiamState } from 'src/app/games/siam/SiamState';
 import { SaharaTutorial } from 'src/app/games/sahara/SaharaTutorial';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
@@ -181,7 +180,7 @@ export class GameInfo {
         new GameInfo($localize`Go`, 'Go', GoComponent, new GoTutorial(), new GoRules(GoState), new Date('2019-12-21'), GameDescription.GO()),
         new GameInfo($localize`Encapsule`, 'Encapsule', EncapsuleComponent, new EncapsuleTutorial(), new EncapsuleRules(EncapsuleState), new Date('2019-12-30'), GameDescription.ENCAPSULE()),
 
-        new GameInfo($localize`Siam`, 'Siam', SiamComponent, new SiamTutorial(), new SiamRules(SiamState), new Date('2020-01-11'), GameDescription.SIAM()),
+        new GameInfo($localize`Siam`, 'Siam', SiamComponent, new SiamTutorial(), SiamRules.get(), new Date('2020-01-11'), GameDescription.SIAM()),
         new GameInfo($localize`Sahara`, 'Sahara', SaharaComponent, new SaharaTutorial(), new SaharaRules(SaharaState), new Date('2020-02-29'), GameDescription.SAHARA()),
         new GameInfo($localize`Pylos`, 'Pylos', PylosComponent, new PylosTutorial(), new PylosRules(PylosState), new Date('2020-10-02'), GameDescription.PYLOS()),
         new GameInfo($localize`Kamisado`, 'Kamisado', KamisadoComponent, new KamisadoTutorial(), new KamisadoRules(KamisadoState), new Date('2020-10-03'), GameDescription.KAMISADO()),

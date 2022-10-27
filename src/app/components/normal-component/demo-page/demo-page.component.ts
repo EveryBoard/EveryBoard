@@ -15,6 +15,7 @@ import { AbstractRules } from 'src/app/jscaip/Rules';
 })
 export class DemoPageComponent {
     public numberOfColumns: FormControl = new FormControl(5);
+    public squared: FormControl = new FormControl(true);
 
     public columns: DemoNodeInfo[][] = [];
 
@@ -32,11 +33,6 @@ export class DemoPageComponent {
         // Create a game card for each demo node of each game
         for (const game of allGames) {
             let demoNodes: AbstractNode[] = [];
-            // eslint-disable-next-line dot-notation
-            if (game.component['getDemoNodes'] != null) {
-                // eslint-disable-next-line dot-notation
-                demoNodes = game.component['getDemoNodes']();
-            }
             const rules: AbstractRules = game.rules;
             const steps: TutorialStep[] = game.tutorial.tutorial;
             for (const step of steps) {

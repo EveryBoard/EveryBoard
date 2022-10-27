@@ -39,6 +39,6 @@ export class DemoCardComponent implements AfterViewInit {
         // The board needs to be updated to account for the changed node
         this.gameComponent.updateBoard();
         // Need to detect changes, otherwise we'll get an angular exception in our tests
-        //componentRef.changeDetectorRef.detectChanges();
+        componentRef.changeDetectorRef.detectChanges();
     }
 }

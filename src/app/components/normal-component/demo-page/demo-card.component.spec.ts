@@ -11,7 +11,7 @@ import { DemoCardComponent } from './demo-card.component';
 describe('DemoCardComponent', () => {
     it('should display the game from the point of view the current player', fakeAsync(async() => {
         // Given a demo card component
-        const testUtils: SimpleComponentTestUtils<DemoCardComponent> = 
+        const testUtils: SimpleComponentTestUtils<DemoCardComponent> =
             await SimpleComponentTestUtils.create(DemoCardComponent);
 
         // When displaying it for a given game

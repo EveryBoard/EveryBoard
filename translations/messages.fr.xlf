@@ -38,6 +38,14 @@
         <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></source>
         <target>Ajouter <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></target>
       </trans-unit>
+      <trans-unit id="1735231057781616406" datatype="html">
+        <source>Number of columns: </source>
+        <target>Nombre de colonnes : </target>
+      </trans-unit>
+      <trans-unit id="3437618805826291312" datatype="html">
+        <source>Squared</source>
+        <target>Carrés</target>
+      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
         <target>Accueil</target>
