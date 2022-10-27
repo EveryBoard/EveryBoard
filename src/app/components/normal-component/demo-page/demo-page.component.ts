@@ -32,7 +32,7 @@ export class DemoPageComponent {
         this.columns = [];
         // Create a game card for each demo node of each game
         for (const game of allGames) {
-            let demoNodes: AbstractNode[] = [];
+            const demoNodes: AbstractNode[] = [];
             const rules: AbstractRules = game.rules;
             const steps: TutorialStep[] = game.tutorial.tutorial;
             for (const step of steps) {
