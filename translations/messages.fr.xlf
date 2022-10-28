@@ -142,9 +142,9 @@
         <source>The international version of the famous African strategy game!</source>
         <target>La version internationale du fameux jeu de stratégie africain !</target>
       </trans-unit>
-      <trans-unit id="4553628047523274326" datatype="html">
-        <source>The Irish version of the Tafl game family!</source>
-        <target>La version irlandaise de la famille de jeu Tafl !</target>
+      <trans-unit id="5716165296000343717" datatype="html">
+        <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
+        <target>La version irlandaise de la famille de jeu Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
@@ -229,6 +229,10 @@
       <trans-unit id="5737474371494262748" datatype="html">
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
         <target>Placez vos pièces hexagonales les unes à côté des autres et soyez le premier à créer une des trois formes requises pour gagner !</target>
+      </trans-unit>
+      <trans-unit id="1177593339964527523" datatype="html">
+        <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
+        <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
@@ -337,6 +341,10 @@
       <trans-unit id="4371580300145721044" datatype="html">
         <source>Martian Chess</source>
         <target>Échecs Martiens</target>
+      </trans-unit>
+      <trans-unit id="5306696079242551443" datatype="html">
+        <source>Hnefatafl</source>
+        <target>Hnefatafl</target>
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
@@ -1014,32 +1022,32 @@
         <source>Sowing</source>
         <target>Égrénage</target>
       </trans-unit>
-      <trans-unit id="6972413011819423487" datatype="html">
+      <trans-unit id="2110548298430403036" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown.
-         As you&apos;re playing first, the 6 houses on the top are yours.&lt;br/&gt;&lt;br&gt;
+         Let&apos;s see how seeds are sown. The spaces in Awalé are called the houses.
+         As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
         <target>L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
-        Nous allons voir comment s'égrènent (se distribuent) les graines.
-        Comme vous jouez en premier, les 6 maisons du haut vous appartiennent.&lt;br/&gt;&lt;br/&gt;
+        Nous allons voir comment s'égrènent (se distribuent) les graines. Les cases à l'Awalé sont appelées les maisons.
+        Comme vous jouez en premier, les 6 maisons du bas vous appartiennent.&lt;br/&gt;&lt;br/&gt;
         Cliquez sur l&apos;une d&apos;entre elles pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d&apos;une graine par maison.</target>
       </trans-unit>
       <trans-unit id="8638152355669938683" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
         This is how seeds are sown:
         one by one from the house next to the one they come from, clockwise.</source>
-        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horlogé, elle comptent maintenant 5 graines.
-         C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horlogé depuis la maison d’où elles viennent.</target>
+        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horaire, elle comptent maintenant 5 graines.
+         C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horaire depuis la maison d’où elles viennent.</target>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
         <target>Gros égrénage</target>
       </trans-unit>
-      <trans-unit id="278639697286568585" datatype="html">
-        <source>You are now the second player (on the bottom).
+      <trans-unit id="6117558662745355702" datatype="html">
+        <source>You are still the first player.
         When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
         Sow the house that contains 12 seeds.</source>
-        <target>Vous êtes maintenant le joueur 2 (en bas).
+        <target>Vous êtes toujours le premier joueur.
         Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
         Distribuez la maison qui contient 12 graines.</target>
       </trans-unit>
@@ -1051,16 +1059,9 @@
         <source>Simple capture</source>
         <target>Capture simple</target>
       </trans-unit>
-      <trans-unit id="1376466164144182842" datatype="html">
-        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.
-         Then, the player looks at the preceding house:
-         if it is still in the opponent&apos;s side and contains two or three seeds, they are also captured.
-         This continues until we reach either the player&apos;s side or a house containing neither two nor three seeds.&lt;br/&gt;&lt;br/&gt;
-         You are the second player, try to capture some pieces!</source>
-        <target>Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu&apos;il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.
-        Ensuite il regarde la case précédente :
-        si elle est dans le camp adverse et contient deux ou trois graines, il les capture aussi, et ainsi de suite jusqu&apos;à ce qu&apos;il arrive à son camp ou jusqu&apos;à ce qu&apos;il y ait un nombre de graines différent de deux ou trois.&lt;br/&gt;&lt;br/&gt;
-        Vous êtes le deuxième joueur, faites une capture !</target>
+      <trans-unit id="3870488699470511412" datatype="html">
+        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
+        <target>Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu&apos;il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votre, faites une capture !</target>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
@@ -1074,13 +1075,9 @@
         <source>Multiple captures</source>
         <target>Capture composée</target>
       </trans-unit>
-      <trans-unit id="1710205648645078210" datatype="html">
-        <source>By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
-        As these are consecutive houses, all seeds in them will be captured.&lt;br/&gt;&lt;br/&gt;
-        Capture them.</source>
-        <target>En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
-        Ces deux maisons, étant consécutives, seront donc toutes les deux capturées.&lt;br/&gt;&lt;br/&gt;
-        Capturez les.</target>
+      <trans-unit id="887019765676174793" datatype="html">
+        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
+        <target>En distribuant la maison la plus à gauche, vous terminerez dans la deuxième maison la plus à gauche, qui en contient maintenant 3, donc ce sera une capture. Mais maintenant, la maison immédiatement précédente en contient 2, ce qui est également capturable, donc cette maison sera capturée aussi !&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votres, faites une capture !</target>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -1094,23 +1091,21 @@
         <source>Interrupted capture</source>
         <target>Capture interrompue</target>
       </trans-unit>
-      <trans-unit id="2140233800611707867" datatype="html">
-        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
-        <target>En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.&lt;br/&gt;&lt;br/&gt;
-        Faites-le.</target>
+      <trans-unit id="1079008869838849535" datatype="html">
+        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
+        <target>En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votre, faites une capture !</target>
       </trans-unit>
-      <trans-unit id="3933505566350744698" datatype="html">
-        <source>Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.</source>
+      <trans-unit id="2820925339032006267" datatype="html">
+        <source>Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.</source>
         <target>Constatez que la 2ème maison n’étant pas capturable, la capture a été interrompue et vous n’avez pas pu capturer la 1ère maison.</target>
       </trans-unit>
       <trans-unit id="5352377142224231024" datatype="html">
         <source>Capture on the other side only</source>
         <target>Capture chez l&apos;adversaire uniquement</target>
       </trans-unit>
-      <trans-unit id="6181593302991158317" datatype="html">
-        <source>Try to capture the two leftmost houses of the opponent.</source>
-        <target>Essayez de capturer les deux maisons les plus à gauche de l’adversaire.</target>
+      <trans-unit id="6544432318052544187" datatype="html">
+        <source>Your houses are the one below. Try to capture the two leftmost houses of the opponent.</source>
+        <target>Vos maisons sont celles du bas. Essayez de capturer les deux maisons les plus à gauche de l’adversaire.</target>
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
@@ -1124,11 +1119,11 @@
         <source>Do not starve</source>
         <target>Ne pas affamer</target>
       </trans-unit>
-      <trans-unit id="1389121325319402395" datatype="html">
+      <trans-unit id="6918764867191654456" datatype="html">
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        Try it.</source>
+        Your houses are the one below. Try it.</source>
         <target>Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;
-        Lancez-vous !</target>
+        Vos maisons sont celles du bas. Lancez-vous !</target>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
@@ -1140,9 +1135,8 @@
         <source>Feeding is mandatory</source>
         <target>Nourrir est obligatoire</target>
       </trans-unit>
-      <trans-unit id="6914881509682724797" datatype="html">
-        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;
-        Go ahead!</source>
+      <trans-unit id="6501764281568922792" datatype="html">
+        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;Go ahead!</source>
         <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.&lt;br/&gt;&lt;br/&gt;
         Allez-y !</target>
       </trans-unit>
@@ -1156,11 +1150,9 @@
         <source>End of the game</source>
         <target>Fin de partie</target>
       </trans-unit>
-      <trans-unit id="2996486651978672921" datatype="html">
-        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;
-         Sow the house on the top right.</source>
-        <target>Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.&lt;br/&gt;&lt;br/&gt;
-        Distribuez la maison en haut à droite.</target>
+      <trans-unit id="5221665367101424107" datatype="html">
+        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;Your houses are still the bottom one, sow the leftmost house.</source>
+        <target>Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.&lt;br/&gt;&lt;br/&gt;Vos maisons sont toujours celles du bas, distribuez la maison la plus à gauche.</target>
       </trans-unit>
       <trans-unit id="51867831368251774" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
@@ -1434,8 +1426,8 @@
         <source>Types of move</source>
         <target>Types de mouvements</target>
       </trans-unit>
-      <trans-unit id="7844462253208284371" datatype="html">
-        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+      <trans-unit id="357682192015415742" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
         <target>Vous pouvez effectuer deux types de mouvement : soit déposer une de vos pièces comme vous l'avez fait à l'étape précédente, soit déplacer une de vos pièces sur le plateau, sur une case voisine. Vous pouvez choisir n'importe laquelle de vos pièces, même s'il y a déjà d'autres pièces au dessus. Une seule condition s'applique : ne pas créer une pile de plus de 4 pièces. Quand vous sélectionnez une pièce avec d'autres dessus, toutes les autres pièces se déplacent avec la votre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, essayez de déplacer une de vos pièces déjà sur le plateau.</target>
       </trans-unit>
       <trans-unit id="4809034034760688818" datatype="html">
@@ -1593,10 +1585,6 @@
       <trans-unit id="5001561383056924621" datatype="html">
         <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
         <target>Veuillez sélectionner une de vos pièces restantes, ou une case sur le plateau où vous avez la pièce la plus grande.</target>
-      </trans-unit>
-      <trans-unit id="7341165560842722107" datatype="html">
-        <source>You must select a different landing square than the square where the move originates from.</source>
-        <target>Veuillez sélectionner une case différente de la case d&apos;origine du mouvement.</target>
       </trans-unit>
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
@@ -1840,10 +1828,6 @@
       <trans-unit id="1025279631840419081" datatype="html">
         <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
         <target>Veuillez sélectionner une autre case de la capture que vous souhaitez prendre, celle-ci appartient à deux captures.</target>
-      </trans-unit>
-      <trans-unit id="3154742766975304650" datatype="html">
-        <source>You must click on an arrow to select your destination.</source>
-        <target>Veuillez cliquer sur une flèche pour sélectionner votre destination.</target>
       </trans-unit>
       <trans-unit id="8708684300793667483" datatype="html">
         <source>You cannot insert a piece here, as all lines are full. Select another space.</source>
@@ -2282,10 +2266,6 @@
       <trans-unit id="1376498600372177047" datatype="html">
         <source>This piece has no possible move, select another one.</source>
         <target>Cette pièce n&apos;a aucun mouvement possible, choisissez-en une autre.</target>
-      </trans-unit>
-      <trans-unit id="2976242446104349974" datatype="html">
-        <source>A move must be orthogonal or diagonal.</source>
-        <target>Un mouvement dois se faire selon une direction orthogonale ou diagonale.</target>
       </trans-unit>
       <trans-unit id="6241913890536717263" datatype="html">
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
@@ -2778,6 +2758,10 @@
         <source>Your second capture is invalid.</source>
         <target>Votre seconde capture est invalide.</target>
       </trans-unit>
+      <trans-unit id="2207725255932699379" datatype="html">
+        <source>You must capture one or two pieces, not more.</source>
+        <target>Vous devez capturer une ou deux pièces, pas plus.</target>
+      </trans-unit>
       <trans-unit id="3567680797279323593" datatype="html">
         <source>At Pylos, the goal is to be the last to play.
         To do this, you have to save up your pieces.
@@ -2846,35 +2830,35 @@
         <source>Square (1/2)</source>
         <target>Carré (1/2)</target>
       </trans-unit>
-      <trans-unit id="7156552420001155973" datatype="html">
+      <trans-unit id="6362834810107211217" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
         A chosen piece can be the piece you just placed.
         You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Form a square, then click twice on one of the four pieces to remove only that one.</source>
+        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
         <target>Quand la pièce que vous venez de poser est la quatrième d&apos;un carré de pièces de votre couleur,
-        vous pouvez choisir alors n&apos;importe où sur le plateau, une à deux de vos pièces.
-        Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant d&apos;économiser 1 ou 2 pièces.
+        vous pouvez choisir alors n&apos;importe où sur le plateau une où deux de vos pièces.
+        Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant de les économiser.
         Une pièce choisie pour être enlevée ne peut pas être en dessous d&apos;autres pièces.
         Une pièce choisie peut être la pièce que vous venez de placer.
         Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Formez un carré, puis cliquez deux fois sur l&apos;une des quatre pièces pour n&apos;enlever que celle-là.</target>
+        Formez un carré, cliquez sur une des quatres pièces, puis cliquez sur le V en bas à droite pour finaliser votre mouvement.</target>
       </trans-unit>
-      <trans-unit id="5456823255724159144" datatype="html">
-        <source>Congratulations, you have saved up one piece.</source>
-        <target>Bravo, vous avez économisé une pièce.</target>
+      <trans-unit id="4722414845520402682" datatype="html">
+        <source>Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.</source>
+        <target>Bravo, vous avez économisé une pièce. Note, vous pouvez annuler la sélection en cliquant à nouveau sur la pièce.</target>
       </trans-unit>
       <trans-unit id="3444837986058371302" datatype="html">
         <source>Square (2/2)</source>
         <target>Carré (2/2)</target>
       </trans-unit>
-      <trans-unit id="635645551351663738" datatype="html">
+      <trans-unit id="4122674190040152445" datatype="html">
         <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Do like in the previous step, but this time click on two different pieces.</source>
+        Do like in the previous step, but this time click on two different pieces before validating.</source>
         <target>Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur deux pièces différentes.</target>
+        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur deux pièces différentes avant de valider.</target>
       </trans-unit>
       <trans-unit id="8313533670567464817" datatype="html">
         <source>Failed, you only captured one piece.</source>
@@ -3167,10 +3151,6 @@
         <source>Failed! You have made a single step.</source>
         <target>Raté ! Vous avez fait un simple pas.</target>
       </trans-unit>
-      <trans-unit id="5300676389075722498" datatype="html">
-        <source>You cannot insert a piece when you have already selected a piece.</source>
-        <target>Vous ne pouvez pas insérer une pièce si vous avez déjà sélectionné une pièce.</target>
-      </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
         <target>Vous ne pouvez plus insérer, toutes vos pièces sont déjà sur le plateau !</target>
@@ -3187,25 +3167,31 @@
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
         <target>Votre poussée est invalide : elle n'est pas droite, ne pousse rien, ou sort du plateau.</target>
       </trans-unit>
-      <trans-unit id="5868009287424458246" datatype="html">
-        <source>You should insert or choose one of your pieces!</source>
-        <target>Vous devez insérez ou choisir une de vos pièces !</target>
+      <trans-unit id="6641065739366631527" datatype="html">
+        <source>You must select a valid destination (highlighted on the board) for your piece</source>
+        <target>Vous devez sélectionner une destination valide (mise en évidence sur le plateau) pour votre pièce.</target>
       </trans-unit>
-      <trans-unit id="4223815631577991732" datatype="html">
+      <trans-unit id="3129880366808972802" datatype="html">
+        <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
+        <target>Vous devez sélectionner une orientation pour votre pièce en cliquant sur une des flèches.</target>
+      </trans-unit>
+      <trans-unit id="3753696680821191929" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following three actions:
+        During its turn, a player can do one of the following actions:
         &lt;ol&gt;
             &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece, and optionally move it.&lt;/li&gt;
+            &lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;
+            &lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;
             &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
         &lt;/ol&gt;</source>
         <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau.
         Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau.
-        Durant son tour de jeu un joueur peut effectuer l&apos;une des trois actions suivantes :
+        Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :
         &lt;ol&gt;
             &lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;
-            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces et optionnellement la déplacer.&lt;/li&gt;
+            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;
+            &lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;
             &lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -3213,47 +3199,47 @@
         <source>Inserting a piece</source>
         <target>Insérer une pièce</target>
       </trans-unit>
-      <trans-unit id="870234930796108332" datatype="html">
+      <trans-unit id="3137783298375495022" datatype="html">
         <source>Each player has 5 pieces in total.
-        As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
+        As long as you have remaining pieces next to the board, you can insert new pieces. To do so:
         &lt;ol&gt;
-            &lt;li&gt;Click on one of the big arrows alongside the board.&lt;/li&gt;
-            &lt;li&gt;Click on one of the small arrows that appeared on the landing square of your piece.
-                This is the direction in which your piece will be oriented.&lt;/li&gt;
+            &lt;li&gt;Click on one of your pieces from your reserve, next to board.&lt;/li&gt;
+            &lt;li&gt;Click on one of the highlighted squares to select a landing for your piece.&lt;/li&gt;
+            &lt;li&gt;Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Insert a piece on the board.</source>
+        You&apos;re playing Light, insert a piece on the board.</source>
         <target>Chaque joueur a en tout 5 pièces.
-        Tant qu&apos;il n&apos;en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire :
+        Tant qu&apos;il vous reste des pièces de réserves sur le côté du plateau, vous pouvez en insérer une. Pour ce faire :
         &lt;ol&gt;
-            &lt;li&gt;Appuyez sur une des grosses flèches autour du plateau.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur une des 4 petites flèches apparues sur la case d&apos;arrivée de la pièce insérée.
-                Cela indiquera la direction dans laquelle sera orientée votre pièce.&lt;/li&gt;
+            &lt;li&gt;Sélectionnez une pièces depuis votre réserve, située à côté du plateau.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une des cases mises en avant pour sélectionner une case de destination pour votre pièce.&lt;/li&gt;
+            &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Insérez une pièce sur le plateau.</target>
+        Vous jouez Clair, insérez une pièce sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="5200908153537449128" datatype="html">
+      <trans-unit id="6681876930126126119" datatype="html">
         <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
         A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically.
-        During that move, you can also move the piece out of the board.
+        You can also move a piece out of the board.
         To move a piece:
         &lt;ol&gt;
             &lt;li&gt;Click on it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows to pick the direction in which it will move.
-                You can also click on the middle dot to change the piece&apos;s orientation without moving it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows on the landing square to pick its orientation.&lt;/li&gt;
+            &lt;li&gt;Click on the square on which you want the piece to move.
+                You can also click a second time on your piece to change its orientation without moving it.&lt;/li&gt;
+            &lt;li&gt;Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Try to move the piece that is on the board one square upwards and to orient it downwards.</source>
+        Try to move your piece that is already on the board one square upwards and to orient it to the left.</source>
         <target>Nous distinguerons ici &quot;déplacer&quot; et &quot;pousser&quot;.
         Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement.
-        Lors de ce déplacement on peut aussi faire sortir la pièce du plateau.
-        Pour déplacer la pièce :
+        Il est également possible de faire sortir une pièce du plateau.
+        Pour déplacer une pièce :
         &lt;ol&gt;
             &lt;li&gt;Cliquez dessus.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur l&apos;une des 5 flèches pour choisir la direction dans laquelle elle va se déplacer.
-                En cliquant sur celle au milieu, vous décidez de juste changer l&apos;orientation de la pièce, sans la déplacer.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur l&apos;une des 4 flèches sur la case d&apos;arrivée de votre pièce pour choisir son orientation.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la destination voulue de la pièce.
+              Vous pouvez aussi cliquer une seconde fois sur votre pièce pour changer son orientation sans la déplacer.&lt;/li&gt;
+            &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Essayer de déplacer la pièce sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers le bas.</target>
+        Essayer de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
         <source>Congratulations, you made a side-slip!</source>
@@ -3277,41 +3263,61 @@
         <source>Failed, the piece is still on the board.</source>
         <target>Raté, la pièce est encore sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="7012941605576384729" datatype="html">
+      <trans-unit id="8483955670337077136" datatype="html">
+        <source>Pushing (1/2)</source>
+        <target>Pousser (1/2)</target>
+      </trans-unit>
+      <trans-unit id="5017134997515199928" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
-        In order to push, multiple conditions must hold:
+        In order to push player pieces, the following conditions must hold:
         &lt;ol&gt;
             &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
-            &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
-                must be smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
-            &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
+            &lt;li&gt;Along the line that you are pushing, the number of pieces (yours or your opponent&apos;s) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.&lt;/li&gt;
         &lt;/ol&gt;
-        Your piece on the top right cannot push because there is one mountain too much.
-        Your piece on the bottom right can push.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+        Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
+        On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;
+        Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
-        Pour pousser il faut plusieurs critères :
+        Pour pousser des pièces d'un joueur, plusieurs critères doivent être vérifiés :
         &lt;ol&gt;
-            &lt;li&gt;Être déjà orienté dans le sens de la poussée.&lt;/li&gt;
-            &lt;li&gt;Que le nombre de pièces (adverses ou non) qui font face à la votre (les résistants)
-                soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).&lt;/li&gt;
-            &lt;li&gt;Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.&lt;/li&gt;
+            &lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;
+            &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face.&lt;/li&gt;
         &lt;/ol&gt;
-        Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
-        Votre pièce tout en bas à droite, elle, peut pousser.&lt;br/&gt;&lt;br/&gt;
-        Faites-le !</target>
+        Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée.
+        Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;
+        Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
       </trans-unit>
-      <trans-unit id="4320644310018984490" datatype="html">
+      <trans-unit id="6284799875777459303" datatype="html">
+        <source>Pushing (2/2)</source>
+        <target>Pousser (2/2)</target>
+      </trans-unit>
+      <trans-unit id="5293434509291141449" datatype="html">
+        <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
+        In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains.
+        On the following board, you can push the mountain on the first row.
+        On the second and third row, because of the resisting forces, you cannot push.&lt;br/&gt;&lt;br/&gt;
+        On the fourth row, you can push as there is one more pusher than resistant pieces. Do it.</source>
+        <target>Pour pousser une montane, vous avez besoin d'un pièce pousseuse par montagne. Chaque résistant (pièce dans la direction opposée) annule la force d'une pousseuse.
+        En résumé, s'il n'y a pas de montagne vous devez avoir strictement plus de pousseurs que de résistants. S'il y a une montagne, vous devez avoir autant de pousseurs qu'il y a de résistants et montagnes.
+        Sur le plateau, vous pouvez pousser la montagne de la première ligne.
+        Sur la deuxième et troisième, vous ne pouvez pas pousser à cause des pièces et montagnes résistantes.&lt;br/&gt;&lt;br/&gt;
+        Sur la quatrième ligne, vous pouvez pousser car il y a une pousseuse de plus que de pièces résistantes. Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="709861006710076010" datatype="html">
+        <source>Congratulations! Note that this move made you lose the game, you will see why in the next step.</source>
+        <target>Bravo ! Notez que ce mouvement vous fait perdre, comme vous allez le voir dans l'étape suivante.</target>
+      </trans-unit>
+      <trans-unit id="6651584028213138803" datatype="html">
         <source>The game ends when a mountain is pushed out of the board.
         If you pushed it and nobody is in front of you, you&apos;re the winner.
         However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
         However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;
-        You have two ways of ending the game here: you can either win, or lose. Choose correctly!</source>
+        Here, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
         <target>Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
         Si vous l&apos;avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.
         Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
         En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.&lt;br/&gt;&lt;br/&gt;
-        Vous avez deux moyen de finir la partie, un gagnant, un perdant, choisissez !</target>
+        Ici, vous pouvez pousser une montagne hors du plateau et soit gagner, soit perdre. Choisissez consciencieusement !</target>
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>
@@ -3467,51 +3473,13 @@
         <source>Tafl moves must be orthogonal.</source>
         <target>Les mouvements aux jeux de Tafl doivent être orthogonaux.</target>
       </trans-unit>
-      <trans-unit id="1634828513961256784" datatype="html">
-        <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="3469374446011769111" datatype="html">
+        <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Brandhub est la version irlandaise du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
       </trans-unit>
-      <trans-unit id="3703259835450002878" datatype="html">
-        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
-        <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de cases que souhaité ;&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce ;&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins ;&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, il ne peut plus y retourner, les autres pièces non plus.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Ceci est le plateau initial, faites le premier coup.</target>
-      </trans-unit>
-      <trans-unit id="2643653187802774042" datatype="html">
-        <source>Tablut is a strategy game that was played by the Vikings.
-        The goal of the game is different for each player.
-        The attacker plays first. Its pieces (dark) are close to the edges.
-        Its goal is to capture the king, which is in the center of the board.
-        The defender plays second. Its pieces (light) are in the middle.
-        Its goal is to move the king on one of the 4 thrones in the corners.
-        Note that the square in which the king starts, in the center of the board, is also a throne.</source>
-        <target>Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
-        Le but du jeu pour les deux joueurs n&apos;est pas le même.
-        L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords.
-        Son but est de capturer le roi, qui est tout au centre du plateau.
-        Le défenseur joue en deuxième, ses pièces (claires) sont au centre.
-        Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins.
-        Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
-      </trans-unit>
-      <trans-unit id="5152957749531280485" datatype="html">
-        <source>All pieces move the same way.
-        Similarly to a rook in chess, a piece can move:
-        &lt;ol&gt;
-            &lt;li&gt;By as many squares as you want.&lt;/li&gt;
-            &lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;
-            &lt;li&gt;Horizontally or vertically.&lt;/li&gt;
-            &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
-        &lt;/ol&gt;
-        To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, do the first move.</source>
-        <target>Au Tablut, toutes les pièces se déplacent de la même façon.
-        De façon équivalente aux tours aux échecs, une pièce se déplace :
-        &lt;ol&gt;
-            &lt;li&gt;D&apos;autant de cases qu&apos;elle veut.&lt;/li&gt;
-            &lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;
-            &lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;
-            &lt;li&gt;Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;
-        &lt;/ol&gt;
-        Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;
-        Ceci est le plateau initial, faites le premier mouvement.</target>
+      <trans-unit id="4948014485926272515" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, no piece can land on it, but all can pass over it.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
+        <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de cases que souhaité ;&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce ;&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins ;&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, plus aucunes pièces ne peut s'arrêter dessus, mais toutes peuvent le survoler.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier coup.</target>
       </trans-unit>
       <trans-unit id="6012770625680782650" datatype="html">
         <source>Capturing a soldier (1/2)</source>
@@ -3557,15 +3525,9 @@
         <source>Capturing the king (1/2)</source>
         <target>Capturer le roi (1/2)</target>
       </trans-unit>
-      <trans-unit id="4467961188268409561" datatype="html">
-        <source>To capture the king, two soldiers are not enough.
-        For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.
-        This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;
-        Capture the king.</source>
-        <target>Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
-        Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.
-        Ceci fonctionne également si le roi est assis sur son trône.&lt;br/&gt;&lt;br/&gt;
-        Capturez le roi.</target>
+      <trans-unit id="8109622767341644037" datatype="html">
+        <source>To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus. Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats. Ceci fonctionne également si le roi est assis sur son trône.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2543567724882527416" datatype="html">
         <source>Failed, you let the king run away.</source>
@@ -3583,13 +3545,13 @@
         <source>Capturing the king (2/2)</source>
         <target>Capturer le roi (2/2)</target>
       </trans-unit>
-      <trans-unit id="3153592495756621475" datatype="html">
-        <source>Another way to capture the king is to immobilize it against an edge of the board.
-        Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;
-        Capture the king.</source>
-        <target>Un autre moyen de capturer le roi est de l&apos;immobiliser à 3 contre un bord.
-        Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;
-        Capturez le roi.</target>
+      <trans-unit id="3205871514812378752" datatype="html">
+        <source>Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Un autre moyen de capturer le roi est de l&apos;immobiliser à 3 contre un bord. Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      </trans-unit>
+      <trans-unit id="2541472060697733126" datatype="html">
+        <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+        <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">
         <source>The king is dead, long live the king. Congratulations, you won.</source>
@@ -3602,6 +3564,14 @@
       <trans-unit id="3108682754212137830" datatype="html">
         <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
         <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé comme un soldat.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      </trans-unit>
+      <trans-unit id="2511498870151087692" datatype="html">
+        <source>Hnefatafl is a strategy game that was played by the vikings, it&apos;s part of a larger family of games called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+        <target>Hnefatafl est la version lapone du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
+      </trans-unit>
+      <trans-unit id="439785126864846458" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move:&lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a throne.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
+        <target>Toutes les pièces se déplacent de la même façon. De façon équivalente aux tours aux échecs, une pièce se déplace :&lt;ol&gt;&lt;li&gt;D&apos;autant de cases qu&apos;elle veut.&lt;/li&gt;&lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;&lt;li&gt;Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>

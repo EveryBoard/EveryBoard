@@ -51,8 +51,8 @@ interface ViewInfo {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class YinshComponent
-    extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation> {
-
+    extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation>
+{
     private static readonly RING_OUTER_SIZE: number = 40;
     private static readonly RING_MID_SIZE: number = 34;
     private static readonly RING_INNER_SIZE: number = 28;
@@ -105,7 +105,7 @@ export class YinshComponent
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.constructedState.allCoords().forEach((coord: Coord): void => {
             if (this.viewInfo.spaceInfo[coord.y] == null) {
                 this.viewInfo.spaceInfo[coord.y] = [];
@@ -125,7 +125,7 @@ export class YinshComponent
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
-        const state: YinshState = this.rules.node.gameState;
+        const state: YinshState = this.getState();
         this.scores = MGPOptional.of(state.countScores());
     }
     public updateViewInfo(): void {
@@ -162,7 +162,7 @@ export class YinshComponent
                     this.constructedState.getRingCoords(this.constructedState.getCurrentPlayer());
                 break;
             case 'MOVE_START':
-                if (this.rules.node.gameState.isInitialPlacementPhase() === false) {
+                if (this.getState().isInitialPlacementPhase() === false) {
                     this.viewInfo.selectableCoords =
                         this.constructedState.getRingCoords(this.constructedState.getCurrentPlayer());
                 }
@@ -186,16 +186,15 @@ export class YinshComponent
     }
     private getSpaceClasses(coord: Coord): string[] {
         if (this.currentlyMoved.some((c: Coord) => c.equals(coord))) {
-            return ['moved'];
+            return ['moved-fill'];
         } else {
             return [];
         }
     }
     private setRingInfo(coord: Coord, piece: YinshPiece): void {
         if (piece.isRing) {
-            const playerClass: string = this.getPlayerClass(piece.player);
             this.viewInfo.spaceInfo[coord.y][coord.x].isRing = true;
-            this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = [playerClass + '-stroke'];
+            this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = ['player' + piece.player.value + '-stroke'];
         } else {
             this.viewInfo.spaceInfo[coord.y][coord.x].isRing = false;
             this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = [];
@@ -205,7 +204,7 @@ export class YinshComponent
         this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = false;
         this.viewInfo.spaceInfo[coord.y][coord.x].markerClasses = [];
         if (piece !== YinshPiece.EMPTY) {
-            const containsMarker: boolean = !piece.isRing || (piece.isRing && this.moveStart.equalsValue(coord));
+            const containsMarker: boolean = !piece.isRing || this.moveStart.equalsValue(coord);
             if (containsMarker) {
                 const playerClass: string = this.getPlayerClass(piece.player);
                 this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = true;
@@ -214,7 +213,7 @@ export class YinshComponent
         }
     }
     public cancelMoveAttempt(): void {
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
@@ -230,10 +229,10 @@ export class YinshComponent
         if (moveOptional.isPresent()) {
             const move: YinshMove = moveOptional.get();
             if (move.isInitialPlacement()) {
-                this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved'];
+                this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
             } else {
                 for (const coord of this.coordsBetween(move.start, move.end.get())) {
-                    this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['moved'];
+                    this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['moved-fill'];
                 }
                 const nothingSelectedThisTurn: boolean =
                     this.currentCapture.isAbsent() &&
@@ -257,14 +256,14 @@ export class YinshComponent
     }
     private showLastMoveCapture(capture: YinshCapture, alsoShowPiece: boolean): void {
         for (const coord of capture.capturedSpaces) {
-            this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['captured'];
+            this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['captured-fill'];
             if (alsoShowPiece) {
-                this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer().getOpponent());
+                this.markRemovedMarker(coord, this.getState().getCurrentPlayer().getOpponent());
             }
         }
-        this.viewInfo.spaceInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].spaceClasses = ['captured'];
+        this.viewInfo.spaceInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].spaceClasses = ['captured-fill'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentPlayer().getOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
@@ -367,11 +366,11 @@ export class YinshComponent
     private markCurrentCapture(capture: YinshCapture): void {
         for (const coord of capture.capturedSpaces) {
             this.viewInfo.selectedCoords.push(coord);
-            this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer());
+            this.markRemovedMarker(coord, this.getState().getCurrentPlayer());
         }
         if (capture.ringTaken.isPresent()) {
             this.viewInfo.selectedCoords.push(capture.ringTaken.get());
-            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer());
+            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentPlayer());
         }
     }
     private markRemovedMarker(coord: Coord, player: Player): void {
@@ -425,7 +424,7 @@ export class YinshComponent
                                               this.moveStart.get(),
                                               this.moveEnd,
                                               this.finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
+        const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {
@@ -449,6 +448,15 @@ export class YinshComponent
         return MGPValidation.SUCCESS;
     }
     private async selectMoveEnd(coord: Coord): Promise<MGPValidation> {
+        if (this.moveStart.equalsValue(coord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
+        const currentPlayerRing: YinshPiece = YinshPiece.RINGS[this.getState().getCurrentPlayer().value];
+        if (this.constructedState.getPieceAt(coord) === currentPlayerRing) {
+            this.cancelMoveAttempt();
+            return this.selectMoveStart(coord);
+        }
         const validity: MGPValidation = this.rules.moveValidity(this.constructedState, this.moveStart.get(), coord);
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());

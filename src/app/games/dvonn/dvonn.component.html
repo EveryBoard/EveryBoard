@@ -3,57 +3,57 @@
      viewBox="0 0 875 380"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let coord of state.allCoords()">
-        <g *ngFor="let caseContent of [state.getPieceAt(coord)]"
+        <g *ngFor="let spaceContent of [state.getPieceAt(coord)]"
            id="click_{{ coord.x }}_{{ coord.y }}"
            (click)="onClick(coord.x, coord.y)">
             <!-- Background -->
-            <polyline [attr.points]="getHexaCoordsAt(coord)"
-                      class="base mid-stroke" />
+            <polygon [attr.points]="getHexaCoordsAt(coord)"
+                     class="base mid-stroke"/>
             <!-- Piece -->
-            <circle *ngIf="caseContent.getSize() > 0"
+            <circle *ngIf="spaceContent.getSize() > 0"
                     [attr.cx]="getCenterAt(coord).x"
                     [attr.cy]="getCenterAt(coord).y"
                     [attr.r]="SPACE_SIZE"
-                    [ngClass]="getPieceClasses(caseContent)"
+                    [ngClass]="getPieceClasses(spaceContent)"
                     class="base mid-stroke"/>
-            <polygon *ngIf="caseContent.containsSource()"
-                     class="other-piece-light"
+            <polygon *ngIf="spaceContent.containsSource()"
+                     class="nonplayer-light-fill"
                      points="157.055,0 90.798,196.319 164.417,196.319 88.344,400 289.571,159.509 218.405,159.509 311.656,0"
-                     [attr.transform]="caseContent.getSize() === 1 ? ('translate(' + (getCenterAt(coord).x-18) + ' ' + (getCenterAt(coord).y-16) + ') scale(0.10)') : ('translate(' + (getCenterAt(coord).x-3) + ' ' + (getCenterAt(coord).y-12) + ') scale(0.07)')"/>
-            <text *ngIf="caseContent.getSize() > 1"
+                     [attr.transform]="spaceContent.getSize() === 1 ? ('translate(' + (getCenterAt(coord).x-18) + ' ' + (getCenterAt(coord).y-16) + ') scale(0.10)') : ('translate(' + (getCenterAt(coord).x-3) + ' ' + (getCenterAt(coord).y-12) + ') scale(0.07)')"/>
+            <text *ngIf="spaceContent.getSize() > 1"
                   (click)="onClick(coord.x, coord.y)"
-                  [attr.x]="caseContent.containsSource() ? getCenterAt(coord).x-7 : getCenterAt(coord).x"
+                  [attr.x]="spaceContent.containsSource() ? getCenterAt(coord).x-7 : getCenterAt(coord).x"
                   [attr.y]="getCenterAt(coord).y"
                   class="text-center text-medium"
-                  dy="13">{{caseContent.getSize()}}</text>
+                  dy="13">{{ spaceContent.getSize() }}</text>
 
         </g>
     </g>
     <!-- Show disconnecteds -->
     <g *ngFor="let disconnected of disconnecteds">
-        <polyline [attr.points]="getHexaCoordsAt(disconnected.coord)"
-                  class="base mid-stroke captured"/>
+        <polygon [attr.points]="getHexaCoordsAt(disconnected.coord)"
+                 class="base mid-stroke captured-fill"/>
         <circle id="captured_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}"
                 [attr.cx]="getCenterAt(disconnected.coord).x"
                 [attr.cy]="getCenterAt(disconnected.coord).y"
                 [attr.r]="SPACE_SIZE"
                 class="base mid-stroke semi-transparent"
-                [ngClass]="getPieceClasses(disconnected.caseContent)"/>
-        <text *ngIf="disconnected.caseContent.getSize() > 1"
+                [ngClass]="getPieceClasses(disconnected.spaceContent)"/>
+        <text *ngIf="disconnected.spaceContent.getSize() > 1"
               [attr.x]="getCenterAt(disconnected.coord).x"
               [attr.y]="getCenterAt(disconnected.coord).y"
               class="text-center text-big"
-              dy="17">{{disconnected.caseContent.getSize()}}</text>
+              dy="17">{{disconnected.spaceContent.getSize()}}</text>
     </g>
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove.isPresent()">
-        <polyline [attr.points]="getHexaCoordsAt(lastMove.get().coord)"
-                  class="base no-fill highlighted"/>
-        <polyline [attr.points]="getHexaCoordsAt(lastMove.get().end)"
-                  class="base no-fill highlighted"/>
+        <polygon [attr.points]="getHexaCoordsAt(lastMove.get().coord)"
+                 class="base no-fill last-move-stroke"/>
+        <polygon [attr.points]="getHexaCoordsAt(lastMove.get().end)"
+                 class="base no-fill last-move-stroke"/>
     </ng-container>
     <!-- Highlight selected piece -->
-    <polyline *ngIf="chosen.isPresent()"
-              [attr.points]="getHexaCoordsAt(chosen.get())"
-              class="base no-fill selected"/>
+    <polygon *ngIf="chosen.isPresent()"
+             [attr.points]="getHexaCoordsAt(chosen.get())"
+             class="base no-fill selected-stroke"/>
 </svg>

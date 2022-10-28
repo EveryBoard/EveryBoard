@@ -36,7 +36,7 @@ describe('PentagoMove', () => {
         expect(move.equals(thirdDiff)).toBeFalse();
         expect(move.equals(noDiff)).toBeTrue();
     });
-    it('Should translate move correctly', () => {
+    it('should translate move correctly', () => {
         const moves: PentagoMove[] = [
             PentagoMove.rotationless(2, 3),
             PentagoMove.withRotation(2, 3, 3, true),

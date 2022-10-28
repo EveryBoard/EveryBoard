@@ -24,10 +24,10 @@ describe('QuartoRules', () => {
             new QuartoMinimax(rules, 'QuartoMinimax'),
         ];
     });
-    it('Should create', () => {
+    it('should create', () => {
         expect(rules).toBeTruthy();
     });
-    it('Should forbid not to give a piece when not last turn', () => {
+    it('should forbid not to give a piece when not last turn', () => {
         // Given a board that is not on last turn
         const state: QuartoState = QuartoState.getInitialState();
 
@@ -38,7 +38,7 @@ describe('QuartoRules', () => {
         const reason: string = 'You must give a piece.';
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Should allow not to give a piece on last turn, and consider the game a draw if no one win', () => {
+    it('should allow not to give a piece on last turn, and consider the game a draw if no one win', () => {
         // Given a board on last turn
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
@@ -63,7 +63,7 @@ describe('QuartoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeDraw(rules, node, minimaxes);
     });
-    it('Should forbid to give a piece already on the board', () => {
+    it('should forbid to give a piece already on the board', () => {
         // Given a board with AAAA on it
         const board: Table<QuartoPiece> = [
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
@@ -80,7 +80,7 @@ describe('QuartoRules', () => {
         const reason: string = QuartoFailure.PIECE_ALREADY_ON_BOARD();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Should forbid to give the piece that you had in your hand', () => {
+    it('should forbid to give the piece that you had in your hand', () => {
         // Given any board
         const state: QuartoState = QuartoState.getInitialState();
 
@@ -91,7 +91,7 @@ describe('QuartoRules', () => {
         const reason: string = QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Should forbid to play on occupied square', () => {
+    it('should forbid to play on occupied square', () => {
         // Given a board with occupied square
         const board: Table<QuartoPiece> = [
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
@@ -108,7 +108,7 @@ describe('QuartoRules', () => {
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Should allow simple move', () => {
+    it('should allow simple move', () => {
         // Given a board
         const state: QuartoState = QuartoState.getInitialState();
 
@@ -125,7 +125,7 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 1, QuartoPiece.AAAB);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('Should consider Player.ZERO winner when doing a full line', () => {
+    it('should consider Player.ZERO winner when doing a full line', () => {
         // Given a board with 3 piece aligned with common criterion
         const board: Table<QuartoPiece> = [
             [QuartoPiece.BBBB, QuartoPiece.BBBA, QuartoPiece.BBAB, QuartoPiece.EMPTY],
@@ -151,7 +151,7 @@ describe('QuartoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('Should consider Player.ONE winner when doing a full line', () => {
+    it('should consider Player.ONE winner when doing a full line', () => {
         // Given a board with 3 piece with common criterion aligned
         const board: Table<QuartoPiece> = [
             [QuartoPiece.ABAB, QuartoPiece.EMPTY, QuartoPiece.AABB, QuartoPiece.EMPTY],
@@ -177,7 +177,7 @@ describe('QuartoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('Should recognize ongoing games', () => {
+    it('should recognize ongoing games', () => {
         // Given an ongoing game
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.ABBB, QuartoPiece.EMPTY],
@@ -193,7 +193,7 @@ describe('QuartoRules', () => {
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     describe('updateBoardStatus', () => {
-        it('Should recognize "3 3" as pre-victory', () => {
+        it('should recognize "3 3" as pre-victory', () => {
             // Given a board where 3 piece are aligned with a common criterion
             // and another line of 3 matching another criterion
             const board: Table<QuartoPiece> = [

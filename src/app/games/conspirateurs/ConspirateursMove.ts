@@ -95,6 +95,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         return false;
     }
 }
+
 export class ConspirateursMoveJump extends Move {
     public static encoder: MoveEncoder<ConspirateursMoveJump> = new class extends MoveEncoder<ConspirateursMoveJump> {
         private readonly coordEncoder: NumberEncoder<Coord> =

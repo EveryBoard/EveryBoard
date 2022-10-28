@@ -58,8 +58,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         if (movedPawn.value !== state.getCurrentPlayer().value) {
             return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
-        const landingCase: FourStatePiece = state.getPieceAt(move.end);
-        if (landingCase !== FourStatePiece.EMPTY) {
+        const landingSpace: FourStatePiece = state.getPieceAt(move.end);
+        if (landingSpace !== FourStatePiece.EMPTY) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const commonNeighbor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighbor(move.coord, move.end);

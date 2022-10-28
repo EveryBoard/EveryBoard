@@ -35,7 +35,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
     public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
 
-    public highlights: Coord[] = [];
+    public possibleLandings: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -52,7 +52,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);
         this.tiles = this.state.tiles;
         const move: MGPOptional<CoerceoMove> = this.rules.node.move;
@@ -63,14 +63,14 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             this.lastStart = MGPOptional.empty();
             this.lastEnd = MGPOptional.empty();
         }
-        this.board = this.rules.node.gameState.board;
+        this.board = this.getState().board;
     }
     private showHighlight() {
-        this.highlights = this.state.getLegalLandings(this.chosenCoord.get());
+        this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
-        this.highlights = [];
+        this.possibleLandings = [];
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -78,7 +78,14 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.cancelMove(clickValidity.getReason());
         }
         const coord: Coord = new Coord(x, y);
-        if (this.chosenCoord.isAbsent()) {
+        const currentPlayer: Player = this.state.getCurrentPlayer();
+        if (this.chosenCoord.equalsValue(coord)) {
+            // Deselects the piece
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        } else if (this.chosenCoord.isAbsent() ||
+                   this.state.getPieceAt(coord).is(currentPlayer))
+        {
             return this.firstClick(coord);
         } else {
             return this.secondClick(coord);
@@ -98,10 +105,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
     private async secondClick(coord: Coord): Promise<MGPValidation> {
-        if (coord.equals(this.chosenCoord.get())) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
-        } else if (this.highlights.some((c: Coord) => c.equals(coord))) {
+        if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures);
         } else {
@@ -109,8 +113,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
     public isPyramid(x: number, y: number): boolean {
-        const caseContent: FourStatePiece = this.board[y][x];
-        return caseContent.isPlayer() || this.wasOpponent(x, y);
+        const spaceContent: FourStatePiece = this.board[y][x];
+        return spaceContent.isPlayer() || this.wasOpponent(x, y);
     }
     private wasOpponent(x: number, y: number): boolean {
         const mother: MGPOptional<CoerceoNode> = this.rules.node.mother;
@@ -118,24 +122,24 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                mother.get().gameState.getPieceAtXY(x, y).is(mother.get().gameState.getCurrentOpponent());
     }
     public getPyramidClass(x: number, y: number): string {
-        const caseContent: FourStatePiece = this.board[y][x];
-        if (caseContent === FourStatePiece.ZERO) {
+        const spaceContent: FourStatePiece = this.board[y][x];
+        if (spaceContent === FourStatePiece.ZERO) {
             return this.getPlayerClass(Player.ZERO);
-        } else if (caseContent === FourStatePiece.ONE) {
+        } else if (spaceContent === FourStatePiece.ONE) {
             return this.getPlayerClass(Player.ONE);
         } else {
-            return 'captured';
+            return 'captured-fill';
         }
     }
-    public isEmptyCase(x: number, y: number): boolean {
-        const caseContent: FourStatePiece = this.board[y][x];
-        return caseContent === FourStatePiece.EMPTY ||
+    public isEmptySpace(x: number, y: number): boolean {
+        const spaceContent: FourStatePiece = this.board[y][x];
+        return spaceContent === FourStatePiece.EMPTY ||
                this.wasRemoved(x, y);
     }
     private wasRemoved(x: number, y: number): boolean {
-        const caseContent: FourStatePiece = this.board[y][x];
+        const spaceContent: FourStatePiece = this.board[y][x];
         const mother: MGPOptional<CoerceoNode> = this.rules.node.mother;
-        if (caseContent === FourStatePiece.UNREACHABLE && mother.isPresent()) {
+        if (spaceContent === FourStatePiece.UNREACHABLE && mother.isPresent()) {
             const previousContent: FourStatePiece = mother.get().gameState.getPieceAtXY(x, y);
             return previousContent === FourStatePiece.EMPTY ||
                    previousContent.is(mother.get().gameState.getCurrentPlayer());
@@ -144,15 +148,15 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
     public getEmptyClass(x: number, y: number): string {
-        const caseContent: FourStatePiece = this.board[y][x];
-        if (caseContent === FourStatePiece.EMPTY) {
+        const spaceContent: FourStatePiece = this.board[y][x];
+        if (spaceContent === FourStatePiece.EMPTY) {
             if ((x+y)%2 === 1) {
                 return 'background';
             } else {
                 return 'background2';
             }
         } else {
-            return 'captured2';
+            return 'captured-alternate-fill';
         }
     }
     public getTilesCountCoordinate(x: number, y: number): string {

@@ -1,7 +1,4 @@
 #!/bin/sh
-#npm start&
-#NPM="$!"
-#sleep 100 # wait until npm has started
 
 grep "new GameInfo" src/app/components/normal-component/pick-game/pick-game.component.ts | sed "s/.*new GameInfo([^,]*, '\([^']*\)'.*/\1/" > scripts/games.txt
 python scripts/screenshot.py || exit
@@ -22,4 +19,3 @@ for image in $(ls src/assets/images/dark/*.png src/assets/images/light/*.png); d
     python scripts/square-image.py $image
 done
 
-kill $NPM

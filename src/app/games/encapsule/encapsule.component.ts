@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
-import { EncapsuleState, EncapsuleCase } from 'src/app/games/encapsule/EncapsuleState';
+import { EncapsuleState, EncapsuleSpace } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -23,15 +23,15 @@ import { assert } from 'src/app/utils/assert';
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
                                                                  EncapsuleState,
-                                                                 EncapsuleCase,
+                                                                 EncapsuleSpace,
                                                                  EncapsuleLegalityInformation>
 {
     private readonly INTER_PIECE_SPACE: number = 20;
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
-    private chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
-    private chosenPieceIndex: number;
+    private chosenPieceIndex: MGPOptional<number>;
     public remainingPieceLeftX: number[][] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -45,7 +45,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        const state: EncapsuleState = this.rules.node.gameState;
+        const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
         const move: MGPOptional<EncapsuleMove> = this.rules.node.move;
         this.calculateLeftX();
@@ -58,11 +58,11 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             this.lastStartingCoord = MGPOptional.empty();
         }
     }
-    public getListPieces(content: EncapsuleCase): EncapsulePiece[] {
+    public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
         return content.toList();
     }
     public getRemainingPieces(player: number): EncapsulePiece[] {
-        return this.rules.node.gameState.getRemainingPiecesOfPlayer(Player.of(player));
+        return this.getState().getRemainingPiecesOfPlayer(Player.of(player));
     }
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -71,13 +71,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         }
 
         const clickedCoord: Coord = new Coord(x, y);
-        const state: EncapsuleState = this.rules.node.gameState;
+        const state: EncapsuleState = this.getState();
         if (this.chosenCoord.isAbsent()) {
             this.chosenCoord = MGPOptional.of(clickedCoord);
             if (this.chosenPiece.isPresent()) {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece.get(), clickedCoord);
-                return this.chooseMove(chosenMove, this.rules.node.gameState);
+                return this.chooseMove(chosenMove, this.getState());
             } else if (state.getPieceAt(clickedCoord).belongsTo(state.getCurrentPlayer()) === false) {
                 return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED());
             } else {
@@ -86,31 +86,38 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             }
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
-                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN());
+                this.cancelMoveAttempt();
+                return MGPValidation.SUCCESS;
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord.get(), clickedCoord);
-                return this.chooseMove(chosenMove, this.rules.node.gameState);
+                return this.chooseMove(chosenMove, this.getState());
             }
         }
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.chosenPiece = MGPOptional.empty();
-        this.chosenPieceIndex = -1;
+        this.chosenPieceIndex = MGPOptional.empty();
     }
     public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + player + '_' + piece.toString());
+        const clickedId: string = '#piece_' + player + '_' + piece.toString() + '_' + index;
+        const clickValidity: MGPValidation = this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
 
-        const state: EncapsuleState = this.rules.node.gameState;
+        const state: EncapsuleState = this.getState();
         if (state.isDroppable(piece) === false) {
             return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());
         } else if (this.chosenCoord.isAbsent()) {
-            this.chosenPiece = MGPOptional.of(piece);
-            this.chosenPieceIndex = index;
+            if (this.chosenPiece.equalsValue(piece) && this.chosenPieceIndex.equalsValue(index)) {
+                this.chosenPiece = MGPOptional.empty();
+                this.chosenPieceIndex = MGPOptional.empty();
+            } else {
+                this.chosenPiece = MGPOptional.of(piece);
+                this.chosenPieceIndex = MGPOptional.of(index);
+            }
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE());
@@ -118,7 +125,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
     public getRectClasses(x: number, y: number): string {
         if (this.isSelected(x, y)) {
-            return 'moved';
+            return 'moved-fill';
         }
         return '';
     }
@@ -151,17 +158,10 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 return (this.SPACE_SIZE / 2) - (3 * this.STROKE_WIDTH) - 6;
         }
     }
-    public getHighlightedCases(): Coord[] {
-        const coords: Coord[] = [];
-        if (this.chosenCoord.isPresent()) {
-            coords.push(this.chosenCoord.get());
-        }
-        return coords;
-    }
     public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
-        if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
-            pieceClasses.push('clickable ');
+        if (this.isSelectedPiece(piece) && this.chosenPieceIndex.equalsValue(index)) {
+            pieceClasses.push('selected-stroke');
         }
         return pieceClasses;
     }

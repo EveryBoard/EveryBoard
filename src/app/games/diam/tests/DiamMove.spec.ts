@@ -19,7 +19,7 @@ describe('DiamMove', () => {
         });
         it('should redefine toString', () => {
             const move: DiamMoveDrop = new DiamMoveDrop(3, DiamPiece.ZERO_FIRST);
-            expect(move.toString()).toEqual('DiamMoveDrop(3, DiamPiece(Player 0, false))');
+            expect(move.toString()).toEqual('DiamMoveDrop(3, DiamPiece(PLAYER_ZERO, false))');
         });
     });
     describe('shift', () => {

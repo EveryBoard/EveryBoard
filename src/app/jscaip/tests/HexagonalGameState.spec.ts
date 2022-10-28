@@ -13,24 +13,24 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
 
     public static empty(width: number,
                         height: number,
-                        excludedCases: ReadonlyArray<number>,
+                        excludedSpaces: ReadonlyArray<number>,
                         empty: number)
     : TestingHexagonalState
     {
         const newBoard: number[][] = ArrayUtils.createTable(width, height, empty);
         let y: number = 0;
-        for (const excluded of excludedCases) {
+        for (const excluded of excludedSpaces) {
             for (let i: number = 0; i < excluded; i++) {
                 newBoard[y][i] = TestingHexagonalState.UNREACHABLE;
                 newBoard[height - (y + 1)][width - (i + 1)] = TestingHexagonalState.UNREACHABLE;
             }
             y++;
         }
-        return new TestingHexagonalState(0, newBoard, width, height, excludedCases, empty);
+        return new TestingHexagonalState(0, newBoard, width, height, excludedSpaces, empty);
     }
     public static fromTable(turn: number,
                             table: NumberTable,
-                            excludedCases: ReadonlyArray<number>,
+                            excludedSpaces: ReadonlyArray<number>,
                             empty: number)
     : TestingHexagonalState
     {
@@ -39,18 +39,18 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
             throw new Error('Cannot create an HexaBoard from an empty table.');
         }
         const width: number = table[0].length;
-        return new TestingHexagonalState(turn, table, width, height, excludedCases, empty);
+        return new TestingHexagonalState(turn, table, width, height, excludedSpaces, empty);
     }
     public constructor(turn: number,
                        public readonly board: NumberTable,
                        public readonly width: number,
                        public readonly height: number,
-                       public readonly excludedCases: ReadonlyArray<number>,
+                       public readonly excludedSpaces: ReadonlyArray<number>,
                        public readonly empty: number)
     {
-        super(turn, board, width, height, excludedCases, empty);
-        if (this.excludedCases.length >= (this.height/2)+1) {
-            throw new Error('Invalid excluded cases specification for HexaBoard.');
+        super(turn, board, width, height, excludedSpaces, empty);
+        if (this.excludedSpaces.length >= (this.height/2)+1) {
+            throw new Error('Invalid excluded spaces specification for HexaBoard.');
         }
     }
     public setAtUnsafe(coord: Coord, value: number): this {
@@ -60,7 +60,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
                                          newBoard,
                                          this.width,
                                          this.height,
-                                         this.excludedCases,
+                                         this.excludedSpaces,
                                          this.empty) as this;
     }
     public isOnBoard(coord: Coord): boolean {
@@ -112,7 +112,7 @@ describe('HexagonalGameState', () => {
             const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
             expect(board.equals(otherBoard)).toBeFalse();
         });
-        it('should distinguish different boards due to different excluded cases', () => {
+        it('should distinguish different boards due to different excluded spaces', () => {
             const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
             const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [2], 0);
             const yetAnotherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1, 2], 0);

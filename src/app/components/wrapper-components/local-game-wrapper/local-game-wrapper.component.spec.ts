@@ -1,28 +1,34 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { P4State } from 'src/app/games/p4/P4State';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
-import { P4Component } from 'src/app/games/p4/p4.component';
-import { LocalGameWrapperComponent } from './local-game-wrapper.component';
+import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { JSONValue } from 'src/app/utils/utils';
+import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
+
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+
+import { P4State } from 'src/app/games/p4/P4State';
+import { P4Move } from 'src/app/games/p4/P4Move';
+import { P4Component } from 'src/app/games/p4/p4.component';
 import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
+
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { JSONValue } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Router } from '@angular/router';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
+
+import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { AuthUser } from 'src/app/services/ConnectedUserService';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -73,16 +79,16 @@ describe('LocalGameWrapperComponent', () => {
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
     }));
     it('should allow to go back one move', fakeAsync(async() => {
-        const state: P4State = testUtils.getComponent().rules.node.gameState;
+        const state: P4State = testUtils.getComponent().getState();
         expect(state.turn).toBe(0);
 
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-        expect(testUtils.getComponent().rules.node.gameState.turn).toBe(1);
+        expect(testUtils.getComponent().getTurn()).toBe(1);
 
         spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
         await testUtils.expectInterfaceClickSuccess('#takeBack');
 
-        expect(testUtils.getComponent().rules.node.gameState.turn).toBe(0);
+        expect(testUtils.getComponent().getTurn()).toBe(0);
         expect(testUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
     }));
     it('should show draw', fakeAsync(async() => {
@@ -134,27 +140,27 @@ describe('LocalGameWrapperComponent', () => {
 
             await testUtils.expectInterfaceClickSuccess('#restartButton');
 
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(0);
+            expect(testUtils.getComponent().getTurn()).toBe(0);
             testUtils.expectElementNotToExist('#draw');
             tick(1000);
         }));
     });
     describe('Using AI', () => {
-        it('Should show level when non-human player is selected, and propose ai to play', async() => {
-            // 1. Choosing AI
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
-            testUtils.expectElementNotToExist('#aiZeroDepthSelect');
-            selectAI.value = selectAI.options[1].value;
+        async function selectAIPlayer(player: Player): Promise<void> {
+            await choosingAIOrHuman(player, 'AI');
+            await choosingAILevel(player);
+        }
+        async function choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): Promise<void> {
+            const playerSelect: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
+            const selectAI: HTMLSelectElement = testUtils.findElement(playerSelect).nativeElement;
+            selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
             selectAI.dispatchEvent(new Event('change'));
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
             await testUtils.fixture.whenStable();
-            const aiName: string = selectAI.options[selectAI.selectedIndex].label;
-            expect(aiName).toBe('P4Minimax');
-
-            // 2. Choosing level
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroDepthSelect').nativeElement;
-            const proposeAIToPlay: jasmine.Spy =
-                spyOn(testUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
+        }
+        async function choosingAILevel(player: Player): Promise<void> {
+            const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroDepthSelect' : '#aiOneDepthSelect';
+            const selectDepth: HTMLSelectElement = testUtils.findElement(aiDepthSelect).nativeElement;
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
@@ -163,8 +169,58 @@ describe('LocalGameWrapperComponent', () => {
             expect(aiDepth).toBe('Level 1');
             testUtils.detectChanges();
             await testUtils.fixture.whenStable();
+        }
+        it('should show level when non-human player is selected', async() => {
+            // Given a board where human are playing human
+            testUtils.expectElementNotToExist('#aiZeroDepthSelect');
+
+            // When selecting an AI for player ZERO
+            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            testUtils.detectChanges();
+            await testUtils.fixture.whenStable();
+
+            // Then AI name should be diplayed and the level selectable
+            const aiName: string = selectAI.options[selectAI.selectedIndex].label;
+            expect(aiName).toBe('P4Minimax');
+            testUtils.expectElementToExist('#aiZeroDepthSelect');
+        });
+        it('should show level when non-human player is selected, and propose AI to play', async() => {
+            // Given any board
+
+            // When selecting player zero as AI
+            await choosingAIOrHuman(Player.ZERO, 'AI');
+            const proposeAIToPlay: jasmine.Spy =
+                spyOn(testUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
+            await choosingAILevel(Player.ZERO);
+
+            // Then proposeAIToPlay should have been called, so that IA play
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
             // Once by changing it on the select, once after the AI move and check who is next
+        });
+        it('Should rotate the board when selecting AI as player zero', async() => {
+            // Given a board of a reversible component
+            testUtils.getComponent().hasAsymetricBoard = true;
+
+            // When chosing the AI as player zero
+            await selectAIPlayer(Player.ZERO);
+
+            // Then the board should have been rotated so that player one, the human, stays below
+            const rotation: string = testUtils.getComponent().rotation;
+            expect(rotation).toBe('rotate(180)');
+        });
+        it('Should de-rotate the board when selecting human as player zero again', async() => {
+            // Given a board of a reversible component, where AI is player zero
+            testUtils.getComponent().hasAsymetricBoard = true;
+            await selectAIPlayer(Player.ZERO);
+
+            // When chosing the human as player zero again
+            await choosingAIOrHuman(Player.ZERO, 'human');
+
+            // Then the board should have been rotated so that player zero is below again
+            const rotation: string = testUtils.getComponent().rotation;
+            expect(rotation).toBe('rotate(0)');
         });
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
@@ -181,14 +237,14 @@ describe('LocalGameWrapperComponent', () => {
             tick(1000);
         }));
         it('should propose AI 2 to play when selecting her just before her turn', async() => {
-            // given wrapper on which a first move have been done
+            // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
-            // when clicking on AI then its level
+            // When clicking on AI then its level
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
             await testUtils.fixture.whenStable();
             const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneDepthSelect').nativeElement;
             const proposeAIToPlay: jasmine.Spy =
@@ -198,7 +254,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.detectChanges();
             await testUtils.fixture.whenStable();
 
-            // then it should have proposed AI to play
+            // Then it should have proposed AI to play
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
         });
         it('should take back to users turn when playing against AI', fakeAsync(async() => {
@@ -206,7 +262,7 @@ describe('LocalGameWrapperComponent', () => {
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
             await testUtils.fixture.whenStable();
             const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneDepthSelect').nativeElement;
             selectDepth.value = selectDepth.options[1].value;
@@ -214,22 +270,22 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.detectChanges();
             await testUtils.fixture.whenStable();
 
-            const state: P4State = testUtils.getComponent().rules.node.gameState;
+            const state: P4State = testUtils.getComponent().getState();
             expect(state.turn).toBe(0);
 
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(1);
+            expect(testUtils.getComponent().getTurn()).toBe(1);
 
             // eslint-disable-next-line dot-notation
             tick(testUtils.wrapper['botTimeOut']);
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(2);
+            expect(testUtils.getComponent().getTurn()).toBe(2);
 
-            // // when taking back
+            // // When taking back
             spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#takeBack');
 
             // // expect to be back two turn, not one
-            expect(testUtils.getComponent().rules.node.gameState.turn).toBe(0);
+            expect(testUtils.getComponent().getTurn()).toBe(0);
 
             tick(1000);
         }));
@@ -237,16 +293,16 @@ describe('LocalGameWrapperComponent', () => {
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
             spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            // given a board on which some illegal move are possible from the AI
+            // Given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
             spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(false);
             spyOn(testUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
-            // when it is the turn of the bugged AI (that performs an illegal move)
+            // When it is the turn of the bugged AI (that performs an illegal move)
             const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
             const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
 
-            // then it should fail and an error should be logged
+            // Then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
             const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
@@ -258,14 +314,14 @@ describe('LocalGameWrapperComponent', () => {
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
             spyOn(localGameWrapper, 'doAIMove');
 
-            // given a game which is finished
+            // Given a game which is finished
             spyOn(testUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
-            // when selecting an AI for the current player
+            // When selecting an AI for the current player
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
             await testUtils.fixture.whenStable();
             const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroDepthSelect').nativeElement;
             selectDepth.value = selectDepth.options[1].value;
@@ -273,7 +329,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.detectChanges();
             await testUtils.fixture.whenStable();
 
-            // then it should not try to play
+            // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
         }));
         it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {
@@ -283,7 +339,7 @@ describe('LocalGameWrapperComponent', () => {
             wrapper.aiDepths[0] = '1';
 
             // When receiveValidMove is called
-            const state: P4State = testUtils.getComponent().rules.node.gameState;
+            const state: P4State = testUtils.getComponent().getState();
             const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
 
             // Then it should display a message

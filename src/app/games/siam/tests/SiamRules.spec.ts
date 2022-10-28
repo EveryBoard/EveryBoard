@@ -6,12 +6,13 @@ import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SiamFailure } from '../SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('SiamRules:', () => {
 
@@ -33,7 +34,7 @@ describe('SiamRules:', () => {
     const d: SiamPiece = SiamPiece.DARK_DOWN;
 
     beforeEach(() => {
-        rules = new SiamRules(SiamState);
+        rules = SiamRules.get();
         minimaxes = [
             new SiamMinimax(rules, 'SiamMinimax'),
         ];
@@ -42,7 +43,7 @@ describe('SiamRules:', () => {
         // Given the initial board
         const state: SiamState = SiamState.getInitialState();
         // When performing an insertion
-        const move: SiamMove = new SiamMove(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+        const move: SiamMove = SiamMove.of(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -65,7 +66,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When moving a piece forward
-        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -88,7 +89,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When trying to move a piece of the opponent
-        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     });
@@ -103,7 +104,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When pushing the opponent's piece with the player's piece
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -126,7 +127,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When performing a rotation
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.RIGHT);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.empty(), Orthogonal.RIGHT).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -149,7 +150,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When performing a half-turn rotation
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.DOWN);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.empty(), Orthogonal.DOWN).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -172,7 +173,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When rotating the piece and moving it forward at the same time
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -195,7 +196,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When trying to perform a rotation that does not change the orientation
-        const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(2, 4, MGPOptional.empty(), Orthogonal.UP).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.MUST_MOVE_OR_ROTATE());
     });
@@ -210,7 +211,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When moving the piece in a different direction than its orientation
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -233,7 +234,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When trying to push the other piece
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
@@ -248,7 +249,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When trying to push the other piece over the border
-        const move: SiamMove = new SiamMove(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
+        const move: SiamMove = SiamMove.of(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
@@ -263,7 +264,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When pushing the one piece
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -286,7 +287,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When tryig to push the one piece
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
@@ -301,7 +302,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When trying to push and change direction at the same time
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
+        const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.ILLEGAL_PUSH());
     });
@@ -316,7 +317,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When trying to insert a 6th piece
-        const move: SiamMove = new SiamMove(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
+        const move: SiamMove = SiamMove.of(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NO_REMAINING_PIECE_TO_INSERT());
     });
@@ -331,7 +332,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When trying to push more than one mountain
-        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+        const move: SiamMove = SiamMove.of(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
@@ -346,7 +347,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When pushing two mountains
-        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+        const move: SiamMove = SiamMove.of(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -369,7 +370,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When pushing the mountain out of the board
-        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, U, _, _],
@@ -395,7 +396,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When pushing the mountain out of the board
-        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, u, _, _],
@@ -421,7 +422,7 @@ describe('SiamRules:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         // When pushing the mountain out of the board vertically
-        const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+        const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, l, _, _],
@@ -435,5 +436,42 @@ describe('SiamRules:', () => {
         // and victory should be for player zero, whose pieces are aligned with the push
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+    });
+    it('should compute empty list of moves between two impossible squares', () => {
+        // Given two coordinatess that are not neighbors
+        const state: SiamState = SiamState.getInitialState();
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(2, 2);
+        // When computing the list of moves between these coords
+        const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
+        // Then there should be no moves
+        expect(moves).toEqual([]);
+    });
+    it('should compute empty list of moves between aligned squares that are too far away', () => {
+        // Given two coordinatess that are aligned but of a distance greater than one
+        const state: SiamState = SiamState.getInitialState();
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(2, 0);
+        // When computing the list of moves between these coords
+        const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
+        // Then there should be no moves
+        expect(moves).toEqual([]);
+    });
+    it('should compute the pusher player even with a mountain amongs the pushers', () => {
+        // Given a board where there is a mountain amongst the pusher,
+        // and a winning move
+        const board: Table<SiamPiece> = [
+            [_, _, M, _, _],
+            [_, _, U, _, _],
+            [_, M, M, _, _],
+            [_, _, u, _, _],
+            [_, _, U, _, _],
+        ];
+        const state: SiamState = new SiamState(board, 0);
+        const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+        // When computing the pusher for the winning move
+        const pusher: PlayerOrNone = rules.getPusher(state, move);
+        // Then it should identify the right player
+        expect(pusher).toBe(Player.ZERO);
     });
 });

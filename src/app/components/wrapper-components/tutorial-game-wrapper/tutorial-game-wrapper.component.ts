@@ -15,6 +15,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
+import { Rules } from 'src/app/jscaip/Rules';
 
 type TutorialPlayer = 'tutorial-player';
 @Component({
@@ -46,7 +47,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
-        this.observerRole = Player.ZERO; // The user is playing, not observing
+        this.role = Player.ZERO; // The user is playing, not observing
     }
     public getNumberOfSteps(): number {
         return this.steps.length;
@@ -96,8 +97,16 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
+        let motherOpt: MGPOptional<MGPNode<Rules<Move, GameState>, Move, GameState>>;
+        if (currentStep.previousState.isPresent()) {
+            const mother: MGPNode<Rules<Move, GameState>, Move, GameState> =
+                new MGPNode(currentStep.previousState.get());
+            motherOpt = MGPOptional.of(mother);
+        } else {
+            motherOpt = MGPOptional.empty();
+        }
         this.gameComponent.rules.node = new MGPNode(currentStep.state,
-                                                    MGPOptional.empty(),
+                                                    motherOpt,
                                                     currentStep.previousMove);
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
@@ -111,8 +120,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.updateBoard();
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
-            const previousState: GameState = this.gameComponent.rules.node.mother.get().gameState;
-            const resultingState: GameState = this.gameComponent.rules.node.gameState;
+            const previousState: GameState = this.gameComponent.getPreviousState();
+            const resultingState: GameState = this.gameComponent.getState();
             const moveValidity: MGPValidation =
                 Utils.getNonNullable(currentStep.predicate)(move, previousState, resultingState);
             if (moveValidity.isSuccess()) {

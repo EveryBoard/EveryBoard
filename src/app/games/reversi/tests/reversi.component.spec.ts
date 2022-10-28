@@ -40,17 +40,17 @@ describe('ReversiComponent', () => {
         await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [2, 7]);
 
         const tablutGameComponent: ReversiComponent = testUtils.getComponent();
-        expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured');
-        expect(tablutGameComponent.getRectClasses(2, 2)).not.toContain('captured');
-        expect(tablutGameComponent.getRectClasses(3, 1)).not.toContain('captured');
-        expect(tablutGameComponent.getRectClasses(4, 0)).not.toContain('captured');
+        expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured-fill');
+        expect(tablutGameComponent.getRectClasses(2, 2)).not.toContain('captured-fill');
+        expect(tablutGameComponent.getRectClasses(3, 1)).not.toContain('captured-fill');
+        expect(tablutGameComponent.getRectClasses(4, 0)).not.toContain('captured-fill');
 
-        expect(tablutGameComponent.getRectClasses(1, 4)).toEqual(['captured']);
+        expect(tablutGameComponent.getRectClasses(1, 4)).toEqual(['captured-fill']);
 
-        expect(tablutGameComponent.getRectClasses(1, 5)).toEqual(['captured']);
-        expect(tablutGameComponent.getRectClasses(2, 6)).toEqual(['captured']);
+        expect(tablutGameComponent.getRectClasses(1, 5)).toEqual(['captured-fill']);
+        expect(tablutGameComponent.getRectClasses(2, 6)).toEqual(['captured-fill']);
 
-        expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved']);
+        expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved-fill']);
     }));
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
         // Given a fictitious board on which player can only pass
@@ -65,10 +65,10 @@ describe('ReversiComponent', () => {
             [O, X, _, _, _, _, _, _],
         ], 1);
 
-        // when displaying the board
+        // When displaying the board
         testUtils.setupState(state);
 
-        // then the player can pass
+        // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);
     }));
 });

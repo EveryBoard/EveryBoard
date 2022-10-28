@@ -10,7 +10,5 @@ export class EncapsuleFailure {
 
     public static readonly INVALID_PIECE_SELECTED: Localized = () => $localize`You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.`;
 
-    public static readonly SAME_DEST_AS_ORIGIN: Localized = () => $localize`You must select a different landing square than the square where the move originates from.`;
-
     public static readonly END_YOUR_MOVE: Localized = () => $localize`You are performing a move, you must select a landing square.`;
 }

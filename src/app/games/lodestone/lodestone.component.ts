@@ -72,6 +72,31 @@ export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos>
     implements OnInit
 {
+    private static readonly PRESSURE_PLATE_EXTRA_SHIFT: number = 0.2;
+
+    private static readonly PRESSURE_PLATES_POSITIONS: PressurePlatePositionInformation = MGPMap.from({
+        top: {
+            startForBigPlate: new Coord(0.5, -1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
+            startForSmallPlate: new Coord(1.5, 0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
+            direction: Direction.RIGHT,
+        },
+        bottom: {
+            startForBigPlate: new Coord(0.5, 8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
+            startForSmallPlate: new Coord(1.5, 7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
+            direction: Direction.RIGHT,
+        },
+        left: {
+            startForBigPlate: new Coord(-1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
+            startForSmallPlate: new Coord(0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
+            direction: Direction.DOWN,
+        },
+        right: {
+            startForBigPlate: new Coord(8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
+            startForSmallPlate: new Coord(7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
+            direction: Direction.DOWN,
+        },
+    });
+
     public PIECE_RADIUS: number;
     public TRIANGLE_OUT: string;
     public TRIANGLE_IN: string;
@@ -113,7 +138,7 @@ export class LodestoneComponent
         const radius20: number = this.PIECE_RADIUS * 0.2;
         this.TRIANGLE_OUT = `${radius80},0 ${radius30},${radius20} ${radius30},-${radius20}`;
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
-        this.displayedState = this.rules.node.gameState;
+        this.displayedState = this.getState();
         this.scores = MGPOptional.of([0, 0]);
     }
     public ngOnInit(): void {
@@ -133,11 +158,14 @@ export class LodestoneComponent
         if (targetValidity.isFailure()) {
             return this.cancelMove(targetValidity.getReason());
         }
+        if (this.selectedCoord.equalsValue(coord)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
+        this.selectedCoord = MGPOptional.of(coord);
         if (this.selectedLodestone.isPresent()) {
-            this.selectedCoord = MGPOptional.of(coord);
             return this.putLodestone();
         } else {
-            this.selectedCoord = MGPOptional.of(coord);
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         }
@@ -151,8 +179,12 @@ export class LodestoneComponent
         assert(this.capturesToPlace === 0, 'should not be able to click on a lodestone when captures need to be placed');
 
         const player: Player = this.getCurrentPlayer();
-        this.selectedLodestone =
-            MGPOptional.of(LodestonePieceLodestone.of(player, lodestone));
+        const playerLodestone: LodestonePieceLodestone = LodestonePieceLodestone.of(player, lodestone);
+        if (this.selectedLodestone.equalsValue(playerLodestone)) {
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
+        }
+        this.selectedLodestone = MGPOptional.of(playerLodestone);
         if (this.selectedCoord.isPresent()) {
             return this.putLodestone();
         } else {
@@ -382,34 +414,10 @@ export class LodestoneComponent
             info.movingClass = this.getPlayerClass(lodestone.owner);
         }
         if (this.selectedLodestone.equalsValue(lodestone)) {
-            info.selectedClass = 'selected';
+            info.selectedClass = 'selected-stroke';
         }
         return info;
     }
-
-    private static readonly PRESSURE_PLATE_EXTRA_SHIFT: number = 0.2;
-    private static readonly PRESSURE_PLATES_POSITIONS: PressurePlatePositionInformation = MGPMap.from({
-        top: {
-            startForBigPlate: new Coord(0.5, -1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
-            startForSmallPlate: new Coord(1.5, 0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
-            direction: Direction.RIGHT,
-        },
-        bottom: {
-            startForBigPlate: new Coord(0.5, 8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
-            startForSmallPlate: new Coord(1.5, 7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
-            direction: Direction.RIGHT,
-        },
-        left: {
-            startForBigPlate: new Coord(-1 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
-            startForSmallPlate: new Coord(0 - LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
-            direction: Direction.DOWN,
-        },
-        right: {
-            startForBigPlate: new Coord(8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 0.5),
-            startForSmallPlate: new Coord(7 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT, 1.5),
-            direction: Direction.DOWN,
-        },
-    });
     private showPressurePlates(): void {
         this.viewInfo.pressurePlates = [];
         for (const pressurePlate of LodestonePressurePlate.POSITIONS) {
@@ -475,7 +483,7 @@ export class LodestoneComponent
                     const oldPiece: LodestonePiece = actualOldPlate.getPieceAt(i);
                     const newPiece: LodestonePiece = actualNewPlate.getPieceAt(i);
                     if (oldPiece.equals(newPiece) === false) {
-                        plateInfo.coords[i].squareClasses.push('moved');
+                        plateInfo.coords[i].squareClasses.push('moved-fill');
                         plateInfo.coords[i].temporary = temporary;
                         if (temporary) {
                             plateInfo.coords[i].pieceClasses.push('semi-transparent');
@@ -485,17 +493,17 @@ export class LodestoneComponent
             } else {
                 // Pressure plate has crumbled, show all squares as moved
                 for (const info of plateInfo.coords) {
-                    info.squareClasses.push('moved');
+                    info.squareClasses.push('moved-fill');
                 }
             }
         }
     }
     private showMovedAndCaptured(infos: LodestoneInfos): void {
         for (const moved of infos.moved) {
-            this.viewInfo.boardInfo[moved.y][moved.x].squareClasses.push('moved');
+            this.viewInfo.boardInfo[moved.y][moved.x].squareClasses.push('moved-fill');
         }
         for (const captured of infos.captures) {
-            this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured');
+            this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured-fill');
         }
     }
     private computePressurePlateShift(): void {

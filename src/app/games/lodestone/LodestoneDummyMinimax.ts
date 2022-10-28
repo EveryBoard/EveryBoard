@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -81,7 +81,7 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
             return ['push', 'pull'];
         }
     }
-    public getBoardValue(node: LodestoneNode): NodeUnheritance {
+    public getBoardValue(node: LodestoneNode): BoardValue {
         const scores: [number, number] = node.gameState.getScores();
         let score: number;
         if (scores[0] === 24 && scores[1] !== 24) {
@@ -91,6 +91,6 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         } else {
             score = scores[0] * Player.ZERO.getScoreModifier() + scores[1] * Player.ONE.getScoreModifier();
         }
-        return new NodeUnheritance(score);
+        return new BoardValue(score);
     }
 }
