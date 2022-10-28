@@ -359,7 +359,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     foregroundClasses.push('clickable-stroke-hover');
                 }
                 infos.push({
-                    backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate-fill' : '')],
+                    backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate-fill' : '-fill')],
                     foregroundClasses,
                     y,
                     drawPosition: this.getDrawPositionOnBoard(x, y),
