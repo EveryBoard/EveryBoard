@@ -32,16 +32,26 @@ export class DemoPageComponent {
         this.columns = [];
         // Create a game card for each demo node of each game
         for (const game of allGames) {
-            const demoNodes: AbstractNode[] = [];
+            const demoNodes: { node: AbstractNode, click: MGPOptional<string> }[] = [];
             const rules: AbstractRules = game.rules;
             const steps: TutorialStep[] = game.tutorial.tutorial;
             for (const step of steps) {
-                if (step.isMove()) {
-                    const move: Move = step.acceptedMoves[0];
-                    demoNodes.push(new MGPNode(rules.applyLegalMove(move, step.state,
-                                                                    rules.isLegal(move, step.state).get()),
-                                               MGPOptional.of(new MGPNode(step.state)),
-                                               MGPOptional.of(move)));
+                if (step.hasSolution()) {
+                    const solution: Move | string = step.getSolution();
+                    if (typeof solution === 'string') {
+                        continue; // TODO: Disabled for now
+                        demoNodes.push({
+                            node: new MGPNode(step.state),
+                            click: MGPOptional.of(solution as string),
+                        });
+                    } else {
+                        const move: Move = solution as Move;
+                        const node: AbstractNode = new MGPNode(rules.applyLegalMove(move, step.state,
+                                                                                    rules.isLegal(move, step.state).get()),
+                                                               MGPOptional.of(new MGPNode(step.state)),
+                                                               MGPOptional.of(move))
+                        demoNodes.push({node, click: MGPOptional.empty()});
+                    }
                 }
             }
             for (const node of demoNodes) {
@@ -50,7 +60,7 @@ export class DemoPageComponent {
                     // We need to create the columns the first time we access them
                     this.columns.push([]);
                 }
-                this.columns[column].push({ name: game.name, component: game.component, node });
+                this.columns[column].push({ name: game.name, component: game.component, node: node.node, click: node.click });
                 i++;
                 column = (column+1) % numberOfColumns;
             }

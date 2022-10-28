@@ -128,7 +128,7 @@ export class GipfTutorial extends Tutorial {
                 [_, _, _, O, _, _, N],
                 [O, O, O, X, X, N, N],
                 [_, _, _, O, N, N, N],
-            ], 42, [8, 4], [2, 3]),
+            ], 42, [3, 4], [2, 3]),
             [
                 new GipfMove(
                     new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
