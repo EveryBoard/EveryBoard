@@ -106,7 +106,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         if (this.captured[y][x] > 0) {
             return ['captured-fill', 'moved-stroke'];
         } else if (this.last.equalsValue(coord)) {
-            return ['moved-stroke', 'highlighted', homeColor];
+            return ['moved-stroke', 'last-move-stroke', homeColor];
         } else if (this.filledCoords.some((c: Coord) => c.equals(coord))) {
             return ['moved-stroke', homeColor];
         } else {

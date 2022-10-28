@@ -34,7 +34,7 @@ describe('AwaleComponent', () => {
         await testUtils.expectMoveSuccess('#click_0_1', move);
         // and the moved spaces should be shown
         // Initial element
-        testUtils.expectElementToHaveClasses('#click_0_1', ['base', 'moved-stroke', 'highlighted', 'player0-fill']);
+        testUtils.expectElementToHaveClasses('#click_0_1', ['base', 'moved-stroke', 'last-move-stroke', 'player0-fill']);
         // The space between initial coord and captured coord
         testUtils.expectElementToHaveClasses('#click_0_0', ['base', 'moved-stroke', 'player1-fill']);
         // as well as the captured spaces
@@ -49,7 +49,7 @@ describe('AwaleComponent', () => {
 
         // Then the moved spaces should be shown
         // Initial element
-        testUtils.expectElementToHaveClasses('#click_5_1', ['base', 'moved-stroke', 'highlighted', 'player0-fill']);
+        testUtils.expectElementToHaveClasses('#click_5_1', ['base', 'moved-stroke', 'last-move-stroke', 'player0-fill']);
         // The filled spaces
         testUtils.expectElementToHaveClasses('#click_4_1', ['base', 'moved-stroke', 'player0-fill']);
         testUtils.expectElementToHaveClasses('#click_3_1', ['base', 'moved-stroke', 'player0-fill']);
