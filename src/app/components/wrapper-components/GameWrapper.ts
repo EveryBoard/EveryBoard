@@ -38,8 +38,6 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public gameComponent: AbstractGameComponent;
 
-    protected componentRef: ComponentRef<AbstractGameComponent> | null = null;
-
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
     public role: PlayerOrNone = PlayerOrNone.NONE;
@@ -89,8 +87,9 @@ export abstract class GameWrapper<P extends Comparable> {
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component.get());
 
-        this.componentRef = Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
-        this.gameComponent = this.componentRef.instance;
+        const componentRef: ComponentRef<AbstractGameComponent> =
+            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
+        this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
             (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {

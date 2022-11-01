@@ -45,11 +45,13 @@ export class DemoPageComponent {
                         });
                     } else {
                         const move: Move = solution as Move;
-                        const node: AbstractNode = new MGPNode(rules.applyLegalMove(move, step.state,
-                                                                                    rules.isLegal(move, step.state).get()),
-                                                               MGPOptional.of(new MGPNode(step.state)),
-                                                               MGPOptional.of(move))
-                        demoNodes.push({node, click: MGPOptional.empty()});
+                        const node: AbstractNode =
+                            new MGPNode(rules.applyLegalMove(move,
+                                                             step.state,
+                                                             rules.isLegal(move, step.state).get()),
+                                        MGPOptional.of(new MGPNode(step.state)),
+                                        MGPOptional.of(move));
+                        demoNodes.push({ node, click: MGPOptional.empty() });
                     }
                 }
             }
@@ -59,7 +61,11 @@ export class DemoPageComponent {
                     // We need to create the columns the first time we access them
                     this.columns.push([]);
                 }
-                this.columns[column].push({ name: game.urlName, component: game.component, node: node.node, click: node.click });
+                this.columns[column].push({
+                    name: game.urlName,
+                    node: node.node,
+                    click: node.click,
+                });
                 i++;
                 column = (column+1) % numberOfColumns;
             }

@@ -38,7 +38,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 connectedUserService: ConnectedUserService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
-                public cdr: ChangeDetectorRef)
+                private readonly cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];

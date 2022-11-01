@@ -1,9 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { LodestoneComponent } from 'src/app/games/lodestone/lodestone.component';
 import { LodestoneNode } from 'src/app/games/lodestone/LodestoneRules';
 import { LodestoneState } from 'src/app/games/lodestone/LodestoneState';
-import { P4Component } from 'src/app/games/p4/p4.component';
 import { P4Node } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -23,15 +21,14 @@ describe('DemoCardComponent', () => {
     }
 
     beforeEach(fakeAsync(async() => {
-         testUtils = await SimpleComponentTestUtils.create(DemoCardComponent);
-    }))
+        testUtils = await SimpleComponentTestUtils.create(DemoCardComponent);
+    }));
     it('should display the game from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
         // When displaying it for a given game
         const board: Table<PlayerOrNone> = P4State.getInitialState().board; // dummy board
         loadNode({
             name: 'P4',
-            component: P4Component,
             // Current player is player 1
             node: new P4Node(new P4State(board, 1)),
             click: MGPOptional.empty(),
@@ -49,7 +46,6 @@ describe('DemoCardComponent', () => {
         // When displaying it for a game that has intermediary clicks
         loadNode({
             name: 'Lodestone',
-            component: LodestoneComponent,
             node: new LodestoneNode(LodestoneState.getInitialState()),
             click: MGPOptional.of('#lodestone_push_orthogonal'),
         });
@@ -61,7 +57,6 @@ describe('DemoCardComponent', () => {
         // Given a demo component displayed for a game
         loadNode({
             name: 'P4',
-            component: P4Component,
             node: new P4Node(P4State.getInitialState()),
             click: MGPOptional.empty(),
         });
@@ -69,9 +64,9 @@ describe('DemoCardComponent', () => {
         spyOn(rules, 'choose');
 
         // When trying to perform a move
-        testUtils.clickElement('#click_2');
+        await testUtils.clickElement('#click_2');
 
         // Then it should not call rules.choose
         expect(testUtils.getComponent().gameComponent.rules.choose).not.toHaveBeenCalled();
-    }))
+    }));
 });
