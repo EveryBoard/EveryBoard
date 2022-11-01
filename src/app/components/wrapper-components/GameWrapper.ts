@@ -38,6 +38,8 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public gameComponent: AbstractGameComponent;
 
+    protected componentRef: ComponentRef<AbstractGameComponent> | null = null;
+
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
     public role: PlayerOrNone = PlayerOrNone.NONE;
@@ -71,10 +73,13 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         return gameCreatedSuccessfully;
     }
+    protected getGameName(): string {
+        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+    }
     private async createGameComponent(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
 
-        const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        const gameName: string = this.getGameName();
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
         if (component.isAbsent()) {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
@@ -83,9 +88,9 @@ export abstract class GameWrapper<P extends Comparable> {
         assert(this.boardRef != null, 'Board element should be present');
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component.get());
-        const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
-        this.gameComponent = componentRef.instance;
+
+        this.componentRef = Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
+        this.gameComponent = this.componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
             (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {
@@ -155,7 +160,7 @@ export abstract class GameWrapper<P extends Comparable> {
         }
     }
     public onCancelMove(_reason?: string): void {
-        // Not needed by default'
+        // Not needed by default
     }
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {

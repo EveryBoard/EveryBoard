@@ -20,7 +20,7 @@ export class DemoPageComponent {
     public columns: DemoNodeInfo[][] = [];
 
     public constructor() {
-        this.fillColumns(5);
+        this.fillColumns(this.numberOfColumns.value);
         this.numberOfColumns.valueChanges.subscribe((columns: number) => {
             this.fillColumns(columns);
         });
@@ -39,7 +39,6 @@ export class DemoPageComponent {
                 if (step.hasSolution()) {
                     const solution: Move | string = step.getSolution();
                     if (typeof solution === 'string') {
-                        continue; // TODO: Disabled for now
                         demoNodes.push({
                             node: new MGPNode(step.state),
                             click: MGPOptional.of(solution as string),
@@ -60,7 +59,7 @@ export class DemoPageComponent {
                     // We need to create the columns the first time we access them
                     this.columns.push([]);
                 }
-                this.columns[column].push({ name: game.name, component: game.component, node: node.node, click: node.click });
+                this.columns[column].push({ name: game.urlName, component: game.component, node: node.node, click: node.click });
                 i++;
                 column = (column+1) % numberOfColumns;
             }
