@@ -119,7 +119,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 private readonly gameService: GameService)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
@@ -159,7 +159,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.redirectIfPartOrGameIsInvalid();
     }
     public async ngOnInit(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.ngOnInit');
 
         this.routerEventsSubscription = this.router.events.subscribe(async(ev: Event) => {
             if (ev instanceof NavigationEnd) {
@@ -188,7 +188,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
       * because user that are playing should not see other players playing
       */
     private async onObservedPartUpdate(part: MGPOptional<FocusedPart>): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onObservedPartUpdate called');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.onObservedPartUpdate called');
         if (part.isPresent()) {
             const newPart: FocusedPart = part.get();
             if (newPart.role === 'Observer' || newPart.id === this.currentPartId) {
@@ -214,18 +214,20 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
 
+        console.log('SOMEONE SAID THAT GAME STARTED!')
         this.gameStarted = true;
-        console.log('setting timeout 3!')
+        console.log('ZERO')
         window.setTimeout(async() => {
+            console.log('TWO')
             // the small waiting is there to make sur that the chronos are charged by view
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             this.startPart();
-            console.log('finish 3')
         }, 1);
+        console.log('ONE')
     }
     protected startPart(): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.startPart');
 
         // TODO: don't start count down for Observer.
         this.partSubscription =
@@ -236,7 +238,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
+        display(OnlineGameWrapperComponent.VERBOSE || true, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
             then: update,
             before_part_turn: part.data.turn,
@@ -246,10 +248,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.onCurrentUpdateOngoing) {
             attempt -= 1;
             assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
-            console.log('setting timeout 4!')
             window.setTimeout(async() => {
                 await this.onCurrentPartUpdate(update, attempt);
-                console.log('finish 4')
             }, 1000);
             return;
         } else {
@@ -436,7 +436,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer at turn ' + this.currentPart.data.turn);
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.switchPlayer at turn ' + this.currentPart.data.turn);
         const part: PartDocument = this.currentPart;
         const currentPlayer: Player = Player.fromTurn(part.data.turn);
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();

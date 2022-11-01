@@ -196,7 +196,6 @@ describe('ConnectedUserService', () => {
         });
         const subscription: Subscription = connectedUserService.subscribeToUser((_user: AuthUser) => {
             // Wait 2s to ensure that the handler has the time to mark for verification
-            console.log('setting timeout 6!')
             window.setTimeout(resolvePromise, 2000);
         });
         await connectedUserService.doEmailLogin(email, password);

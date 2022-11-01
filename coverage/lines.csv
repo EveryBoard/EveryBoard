@@ -1,9 +1,4 @@
 ActiveUsersService.ts,3
 ConnectedUserService.ts,3
-<<<<<<< HEAD
-LinesOfActionRules.ts,1
 online-game-wrapper.component.ts,5
-=======
-online-game-wrapper.component.ts,10
->>>>>>> 2566fe84a9478cb9a84040158932c6ce47e061d6
 PositionalEpaminondasMinimax.ts,1

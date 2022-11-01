@@ -136,6 +136,7 @@ export class SimpleComponentTestUtils<T> {
         return this.component;
     }
     public detectChanges(): void {
+        console.log('>>>> detectChanges')
         this.fixture.detectChanges();
     }
     public findElement(elementName: string): DebugElement {
@@ -251,6 +252,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
     public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
+        console.log('TestUtils.prepareFixture; TestBed.createComponent')
         this.fixture = TestBed.createComponent(wrapperKind);
         this.wrapper = this.fixture.debugElement.componentInstance;
         this.debugElement = this.fixture.debugElement;
@@ -269,6 +271,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.getComponent()).withContext('Component should be created').toBeTruthy();
     }
     public detectChanges(): void {
+        console.log('about to fixture.detectChange')
         this.fixture.detectChanges();
     }
     public forceChangeDetection(): void {

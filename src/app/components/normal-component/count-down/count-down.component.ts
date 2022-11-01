@@ -18,8 +18,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public remainingMs: number;
     public displayedSec: number;
     public displayedMinute: number;
-    private timeoutHandleGlobal: number | null;
-    private timeoutHandleSec: number | null;
+    private timeoutHandleGlobal: number | null = null;
+    private timeoutHandleSec: number | null = null;
     private isPaused: boolean = true;
     private isSet: boolean = false;
     private started: boolean = false;
@@ -86,10 +86,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.startTime = Date.now();
         const remainingTimeOnResume: number = this.remainingMs;
         this.isPaused = false;
-        console.log('setting timeout 1!')
         this.timeoutHandleGlobal = window.setTimeout(() => {
             this.onEndReached();
-            console.log('finish 1')
         }, remainingTimeOnResume);
         this.countSeconds();
     }
@@ -103,10 +101,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.outOfTimeAction.emit();
     }
     private countSeconds(): void {
-        console.log('setting timeout 11!')
         this.timeoutHandleSec = window.setTimeout(() => {
             this.updateShownTime();
-            console.log('finish 11')
         }, 1000);
     }
     public isIdle(): boolean {
@@ -117,6 +113,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
 
         if (!this.started) {
+            // TODO FOR REVIEW: serait-il dégueulasse de centraliser nos "throw error"
+            // Ce afin d'en faire des "console.log" pour mieux voir QUAND dans les logs, c'est arrivé
+            console.log('Should not pause not started chrono (' + this.debugName + ')')
             throw new Error('Should not pause not started chrono (' + this.debugName + ')');
         }
         if (this.isPaused) {

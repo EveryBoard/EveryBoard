@@ -66,6 +66,7 @@ export abstract class GameWrapper<P extends Comparable> {
     protected async afterGameIncluderViewInit(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
+        console.log('DUO')
         if (gameCreatedSuccessfully) {
             this.gameComponent.rules.setInitialBoard();
             this.gameComponent.updateBoard();
@@ -73,14 +74,16 @@ export abstract class GameWrapper<P extends Comparable> {
         return gameCreatedSuccessfully;
     }
     private async createGameComponent(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
+        display(GameWrapper.VERBOSE || true, { m: 'GameWrapper.createGameComponent', that: this });
 
         const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
         if (component.isAbsent()) {
+            console.log('TAMERDASSE')
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
             return false;
         }
+        console.log('GameIncluder should be present!')
         assert(this.gameIncluder != null, 'GameIncluder should be present');
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component.get());
@@ -112,6 +115,7 @@ export abstract class GameWrapper<P extends Comparable> {
         return true;
     }
     public setRole(role: PlayerOrNone): void {
+        console.log('setting role', role)
         this.role = role;
         this.gameComponent.role = this.role;
         if (this.gameComponent.hasAsymetricBoard) {
