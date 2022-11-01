@@ -34,7 +34,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     // This holds the #board html element
     @ViewChild('board', { read: ViewContainerRef })
-    public boardRef: ViewContainerRef | null;
+    public boardRef: ViewContainerRef | null = null;
 
     public gameComponent: AbstractGameComponent;
 

@@ -54,7 +54,7 @@ export class DemoCardComponent extends GameWrapper<string> implements AfterViewI
                 // Update the view after the click
                 this.cdr.detectChanges();
             }
-        });
+        }, 1);
     }
     public async onLegalUserMove(move: Move, scores?: [number, number] | undefined): Promise<void> {
         return;

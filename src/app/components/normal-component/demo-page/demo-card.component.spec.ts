@@ -25,8 +25,9 @@ describe('DemoCardComponent', () => {
     }));
     it('should display the game from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
+		const board: Table<PlayerOrNone> = P4State.getInitialState().board; // dummy board
+
         // When displaying it for a given game
-        const board: Table<PlayerOrNone> = P4State.getInitialState().board; // dummy board
         loadNode({
             name: 'P4',
             // Current player is player 1
@@ -61,7 +62,7 @@ describe('DemoCardComponent', () => {
             click: MGPOptional.empty(),
         });
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
-        spyOn(rules, 'choose');
+        spyOn(rules, 'choose').and.callThrough();
 
         // When trying to perform a move
         await testUtils.clickElement('#click_2');
