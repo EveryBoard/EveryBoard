@@ -135,7 +135,7 @@
                 </div>
                 <div *ngIf="currentPart.isWin()">
                     <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get().name === getPlayer().name" i18n>You won.</p>
-                    <p class="title" *ngIf="(currentPart.getWinner().get().name !== getPlayer().name) && isPlaying()" i18n>You lost.</p>
+                    <p class="title" id="youLostIndicator" *ngIf="(currentPart.getWinner().get().name !== getPlayer().name) && isPlaying()" i18n>You lost.</p>
                     <p class="title" *ngIf="isPlaying() === false" i18n>{{ currentPart.getWinner().get().name }} won.</p>
                 </div>
                 <div *ngIf="currentPart.isTimeout()">

@@ -15,7 +15,6 @@ export interface ConfigRoom extends JSONObject {
     readonly totalPartDuration: number;
 }
 
-
 export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>
 
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';

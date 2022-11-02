@@ -3,8 +3,6 @@ import { Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { MinimalUser } from '../domain/MinimalUser';
 
 @Injectable({
     // This ensures that any component using this service has its unique ActivePartsService
@@ -20,7 +18,6 @@ export class ActivePartsService {
 
     constructor(private readonly partDAO: PartDAO) {
     }
-
     public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
         let activeParts: PartDocument[] = [];
         const onDocumentCreated: (createdParts: PartDocument[]) => void = (createdParts: PartDocument[]) => {
@@ -50,15 +47,5 @@ export class ActivePartsService {
         const partObserver: FirestoreCollectionObserver<Part> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         return this.partDAO.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], partObserver);
-    }
-    public async userHasActivePart(user: MinimalUser): Promise<boolean> {
-        // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
-        const userIsFirstPlayer: FirestoreDocument<Part>[] = await this.partDAO.findWhere([
-            ['playerZero', '==', user],
-            ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const userIsSecondPlayer: FirestoreDocument<Part>[] = await this.partDAO.findWhere([
-            ['playerOne', '==', user],
-            ['result', '==', MGPResult.UNACHIEVED.value]]);
-        return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;
     }
 }

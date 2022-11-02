@@ -14,6 +14,8 @@ import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
+import { ErrorLoggerService } from '../ErrorLoggerService';
 
 describe('ConfigRoomService', () => {
 
@@ -53,9 +55,9 @@ describe('ConfigRoomService', () => {
         // Given a ConfigRoomService
         spyOn(configRoomDAO, 'set').and.resolveTo();
         // When setting the configRoom
-        await configRoomDAO.set('partId', ConfigRoomMocks.INITIAL);
+        await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
         // Then it should delegate to the DAO
-        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', ConfigRoomMocks.INITIAL);
+        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('configRoomId', ConfigRoomMocks.INITIAL);
     }));
     it('createInitialConfigRoom should delegate to the DAO set method', fakeAsync(async() => {
         // Given a ConfigRoomService
@@ -69,6 +71,20 @@ describe('ConfigRoomService', () => {
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL);
     }));
     describe('joinGame', () => {
+        it('should call configRoomService.addCandidate even when called while already in the game', fakeAsync(async() => {
+            // Given a configRoom and a connected user that is candidate in the room
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+
+            // When calling joinGame to join the game one more time
+            spyOn(configRoomService, 'addCandidate').and.callThrough();
+            const joinResult: MGPValidation = await configRoomService.joinGame('configRoomId');
+
+            // Then it should succeed
+            expect(configRoomService.addCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+            expect(joinResult.isSuccess()).toBeTrue();
+        }));
         it('should not update configRoom when called by the creator', fakeAsync(async() => {
             // Given a configRoom where we are the creator
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
@@ -135,6 +151,51 @@ describe('ConfigRoomService', () => {
             const currentConfigRoom: MGPOptional<ConfigRoom> = await configRoomDAO.read('configRoomId');
             expect(currentConfigRoom.get()).withContext('should be as new').toEqual(ConfigRoomMocks.INITIAL);
         }));
+        it('should remove yourself when leaving the room', fakeAsync(async() => {
+            // Given a configRoom that we are observing as a candidate
+            await configRoomService.addCandidate('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
+            await configRoomService.addCandidate('configRoomId', UserMocks.OTHER_OPPONENT_MINIMAL_USER);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
+            ConnectedUserServiceMock.setUser(UserMocks.OTHER_OPPONENT_AUTH_USER);
+
+            // When the ChosenOpponent leaves
+            await configRoomService.cancelJoining('configRoomId');
+
+            // Then the config room is back to the initial one
+            const currentConfigRoom: MGPOptional<ConfigRoom> = await configRoomDAO.read('configRoomId');
+            const otherOpponentDoc: MGPOptional<unknown> =
+                await configRoomDAO.subCollectionDAO('configRoomId', 'candidates').read(UserMocks.OTHER_OPPONENT_AUTH_USER.id);
+            expect(otherOpponentDoc.isAbsent()).toBeTrue();
+            expect(currentConfigRoom.get()).withContext('should be as new').toEqual(ConfigRoomMocks.INITIAL);
+        }));
+        it('should throw when called by creator', fakeAsync(async() => {
+            // Given a config room that we are observing but that we are creating
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+            configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
+            await configRoomService.joinGame('configRoomId');
+
+            // When calling cancelJoining
+            // Then it should throw an error
+            const creatorId: string = UserMocks.CREATOR_AUTH_USER.id;
+            const error: string = 'Cannot delete element ' + creatorId + ' absent from ConfigRoomDAOMock/configRoomId/candidates';
+            await expectAsync(configRoomService.cancelJoining('configRoomId')).toBeRejectedWithError(error);
+        }));
+        it('should throw when called by user absent from the room', fakeAsync(async() => {
+            // Given a config room that we are not observing or creating and that we did not joined
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            ConnectedUserServiceMock.setUser(UserMocks.OTHER_OPPONENT_AUTH_USER);
+            configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
+
+            // When calling cancelJoining
+            // Then it should throw an error
+            const userId: string = UserMocks.OTHER_OPPONENT_AUTH_USER.id;
+            const error: string = 'Cannot delete element ' + userId + ' absent from ConfigRoomDAOMock/configRoomId/candidates';
+            await expectAsync(configRoomService.cancelJoining('configRoomId')).toBeRejectedWithError(error);
+        }));
     });
     describe('deleteConfigRoom', () => {
         it('should delegate deletion to CONFIGROOMDAO', fakeAsync(async() => {
@@ -147,21 +208,21 @@ describe('ConfigRoomService', () => {
             // When we delete it
             await configRoomService.deleteConfigRoom('configRoomId', []);
 
-            // Then it is deleted in the CONFIGROOMDAO
+            // Then it is deleted in the DAO
             expect(configRoomDAO.delete).toHaveBeenCalledOnceWith('configRoomId');
         }));
         it('should delete candidates as well', fakeAsync(async() => {
             // Given a configRoom that we are observing, which has candidates
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
-            await configRoomService.addCandidate('partId', UserMocks.CANDIDATE_MINIMAL_USER);
+            await configRoomService.addCandidate('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
 
             spyOn(configRoomService, 'removeCandidate').and.resolveTo();
 
             // When we delete it
             await configRoomService.deleteConfigRoom('configRoomId', [UserMocks.CANDIDATE_MINIMAL_USER]);
 
-            // Then the candidate docs are also deleted in the CONFIGROOMDAO
+            // Then the candidate docs are also deleted in the DAO
             expect(configRoomService.removeCandidate).toHaveBeenCalledOnceWith('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
         }));
     });

@@ -4,6 +4,9 @@ import { ThemeService } from 'src/app/services/ThemeService';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 @Component({
     selector: 'app-welcome',
@@ -19,7 +22,9 @@ export class WelcomeComponent {
 
     public gameInfoDetails: MGPOptional<GameInfo> = MGPOptional.empty();
 
-    public constructor(private readonly router: Router,
+    public constructor(public readonly router: Router,
+                       public readonly messageDisplayer: MessageDisplayer,
+                       public readonly observedPartService: ObservedPartService,
                        themeService: ThemeService)
     {
         this.theme = themeService.getTheme();
@@ -33,8 +38,18 @@ export class WelcomeComponent {
             column = (column+1) % this.numberOfColumns;
         }
     }
-    public async createGame(game: string): Promise<boolean> {
-        return this.router.navigate(['/play', game]);
+    public async createGame(game?: string): Promise<boolean> {
+        const canCreateGame: MGPValidation = this.observedPartService.canUserCreate();
+        if (canCreateGame.isSuccess()) {
+            if (game == null) {
+                return this.router.navigate(['/play']);
+            } else {
+                return this.router.navigate(['/play', game]);
+            }
+        } else {
+            this.messageDisplayer.criticalMessage(canCreateGame.getReason());
+            return false;
+        }
     }
     public async createLocalGame(game: string): Promise<boolean> {
         return this.router.navigate(['/local', game]);

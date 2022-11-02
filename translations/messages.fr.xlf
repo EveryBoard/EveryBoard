@@ -62,6 +62,18 @@
         <source>Learn the rules</source>
         <target>Apprendre les règles</target>
       </trans-unit>
+      <trans-unit id="7164690325767499813" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> de <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+      </trans-unit>
+      <trans-unit id="172167399786281724" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> contre <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+      </trans-unit>
+      <trans-unit id="5678362140621139107" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (waiting for opponent)</source>
+        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (en attente d'adversaire)</target>
+      </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
         <target>Paramètres</target>
@@ -520,7 +532,7 @@
       </trans-unit>
       <trans-unit id="6808393327735679948" datatype="html">
         <source>EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
-        <target>EveryBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprend donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours. </target>
+        <target>EveryBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprend donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours.</target>
       </trans-unit>
       <trans-unit id="2129768251160483742" datatype="html">
         <source>It is not your turn!</source>
@@ -3799,10 +3811,6 @@
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
         <target>Une erreur inattendue est arrivée. Nous l'avons notée et essayerons de la réparer au plus vite.</target>
       </trans-unit>
-      <trans-unit id="7463436103435995523" datatype="html">
-        <source>You are already in a game. Finish it or cancel it first.</source>
-        <target>Vous avez déjà une partie en cours. Terminez-la ou annulez-la d&apos;abord.</target>
-      </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>
         <target><x id="PH" equiv-text="hours"/> heures</target>
@@ -3838,6 +3846,26 @@
       <trans-unit id="5120671221766405888" datatype="html">
         <source>Game does not exist</source>
         <target>Partie inexistante</target>
+      </trans-unit>
+      <trans-unit id="2025949389316561274" datatype="html">
+        <source>You are already playing in another game.</source>
+        <target>Vous êtes déjà en train de jouer une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="3355072499279505626" datatype="html">
+        <source>You are already the creator of another game.</source>
+        <target>Vous êtes déjà le créateur d'une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="5005469579079717737" datatype="html">
+        <source>You are already the chosen opponent in another game.</source>
+        <target>Vous êtes déjà sélectionné comme adversaire dans une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="7540734974309484940" datatype="html">
+        <source>You are already candidate in another game.</source>
+        <target>Vous êtes déjà candidat dans une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="2152425747573072542" datatype="html">
+        <source>You are already observing another game.</source>
+        <target>Vous observez déjà une autre partie.</target>
       </trans-unit>
     </body>
   </file>

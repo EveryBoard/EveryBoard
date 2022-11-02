@@ -43,6 +43,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
 import { Comparable } from '../Comparable';
 import { Subscription } from 'rxjs';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -101,11 +103,12 @@ export class SimpleComponentTestUtils<T> {
             ],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
@@ -117,14 +120,16 @@ export class SimpleComponentTestUtils<T> {
     }
     private constructor() {}
 
-    public async clickElement(elementName: string): Promise<void> {
+    public async clickElement(elementName: string, awaitStability: boolean = true): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
             return;
         }
         element.triggerEventHandler('click', null);
-        await this.fixture.whenStable();
+        if (awaitStability) {
+            await this.fixture.whenStable();
+        }
         this.detectChanges();
     }
     public getComponent(): T {
@@ -234,6 +239,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
@@ -294,11 +300,15 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
         this.canUserPlaySpy.calls.reset();
     }
-    public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
+    public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         element.triggerEventHandler('click', null);
+        if (waitOneMs) {
+            tick(1);
+        }
+
         await this.fixture.whenStable();
         this.fixture.detectChanges();
         expect(this.cancelMoveSpy).not
@@ -594,11 +604,14 @@ export async function expectPermissionToBeDenied<T>(promise: Promise<T>): Promis
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): () => void {
+
     let unsubscribed: boolean = false;
     spyOn(service, subscribeMethod).and.returnValue(new Subscription(() => {
         unsubscribed = true;
     }));
     return () => {
-        expect(unsubscribed).toBeTrue();
+        expect(unsubscribed)
+            .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method bub did not')
+            .toBeTrue();
     };
 }

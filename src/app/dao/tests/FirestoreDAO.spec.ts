@@ -24,51 +24,53 @@ class FooDAO extends FirestoreDAO<Foo> {
 }
 
 describe('FirestoreDAO', () => {
-    let dao: FooDAO;
+
+    let fooDAO: FooDAO;
+
     beforeEach(async() => {
         await setupEmulators();
-        dao = TestBed.inject(FooDAO);
+        fooDAO = TestBed.inject(FooDAO);
     });
     it('should not read an object that does not exist', async() => {
-        await expectAsync(dao.read('idonotexist')).toBeResolvedTo(MGPOptional.empty());
+        await expectAsync(fooDAO.read('idonotexist')).toBeResolvedTo(MGPOptional.empty());
     });
     it('should be able to read back objects that exist', async() => {
-        const id: string = await dao.create({ value: 'this is my value', otherValue: 42 });
-        const stored: Foo = (await dao.read(id)).get();
+        const id: string = await fooDAO.create({ value: 'this is my value', otherValue: 42 });
+        const stored: Foo = (await fooDAO.read(id)).get();
         expect(stored.value).toBe('this is my value');
         expect(stored.otherValue).toBe(42);
     });
     it('should support partial updates', async() => {
-        const id: string = await dao.create({ value: 'foo', otherValue: 1 });
-        await dao.update(id, { otherValue: 2 });
-        const stored: Foo = (await dao.read(id)).get();
+        const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
+        await fooDAO.update(id, { otherValue: 2 });
+        const stored: Foo = (await fooDAO.read(id)).get();
         expect(stored.value).toBe('foo');
         expect(stored.otherValue).toBe(2);
     });
     it('should remove an object upon deletion', async() => {
-        const id: string = await dao.create({ value: 'foo', otherValue: 1 });
-        await dao.delete(id);
-        await expectAsync(dao.exists(id)).toBeResolvedTo(false);
+        const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
+        await fooDAO.delete(id);
+        await expectAsync(fooDAO.exists(id)).toBeResolvedTo(false);
     });
     it('should update an object upon set', async() => {
-        const id: string = await dao.create({ value: 'foo', otherValue: 1 });
-        await dao.set(id, { value: 'bar', otherValue: 2 });
-        const stored: Foo = (await dao.read(id)).get();
+        const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
+        await fooDAO.set(id, { value: 'bar', otherValue: 2 });
+        const stored: Foo = (await fooDAO.read(id)).get();
         expect(stored.value).toBe('bar');
         expect(stored.otherValue).toBe(2);
     });
     describe('subscribeToChanges', () => {
         it('should return an observable that can be used to see changes in objects', async() => {
-            const id: string = await dao.create({ value: 'foo', otherValue: 1 });
+            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
             const allChangesSeenPromise: Promise<boolean> = new Promise((resolve: (value: boolean) => void) => {
-                dao.subscribeToChanges(id, (foo: MGPOptional<Foo>) => {
+                fooDAO.subscribeToChanges(id, (foo: MGPOptional<Foo>) => {
                     if (foo.isPresent() && foo.get().value === 'bar' && foo.get().otherValue === 2) {
                         resolve(true);
                     }
                 });
             });
-            await dao.update(id, { otherValue: 2 });
-            await dao.update(id, { value: 'bar' });
+            await fooDAO.update(id, { otherValue: 2 });
+            await fooDAO.update(id, { value: 'bar' });
             await expectAsync(allChangesSeenPromise).toBeResolvedTo(true);
         });
     });
@@ -100,8 +102,8 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'foo']], callback);
-            await dao.create({ value: 'foo', otherValue: 1 });
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
             subscription.unsubscribe();
         });
@@ -111,8 +113,8 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 1]], callback);
-            await dao.create({ value: 'foo', otherValue: 1 });
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 1]], callback);
+            await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
             subscription.unsubscribe();
         });
@@ -123,8 +125,8 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'baz']], callback);
-            await dao.create({ value: 'foo', otherValue: 1 });
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
+            await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             subscription.unsubscribe();
         });
@@ -135,8 +137,8 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
-            await dao.create({ value: 'foo', otherValue: 1 });
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
+            await fooDAO.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             subscription.unsubscribe();
         });
@@ -146,9 +148,9 @@ describe('FirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'foo']], callback);
-            const id: string = await dao.create({ value: 'foo', otherValue: 1 });
-            await dao.update(id, { otherValue: 42 });
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
+            await fooDAO.update(id, { otherValue: 42 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 42 }]);
             subscription.unsubscribe();
         });
@@ -158,9 +160,9 @@ describe('FirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'baz']], callback);
-            const id: string = await dao.create({ value: 'foo', otherValue: 1 });
-            await dao.update(id, { otherValue: 42 });
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
+            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
+            await fooDAO.update(id, { otherValue: 42 });
             await expectAsync(promise).toBePending();
             subscription.unsubscribe();
         });
@@ -170,9 +172,9 @@ describe('FirestoreDAO', () => {
                 () => void { },
                 callbackFunction,
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'foo']], callback);
-            const id: string = await dao.create({ value: 'foo', otherValue: 1 });
-            await dao.delete(id);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
+            await fooDAO.delete(id);
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
             subscription.unsubscribe();
         });
@@ -182,9 +184,9 @@ describe('FirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const subscription: Subscription = dao.observingWhere([['value', '==', 'foo']], callback);
-            const id: string = await dao.create({ value: 'foo', otherValue: 1 });
-            await dao.delete(id);
+            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
+            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
+            await fooDAO.delete(id);
             await expectAsync(promise).toBePending();
             subscription.unsubscribe();
         });
@@ -192,11 +194,11 @@ describe('FirestoreDAO', () => {
     describe('findWhere', () => {
         it('should return the matching documents', async() => {
             // Given a DB with some documents
-            await dao.create({ value: 'foo', otherValue: 1 });
-            await dao.create({ value: 'foo', otherValue: 2 });
+            await fooDAO.create({ value: 'foo', otherValue: 1 });
+            await fooDAO.create({ value: 'foo', otherValue: 2 });
 
             // When calling findWhere
-            const docs: FirestoreDocument<Foo>[] = await dao.findWhere([['otherValue', '==', 1]]);
+            const docs: FirestoreDocument<Foo>[] = await fooDAO.findWhere([['otherValue', '==', 1]]);
 
             // Then it should return the matching documents only
             expect(docs.length).toBe(1);
@@ -205,11 +207,11 @@ describe('FirestoreDAO', () => {
     });
     describe('subCollectionDAO', () => {
         it('should provide the subcollection with the fully correct path', async() => {
-            // Given a dao with a certain path
-            const path: string = dao.collection.path;
+            // Given a fooDAO with a certain path
+            const path: string = fooDAO.collection.path;
             // When calling subCollectionDAO
             const subDAO: FirestoreDAO<FirestoreJSONObject> =
-                dao.subCollectionDAO('foo', 'sub') as FirestoreDAO<FirestoreJSONObject>;
+                fooDAO.subCollectionDAO('foo', 'sub') as FirestoreDAO<FirestoreJSONObject>;
             // Then it should have the right path
             // eslint-disable-next-line dot-notation
             const subDAOPath: string = subDAO.collection.path;
