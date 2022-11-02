@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { assert } from 'src/app/utils/assert';
 import { display } from 'src/app/utils/utils';
 
 @Component({
@@ -112,14 +113,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public pause(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
 
-        if (!this.started) {
-            // TODO FOR REVIEW: serait-il dégueulasse de centraliser nos "throw error"
-            // Ce afin d'en faire des "console.log" pour mieux voir QUAND dans les logs, c'est arrivé
-            throw new Error('Should not pause not started chrono (' + this.debugName + ')');
-        }
-        if (this.isPaused) {
-            throw new Error('Should not pause already paused chrono (' + this.debugName + ')');
-        }
+        assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
+        assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
 
         this.clearTimeouts();
         this.isPaused = true;
@@ -127,10 +122,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public stop(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingMs + 'ms)');
+        assert(this.started, 'Should only stop chrono that are started!');
 
-        if (this.started === false) {
-            throw new Error('Should only stop chrono that are started!');
-        }
         this.pause();
         this.started = false;
         this.isSet = false;

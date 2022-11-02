@@ -73,7 +73,7 @@ export abstract class GameWrapper<P extends Comparable> {
         return gameCreatedSuccessfully;
     }
     private async createGameComponent(): Promise<boolean> {
-        display(GameWrapper.VERBOSE || true, { m: 'GameWrapper.createGameComponent', that: this });
+        display(GameWrapper.VERBOSE, { m: 'GameWrapper.createGameComponent', that: this });
 
         const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);

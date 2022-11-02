@@ -10,6 +10,6 @@ export class GameIncluderComponent {
     public static VERBOSE: boolean = false;
 
     constructor(public viewContainerRef: ViewContainerRef) {
-        display(GameIncluderComponent.VERBOSE || true, 'GameIncluderComponent constructor');
+        display(GameIncluderComponent.VERBOSE, 'GameIncluderComponent constructor');
     }
 }

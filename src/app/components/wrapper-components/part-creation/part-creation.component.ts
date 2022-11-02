@@ -116,7 +116,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public readonly formBuilder: FormBuilder,
                        public readonly messageDisplayer: MessageDisplayer)
     {
-        display(PartCreationComponent.VERBOSE || true, 'PartCreationComponent constructed');
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed');
     }
     public async ngOnInit(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit');
@@ -501,7 +501,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.gameService.acceptConfig(this.partId, Utils.getNonNullable(this.currentConfigRoom));
     }
     public async ngOnDestroy(): Promise<void> {
-        display(PartCreationComponent.VERBOSE || true, 'PartCreationComponent.ngOnDestroy');
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy');
 
         // This will unsubscribe from all observables
         this.ngUnsubscribe.next();
