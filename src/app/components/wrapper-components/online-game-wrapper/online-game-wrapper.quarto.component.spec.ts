@@ -303,7 +303,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // reachedOutOfTime is called (in test) after tick(1) even though there is still remainingTime
         expect(wrapper.currentPart?.data.listMoves).toEqual([]);
         expect(wrapper.currentPart?.data.listMoves).toEqual([]);
-        expect(wrapper.currentPlayer.name).toEqual('creator');
+        expect(Utils.getNonNullable(wrapper.currentPlayer).name).toEqual('creator');
         wrapper.pauseCountDownsFor(Player.ZERO);
     }));
     it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {

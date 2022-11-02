@@ -79,11 +79,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     // link between GameWrapping's template and remote opponent
     public currentPart: PartDocument | null = null;
-    public currentPartId: string;
+    public currentPartId!: string; // Initialized in ngOnInit
     public gameStarted: boolean = false;
     public opponent: MinimalUser | null = null;
-    public authUser: AuthUser;
-    public currentPlayer: MinimalUser;
+    public authUser!: AuthUser; // Initialized in ngOnInit
+    public currentPlayer: MinimalUser | null = null;
 
     public rematchProposed: boolean = false;
     public opponentProposedRematch: boolean = false;
