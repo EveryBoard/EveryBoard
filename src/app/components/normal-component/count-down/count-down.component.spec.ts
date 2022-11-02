@@ -4,7 +4,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { CountDownComponent } from './count-down.component';
 
-fdescribe('CountDownComponent', () => {
+describe('CountDownComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<CountDownComponent>;
 
