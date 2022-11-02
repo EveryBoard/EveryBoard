@@ -42,9 +42,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public setDuration(duration: number): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
         // duration is in ms
-        if (this.started) {
-            throw new Error('Should not set a chrono that has already been started (' + this.debugName + ')!');
-        }
+        assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
+
         this.isSet = true;
         this.changeDuration(duration);
     }
@@ -68,22 +67,16 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public start(): void {
         // duration is in ms
         display(CountDownComponent.VERBOSE, this.debugName + '.start(' + this.remainingMs + 'ms);');
+        assert(this.isSet, 'Should not start a chrono that has not been set!');
+        assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
 
-        if (this.isSet === false) {
-            throw new Error('Should not start a chrono that has not been set!');
-        }
-        if (this.started) {
-            throw new Error('Should not start chrono that has already been started (' + this.debugName + ')');
-        }
         this.started = true;
         this.resume();
     }
     public resume(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingMs + 'ms)');
+        assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
 
-        if (this.isPaused === false || this.started === false) {
-            throw new Error('Should only resume chrono that are started and paused!');
-        }
         this.startTime = Date.now();
         const remainingTimeOnResume: number = this.remainingMs;
         this.isPaused = false;
@@ -112,7 +105,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public pause(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
-
         assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
         assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
 
