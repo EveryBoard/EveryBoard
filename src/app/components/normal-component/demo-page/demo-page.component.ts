@@ -5,9 +5,9 @@ import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
-import { DemoNodeInfo } from './demo-card.component';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
 import { AbstractRules } from 'src/app/jscaip/Rules';
+import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 
 @Component({
     selector: 'app-demo-page',

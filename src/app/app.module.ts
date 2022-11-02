@@ -18,7 +18,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
-import { DemoCardComponent } from './components/normal-component/demo-page/demo-card.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
@@ -93,6 +92,7 @@ import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
+import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 
 registerLocaleData(localeFr);
 
@@ -170,7 +170,7 @@ export class FirebaseProviders {
         VerifyAccountComponent,
         ResetPasswordComponent,
         SettingsComponent,
-        DemoCardComponent,
+        DemoCardWrapperComponent,
         DemoPageComponent,
 
         AbaloneComponent,

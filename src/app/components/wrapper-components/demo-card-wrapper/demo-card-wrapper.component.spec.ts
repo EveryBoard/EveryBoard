@@ -9,10 +9,10 @@ import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { DemoCardComponent, DemoNodeInfo } from './demo-card.component';
+import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
 
 describe('DemoCardComponent', () => {
-    let testUtils: SimpleComponentTestUtils<DemoCardComponent>;
+    let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
 
     function loadNode(nodeInfo: DemoNodeInfo): void {
         testUtils.getComponent().demoNodeInfo = nodeInfo;
@@ -21,11 +21,11 @@ describe('DemoCardComponent', () => {
     }
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(DemoCardComponent);
+        testUtils = await SimpleComponentTestUtils.create(DemoCardWrapperComponent);
     }));
     it('should display the game from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
-		const board: Table<PlayerOrNone> = P4State.getInitialState().board; // dummy board
+        const board: Table<PlayerOrNone> = P4State.getInitialState().board; // dummy board
 
         // When displaying it for a given game
         loadNode({

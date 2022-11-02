@@ -18,7 +18,7 @@ export type DemoNodeInfo = {
     selector: 'app-demo-card',
     template: `<div #board></div>`,
 })
-export class DemoCardComponent extends GameWrapper<string> implements AfterViewInit {
+export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     @Input() public demoNodeInfo: DemoNodeInfo;
 
     @ViewChild('board', { read: ViewContainerRef })
