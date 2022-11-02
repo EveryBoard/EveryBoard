@@ -18,8 +18,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public remainingMs: number;
     public displayedSec: number;
     public displayedMinute: number;
-    private timeoutHandleGlobal: number | null;
-    private timeoutHandleSec: number | null;
+    private timeoutHandleGlobal: number | null = null;
+    private timeoutHandleSec: number | null = null;
     private isPaused: boolean = true;
     private isSet: boolean = false;
     private started: boolean = false;

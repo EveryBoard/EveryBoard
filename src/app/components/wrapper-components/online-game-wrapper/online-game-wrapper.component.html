@@ -13,7 +13,7 @@
                 <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
                     <ng-container *ngIf="currentPlayer?.name === getPlayer().name else opponentsTurn" i18n>It is your turn.</ng-container>
-                    <ng-template #opponentsTurn><ng-container i18n>It is {{ currentPlayer.name }}'s turn.</ng-container></ng-template>
+                    <ng-template #opponentsTurn><ng-container i18n>It is {{ currentPlayer?.name }}'s turn.</ng-container></ng-template>
                 </p>
             </div>
             <div class="block">
@@ -183,8 +183,8 @@
 <div class="block mt-2">
     <div id="chat"
          class="box" >
+		currentPart: {{ currentPart }}
         <app-chat [chatId]="currentPartId"
-                  *ngIf="currentPart !== null"
-                  [turn]="currentPart.getTurn()"></app-chat>
+                  [turn]="currentPart?.getTurn()"></app-chat>
     </div>
 </div>
