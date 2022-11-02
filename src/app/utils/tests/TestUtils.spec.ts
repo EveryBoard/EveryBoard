@@ -300,11 +300,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
         this.canUserPlaySpy.calls.reset();
     }
-    public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
+    public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         element.triggerEventHandler('click', null);
+        if (waitOneMs) {
+            tick(1);
+        }
 
         await this.fixture.whenStable();
         this.fixture.detectChanges();
