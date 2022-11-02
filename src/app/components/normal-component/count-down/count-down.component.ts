@@ -115,7 +115,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         if (!this.started) {
             // TODO FOR REVIEW: serait-il dégueulasse de centraliser nos "throw error"
             // Ce afin d'en faire des "console.log" pour mieux voir QUAND dans les logs, c'est arrivé
-            console.log('Should not pause not started chrono (' + this.debugName + ')')
             throw new Error('Should not pause not started chrono (' + this.debugName + ')');
         }
         if (this.isPaused) {

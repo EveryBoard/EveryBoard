@@ -214,17 +214,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
 
-        console.log('SOMEONE SAID THAT GAME STARTED!')
         this.gameStarted = true;
-        console.log('ZERO')
         window.setTimeout(async() => {
-            console.log('TWO')
             // the small waiting is there to make sur that the chronos are charged by view
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             this.startPart();
-        }, 1);
-        console.log('ONE')
+        }, 2);
     }
     protected startPart(): void {
         display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.startPart');

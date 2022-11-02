@@ -193,7 +193,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
             expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
             expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
-            tick(1);
+            tick(2);
         }));
         it('stage three should make the game component appear at last', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
@@ -205,7 +205,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
                 .withContext(`p4Tag id should be absent before startGame's async method has complete`)
                 .toBeNull();
 
-            tick(1);
+            tick(2);
 
             expect(testUtils.querySelector('app-p4'))
                 .withContext(`p4Tag id should be present after startGame's async method has complete`)
@@ -266,7 +266,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         testUtils.detectChanges();
         tick();
         testUtils.detectChanges();
-        tick(1); // Need to wait for startPart to be called
+        tick(2); // Need to wait for startPart to be called
 
         // When the component is destroyed
         await wrapper.ngOnDestroy();

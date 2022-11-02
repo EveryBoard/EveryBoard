@@ -106,7 +106,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public allDocDeleted: boolean = false;
 
     public constructor(public readonly router: Router,
-                       public actRoute: ActivatedRoute,
+                       public readonly actRoute: ActivatedRoute,
                        public readonly connectedUserService: ConnectedUserService,
                        public readonly observedPartService: ObservedPartService,
                        public readonly gameService: GameService,
