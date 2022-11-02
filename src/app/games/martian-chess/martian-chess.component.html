@@ -74,11 +74,6 @@
                   [ngClass]="getClockCircleClasses()"
                   stroke-linecap="round"/>
     </g>
-    <line id="canal"
-          [attr.x1]="SPACE_SIZE"     [attr.y1]="(5 * SPACE_SIZE) + 8"
-          [attr.x2]="5 * SPACE_SIZE" [attr.y2]="(5 * SPACE_SIZE) + 8"
-          [ngClass]="'player' + getCurrentPlayer().value"
-          [attr.stroke-width]="2 * STROKE_WIDTH"/>
     <g id="modeCogView"
        [attr.transform]="configViewTranslation">
         <g id="modeCog"
@@ -104,7 +99,7 @@
                    app-martian-chess-queen
                    (click)="chooseStyle(y)"
                    [attr.transform]="'translate(0, ' + (-(y+1) * SPACE_SIZE) + ')'"
-                   [pieceClasses]="['player' + getCurrentPlayer().value]"
+                   [pieceClasses]="['player' + getCurrentPlayer().value + '-fill']"
                    [style]="proposedStyle.style"/>
             </ng-container>
         </g>
@@ -118,7 +113,7 @@
                         [attr.transform]="'translate(0, ' + (2 * piece * SPACE_SIZE) + ')'">
                         <text *ngIf="value > 1"
                                class="text-giant text-center"
-                               [ngClass]="'player' + (player.value === 0 ? 1 : 0)"
+                               [ngClass]="'player' + (player.value === 0 ? 1 : 0) + '-fill'"
                                [attr.x]="SPACE_SIZE / 2"
                                [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
@@ -126,15 +121,15 @@
                            [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn
-                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0) + '-fill']"
                                [style]="style"/>
                             <g *ngIf="piece === 1"
                                app-martian-chess-drone
-                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0) + '-fill']"
                                [style]="style"/>
                             <g *ngIf="piece === 2"
                                app-martian-chess-queen
-                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0) + '-fill']"
                                [style]="style"/>
                         </g>
                     </g>

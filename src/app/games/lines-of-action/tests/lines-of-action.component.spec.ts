@@ -50,7 +50,7 @@ describe('LinesOfActionComponent', () => {
             // When clicking on a piece of the user
             await testUtils.expectClickSuccess('#click_2_0');
 
-            // Then the piece should be highlighter
+            // Then the piece should be shown as selected
             testUtils.expectElementToHaveClass('#piece_2_0', 'selected-stroke');
         }));
     });

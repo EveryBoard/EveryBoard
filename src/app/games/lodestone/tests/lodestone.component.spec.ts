@@ -84,10 +84,12 @@ describe('LodestoneComponent', () => {
         it('should deselect lodestone and square after move has been made', fakeAsync(async() => {
             // Given a state
             await testUtils.expectClickSuccess('#square_0_0');
+
             // When performing a move
             const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal');
             await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
-            // Then the selected lodestone and square should not be selected, and moved square should be 'moved'
+
+            // Then the selected lodestone and square should not be 'selected'
             testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
             testUtils.expectElementNotToExist('#selection_0_0');
         }));
@@ -97,7 +99,7 @@ describe('LodestoneComponent', () => {
             // When performing a move
             const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal');
             await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
-            // Then the square part of the move should be shown as 'moved'
+            // Then the square part of the move should be shown as 'moved-fill'
             testUtils.expectElementToHaveClass('#square_0_0 > rect', 'moved-fill');
             testUtils.expectElementToHaveClass('#square_5_0 > rect', 'moved-fill');
             testUtils.expectElementToHaveClass('#square_6_0 > rect', 'moved-fill');

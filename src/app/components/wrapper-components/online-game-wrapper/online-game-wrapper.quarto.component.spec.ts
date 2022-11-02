@@ -309,7 +309,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
 
-        // ==========================================================
         const user: AuthUser = UserMocks.CREATOR_AUTH_USER;
         testUtils = await prepareWrapper<QuartoComponent>(user, 'Quarto');
         const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);

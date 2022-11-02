@@ -519,7 +519,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return;
         }
         if (this.currentConfigRoom === null) {
-            return display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy: there is no part here');
+            display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy: there is no part here');
         } else if (this.allDocDeleted === true) {
             display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy: part has already been deleted');
         } else if (authUser.id === this.currentConfigRoom.creator.id) {
