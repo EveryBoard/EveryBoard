@@ -17,7 +17,7 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.CREATOR_AUTH_USER, 'Awale', false, false)).testUtils;
 
         // When displaying the component
-        tick(1);
+        tick(2);
         testUtils.detectChanges();
 
         // Then the svg component should have no rotation
@@ -30,7 +30,7 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.OPPONENT_AUTH_USER, 'Awale', false, false)).testUtils;
 
         // When displaying the component
-        tick(1);
+        tick(2);
         testUtils.detectChanges();
 
         // Then the svg component should have a rotation of 180°

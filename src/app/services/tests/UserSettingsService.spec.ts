@@ -3,17 +3,20 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserSettingsService } from '../UserSettingsService';
 
 describe('UserSettingsService', () => {
-    let service: UserSettingsService;
+
+    let userSettingsService: UserSettingsService;
 
     beforeEach(() => {
-        service = new UserSettingsService();
+        userSettingsService = new UserSettingsService();
     });
 
     describe('theme', () => {
         it('should update local storage on theme change', () => {
-            spyOn(localStorage, 'setItem');
+            spyOn(localStorage, 'setItem').and.callThrough();
+
             // When changing the theme
-            service.changeTheme('light');
+            userSettingsService.changeTheme('light');
+
             // Then localStorage is updated
             expect(localStorage.setItem).toHaveBeenCalledWith('theme', 'light');
 
@@ -23,7 +26,7 @@ describe('UserSettingsService', () => {
             // Given that the stored theme is 'light'
             spyOn(localStorage, 'getItem').and.returnValue('light');
             // When getting the theme
-            const theme: MGPOptional<string> = service.getTheme();
+            const theme: MGPOptional<string> = userSettingsService.getTheme();
             // Then the theme is 'light'
             expect(theme.isPresent()).toBeTrue();
             expect(theme.get()).toBe('light');
@@ -31,9 +34,9 @@ describe('UserSettingsService', () => {
     });
     describe('language', () => {
         it('should update local storage on language change', () => {
-            spyOn(localStorage, 'setItem');
+            spyOn(localStorage, 'setItem').and.callThrough();
             // When changing the language
-            service.changeLanguage('fr');
+            userSettingsService.changeLanguage('fr');
             // Then localStorage is updated
             expect(localStorage.setItem).toHaveBeenCalledWith('locale', 'fr');
 
@@ -43,7 +46,7 @@ describe('UserSettingsService', () => {
             // Given that the stored theme is 'light'
             spyOn(localStorage, 'getItem').and.returnValue('fr');
             // When getting the language
-            const language: string = service.getLanguage();
+            const language: string = userSettingsService.getLanguage();
             // Then the theme is 'light'
             expect(language).toBe('fr');
         });

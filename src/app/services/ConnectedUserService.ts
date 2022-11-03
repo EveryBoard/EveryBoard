@@ -1,5 +1,8 @@
+import { FirebaseError } from '@angular/fire/app';
+import * as FireAuth from '@angular/fire/auth';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
+
 import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from '../utils/MGPValidation';
@@ -7,12 +10,23 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
-import { FirebaseError } from '@angular/fire/app';
-import * as FireAuth from '@angular/fire/auth';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
-import { Subscription } from 'rxjs';
+import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
+
+export class GameActionFailure {
+
+    public static YOU_ARE_ALREADY_PLAYING: Localized = () => $localize`You are already playing in another game.`;
+
+    public static YOU_ARE_ALREADY_CREATING: Localized = () => $localize`You are already the creator of another game.`;
+
+    public static YOU_ARE_ALREADY_CHOSEN_OPPONENT: Localized = () => $localize`You are already the chosen opponent in another game.`;
+
+    public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
+
+    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing another game.`;
+}
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -64,6 +78,7 @@ export class AuthUser {
                 public verified: boolean) {
     }
     public isConnected(): boolean {
+        // Only a user that is connected has its email set
         return this.email.isPresent();
     }
     public toMinimalUser(): MinimalUser {
@@ -71,6 +86,12 @@ export class AuthUser {
             id: this.id,
             name: this.username.get(),
         };
+    }
+    public equals(other: AuthUser): boolean {
+        return this.id === other.id &&
+               this.email.equals(other.email) &&
+               this.username.equals(other.username) &&
+               this.verified === other.verified;
     }
 }
 
@@ -81,7 +102,7 @@ export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    private readonly authSubscription!: Subscription;
+    private readonly authSubscription: Subscription;
 
     /**
      * This is the current user, if there is one.
@@ -89,12 +110,9 @@ export class ConnectedUserService implements OnDestroy {
      * (This is because the guard can't activate if there is no user, so if the guard was activated, there is a user)
      */
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
-
-    private userSubscription: Subscription = new Subscription();
-
     private readonly userRS: ReplaySubject<AuthUser>;
-
     private readonly userObs: Observable<AuthUser>;
+    private userSubscription: Subscription = new Subscription();
 
     constructor(private readonly userDAO: UserDAO,
                 private readonly userService: UserService,
@@ -114,13 +132,14 @@ export class ConnectedUserService implements OnDestroy {
                 } else { // new user logged in
                     assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
                     this.userSubscription =
-                        this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
-                            if (doc.isPresent()) {
-                                const username: string | undefined = doc.get().username;
+                        this.userDAO.subscribeToChanges(user.uid, (docOpt: MGPOptional<User>) => {
+                            if (docOpt.isPresent()) {
+                                const doc: User = docOpt.get();
+                                const username: string | undefined = doc.username;
                                 display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
                                 const userHasFinalizedVerification: boolean =
                                     this.emailVerified(user) === true && username != null;
-                                if (userHasFinalizedVerification === true && doc.get().verified === false) {
+                                if (userHasFinalizedVerification === true && doc.verified === false) {
                                     // The user has finalized verification but isn't yet marked as so in the DB.
                                     // So we mark it, and we'll get notified when the user is marked.
                                     return this.userService.markAsVerified(user.uid);
@@ -129,8 +148,10 @@ export class ConnectedUserService implements OnDestroy {
                                                                         MGPOptional.ofNullable(user.email),
                                                                         MGPOptional.ofNullable(username),
                                                                         userHasFinalizedVerification);
-                                this.user = MGPOptional.of(authUser);
-                                this.userRS.next(authUser);
+                                if (this.user.equalsValue(authUser) === false) {
+                                    this.user = MGPOptional.of(authUser);
+                                    this.userRS.next(authUser);
+                                }
                             }
                         });
                 }
@@ -308,14 +329,6 @@ export class ConnectedUserService implements OnDestroy {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
-    }
-    public updateObservedPart(observedPart: string): Promise<void> {
-        assert(this.user.isPresent(), 'Should not call updateObservedPart when not connected');
-        return this.userDAO.update(this.user.get().id, { observedPart });
-    }
-    public removeObservedPart(): Promise<void> {
-        assert(this.user.isPresent(), 'Should not call removeObservedPart when not connected');
-        return this.userDAO.update(this.user.get().id, { observedPart: null });
     }
     public sendPresenceToken(): Promise<void> {
         assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');

@@ -21,18 +21,18 @@ describe('CountDownComponent', () => {
         it('should throw when setting chrono already started', () => {
             component.setDuration(1250);
             component.start();
-            const error: string = 'Should not set a chrono that has already been started (undefined)!';
+            const error: string = 'Assertion failure: Should not set a chrono that has already been started (undefined)! (extra data: undefined)';
             expect(() => component.setDuration(1250)).toThrowError(error);
         });
     });
     describe('start', () => {
         it('should throw when starting without having been set', () => {
-            expect(() => component.start()).toThrowError('Should not start a chrono that has not been set!');
+            expect(() => component.start()).toThrowError('Assertion failure: Should not start a chrono that has not been set! (extra data: undefined)');
         });
         it('should throw when starting twice', () => {
             component.setDuration(1250);
             component.start();
-            const error: string = 'Should not start chrono that has already been started (undefined)';
+            const error: string = 'Assertion failure: Should not start chrono that has already been started (undefined) (extra data: undefined)';
             expect(() => component.start()).toThrowError(error);
         });
         it('should show remaining time once set', () => {
@@ -47,7 +47,7 @@ describe('CountDownComponent', () => {
             component.start();
             expect(component.isStarted()).toBeTrue();
             component.stop();
-            expect(() => component.start()).toThrowError('Should not start a chrono that has not been set!');
+            expect(() => component.start()).toThrowError('Assertion failure: Should not start a chrono that has not been set! (extra data: undefined)');
         });
     });
     describe('pause', () => {
@@ -55,34 +55,34 @@ describe('CountDownComponent', () => {
             component.setDuration(1250);
             component.start();
             component.pause();
-            const error: string = 'Should not pause already paused chrono (undefined)';
+            const error: string = 'Assertion failure: Should not pause already paused chrono (undefined) (extra data: undefined)';
             expect(() => component.pause()).toThrowError(error);
         });
         it('should throw when pausing not started chrono', () => {
-            const error: string = 'Should not pause not started chrono (undefined)';
+            const error: string = 'Assertion failure: Should not pause not started chrono (undefined) (extra data: undefined)';
             expect(() => component.pause()).toThrowError(error);
         });
     });
     describe('resume', () => {
         it('should throw when resuming not started chrono', () => {
-            expect(() => component.resume()).toThrowError('Should only resume chrono that are started and paused!');
+            expect(() => component.resume()).toThrowError('Assertion failure: Should only resume chrono that are started and paused! (extra data: undefined)');
         });
         it('should throw when resuming stopped chrono', () => {
             component.setDuration(1250);
             component.start();
             component.stop();
-            expect(() => component.resume()).toThrowError('Should only resume chrono that are started and paused!');
+            expect(() => component.resume()).toThrowError('Assertion failure: Should only resume chrono that are started and paused! (extra data: undefined)');
         });
     });
     describe('stop', () => {
         it('should throw when stopping not started chrono', () => {
-            expect(() => component.stop()).toThrowError('Should only stop chrono that are started!');
+            expect(() => component.stop()).toThrowError('Assertion failure: Should only stop chrono that are started! (extra data: undefined)');
         });
         it('should throw when stopping stopped chrono', () => {
             component.setDuration(1250);
             component.start();
             component.stop();
-            expect(() => component.stop()).toThrowError('Should only stop chrono that are started!');
+            expect(() => component.stop()).toThrowError('Assertion failure: Should only stop chrono that are started! (extra data: undefined)');
         });
     });
     it('should update written time', fakeAsync(() => {

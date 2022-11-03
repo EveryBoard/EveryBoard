@@ -78,7 +78,7 @@ describe('EncapsuleRules', () => {
         });
     });
     it('should know winner even when he was not playing', () => {
-        // Given a board on which active player could loose by acting
+        // Given a board on which active player could lose by acting
         const board: EncapsuleSpace[][] = [
             [XO_, ___, ___],
             [___, _X_, ___],
@@ -89,7 +89,7 @@ describe('EncapsuleRules', () => {
             X0, X1, X2,
         ]);
 
-        // When doing that "actively loosing move"
+        // When doing that "actively losing move"
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0));
 
         // Then the active player should have lost

@@ -23,7 +23,9 @@ import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('OnlineGameWrapper for non-existing game', () => {
+
     let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;
+
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         testUtils = await ComponentTestUtils.basic('invalid-game');
@@ -121,7 +123,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             spyOn(wrapper, 'startGame').and.callThrough();
             expect(wrapper.startGame).not.toHaveBeenCalled();
 
-            tick(); // Finish calling async code from PartCreationComponent initialisation
+            tick(); // Finish calling async code from PartCreationComponent initialization
 
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
 
@@ -131,7 +133,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(1);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('Some tags are needed before initialisation', fakeAsync(async() => {
+        it('Some tags are needed before initialization', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.INITIAL, PartMocks.INITIAL);
             expect(wrapper).toBeTruthy();
             const partCreationTag: DebugElement = testUtils.findElement('app-part-creation');
@@ -146,7 +148,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
-        it('Some ids are needed before initialisation', fakeAsync(async() => {
+        it('Some ids are needed before initialization', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.INITIAL, PartMocks.INITIAL);
             const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             const gameId: DebugElement = testUtils.findElement('#game');
@@ -189,7 +191,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
             expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
             expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
-            tick(1);
+            tick(2);
         }));
         it('stage three should make the game component appear at last', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
@@ -201,7 +203,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
                 .withContext(`p4Tag id should be absent before startGame's async method has complete`)
                 .toBeNull();
 
-            tick(1);
+            tick(2);
 
             expect(testUtils.findElement('app-p4'))
                 .withContext(`p4Tag id should be present after startGame's async method has complete`)
@@ -242,7 +244,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
+        spyOn(router, 'navigate').and.callThrough();
         await TestBed.inject(ChatDAO).set('configRoomId', { messages: [], status: `I don't have a clue` });
         testUtils.detectChanges();
         tick(3000); // Since a criticalToast will pop
@@ -262,10 +264,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         testUtils.detectChanges();
         tick();
         testUtils.detectChanges();
-        tick(1); // Need to wait for startPart to be called
+        tick(2); // Need to wait for startPart to be called
 
         // When the component is destroyed
-        wrapper.ngOnDestroy();
+        await wrapper.ngOnDestroy();
 
         // Then it unsubscribed from the part
         expectUnsubscribeToHaveBeenCalled();

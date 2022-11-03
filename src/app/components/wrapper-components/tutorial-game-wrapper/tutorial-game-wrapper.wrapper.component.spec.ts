@@ -551,7 +551,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // When clicking play locally
             const router: Router = TestBed.inject(Router);
-            spyOn(router, 'navigate');
+            spyOn(router, 'navigate').and.resolveTo();
             await testUtils.clickElement('#playOnlineButton');
 
             // expect navigator to have been called

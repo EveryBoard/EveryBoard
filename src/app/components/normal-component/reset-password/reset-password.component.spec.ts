@@ -8,7 +8,7 @@ import { ResetPasswordComponent } from './reset-password.component';
 describe('ResetPasswordComponent', () => {
     let testUtils: SimpleComponentTestUtils<ResetPasswordComponent>;
 
-    let authService: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     const email: string = 'jean@jaja.europe';
 
@@ -25,7 +25,7 @@ describe('ResetPasswordComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ResetPasswordComponent);
         testUtils.detectChanges();
-        authService = TestBed.inject(ConnectedUserService);
+        connectedUserService = TestBed.inject(ConnectedUserService);
     }));
 
     it('should create', () => {
@@ -35,23 +35,25 @@ describe('ResetPasswordComponent', () => {
         expect(testUtils.findElement('#resetPasswordButton').nativeElement.disabled).toBeTrue();
     }));
     it('should delegate to authentication service when button is clicked and show success message', fakeAsync(async() => {
-        spyOn(authService, 'sendPasswordResetEmail').and.resolveTo(MGPValidation.SUCCESS);
+        spyOn(connectedUserService, 'sendPasswordResetEmail').and.resolveTo(MGPValidation.SUCCESS);
         // Given a user with an email
         fillInEmail();
+
         // When asking for password reset
         await testUtils.clickElement('#resetPasswordButton');
+
         // Then it has called sendPasswordResetEmail and shows the success message
-        expect(authService.sendPasswordResetEmail).toHaveBeenCalledWith(email);
+        expect(connectedUserService.sendPasswordResetEmail).toHaveBeenCalledWith(email);
         expect(testUtils.findElement('#successMessage').nativeElement.innerHTML).toEqual('The email has been sent, please follow the instructions from that email.');
     }));
     it('should show error message upon failure', fakeAsync(async() => {
         // Given a user with an email that will fail password reset
-        spyOn(authService, 'sendPasswordResetEmail').and.resolveTo(MGPValidation.failure('error'));
+        spyOn(connectedUserService, 'sendPasswordResetEmail').and.resolveTo(MGPValidation.failure('error'));
         fillInEmail();
         // When asking for password reset
         await testUtils.clickElement('#resetPasswordButton');
         // Then it has called sendPasswordResetEmail and shows the success message
-        expect(authService.sendPasswordResetEmail).toHaveBeenCalledWith(email);
+        expect(connectedUserService.sendPasswordResetEmail).toHaveBeenCalledWith(email);
         expect(getShownError()).toEqual('error');
     }));
 });

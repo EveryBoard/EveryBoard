@@ -18,7 +18,7 @@
                   [ngClass]="getSquareClasses(x, y)"
                   class="base"/>
             <use *ngIf="c.isPiece()"
-                 id="piece_{{x}}_{{y}}"
+                 id="piece_{{ x }}_{{ y }}"
                  class="base mid-stroke"
                  [ngClass]="getPieceClasses(x, y, c)"
                  (click)="clickSquare(x, y)"
@@ -28,7 +28,7 @@
                  xlink:href="#mountain"
                  class="nonplayer-fill"
                  (click)="clickSquare(x, y)"
-                 [attr.transform]="'translate(' + ((x+1) * SPACE_SIZE) + ' ' + ((y+1) * SPACE_SIZE) + ')'"/>
+                 [attr.transform]="'translate(' + ((x + 1) * SPACE_SIZE) + ' ' + ((y + 1) * SPACE_SIZE) + ')'"/>
         </g>
     </g>
     <g *ngFor="let coord of clickableCoords">

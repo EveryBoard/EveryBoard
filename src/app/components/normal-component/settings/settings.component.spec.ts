@@ -24,7 +24,7 @@ describe('SettingsComponent', () => {
     it('should update user setting and redirect when a language change is made', fakeAsync(async() => {
         // Given that the language is set to english
         spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue('en-US');
-        spyOn(userSettingsService, 'changeLanguage');
+        spyOn(userSettingsService, 'changeLanguage').and.callThrough();
         spyOn(window, 'open').and.returnValue(null);
         testUtils.detectChanges();
 
@@ -43,7 +43,7 @@ describe('SettingsComponent', () => {
     it('should update user setting and redirect when a theme change is made', fakeAsync(async() => {
         // Given that the dark theme is selected
         spyOn(userSettingsService, 'getTheme').and.returnValue(MGPOptional.of('dark'));
-        spyOn(userSettingsService, 'changeTheme');
+        spyOn(userSettingsService, 'changeTheme').and.callThrough();
         spyOn(window, 'open').and.returnValue(null);
         testUtils.detectChanges();
 
