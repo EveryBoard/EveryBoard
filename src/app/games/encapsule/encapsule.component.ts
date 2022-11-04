@@ -14,6 +14,7 @@ import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 @Component({
     selector: 'app-encapsule',
@@ -26,13 +27,15 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleSpace,
                                                                  EncapsuleLegalityInformation>
 {
-    private readonly INTER_PIECE_SPACE: number = 20;
+    public readonly CENTER: number = this.getPieceCenter(1);
+    public readonly UPLEFT: number = - (this.SPACE_SIZE + (this.STROKE_WIDTH * 0.5));
+    public readonly WIDTH: number = (5 * this.SPACE_SIZE) + (3 * this.STROKE_WIDTH);
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
     private chosenPieceIndex: MGPOptional<number>;
-    public remainingPieceLeftX: number[][] = [];
+    public remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -48,7 +51,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
         const move: MGPOptional<EncapsuleMove> = this.rules.node.move;
-        this.calculateLeftX();
+        this.calculateLeftPieceCoords();
 
         if (move.isPresent()) {
             this.lastLandingCoord = MGPOptional.of(move.get().landingCoord);
@@ -61,8 +64,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
         return content.toList();
     }
-    public getRemainingPieces(player: number): EncapsulePiece[] {
-        return this.getState().getRemainingPiecesOfPlayer(Player.of(player));
+    public getRemainingPieces(player: Player): EncapsulePiece[] {
+        return this.getState().getRemainingPiecesOfPlayer(player);
     }
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -142,6 +145,9 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getPieceClasses(piece: EncapsulePiece): string[] {
         return [this.getPieceStrokeClass(piece)];
     }
+    public getPieceCenter(xOrY: number): number {
+        return (this.SPACE_SIZE * xOrY) + this.STROKE_WIDTH + (this.SPACE_SIZE / 2);
+    }
     private getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: PlayerOrNone = piece.getPlayer();
         assert(player.isPlayer(), 'EncapsuleComponent.getPieceStrokeClass should only be called with actual pieces!');
@@ -168,24 +174,46 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private isSelectedPiece(piece: EncapsulePiece): boolean {
         return this.chosenPiece.equalsValue(piece);
     }
-    private calculateLeftX(): void {
-        this.remainingPieceLeftX = [];
-        for (let player: number = 0; player <= 1; player++) {
-            this.remainingPieceLeftX.push([]);
+    private calculateLeftPieceCoords(): void {
+        /**
+         * Must have the maximum of piece below the board (for current player)
+         * And the rest of them on the left of the board (for current player)
+         * Aimed pattern (for current player):
+         * 5 . . .
+         * 4 . . .
+         * 3 . . .
+         *   2 1 0
+         */
+        this.remainingPieceCenterCoords = new MGPMap();
+        for (const player of Player.PLAYERS) {
+            const playersRemainingPieceLeftPieceCoords: Coord[] = [];
             const pieces: EncapsulePiece[] = this.getRemainingPieces(player);
-            for (let indexX: number = 0; indexX < pieces.length; indexX++) {
-                if (indexX === 0) {
-                    this.remainingPieceLeftX[player].push(0);
+            for (let index: number = 0; index < pieces.length; index++) {
+                let abstractCoord: Coord;
+                let offsetX: number = 0;
+                let offsetY: number = 0;
+                if (index <= 2) {
+                    abstractCoord = new Coord(2 - index, 3);
+                    offsetY = this.STROKE_WIDTH;
                 } else {
-                    const previousPieceLeftX: number = this.remainingPieceLeftX[player][indexX - 1];
-                    const previousPieceWidth: number = 2 * this.getPieceRadius(pieces[indexX - 1]);
-                    const previousPieceEndX: number = previousPieceLeftX + previousPieceWidth;
-                    this.remainingPieceLeftX[player].push(previousPieceEndX + this.INTER_PIECE_SPACE);
+                    abstractCoord = new Coord(-1, 5 - index);
+                    offsetX = - this.STROKE_WIDTH;
                 }
+                const realX: number = this.getPieceCenter(abstractCoord.x);
+                const realY: number = this.getPieceCenter(abstractCoord.y);
+                playersRemainingPieceLeftPieceCoords.push(new Coord(realX + offsetX, realY + offsetY));
             }
+            this.remainingPieceCenterCoords.set(player, playersRemainingPieceLeftPieceCoords);
         }
     }
-    public getPieceLeftX(player: number, pieceIdx: number): number {
-        return this.remainingPieceLeftX[player][pieceIdx];
+    public getRemainingPieceCenterCoord(player: Player, pieceIdx: number): Coord {
+        return this.remainingPieceCenterCoords.get(player).get()[pieceIdx];
+    }
+    public getRemainingPieceTransform(player: Player): string {
+        if (player === this.role) {
+            return 'translate(' + this.STROKE_WIDTH + ', ' + ((2 * this.STROKE_WIDTH) + (4 * this.SPACE_SIZE)) + ')';
+        } else {
+            return 'translate(' + this.STROKE_WIDTH + ', 0)';
+        }
     }
 }
