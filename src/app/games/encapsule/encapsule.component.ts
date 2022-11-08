@@ -209,11 +209,4 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getRemainingPieceCenterCoord(player: Player, pieceIdx: number): Coord {
         return this.remainingPieceCenterCoords.get(player).get()[pieceIdx];
     }
-    public getRemainingPieceTransform(player: Player): string {
-        if (player === this.role) {
-            return 'translate(' + this.STROKE_WIDTH + ', ' + ((2 * this.STROKE_WIDTH) + (4 * this.SPACE_SIZE)) + ')';
-        } else {
-            return 'translate(' + this.STROKE_WIDTH + ', 0)';
-        }
-    }
 }
