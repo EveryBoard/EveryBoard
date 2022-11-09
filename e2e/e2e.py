@@ -100,29 +100,9 @@ def login(driver, email, password):
     # Log in
     click_button(driver, "#loginButton")
 
-def decorator_maker_with_arguments(decorator_arg1, decorator_arg2, decorator_arg3):
-    def decorator(func):
-        def wrapper(function_arg1, function_arg2, function_arg3) :
-            "This is the wrapper function"
-            print("The wrapper can access all the variables\n"
-                  "\t- from the decorator maker: {0} {1} {2}\n"
-                  "\t- from the function call: {3} {4} {5}\n"
-                  "and pass them to the decorated function"
-                  .format(decorator_arg1, decorator_arg2,decorator_arg3,
-                          function_arg1, function_arg2,function_arg3))
-            return func(function_arg1, function_arg2,function_arg3)
-
-        return wrapper
-
-    return decorator
-
 def scenario(kind):
     def decorator(func):
-        print("new scenario {}".format(kind))
         scenarios[kind] = [func] + scenarios[kind]
-        def wrapper(*args, **kwargs):
-            print("applying scenario {}".format(kind))
-            return func(*args, **kwargs)
     return decorator
 
 scenarios = {
@@ -207,6 +187,39 @@ def can_play_local_2_players(driver):
   winner = driver.find_element(By.ID, "gameResult").text
   if winner != "Player 1 won":
       raise Exception("failed: text should be {}".format(winner))
+
+@scenario("simple")
+def can_play_local_vs_ai(driver):
+  """
+  Scenario: I am a visitor
+  Action: I play a game against the AI
+  Result: The AI plays its move and I can play again
+  """
+
+  # Launch a game of four in a row
+  click_button_after_hover(driver, "#playOffline", "#playLocally")
+  select(driver, "#gameType", "Four in a Row")
+  click_button(driver, "#launchGame")
+
+  # Select the AI as second player
+  select(driver, "#playerOneSelect", "P4Minimax")
+  select(driver, "#aiOneDepthSelect", "Level 1")
+
+  # I play a move
+  click_button(driver, "#click_2 > rect")
+
+  # Let AI play
+  time.sleep(2) # two seconds should be more than enough
+
+  # AI should have played a second move, I can play again
+  click_button(driver, "#click_1 > rect")
+
+  # Now there should be a piece in #click_1
+  check_presence_of(driver, "#click_1 > circle")
+
+@scenario("two_drivers")
+def can_create_part_and_play(driver1, driver2):
+	pass
 
 def launch_scenarios():
     """Launches all the scenarios, stop at the first one that fails"""
