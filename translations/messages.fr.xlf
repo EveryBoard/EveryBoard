@@ -570,10 +570,6 @@
         <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
         <target><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</target>
       </trans-unit>
-      <trans-unit id="8739046962840362623" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ winner }}"/> won</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ winner }}"/> a gagné</target>
-      </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
         <target>Match nul</target>
@@ -581,6 +577,18 @@
       <trans-unit id="2981217201452500939" datatype="html">
         <source>Start a new game</source>
         <target>Commencer une nouvelle partie</target>
+      </trans-unit>
+      <trans-unit id="2807439857560054144" datatype="html">
+        <source>You win</source>
+        <target>Vous avez gagné</target>
+      </trans-unit>
+      <trans-unit id="7296562707316713658" datatype="html">
+        <source>You lose</source>
+        <target>Vous avez perdu</target>
+      </trans-unit>
+      <trans-unit id="1836885699974320953" datatype="html">
+        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
+        <target><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Joueur <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) a gagné</target>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
@@ -601,6 +609,10 @@
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
         <target>Joueur <x id="PH" equiv-text="gameStatus.winner.value + 1"/></target>
+      </trans-unit>
+      <trans-unit id="8487548203433588213" datatype="html">
+        <source><x id="PH" equiv-text="this.winner.get()"/> won</source>
+        <target><x id="PH" equiv-text="this.winner.get()"/> a gagné</target>
       </trans-unit>
       <trans-unit id="5468318552081538104" datatype="html">
         <source>It is your turn.</source>

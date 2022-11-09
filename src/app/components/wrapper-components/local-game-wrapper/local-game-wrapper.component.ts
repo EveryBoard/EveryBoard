@@ -30,6 +30,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public playerSelection: [string, string] = ['human', 'human'];
 
     public winner: MGPOptional<string> = MGPOptional.empty();
+    public winnerMessage: string = '';
 
     public botTimeOut: number = 1000;
 
@@ -83,7 +84,23 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
                 this.winner = MGPOptional.of($localize`Player ${gameStatus.winner.value + 1}`);
+                const loser: Player = gameStatus.winner.getOpponent();
+                const loserValue: number = loser.value;
+                if (this.players[gameStatus.winner.value].equalsValue('human')) { // When human win
+                    if (this.players[loserValue].equalsValue('human')) {
+                        this.winnerMessage = $localize`${this.winner.get()} won`;
+                    } else {
+                        this.winnerMessage = $localize`You win`;
+                    }
+                } else { // When AI win
+                    if (this.players[loserValue].equalsValue('human')) {
+                        this.winnerMessage = $localize`You lose`;
+                    } else {
+                        this.winnerMessage = $localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`;
+                    }
+                }
             }
+
         }
     }
     public proposeAIToPlay(): void {
@@ -108,7 +125,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
         return MGPOptional.ofNullable(
             this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
-                return this.players[playerIndex].isPresent() && this.players[playerIndex].get() === a.name;
+                return this.players[playerIndex].equalsValue(a.name);
             }));
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {

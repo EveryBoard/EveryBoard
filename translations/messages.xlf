@@ -2411,9 +2411,6 @@
       <trans-unit id="3272612818120648715" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="nent.scores.get()[0] }}"/> points</source>
       </trans-unit>
-      <trans-unit id="8739046962840362623" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="t() }}"/> won</source>
-      </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
       </trans-unit>
@@ -2428,6 +2425,18 @@
       </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
+      </trans-unit>
+      <trans-unit id="8487548203433588213" datatype="html">
+        <source><x id="PH" equiv-text="this.winner.get()"/> won</source>
+      </trans-unit>
+      <trans-unit id="2807439857560054144" datatype="html">
+        <source>You win</source>
+      </trans-unit>
+      <trans-unit id="7296562707316713658" datatype="html">
+        <source>You lose</source>
+      </trans-unit>
+      <trans-unit id="1836885699974320953" datatype="html">
+        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>

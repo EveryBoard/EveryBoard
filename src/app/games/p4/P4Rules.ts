@@ -192,10 +192,12 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 // while we haven't reached the top or an empty space
                 const tmpScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                    console.log('VICTORY', x, y)
                     return GameStatus.getVictory(state.getCurrentOpponent());
                 }
             }
         }
+        console.log('pas fini')
         return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
 }

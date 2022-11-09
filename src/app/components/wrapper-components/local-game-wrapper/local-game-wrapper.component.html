@@ -49,7 +49,7 @@
                                 [(ngModel)]="aiDepths[1]"
                                 (change)="updatePlayer(Player.ONE)">
                             <option selected value="0" i18n>Pick the level</option>
-                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
+                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
                                     [value]="i" i18n>Level {{ i }}</option>
                         </select>
                     </div>
@@ -58,20 +58,13 @@
                        class="block" i18n>{{ gameComponent.scores.get()[1] }} points</p>
                 </div>
             </div>
-            <div class="block" id="gameResult" *ngIf="endGame">
-                <h4 *ngIf="winner.isPresent()" i18n>{{ winner.get() }} won</h4>
+            <div id="gameResult" class="block" *ngIf="endGame">
+                <h4 id="winner" *ngIf="winner.isPresent()">{{ winnerMessage }}</h4>
                 <h4 id="draw" *ngIf="winner.isAbsent()" i18n>Draw</h4>
             </div>
         </div>
         <div *ngIf="gameComponent"
              class="tile is-child box is-vcentered">
-            <ng-container *ngIf="gameComponent.rules.node.move">
-                <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
-                    {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.rules.node) }} <br/>
-                </ng-container>
-                Created {{ getCreatedNodes() }} nodes.<br/>
-                Minimax time: {{ getMinimaxTime() }}ms.<br/>
-            </ng-container>
             <button id="passButton"
                     *ngIf="endGame === false && gameComponent.canPass"
                     class="button is-primary is-fullwidth mb-1"
@@ -90,7 +83,6 @@
                     i18n
             >Start a new game</button>
         </div>
-
     </div>
     <div class="tile is-parent is-9 is-vcentered"
          [ngClass]="getBoardHighlight()">
