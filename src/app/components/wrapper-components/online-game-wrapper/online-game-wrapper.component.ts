@@ -665,6 +665,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.setRole(PlayerOrNone.NONE);
         }
         await this.observedPartService.updateObservedPart({
+            ...this.observedPart.get(),
             role: this.role === PlayerOrNone.NONE ? 'Observer' : 'Player',
         });
         return opponent;

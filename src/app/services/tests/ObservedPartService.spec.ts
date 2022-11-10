@@ -24,6 +24,7 @@ export class ObservedPartServiceMock {
             .setObservedPart(observedPart);
     }
     private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
+
     private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
     constructor() {
@@ -64,8 +65,8 @@ export class ObservedPartServiceMock {
             }
         }
     }
-    public async updateObservedPart(observedPart: string): Promise<void> {
-        return;
+    public async updateObservedPart(observedPart: FocusedPart): Promise<void> {
+        this.observedPartRS.next(MGPOptional.of(observedPart));
     }
 }
 

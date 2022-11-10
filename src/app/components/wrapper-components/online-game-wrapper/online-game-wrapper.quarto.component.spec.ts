@@ -147,7 +147,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -261,7 +261,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils = preparationResult.testUtils;
         role = preparationResult.role;
         partDAO = TestBed.inject(PartDAO);
-        // gameService = TestBed.inject(GameService);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
     }
     async function prepareBoard(moves: QuartoMove[], player: Player = Player.ZERO): Promise<void> {
@@ -470,6 +469,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then updateObservedPart should have been called as Player
             const update: Partial<FocusedPart> = {
+                id: 'configRoomId',
+                typeGame: 'Quarto',
+                opponent: null,
                 role: 'Player',
             };
             expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
@@ -487,6 +489,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then updateObservedPart should have been called as Player
             const update: Partial<FocusedPart> = {
+                id: 'configRoomId',
+                opponent: UserMocks.CREATOR_MINIMAL_USER,
+                typeGame: 'Quarto',
                 role: 'Player',
             };
             expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
@@ -2149,6 +2154,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then updateObservedPart should have been called as Observer
             const update: Partial<FocusedPart> = {
+                id: 'configRoomId',
+                opponent: UserMocks.CREATOR_MINIMAL_USER,
+                typeGame: 'Quarto',
                 role: 'Observer',
             };
             expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
