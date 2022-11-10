@@ -147,7 +147,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -490,8 +490,8 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then updateObservedPart should have been called as Player
             const update: Partial<FocusedPart> = {
                 id: 'configRoomId',
-                opponent: UserMocks.CREATOR_MINIMAL_USER,
                 typeGame: 'Quarto',
+                opponent: UserMocks.CREATOR_MINIMAL_USER,
                 role: 'Player',
             };
             expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
