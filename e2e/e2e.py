@@ -43,7 +43,8 @@ def click_button_after_hover(driver, hover_selector, button_selector):
 
 def select(driver, selector, selection):
     try:
-        element = Select(driver.find_element(By.CSS_SELECTOR, selector))
+        wait = WebDriverWait(driver, 10) # wait up to 10s to find the element
+        element = Select(wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector))))
         element.select_by_visible_text(selection)
     except Exception as e:
         print("Failed when selecting from drop down '{}'".format(selector))
@@ -209,7 +210,7 @@ def can_play_local_vs_ai(driver):
   click_button(driver, "#click_2 > rect")
 
   # Let AI play
-  time.sleep(2) # two seconds should be more than enough
+  time.sleep(2) # Two seconds should be more than enough
 
   # AI should have played a second move, I can play again
   click_button(driver, "#click_1 > rect")
@@ -218,8 +219,41 @@ def can_play_local_vs_ai(driver):
   check_presence_of(driver, "#click_1 > circle")
 
 @scenario("two_drivers")
-def can_create_part_and_play(driver1, driver2):
-	pass
+def can_create_part_and_play(driver1, username1, driver2, username2):
+  # Player 1 creates the part
+  click_button(driver1, "#createOnlineGame")
+  select(driver1, "#gameType", "Four in a Row")
+  click_button(driver1, "#launchGame")
+
+  # Player 2 joins the part
+  click_button(driver2, "#seeGameList")
+  click_button(driver2, "#part_0")
+
+  # Player 1 sees player 2 arrive and selects them
+  click_button(driver1, "#presenceOf_{}".format(username1))
+
+  # Player 2 accepts
+  click_button(driver2, "#acceptConfig")
+
+  # Now we are in the game!
+  # Let's play it until the end
+  click_button(driver1, "#click_3 > rect")
+  check_presence_of(driver2, "#playerTurn")
+  click_button(driver2, "#click_2 > rect")
+  check_presence_of(driver1, "#playerTurn")
+  click_button(driver1, "#click_3 > rect")
+  check_presence_of(driver2, "#playerTurn")
+  click_button(driver2, "#click_2 > rect")
+  check_presence_of(driver1, "#playerTurn")
+  click_button(driver1, "#click_3 > rect")
+  check_presence_of(driver2, "#playerTurn")
+  click_button(driver2, "#click_2 > rect")
+  check_presence_of(driver1, "#playerTurn")
+  click_button(driver1, "#click_3 > rect")
+
+  # Now player 1 has won
+  check_presence_of(driver1, "#youWonIndicator")
+  check_presence_of(driver2, "#youLostIndicator")
 
 def launch_scenarios():
     """Launches all the scenarios, stop at the first one that fails"""
@@ -231,7 +265,7 @@ def launch_scenarios():
     for simple_scenario in scenarios["simple"]:
         # Always go back home for a new scenario
         driver.get("http://localhost:4200")
-        simple_scenario(driver)
+        # TODO simple_scenario(driver)
 
     # Now we need a registered account
     username = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -242,8 +276,7 @@ def launch_scenarios():
     register(driver, email, username, password)
     for registered_scenario in scenarios["registered"]:
         driver.get("http://localhost:4200")
-        time.sleep(1)
-        registered_scenario(driver, username, email, password)
+        # TODO registered_scenario(driver, username, email, password)
 
     # Now we need another driver
     driver2 = webdriver.Firefox(options=options)
@@ -255,7 +288,7 @@ def launch_scenarios():
     for two_drivers_scenarios in scenarios["two_drivers"]:
         driver.get("http://localhost:4200")
         driver2.get("http://localhost:4200")
-        two_drivers_scenarios(driver, driver2)
+        two_drivers_scenarios(driver, username, driver2, username)
 
     driver.close()
     driver2.close()
