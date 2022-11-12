@@ -29,8 +29,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public playerSelection: [string, string] = ['human', 'human'];
 
-    public winner: MGPOptional<string> = MGPOptional.empty();
-    public winnerMessage: string = '';
+    public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
     public botTimeOut: number = 1000;
 
@@ -83,20 +82,20 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
-                this.winner = MGPOptional.of($localize`Player ${gameStatus.winner.value + 1}`);
+                const winner: string = $localize`Player ${gameStatus.winner.value + 1}`;
                 const loser: Player = gameStatus.winner.getOpponent();
                 const loserValue: number = loser.value;
                 if (this.players[gameStatus.winner.value].equalsValue('human')) { // When human win
                     if (this.players[loserValue].equalsValue('human')) {
-                        this.winnerMessage = $localize`${this.winner.get()} won`;
+                        this.winnerMessage = MGPOptional.of($localize`${ winner } won`);
                     } else {
-                        this.winnerMessage = $localize`You win`;
+                        this.winnerMessage = MGPOptional.of($localize`You won`);
                     }
                 } else { // When AI win
                     if (this.players[loserValue].equalsValue('human')) {
-                        this.winnerMessage = $localize`You lose`;
+                        this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = $localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`;
+                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (${ winner }) won`);
                     }
                 }
             }
@@ -163,7 +162,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.gameComponent.rules.setInitialBoard();
         this.gameComponent.updateBoard();
         this.endGame = false;
-        this.winner = MGPOptional.empty();
+        this.winnerMessage = MGPOptional.empty();
         this.proposeAIToPlay();
     }
     public getPlayer(): string {

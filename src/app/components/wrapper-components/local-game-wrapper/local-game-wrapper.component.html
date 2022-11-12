@@ -59,8 +59,8 @@
                 </div>
             </div>
             <div id="gameResult" class="block" *ngIf="endGame">
-                <h4 id="winner" *ngIf="winner.isPresent()">{{ winnerMessage }}</h4>
-                <h4 id="draw" *ngIf="winner.isAbsent()" i18n>Draw</h4>
+                <h4 id="winner" *ngIf="winnerMessage.isPresent()">{{ winnerMessage.get() }}</h4>
+                <h4 id="draw" *ngIf="winnerMessage.isAbsent()" i18n>Draw</h4>
             </div>
         </div>
         <div *ngIf="gameComponent"

@@ -367,7 +367,7 @@ describe('LocalGameWrapperComponent', () => {
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
             expect(winnerTag).toBe('Player 1 won');
         }));
-        it(`should display 'You Lose' when human loose against AI`, fakeAsync(async() => {
+        it(`should display 'You Lost' when human loose against AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for AI
             const board: PlayerOrNone[][] = [
                 [O, O, O, _, _, O, O],
@@ -385,11 +385,11 @@ describe('LocalGameWrapperComponent', () => {
             await selectAIPlayer(Player.ZERO);
             tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
 
-            // Then 'You lose' should be displayed
+            // Then 'You lost' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
-            expect(winnerTag).toBe('You lose');
+            expect(winnerTag).toBe('You lost');
         }));
-        it(`should display 'You win' when human win again AI`, fakeAsync(async() => {
+        it(`should display 'You won' when human win again AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for human (against AI)
             const state: P4State = new P4State(preVictoryBoard, 39);
             testUtils.setupState(state);
@@ -398,9 +398,9 @@ describe('LocalGameWrapperComponent', () => {
             // When user does the winning move
             await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 
-            // Then 'You lose' should be displayed
+            // Then 'You won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
-            expect(winnerTag).toBe('You win');
+            expect(winnerTag).toBe('You won');
         }));
         it(`should display '<AI name> (Player <N>) Win' when AI fight AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for AI zero

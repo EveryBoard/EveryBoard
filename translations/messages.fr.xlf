@@ -578,12 +578,12 @@
         <source>Start a new game</source>
         <target>Commencer une nouvelle partie</target>
       </trans-unit>
-      <trans-unit id="2807439857560054144" datatype="html">
-        <source>You win</source>
+      <trans-unit id="960848013465225718" datatype="html">
+        <source>You won</source>
         <target>Vous avez gagné</target>
       </trans-unit>
-      <trans-unit id="7296562707316713658" datatype="html">
-        <source>You lose</source>
+      <trans-unit id="1041065984971815594" datatype="html">
+        <source>You lost</source>
         <target>Vous avez perdu</target>
       </trans-unit>
       <trans-unit id="1836885699974320953" datatype="html">
