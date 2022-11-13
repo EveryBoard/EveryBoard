@@ -13,6 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Coord } from 'src/app/jscaip/Coord';
 
 @Component({
     selector: 'app-pylos',
@@ -97,21 +98,25 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (pieceBelongToOpponent) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
-        if (this.isSupporting(clickedCoord)) {
-            return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
-        }
         if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        if (this.chosenLandingCoord.isAbsent()) {
+        if (this.chosenLandingCoord.isPresent()) {
+            // Starting to select capture
+            if (this.isSupporting(clickedCoord, this.constructedState)) {
+                return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
+            }
+            return this.onCaptureClick(clickedCoord);
+        } else {
+            if (this.isSupporting(clickedCoord, this.getState())) {
+                return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
+            }
             return this.onClimbClick(clickedCoord);
         }
-        // Starting to select capture
-        return this.onCaptureClick(clickedCoord);
     }
-    private isSupporting(clickedCoord: PylosCoord): boolean {
-        return this.constructedState.isSupporting(clickedCoord);
+    private isSupporting(clickedCoord: PylosCoord, state: PylosState): boolean {
+        return state.isSupporting(clickedCoord);
     }
     private async onClimbClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         // Starting do describe a climbing move
@@ -207,20 +212,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.updateCapturableList();
             return MGPValidation.SUCCESS; // now player can click on his captures
         } else {
-            if (this.isCapturelessMoveFinished(clickedCoord)) {
-                this.chosenLandingCoord = MGPOptional.of(clickedCoord);
-                return this.concludeMoveWithCapture([]);
-            } else {
-                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD());
-            }
+            this.chosenLandingCoord = MGPOptional.of(clickedCoord);
+            return this.concludeMoveWithCapture([]);
         }
-    }
-    private isCapturelessMoveFinished(clickedCoord: PylosCoord): boolean {
-        if (this.chosenStartingCoord.isAbsent()) {
-            // Drop without capture
-            return true;
-        }
-        return clickedCoord.isUpperThan(this.chosenStartingCoord.get()); // true if legal climbing (without capture)
     }
     public getSquareClasses(x: number, y: number, z: number): string[] {
         const coord: PylosCoord = new PylosCoord(x, y, z);
@@ -339,5 +333,15 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const y: number = coord.y;
         const z: number = coord.z;
         return this.mustDraw(x, y, z);
+    }
+    public mustDisplayLandingCoord(x: number, y: number, z: number): boolean {
+        if (this.chosenStartingCoord.isPresent()) {
+            if (this.chosenStartingCoord.get().equals(new PylosCoord(x, y, z))) {
+                return true;
+            }
+            const startingZ: number = this.chosenStartingCoord.get().z;
+            return startingZ < z;
+        }
+        return true;
     }
 }

@@ -132,13 +132,13 @@ describe('PylosComponent', () => {
         }));
     });
     describe('Second click', () => {
-        it('should forbid piece to land lower than they started', fakeAsync(async() => {
-            // Given a board with an higher piece and lower space
+        it('should refuse to change selected piece to a supporting one', fakeAsync(async() => {
+            // Given a board with an high piece selected
             const initialBoard: PlayerOrNone[][][] = [
                 [
                     [O, X, _, _],
                     [X, O, _, _],
-                    [_, _, _, _],
+                    [_, _, O, _],
                     [_, _, _, _],
                 ], [
                     [O, _, _],
@@ -153,12 +153,12 @@ describe('PylosComponent', () => {
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
             testUtils.setupState(initialState);
-
-            // When choosing the higher piece
             await testUtils.expectClickSuccess('#piece_0_0_1');
 
-            // Then dropping lower should warn the user that it's illegal
-            await testUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD());
+            // When choosing a piece that support selected piece
+            // Then it should be illegal
+            const error: string = PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE();
+            await testUtils.expectClickFailure('#piece_0_0_0', error);
         }));
         it('should cancel piece selection when clicking on it again', fakeAsync(async() => {
             // Given a board on which a piece is selected
@@ -244,6 +244,36 @@ describe('PylosComponent', () => {
 
             // Then the climb should be legal
             await testUtils.expectMoveSuccess('#drop_0_0_1', move);
+        }));
+        it('should no longer display unlandable coord', fakeAsync(async() => {
+            // Given a board on which a climbing is possible
+            const initialBoard: PlayerOrNone[][][] = [
+                [
+                    [X, O, _, _],
+                    [O, X, _, _],
+                    [_, _, O, _],
+                    [_, _, _, _],
+                ], [
+                    [_, _, _],
+                    [_, _, _],
+                    [_, _, _],
+                ], [
+                    [_, _],
+                    [_, _],
+                ], [
+                    [_],
+                ],
+            ];
+            const initialState: PylosState = new PylosState(initialBoard, 0);
+            testUtils.setupState(initialState);
+            testUtils.expectElementToExist('#drop_3_3_0');
+
+            // When selecting the climbing piece
+            await testUtils.expectClickSuccess('#piece_2_2_0');
+
+            // Then non landable coord should no longer be displayed
+            testUtils.expectElementNotToExist('#drop_3_3_0');
+            testUtils.expectElementToExist('#drop_0_0_1');
         }));
     });
     describe('capture', () => {
@@ -445,7 +475,7 @@ describe('PylosComponent', () => {
             await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the non longer landable square should be displayed
-            testUtils.expectElementToExist('#highCapture_0_0_1');
+            testUtils.expectElementToHaveClass('#highCapture_0_0_1', 'captured-fill');
         }));
         it('should cancel move (during capture) when clicking on a non capturable piece', fakeAsync(async() => {
             // Given a board where a capture is ongoing
