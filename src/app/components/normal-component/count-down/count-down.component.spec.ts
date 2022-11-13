@@ -7,7 +7,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Utils } from 'src/app/utils/utils';
 import { CountDownComponent } from './count-down.component';
 
-fdescribe('CountDownComponent', () => {
+describe('CountDownComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<CountDownComponent>;
 
