@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { display, isJSONPrimitive, Utils } from '../utils';
 
 describe('utils', () => {
@@ -56,7 +58,6 @@ describe('utils', () => {
             expect(Utils.getNonNullable(42)).toBe(42);
         });
     });
-
     describe('display', () => {
         it('should log if verbose is true', () => {
             spyOn(console, 'log').and.callFake((_: string) => {});
@@ -67,6 +68,13 @@ describe('utils', () => {
             spyOn(console, 'log').and.callFake((_: string) => {});
             display(false, 'foo');
             expect(console.log).not.toHaveBeenCalled();
+        });
+    });
+    describe('assert', () => {
+        it('should log error and throw when condition is false', () => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            expect(() => Utils.assert(false, 'error')).toThrowError('Assertion failure: error');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'error');
         });
     });
 });
