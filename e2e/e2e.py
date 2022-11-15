@@ -10,6 +10,8 @@ import random
 import string
 import time
 
+USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
+
 def fill_field(driver, selector, content):
     try:
         wait = WebDriverWait(driver, 10) # wait up to 10s to find the element
@@ -23,6 +25,8 @@ def fill_field(driver, selector, content):
 def click_button(driver, selector):
     try:
         print("Clicking button: {}".format(selector))
+        # Force a small wait to mimick a real user. This is to stabilize these tests a bit more
+        time.sleep(USER_RESPONSE_TIME)
         wait = WebDriverWait(driver, 10) # wait up to 10s to find the element
         button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
         button.click()
@@ -225,12 +229,17 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
   select(driver1, "#gameType", "Four in a Row")
   click_button(driver1, "#launchGame")
 
+  # Player 1 configures the part
+  click_button(driver1, "#firstPlayerCreator") # Player 1 will start
+
+
   # Player 2 joins the part
   click_button(driver2, "#seeGameList")
-  click_button(driver2, "#part_0")
+  click_button(driver2, "#part_0 > td")
 
   # Player 1 sees player 2 arrive and selects them
-  click_button(driver1, "#presenceOf_{}".format(username1))
+  click_button(driver1, "#presenceOf_{}".format(username2))
+  click_button(driver1, "#proposeConfig")
 
   # Player 2 accepts
   click_button(driver2, "#acceptConfig")
@@ -265,7 +274,7 @@ def launch_scenarios():
     for simple_scenario in scenarios["simple"]:
         # Always go back home for a new scenario
         driver.get("http://localhost:4200")
-        # TODO simple_scenario(driver)
+        simple_scenario(driver)
 
     # Now we need a registered account
     username = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -276,7 +285,7 @@ def launch_scenarios():
     register(driver, email, username, password)
     for registered_scenario in scenarios["registered"]:
         driver.get("http://localhost:4200")
-        # TODO registered_scenario(driver, username, email, password)
+        registered_scenario(driver, username, email, password)
 
     # Now we need another driver
     driver2 = webdriver.Firefox(options=options)
@@ -288,7 +297,7 @@ def launch_scenarios():
     for two_drivers_scenarios in scenarios["two_drivers"]:
         driver.get("http://localhost:4200")
         driver2.get("http://localhost:4200")
-        two_drivers_scenarios(driver, username, driver2, username)
+        two_drivers_scenarios(driver, username, driver2, username2)
 
     driver.close()
     driver2.close()

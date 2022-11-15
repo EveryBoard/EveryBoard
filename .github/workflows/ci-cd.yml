@@ -70,6 +70,38 @@ jobs:
       - name: Check coverage
         run: python ./scripts/coverage.py check
 
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [ build, tests ]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Setup dependencies (cache node modules)
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Setup dependencies (setup node)
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Setup dependencies (install dependencies)
+        run: npm ci
+      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
+      - name: Install python dependencies
+        uses: BSFishy/pip-action@v1
+        with:
+          packages: selenium
+      - name: Run e2e tests
+        run: npm run e2e
+
   linter:
     runs-on: ubuntu-latest
     needs: build
