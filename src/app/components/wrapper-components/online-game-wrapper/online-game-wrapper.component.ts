@@ -435,13 +435,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
+		const currentPart = Utils.getNonNullable(this.currentPart);
+		const playerZero: MinimalUser = this.players[0].get();
+		const playerOne: MinimalUser = this.players[1].get();
         if (gameStatus === GameStatus.ONE_WON) {
-            this.currentPart =
-                Utils.getNonNullable(this.currentPart).setWinnerAndLoser(this.players[1].get(), this.players[0].get());
+            this.currentPart = currentPart.setWinnerAndLoser(playerOne, playerZero);
         } else {
             assert(gameStatus === GameStatus.ZERO_WON, 'impossible to get a victory without winner!');
-            this.currentPart =
-                Utils.getNonNullable(this.currentPart).setWinnerAndLoser(this.players[0].get(), this.players[1].get());
+			this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne)
         }
         this.endGame = true;
         const player: Player = this.role as Player;
@@ -821,7 +822,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const lastIndex: number = this.getLastIndex();
         return this.gameService.addGlobalTime(this.currentPartId,
                                               lastIndex,
-                                              Utils.getNonNullable(this.currentPart).data, giver);
+                                              Utils.getNonNullable(this.currentPart).data,
+											  giver);
     }
     public addTurnTime(): Promise<void> {
         const giver: Player = this.role as Player;

@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 })
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @Input() public chatId!: string;
     @Input() public turn?: number;
