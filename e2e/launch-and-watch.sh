@@ -8,5 +8,5 @@ tail -f allout.txt | grep --line-buffered -Eo '([-+.[:alnum:]]+://)?([-[:alnum:]
     while read line
     do
         echo "Opening $line"
-        curl $line
+        curl -s $line > /dev/null
     done

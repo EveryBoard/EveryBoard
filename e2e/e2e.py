@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -267,8 +267,8 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
 def launch_scenarios():
     """Launches all the scenarios, stop at the first one that fails"""
     options = Options()
-    # options.headless = True # Turn this off to see the script happening in real time. Useful for debugging
-    driver = webdriver.Firefox(options=options)
+    options.headless = True # Turn this off to see the script happening in real time. Useful for debugging
+    driver = webdriver.Chrome(options=options)
     #driver.get("http://localhost:4200")
 
     for simple_scenario in scenarios["simple"]:
