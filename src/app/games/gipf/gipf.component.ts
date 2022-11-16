@@ -65,7 +65,7 @@ export class GipfComponent
         this.encoder = GipfMove.encoder;
         this.tutorial = new GipfTutorial().tutorial;
         this.SPACE_SIZE = 40;
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord((this.HEXAGON_WIDTH / 2) + (3 * this.STROKE_WIDTH/ 4),
                                                    - this.HEXAGON_WIDTH),
@@ -194,10 +194,10 @@ export class GipfComponent
         this.arrows = [];
         for (const dir of GipfRules.getAllDirectionsForEntrance(this.constructedState, placement)) {
             if (GipfRules.isLineComplete(this.constructedState, placement, dir) === false) {
-                const nextCase: Coord = placement.getNext(dir);
+                const nextSpace: Coord = placement.getNext(dir);
                 const center1: Coord = this.getCenterAt(placement);
-                const center2: Coord = this.getCenterAt(nextCase);
-                this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
+                const center2: Coord = this.getCenterAt(nextSpace);
+                this.arrows.push(new Arrow(placement, nextSpace, center1.x, center1.y, center2.x, center2.y));
             }
         }
     }
@@ -248,11 +248,11 @@ export class GipfComponent
                           placement: GipfPlacement,
                           finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
+        const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
         return validity;
     }
     public cancelMoveAttempt(): void {
-        this.constructedState = this.rules.node.gameState;
+        this.constructedState = this.getState();
         this.captured = [];
         this.moved = [];
 
@@ -276,9 +276,9 @@ export class GipfComponent
     }
     public getSpaceClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return 'captured';
+            return 'captured-fill';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return 'moved';
+            return 'moved-fill';
         } else {
             return '';
         }

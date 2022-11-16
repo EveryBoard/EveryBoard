@@ -172,4 +172,12 @@ describe('Orthogonal', () => {
             expect(Orthogonal.encoder.decode(dir)).toEqual(Orthogonal.factory.fromString(dir).get());
         });
     });
+    describe('rotateClockwise', () => {
+        it('should rotate clockwise for each direction', () => {
+            expect(Orthogonal.LEFT.rotateClockwise()).toBe(Orthogonal.UP);
+            expect(Orthogonal.UP.rotateClockwise()).toBe(Orthogonal.RIGHT);
+            expect(Orthogonal.RIGHT.rotateClockwise()).toBe(Orthogonal.DOWN);
+            expect(Orthogonal.DOWN.rotateClockwise()).toBe(Orthogonal.LEFT);
+        });
+    });
 });

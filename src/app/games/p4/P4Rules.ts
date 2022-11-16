@@ -9,7 +9,7 @@ import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { P4Failure } from './P4Failure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -24,9 +24,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const coords: Coord[] = [];
         for (let x: number = 0; x < 7; x++) {
             for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
-                const caseScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
-                if (caseScore === Player.ZERO.getVictoryValue() ||
-                    caseScore === Player.ONE.getVictoryValue())
+                const spaceScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
+                if (spaceScore === Player.ZERO.getVictoryValue() ||
+                    spaceScore === Player.ONE.getVictoryValue())
                 {
                     coords.push(new Coord(x, y));
                 }
@@ -34,7 +34,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return coords;
     }
-    private static getBoardValueFromScratch(state: P4State): NodeUnheritance {
+    private static getBoardValueFromScratch(state: P4State): BoardValue {
         display(P4Rules.VERBOSE, { P4Rules_getBoardValueFromScratch: { state } });
         let score: number = 0;
 
@@ -46,16 +46,16 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
                     // if we find a pre-victory
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { state, tmpScore, coord: { x, y } } });
-                    return new NodeUnheritance(tmpScore); // we return it
+                    return new BoardValue(tmpScore); // we return it
                     // TODO check that PRE_VICTORY does not overwrite VICTORY in this case
                     // It seems possible to have a pre victory on one column, and a victory on the next
                 }
                 score += tmpScore;
             }
         }
-        return new NodeUnheritance(score);
+        return new BoardValue(score);
     }
-    public static getLowestUnoccupiedCase(board: Table<PlayerOrNone>, x: number): number {
+    public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
         while (y < 6 && board[y][x] === PlayerOrNone.NONE) {
             y++;
@@ -79,17 +79,17 @@ export class P4Rules extends Rules<P4Move, P4State> {
         let coord: Coord = new Coord(i.x + dir.x, i.y + dir.y);
         while (coord.isInRange(7, 6) && freeSpaces !== 3) {
             // while we're on the board
-            const currentCase: PlayerOrNone = board[coord.y][coord.x];
-            if (currentCase === opponent) {
+            const currentSpace: PlayerOrNone = board[coord.y][coord.x];
+            if (currentSpace === opponent) {
                 return [freeSpaces, allies];
             }
-            if (currentCase === ally && allAlliesAreSideBySide) {
+            if (currentSpace === ally && allAlliesAreSideBySide) {
                 allies++;
             } else {
                 allAlliesAreSideBySide = false; // we stop counting the allies on this line
             }
             // as soon as there is a hole
-            if (currentCase !== opponent && currentCase !== ally) {
+            if (currentSpace !== opponent && currentSpace !== ally) {
                 // TODO: this condition was not there before, check that it makes sense (but the body was there)
                 freeSpaces++;
             }
@@ -157,7 +157,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return moves;
     }
-    public static getBoardValue(state: P4State): NodeUnheritance {
+    public static getBoardValue(state: P4State): BoardValue {
         display(P4Rules.VERBOSE, {
             text: 'P4Rules.getBoardValue called',
             board: state.getCopiedBoard(),
@@ -168,7 +168,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
-        const y: number = P4Rules.getLowestUnoccupiedCase(board, x);
+        const y: number = P4Rules.getLowestUnoccupiedSpace(board, x);
 
         const turn: number = state.turn;
 

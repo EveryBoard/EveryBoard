@@ -73,6 +73,9 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return MGPOptional.empty();
         }
     }
+    public isEmpty(): boolean {
+        return this.values.length === 0;
+    }
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }

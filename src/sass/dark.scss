@@ -3,22 +3,25 @@
     --alt-background-fill: #666;
     --alt-captured: #990000;
     --base-stroke: #444;
+    --background-fill: #888;
     --capturable: #990;
     --captured: red;
     --clickable: #990;
-    --indicator: #990;
-    --last-move: #AA8;
+    --disabled-tab-color: grey;
+    --indicator: green;
+    --last-move: #990;
     --moved: #AAA;
-    --nonplayer: #5c0838;
-    --nonplayer-light: #8d2660;
+    --nonplayer: #005500;
+    --nonplayer-light: #007700;
     --player0: #994d00;
     --player0-alternate: #d3853d;
     --player1: #ffc34d;
     --player1-alternate: #ffe19b;
     --pre-captured: pink;
-    --selectable: #990;
+    --selectable: green;
     --selected: #99E;
     --spaces-fill: #888;
+    --tab-highlight-on-hover: #4a4a4a;
     --victory: green;
 }
 

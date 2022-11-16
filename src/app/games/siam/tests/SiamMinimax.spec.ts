@@ -28,14 +28,15 @@ describe('SiamMinimax:', () => {
     const d: SiamPiece = SiamPiece.DARK_DOWN;
 
     beforeEach(() => {
-        rules = new SiamRules(SiamState);
+        rules = SiamRules.get();
         minimax = new SiamMinimax(rules, 'SiamMinimax');
     });
     describe('list of moves', () => {
         it('should provide 44 possible moves on initial board', () => {
             // Given the initial board
+            const node: SiamNode = new SiamNode(SiamState.getInitialState());
             // When computing the list of moves
-            const firstTurnMoves: SiamMove[] = minimax.getListMoves(rules.node);
+            const firstTurnMoves: SiamMove[] = minimax.getListMoves(node);
             // Then there should be exactly 44 moves
             expect(firstTurnMoves.length).toEqual(44);
         });
@@ -61,7 +62,7 @@ describe('SiamMinimax:', () => {
             };
             for (const move of moves) {
                 if (move.isInsertion()) {
-                    if (move.landingOrientation === move.moveDirection.get()) {
+                    if (move.landingOrientation === move.direction.get()) {
                         moveType.pushingInsertion = moveType.pushingInsertion + 1;
                     } else {
                         moveType.slidingInsertion = moveType.slidingInsertion + 1;
@@ -108,7 +109,7 @@ describe('SiamMinimax:', () => {
             // When computing the best move
             const chosenMove: SiamMove = node.findBestMove(1, minimax);
             // Then it should go for victory
-            const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            const bestMove: SiamMove = SiamMove.of(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
         });
         it('should consider pushing as the best option', () => {
@@ -125,7 +126,7 @@ describe('SiamMinimax:', () => {
             // When computing the best move
             const chosenMove: SiamMove = node.findBestMove(1, minimax);
             // Then it should push
-            const bestMove: SiamMove = new SiamMove(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            const bestMove: SiamMove = SiamMove.of(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
         });
         it('should consider pushing from outside to be the best option', () => {
@@ -142,7 +143,7 @@ describe('SiamMinimax:', () => {
             // When computing the best move
             const chosenMove: SiamMove = node.findBestMove(1, minimax);
             // Then the best move should push from outside
-            const bestMove: SiamMove = new SiamMove(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            const bestMove: SiamMove = SiamMove.of(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
         });
     });
@@ -157,7 +158,7 @@ describe('SiamMinimax:', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
             expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
@@ -174,7 +175,7 @@ describe('SiamMinimax:', () => {
                 [_, _, U, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
             expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
@@ -191,7 +192,7 @@ describe('SiamMinimax:', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+            const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
             const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // When computing the board value
             // Then player zero should have a higher score because it is their turn
@@ -207,7 +208,7 @@ describe('SiamMinimax:', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+            const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
             const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
             const boardValue: number = minimax.getBoardValue(node).value;
 
@@ -222,7 +223,7 @@ describe('SiamMinimax:', () => {
             // Given the initial state
             const state: SiamState = SiamState.getInitialState();
             // When computing the pushers
-            const pushers: { coord: Coord, distance: number }[] = SiamRules.getPushers(state, [1, 2, 3], [2]);
+            const pushers: { coord: Coord, distance: number }[] = SiamRules.get().getPushers(state, [1, 2, 3], [2]);
             // Then it should compute 6 pushers to a distance of 5
             expect(pushers.length).withContext('should find 6 pushers').toBe(6);
             for (const pusher of pushers) {
@@ -242,7 +243,7 @@ describe('SiamMinimax:', () => {
             const fallingCoord: Coord = new Coord(3, 0);
             // When computing the closest pusher
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then it should identify the closest pusher and know the distance to the border
             expect(closestPusher).toEqual(MGPOptional.of({
                 distance: 3,
@@ -262,7 +263,7 @@ describe('SiamMinimax:', () => {
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then it should be at a distance of 3+1
             expect(closestPusher).toEqual(MGPOptional.of({
                 distance: 4,
@@ -282,7 +283,7 @@ describe('SiamMinimax:', () => {
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then it should be at a distance of 4
             expect(closestPusher).toEqual(MGPOptional.of({
                 distance: 4,
@@ -302,7 +303,7 @@ describe('SiamMinimax:', () => {
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then it should be at distance 5, meaning it is a piece out of the board
             expect(closestPusher).toEqual(MGPOptional.of({
                 distance: 5,
@@ -322,7 +323,7 @@ describe('SiamMinimax:', () => {
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then it should be a piece outside of the board
             expect(closestPusher).toEqual(MGPOptional.of({
                 distance: 3,
@@ -342,7 +343,7 @@ describe('SiamMinimax:', () => {
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then there should be none
             expect(closestPusher).toEqual(MGPOptional.empty());
         });
@@ -359,7 +360,7 @@ describe('SiamMinimax:', () => {
             // When computing the closest pusher for the aligned mountains
             const fallingCoord: Coord = new Coord(3, 0);
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then there should be none
             expect(closestPusher).toEqual(MGPOptional.empty());
         });
@@ -376,7 +377,7 @@ describe('SiamMinimax:', () => {
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then it should be the furthest
             expect(closestPusher).toEqual(MGPOptional.of({
                 distance: 3,
@@ -396,7 +397,7 @@ describe('SiamMinimax:', () => {
             const fallingCoord: Coord = new Coord(3, 0);
             // When computing the closest pusher
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
+                SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP);
             // Then the result shouldn't be affected by the piece after the mountain
             expect(closestPusher).toEqual(MGPOptional.of({
                 distance: 4,
@@ -408,7 +409,7 @@ describe('SiamMinimax:', () => {
             const state: SiamState = SiamState.getInitialState();
             // When computing the closest pusher horizontally
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-                SiamRules.getLineClosestPusher(state, new Coord(4, 2), Orthogonal.RIGHT);
+                SiamRules.get().getLineClosestPusher(state, new Coord(4, 2), Orthogonal.RIGHT);
             // Then it should not find any
             expect(closestPusher).toEqual(MGPOptional.empty());
         });
@@ -434,9 +435,9 @@ describe('SiamMinimax:', () => {
                     zeroShortestDistance === 0) {
                     actualValues[oneShortestDistance].push(null);
                 } else {
-                    const actualScore: number = SiamRules.getScoreFromShortestDistances(zeroShortestDistance,
-                                                                                        oneShortestDistance,
-                                                                                        currentPlayer);
+                    const actualScore: number = SiamRules.get().getScoreFromShortestDistances(zeroShortestDistance,
+                                                                                              oneShortestDistance,
+                                                                                              currentPlayer);
                     actualValues[oneShortestDistance].push(actualScore);
                 }
             }

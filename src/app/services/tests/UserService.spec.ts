@@ -8,7 +8,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('UserService', () => {
 
-    let service: UserService;
+    let userService: UserService;
 
     let userDAO: UserDAO;
 
@@ -21,17 +21,17 @@ describe('UserService', () => {
             ],
         }).compileComponents();
         userDAO = TestBed.inject(UserDAO);
-        service = TestBed.inject(UserService);
+        userService = TestBed.inject(UserService);
     }));
     it('should create', () => {
-        expect(service).toBeTruthy();
+        expect(userService).toBeTruthy();
     });
     describe('setUsername', () => {
         it('should change the username of a user', async() => {
             spyOn(userDAO, 'update').and.resolveTo();
 
             // When the username of a user set
-            await service.setUsername('uid', 'foo');
+            await userService.setUsername('uid', 'foo');
 
             // Then the username is updated through the DAO
             expect(userDAO.update).toHaveBeenCalledWith('uid', { username: 'foo' });
@@ -43,7 +43,7 @@ describe('UserService', () => {
             spyOn(userDAO, 'update').and.resolveTo();
 
             // When calling updatePresenceToken
-            await service.updatePresenceToken('joserId');
+            await userService.updatePresenceToken('joserId');
 
             // Then update should be called
             expect(userDAO.update).toHaveBeenCalledOnceWith('joserId', { lastUpdateTime: serverTimestamp() });

@@ -57,7 +57,7 @@ export abstract class GameWrapper<P extends Comparable> {
     {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
-    public getMatchingComponent(gameName: string) : MGPOptional<Type<AbstractGameComponent>> {
+    public getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
@@ -68,11 +68,12 @@ export abstract class GameWrapper<P extends Comparable> {
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.rules.setInitialBoard();
+            this.gameComponent.updateBoard();
         }
         return gameCreatedSuccessfully;
     }
     private async createGameComponent(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
+        display(GameWrapper.VERBOSE, { m: 'GameWrapper.createGameComponent', that: this });
 
         const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
@@ -165,7 +166,7 @@ export abstract class GameWrapper<P extends Comparable> {
             // This can happen if called before the component has been set up
             return false;
         }
-        const turn: number = this.gameComponent.rules.node.gameState.turn;
+        const turn: number = this.gameComponent.getTurn();
         const indexPlayer: number = turn % 2;
         const player: P = this.getPlayer();
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
@@ -190,7 +191,7 @@ export abstract class GameWrapper<P extends Comparable> {
             return ['endgame-bg'];
         }
         if (this.isPlayerTurn()) {
-            const turn: number = this.gameComponent.rules.node.gameState.turn;
+            const turn: number = this.gameComponent.getTurn();
             return ['player' + (turn % 2) + '-bg'];
         }
         return [];

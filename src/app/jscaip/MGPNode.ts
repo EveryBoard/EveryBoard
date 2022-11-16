@@ -4,7 +4,7 @@ import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { NodeUnheritance } from './NodeUnheritance';
+import { BoardValue } from './BoardValue';
 import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -21,7 +21,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
                      S extends GameState,
                      L = void,
-                     U extends NodeUnheritance = NodeUnheritance> {
+                     U extends BoardValue = BoardValue> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
     // TODO: check for the proper use of LinkedList to optimise the stuff
     // TODO: when AI has all choice at bestHopedValue equality, she must split by average?
@@ -83,7 +83,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                 public readonly move: MGPOptional<M> = MGPOptional.empty(),
                 public minimaxCreator?: Minimax<M, S, L, U>)
     {
-        /* Initialisation condition:
+        /* Initialization condition:
          * mother: null for initial board
          * board: should already be a clone
          */
@@ -227,14 +227,6 @@ export class MGPNode<R extends Rules<M, S, L>,
             }
         }
         return MGPOptional.empty();
-    }
-    public getInitialNode(): MGPNode<R, M, S, L, U> {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let almightyMom: MGPNode<R, M, S, L, U> = this;
-        while (almightyMom.mother.isPresent()) {
-            almightyMom = almightyMom.mother.get();
-        }
-        return almightyMom;
     }
     public getHopedValue(minimax: Minimax<M, S, L, U>): number {
         return this.hopedValue.get(minimax.name).get();

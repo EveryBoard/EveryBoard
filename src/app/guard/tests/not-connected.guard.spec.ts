@@ -11,7 +11,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 describe('NotConnectedGuard', () => {
     let guard: NotConnectedGuard;
 
-    let authService: ConnectedUserService;
+    let connectedUserService: ConnectedUserService;
 
     let router: Router;
 
@@ -27,9 +27,9 @@ describe('NotConnectedGuard', () => {
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
-        authService = TestBed.inject(ConnectedUserService);
-        guard = new NotConnectedGuard(authService, router);
+        spyOn(router, 'navigate').and.callThrough();
+        connectedUserService = TestBed.inject(ConnectedUserService);
+        guard = new NotConnectedGuard(connectedUserService, router);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();
@@ -46,18 +46,9 @@ describe('NotConnectedGuard', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/'));
     }));
-    it('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
-        // Given a guard that has executed
-        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        await guard.canActivate();
-        // eslint-disable-next-line dot-notation
-        spyOn(guard['userSub'], 'unsubscribe');
-
-        // When destroying the guard
-        guard.ngOnDestroy();
-
-        // Then unsubscribe is called
-        // eslint-disable-next-line dot-notation
-        expect(guard['userSub'].unsubscribe).toHaveBeenCalledWith();
+    xit('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
+        // TODO FOR REVIEW: maintenant comme tu le sais, on se désabonne immédiatement
+        // vu que de toute façon c'est du code dans une promise
+        // on "promisifie" un observable, aller jusqu'au bout c'est s'en désabonner au plus tôt ?
     }));
 });

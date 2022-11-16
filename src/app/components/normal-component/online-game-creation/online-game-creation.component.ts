@@ -3,18 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ActivePartsService } from 'src/app/services/ActivePartsService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ObservedPartService } from 'src/app/services/ObservedPartService';
 
-export class OnlineGameCreationMessages {
-    public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;
-}
 
 @Component({
     selector: 'app-online-game-creation',
@@ -25,8 +21,8 @@ export class OnlineGameCreationComponent implements OnInit {
     public constructor(private readonly route: ActivatedRoute,
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
+                       private readonly observedPartService: ObservedPartService,
                        private readonly messageDisplayer: MessageDisplayer,
-                       private readonly activePartsService: ActivePartsService,
                        private readonly gameService: GameService) {
     }
     public async ngOnInit(): Promise<void> {
@@ -38,17 +34,17 @@ export class OnlineGameCreationComponent implements OnInit {
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         const authUser: AuthUser = this.connectedUserService.user.get();
         assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
-        const user: MinimalUser = authUser.toMinimalUser();
         if (this.gameExists(game) === false) {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
-        if (await this.canCreateOnlineGame(user)) {
+        const canCreateOnlineGame: MGPValidation = this.observedPartService.canUserCreate();
+        if (canCreateOnlineGame.isSuccess()) {
             const gameId: string = await this.gameService.createPartConfigRoomAndChat(game);
             await this.router.navigate(['/play', game, gameId]);
             return true;
         } else {
-            this.messageDisplayer.infoMessage(OnlineGameCreationMessages.ALREADY_INGAME());
+            this.messageDisplayer.infoMessage(canCreateOnlineGame.getReason());
             await this.router.navigate(['/lobby']);
             return false;
         }
@@ -57,9 +53,5 @@ export class OnlineGameCreationComponent implements OnInit {
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.isPresent();
-    }
-    private async canCreateOnlineGame(user: MinimalUser): Promise<boolean> {
-        const hasActivePart: boolean = await this.activePartsService.userHasActivePart(user);
-        return hasActivePart === false;
     }
 }

@@ -5,7 +5,7 @@
      preserveAspectRatio="xMidYMid meet"
 >
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let caseContent of line; index as x">
+        <g *ngFor="let spaceContent of line; index as x">
             <g id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)">
                 <!-- Background -->
@@ -18,21 +18,21 @@
                       fill-opacity="0.7"
                 />
                 <!-- Piece -->
-                <circle *ngIf="caseContent !== UNOCCUPIED"
+                <circle *ngIf="spaceContent !== UNOCCUPIED"
                         [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
                         [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
-                        [ngClass]="piecePlayerClass(caseContent)"
+                        [ngClass]="piecePlayerClass(spaceContent)"
                         [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                         class="base-no-fill"
                 />
-                <rect *ngIf="caseContent !== UNOCCUPIED"
+                <rect *ngIf="spaceContent !== UNOCCUPIED"
                       [attr.x]="SPACE_SIZE/2 + (x * SPACE_SIZE) - SPACE_SIZE/8"
                       [attr.y]="SPACE_SIZE/2 + (y * SPACE_SIZE) - SPACE_SIZE/8"
-                      [attr.rx]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
-                      [attr.ry]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
+                      [attr.rx]="isPlayerZero(spaceContent) ? SPACE_SIZE : 0"
+                      [attr.ry]="isPlayerZero(spaceContent) ? SPACE_SIZE : 0"
                       [attr.width]="SPACE_SIZE/4"
                       [attr.height]="SPACE_SIZE/4"
-                      [attr.fill]="pieceColor(caseContent)"
+                      [attr.fill]="pieceColor(spaceContent)"
                       class="no-stroke"
                 />
             </g>
@@ -44,12 +44,12 @@
               [attr.y]="lastPieceMove.get().coord.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
-              class="base no-fill mid-stroke highlighted"/>
+              class="base no-fill mid-stroke last-move-stroke"/>
         <rect [attr.x]="lastPieceMove.get().end.x * SPACE_SIZE"
               [attr.y]="lastPieceMove.get().end.y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
-              class="base no-fill mid-stroke highlighted"/>
+              class="base no-fill mid-stroke last-move-stroke"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen.isPresent()"
@@ -57,5 +57,5 @@
             [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
             [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
             [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-            class="base mid-stroke no-fill highlighted"/>
+            class="base mid-stroke no-fill selected-stroke"/>
 </svg>

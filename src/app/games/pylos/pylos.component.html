@@ -1,17 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
      [attr.viewBox]="'0 0 ' + BOARD_WIDTH + ' ' + BOARD_HEIGHT"
-     [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
 
-    <g *ngFor="let player of Player.PLAYERS">
-        <circle *ngFor="let p of getPlayerSidePieces(player)"
-                id="piece_{{ player.value }}_{{ p }}"
-                [attr.cx]="(SPACE_SIZE / 4) + ((BOARD_WIDTH - (SPACE_SIZE / 4)) * (p / 15))"
-                [attr.cy]="getPiecesCyForPlayer(player)"
-                [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
-                [ngClass]="getPlayerClass(player)"
-                class="base small-stroke"/>
+    <g [attr.transform]="'rotate(' + (this.role.value * 180) + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
+        <g *ngFor="let player of Player.PLAYERS">
+            <circle *ngFor="let p of getPlayerSidePieces(player)"
+                    id="piece_{{ player.value }}_{{ p }}"
+                    [attr.cx]="(SPACE_SIZE / 4) + ((BOARD_WIDTH - (SPACE_SIZE / 4)) * (p / 15))"
+                    [attr.cy]="getPiecesCyForPlayer(player)"
+                    [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
+                    [ngClass]="getPlayerClass(player)"
+                    class="base small-stroke"/>
+        </g>
     </g>
 
     <g #boardInItself
@@ -72,6 +73,7 @@
                      class="base-no-fill small-stroke"/>
         </g>
         <g *ngFor="let capturable of capturables"
+           (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"
            id="capturable_{{ capturable.x }}_{{ capturable.y }}_{{ capturable.z }}"
            [attr.transform]="'translate(' + getPieceCxByCoord(capturable) + ' ' + getPieceCyByCoord(capturable) + ')'">
             <line [attr.x1]="-0.25 * getPieceRadius(capturable.z)"

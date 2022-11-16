@@ -481,7 +481,7 @@ describe('SixRules', () => {
             });
         });
         describe('Disconnection Victories', () => {
-            it('should consider looser PLAYER.ZERO when he drop bellow 6 pieces on phase two', () => {
+            it('should consider loser PLAYER.ZERO when he drop bellow 6 pieces on phase two', () => {
                 // Given a board in phase two
                 const board: NumberTable = [
                     [O, O, X, _, _],
@@ -508,7 +508,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
-            it('should consider looser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
+            it('should consider loser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
                 // Given a board in phase 2
                 const board: NumberTable = [
                     [X, X, O, _, _],

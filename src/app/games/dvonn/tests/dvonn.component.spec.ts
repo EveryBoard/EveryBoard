@@ -79,7 +79,7 @@ describe('DvonnComponent', () => {
         const gameComponent: DvonnComponent = testUtils.getComponent();
         // expect board to show it
         expect(gameComponent.disconnecteds).toEqual([
-            { coord: new Coord(4, 1), caseContent: W_ },
+            { coord: new Coord(4, 1), spaceContent: W_ },
         ]);
     }));
     it('should allow clicking twice on a piece to deselect it', fakeAsync(async() => {

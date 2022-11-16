@@ -2,7 +2,7 @@
     <div class="tile is-3 is-vertical is-parent">
         <div class="tile is-child box has-text-centered" *ngIf="gameComponent" id="info">
             <div class="block" id="turnIndicator">
-                <p class="subtitle" i18n>Turn n°{{ gameComponent.rules.node.gameState.turn + 1 }}</p>
+                <p class="subtitle" i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
             <div id="playerSelector"
                  class="columns">

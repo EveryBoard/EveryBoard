@@ -2,7 +2,7 @@ import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
 import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -119,11 +119,11 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
         }
         return resultingState;
     }
-    public getBoardValue(node: GoNode): NodeUnheritance {
+    public getBoardValue(node: GoNode): BoardValue {
         const state: GoState = node.gameState;
         const gameStatus: GameStatus = GoRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
+            return new BoardValue(gameStatus.toBoardValue());
         }
         const LOCAL_VERBOSE: boolean = false;
 
@@ -133,7 +133,7 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
 
         const goScore: number[] = goState.getCapturedCopy();
         const goKilled: number[] = this.getDeadStones(goState);
-        return new NodeUnheritance((goScore[1] + (2 * goKilled[0])) - (goScore[0] + (2 * goKilled[1])));
+        return new BoardValue((goScore[1] + (2 * goKilled[0])) - (goScore[0] + (2 * goKilled[1])));
     }
     public getDeadStones(state: GoState): number[] {
         const killed: number[] = [0, 0];

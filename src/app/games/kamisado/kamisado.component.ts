@@ -59,7 +59,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         return this.getPlayerClass(piece.player);
     }
     public updateBoard(): void {
-        const state: KamisadoState = this.rules.node.gameState;
+        const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
         this.lastMove = this.rules.node.move;
         this.lastPieceMove = MGPOptional.empty();
@@ -82,7 +82,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     }
     public async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
-        return this.chooseMove(KamisadoMove.PASS, this.rules.node.gameState);
+        return this.chooseMove(KamisadoMove.PASS, this.getState());
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -100,8 +100,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         } else {
-            const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
-            const player: Player = this.rules.node.gameState.getCurrentPlayer();
+            const piece: KamisadoPiece = this.getState().getPieceAtXY(x, y);
+            const player: Player = this.getState().getCurrentPlayer();
             if (piece.belongsTo(player)) {
                 // Player clicked on another of its pieces, select it if he can
                 if (this.chosenAutomatically) {
@@ -116,8 +116,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         }
     }
     public choosePiece(x: number, y: number): MGPValidation {
-        const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
-        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+        const piece: KamisadoPiece = this.getState().getPieceAtXY(x, y);
+        const opponent: Player = this.getState().getCurrentOpponent();
         if (piece.belongsTo(opponent)) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
@@ -128,7 +128,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gameState);
+        return this.chooseMove(move, this.getState());
     }
     public cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {

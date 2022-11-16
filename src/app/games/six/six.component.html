@@ -24,17 +24,17 @@
     <polygon *ngFor="let disconnected of disconnecteds"
              id="disconnected_{{ disconnected.x }}_{{ disconnected.y }}"
              [attr.points]="getHexaCoordsAt(disconnected)"
-             class="base round captured"/>
+             class="base round captured-fill"/>
     <polygon *ngIf="leftCoord.isPresent()"
              id="leftCoord_{{ leftCoord.get().x }}_{{ leftCoord.get().y }}"
              (click)="onNeighborClick(leftCoord.get())"
              [attr.points]="getHexaCoordsAt(leftCoord.get())"
-             class="base round moved mid-stroke"/>
+             class="base round moved-fill mid-stroke"/>
     <polygon *ngIf="lastDrop.isPresent()"
              id="lastDrop_{{ lastDrop.get().x }}_{{ lastDrop.get().y }}"
              (click)="onPieceClick(lastDrop.get())"
              [attr.points]="getHexaCoordsAt(lastDrop.get())"
-             class="base no-fill round last-move mid-stroke"/>
+             class="base no-fill round last-move-stroke mid-stroke"/>
     <!-- HIGHLIGHTS -->
     <polygon *ngIf="selectedPiece.isPresent()"
              id="selectedPiece_{{ selectedPiece.get().x }}_{{ selectedPiece.get().y }}"
@@ -45,10 +45,10 @@
     <polygon *ngFor="let victoryCoord of victoryCoords"
              id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
              [attr.points]="getHexaCoordsAt(victoryCoord)"
-             class="base no-fill round highlighted mid-stroke"/>
+             class="base no-fill round victory-fill mid-stroke"/>
     <g *ngFor="let cuttableGroup of cuttableGroups"
        pointer-events="fill"
-       class="capturable">
+       class="capturable-stroke">
         <polygon *ngFor="let cuttable of cuttableGroup"
                  id="cuttable_{{ cuttable.x }}_{{ cuttable.y }}"
                  (click)="onPieceClick(cuttable)"

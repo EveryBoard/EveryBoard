@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode, PentagoRules } from './PentagoRules';
@@ -69,7 +69,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
         }
         return legalRotations;
     }
-    public getBoardValue(node: PentagoNode): NodeUnheritance {
-        return new NodeUnheritance(PentagoRules.get().getGameStatus(node).toBoardValue());
+    public getBoardValue(node: PentagoNode): BoardValue {
+        return new BoardValue(PentagoRules.get().getGameStatus(node).toBoardValue());
     }
 }

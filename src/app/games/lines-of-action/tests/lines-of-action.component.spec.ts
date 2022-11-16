@@ -50,8 +50,8 @@ describe('LinesOfActionComponent', () => {
             // When clicking on a piece of the user
             await testUtils.expectClickSuccess('#click_2_0');
 
-            // Then the piece should be highlighter
-            testUtils.expectElementToHaveClass('#piece_2_0', 'selected');
+            // Then the piece should be shown as selected
+            testUtils.expectElementToHaveClass('#piece_2_0', 'selected-stroke');
         }));
     });
     describe('Second click', () => {
@@ -70,8 +70,8 @@ describe('LinesOfActionComponent', () => {
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
             const component: LinesOfActionComponent = testUtils.getComponent();
-            expect(component.getSquareClasses(2, 2)).toEqual(['moved']);
-            expect(component.getSquareClasses(2, 0)).toEqual(['moved']);
+            expect(component.getSquareClasses(2, 2)).toEqual(['moved-fill']);
+            expect(component.getSquareClasses(2, 0)).toEqual(['moved-fill']);
         }));
         it('should show captures', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
@@ -92,7 +92,7 @@ describe('LinesOfActionComponent', () => {
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
             const component: LinesOfActionComponent = testUtils.getComponent();
-            expect(component.getSquareClasses(2, 2)).toEqual(['captured']);
+            expect(component.getSquareClasses(2, 2)).toEqual(['captured-fill']);
         }));
         it('should change selected piece when clicking another piece', fakeAsync(async() => {
             // Given a board on which you have a selected piece
@@ -102,9 +102,9 @@ describe('LinesOfActionComponent', () => {
             await testUtils.expectClickSuccess('#click_3_0');
 
             // Then the secondly clicked coord should be selected
-            testUtils.expectElementToHaveClass('#piece_3_0', 'selected');
+            testUtils.expectElementToHaveClass('#piece_3_0', 'selected-stroke');
             // And the previous one no longer
-            testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
         }));
         it('should deselect selected piece when clicking on it again', fakeAsync(async() => {
             // Given any board with a piece selected
@@ -114,7 +114,7 @@ describe('LinesOfActionComponent', () => {
             await testUtils.expectClickSuccess('#click_2_0');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
         }));
     });
 });

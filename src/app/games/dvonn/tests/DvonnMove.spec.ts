@@ -41,7 +41,7 @@ describe('DvonnMove', () => {
         expect(DvonnMove.of(new Coord(5, 2), new Coord(5, 0)).length()).toEqual(2);
         expect(DvonnMove.of(new Coord(5, 2), new Coord(6, 1)).length()).toEqual(1);
     });
-    it('should override equality', () => {
+    it('should override equals correctly', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(2, 2), new Coord(2, 3));
         const sameMove: DvonnMove = DvonnMove.of(new Coord(2, 2), new Coord(2, 3));
         const neighbor: DvonnMove = DvonnMove.of(new Coord(3, 3), new Coord(2, 3));

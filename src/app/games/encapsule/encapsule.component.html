@@ -1,27 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 520 520"
+     [attr.viewBox]="UPLEFT + ' ' + UPLEFT + ' ' + WIDTH + ' ' + WIDTH"
      preserveAspectRatio="xMidYMid meet">
-
-    <g #remainingCasePlayerZero
-       [attr.transform]="'translate(' + STROKE_WIDTH + ', 0)'">
-        <g *ngFor="let piece of getRemainingPieces(0); index as pieceIdx">
-            <circle id="piece_0_{{ piece.toString() }}_{{ pieceIdx }}"
-                    (click)="onPieceClick(0, piece, pieceIdx)"
+    <g #remainingPieces
+       *ngFor="let player of Player.PLAYERS">
+        <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
+            <circle id="piece_{{ player.value }}_{{ piece.toString() }}_{{ pieceIdx }}"
+                    (click)="onPieceClick(player.value, piece, pieceIdx)"
+                    [attr.transform]="'rotate(' + ((this.role.value + player.value) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
                     [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="getPieceLeftX(0, pieceIdx) + getPieceRadius(piece)"
-                    [attr.cy]="(SPACE_SIZE / 2)"
+                    [attr.cx]="getRemainingPieceCenterCoord(player, pieceIdx).x"
+                    [attr.cy]="getRemainingPieceCenterCoord(player, pieceIdx).y"
                     [ngClass]="getSidePieceClasses(piece, pieceIdx)"
                     class="base no-fill"
                     pointer-events="fill"
             />
         </g>
     </g>
-    <g #boardDiv
-       [attr.transform]="'translate(' + (260 - (1.5 * SPACE_SIZE) - STROKE_WIDTH) + ', ' + SPACE_SIZE + ')'"
-    >
+    <g #boardDiv>
         <g *ngFor="let line of board; index as y">
-            <g *ngFor="let caseContent of line; index as x">
+            <g *ngFor="let spaceContent of line; index as x">
                 <rect id="click_{{ x }}_{{ y }}"
                       (click)="onBoardClick(x, y)"
                       [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
@@ -31,11 +29,11 @@
                       [ngClass]="getRectClasses(x, y)"
                       class="base"
                 />
-                <circle *ngFor="let piece of getListPieces(caseContent)"
+                <circle *ngFor="let piece of getListPieces(spaceContent)"
                         (click)="onBoardClick(x, y)"
                         [attr.r]="getPieceRadius(piece)"
-                        [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
-                        [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                        [attr.cx]="getPieceCenter(x)"
+                        [attr.cy]="getPieceCenter(y)"
                         [ngClass]="getPieceClasses(piece)"
                         class='base no-fill'
                 />
@@ -48,23 +46,8 @@
               [attr.y]="(SPACE_SIZE * chosenCoord.get().y) + STROKE_WIDTH"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
-              class="base no-fill selected"
+              class="base no-fill selected-stroke"
               pointer-events="fill"
         />
-    </g>
-    <g #remainingCasePlayerOne
-       [attr.transform]="'translate(' + STROKE_WIDTH + ', ' + ((2 * STROKE_WIDTH) + (4 * SPACE_SIZE)) + ')'"
-    >
-        <g *ngFor="let piece of getRemainingPieces(1); index as pieceIdx">
-            <circle id="piece_1_{{ piece.toString() }}_{{ pieceIdx }}"
-                    (click)="onPieceClick(1, piece, pieceIdx)"
-                    [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="getPieceLeftX(1, pieceIdx) + getPieceRadius(piece)"
-                    [attr.cy]="(SPACE_SIZE / 2)"
-                    [ngClass]="getSidePieceClasses(piece, pieceIdx)"
-                    class="base no-fill"
-                    pointer-events="fill"
-            />
-        </g>
     </g>
 </svg>

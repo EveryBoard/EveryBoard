@@ -14,7 +14,7 @@ import { MessageDisplayer } from '../MessageDisplayer';
 
 describe('ErrorLoggerService', () => {
 
-    let service: ErrorLoggerService;
+    let errorLoggerService: ErrorLoggerService;
     let errorDAO: ErrorDAO;
 
     beforeEach(fakeAsync(async() => {
@@ -29,11 +29,11 @@ describe('ErrorLoggerService', () => {
                 { provide: ErrorDAO, useClass: ErrorDAOMock },
             ],
         }).compileComponents();
-        service = TestBed.inject(ErrorLoggerService);
+        errorLoggerService = TestBed.inject(ErrorLoggerService);
         errorDAO = TestBed.inject(ErrorDAO);
     }));
     it('should create', fakeAsync(async() => {
-        expect(service).toBeTruthy();
+        expect(errorLoggerService).toBeTruthy();
     }));
     it('should throw instead of logging the error when not initialized', () => {
         // Given a non-initialized error logger service
@@ -62,7 +62,7 @@ describe('ErrorLoggerService', () => {
         const component: string = 'Some component';
         const message: string = 'my new error message';
         const data: JSONValue = { foo: 'bar' };
-        spyOn(errorDAO, 'create');
+        spyOn(errorDAO, 'create').and.callThrough();
 
         // When logging it
         ErrorLoggerService.logError(component, message, data);
@@ -84,7 +84,7 @@ describe('ErrorLoggerService', () => {
         // Given an error in a component which has not already been encountered
         const component: string = 'Some component';
         const message: string = 'my new error message';
-        spyOn(errorDAO, 'create');
+        spyOn(errorDAO, 'create').and.callThrough();
 
         // When logging it
         ErrorLoggerService.logError(component, message);
@@ -102,14 +102,14 @@ describe('ErrorLoggerService', () => {
         expect(errorDAO.create).toHaveBeenCalledOnceWith(expectedError);
     }));
     it('should increment count of already encountered errors', fakeAsync(async() => {
-        spyOn(errorDAO, 'update');
+        spyOn(errorDAO, 'update').and.callThrough();
         // Given an error in a component which has already been encountered
         const component: string = 'Some component';
         const message: string = 'my new error message';
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
         tick(1000);
-        const errors: FirestoreDocument<MGPError>[] = await service.findErrors(component, '/', message, data);
+        const errors: FirestoreDocument<MGPError>[] = await errorLoggerService.findErrors(component, '/', message, data);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
 
@@ -128,7 +128,7 @@ describe('ErrorLoggerService', () => {
         it('should return the empty list if there is no matching error', async() => {
             // Given no matching error
             // When looking for matching errors
-            const errors: FirestoreDocument<MGPError>[] = await service.findErrors('test', '', 'dummy message');
+            const errors: FirestoreDocument<MGPError>[] = await errorLoggerService.findErrors('test', '', 'dummy message');
             // Then no matching error should be found
             expect(errors.length).toBe(0);
         });
@@ -146,7 +146,7 @@ describe('ErrorLoggerService', () => {
             const errorId: string = await errorDAO.create(error);
             // When looking for matching errors
             const errors: FirestoreDocument<MGPError>[] =
-                await service.findErrors(error.component, error.route, error.message, error.data);
+                await errorLoggerService.findErrors(error.component, error.route, error.message, error.data);
             // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toBe(errorId);
@@ -164,7 +164,7 @@ describe('ErrorLoggerService', () => {
             const errorId: string = await errorDAO.create(error);
             // When looking for matching errors (without data)
             const errors: FirestoreDocument<MGPError>[] =
-                await service.findErrors(error.component, error.route, error.message);
+                await errorLoggerService.findErrors(error.component, error.route, error.message);
             // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toEqual(errorId);

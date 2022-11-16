@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AwaleRules } from './AwaleRules';
+import { AwaleRules, CaptureResult } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from './AwaleState';
@@ -10,6 +10,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { AwaleTutorial } from './AwaleTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Player } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-awale-component',
@@ -23,9 +25,11 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 {
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
-    private captured: Coord[] = [];
-
-    private moved: Coord[] = [];
+    public captured: Table<number> = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+    ];
+    private filledCoords: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -41,7 +45,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        const state: AwaleState = this.rules.node.gameState;
+        const state: AwaleState = this.getState();
         this.scores = MGPOptional.of(state.getCapturedCopy());
         this.hidePreviousMove();
         const lastMove: MGPOptional<AwaleMove> = this.rules.node.move;
@@ -56,23 +60,30 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         }
     }
     private hidePreviousMove(): void {
-        this.captured = [];
-        this.moved = [];
+        this.captured = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ];
+        this.filledCoords = [];
     }
     private showPreviousMove(): void {
+        const previousMove: AwaleMove = this.rules.node.move.get();
         const previousState: AwaleState = this.rules.node.mother.get().gameState;
-        for (let y: number = 0; y <= 1; y++) {
-            for (let x: number = 0; x <= 5; x++) {
-                const coord: Coord = new Coord(x, y);
-                const currentValue: number = this.board[y][x];
-                const oldValue: number = previousState.getPieceAt(coord);
-                if (!this.last.equalsValue(coord)) {
-                    if (currentValue < oldValue) {
-                        this.captured.push(coord);
-                    } else if (currentValue > oldValue) {
-                        this.moved.push(coord);
-                    }
-                }
+        const previousBoard: number[][] = ArrayUtils.copyBiArray(previousState.board);
+        const previousY: number = previousState.getCurrentOpponent().value;
+        this.filledCoords = AwaleRules.distribute(previousMove.x,
+                                                  previousY,
+                                                  previousBoard);
+        const landingCoord: Coord = this.filledCoords[this.filledCoords.length - 1];
+        if (landingCoord.y !== previousY) {
+            const captureResult: CaptureResult = AwaleRules.captureIfLegal(landingCoord.x,
+                                                                           landingCoord.y,
+                                                                           previousState.getCurrentPlayer(),
+                                                                           previousBoard);
+            this.captured = captureResult.captureMap;
+            const player: Player = this.getState().getCurrentPlayer();
+            if (AwaleRules.mustMansoon(player.getOpponent(), captureResult.resultingBoard)) {
+                this.captured = AwaleRules.mansoon(player, captureResult.resultingBoard).captureMap;
             }
         }
     }
@@ -81,25 +92,25 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (y === this.rules.node.gameState.getCurrentPlayer().value) {
+        if (y === this.getState().getCurrentPlayer().value) {
             return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
         }
         this.last = MGPOptional.empty(); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = AwaleMove.from(x);
-        // let's confirm on java-server-side that the move is legal
-        return this.chooseMove(chosenMove, this.rules.node.gameState, this.scores.get());
+        return this.chooseMove(chosenMove, this.getState());
     }
-    public getSquareClasses(x: number, y: number): string[] {
+    public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return ['captured'];
+        const homeColor: string = 'player' + (y + 1) % 2 + '-fill';
+        if (this.captured[y][x] > 0) {
+            return ['captured-fill', 'moved-stroke'];
         } else if (this.last.equalsValue(coord)) {
-            return ['moved', 'highlighted'];
-        } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return ['moved'];
+            return ['moved-stroke', 'last-move-stroke', homeColor];
+        } else if (this.filledCoords.some((c: Coord) => c.equals(coord))) {
+            return ['moved-stroke', homeColor];
         } else {
-            return [];
+            return [homeColor];
         }
     }
     public getPieceCx(x: number): number {

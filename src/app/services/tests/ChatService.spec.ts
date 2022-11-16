@@ -11,7 +11,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 describe('ChatService', () => {
 
-    let service: ChatService;
+    let chatService: ChatService;
     let chatDAO: ChatDAO;
 
     const MESSAGE: Message = {
@@ -31,19 +31,19 @@ describe('ChatService', () => {
         }).compileComponents();
 
         chatDAO = TestBed.inject(ChatDAO);
-        service = new ChatService(chatDAO);
+        chatService = new ChatService(chatDAO);
     }));
     it('should be created', () => {
-        expect(service).toBeTruthy();
+        expect(chatService).toBeTruthy();
     });
     describe('deleteChat', () => {
         it('should delete the chat through the DAO', fakeAsync(async() => {
-            spyOn(chatDAO, 'delete');
+            spyOn(chatDAO, 'delete').and.callThrough();
             // Given a chat that exists
-            await service.createNewChat('id');
+            await chatService.createNewChat('id');
 
             // When calling deleteChat
-            await service.deleteChat('id');
+            await chatService.deleteChat('id');
 
             // Then the chat has been removed
             expect(chatDAO.delete).toHaveBeenCalledWith('id');
@@ -51,9 +51,11 @@ describe('ChatService', () => {
     });
     describe('createNewChat', () => {
         it('should create the chat through the DAO', fakeAsync(async() => {
-            spyOn(chatDAO, 'set');
+            spyOn(chatDAO, 'set').and.callThrough();
+
             // When calling createNewChat
-            await service.createNewChat('id');
+            await chatService.createNewChat('id');
+
             // Then the chat has been initialized with the DAO
             expect(chatDAO.set).toHaveBeenCalledWith('id', {});
         }));
@@ -61,34 +63,36 @@ describe('ChatService', () => {
     describe('sendMessage', () => {
         it('should not send message if the user is not allowed to send a message in the chat', fakeAsync(async() => {
             // Given a chat
-            await service.createNewChat('id');
+            await chatService.createNewChat('id');
             // When sending a message without a username
             const sender: MinimalUser = { name: '', id: 'fooId' };
-            const result: Promise<MGPValidation> = service.sendMessage('id', sender, 'foo', 2);
+            const result: Promise<MGPValidation> = chatService.sendMessage('id', sender, 'foo', 2);
             // Then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE()));
         }));
         it('should not send message if it is empty', fakeAsync(async() => {
             // Given a chat
-            await service.createNewChat('id');
+            await chatService.createNewChat('id');
+
             // When sending an empty message
             const sender: MinimalUser = { name: 'sender', id: 'senderId' };
-            const result: Promise<MGPValidation> = service.sendMessage('id', sender, '', 2);
+            const result: Promise<MGPValidation> = chatService.sendMessage('id', sender, '', 2);
+
             // Then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE()));
         }));
         it('should update the chat with the new message in the DAO', fakeAsync(async() => {
             spyOn(Date, 'now').and.returnValue(42);
-            spyOn(service, 'addMessage');
+            spyOn(chatService, 'addMessage').and.callThrough();
             // Given an empty chat
-            await service.createNewChat('id');
+            await chatService.createNewChat('id');
 
             // When a message is sent on that chat
             const sender: MinimalUser = { name: 'sender', id: 'senderId' };
-            await service.sendMessage('id', sender, 'foo', 2);
+            await chatService.sendMessage('id', sender, 'foo', 2);
 
             // Then the chat should be updated with the new message
-            expect(service.addMessage).toHaveBeenCalledWith('id', MESSAGE);
+            expect(chatService.addMessage).toHaveBeenCalledWith('id', MESSAGE);
         }));
     });
 });

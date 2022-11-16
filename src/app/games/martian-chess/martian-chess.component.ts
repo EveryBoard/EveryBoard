@@ -57,6 +57,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public static SPACE_SIZE: number = 100;
     public static STROKE_WIDTH: number = 8;
     public INDICATOR_SIZE: number = 20;
+    public readonly HORIZONTAL_CENTER: number = 2 * MartianChessComponent.SPACE_SIZE;
+    public readonly VERTICAL_CENTER: number =
+        (4 * MartianChessComponent.SPACE_SIZE) + MartianChessComponent.STROKE_WIDTH;
 
     public readonly LEFT: number = (MartianChessComponent.SPACE_SIZE / -4) + (MartianChessComponent.STROKE_WIDTH / -2);
     public readonly UP: number = - MartianChessComponent.STROKE_WIDTH / 2;
@@ -184,7 +187,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return up + ', ' + center + ', ' + right;
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gameState;
+        this.state = this.getState();
         this.board = this.state.board;
         const scoreZero: number = this.state.getScoreOf(Player.ZERO);
         const scoreOne: number = this.state.getScoreOf(Player.ONE);
@@ -199,9 +202,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getPieceClasses(x: number, y: number): string[] {
         const clickedCoord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        classes.push(y > 3 ? 'player0' : 'player1');
+        classes.push(y > 3 ? 'player0-fill' : 'player1-fill');
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
-            classes.push('highlighted');
+            classes.push('selected-stroke');
         }
         if (this.rules.node.move.isPresent()) {
             const move: MartianChessMove = this.rules.node.move.get();
@@ -210,9 +213,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                     this.rules.node.mother.get().gameState.getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
                 if (wasOccupied) {
-                    const landingHome: boolean = this.rules.node.gameState.isInOpponentTerritory(new Coord(0, y));
+                    const landingHome: boolean = this.getState().isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('highlighted');
+                        classes.push('last-move-stroke');
                     }
                 }
             }
@@ -293,7 +296,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const move: MGPFallible<MartianChessMove> =
                 MartianChessMove.from(info.selectedPiece, endCoord, this.callTheClock);
             assert(move.isSuccess(), 'MartianChessComponent or Rules did a mistake thinking this would have been a legal move!');
-            const state: MartianChessState = this.rules.node.gameState;
+            const state: MartianChessState = this.getState();
             return this.chooseMove(move.get(), state);
         } else if (this.isOneOfUsersPieces(endCoord)) {
             return this.selectAsFirstPiece(endCoord);
@@ -329,7 +332,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getClockCircleClasses(): string[] {
         const classes: string[] = ['base'];
         if (this.callTheClock) {
-            classes.push('highlighted');
+            classes.push('selected-stroke');
         }
         if (this.getCurrentPlayer() === Player.ZERO) {
             classes.push('player0-stroke');
@@ -345,18 +348,18 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const node: MartianChessNode = this.rules.node;
             const move: MartianChessMove = node.move.get();
             if (move.coord.equals(square)) {
-                classes.push('moved');
+                classes.push('moved-fill');
             } else if (move.end.equals(square)) {
                 const previousPiece: MartianChessPiece = node.mother.get().gameState.getPieceAt(square);
                 const wasEmpty: boolean = previousPiece === MartianChessPiece.EMPTY;
                 if (wasEmpty) {
-                    classes.push('moved');
+                    classes.push('moved-fill');
                 } else {
                     const landingHome: boolean = node.gameState.isInOpponentTerritory(new Coord(0, y));
                     if (landingHome) {
-                        classes.push('moved');
+                        classes.push('moved-fill');
                     } else {
-                        classes.push('captured');
+                        classes.push('captured-fill');
                     }
                 }
             }
@@ -369,5 +372,23 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public chooseStyle(n: number): void {
         this.style = this.listOfStyles[n].style;
         this.displayModePanel = false;
+    }
+    public getPieceTranslation(y: number): string {
+        return 'translate(0,  ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
+    }
+    public getBoardTransformation(): string {
+        const translation: string = 'translate(' + this.SPACE_SIZE + ', 0)';
+        const rotation: string = 'rotate(' + (this.role.value * 180) + ' ' + this.HORIZONTAL_CENTER + ' ' + this.VERTICAL_CENTER + ')';
+        return translation + ' ' + rotation;
+    }
+    public getCapturesTransformation(player: Player): string {
+        const scale: string = 'scale(0.5, 0.5)';
+        const translationX: number = - this.SPACE_SIZE / 2;
+        let translationY: number = this.SPACE_SIZE / 2;
+        if (player === this.role) {
+            translationY += (10 * this.SPACE_SIZE) + (4 * this.STROKE_WIDTH);
+        }
+        const translation: string = 'translate(' + translationX + ', ' + translationY + ')';
+        return scale + ' ' + translation;
     }
 }

@@ -97,7 +97,7 @@ describe('SixComponent', () => {
 
             testUtils.expectElementToExist('#leftCoord_0_-1');
             testUtils.expectElementToExist('#lastDrop_0_5');
-            expect(gameComponent.getPieceClass(new Coord(0, 5))).toBe('player0');
+            expect(gameComponent.getPieceClass(new Coord(0, 5))).toBe('player0-fill');
         }));
         it('should deselect selected piece when clicking on it again', fakeAsync(async() => {
             // Given a board in moving phase, where a piece is selected

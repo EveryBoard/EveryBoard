@@ -57,7 +57,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
 
             // Then the piece should be selected
-            testUtils.expectElementToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected');
+            testUtils.expectElementToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected-stroke');
         }));
         it('should mark piece on board as selected when clicked on', fakeAsync(async() => {
             // Given a board with piece on
@@ -73,7 +73,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_7_0');
 
             // Then it should be marked as selected
-            testUtils.expectElementToHaveClass('#click_7_0', 'selected');
+            testUtils.expectElementToHaveClass('#click_7_0', 'selected-stroke');
         }));
     });
     describe('Second click', () => {
@@ -199,7 +199,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_0_0');
 
             // Then no move is made and the new piece is selected
-            testUtils.expectElementToHaveClass('#click_0_0', 'selected');
+            testUtils.expectElementToHaveClass('#click_0_0', 'selected-stroke');
         }));
         it('should deselect remaining piece when clicking on it again', fakeAsync(async() => {
             // Given a board on which a remaining piece is selected
@@ -209,7 +209,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected');
+            testUtils.expectElementNotToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected-stroke');
         }));
         it('should deselect piece on board when clicking on it again', fakeAsync(async() => {
             // Given a board with piece on, one of them selected
@@ -226,7 +226,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_7_0');
 
             // Then it should no longer be marked as selected
-            testUtils.expectElementNotToHaveClass('#click_7_0', 'selected');
+            testUtils.expectElementNotToHaveClass('#click_7_0', 'selected-stroke');
         }));
     });
     describe('visuals', () => {
@@ -280,7 +280,7 @@ describe('DiamComponent', () => {
             // When rendering the board
             testUtils.setupState(state);
 
-            // Then only the winning pieces should be highlighted
+            // Then only the winning pieces should be shown as victory
             testUtils.expectElementToHaveClass('#click_0_1', 'victory-stroke');
             testUtils.expectElementToHaveClass('#click_4_1', 'victory-stroke');
             testUtils.expectElementNotToHaveClass('#click_0_0', 'victory-stroke');
