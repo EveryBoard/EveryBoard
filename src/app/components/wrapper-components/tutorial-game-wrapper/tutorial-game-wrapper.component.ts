@@ -61,7 +61,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
     public async ngAfterViewInit(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.ngAfterViewInit');
-        const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+        const createdSuccessfully: boolean = await this.afterViewInit();
         if (createdSuccessfully) {
             this.start();
         }

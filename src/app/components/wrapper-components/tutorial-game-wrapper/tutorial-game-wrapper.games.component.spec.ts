@@ -89,14 +89,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Game should load correctly', () => {
         for (const game of GameInfo.ALL_GAMES()) {
-            if (game.display) {
-                it(game.urlName, fakeAsync(async() => {
-                    const wrapper: GameWrapper<Comparable> =
-                        (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
-                            .wrapper;
-                    expect(wrapper).toBeTruthy();
-                }));
-            }
+            it(game.urlName, fakeAsync(async() => {
+                const wrapper: GameWrapper<Comparable> =
+                    (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
+                        .wrapper;
+                expect(wrapper).toBeTruthy();
+            }));
         }
     });
     describe('Tutorials', () => {
@@ -316,9 +314,6 @@ describe('TutorialGameWrapperComponent (games)', () => {
         }));
         it('should make sure all solutionMove are legal', fakeAsync(async() => {
             for (const gameInfo of GameInfo.ALL_GAMES()) {
-                if (gameInfo.display === false) {
-                    continue;
-                }
                 const gameComponent: AbstractGameComponent =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
                 const rules: Rules<Move, GameState, unknown> = gameComponent.rules;
