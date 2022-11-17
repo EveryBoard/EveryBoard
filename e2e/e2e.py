@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -10,6 +10,7 @@ import random
 import string
 import time
 
+HEADLESS = True # Set to false off to see the script happening in real time. Useful for debugging
 USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
 
 def fill_field(driver, selector, content):
@@ -34,13 +35,16 @@ def click_button(driver, selector):
         print("Failed when clicking on button '{}'".format(selector))
         raise e
 
-def click_button_after_hover(driver, hover_selector, button_selector):
+def click_menu_button(driver, hover_selector, button_selector):
     try:
-        wait = WebDriverWait(driver, 10) # wait up to 10s to find the element
-        hover = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, hover_selector)))
-        actions = ActionChains(driver)
-        actions.move_to_element(hover).perform()
-        driver.find_element(By.CSS_SELECTOR, button_selector).click()
+        if HEADLESS:
+            click_button(driver, '.navbar-burger')
+        else:
+            wait = WebDriverWait(driver, 10) # wait up to 10s to find the element
+            hover = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, hover_selector)))
+            actions = ActionChains(driver)
+            actions.move_to_element(hover).perform()
+        click_button(driver, button_selector)
     except Exception as e:
         print("Failed when hovering over '{}' and clicking on button '{}'".format(hover_selector, button_selector))
         raise e
@@ -64,7 +68,10 @@ def check_presence_of(driver, selector):
 
 def register(driver, email, username, password):
     """Registers the user by filling in the registration form"""
+    driver.get("http://localhost:4200")
     # Access registration page
+    if HEADLESS:
+        click_button(driver, '.navbar-burger')
     click_button(driver, "#register")
 
     # Fill in registration form
@@ -81,7 +88,7 @@ def register(driver, email, username, password):
 def access_game_list(driver):
     """Accesses the list of games"""
     # Go back to the main page
-    click_button(driver, "#home")
+    click_button(driver, "#logo")
 
     # Go to the lobby
     click_button(driver, "#seeGameList")
@@ -92,10 +99,12 @@ def access_game_list(driver):
 def logout(driver):
     """Logs the current user out"""
     # Just click on the logout button
-    click_button_after_hover(driver, "#connectedUserName", "#logout")
+    click_menu_button(driver, "#connectedUserName", "#logout")
 
 def login(driver, email, password):
     # Go to the login page
+    if HEADLESS:
+        click_button(driver, '.navbar-burger')
     click_button(driver, "#login")
 
     # Fill in the form
@@ -144,7 +153,7 @@ def can_play_tutorial(driver):
     Result: I can complete it fully
     """
     # Launch the tutorial
-    click_button_after_hover(driver, "#playOffline", "#tutorial")
+    click_menu_button(driver, "#playOffline", "#tutorial")
     select(driver, "#gameType", "Four in a Row")
     click_button(driver, "#launchTutorial")
 
@@ -175,7 +184,7 @@ def can_play_local_2_players(driver):
   Result: I can go until the end of the game
   """
   # Launch a game of four in a row
-  click_button_after_hover(driver, "#playOffline", "#playLocally")
+  click_menu_button(driver, "#playOffline", "#playLocally")
   select(driver, "#gameType", "Four in a Row")
   click_button(driver, "#launchGame")
 
@@ -202,7 +211,7 @@ def can_play_local_vs_ai(driver):
   """
 
   # Launch a game of four in a row
-  click_button_after_hover(driver, "#playOffline", "#playLocally")
+  click_menu_button(driver, "#playOffline", "#playLocally")
   select(driver, "#gameType", "Four in a Row")
   click_button(driver, "#launchGame")
 
@@ -267,8 +276,8 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
 def launch_scenarios():
     """Launches all the scenarios, stop at the first one that fails"""
     options = Options()
-    # options.headless = True # Turn this off to see the script happening in real time. Useful for debugging
-    driver = webdriver.Firefox(options=options)
+    options.headless = HEADLESS
+    driver = webdriver.Chrome(options=options)
     #driver.get("http://localhost:4200")
 
     for simple_scenario in scenarios["simple"]:
@@ -281,18 +290,16 @@ def launch_scenarios():
     email = username + '@everyboard.org'
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
-    driver.get("http://localhost:4200")
     register(driver, email, username, password)
     for registered_scenario in scenarios["registered"]:
         driver.get("http://localhost:4200")
         registered_scenario(driver, username, email, password)
 
     # Now we need another driver
-    driver2 = webdriver.Firefox(options=options)
+    driver2 = webdriver.Chrome(options=options)
     username2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
     email2 = username2 + '@everyboard.org'
     password2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-    driver2.get('http://localhost:4200')
     register(driver2, email2, username2, password2)
     for two_drivers_scenarios in scenarios["two_drivers"]:
         driver.get("http://localhost:4200")
