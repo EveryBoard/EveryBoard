@@ -67,12 +67,24 @@ export class ObservedPartService implements OnDestroy {
         }
     }
     public updateObservedPart(observedPart: Partial<FocusedPart>): Promise<void> {
-        // TODO FOR REVIEW: should we assert that observedPart (the update)
-        //  is not partial if this.observedPart (the current value) is not set ?
-        const oldObservedPart: FocusedPart = this.observedPart.getOrElse(observedPart as FocusedPart);
-        const mergedObservedPart: FocusedPart = { ...oldObservedPart, ...observedPart };
         assert(this.connectedUserService.user.isPresent(), 'Should not call updateObservedPart when not connected');
-        return this.userDAO.update(this.connectedUserService.user.get().id, { observedPart: mergedObservedPart });
+        if (this.observedPart.isPresent()) {
+            const oldObservedPart: FocusedPart = this.observedPart.get();
+            const mergedObservedPart: FocusedPart = { ...oldObservedPart, ...observedPart };
+            return this.userDAO.update(this.connectedUserService.user.get().id, { observedPart: mergedObservedPart });
+        } else {
+            const fakeFocusedPart: FocusedPart = {
+                id: 'id',
+                role: 'Candidate',
+                typeGame: 'P4',
+            };
+            const keys: string[] = Object.keys(fakeFocusedPart);
+            for (const key of keys) {
+                assert(observedPart[key] != null, 'field ' + key + ' should be set before updating observedPart');
+            }
+            // Here, we know that observedPart is not partial
+            return this.userDAO.update(this.connectedUserService.user.get().id, { observedPart });
+        }
     }
     public removeObservedPart(): Promise<void> {
         assert(this.connectedUserService.user.isPresent(), 'Should not call removeObservedPart when not connected');
