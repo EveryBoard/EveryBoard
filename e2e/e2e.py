@@ -58,12 +58,13 @@ def select(driver, selector, selection):
         print("Failed when selecting from drop down '{}'".format(selector))
         raise e
 
-def check_presence_of(driver, selector):
+def wait_for_presence_of(driver, selector):
     try:
         wait = WebDriverWait(driver, 10)
         element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
     except Exception as e:
         print("failed when checking presence of element '{}'".format(selector))
+        print(driver.find_element(By.CSS_SELECTOR, "body"))
         raise e
 
 def register(driver, email, username, password):
@@ -94,7 +95,7 @@ def access_game_list(driver):
     click_button(driver, "#seeGameList")
 
     # Now I should see the game list (this will throw it if does not find it)
-    check_presence_of(driver, '#actualGames')
+    wait_for_presence_of(driver, '#actualGames')
 
 def logout(driver):
     """Logs the current user out"""
@@ -229,7 +230,7 @@ def can_play_local_vs_ai(driver):
   click_button(driver, "#click_1 > rect")
 
   # Now there should be a piece in #click_1
-  check_presence_of(driver, "#click_1 > circle")
+  wait_for_presence_of(driver, "#click_1 > circle")
 
 @scenario("two_drivers")
 def can_create_part_and_play(driver1, username1, driver2, username2):
@@ -240,7 +241,6 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
 
   # Player 1 configures the part
   click_button(driver1, "#firstPlayerCreator") # Player 1 will start
-
 
   # Player 2 joins the part
   click_button(driver2, "#seeGameList")
@@ -256,22 +256,22 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
   # Now we are in the game!
   # Let's play it until the end
   click_button(driver1, "#click_3 > rect")
-  check_presence_of(driver2, "#playerTurn")
+  wait_for_presence_of(driver2, "#playerTurn")
   click_button(driver2, "#click_2 > rect")
-  check_presence_of(driver1, "#playerTurn")
+  wait_for_presence_of(driver1, "#playerTurn")
   click_button(driver1, "#click_3 > rect")
-  check_presence_of(driver2, "#playerTurn")
+  wait_for_presence_of(driver2, "#playerTurn")
   click_button(driver2, "#click_2 > rect")
-  check_presence_of(driver1, "#playerTurn")
+  wait_for_presence_of(driver1, "#playerTurn")
   click_button(driver1, "#click_3 > rect")
-  check_presence_of(driver2, "#playerTurn")
+  wait_for_presence_of(driver2, "#playerTurn")
   click_button(driver2, "#click_2 > rect")
-  check_presence_of(driver1, "#playerTurn")
+  wait_for_presence_of(driver1, "#playerTurn")
   click_button(driver1, "#click_3 > rect")
 
   # Now player 1 has won
-  check_presence_of(driver1, "#youWonIndicator")
-  check_presence_of(driver2, "#youLostIndicator")
+  wait_for_presence_of(driver1, "#youWonIndicator")
+  wait_for_presence_of(driver2, "#youLostIndicator")
 
 def launch_scenarios():
     """Launches all the scenarios, stop at the first one that fails"""
