@@ -15,7 +15,7 @@ describe('EncapsulePiece', () => {
     });
     describe('ofSizeAndPlayer', () => {
         it('should construct the expected piece', () => {
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ONE)).toBe(EncapsulePiece.MEDIUM_LIGHT);
+            expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ONE)).toBe(EncapsulePiece.BIG_LIGHT);
         });
         it('should return the none piece if player or size is none', () => {
             expect(EncapsulePiece.ofSizeAndPlayer(Size.NONE, Player.ONE)).toBe(EncapsulePiece.NONE);

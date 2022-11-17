@@ -1574,7 +1574,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
     });
-    xdescribe('User "handshake"', () => {
+    describe('User "handshake"', () => {
         xit(`should make opponent's name lightgrey when he is token-outdated`, fakeAsync(async() => {
             // Given a connected opponent
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
