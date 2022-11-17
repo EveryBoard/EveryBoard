@@ -133,7 +133,7 @@ describe('PylosComponent', () => {
     });
     describe('Second click', () => {
         it('should refuse to change selected piece to a supporting one', fakeAsync(async() => {
-            // Given a board with an high piece selected
+            // Given a board with a high piece selected
             const initialBoard: PlayerOrNone[][][] = [
                 [
                     [O, X, _, _],

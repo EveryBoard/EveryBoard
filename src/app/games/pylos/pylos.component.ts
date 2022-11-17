@@ -13,7 +13,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Coord } from 'src/app/jscaip/Coord';
 
 @Component({
     selector: 'app-pylos',
