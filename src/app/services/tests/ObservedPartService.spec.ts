@@ -164,6 +164,60 @@ describe('ObservedPartService', () => {
                 // Then the userDAO should update the connected user doc
                 expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart });
             });
+            it('should merge old observedPart to new when the old is present', async() => {
+                // Given a service that has an old observedPart
+                ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+                const oldValue: FocusedPart = {
+                    id: 'old',
+                    role: 'Candidate',
+                    typeGame: 'old',
+                };
+                await observedPartService.updateObservedPart(oldValue);
+
+                // When updating it with another value
+                spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+                const newValue: Partial<FocusedPart> = {
+                    id: 'new',
+                };
+                await observedPartService.updateObservedPart(newValue);
+
+                // Then all value from the update should be there, and the one not mentionned should be from the old one
+                expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_AUTH_USER.id, { observedPart: {
+                    id: 'new',
+                    role: 'Candidate',
+                    typeGame: 'old',
+                }});
+            });
+            it('should throw if observedPart update is incomplete when old observed part is absent (and role missing)', async() => {
+                // Given a service observing an user
+                ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+
+                // When updating with only one field the part
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                const expectedError: string = 'Assertion failure: field role should be set before updating observedPart';
+
+                // Then the userDAO should update the connected user doc
+                const updatedPart: Partial<FocusedPart> = {
+                    id: 'another-id',
+                    typeGame: 'whatever',
+                };
+                expect(() => observedPartService.updateObservedPart(updatedPart)).toThrowError(expectedError);
+            });
+            it('should throw if observedPart update is incomplete when old observed part is absent (and typeGame missing)', async() => {
+                // Given a service observing an user
+                ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+
+                // When updating with only one field the part
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                const expectedError: string = 'Assertion failure: field typeGame should be set before updating observedPart';
+
+                // Then it should throw
+                const updatedPart: Partial<FocusedPart> = {
+                    id: 'another-id',
+                    role: 'Candidate',
+                };
+                expect(() => observedPartService.updateObservedPart(updatedPart)).toThrowError(expectedError);
+            });
         });
         describe('removeObservedPart', () => {
             it('should throw when asking to remove whilst no user is logged', async() => {
