@@ -31,7 +31,6 @@ jobs:
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-
       - name: Build
         run: npm run build
 
@@ -63,10 +62,12 @@ jobs:
 
       - name: Run test suite
         run: npm run test:ci
-      - name: Install python dependencies
-        uses: BSFishy/pip-action@v1
+      - name: Setup python
+        uses: actions/setup-python@v4
         with:
-          packages: lxml pandas
+          python-version: '3.10'
+      - name: Install python dependencies
+        run: pip install lxml pandas
       - name: Check coverage
         run: python ./scripts/coverage.py check
 
@@ -95,10 +96,12 @@ jobs:
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-      - name: Install python dependencies
-        uses: BSFishy/pip-action@v1
+      - name: Setup python
+        uses: actions/setup-python@v4
         with:
-          packages: selenium
+          python-version: '3.10'
+      - name: Install python dependencies
+        run: pip install --upgrade selenium requests
       - name: Run e2e tests
         run: npm run e2e
 
@@ -211,10 +214,6 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
-      - name: Install python dependencies
-        uses: BSFishy/pip-action@v1
-        with:
-          packages: selenium lxml pandas
       - name: Check if push by an org member
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.0.1
