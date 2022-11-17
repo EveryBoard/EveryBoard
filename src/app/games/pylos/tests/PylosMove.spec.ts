@@ -9,14 +9,15 @@ describe('PylosMove', () => {
     const coord: PylosCoord = new PylosCoord(0, 0, 0);
     const highCoord: PylosCoord = new PylosCoord(0, 0, 2);
 
-    it('should forbid horizontal climb', () => {
+    it('should forbid horizontal climb creation', () => {
         // Given two coord on the same Z level
         // When creating a move going horizontally
-        // THen it should throw
+        // Then it should throw
         expect(() => PylosMove.fromClimb(coord, new PylosCoord(1, 1, 0), []))
             .toThrowError(PylosFailure.MUST_MOVE_UPWARD());
     });
     it('should allow move creation', () => {
+        // From Climb
         expect(PylosMove.fromClimb(coord, highCoord, [])).toBeDefined();
 
         // From Drop
@@ -73,8 +74,5 @@ describe('PylosMove', () => {
     it('should create [low, high] equal to [high, low]', () => {
         const moveAB: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
         expect(moveAB.firstCapture.get()).toEqual(highCoord);
-    });
-    it('should forbid horizontal climb creation', () => {
-
     });
 });
