@@ -281,8 +281,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case UpdateType.END_GAME:
                 return this.applyEndGame();
             case UpdateType.MOVE_WITHOUT_TIME:
-				const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-				const actualOldPart: PartDocument = Utils.getNonNullable(oldPart);
+                const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
+                const actualOldPart: PartDocument = Utils.getNonNullable(oldPart);
                 currentPart.data = {
                     ...currentPart.data,
                     turn: currentPart.data.turn - 1,
@@ -499,14 +499,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
-		const currentPart = Utils.getNonNullable(this.currentPart);
-		const playerZero: MinimalUser = this.players[0].get();
-		const playerOne: MinimalUser = this.players[1].get();
+        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
+        const playerZero: MinimalUser = this.players[0].get();
+        const playerOne: MinimalUser = this.players[1].get();
         if (gameStatus === GameStatus.ONE_WON) {
             this.currentPart = currentPart.setWinnerAndLoser(playerOne, playerZero);
         } else {
             assert(gameStatus === GameStatus.ZERO_WON, 'impossible to get a victory without winner!');
-			this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne)
+            this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne);
         }
         this.endGame = true;
         const player: Player = this.role as Player;
@@ -523,7 +523,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public canAskTakeBack(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
         assert(this.currentPart != null, 'should not call canAskTakeBack when currentPart is not defined yet');
-		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart)
+        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         if (currentPart.data.turn <= this.role.value) {
             return false;
         } else if (currentPart.data.request &&
@@ -548,7 +548,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private getTakeBackRequester(): PlayerOrNone {
-		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart)
+        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const request: Request | null | undefined = currentPart.data.request;
         if (request && request.code === 'TakeBackAsked') {
             return Request.getPlayer(request);
@@ -558,7 +558,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public canProposeDraw(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
-		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart)
+        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         if (this.endGame) {
             return false;
         } else if (currentPart.data.request &&
@@ -581,7 +581,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return drawRequester !== this.role;
     }
     private getDrawRequester(): PlayerOrNone {
-		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
+        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const request: Request | null | undefined = currentPart.data.request;
         if (request && request.code === 'DrawProposed') {
             return Request.getPlayer(request);
@@ -885,7 +885,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.gameService.addGlobalTime(this.currentPartId,
                                               lastIndex,
                                               Utils.getNonNullable(this.currentPart).data,
-											  giver);
+                                              giver);
     }
     public addTurnTime(): Promise<void> {
         const giver: Player = this.role as Player;
