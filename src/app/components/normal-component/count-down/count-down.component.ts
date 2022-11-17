@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { assert } from 'src/app/utils/assert';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-count-down',
@@ -42,7 +41,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public setDuration(duration: number): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
         // duration is in ms
-        assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
+        Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
 
         this.isSet = true;
         this.changeDuration(duration);
@@ -67,15 +66,15 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public start(): void {
         // duration is in ms
         display(CountDownComponent.VERBOSE, this.debugName + '.start(' + this.remainingMs + 'ms);');
-        assert(this.isSet, 'Should not start a chrono that has not been set!');
-        assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
+        Utils.assert(this.isSet, 'Should not start a chrono that has not been set!');
+        Utils.assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
 
         this.started = true;
         this.resume();
     }
     public resume(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingMs + 'ms)');
-        assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
+        Utils.assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
 
         this.startTime = Date.now();
         const remainingTimeOnResume: number = this.remainingMs;
@@ -105,8 +104,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public pause(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
-        assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
-        assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
+        Utils.assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
+        Utils.assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
 
         this.clearTimeouts();
         this.isPaused = true;
@@ -114,7 +113,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public stop(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingMs + 'ms)');
-        assert(this.started, 'Should only stop chrono that are started!');
+        Utils.assert(this.started, 'Should only stop chrono that are started!');
 
         this.pause();
         this.started = false;
