@@ -64,7 +64,7 @@ def wait_for_presence_of(driver, selector):
         element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
     except Exception as e:
         print("failed when checking presence of element '{}'".format(selector))
-        print(driver.find_element(By.CSS_SELECTOR, "body"))
+        print(driver.find_element(By.CSS_SELECTOR, "body").get_attribute('innerHTML'))
         raise e
 
 def register(driver, email, username, password):
