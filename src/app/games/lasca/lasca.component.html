@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 0 700 700"
+     preserveAspectRatio="xMidYMid meet"
+>
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let spaceContent of line; index as x">
+            <g id="click_{{ x }}_{{ y }}"
+               (click)="onClick(x, y)">
+                <!-- Background -->
+                <rect [attr.x]="x * SPACE_SIZE"
+                      [attr.y]="y * SPACE_SIZE"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      class="base-no-fill"
+                      [attr.fill]="backgroundColor(x, y)"
+                      fill-opacity="0.7"
+                />
+                <!-- Piece -->
+                <circle *ngIf="spaceContent !== LascaSpace.EMPTY"
+                        [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
+                        [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
+                        [ngClass]="piecePlayerClass(spaceContent)"
+                        [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                        class="base-no-fill"
+                />
+            </g>
+        </g>
+    </g>
+    <!-- Highlight last move -->
+<!--    <g *ngIf="lastMove.isPresent()">
+        <rect [attr.x]="lastPieceMove.get().coord.x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().coord.y * SPACE_SIZE"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="base no-fill mid-stroke last-move-stroke"/>
+        <rect [attr.x]="lastPieceMove.get().end.x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().end.y * SPACE_SIZE"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="base no-fill mid-stroke last-move-stroke"/>
+    </g> -->
+    <!-- Highlight selected piece -->
+<!--    <circle *ngIf="chosen.isPresent()"
+            id="selectedPiece"
+            [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
+            [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
+            [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+            class="base mid-stroke no-fill selected-stroke"/> -->
+</svg>

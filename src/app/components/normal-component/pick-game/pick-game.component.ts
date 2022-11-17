@@ -30,6 +30,7 @@ import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { LascaComponent } from 'src/app/games/lasca/lasca.component';
 
 class GameDescription {
 
@@ -60,6 +61,8 @@ class GameDescription {
     public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
+
+    public static readonly LASCA: Localized = () => $localize`LASCA`;
 
     public static readonly LINES_OF_ACTION: Localized = () => $localize`Regroup your pieces to win. But your possible moves will often change!`;
 
@@ -128,6 +131,7 @@ export class GameInfo {
         new GameInfo($localize`Lodestone`, 'Lodestone', LodestoneComponent, new Date('2022-06-24'), GameDescription.LODESTONE()),
         new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()),
         new GameInfo($localize`Hnefatafl`, 'Hnefatafl', HnefataflComponent, new Date('2022-09-21'), GameDescription.HNEFATAFL()),
+        new GameInfo($localize`Lasca`, 'Lasca', LascaComponent, new Date('2022-11-17'), GameDescription.LASCA()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

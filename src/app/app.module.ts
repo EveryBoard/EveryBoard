@@ -54,6 +54,7 @@ import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
+import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
@@ -186,6 +187,7 @@ export class FirebaseProviders {
         GoComponent,
         HnefataflComponent,
         KamisadoComponent,
+        LascaComponent,
         LinesOfActionComponent,
         LodestoneComponent,
         MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,
