@@ -266,7 +266,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         this.onCurrentUpdateOngoing = false;
     }
-    private async applyUpdate(updateType: UpdateType, part: PartDocument, oldPart: PartDocument): Promise<void> {
+    private async applyUpdate(updateType: UpdateType, part: PartDocument, oldPart: PartDocument | null): Promise<void> {
         switch (updateType) {
             case UpdateType.REQUEST:
                 return await this.onRequest(Utils.getNonNullable(part.data.request), oldPart);
@@ -281,12 +281,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case UpdateType.END_GAME:
                 return this.applyEndGame();
             case UpdateType.MOVE_WITHOUT_TIME:
-                this.currentPart.data = {
-                    ...this.currentPart.data,
-                    turn: this.currentPart.data.turn - 1,
-                    lastUpdate: oldPart.data.lastUpdate,
-                    lastUpdateTime: oldPart.data.lastUpdateTime,
-                    listMoves: this.currentPart.data.listMoves.slice(0, this.currentPart.data.listMoves.length - 1),
+				const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
+				const actualOldPart: PartDocument = Utils.getNonNullable(oldPart);
+                currentPart.data = {
+                    ...currentPart.data,
+                    turn: currentPart.data.turn - 1,
+                    lastUpdate: actualOldPart.data.lastUpdate,
+                    lastUpdateTime: actualOldPart.data.lastUpdateTime,
+                    listMoves: currentPart.data.listMoves.slice(0, currentPart.data.listMoves.length - 1),
                 };
                 return;
             case UpdateType.MOVE:
@@ -332,7 +334,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             if (diff.isPresent('listMoves').state === 'added' && update.data.turn > 0) {
                 updatesTypes.push(this.getMoveUpdateType(update, diff));
             }
-        } else if (this.turnHasIncreased(this.currentPart.data.turn, update.data.turn, update.data.listMoves)) {
+        } else if (this.turnHasIncreased(currentPartDoc.turn, update.data.turn, update.data.listMoves)) {
             updatesTypes.push(this.getMoveUpdateType(update, diff));
         }
         if (update.data.beginning == null) {
@@ -432,7 +434,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer at turn ' + this.currentPart.data.turn);
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
         const part: PartDocument = Utils.getNonNullable(this.currentPart);
         const currentPlayer: Player = Player.fromTurn(part.data.turn);
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
@@ -521,13 +523,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public canAskTakeBack(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
         assert(this.currentPart != null, 'should not call canAskTakeBack when currentPart is not defined yet');
-        if (this.currentPart.data.turn <= this.role.value) {
+		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart)
+        if (currentPart.data.turn <= this.role.value) {
             return false;
-        } else if (this.currentPart.data.request &&
-                   this.currentPart.data.request.code === 'TakeBackRefused' &&
+        } else if (currentPart.data.request &&
+                   currentPart.data.request.code === 'TakeBackRefused' &&
                    this.role.isPlayer() &&
                    // eslint-disable-next-line dot-notation
-                   this.currentPart.data.request.data['player'] === this.role.getOpponent().value)
+                   currentPart.data.request.data['player'] === this.role.getOpponent().value)
         {
             return false;
         } else if (this.getTakeBackRequester() === PlayerOrNone.NONE) {
@@ -545,7 +548,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private getTakeBackRequester(): PlayerOrNone {
-        const request: Request | null | undefined = this.currentPart.data.request;
+		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart)
+        const request: Request | null | undefined = currentPart.data.request;
         if (request && request.code === 'TakeBackAsked') {
             return Request.getPlayer(request);
         } else {
@@ -554,12 +558,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public canProposeDraw(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
+		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart)
         if (this.endGame) {
             return false;
-        } else if (this.currentPart.data.request &&
-                   this.currentPart.data.request.code === 'DrawRefused' &&
+        } else if (currentPart.data.request &&
+                   currentPart.data.request.code === 'DrawRefused' &&
                    this.role.isPlayer() &&
-                   Request.getPlayer(this.currentPart.data.request) === this.role.getOpponent())
+                   Request.getPlayer(currentPart.data.request) === this.role.getOpponent())
         {
             return false;
         } else if (this.isOpponentWaitingForDrawResponse()) {
@@ -576,7 +581,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return drawRequester !== this.role;
     }
     private getDrawRequester(): PlayerOrNone {
-        const request: Request | null | undefined = this.currentPart.data.request;
+		const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
+        const request: Request | null | undefined = currentPart.data.request;
         if (request && request.code === 'DrawProposed') {
             return Request.getPlayer(request);
         } else {
@@ -621,7 +627,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 // eslint-disable-next-line dot-notation
                 const globalPlayer: Player = Player.of(request.data['player']);
                 this.addGlobalTimeTo(globalPlayer, addedGlobalTime);
-                break;
                 break;
         }
     }
