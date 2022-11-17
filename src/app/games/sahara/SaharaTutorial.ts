@@ -3,14 +3,14 @@ import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
 
-export class SaharaTutorial {
+export class SaharaTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board`,

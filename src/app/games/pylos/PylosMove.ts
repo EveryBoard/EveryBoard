@@ -3,6 +3,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { PylosCoord } from './PylosCoord';
 import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { PylosFailure } from './PylosFailure';
 
 export class PylosMoveFailure {
     public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`You must capture one or two pieces, not more.`;
@@ -52,8 +53,8 @@ export class PylosMove extends Move {
                                                  landingCoord,
                                                  capturesOptionals.firstCapture,
                                                  capturesOptionals.secondCapture);
-        if (!landingCoord.isUpperThan(startingCoord)) {
-            throw new Error('PylosMove: When piece move it must move upward.');
+        if (landingCoord.isUpperThan(startingCoord) === false) {
+            throw new Error(PylosFailure.MUST_MOVE_UPWARD());
         }
         return newMove;
     }

@@ -1,13 +1,13 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4State } from 'src/app/games/p4/P4State';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-export class P4Tutorial {
+export class P4Tutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

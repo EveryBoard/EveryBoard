@@ -210,5 +210,7 @@
             }
         }
     },
-    "defaultProject": "everyboard"
+    "cli": {
+      "analytics": false
+    }
 }
