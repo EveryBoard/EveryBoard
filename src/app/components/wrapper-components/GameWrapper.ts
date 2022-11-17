@@ -1,6 +1,5 @@
-import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
+import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -33,9 +32,9 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public static VERBOSE: boolean = false;
 
-    // component loading
-    @ViewChild(GameIncluderComponent)
-    public gameIncluder: GameIncluderComponent;
+    // This holds the #board html element
+    @ViewChild('board', { read: ViewContainerRef })
+    public boardRef: ViewContainerRef | null = null;
 
     public gameComponent: AbstractGameComponent;
 
@@ -55,7 +54,7 @@ export abstract class GameWrapper<P extends Comparable> {
                 protected readonly router: Router,
                 protected readonly messageDisplayer: MessageDisplayer)
     {
-        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
+        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.boardRef != null));
     }
     public getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
@@ -63,8 +62,8 @@ export abstract class GameWrapper<P extends Comparable> {
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
-    protected async afterGameIncluderViewInit(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
+    protected async afterViewInit(): Promise<boolean> {
+        display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.rules.setInitialBoard();
@@ -72,20 +71,24 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         return gameCreatedSuccessfully;
     }
+    protected getGameName(): string {
+        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+    }
     private async createGameComponent(): Promise<boolean> {
         display(GameWrapper.VERBOSE, { m: 'GameWrapper.createGameComponent', that: this });
 
-        const gameName: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        const gameName: string = this.getGameName();
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
         if (component.isAbsent()) {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
             return false;
         }
-        assert(this.gameIncluder != null, 'GameIncluder should be present');
+        assert(this.boardRef != null, 'Board element should be present');
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component.get());
+
         const componentRef: ComponentRef<AbstractGameComponent> =
-            this.gameIncluder.viewContainerRef.createComponent(componentFactory);
+            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
         this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
@@ -156,7 +159,7 @@ export abstract class GameWrapper<P extends Comparable> {
         }
     }
     public onCancelMove(_reason?: string): void {
-        // Not needed by default'
+        // Not needed by default
     }
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {

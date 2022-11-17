@@ -1,11 +1,11 @@
 import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
 import { ApagosState } from 'src/app/games/apagos/ApagosState';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ApagosCoord } from './ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
-export class ApagosTutorial {
+export class ApagosTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

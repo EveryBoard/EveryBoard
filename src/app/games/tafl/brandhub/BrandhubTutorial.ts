@@ -2,14 +2,14 @@ import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
 import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
 import { BrandhubState } from 'src/app/games/tafl/brandhub/BrandhubState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.INVADERS;
 const X: TaflPawn = TaflPawn.DEFENDERS;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-export class BrandhubTutorial {
+export class BrandhubTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,

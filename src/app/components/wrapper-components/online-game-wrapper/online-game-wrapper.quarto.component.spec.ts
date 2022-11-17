@@ -155,7 +155,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
      * ngOnInit (triggered by detectChanges)
      * stage 1: PartCreationComponent appear
      * startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
-     * stage 2: PartCreationComponent dissapear, GameIncluderComponent appear
+     * stage 2: PartCreationComponent dissapear, game component appear
      * tick(1): the async part of startGame is now finished
      * stage 3: P4Component appear
      * differents scenarios
@@ -389,7 +389,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Given an online game being created
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, false);
         const partCreationId: DebugElement = testUtils.findElement('#partCreation');
-        let quartoTag: DebugElement = testUtils.querySelector('app-quarto');
+        let quartoTag: DebugElement = testUtils.findElement('app-quarto');
         expect(partCreationId)
             .withContext('partCreation id should be absent after config accepted')
             .toBeFalsy();
@@ -408,7 +408,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.detectChanges();
 
         // Then the game component should become present in the component
-        quartoTag = testUtils.querySelector('app-quarto');
+        quartoTag = testUtils.findElement('app-quarto');
         expect(quartoTag)
             .withContext('quarto tag should be present after config accepted and async millisec finished')
             .toBeTruthy();

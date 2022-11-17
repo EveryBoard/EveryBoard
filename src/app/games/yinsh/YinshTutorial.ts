@@ -1,4 +1,4 @@
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -21,7 +21,7 @@ export class YinshTutorialMessages {
     public static readonly MUST_CAPTURE_TWO: Localized = () => $localize`Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.`;
 }
 
-export class YinshTutorial {
+export class YinshTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

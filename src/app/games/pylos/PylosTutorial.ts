@@ -4,13 +4,13 @@ import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-export class PylosTutorial {
+export class PylosTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

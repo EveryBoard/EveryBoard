@@ -64,14 +64,11 @@ describe('LocalGameWrapperComponent', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     });
     it('should have game included after view init', () => {
-        const gameIncluderTag: DebugElement = testUtils.querySelector('app-game-includer');
-        let p4Tag: DebugElement = testUtils.querySelector('app-p4');
-        expect(gameIncluderTag).withContext('app-game-includer tag should be present at start').toBeTruthy();
+        let p4Tag: DebugElement = testUtils.findElement('app-p4');
 
-        p4Tag = testUtils.querySelector('app-p4');
+        p4Tag = testUtils.findElement('app-p4');
         expect(p4Tag).withContext('app-p4 tag should be present after view init').toBeTruthy();
 
-        expect(testUtils.wrapper.gameIncluder).withContext('gameIncluder should exist after view init').toBeTruthy();
         expect(testUtils.wrapper.gameComponent)
             .withContext('gameComponent should be present once component view init').toBeTruthy();
     });

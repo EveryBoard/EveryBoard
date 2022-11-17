@@ -1,5 +1,5 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -9,7 +9,7 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 
-export class CoerceoTutorial {
+export class CoerceoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

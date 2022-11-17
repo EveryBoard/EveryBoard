@@ -38,7 +38,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 connectedUserService: ConnectedUserService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
-                public cdr: ChangeDetectorRef)
+                private readonly cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
@@ -53,7 +53,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
-            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            const createdSuccessfully: boolean = await this.afterViewInit();
             if (createdSuccessfully) {
                 this.restartGame();
                 this.cdr.detectChanges();

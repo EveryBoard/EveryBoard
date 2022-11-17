@@ -2,14 +2,14 @@ import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
 import { TablutState } from 'src/app/games/tafl/tablut/TablutState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.INVADERS;
 const i: TaflPawn = TaflPawn.DEFENDERS;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-export class TablutTutorial {
+export class TablutTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,

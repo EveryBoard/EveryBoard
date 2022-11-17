@@ -1,7 +1,7 @@
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -10,7 +10,7 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-export class GoTutorial {
+export class GoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

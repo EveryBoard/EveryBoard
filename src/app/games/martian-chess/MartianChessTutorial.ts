@@ -1,4 +1,4 @@
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -15,7 +15,7 @@ const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
 export const NOT_A_FIELD_PROMOTION: Localized = () => $localize`This is not a field promotion!`;
 
-export class MartianChessTutorial {
+export class MartianChessTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
