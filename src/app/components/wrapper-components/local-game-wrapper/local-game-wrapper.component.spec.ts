@@ -142,31 +142,29 @@ describe('LocalGameWrapperComponent', () => {
             tick(1000);
         }));
     });
+    async function selectAIPlayer(player: Player): Promise<void> {
+        await choosingAIOrHuman(player, 'AI');
+        await choosingAILevel(player);
+    }
+    async function choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): Promise<void> {
+        const playerSelect: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
+        const selectAI: HTMLSelectElement = testUtils.findElement(playerSelect).nativeElement;
+        selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
+        selectAI.dispatchEvent(new Event('change'));
+        testUtils.detectChanges();
+        await testUtils.fixture.whenStable();
+    }
+    async function choosingAILevel(player: Player): Promise<void> {
+        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroDepthSelect' : '#aiOneDepthSelect';
+        const selectDepth: HTMLSelectElement = testUtils.findElement(aiDepthSelect).nativeElement;
+        selectDepth.value = selectDepth.options[1].value;
+        selectDepth.dispatchEvent(new Event('change'));
+        testUtils.detectChanges();
+        const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
+        expect(aiDepth).toBe('Level 1');
+        testUtils.detectChanges();
+    }
     describe('Using AI', () => {
-        async function selectAIPlayer(player: Player): Promise<void> {
-            await choosingAIOrHuman(player, 'AI');
-            await choosingAILevel(player);
-        }
-        async function choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): Promise<void> {
-            const playerSelect: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
-            const selectAI: HTMLSelectElement = testUtils.findElement(playerSelect).nativeElement;
-            selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.fixture.whenStable();
-        }
-        async function choosingAILevel(player: Player): Promise<void> {
-            const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroDepthSelect' : '#aiOneDepthSelect';
-            const selectDepth: HTMLSelectElement = testUtils.findElement(aiDepthSelect).nativeElement;
-            selectDepth.value = selectDepth.options[1].value;
-            selectDepth.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.fixture.whenStable();
-            const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
-            expect(aiDepth).toBe('Level 1');
-            testUtils.detectChanges();
-            await testUtils.fixture.whenStable();
-        }
         it('should show level when non-human player is selected', async() => {
             // Given a board where human are playing human
             testUtils.expectElementNotToExist('#aiZeroDepthSelect');
@@ -191,6 +189,7 @@ describe('LocalGameWrapperComponent', () => {
             const proposeAIToPlay: jasmine.Spy =
                 spyOn(testUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
             await choosingAILevel(Player.ZERO);
+            await testUtils.fixture.whenStable();
 
             // Then proposeAIToPlay should have been called, so that IA play
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
@@ -341,6 +340,87 @@ describe('LocalGameWrapperComponent', () => {
             // Then it should display a message
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
+        }));
+    });
+    describe('winner indicator', () => {
+
+        const preVictoryBoard: PlayerOrNone[][] = [
+            [O, O, O, _, _, O, O],
+            [X, X, O, _, O, X, X],
+            [O, O, X, _, X, X, O],
+            [X, X, X, O, O, X, X],
+            [O, O, X, O, X, O, O],
+            [X, X, O, O, X, X, X],
+        ];
+        it(`should display 'Player <N> won' when human vs human victory`, fakeAsync(async() => {
+            // Given a Human-vs-human board where victory is imminent
+            const state: P4State = new P4State(preVictoryBoard, 40);
+            testUtils.setupState(state);
+
+            // When player zero does the winning move
+            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+
+            // Then 'Player 0 won' should be displayed
+            const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
+            expect(winnerTag).toBe('Player 1 won');
+        }));
+        it(`should display 'You Lost' when human loose against AI`, fakeAsync(async() => {
+            // Given a board where victory is imminent for AI
+            const board: PlayerOrNone[][] = [
+                [O, O, O, _, _, O, O],
+                [X, X, O, _, O, X, X],
+                [O, O, X, _, X, X, O],
+                [X, X, X, O, O, X, X],
+                [O, O, X, O, X, O, O],
+                [X, X, O, O, X, X, X],
+            ];
+            const state: P4State = new P4State(board, 37);
+            testUtils.setupState(state);
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+            // When selecting AI, and AI then doing winning move
+            await selectAIPlayer(Player.ZERO);
+            tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
+
+            // Then 'You lost' should be displayed
+            const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
+            expect(winnerTag).toBe('You lost');
+        }));
+        it(`should display 'You won' when human win again AI`, fakeAsync(async() => {
+            // Given a board where victory is imminent for human (against AI)
+            const state: P4State = new P4State(preVictoryBoard, 39);
+            testUtils.setupState(state);
+            await selectAIPlayer(Player.ZERO);
+
+            // When user does the winning move
+            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+
+            // Then 'You won' should be displayed
+            const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
+            expect(winnerTag).toBe('You won');
+        }));
+        it(`should display '<AI name> (Player <N>) Win' when AI fight AI`, fakeAsync(async() => {
+            // Given a board where victory is imminent for AI zero
+            const board: PlayerOrNone[][] = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, X, X, X, _, _],
+            ];
+            const state: P4State = new P4State(board, 40);
+            testUtils.setupState(state);
+            await selectAIPlayer(Player.ZERO);
+            tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
+
+            // When AI zero does the winning move
+            await selectAIPlayer(Player.ONE);
+            tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
+
+            // Then 'AI (Player 0) won' should be displayed
+            const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
+            expect(winnerTag).toBe('P4Minimax (Player 2) won');
         }));
     });
 });
