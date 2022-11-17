@@ -84,6 +84,7 @@ def register(driver, email, username, password):
     click_button(driver, "#registerButton")
 
     # Click on finalize verification button
+    time.sleep(0.5) # Wait for the email verification to be done by the other script
     click_button(driver, "#finalizeVerification")
 
 def access_game_list(driver):
