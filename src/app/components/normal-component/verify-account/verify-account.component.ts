@@ -26,17 +26,17 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
 
     public emailAddress: string;
 
-    public userSub: Subscription;
+    private userSubscription: Subscription;
 
     public usernameForm: FormGroup = new FormGroup({
         username: new FormControl(),
     });
 
-    constructor(private readonly authService: ConnectedUserService,
+    constructor(private readonly connectedUserService: ConnectedUserService,
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
-        this.userSub = this.authService.subscribeToUser(
+        this.userSubscription = this.connectedUserService.subscribeToUser(
             async(user: AuthUser) => {
                 this.emailAddress = user.email.get();
                 // We know that if this page is shown, something needs to be done to finalize the account
@@ -58,7 +58,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
             });
     }
     public async pickUsername(formContent: { username: string }): Promise<void> {
-        const result: MGPValidation = await this.authService.setUsername(formContent.username);
+        const result: MGPValidation = await this.connectedUserService.setUsername(formContent.username);
         if (result.isSuccess()) {
             this.success = true;
         } else {
@@ -66,7 +66,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         }
     }
     public async sendEmailVerification(): Promise<void> {
-        const result: MGPValidation = await this.authService.sendEmailVerification();
+        const result: MGPValidation = await this.connectedUserService.sendEmailVerification();
         if (result.isSuccess()) {
             this.success = true;
         } else {
@@ -75,12 +75,12 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
     }
     public async finalizeEmailVerification(): Promise<void> {
         this.triedToFinalize = true;
-        await this.authService.reloadUser();
+        await this.connectedUserService.reloadUser();
         window.open(window.location.href, '_self');
     }
     public ngOnDestroy(): void {
-        if (this.userSub != null && this.userSub.unsubscribe != null) {
-            this.userSub.unsubscribe();
+        if (this.userSubscription != null && this.userSubscription.unsubscribe != null) {
+            this.userSubscription.unsubscribe();
         }
     }
 }

@@ -1,17 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="100%" height="auto"
+     width="100%" height="100%"
      [attr.viewBox]="'0 0 ' + BOARD_WIDTH + ' ' + BOARD_HEIGHT"
-     [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
 
-    <g *ngFor="let player of Player.PLAYERS">
-        <circle *ngFor="let p of getPlayerSidePieces(player)"
-                id="piece_{{ player.value }}_{{ p }}"
-                [attr.cx]="(SPACE_SIZE / 4) + ((BOARD_WIDTH - (SPACE_SIZE / 4)) * (p / 15))"
-                [attr.cy]="getPiecesCyForPlayer(player)"
-                [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
-                [ngClass]="getPlayerClass(player)"
-                class="base small-stroke"/>
+    <g [attr.transform]="'rotate(' + (this.role.value * 180) + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
+        <g *ngFor="let player of Player.PLAYERS">
+            <circle *ngFor="let p of getPlayerSidePieces(player)"
+                    id="piece_{{ player.value }}_{{ p }}"
+                    [attr.cx]="(SPACE_SIZE / 4) + ((BOARD_WIDTH - (SPACE_SIZE / 4)) * (p / 15))"
+                    [attr.cy]="getPiecesCyForPlayer(player)"
+                    [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
+                    [ngClass]="getPlayerClass(player)"
+                    class="base small-stroke"/>
+        </g>
     </g>
 
     <g #boardInItself
@@ -37,6 +38,7 @@
                         />
                         <ng-template #onlyRect>
                             <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
+                                  *ngIf="mustDisplayLandingCoord(x, y, z)"
                                   (click)="onDrop(x, y, z)"
                                   [attr.width]="getPieceRadius(z) * 2"
                                   [attr.height]="getPieceRadius(z) * 2"
@@ -56,7 +58,7 @@
               [attr.height]="getPieceRadius(highCapture.get().z) * 2"
               [attr.x]="getPieceCxByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
               [attr.y]="getPieceCyByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
-              class="base captured small-stroke"/>
+              class="base captured-fill small-stroke"/>
         <g *ngIf="chosenLandingCoord.isPresent()"
            id="capture_validation"
            (click)="validateCapture()"

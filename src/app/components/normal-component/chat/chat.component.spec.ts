@@ -126,7 +126,7 @@ describe('ChatComponent', () => {
         it('should scroll to the bottom on load', fakeAsync(async() => {
             // Given a visible chat with multiple messages
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            spyOn(component, 'scrollTo');
+            spyOn(component, 'scrollTo').and.callThrough();
             await addMessages('fauxChat', 100);
 
             // When the chat is initialized
@@ -210,7 +210,7 @@ describe('ChatComponent', () => {
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
         }));
         it('should send messages using the chat service', fakeAsync(async() => {
-            spyOn(chatService, 'sendMessage');
+            spyOn(chatService, 'sendMessage').and.callThrough();
             // Given a chat
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -236,7 +236,7 @@ describe('ChatComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             await addMessages('fauxChat', 100);
             testUtils.detectChanges();
-            spyOn(component, 'scrollTo');
+            spyOn(component, 'scrollTo').and.callThrough();
 
             // When a message is sent
             component.userMessage = 'hello there';
@@ -248,10 +248,10 @@ describe('ChatComponent', () => {
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
         }));
-        it('should not loadChatContent when user is online, then updated but still online', fakeAsync(() => {
+        it('should not loadChatContent when user is online, then updated but still online', fakeAsync(async() => {
             // Given a chat component
             const userDAO: UserDAO = TestBed.inject(UserDAO);
-            void userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
+            await userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
             tick();
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             testUtils.detectChanges();

@@ -57,6 +57,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public static SPACE_SIZE: number = 100;
     public static STROKE_WIDTH: number = 8;
     public INDICATOR_SIZE: number = 20;
+    public readonly HORIZONTAL_CENTER: number = 2 * MartianChessComponent.SPACE_SIZE;
+    public readonly VERTICAL_CENTER: number =
+        (4 * MartianChessComponent.SPACE_SIZE) + MartianChessComponent.STROKE_WIDTH;
 
     public readonly LEFT: number = (MartianChessComponent.SPACE_SIZE / -4) + (MartianChessComponent.STROKE_WIDTH / -2);
     public readonly UP: number = - MartianChessComponent.STROKE_WIDTH / 2;
@@ -369,5 +372,23 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public chooseStyle(n: number): void {
         this.style = this.listOfStyles[n].style;
         this.displayModePanel = false;
+    }
+    public getPieceTranslation(y: number): string {
+        return 'translate(0,  ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
+    }
+    public getBoardTransformation(): string {
+        const translation: string = 'translate(' + this.SPACE_SIZE + ', 0)';
+        const rotation: string = 'rotate(' + (this.role.value * 180) + ' ' + this.HORIZONTAL_CENTER + ' ' + this.VERTICAL_CENTER + ')';
+        return translation + ' ' + rotation;
+    }
+    public getCapturesTransformation(player: Player): string {
+        const scale: string = 'scale(0.5, 0.5)';
+        const translationX: number = - this.SPACE_SIZE / 2;
+        let translationY: number = this.SPACE_SIZE / 2;
+        if (player === this.role) {
+            translationY += (10 * this.SPACE_SIZE) + (4 * this.STROKE_WIDTH);
+        }
+        const translation: string = 'translate(' + translationX + ', ' + translationY + ')';
+        return scale + ' ' + translation;
     }
 }

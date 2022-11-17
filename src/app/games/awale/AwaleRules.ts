@@ -108,8 +108,8 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
             return MGPFallible.failure(AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
         const opponentIsStarving: boolean = AwaleRules.isStarving(opponent, state.board);
-        const doesNotDistribute: boolean = AwaleRules.doesDistribute(x, playerY, state.board) === false;
-        if (opponentIsStarving && doesNotDistribute) {
+        const playerDoesNotDistribute: boolean = AwaleRules.doesDistribute(x, playerY, state.board) === false;
+        if (opponentIsStarving && playerDoesNotDistribute) {
             return MGPFallible.failure(AwaleFailure.SHOULD_DISTRIBUTE());
         }
         return MGPFallible.success(undefined);
@@ -125,7 +125,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
     }
     public static canDistribute(player: Player, board: Table<number>): boolean {
         for (let x: number = 0; x < 6; x++) {
-            if (AwaleRules.doesDistribute(x++, player.getOpponent().value, board)) {
+            if (AwaleRules.doesDistribute(x, player.getOpponent().value, board)) {
                 return true;
             }
         }
@@ -133,7 +133,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
     }
     public static isStarving(player: Player, board: Table<number>): boolean {
         let i: number = 0;
-        const playerY: number = player.getOpponent().value;
+        const playerY: number = player.getOpponent().value; // For player 0 has row 1
         do {
             if (board[playerY][i++] > 0) {
                 return false; // found some food there, so not starving
@@ -224,8 +224,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         const captureResult: CaptureResult = AwaleRules.capture(x, y, player, board);
         const isStarving: boolean = AwaleRules.isStarving(player.getOpponent(), captureResult.resultingBoard);
         if (captureResult.capturedSum > 0 && isStarving) {
-            /*
-             * if the distribution would capture all seeds
+            /* if the distribution would capture all seeds
              * the capture is forbidden and cancelled
              */
             return {

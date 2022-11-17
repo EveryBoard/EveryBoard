@@ -83,7 +83,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                 public readonly move: MGPOptional<M> = MGPOptional.empty(),
                 public minimaxCreator?: Minimax<M, S, L, U>)
     {
-        /* Initialisation condition:
+        /* Initialization condition:
          * mother: null for initial board
          * board: should already be a clone
          */
@@ -271,4 +271,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         return nbDescendants;
     }
+}
+
+export abstract class AbstractNode extends MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> {
 }

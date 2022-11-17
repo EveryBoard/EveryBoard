@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 
 describe('ActiveUsersService', () => {
 
-    let service: ActiveUsersService;
+    let activeUsersService: ActiveUsersService;
 
     let userDAO: UserDAO;
 
@@ -25,19 +25,19 @@ describe('ActiveUsersService', () => {
             ],
         }).compileComponents();
         userDAO = TestBed.inject(UserDAO);
-        service = TestBed.inject(ActiveUsersService);
+        activeUsersService = TestBed.inject(ActiveUsersService);
     }));
     it('should create', () => {
-        expect(service).toBeTruthy();
+        expect(activeUsersService).toBeTruthy();
     });
     it('should update list of users when one change', fakeAsync(async() => {
-        await service.userDAO.set('playerDocId', {
+        await activeUsersService.userDAO.set('playerDocId', {
             username: 'premier',
             state: 'online',
             verified: true,
         });
         let observerCalls: number = 0;
-        const subscription: Subscription = service.subscribeToActiveUsers((users: UserDocument[]) => {
+        const subscription: Subscription = activeUsersService.subscribeToActiveUsers((users: UserDocument[]) => {
             if (observerCalls === 1) {
                 expect(users).toEqual([{
                     id: 'playerDocId',
@@ -50,7 +50,7 @@ describe('ActiveUsersService', () => {
             }
             observerCalls++;
         });
-        await service.userDAO.update('playerDocId', { username: 'nouveau' });
+        await activeUsersService.userDAO.update('playerDocId', { username: 'nouveau' });
         expect(observerCalls).toBe(2);
         subscription.unsubscribe();
     }));
@@ -87,7 +87,7 @@ describe('ActiveUsersService', () => {
             { id: 'third', data: THIRD_USER },
             { id: 'fourth', data: FOURTH_USER },
         ];
-        const orderedUserDocs: UserDocument[] = service.sort(userDocs);
+        const orderedUserDocs: UserDocument[] = activeUsersService.sort(userDocs);
         expect(expectedOrder).toEqual(orderedUserDocs);
     });
     describe('subscribeToActiveUsers', () => {
@@ -104,7 +104,7 @@ describe('ActiveUsersService', () => {
                 });
 
             // When subscribing to the active users
-            const subscription: Subscription = service.subscribeToActiveUsers(() => {});
+            const subscription: Subscription = activeUsersService.subscribeToActiveUsers(() => {});
             // Then it should call observingWhere from the DAO with the right parameters
             expect(userDAO.observingWhere).toHaveBeenCalledTimes(1);
             subscription.unsubscribe();
@@ -117,14 +117,14 @@ describe('ActiveUsersService', () => {
                 verified: true,
             });
             let seenActiveUsers: UserDocument[] = [];
-            let activeUsersSubscription: Subscription = service.subscribeToActiveUsers(
+            let activeUsersSubscription: Subscription = activeUsersService.subscribeToActiveUsers(
                 (activeUsers: UserDocument[]) => {
                     seenActiveUsers = activeUsers;
                 });
             activeUsersSubscription.unsubscribe();
 
             // When subscribing a second time
-            activeUsersSubscription = service.subscribeToActiveUsers(
+            activeUsersSubscription = activeUsersService.subscribeToActiveUsers(
                 (activeUsers: UserDocument[]) => {
                     seenActiveUsers = activeUsers;
                 });

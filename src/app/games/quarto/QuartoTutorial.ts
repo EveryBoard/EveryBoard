@@ -1,7 +1,7 @@
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const AABA: QuartoPiece = QuartoPiece.AABA;
 const AABB: QuartoPiece = QuartoPiece.AABB;
@@ -17,7 +17,7 @@ const BBBA: QuartoPiece = QuartoPiece.BBBA;
 const BBBB: QuartoPiece = QuartoPiece.BBBB;
 const EMPTY: QuartoPiece = QuartoPiece.EMPTY;
 
-export class QuartoTutorial {
+export class QuartoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

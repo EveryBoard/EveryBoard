@@ -1,8 +1,8 @@
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from 'src/app/games/awale/AwaleState';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-export class AwaleTutorial {
+export class AwaleTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.anyMove(

@@ -38,6 +38,14 @@
         <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></source>
         <target>Ajouter <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></target>
       </trans-unit>
+      <trans-unit id="1735231057781616406" datatype="html">
+        <source>Number of columns: </source>
+        <target>Nombre de colonnes : </target>
+      </trans-unit>
+      <trans-unit id="3437618805826291312" datatype="html">
+        <source>Squared</source>
+        <target>Carrés</target>
+      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
         <target>Accueil</target>
@@ -61,6 +69,18 @@
       <trans-unit id="3468367367164457633" datatype="html">
         <source>Learn the rules</source>
         <target>Apprendre les règles</target>
+      </trans-unit>
+      <trans-unit id="7164690325767499813" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> de <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+      </trans-unit>
+      <trans-unit id="172167399786281724" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> contre <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+      </trans-unit>
+      <trans-unit id="5678362140621139107" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (waiting for opponent)</source>
+        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (en attente d'adversaire)</target>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -520,7 +540,7 @@
       </trans-unit>
       <trans-unit id="6808393327735679948" datatype="html">
         <source>EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
-        <target>EveryBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprend donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours. </target>
+        <target>EveryBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprend donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours.</target>
       </trans-unit>
       <trans-unit id="2129768251160483742" datatype="html">
         <source>It is not your turn!</source>
@@ -558,10 +578,6 @@
         <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
         <target><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</target>
       </trans-unit>
-      <trans-unit id="8739046962840362623" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ winner }}"/> won</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ winner }}"/> a gagné</target>
-      </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
         <target>Match nul</target>
@@ -569,6 +585,18 @@
       <trans-unit id="2981217201452500939" datatype="html">
         <source>Start a new game</source>
         <target>Commencer une nouvelle partie</target>
+      </trans-unit>
+      <trans-unit id="960848013465225718" datatype="html">
+        <source>You won</source>
+        <target>Vous avez gagné</target>
+      </trans-unit>
+      <trans-unit id="1041065984971815594" datatype="html">
+        <source>You lost</source>
+        <target>Vous avez perdu</target>
+      </trans-unit>
+      <trans-unit id="7295646331303360714" datatype="html">
+        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
+        <target><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Joueur <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) a gagné</target>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
@@ -589,6 +617,10 @@
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
         <target>Joueur <x id="PH" equiv-text="gameStatus.winner.value + 1"/></target>
+      </trans-unit>
+      <trans-unit id="8487548203433588213" datatype="html">
+        <source><x id="PH" equiv-text="this.winner.get()"/> won</source>
+        <target><x id="PH" equiv-text="this.winner.get()"/> a gagné</target>
       </trans-unit>
       <trans-unit id="5468318552081538104" datatype="html">
         <source>It is your turn.</source>
@@ -998,8 +1030,8 @@
         <source>Transfer</source>
         <target>Transfert</target>
       </trans-unit>
-      <trans-unit id="759585629296293659" datatype="html">
-        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
+      <trans-unit id="1035614445063065926" datatype="html">
+        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from a higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
         <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
       </trans-unit>
       <trans-unit id="2553091915151695430" datatype="html">
@@ -3799,10 +3831,6 @@
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
         <target>Une erreur inattendue est arrivée. Nous l'avons notée et essayerons de la réparer au plus vite.</target>
       </trans-unit>
-      <trans-unit id="7463436103435995523" datatype="html">
-        <source>You are already in a game. Finish it or cancel it first.</source>
-        <target>Vous avez déjà une partie en cours. Terminez-la ou annulez-la d&apos;abord.</target>
-      </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>
         <target><x id="PH" equiv-text="hours"/> heures</target>
@@ -3838,6 +3866,26 @@
       <trans-unit id="5120671221766405888" datatype="html">
         <source>Game does not exist</source>
         <target>Partie inexistante</target>
+      </trans-unit>
+      <trans-unit id="2025949389316561274" datatype="html">
+        <source>You are already playing in another game.</source>
+        <target>Vous êtes déjà en train de jouer une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="3355072499279505626" datatype="html">
+        <source>You are already the creator of another game.</source>
+        <target>Vous êtes déjà le créateur d'une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="5005469579079717737" datatype="html">
+        <source>You are already the chosen opponent in another game.</source>
+        <target>Vous êtes déjà sélectionné comme adversaire dans une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="7540734974309484940" datatype="html">
+        <source>You are already candidate in another game.</source>
+        <target>Vous êtes déjà candidat dans une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="2152425747573072542" datatype="html">
+        <source>You are already observing another game.</source>
+        <target>Vous observez déjà une autre partie.</target>
       </trans-unit>
     </body>
   </file>

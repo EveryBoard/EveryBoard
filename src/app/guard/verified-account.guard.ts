@@ -7,19 +7,23 @@ import { AccountGuard } from './account-guard';
     providedIn: 'root',
 })
 export class VerifiedAccountGuard extends AccountGuard {
-    constructor(authService: ConnectedUserService,
-                private readonly router : Router) {
-        super(authService);
-    }
-    protected async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
+
+    public static async evaluateUserPermission(router: Router, user: AuthUser): Promise<boolean | UrlTree> {
         if (user.isConnected() === false) {
             // Redirects the user to the login page
-            return this.router.parseUrl('/login');
+            return router.parseUrl('/login');
         } else if (user.verified === false) {
             // Redirects the user to the account verification page
-            return this.router.parseUrl('/verify-account');
+            return router.parseUrl('/verify-account');
         } else {
             return true;
         }
+    }
+    constructor(connectedUserService: ConnectedUserService,
+                protected readonly router: Router) {
+        super(connectedUserService);
+    }
+    public async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
+        return VerifiedAccountGuard.evaluateUserPermission(this.router, user);
     }
 }

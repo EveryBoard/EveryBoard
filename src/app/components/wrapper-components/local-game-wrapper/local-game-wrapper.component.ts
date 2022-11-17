@@ -29,7 +29,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public playerSelection: [string, string] = ['human', 'human'];
 
-    public winner: MGPOptional<string> = MGPOptional.empty();
+    public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
     public botTimeOut: number = 1000;
 
@@ -38,7 +38,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 connectedUserService: ConnectedUserService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
-                public cdr: ChangeDetectorRef)
+                private readonly cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
@@ -53,7 +53,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
-            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            const createdSuccessfully: boolean = await this.afterViewInit();
             if (createdSuccessfully) {
                 this.restartGame();
                 this.cdr.detectChanges();
@@ -82,8 +82,24 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
-                this.winner = MGPOptional.of($localize`Player ${gameStatus.winner.value + 1}`);
+                const winner: string = $localize`Player ${gameStatus.winner.value + 1}`;
+                const loser: Player = gameStatus.winner.getOpponent();
+                const loserValue: number = loser.value;
+                if (this.players[gameStatus.winner.value].equalsValue('human')) { // When human win
+                    if (this.players[loserValue].equalsValue('human')) {
+                        this.winnerMessage = MGPOptional.of($localize`${ winner } won`);
+                    } else {
+                        this.winnerMessage = MGPOptional.of($localize`You won`);
+                    }
+                } else { // When AI win
+                    if (this.players[loserValue].equalsValue('human')) {
+                        this.winnerMessage = MGPOptional.of($localize`You lost`);
+                    } else {
+                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (${ winner }) won`);
+                    }
+                }
             }
+
         }
     }
     public proposeAIToPlay(): void {
@@ -108,7 +124,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
         return MGPOptional.ofNullable(
             this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
-                return this.players[playerIndex].isPresent() && this.players[playerIndex].get() === a.name;
+                return this.players[playerIndex].equalsValue(a.name);
             }));
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
@@ -146,7 +162,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.gameComponent.rules.setInitialBoard();
         this.gameComponent.updateBoard();
         this.endGame = false;
-        this.winner = MGPOptional.empty();
+        this.winnerMessage = MGPOptional.empty();
         this.proposeAIToPlay();
     }
     public getPlayer(): string {
