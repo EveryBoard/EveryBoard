@@ -38,6 +38,7 @@
                         />
                         <ng-template #onlyRect>
                             <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
+                                  *ngIf="mustDisplayLandingCoord(x, y, z)"
                                   (click)="onDrop(x, y, z)"
                                   [attr.width]="getPieceRadius(z) * 2"
                                   [attr.height]="getPieceRadius(z) * 2"
@@ -57,7 +58,7 @@
               [attr.height]="getPieceRadius(highCapture.get().z) * 2"
               [attr.x]="getPieceCxByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
               [attr.y]="getPieceCyByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
-              class="base captured small-stroke"/>
+              class="base captured-fill small-stroke"/>
         <g *ngIf="chosenLandingCoord.isPresent()"
            id="capture_validation"
            (click)="validateCapture()"
