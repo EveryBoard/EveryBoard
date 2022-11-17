@@ -1,0 +1,44 @@
+<form>
+    <div class="field">
+        <label class="label" for="numberOfColumns">
+            <ng-container i18n>Number of columns: </ng-container>
+            <output>{{ numberOfColumns.value }}</output>
+        </label>
+        <div class="control">
+            <input class="slider is-circle is-primary"
+                   step="1"
+                   min="1" max="10"
+                   name="maximalMoveDuration"
+                   [formControl]="numberOfColumns" type="range">
+        </div>
+    </div>
+    <div class="field">
+        <label class="checkbox">
+            <input type="checkbox" [formControl]="squared">
+             <ng-container i18n>Squared</ng-container>
+        </label>
+    </div>
+</form>
+<div class="columns">
+    <div *ngFor="let column of columns" class="column">
+        <div *ngFor="let game of column" class="card">
+            <div class="card-header">
+                <p class="card-header-title">{{ game.name }}</p>
+            </div>
+            <div *ngIf="squared.value; else nonSquared"
+                 class="card-image game-card" 
+                 style="height: 200px;">
+                <figure class="image" style="height: 100%">
+                    <app-demo-card [demoNodeInfo]="game"></app-demo-card>
+                </figure>
+            </div>
+            <ng-template #nonSquared>
+                <div class="card-image game-card">
+                    <figure class="image">
+                        <app-demo-card [demoNodeInfo]="game"></app-demo-card>
+                    </figure>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

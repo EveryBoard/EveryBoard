@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { MGPResult, Part } from 'src/app/domain/Part';
+import { Part, MGPResult } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, createDisconnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -16,6 +16,8 @@ import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { Utils } from 'src/app/utils/utils';
+import { FocusedPart } from 'src/app/domain/User';
+import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 
 type PartInfo = {
@@ -170,9 +172,13 @@ describe('PartDAO', () => {
             // Given a non-started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
+            const observedPart: FocusedPart = {
+                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+                id: partId,
+            };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
+            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -188,9 +194,13 @@ describe('PartDAO', () => {
             // Given a non-started part with its creator who has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
+            const observedPart: FocusedPart = {
+                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+                id: partId,
+            };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
-            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
+            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -205,10 +215,14 @@ describe('PartDAO', () => {
         it('should forbid deleting a started part (creator has not timed out)', async() => {
             // Given a started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero: creator });
+            const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
+            const observedPart: FocusedPart = {
+                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+                id: partId,
+            };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
+            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -223,10 +237,14 @@ describe('PartDAO', () => {
         it('should forbid deleting a started part (creator has timed out)', async() => {
             // Given a started part and its creator that has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero: creator });
+            const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
+            const observedPart: FocusedPart = {
+                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+                id: partId,
+            };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
-            await userDAO.update(creator.id, { observedPart: partId, lastUpdateTime });
+            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -336,6 +354,7 @@ describe('PartDAO', () => {
         it('should forbid starting a part when setting playerZero to another user than chosenOpponent or creator', async() => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
+
             // When chosen opponents updates the part document but puts another user as playerOne
             const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const update: Partial<Part> = {
@@ -357,6 +376,7 @@ describe('PartDAO', () => {
         it('should forbid starting a part when setting playerOne to another user than chosenOpponent or creator', async() => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
+
             // When chosen opponents updates the part document but puts another user as playerOne
             const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const update: Partial<Part> = {
@@ -405,7 +425,8 @@ describe('PartDAO', () => {
                                                                  });
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
-            }});
+            }
+        });
     });
     describe('for unverified user', () => {
         it('should forbid creating a part', async() => {
@@ -509,9 +530,9 @@ describe('PartDAO', () => {
             ];
             for (const [turnDelta, listMoves] of turnDeltasAndListMoves) {
                 // Given a part in the middle of being played
-                const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero, playerOne });
-                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForZero);
-                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForOne);
+                const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero, playerOne });
+                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForZero);
+                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
                 await updateAndBumpIndex(partId, Player.ZERO, 1,
                                          { turn: 1, listMoves: [0] });
@@ -545,9 +566,9 @@ describe('PartDAO', () => {
             ];
             for (const turnDelta of turnDeltas) {
                 // Given a part in the middle of being played
-                const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero, playerOne });
-                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForZero);
-                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTING.remainingMsForOne);
+                const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero, playerOne });
+                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForZero);
+                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
                 await updateAndBumpIndex(partId, Player.ZERO, 1,
                                          { turn: 1, listMoves: [0] });
@@ -580,11 +601,13 @@ describe('PartDAO', () => {
         it('should allow updates to lastUpdate if it is a +1 increment and matches the player', async() => {
             // Given a part and a player (here, creator)
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero });
+            const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero });
 
             // When updating lastUpdate as expected
-            const result: Promise<void> =
-                    updateAndBumpIndex(partId, Player.ZERO, PartMocks.STARTING.lastUpdate.index, { });
+            const result: Promise<void> = updateAndBumpIndex(partId,
+                                                             Player.ZERO,
+                                                             PartMocks.STARTED.lastUpdate.index,
+                                                             { });
 
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
@@ -592,11 +615,11 @@ describe('PartDAO', () => {
         it('should forbid updates to lastUpdate if it increments more than once', async() => {
             // Given a part and a player (here, creator)
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero });
+            const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero });
 
             // When incrementing the index of lastUpdate too much
             const result: Promise<void> =
-                    updateAndBumpIndex(partId, Player.ZERO, PartMocks.STARTING.lastUpdate.index + 1, { });
+                    updateAndBumpIndex(partId, Player.ZERO, PartMocks.STARTED.lastUpdate.index + 1, { });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -604,11 +627,11 @@ describe('PartDAO', () => {
         it('should forbid updates to lastUpdate for another user', async() => {
             // Given a part and a player (here, creator)
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const partId: string = await partDAO.create({ ...PartMocks.STARTING, playerZero });
+            const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero });
 
             // When providing the wrong player in lastUpdate
             const result: Promise<void> =
-                    updateAndBumpIndex(partId, Player.ONE, PartMocks.STARTING.lastUpdate.index, { });
+                    updateAndBumpIndex(partId, Player.ONE, PartMocks.STARTED.lastUpdate.index, { });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -618,7 +641,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
@@ -640,7 +663,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
@@ -668,7 +691,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // Player zero wins
@@ -700,7 +723,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
@@ -723,7 +746,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             await signOut();
@@ -743,7 +766,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // When resigning
@@ -761,7 +784,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // When resigning and setting the other player as loser
@@ -779,7 +802,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, remainingMsForOne: 1, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, remainingMsForOne: 1, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // Wait 10ms to ensure the player has timed out
@@ -803,7 +826,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser along with a move
@@ -823,7 +846,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser along with a move
@@ -843,7 +866,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // When setting the winner or loser to an non player
@@ -880,7 +903,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser without sending a move
@@ -898,7 +921,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // When setting the winner and loser without changing part result
@@ -920,7 +943,7 @@ describe('PartDAO', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTING, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
             let index: number = 1;
             if (player === Player.ONE) {

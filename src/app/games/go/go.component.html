@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="100%" height="auto"
+     width="100%" height="100%"
      [attr.viewBox]="'0 -3 ' + (board.length * 50) + ' ' + (6 + (board.length * 50))"
      preserveAspectRatio="xMidYMid meet">
     <rect x="0" y="0"
@@ -29,7 +29,7 @@
                 />
             </g>
             <ng-template #empty>
-                <rect id="click_{{x}}_{{y}}"
+                <rect id="click_{{ x }}_{{ y }}"
                       width="50" height="50"
                       [attr.x]="50*x" [attr.y]="50*y"
                       (click)="onClick(x, y)"

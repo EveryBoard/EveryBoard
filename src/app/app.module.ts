@@ -17,6 +17,7 @@ import { ConfigRoomService } from './services/ConfigRoomService';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
@@ -30,7 +31,6 @@ import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { TutorialGameWrapperComponent }
     from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
@@ -60,7 +60,6 @@ import { MartianChessComponent } from './games/martian-chess/martian-chess.compo
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
-import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
 import { PylosComponent } from './games/pylos/pylos.component';
@@ -77,9 +76,11 @@ import { environment } from 'src/environments/environment';
 import { LocaleUtils } from './utils/LocaleUtils';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
-import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
+
+import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
@@ -93,6 +94,7 @@ import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
+import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 
 registerLocaleData(localeFr);
 
@@ -105,15 +107,15 @@ export const routes: Route[] = [
     { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
-
-    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
     { path: 'tutorial', component: TutorialGameCreationComponent },
     { path: 'tutorial/:compo', component: TutorialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
+    { path: 'demo', component: DemoPageComponent },
     { path: '**', component: NotFoundComponent },
 ];
 
@@ -163,13 +165,14 @@ export class FirebaseProviders {
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
         TutorialGameWrapperComponent,
-        GameIncluderComponent,
         LocalGameCreationComponent,
         OnlineGameSelectionComponent,
         TutorialGameCreationComponent,
         VerifyAccountComponent,
         ResetPasswordComponent,
         SettingsComponent,
+        DemoCardWrapperComponent,
+        DemoPageComponent,
 
         AbaloneComponent,
         ApagosComponent,
@@ -188,7 +191,6 @@ export class FirebaseProviders {
         LinesOfActionComponent,
         LodestoneComponent,
         MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,
-        MinimaxTestingComponent,
         P4Component,
         PentagoComponent,
         PylosComponent,

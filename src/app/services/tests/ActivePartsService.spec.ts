@@ -13,7 +13,7 @@ import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
 
 describe('ActivePartsService', () => {
 
-    let service: ActivePartsService;
+    let activePartsService: ActivePartsService;
 
     let partDAO: PartDAO;
 
@@ -39,16 +39,16 @@ describe('ActivePartsService', () => {
             ],
         }).compileComponents();
         partDAO = TestBed.inject(PartDAO);
-        service = TestBed.inject(ActivePartsService);
+        activePartsService = TestBed.inject(ActivePartsService);
     }));
     it('should create', () => {
-        expect(service).toBeTruthy();
+        expect(activePartsService).toBeTruthy();
     });
     describe('subscribeToActiveParts', () => {
         it('should notify about new parts', fakeAsync(async() => {
             // Given a service where we are observing active parts
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -65,7 +65,7 @@ describe('ActivePartsService', () => {
         it('should not notify about new parts when we unsubscribe', fakeAsync(async() => {
             // Given a service where we were observing active parts, but have unsubscribed
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -82,7 +82,7 @@ describe('ActivePartsService', () => {
             // Given that we are observing active parts, and there is already one part
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -100,7 +100,7 @@ describe('ActivePartsService', () => {
             const partToBeDeleted: string = await partDAO.create(part);
             const partThatWillRemain: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -118,7 +118,7 @@ describe('ActivePartsService', () => {
             // Given that we are observing active parts, and there is already one part
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -137,7 +137,7 @@ describe('ActivePartsService', () => {
             const partToBeModified: string = await partDAO.create(part);
             const partThatWontChange: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            const activePartsSubscription: Subscription = service.subscribeToActiveParts(
+            const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -169,7 +169,7 @@ describe('ActivePartsService', () => {
                 });
 
             // When subscribing to the active users
-            const subscription: Subscription = service.subscribeToActiveParts(() => {});
+            const subscription: Subscription = activePartsService.subscribeToActiveParts(() => {});
             // Then it should call observingWhere from the DAO with the right parameters
             expect(partDAO.observingWhere).toHaveBeenCalledTimes(1);
             subscription.unsubscribe();
@@ -178,14 +178,14 @@ describe('ActivePartsService', () => {
             // Given an active part service where we subscribed in the past
             await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
-            let activePartsSubscription: Subscription = service.subscribeToActiveParts(
+            let activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
             activePartsSubscription.unsubscribe();
 
             // When subscribing a second time
-            activePartsSubscription = service.subscribeToActiveParts(
+            activePartsSubscription = activePartsService.subscribeToActiveParts(
                 (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
@@ -193,43 +193,6 @@ describe('ActivePartsService', () => {
             // Then there should be exactly one part seen
             expect(seenActiveParts.length).toBe(1);
             activePartsSubscription.unsubscribe();
-        }));
-    });
-    describe('userHasActivePart', () => {
-        const part: Part = {
-            lastUpdate: {
-                index: 0,
-                player: 0,
-            },
-            typeGame: 'P4',
-            playerZero: UserMocks.CREATOR_MINIMAL_USER,
-            turn: 0,
-            result: MGPResult.UNACHIEVED.value,
-            listMoves: [],
-        };
-        it('should return true when user has an active part as player zero', fakeAsync(async() => {
-            // Given a part where user is player zero
-            await partDAO.create({ ...part, playerZero: UserMocks.CANDIDATE_MINIMAL_USER });
-            // When checking if the user has an active part
-            const result: boolean = await service.userHasActivePart(UserMocks.CANDIDATE_MINIMAL_USER);
-            // Then it should return true
-            expect(result).toBeTrue();
-        }));
-        it('should return true when user has an active part as player one', fakeAsync(async() => {
-            // Given a part where user is player zero
-            await partDAO.create({ ...part, playerOne: UserMocks.CANDIDATE_MINIMAL_USER });
-            // When checking if the user has an active part
-            const result: boolean = await service.userHasActivePart(UserMocks.CANDIDATE_MINIMAL_USER);
-            // Then it should return true
-            expect(result).toBeTrue();
-        }));
-        it('should return false when the user has no active part', fakeAsync(async() => {
-            // Given a part where the user is not active
-            await partDAO.create(part);
-            // When checking if the user has an active part
-            const result: boolean = await service.userHasActivePart(UserMocks.CANDIDATE_MINIMAL_USER);
-            // Then it should return false
-            expect(result).toBeFalse();
         }));
     });
 });

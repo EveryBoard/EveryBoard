@@ -23,7 +23,7 @@ export class RegisterComponent {
         password: new FormControl(),
     });
 
-    constructor(public authService: ConnectedUserService,
+    constructor(public connectedUserService: ConnectedUserService,
                 public router: Router) {}
 
     public async registerWithEmail(): Promise<void> {
@@ -34,10 +34,10 @@ export class RegisterComponent {
             this.errorMessage = $localize`There are missing fields in the registration form, please check that you filled in all fields.`;
         } else {
             const registrationResult: MGPFallible<FireAuth.User> =
-                await this.authService.doRegister(username, email, password);
+                await this.connectedUserService.doRegister(username, email, password);
             if (registrationResult.isSuccess()) {
                 const emailResult: MGPValidation =
-                    await this.authService.sendEmailVerification();
+                    await this.connectedUserService.sendEmailVerification();
                 if (emailResult.isSuccess()) {
                     await this.router.navigate(['/verify-account']);
                 } else {
@@ -49,7 +49,7 @@ export class RegisterComponent {
         }
     }
     public async registerWithGoogle(): Promise<void> {
-        const result: MGPValidation = await this.authService.doGoogleLogin();
+        const result: MGPValidation = await this.connectedUserService.doGoogleLogin();
         if (result.isSuccess()) {
             await this.router.navigate(['/verify-account']);
         } else {

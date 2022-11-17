@@ -22,6 +22,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 @Injectable()
 export class ConnectedUserServiceMock {
+
     public static setUser(user: AuthUser, notifyObservers: boolean = true, userId: string = 'userId'): void {
         (TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock)
             .setUser(userId, user, notifyObservers);
@@ -47,7 +48,12 @@ export class ConnectedUserServiceMock {
         return this.userRS.asObservable().subscribe(callback);
     }
     public async disconnect(): Promise<MGPValidation> {
-        throw new Error('ConnectedUserServiceMock.disconnect not implemented');
+        if (this.user.isPresent()) {
+            this.user = MGPOptional.empty();
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('Cannot disconnect a non-connected user');
+        }
     }
     public async doRegister(_username: string, _email: string, _password: string)
     : Promise<MGPFallible<FireAuth.User>>
@@ -79,13 +85,7 @@ export class ConnectedUserServiceMock {
     public async sendPasswordResetEmail(): Promise<MGPValidation> {
         throw new Error('ConnectedUserServiceMock.sendPasswordResetEmail not implemented');
     }
-    public async updateObservedPart(observedPart: string): Promise<void> {
-        return;
-    }
     public async sendPresenceToken(): Promise<void> {
-        return;
-    }
-    public async removeObservedPart(observedPart: string): Promise<void> {
         return;
     }
 }
@@ -100,7 +100,7 @@ function setupAuthTestModule(): Promise<unknown> {
  * await firebase.auth().signOut();
  */
 export async function createConnectedGoogleUser(email: string, username?: string): Promise<FireAuth.User> {
-    TestBed.inject(ConnectedUserService);
+    const userDAO: UserDAO = TestBed.inject(UserDAO);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
@@ -108,11 +108,11 @@ export async function createConnectedGoogleUser(email: string, username?: string
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
+    await userDAO.set(credential.user.uid, { verified: false });
     if (username != null) {
         // This needs to happen in multiple updates to match the security rules
-        await TestBed.inject(UserDAO).update(credential.user.uid, { username });
-        await TestBed.inject(UserDAO).update(credential.user.uid, { verified: true });
+        await userDAO.update(credential.user.uid, { username });
+        await userDAO.update(credential.user.uid, { verified: true });
     }
     return credential.user;
 }
@@ -135,12 +135,13 @@ export async function reconnectUser(email: string): Promise<void> {
 }
 
 export async function createUnverifiedUser(email: string, username: string): Promise<MinimalUser> {
+    const userDAO: UserDAO = TestBed.inject(UserDAO);
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": false}';
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await TestBed.inject(UserDAO).set(credential.user.uid, { verified: false });
-    await TestBed.inject(UserDAO).update(credential.user.uid, { username });
+    await userDAO.set(credential.user.uid, { verified: false });
+    await userDAO.update(credential.user.uid, { username });
     return { id: credential.user.uid, name: username };
 }
 
@@ -155,19 +156,23 @@ export async function createDisconnectedGoogleUser(email: string, username?: str
 }
 
 describe('ConnectedUserService', () => {
+
     let auth: FireAuth.Auth;
     let connectedUserService: ConnectedUserService;
+    let userDAO: UserDAO;
 
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
     const password: string = 'hunter2';
 
-    let alreadyDestroyed: boolean = false;
+    let alreadyDestroyed: boolean;
 
     beforeEach(async() => {
         await setupAuthTestModule();
         connectedUserService = TestBed.inject(ConnectedUserService);
         auth = TestBed.inject(FireAuth.Auth);
+        userDAO = TestBed.inject(UserDAO);
+        alreadyDestroyed = false;
     });
 
     it('should create', fakeAsync(async() => {
@@ -438,7 +443,7 @@ describe('ConnectedUserService', () => {
             // Then it fails
             expect(result).toEqual(MGPValidation.failure('Cannot disconnect a non-connected user'));
         });
-        it('should succeed if a user is connected, and result in the user being disconnected', async() => {
+        it('should succeed if a user is connected, and disconnected the user', async() => {
             // Given a registered and connected user
             const registrationResult: MGPFallible<FireAuth.User> =
                 await connectedUserService.doRegister(username, email, password);
@@ -599,45 +604,6 @@ describe('ConnectedUserService', () => {
         // eslint-disable-next-line dot-notation
         expect(connectedUserService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
     });
-    describe('updateObservedPart', () => {
-        it('should throw when called while no user is logged', fakeAsync(() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            const expectedError: string = 'Assertion failure: Should not call updateObservedPart when not connected';
-            expect(() => connectedUserService.updateObservedPart('some-part-doc-id')).toThrowError(expectedError);
-        }));
-        it('should delegate to userDAO', async() => {
-            // Given a service observing an user
-            connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
-
-            // When asking to update observedPart
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
-            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
-            const observedPart: string = 'observedPartId';
-            await connectedUserService.updateObservedPart(observedPart);
-
-            // Then the userDAO should update the connected user doc
-            expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart });
-        });
-    });
-    describe('removeObservedPart', () => {
-        it('should throw when asking to remove while no user is logged', fakeAsync(() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            const expectedError: string = 'Assertion failure: Should not call removeObservedPart when not connected';
-            expect(() => connectedUserService.removeObservedPart()).toThrowError(expectedError);
-        }));
-        it('should delegate removal to userDAO', async() => {
-            // Given a service observing an user
-            connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
-
-            // When asking to update observedPart
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
-            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
-            await connectedUserService.removeObservedPart();
-
-            // Then the userDAO should update the connected user doc
-            expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_MINIMAL_USER.id, { observedPart: null });
-        });
-    });
     describe('sendPresenceToken', () => {
         it('should throw when asking to send presence token while no user is logged', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
@@ -649,7 +615,6 @@ describe('ConnectedUserService', () => {
             connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to send presence token
-            const userDAO: UserDAO = TestBed.inject(UserDAO);
             spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
             await connectedUserService.sendPresenceToken();
 

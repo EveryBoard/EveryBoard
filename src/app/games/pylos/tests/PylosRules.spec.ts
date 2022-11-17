@@ -295,7 +295,7 @@ describe('PylosRules:', () => {
         const status: MGPFallible<void> = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });
-    it('should declare looser Player.ZERO when he put his 15th ball', () => {
+    it('should declare loser Player.ZERO when he put his 15th ball', () => {
         const board: PlayerOrNone[][][] = [
             [
                 [X, O, X, O],
@@ -339,7 +339,7 @@ describe('PylosRules:', () => {
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('should declare looser Player.ONE when he put his 15th ball', () => {
+    it('should declare loser Player.ONE when he put his 15th ball', () => {
         const board: PlayerOrNone[][][] = [
             [
                 [O, X, O, X],

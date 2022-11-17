@@ -1,51 +1,51 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="100%" height="auto"
+     width="100%" height="100%"
      [attr.viewBox]="LEFT + ' ' + UP + ' ' + WIDTH + ' ' + HEIGHT"
-     [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of board; index as y"
-       [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
-        <g *ngFor="let piece of line; index as x"
-           id="click_{{ x }}_{{ y }}"
-           (click)="onClick(x, y)"
-           [attr.transform]="'translate(0,  ' + (y <= 3 ? 0 : (2 * STROKE_WIDTH)) + ')'">
-            <!-- Background -->
-            <rect id="square_{{ x }}_{{ y }}"
-                  [attr.x]="x * SPACE_SIZE"
-                  [attr.y]="y * SPACE_SIZE"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-                  [ngClass]="getSquareClasses(x, y)"/>
-            <!-- Pieces -->
-            <g *ngIf="piece !== pieces.EMPTY"
-               [attr.transform]="getPieceLocation(x, y)">
-                <g *ngIf="piece === pieces.PAWN"
-                   app-martian-chess-pawn
-                   mainShapeId="pawn_{{ x }}_{{ y }}"
-                   [pieceClasses]="getPieceClasses(x, y)"
-                   [style]="style"/>
-                <g *ngIf="piece === pieces.DRONE"
-                   app-martian-chess-drone
-                   [pieceClasses]="getPieceClasses(x, y)"
-                   mainShapeId="drone_{{ x }}_{{ y }}"
-                   [style]="style"/>
-                <g *ngIf="piece === pieces.QUEEN"
-                   app-martian-chess-queen
-                   mainShapeId="queen_{{ x }}_{{ y }}"
-                   [pieceClasses]="getPieceClasses(x, y)"
-                   [style]="style"/>
+    <g [attr.transform]="getBoardTransformation()">
+        <g *ngFor="let line of board; index as y">
+            <g *ngFor="let piece of line; index as x"
+               id="click_{{ x }}_{{ y }}"
+               (click)="onClick(x, y)"
+               [attr.transform]="getPieceTranslation(y)">
+                <!-- Background -->
+                <rect id="square_{{ x }}_{{ y }}"
+                      [attr.x]="x * SPACE_SIZE"
+                      [attr.y]="y * SPACE_SIZE"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      [ngClass]="getSquareClasses(x, y)"/>
+                <!-- Pieces -->
+                <g *ngIf="piece !== pieces.EMPTY"
+                   [attr.transform]="getPieceLocation(x, y)">
+                    <g *ngIf="piece === pieces.PAWN"
+                       app-martian-chess-pawn
+                       mainShapeId="pawn_{{ x }}_{{ y }}"
+                       [pieceClasses]="getPieceClasses(x, y)"
+                       [style]="style"/>
+                    <g *ngIf="piece === pieces.DRONE"
+                       app-martian-chess-drone
+                       [pieceClasses]="getPieceClasses(x, y)"
+                       mainShapeId="drone_{{ x }}_{{ y }}"
+                       [style]="style"/>
+                    <g *ngIf="piece === pieces.QUEEN"
+                       app-martian-chess-queen
+                       mainShapeId="queen_{{ x }}_{{ y }}"
+                       [pieceClasses]="getPieceClasses(x, y)"
+                       [style]="style"/>
+                </g>
             </g>
-        </g>
-        <g *ngIf="selectedPieceInfo.isPresent()">
-            <g *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings">
-                <rect id="indicator_{{ possibleLanding.x }}_{{ possibleLanding.y }}"
-                      [attr.transform]="'translate(0,  ' + (possibleLanding.y <= 3 ? 0 : (2 * STROKE_WIDTH)) + ')'"
-                      [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                      [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                      [attr.width]="INDICATOR_SIZE"
-                      [attr.height]="INDICATOR_SIZE"
-                      (click)="onClick(possibleLanding.x, possibleLanding.y)"
-                      class="indicator"/>
+            <g *ngIf="selectedPieceInfo.isPresent()">
+                <g *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings">
+                    <rect id="indicator_{{ possibleLanding.x }}_{{ possibleLanding.y }}"
+                          [attr.transform]="getPieceTranslation(possibleLanding.y)"
+                          [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+                          [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+                          [attr.width]="INDICATOR_SIZE"
+                          [attr.height]="INDICATOR_SIZE"
+                          (click)="onClick(possibleLanding.x, possibleLanding.y)"
+                          class="indicator"/>
+                </g>
             </g>
         </g>
     </g>
@@ -74,11 +74,6 @@
                   [ngClass]="getClockCircleClasses()"
                   stroke-linecap="round"/>
     </g>
-    <line id="canal"
-          [attr.x1]="SPACE_SIZE"     [attr.y1]="(5 * SPACE_SIZE) + 8"
-          [attr.x2]="5 * SPACE_SIZE" [attr.y2]="(5 * SPACE_SIZE) + 8"
-          [ngClass]="'player' + getCurrentPlayer().value"
-          [attr.stroke-width]="2 * STROKE_WIDTH"/>
     <g id="modeCogView"
        [attr.transform]="configViewTranslation">
         <g id="modeCog"
@@ -104,7 +99,7 @@
                    app-martian-chess-queen
                    (click)="chooseStyle(y)"
                    [attr.transform]="'translate(0, ' + (-(y+1) * SPACE_SIZE) + ')'"
-                   [pieceClasses]="['player' + getCurrentPlayer().value]"
+                   [pieceClasses]="['player' + getCurrentPlayer().value + '-fill']"
                    [style]="proposedStyle.style"/>
             </ng-container>
         </g>
@@ -112,29 +107,29 @@
     <g id="captures">
         <g *ngFor="let player of Player.PLAYERS">
             <g id="capture_of_player_{{ player.value }}"
-               [attr.transform]="'scale(0.5, 0.5) translate(' + (- SPACE_SIZE / 2) + ', ' + ((SPACE_SIZE / 2) + (player.value * ((10 * SPACE_SIZE) + (4 * STROKE_WIDTH)))) + ')'">
+               [attr.transform]="getCapturesTransformation(player)">
                 <g *ngFor="let value of state.getCapturesOf(player); index as piece">
                     <g *ngIf="value > 0"
-                        [attr.transform]="'translate(0, ' + (2 * piece * SPACE_SIZE) + ')'">
+                       [attr.transform]="'translate(0, ' + (2 * piece * SPACE_SIZE) + ')'">
                         <text *ngIf="value > 1"
-                               class="text-giant text-center"
-                               [ngClass]="'player' + (player.value === 0 ? 1 : 0)"
-                               [attr.x]="SPACE_SIZE / 2"
-                               [attr.y]="SPACE_SIZE / 2"
+                              class="text-giant text-center"
+                              [ngClass]="getPlayerClass(player)"
+                              [attr.x]="SPACE_SIZE / 2"
+                              [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
                         <g id="piece_{{ piece }}_player_{{ player.value }}"
                            [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn
-                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [pieceClasses]="[getPlayerClass(player)]"
                                [style]="style"/>
                             <g *ngIf="piece === 1"
                                app-martian-chess-drone
-                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [pieceClasses]="[getPlayerClass(player)]"
                                [style]="style"/>
                             <g *ngIf="piece === 2"
                                app-martian-chess-queen
-                               [pieceClasses]="['player' + (player.value === 0 ? 1 : 0)]"
+                               [pieceClasses]="[getPlayerClass(player)]"
                                [style]="style"/>
                         </g>
                     </g>

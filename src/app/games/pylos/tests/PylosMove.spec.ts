@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { PylosCoord } from '../PylosCoord';
+import { PylosFailure } from '../PylosFailure';
 import { PylosMove, PylosMoveFailure } from '../PylosMove';
 
 describe('PylosMove', () => {
@@ -8,10 +9,15 @@ describe('PylosMove', () => {
     const coord: PylosCoord = new PylosCoord(0, 0, 0);
     const highCoord: PylosCoord = new PylosCoord(0, 0, 2);
 
+    it('should forbid horizontal climb creation', () => {
+        // Given two coord on the same Z level
+        // When creating a move going horizontally
+        // Then it should throw
+        expect(() => PylosMove.fromClimb(coord, new PylosCoord(1, 1, 0), []))
+            .toThrowError(PylosFailure.MUST_MOVE_UPWARD());
+    });
     it('should allow move creation', () => {
         // From Climb
-        expect(() => PylosMove.fromClimb(coord, coord, []))
-            .toThrowError('PylosMove: When piece move it must move upward.');
         expect(PylosMove.fromClimb(coord, highCoord, [])).toBeDefined();
 
         // From Drop

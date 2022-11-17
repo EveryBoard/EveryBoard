@@ -5,13 +5,13 @@ import { ErrorDAO } from '../ErrorDAO';
 
 describe('ErrorDAO', () => {
 
-    let dao: ErrorDAO;
+    let errorDAO: ErrorDAO;
 
     beforeEach(async() => {
         await setupEmulators();
-        dao = TestBed.inject(ErrorDAO);
+        errorDAO = TestBed.inject(ErrorDAO);
     });
     it('should be created', () => {
-        expect(dao).toBeTruthy();
+        expect(errorDAO).toBeTruthy();
     });
 });

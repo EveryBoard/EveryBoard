@@ -200,4 +200,140 @@ describe('ObjectDifference', () => {
         };
         expect(() => ObjectDifference.from(before, after)).toThrowError('Thing should not change type');
     });
+    describe('isPresent', () => {
+        it('should know when a field has been removed', () => {
+            // Given a diff created from a removed field
+            const before: FirestoreJSONObject = {
+                dyingField: true,
+            };
+            const after: FirestoreJSONObject = {
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+
+            // When asking if the removed field is present in the diff (and how)
+            const isPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } =
+                diff.isPresent('dyingField');
+
+            // Then it should say that it is present, as a removed field !
+            const expectedIsPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } = {
+                state: 'removed',
+                present: true,
+            };
+            expect(isPresent).toEqual(expectedIsPresent);
+        });
+        it('should know when a field has been added', () => {
+            // Given a diff created from an added field
+            const before: FirestoreJSONObject = {
+            };
+            const after: FirestoreJSONObject = {
+                addedKey: 'yes',
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+
+            // When asking if the added field is present in the diff (and how)
+            const isPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } =
+                diff.isPresent('addedKey');
+
+            // Then it should say that it is present, as an added field !
+            const expectedIsPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } = {
+                state: 'added',
+                present: true,
+            };
+            expect(isPresent).toEqual(expectedIsPresent);
+        });
+        it('should know when a field has been modified', () => {
+            // Given a diff created from a modified field
+            const before: FirestoreJSONObject = {
+                modifiedKey: 42,
+            };
+            const after: FirestoreJSONObject = {
+                modifiedKey: 73,
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+
+            // When asking if the modified field is present in the diff (and how)
+            const isPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } =
+                diff.isPresent('modifiedKey');
+
+            // Then it should say that it is present, as a modified field !
+            const expectedIsPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } = {
+                state: 'modified',
+                present: true,
+            };
+            expect(isPresent).toEqual(expectedIsPresent);
+        });
+        it('should know when a field is absent', () => {
+            // Given a diff
+            const before: FirestoreJSONObject = {
+                modifiedKey: 42,
+            };
+            const after: FirestoreJSONObject = {
+                modifiedKey: 73,
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+
+            // When asking if unknown field is present in the diff (and how)
+            const isPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } =
+                diff.isPresent('JimCarreyIlEstFunny');
+
+            // Then it should say that it is absent
+            const expectedIsPresent: { state: 'added' | 'modified' | 'removed' | null, present: boolean } = {
+                state: null,
+                present: false,
+            };
+            expect(isPresent).toEqual(expectedIsPresent);
+        });
+    });
+    describe('isFullyCreated', () => {
+        it('should return false when there is removed fields', () => {
+            // Given a diff created from one removed fields and one created
+            const before: FirestoreJSONObject = {
+                someKey: 5,
+            };
+            const after: FirestoreJSONObject = {
+                createdKey: 'yes',
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+
+            // When asking if the diff is fully created
+            const isFullyCreated: boolean = diff.isFullyCreated();
+
+            // Then it should be false
+            expect(isFullyCreated).toBeFalse();
+        });
+        it('should return false when there is modified fields', () => {
+            // Given a diff created from one modified fields and one created
+            const before: FirestoreJSONObject = {
+                modifiedKey: 'ah oui mais non hein',
+            };
+            const after: FirestoreJSONObject = {
+                modifiedKey: 'yes',
+                someKey: 5,
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+
+            // When asking if the diff is fully created
+            const isFullyCreated: boolean = diff.isFullyCreated();
+
+            // Then it should be false
+            expect(isFullyCreated).toBeFalse();
+        });
+        it('should return true when every field included are added', () => {
+            // Given a diff created from one added fields and one untouched
+            const before: FirestoreJSONObject = {
+                untouchedKey: 'ah oui mais non hein',
+            };
+            const after: FirestoreJSONObject = {
+                untouchedKey: 'ah oui mais non hein',
+                addedKey: 5,
+            };
+            const diff: ObjectDifference = ObjectDifference.from(before, after);
+
+            // When asking if the diff is fully created
+            const isFullyCreated: boolean = diff.isFullyCreated();
+
+            // Then it should be true
+            expect(isFullyCreated).toBeTrue();
+        });
+    });
 });

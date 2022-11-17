@@ -18,11 +18,11 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
 
     public board: Table<P>;
 
-    public getTriangleCornerCoords(x: number, y: number) : Coord[] {
+    public getTriangleCornerCoords(x: number, y: number): Coord[] {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
         else return this.getUpwardCoordinate(x, y);
     }
-    public getTriangleCoordinate(x: number, y: number) : string {
+    public getTriangleCoordinate(x: number, y: number): string {
         const coords: Coord[] = this.getTriangleCornerCoords(x, y);
         const strings: string[] = coords.map((c: Coord) => c.x + ',' + c.y);
         return strings.reduce((sum: string, last: string) => sum + ',' + last);
@@ -49,7 +49,7 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
         const rightCorner: Coord = new Coord(right, bottom);
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
-    public getPyramidCoordinate(x: number, y: number) : string {
+    public getPyramidCoordinate(x: number, y: number): string {
         if ((x+y)%2 === 1) return this.getDownwardPyramidCoordinate(x, y);
         else return this.getUpwardPyramidCoordinate(x, y);
     }
