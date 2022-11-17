@@ -2,6 +2,7 @@
 
 # This script launches the emulator and opens all links it sees
 
+touch allout.txt
 npm run start:emulator 2>&1 | tee allout.txt &
 
 tail -f allout.txt | grep --line-buffered -Eo '([-+.[:alnum:]]+://)?([-[:alnum:]]+.)*localhost(:[[:digit:]]+)?(/[[:graph:]]*)?' |
