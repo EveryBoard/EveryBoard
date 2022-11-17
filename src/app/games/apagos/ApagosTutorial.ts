@@ -26,7 +26,7 @@ export class ApagosTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Transfer`,
-            $localize`The other kind of move is the transfer.<ol><li>Choose one of your pieces on the board by clicking on the square in which it is.</li><li>Choose its landing square by clicking on one of the arrow to finish the transfer.</li></ol>It can only be done with your pieces, from an higher square to a lower one.<br/><br/>You're playing Dark, do a transfer!`,
+            $localize`The other kind of move is the transfer.<ol><li>Choose one of your pieces on the board by clicking on the square in which it is.</li><li>Choose its landing square by clicking on one of the arrow to finish the transfer.</li></ol>It can only be done with your pieces, from a higher square to a lower one.<br/><br/>You're playing Dark, do a transfer!`,
             ApagosState.fromRepresentation(2, [
                 [0, 0, 1, 0],
                 [0, 1, 0, 0],
