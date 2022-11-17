@@ -182,11 +182,12 @@ describe('ObservedPartService', () => {
                 await observedPartService.updateObservedPart(newValue);
 
                 // Then all value from the update should be there, and the one not mentionned should be from the old one
-                expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_AUTH_USER.id, { observedPart: {
+                const observedPart: FocusedPart = {
                     id: 'new',
                     role: 'Candidate',
                     typeGame: 'old',
-                }});
+                };
+                expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.CREATOR_AUTH_USER.id, { observedPart });
             });
             it('should throw if observedPart update is incomplete when old observed part is absent (and role missing)', async() => {
                 // Given a service observing an user
