@@ -45,7 +45,7 @@ export class ApagosTutorial extends Tutorial {
         TutorialStep.fromPredicate(
             $localize`Victory`,
             $localize`When you put a last piece into a square, the games end. In this configuration you can win.<br/><br/>You're playing Light, do the winning move!`,
-            ApagosState.fromRepresentation(2, [
+            ApagosState.fromRepresentation(3, [
                 [1, 0, 3, 4],
                 [2, 1, 3, 1],
                 [3, 1, 7, 5],
