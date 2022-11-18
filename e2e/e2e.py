@@ -61,10 +61,9 @@ def select(driver, selector, selection):
 def wait_for_presence_of(driver, selector):
     try:
         wait = WebDriverWait(driver, 10)
-        element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
     except Exception as e:
-        print("failed when checking presence of element '{}'".format(selector))
-        print(driver.find_element(By.CSS_SELECTOR, "body").get_attribute('innerHTML'))
+        print("Failed when checking presence of element '{}'".format(selector))
         raise e
 
 def register(driver, email, username, password):
@@ -180,99 +179,104 @@ def can_play_tutorial(driver):
 
 @scenario("simple")
 def can_play_local_2_players(driver):
-  """
-  Scenario: I am a visitor
-  Action: I play a game against a friend on the same computer
-  Result: I can go until the end of the game
-  """
-  # Launch a game of four in a row
-  click_menu_button(driver, "#playOffline", "#playLocally")
-  select(driver, "#gameType", "Four in a Row")
-  click_button(driver, "#launchGame")
+    """
+    Role: I am a visitor
+    Action: I play a game against a friend on the same computer
+    Result: I can go until the end of the game
+    """
+    # Launch a game of four in a row
+    click_menu_button(driver, "#playOffline", "#playLocally")
+    select(driver, "#gameType", "Four in a Row")
+    click_button(driver, "#launchGame")
 
-  # Stupid game between player 0 and 1, where 0 wins
-  click_button(driver, "#click_3 > rect")
-  click_button(driver, "#click_2 > rect")
-  click_button(driver, "#click_3 > rect")
-  click_button(driver, "#click_2 > rect")
-  click_button(driver, "#click_3 > rect")
-  click_button(driver, "#click_2 > rect")
-  click_button(driver, "#click_3 > rect")
+    # Stupid game between player 0 and 1, where 0 wins
+    click_button(driver, "#click_3 > rect")
+    click_button(driver, "#click_2 > rect")
+    click_button(driver, "#click_3 > rect")
+    click_button(driver, "#click_2 > rect")
+    click_button(driver, "#click_3 > rect")
+    click_button(driver, "#click_2 > rect")
+    click_button(driver, "#click_3 > rect")
 
-  # Now 0 won
-  winner = driver.find_element(By.ID, "gameResult").text
-  if winner != "Player 1 won":
-      raise Exception("failed: text should be {}".format(winner))
+    # Now 0 won
+    winner = driver.find_element(By.ID, "gameResult").text
+    if winner != "Player 1 won":
+        raise Exception("failed: text should be {}".format(winner))
 
 @scenario("simple")
 def can_play_local_vs_ai(driver):
-  """
-  Scenario: I am a visitor
-  Action: I play a game against the AI
-  Result: The AI plays its move and I can play again
-  """
+    """
+    Role: I am a visitor
+    Action: I play a game against the AI
+    Result: The AI plays its move and I can play again
+    """
 
-  # Launch a game of four in a row
-  click_menu_button(driver, "#playOffline", "#playLocally")
-  select(driver, "#gameType", "Four in a Row")
-  click_button(driver, "#launchGame")
+    # Launch a game of four in a row
+    click_menu_button(driver, "#playOffline", "#playLocally")
+    select(driver, "#gameType", "Four in a Row")
+    click_button(driver, "#launchGame")
 
-  # Select the AI as second player
-  select(driver, "#playerOneSelect", "P4Minimax")
-  select(driver, "#aiOneDepthSelect", "Level 1")
+    # Select the AI as second player
+    select(driver, "#playerOneSelect", "P4Minimax")
+    select(driver, "#aiOneDepthSelect", "Level 1")
 
-  # I play a move
-  click_button(driver, "#click_2 > rect")
+    # I play a move
+    click_button(driver, "#click_2 > rect")
 
-  # Let AI play
-  time.sleep(2) # Two seconds should be more than enough
+    # Let AI play
+    time.sleep(2) # Two seconds should be more than enough
 
-  # AI should have played a second move, I can play again
-  click_button(driver, "#click_1 > rect")
+    # AI should have played a second move, I can play again
+    click_button(driver, "#click_1 > rect")
 
-  # Now there should be a piece in #click_1
-  wait_for_presence_of(driver, "#click_1 > circle")
+    # Now there should be a piece in #click_1
+    wait_for_presence_of(driver, "#click_1 > circle")
 
 @scenario("two_drivers")
 def can_create_part_and_play(driver1, username1, driver2, username2):
-  # Player 1 creates the part
-  click_button(driver1, "#createOnlineGame")
-  select(driver1, "#gameType", "Four in a Row")
-  click_button(driver1, "#launchGame")
+    """
+    Role: We are two registered users
+    Action: We create and play a full game
+    Result: We see who has won
+    """
+    # Player 1 creates the part
+    click_button(driver1, "#createOnlineGame")
+    select(driver1, "#gameType", "Four in a Row")
+    click_button(driver1, "#launchGame")
 
-  # Player 1 configures the part
-  click_button(driver1, "#firstPlayerCreator") # Player 1 will start
+    # Player 1 configures the part
+    click_button(driver1, "#firstPlayerCreator") # Player 1 will start
 
-  # Player 2 joins the part
-  click_button(driver2, "#seeGameList")
-  click_button(driver2, "#part_0 > td")
+    # Player 2 joins the part
+    click_button(driver2, "#seeGameList")
+    click_button(driver2, "#part_0 > td")
 
-  # Player 1 sees player 2 arrive and selects them
-  click_button(driver1, "#presenceOf_{}".format(username2))
-  click_button(driver1, "#proposeConfig")
+    # Player 1 sees player 2 arrive and selects them
+    click_button(driver1, "#presenceOf_{}".format(username2))
+    click_button(driver1, "#proposeConfig")
 
-  # Player 2 accepts
-  click_button(driver2, "#acceptConfig")
+    # Player 2 accepts
+    click_button(driver2, "#acceptConfig")
 
-  # Now we are in the game!
-  # Let's play it until the end
-  click_button(driver1, "#click_3 > rect")
-  wait_for_presence_of(driver2, "#playerTurn")
-  click_button(driver2, "#click_2 > rect")
-  wait_for_presence_of(driver1, "#playerTurn")
-  click_button(driver1, "#click_3 > rect")
-  wait_for_presence_of(driver2, "#playerTurn")
-  click_button(driver2, "#click_2 > rect")
-  wait_for_presence_of(driver1, "#playerTurn")
-  click_button(driver1, "#click_3 > rect")
-  wait_for_presence_of(driver2, "#playerTurn")
-  click_button(driver2, "#click_2 > rect")
-  wait_for_presence_of(driver1, "#playerTurn")
-  click_button(driver1, "#click_3 > rect")
+    # Now we are in the game!
+    # Let's play it until the end
+    click_button(driver1, "#click_3 > rect")
+    wait_for_presence_of(driver2, "#playerTurn")
+    click_button(driver2, "#click_2 > rect")
+    wait_for_presence_of(driver1, "#playerTurn")
+    click_button(driver1, "#click_3 > rect")
+    wait_for_presence_of(driver2, "#playerTurn")
+    click_button(driver2, "#click_2 > rect")
+    wait_for_presence_of(driver1, "#playerTurn")
+    click_button(driver1, "#click_3 > rect")
+    wait_for_presence_of(driver2, "#playerTurn")
+    click_button(driver2, "#click_2 > rect")
+    wait_for_presence_of(driver1, "#playerTurn")
+    click_button(driver1, "#click_3 > rect")
 
-  # Now player 1 has won
-  wait_for_presence_of(driver1, "#youWonIndicator")
-  wait_for_presence_of(driver2, "#youLostIndicator")
+    # Now player 1 has won
+    wait_for_presence_of(driver1, "#youWonIndicator")
+    wait_for_presence_of(driver2, "#youLostIndicator")
 
 def launch_scenarios():
     """Launches all the scenarios, stop at the first one that fails"""
