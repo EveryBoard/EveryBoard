@@ -649,8 +649,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(router.navigate).not.toHaveBeenCalled();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('should not do anything particular when observer leaves this part from another tab', fakeAsync(async() => {
-            // Given a part where the user is observer
+        it('should update observed part again to match current part when observer leaves this part from another tab', fakeAsync(async() => {
+            // Given a part where the user is observer (or plaer)
             await prepareTestUtilsFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
@@ -659,10 +659,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(router, 'navigate').and.resolveTo();
             ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
 
-            // Then nothing special should have happened, including no redirection
-            // Though compo.observedPart should have been locally changed
+            // Then the observed part should have been updated to match the current part
             expect(router.navigate).not.toHaveBeenCalled();
-            expect(wrapper.getObservedPart()).toEqual(MGPOptional.empty());
+            expect(wrapper.getObservedPart()).toEqual(MGPOptional.of({
+                id: 'configRoomId',
+                opponent: null,
+                typeGame: 'Quarto',
+                role: 'Observer'
+            }));
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });

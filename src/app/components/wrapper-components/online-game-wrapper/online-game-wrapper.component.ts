@@ -202,7 +202,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.router.navigate(['/lobby']);
             }
         } else {
-            this.observedPart = MGPOptional.empty();
+            // We closed a tab observing a part.
+            // But we're definitely still observing/playing this one, so we update observed part to match this
+            this.observedPartService.updateObservedPart({
+                id: this.currentPartId,
+                opponent: this.opponent,
+                typeGame: this.extractGameNameFromURL(),
+                role: this.role === PlayerOrNone.NONE ? 'Observer' : 'Player',
+            });
         }
     }
     public getObservedPart(): MGPOptional<FocusedPart> {
