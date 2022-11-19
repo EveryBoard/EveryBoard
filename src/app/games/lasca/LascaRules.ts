@@ -5,6 +5,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
 import { LascaPiece, LascaSpace, LascaState } from './LascaState';
@@ -24,6 +25,14 @@ export class LascaRulesFailure {
 
 export class LascaRules extends Rules<LascaMove, LascaState> {
 
+    private static singleton: MGPOptional<LascaRules> = MGPOptional.empty();
+
+    public static get(): LascaRules {
+        if (this.singleton.isAbsent()) {
+            this.singleton = MGPOptional.of(new LascaRules(LascaState));
+        }
+        return this.singleton.get();
+    }
     public static getCaptures(state: LascaState): LascaMove[] {
         const captures: LascaMove[] = [];
         const player: Player = state.getCurrentPlayer();

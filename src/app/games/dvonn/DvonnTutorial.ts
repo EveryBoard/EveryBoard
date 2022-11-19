@@ -1,7 +1,7 @@
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -17,7 +17,7 @@ const X2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 const O4: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 4, false);
 const X4: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 4, false);
 
-export class DvonnTutorial {
+export class DvonnTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.anyMove(

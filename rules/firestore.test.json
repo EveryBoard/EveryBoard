@@ -170,16 +170,16 @@ service cloud.firestore {
         function playerPerformsNonMoveUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
             // Time can be increased (add more time to other player) or decreased (on take backs, for any player)
-            let playerZeroTimeUnchanged = preservesField('remainingMsForZero');
-            let safeTimeIncreasePlayerZero = userIsPlayerOne(part) && safeTimeIncrease(part.playerZero, 'remainingMsForZero', part, update);
-            let playerZeroTimeDecreased = update.remainingMsForZero < part.remainingMsForZero;
-            let playerOneTimeUnchanged = preservesField('remainingMsForOne');
-            let safeTimeIncreasePlayerOne = userIsPlayerZero(part) && safeTimeUpdate(part.playerOne, 'remainingMsForOne', part, update);
-            let playerOneTimeDecreased = update.remainingMsForOne < part.remainingMsForOne;
-            let safeTimeManagement = (playerZeroTimeUnchanged || safeTimeIncreasePlayerZero || playerZeroTimeDecreased) &&
-                (playerOneTimeUnchanged || safeTimeIncreasePlayerOne || playerOneTimeDecreased);
+//            let playerZeroTimeUnchanged = preservesField('remainingMsForZero');
+//            let safeTimeIncreasePlayerZero = userIsPlayerOne(part) && safeTimeIncrease(part.playerZero, 'remainingMsForZero', part, update);
+//            let playerZeroTimeDecreased = update.remainingMsForZero < part.remainingMsForZero;
+//            let playerOneTimeUnchanged = preservesField('remainingMsForOne');
+//            let safeTimeIncreasePlayerOne = userIsPlayerZero(part) && safeTimeUpdate(part.playerOne, 'remainingMsForOne', part, update);
+//            let playerOneTimeDecreased = update.remainingMsForOne < part.remainingMsForOne;
+//            let safeTimeManagement = (playerZeroTimeUnchanged || safeTimeIncreasePlayerZero || playerZeroTimeDecreased) &&
+//                (playerOneTimeUnchanged || safeTimeIncreasePlayerOne || playerOneTimeDecreased);
             return isValidPartUpdateDuringGame(part) &&
-                safeTimeManagement &&
+//                safeTimeManagement &&
                 (preservesField('turn') || safeTurnDecrease(part.turn, update.turn)) &&
                 preservesWinnerAndLoserUnlessResultChanges() &&
                 onlyAcceptsDrawIfProposed(part, update) &&
@@ -255,20 +255,20 @@ service cloud.firestore {
                 update.remainingMsForZero == configRoom.totalPartDuration * 1000 &&
                 update.remainingMsForOne == configRoom.totalPartDuration * 1000;
         }
-        function safeTimeDecrease(player, remainingMsFieldName, part, update) {
-            let timeDecreased = update[remainingMsFieldName] < part[remainingMsFieldName];
-            let isNotOwnTime = request.auth.uid != player.id;
-            return timeDecreased && isNotOwnTime;
-        }
-        function safeTimeIncrease(player, remainingMsFieldName, part, update) {
-            let timeIncreased = update[remainingMsFieldName] > part[remainingMsFieldName];
-            let isNotOwnTime = request.auth.uid != player.id;
-            return timeIncreased && isNotOwnTime;
-        }
-        function safeTimeUpdate(player, remainingMsFieldName, part, update) {
-            return safeTimeIncrease(player, remainingMsFieldName, part, update) ||
-                safeTimeDecrease(player, remainingMsFieldName, part, update)
-        }
+//        function safeTimeDecrease(player, remainingMsFieldName, part, update) {
+//            let timeDecreased = update[remainingMsFieldName] < part[remainingMsFieldName];
+//            let isNotOwnTime = request.auth.uid != player.id;
+//            return timeDecreased && isNotOwnTime;
+//        }
+//        function safeTimeIncrease(player, remainingMsFieldName, part, update) {
+//            let timeIncreased = update[remainingMsFieldName] > part[remainingMsFieldName];
+//            let isNotOwnTime = request.auth.uid != player.id;
+//            return timeIncreased && isNotOwnTime;
+//        }
+//        function safeTimeUpdate(player, remainingMsFieldName, part, update) {
+//            return safeTimeIncrease(player, remainingMsFieldName, part, update) ||
+//                safeTimeDecrease(player, remainingMsFieldName, part, update)
+//        }
         function validPlayerSelection(configRoom, partUpdate) {
             let playerZeroIsCreator = playerEquals(partUpdate.playerZero, configRoom.creator);
             let playerZeroIsChosenOpponent = playerEquals(partUpdate.playerZero, configRoom.chosenOpponent);
