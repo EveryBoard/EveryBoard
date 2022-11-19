@@ -682,7 +682,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                                scores?: [number, number])
     : Promise<void>
     {
-        const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
+        const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encode(move);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scores + ')');
         this.gameComponent.rules.choose(move);

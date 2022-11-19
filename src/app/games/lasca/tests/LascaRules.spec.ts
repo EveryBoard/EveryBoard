@@ -4,11 +4,12 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { LascaControlMinimax } from '../LascaControlMinimax';
 import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules, LascaRulesFailure } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-fdescribe('LascaRules', () => {
+describe('LascaRules', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;
@@ -29,7 +30,9 @@ fdescribe('LascaRules', () => {
 
     beforeEach(() => {
         rules = new LascaRules(LascaState);
-        minimaxes = []; // TODOTODO
+        minimaxes = [
+            new LascaControlMinimax(rules, 'Lasca Control Minimax'),
+        ];
     });
     describe('Move', () => {
         it('should forbid move when first coord is empty', () => {
@@ -169,8 +172,8 @@ fdescribe('LascaRules', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],
                 [__, _u, __, _u, __, __, __],
-                [__, __, __, __, _u, __, __],
                 [__, __, __, __, __, __, __],
+                [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
             ], 1).get();
 
@@ -183,8 +186,8 @@ fdescribe('LascaRules', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, __, _u, __, __, __],
-                [vu, __, __, __, _u, __, __],
-                [__, __, __, __, __, __, __],
+                [vu, __, __, __, __, __, __],
+                [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
             ], 2).get();
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -276,7 +279,7 @@ fdescribe('LascaRules', () => {
         });
     });
     describe('Promotion', () => {
-        it('should promote commander of a pile that reached last line', () => {
+        it('should promote the commander of a pile that reached last line', () => {
             // Given a board where a pile is about to reach final line
             const state: LascaState = LascaState.from([
                 [__, __, __, __, _v, __, _v],

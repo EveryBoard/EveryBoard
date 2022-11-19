@@ -8,7 +8,8 @@
             <ellipse cx="40.952408" cy="15.225397" rx="39.769348" ry="14.11405"/>
         </g>
     </defs>
-    <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]">
+    <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]"
+       id="board_space_{{ x }}">
         <path id="click_{{ x }}"
               class="base mid-stroke"
               [ngClass]="viewInfo.boardInfo[x].spaceClasses"

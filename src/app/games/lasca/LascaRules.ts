@@ -87,6 +87,9 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return pieceMoves;
     }
+    public static getPieceUnderControlBy(state: LascaState, player: Player): Coord[] {
+        return state.getPileOf(player);
+    }
     public applyLegalMove(move: LascaMove, state: LascaState): LascaState {
         const moveStart: Coord = move.getStartingCoord();
         const moveEnd: Coord = move.getEndingCoord();

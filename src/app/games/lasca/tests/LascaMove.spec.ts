@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { JSONValue } from 'src/app/utils/utils';
 import { LascaMove, LascaMoveFailure } from '../LascaMove';
 
 describe('LascaMove', () => {
@@ -71,6 +72,31 @@ describe('LascaMove', () => {
 
             // Then it should succeed
             expect(move.isSuccess()).toBeTrue();
+        });
+    });
+    describe('Encoder', () => {
+        it('should encode steps', () => {
+            // Given a step
+            const move: LascaMove = LascaMove.fromStep(new Coord(0, 0), new Coord(1, 1)).get();
+
+            // When encoding it then decoding the result
+            const encoded: JSONValue = LascaMove.encoder.encode(move);
+            const decoded: LascaMove = LascaMove.encoder.decode(encoded);
+
+            // Then the decoded value should be the original value
+            expect(decoded).toEqual(move);
+        });
+        it('should encode captures', () => {
+            // Given a capture
+            const steppedCoords: Coord[] = [new Coord(0, 0), new Coord(2, 2), new Coord(0, 4)];
+            const move: LascaMove = LascaMove.fromCapture(steppedCoords).get();
+
+            // When encoding it then decoding the result
+            const encoded: JSONValue = LascaMove.encoder.encode(move);
+            const decoded: LascaMove = LascaMove.encoder.decode(encoded);
+
+            // Then the decoded value should be the original value
+            expect(decoded).toEqual(move);
         });
     });
 });

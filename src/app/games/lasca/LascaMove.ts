@@ -2,10 +2,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
+import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { JSONObject, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export class LascaMoveFailure {
     public static readonly CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL: Localized = () => $localize`TODOTODO capture must be double diagonal step`;
@@ -16,18 +18,6 @@ export class LascaMoveFailure {
 
 export class LascaMove extends Move {
 
-    public toString(): string {
-        throw new Error('toString not implemented.');
-    }
-    public equals(other: LascaMove): boolean {
-        if (other.coords.length !== this.coords.length) return false;
-        let i: number = 0;
-        for (const coord of this.coords) {
-            if (coord.equals(other.coords[i]) === false) return false;
-            i++;
-        }
-        return true;
-    }
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
         const jumpsValidity: MGPFallible<MGPSet<Coord>> = LascaMove.getSteppedOverCoords(coords);
         if (jumpsValidity.isSuccess()) {
@@ -69,14 +59,51 @@ export class LascaMove extends Move {
         }
         return MGPFallible.success(new LascaMove([start, end], true));
     }
+    public static encoder: MoveEncoder<LascaMove> = new class extends MoveEncoder<LascaMove> {
+        public encodeMove(move: LascaMove): JSONValueWithoutArray {
+            return {
+                coords: move.coords.map((coord: Coord): JSONValueWithoutArray => {
+                    return Coord.encoder.encode(coord) as JSONValueWithoutArray;
+                }),
+                isStep: move.isStep,
+            };
+        }
+        public decodeMove(encoded: JSONValueWithoutArray): LascaMove {
+            const casted: JSONObject = encoded as JSONObject;
+            assert(casted.coords != null, 'Encoded LascaMove should have a coords field');
+            assert(casted.isStep != null, 'Encoded LascaMove should have a isStep field');
+            const encodedCoords: JSONValueWithoutArray[] =
+                Utils.getNonNullable(casted.coords) as JSONValueWithoutArray[];
+            const coords: Coord[] = encodedCoords.map((x: JSONValue) => Coord.encoder.decode(x));
+            return new LascaMove(coords, casted.isStep as boolean);
+        }
+    };
     private constructor(private readonly coords: Coord[], public readonly isStep: boolean) {
         super();
+    }
+    public toString(): string {
+        const coords: Coord[] = this.coords;
+        const coordStrings: string[] = coords.map((coord: Coord) => coord.toString());
+        const coordString: string = coordStrings.join(', ');
+        return 'LascaMove(' + coordString + ')';
+    }
+    public equals(other: LascaMove): boolean {
+        if (other.coords.length !== this.coords.length) return false;
+        let i: number = 0;
+        for (const coord of this.coords) {
+            if (coord.equals(other.coords[i]) === false) return false;
+            i++;
+        }
+        return true;
     }
     public getCoord(index: number): MGPFallible<Coord> {
         if (index < 0 || index >= this.coords.length) {
             return MGPFallible.failure('invalid index');
         }
         return MGPFallible.success(this.coords[index]);
+    }
+    public getCoordsCopy(): Coord[] {
+        return ArrayUtils.copyImmutableArray(this.coords);
     }
     public getStartingCoord(): Coord {
         return this.getCoord(0).get();
