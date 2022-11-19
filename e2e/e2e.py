@@ -262,6 +262,7 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
 
     # Now we are in the game!
     # Let's play it until the end
+    wait_for_presence_of(driver1, "#playerTurn")
     click_button(driver1, "#click_3 > rect")
     wait_for_presence_of(driver2, "#playerTurn")
     click_button(driver2, "#click_2 > rect")
