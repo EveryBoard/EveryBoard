@@ -262,6 +262,9 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
 
     # Now we are in the game!
     # Let's play it until the end
+    # First, reload the page to avoid a potential bug (temporary, we can remove this once the bug is fixed)
+    time.sleep(1)
+    driver1.get(driver1.current_url)
     wait_for_presence_of(driver1, "#playerTurn")
     click_button(driver1, "#click_3 > rect")
     wait_for_presence_of(driver2, "#playerTurn")
