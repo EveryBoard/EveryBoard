@@ -665,7 +665,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 id: 'configRoomId',
                 opponent: null,
                 typeGame: 'Quarto',
-                role: 'Observer'
+                role: 'Observer',
             }));
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));

@@ -204,7 +204,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         } else {
             // We closed a tab observing a part.
             // But we're definitely still observing/playing this one, so we update observed part to match this
-            this.observedPartService.updateObservedPart({
+            await this.observedPartService.updateObservedPart({
                 id: this.currentPartId,
                 opponent: this.opponent,
                 typeGame: this.extractGameNameFromURL(),
