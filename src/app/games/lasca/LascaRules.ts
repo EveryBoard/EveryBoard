@@ -96,16 +96,13 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return pieceMoves;
     }
-    public static getPieceUnderControlBy(state: LascaState, player: Player): Coord[] {
-        return state.getPileOf(player);
-    }
     public applyLegalMove(move: LascaMove, state: LascaState): LascaState {
         const moveStart: Coord = move.getStartingCoord();
         const moveEnd: Coord = move.getEndingCoord();
         let movingPile: LascaSpace = state.getPieceAt(moveStart);
         let resultingState: LascaState = state.remove(moveStart);
         if (move.isStep === false) {
-            const capturedCoords: MGPSet<Coord> = move.getSteppedOverCoords().get();
+            const capturedCoords: MGPSet<Coord> = move.getCapturedCoords().get();
             for (const capturedCoord of capturedCoords) {
                 const capturedSpace: LascaSpace = state.getPieceAt(capturedCoord);
                 const commander: LascaPiece = capturedSpace.getCommander();
@@ -158,7 +155,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
     }
     public isLegalCapture(move: LascaMove, state: LascaState, possibleCaptures: LascaMove[]): MGPFallible<void> {
         const player: Player = state.getCurrentPlayer();
-        const steppedOverCoords: MGPSet<Coord> = move.getSteppedOverCoords().get();
+        const steppedOverCoords: MGPSet<Coord> = move.getCapturedCoords().get();
         for (const steppedOverCoord of steppedOverCoords) {
             const steppedOverSpace: LascaSpace = state.getPieceAt(steppedOverCoord);
             if (steppedOverSpace.isCommandedBy(player)) {

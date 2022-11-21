@@ -118,15 +118,6 @@ export class LascaState extends GameStateWithTable<LascaSpace> {
             [_, O, _, O, _, O, _],
             [O, _, O, _, O, _, O],
         ];
-        // const board: Table<LascaSpace> = [
-        //     [_, _, X, _, X, _, X],
-        //     [_, X, _, X, _, X, _],
-        //     [X, _, O, _, X, _, X],
-        //     [_, _, _, _, _, _, _],
-        //     [O, _, O, _, O, _, O],
-        //     [_, O, _, O, _, O, _],
-        //     [O, _, O, _, O, _, O],
-        // ];
         return new LascaState(board, 0);
     }
     public static from(board: Table<LascaSpace>, turn: number): MGPFallible<LascaState> {

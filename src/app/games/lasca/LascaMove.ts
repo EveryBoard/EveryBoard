@@ -111,7 +111,7 @@ export class LascaMove extends Move {
     public getEndingCoord(): Coord {
         return this.coords[this.coords.length - 1];
     }
-    public getSteppedOverCoords(): MGPFallible<MGPSet<Coord>> {
+    public getCapturedCoords(): MGPFallible<MGPSet<Coord>> {
         return LascaMove.getSteppedOverCoords(this.coords);
     }
     public concatene(move: LascaMove): LascaMove {

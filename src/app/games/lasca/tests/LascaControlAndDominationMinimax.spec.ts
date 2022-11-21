@@ -2,7 +2,7 @@
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LascaControlMinimax } from '../LascaControlMinimax';
+import { LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
 import { LascaRules } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
@@ -11,11 +11,11 @@ fdescribe('LascaControlAndDominateMinimax', () => {
     const O: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
     const X: LascaSpace = new LascaSpace([LascaPiece.ONE]);
     const _: LascaSpace = LascaSpace.EMPTY;
-    let minimax: LascaControlMinimax; // TODOTODO DUPLICATE TEST AND SHOW HOW DOMINATION DOMINATES
+    let minimax: LascaControlAndDominationMinimax; // TODOTODO DUPLICATE TEST AND SHOW HOW DOMINATION DOMINATES
 
     beforeEach(() => {
         const ruler: LascaRules = LascaRules.get();
-        minimax = new LascaControlMinimax(ruler, 'Lasca Control And Dominate Minimax');
+        minimax = new LascaControlAndDominationMinimax(ruler, 'Lasca Control And Dominate Minimax');
     });
     it('should not count the immobilised piles', () => {
         // Given two board with the exact same piles, one having blocked piles
@@ -71,5 +71,11 @@ fdescribe('LascaControlAndDominateMinimax', () => {
         // When comparing them
         // Then the two should be of equal value: the number of non-blocked piles times 11
         RulesUtils.expectStatesToBeOfEqualValue(minimax, forcedState, freeState);
+    });
+    it('should count the dominating piece as secondary board value (at equal potential mobility)', () => {
+        // Given two board with the same potential mobility, one with more " dominant pieces" than the other
+        // (dominant = that is of the same color as the commander)
+        // When comparing them
+        // Then the one with more dominant pieces should be prefered
     });
 });

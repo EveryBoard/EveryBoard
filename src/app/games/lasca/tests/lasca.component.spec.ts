@@ -7,7 +7,7 @@ import { LascaComponent } from '../lasca.component';
 import { LascaMove, LascaMoveFailure } from '../LascaMove';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-describe('LascaComponent', () => {
+fdescribe('LascaComponent', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;
@@ -49,7 +49,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#coord_4_4_piece_0', 'selected-stroke');
         }));
     });
-    describe('second click', () => {
+    fdescribe('second click', () => {
         it('should cancelMove when clicking on opponent', fakeAsync(async() => {
             // Given any board with a selected piece
             await testUtils.expectClickSuccess('#coord_4_4');
@@ -171,7 +171,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord_4_4');
 
             // Then it should already be shown as captured, and the next possibles ones displayed
-            testUtils.expectElementToHaveClass('#coord_3_3', 'captured-fill');
+            testUtils.expectElementToHaveClass('#space_3_3', 'captured-fill');
         }));
     });
     describe('multiple capture', () => {

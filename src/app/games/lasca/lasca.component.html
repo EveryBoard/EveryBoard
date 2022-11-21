@@ -1,44 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-100 -100 900 900"
+     viewBox="0 -100 900 900"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <g id="piece">
-            <path d="M 1.4319358,16.913484 V 49.329973 H 1.482219 A 39.498175,14.141265 0 0 0 40.938372,63.011675 39.498175,14.141265 0 0 0 80.394523,49.329973 h 0.06885 V 16.913484 h -0.02864 A 39.769348,14.114049 0 0 1 40.941466,29.431707 39.769348,14.114049 0 0 1 1.4481812,16.913484 Z"/>
-            <ellipse cx="40.952408" cy="15.225397" rx="39.769348" ry="14.11405"/>
+            <path d="M 10 15 v 15 a 40 15, 0, 0, 0, 80 0 v -15 a 40 15, 0, 0, 0, -80 0 Z"/>
+            <ellipse cx="50" cy="15" rx="40" ry="15"/>
         </g>
     </defs>
     <g *ngFor="let line of adaptedBoard; index as y">
         <g *ngFor="let spaceInfo of line; index as x">
             <g id="coord_{{ x }}_{{ y }}"
-               (click)="onClick(x, y)">
-                <rect id="space_{{ x }}_{{ y }}"
-                      [attr.x]="x * SPACE_SIZE"
-                      [attr.y]="y * SPACE_SIZE"
-                      [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"
-                      class="base-no-fill"
-                      [ngClass]="spaceInfo.spaceClasses"
-                      [attr.fill]="backgroundColor(x, y)"
-                      fill-opacity="0.7"/>
+               (click)="onClick(x, y)"
+               [attr.transform]="getCoordTransform(x, y)">
+                <polygon id="space_{{ x }}_{{ y }}"
+                         [attr.points]="getLosangePoints()"
+                         [ngClass]="spaceInfo.spaceClasses"
+                         class="base-no-fill"
+                         [attr.fill]="backgroundColor(x, y)"/>
                 <g *ngFor="let pieceInfo of spaceInfo.pieceInfos; index as z"
                     pointer-events="fill"
-                    [attr.transform]="'translate(' + (x * SPACE_SIZE + 10) + ' ' + (y * SPACE_SIZE + 20 - (z * 32)) + ')'"
-                    class="base-no-fill no-fill mid-small-stroke">
+                    [attr.transform]="'translate(15 ' + (35 - (z * 15)) + ')'"
+                    class="base mid-small-stroke">
                     <use id="coord_{{ x }}_{{ y }}_piece_{{ z }}"
-                         [attr.x]="0"
-                         [attr.y]="0"
+                         x="10"
+                         y="0"
                          xlink:href="#piece"
                          [ngClass]="pieceInfo.classes"
                          class="base mid-stroke"/>
                     <circle id="coord_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
                             *ngIf="pieceInfo.isOfficer"
-                            [attr.cx]="SPACE_SIZE * 0.40"
-                            [attr.cy]="46"
-                            [attr.r]="SPACE_SIZE * 0.1"
+                            [attr.cx]="10 + (SPACE_SIZE * 0.5)"
+                            [attr.cy]="37.5"
+                            [attr.r]="6"
                             [ngClass]="pieceInfo.classes"/>
                 </g>
             </g>
         </g>
     </g>
+    <rect x="0" y="700" [attr.width]="700 * HORIZONTAL_WIDTH_RATIO" [attr.height]="EPAISSEUR" class="base"/>
+    <polygon [attr.points]="getDiagonalVolumeLanPoints()" class="base"/>
 </svg>

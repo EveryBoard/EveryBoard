@@ -9,6 +9,7 @@ import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SCORE } from '../SCORE';
+import { min } from 'rxjs';
 
 export class RulesUtils {
 
@@ -89,19 +90,36 @@ export class RulesUtils {
                 .toBe(0);
         }
     }
+    public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, L>(
+        minimax: Minimax<M, S, L>,
+        leftState: S,
+        rightState: S)
+    : void {
+        const leftNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(leftState,
+                                                                       MGPOptional.empty(),
+                                                                       MGPOptional.empty(),
+                                                                       minimax);
+        const leftValue: number = minimax.getBoardValue(leftNode).value;
+        const rightNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(rightState,
+                                                                        MGPOptional.empty(),
+                                                                        MGPOptional.empty(),
+                                                                        minimax);
+        const rightValue: number = minimax.getBoardValue(rightNode).value;
+        expect(leftValue).withContext('both value should be equal').toEqual(rightValue);
+    }
     public static expectSecondStateToBeBetterThanFirstFor<M extends Move, S extends GameState, L>(
         minimax: Minimax<M, S, L>,
-        weakerState: S,
+        weakState: S,
         weakMove: MGPOptional<M>,
-        strongerState: S,
+        strongState: S,
         strongMove: MGPOptional<M>,
         player: Player)
     : void
     {
-        const weakValue: number =
-            minimax.getBoardValue(new MGPNode(weakerState, MGPOptional.empty(), weakMove)).value;
-        const strongValue: number =
-            minimax.getBoardValue(new MGPNode(strongerState, MGPOptional.empty(), strongMove)).value;
+        const weakNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(weakState, MGPOptional.empty(), weakMove);
+        const weakValue: number = minimax.getBoardValue(weakNode).value;
+        const strongNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(strongState, MGPOptional.empty(), strongMove);
+        const strongValue: number = minimax.getBoardValue(strongNode).value;
         if (player === Player.ZERO) {
             expect(weakValue).toBeGreaterThan(strongValue);
         } else {
