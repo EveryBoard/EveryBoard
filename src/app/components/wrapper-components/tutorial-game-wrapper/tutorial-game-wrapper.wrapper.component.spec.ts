@@ -199,7 +199,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentTitle).toBe(expectedTitle);
         }));
         it('should call setRole according to the current player (player zero)', fakeAsync(async() => {
-            // Given a tutorial a step from player zero
+            // Given a tutorial a step for player zero
             const statePlayerZero: QuartoState = QuartoState.getInitialState();
             const tutorial: TutorialStep[] = [
                 TutorialStep.informational(
