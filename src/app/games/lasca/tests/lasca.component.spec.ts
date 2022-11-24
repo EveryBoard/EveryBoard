@@ -26,6 +26,44 @@ fdescribe('LascaComponent', () => {
         testUtils.expectToBeCreated();
     });
     describe('first click', () => {
+        it('should highlight possible step-landing after selecting piece', fakeAsync(async() => {
+            // Given any board where step are possible (initial biard)
+            // When clicking selecting piece
+            await testUtils.expectClickSuccess('#space_4_4');
+
+            // Then its landing coord should be "capturable-fill", naming is wrong but it must match with captures
+
+        }));
+        it('should highlight piece that can move this turn (when free move)', () => {
+            // Given a board where current player can move 4 pieces (by example, the starting board)
+            // When displaying it
+            // Then those 3 coord should be "selectable-fill"
+            testUtils.expectElementToHaveClass('#space_0_4_piece_0', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#space_2_4_piece_0', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#space_4_4_piece_0', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#space_6_4_piece_0', 'selectable-fill');
+        });
+        it('should highlight piece that can move this turn (when forced capture)', () => {
+            // Given a board where current player have 3 "mobile" pieces but one must capture
+            const state: LascaState = LascaState.from([
+                [_v, __, _v, __, _v, __, _v],
+                [__, _v, __, _v, __, _v, __],
+                [_v, __, _v, __, _v, __, _v],
+                [__, _u, __, __, __, __, __],
+                [_u, __, __, __, _u, __, _u],
+                [__, _u, __, _u, __, _u, __],
+                [_u, __, _u, __, _u, __, _u],
+            ], 1).get();
+
+            // When displayint it
+            testUtils.setupState(state);
+
+            // Then only the one that must capture must be "selectable-fill"
+            testUtils.expectElementToHaveClass('#space_0_2_piece_0', 'selectable-fill');
+            testUtils.expectElementNotToHaveClass('#space_2_2_piece_0', 'selectable-fill');
+            testUtils.expectElementNotToHaveClass('#space_4_2_piece_0', 'selectable-fill');
+            testUtils.expectElementNotToHaveClass('#space_6_2_piece_0', 'selectable-fill');
+        });
         it(`should forbid clicking on opponent's pieces`, fakeAsync(async() => {
             // Given any board
             // When clicking on the opponent's piece
@@ -49,7 +87,7 @@ fdescribe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#coord_4_4_piece_0', 'selected-stroke');
         }));
     });
-    fdescribe('second click', () => {
+    describe('second click', () => {
         it('should cancelMove when clicking on opponent', fakeAsync(async() => {
             // Given any board with a selected piece
             await testUtils.expectClickSuccess('#coord_4_4');

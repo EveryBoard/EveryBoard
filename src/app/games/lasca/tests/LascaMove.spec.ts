@@ -12,7 +12,7 @@ fdescribe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(0, 2));
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEP_MUST_BE_SINGLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
         });
         it('should forbid to get out of the board', () => {
             // When trying to create a move that goes outside of the board
@@ -26,7 +26,7 @@ fdescribe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(2, 2));
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEP_MUST_BE_SINGLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
         });
         it('should allow simple move', () => {
             // When trying to create a simple move

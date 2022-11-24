@@ -1,8 +1,8 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
-import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -10,10 +10,9 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { JSONObject, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export class LascaMoveFailure {
-    public static readonly CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL: Localized = () => $localize`TODOTODO capture must be double diagonal step`;
-    public static readonly MOVE_STEP_MUST_BE_SINGLE_DIAGONAL: Localized = () => $localize`TODOTODO move must be single diagonal step`;
-    public static readonly CANNOT_LEAVE_THE_BOARD: Localized = () => $localize`TODOTODO OUT OF RANGE COORD`;
-    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`TODOTODO must not jump over the same coord several time`;
+    public static readonly CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL: Localized = () => $localize`Capture must be double diagonal steps`;
+    public static readonly MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL: Localized = () => $localize`Move must be single diagonal steps`;
+    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot jump over the same coord several time`;
 }
 
 export class LascaMove extends Move {
@@ -31,7 +30,7 @@ export class LascaMove extends Move {
         const jumpedOverCoords: MGPSet<Coord> = new MGPSet();
         for (const coord of coords) {
             if (coord.isNotInRange(7, 7)) {
-                return MGPFallible.failure(LascaMoveFailure.CANNOT_LEAVE_THE_BOARD());
+                return MGPFallible.failure('OUT OF RANGE COORD');
             }
             if (lastCoordOpt.isPresent()) {
                 const lastCoord: Coord = lastCoordOpt.get();
@@ -50,12 +49,15 @@ export class LascaMove extends Move {
         return MGPFallible.success(jumpedOverCoords);
     }
     public static fromStep(start: Coord, end: Coord): MGPFallible<LascaMove> {
-        if (start.isNotInRange(7, 7) || end.isNotInRange(7, 7)) {
-            return MGPFallible.failure(LascaMoveFailure.CANNOT_LEAVE_THE_BOARD());
+        if (start.isNotInRange(7, 7)) {
+            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
+        }
+        if (end.isNotInRange(7, 7)) {
+            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
         }
         const vector: Coord = start.getVectorToward(end);
         if (Math.abs(vector.x) !== 1 || Math.abs(vector.y) !== 1) {
-            return MGPFallible.failure(LascaMoveFailure.MOVE_STEP_MUST_BE_SINGLE_DIAGONAL());
+            return MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL());
         }
         return MGPFallible.success(new LascaMove([start, end], true));
     }

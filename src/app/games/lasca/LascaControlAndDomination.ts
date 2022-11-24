@@ -16,7 +16,7 @@ export class LascaControlAndDominationMinimax extends LascaControlMinimax {
         if (gameStatus.isEndGame) {
             return new BoardValue(gameStatus.toBoardValue());
         }
-        const controlValue: number = super.getBoardValue(node).value * 11;
+        const controlValue: number = super.getBoardValue(node).value * 12;
         let dominatingPiecesCount: number = 0;
         for (let y: number = 0; y < 7; y++) {
             for (let x: number = 0; x < 7; x++) {
@@ -24,9 +24,7 @@ export class LascaControlAndDominationMinimax extends LascaControlMinimax {
                 if (space.getPileSize() > 0) {
                     const spaceSize: number = space.getPileSize();
                     let pieceIndex: number = 0;
-                    console.log('[')
                     const commander: Player = space.getCommander().player;
-                    console.log(']')
                     while (pieceIndex < spaceSize && space.get(pieceIndex).player === commander) {
                         pieceIndex++;
                     }

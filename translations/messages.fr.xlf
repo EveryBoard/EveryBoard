@@ -202,6 +202,10 @@
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
         <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
       </trans-unit>
+      <trans-unit id="4680238838438366543" datatype="html">
+        <source>Close to checkers, capture opponent pieces, free your own, and immobilize you opponent to win the game!</source>
+        <target>Cousin du jeu de Dame, capturez les pièces adverses, libérez les vôtres, et immobilisez l'adversaire pour gagner la partie !</target>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
         <target>Regroupez vos pièces pour gagner. Mais les mouvements possibles changent constamment !</target>
@@ -365,6 +369,10 @@
       <trans-unit id="5306696079242551443" datatype="html">
         <source>Hnefatafl</source>
         <target>Hnefatafl</target>
+      </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
+        <target>Lasca</target>
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
@@ -2287,6 +2295,34 @@
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
          Ici, votre adversaire a déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
       </trans-unit>
+      <trans-unit id="2020802782007615776" datatype="html">
+        <source>Capture must be double diagonal steps</source>
+        <target>Les captures doivent être des sauts de deux pas en diagonal</target>
+      </trans-unit>
+      <trans-unit id="3722504673049657082" datatype="html">
+        <source>Move must be single diagonal steps</source>
+        <target>Les déplacements doivent être des simple pas en diagonal</target>
+      </trans-unit>
+      <trans-unit id="8722600729890521244" datatype="html">
+        <source>You cannot jump over the same coord several time</source>
+        <target>Vous ne pouvez pas sauter au dessus d'une même case plusieurs fois</target>
+      </trans-unit>
+      <trans-unit id="8833682869379041729" datatype="html">
+        <source>Cannot go backward with normal piece</source>
+        <target>Vous ne pouvez pas aller en arrière avec une pièce normale</target>
+      </trans-unit>
+      <trans-unit id="8649496248690252329" datatype="html">
+        <source>Cannot capture empty space (nor jump over it)</source>
+        <target>Vous ne pouvez pas capturer une case vide (ni sauter par dessus)</target>
+      </trans-unit>
+      <trans-unit id="8144038524408187730" datatype="html">
+        <source>Capture is mandatory</source>
+        <target>La capture est obligatoire</target>
+      </trans-unit>
+      <trans-unit id="4753584102674404468" datatype="html">
+        <source>You must finish this capture</source>
+        <target>Vous devez finir cette capture</target>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
         <target>Vous devez vous effectuer un déplacement de longueur égale au nombre de pièces présente sur la ligne de votre déplacement.</target>
@@ -3726,6 +3762,10 @@
         ou même d'effectuer plusieurs captures !
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
         Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="4246775244288947688" datatype="html">
+        <source>Coord out of range, invalid move! </source>
+        <target>Coordonnée hors du plateau, mouvement illégal ! </target>
       </trans-unit>
       <trans-unit id="7542102025019708759" datatype="html">
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>

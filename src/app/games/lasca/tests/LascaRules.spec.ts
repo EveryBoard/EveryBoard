@@ -4,6 +4,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
 import { LascaControlMinimax } from '../LascaControlMinimax';
 import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules, LascaRulesFailure } from '../LascaRules';
@@ -32,6 +33,7 @@ fdescribe('LascaRules', () => {
         rules = new LascaRules(LascaState);
         minimaxes = [
             new LascaControlMinimax(rules, 'Lasca Control Minimax'),
+            new LascaControlAndDominationMinimax(rules, 'Lasca Control and Domination Minimax'),
         ];
     });
     describe('Move', () => {

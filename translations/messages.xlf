@@ -182,6 +182,9 @@
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
       </trans-unit>
+      <trans-unit id="4680238838438366543" datatype="html">
+        <source>Close to checkers, capture opponent pieces, free your own, and immobilize you opponent to win the game!</source>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
       </trans-unit>
@@ -307,6 +310,9 @@
       </trans-unit>
       <trans-unit id="5306696079242551443" datatype="html">
         <source>Hnefatafl</source>
+      </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1635,6 +1641,27 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
+      <trans-unit id="2020802782007615776" datatype="html">
+        <source>Capture must be double diagonal steps</source>
+      </trans-unit>
+      <trans-unit id="3722504673049657082" datatype="html">
+        <source>Move must be single diagonal steps</source>
+      </trans-unit>
+      <trans-unit id="8722600729890521244" datatype="html">
+        <source>You cannot jump over the same coord several time</source>
+      </trans-unit>
+      <trans-unit id="8833682869379041729" datatype="html">
+        <source>Cannot go backward with normal piece</source>
+      </trans-unit>
+      <trans-unit id="8649496248690252329" datatype="html">
+        <source>Cannot capture empty space (nor jump over it)</source>
+      </trans-unit>
+      <trans-unit id="8144038524408187730" datatype="html">
+        <source>Capture is mandatory</source>
+      </trans-unit>
+      <trans-unit id="4753584102674404468" datatype="html">
+        <source>You must finish this capture</source>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
       </trans-unit>
@@ -2602,6 +2629,9 @@
         or you could even capture multiple times!
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
+      </trans-unit>
+      <trans-unit id="4246775244288947688" datatype="html">
+        <source>Coord out of range, invalid move! </source>
       </trans-unit>
       <trans-unit id="7542102025019708759" datatype="html">
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>

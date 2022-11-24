@@ -77,6 +77,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         this.updateAdaptedBoardFrom(state);
         this.showLastMove();
         this.validCaptures = LascaRules.getCaptures(this.getState());
+        this.showPossiblesMoves();
     }
     private updateAdaptedBoardFrom(state: LascaState): void {
         console.log('adapt board from')
@@ -151,6 +152,17 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             }
         } else {
             return;
+        }
+    }
+    private showPossiblesMoves(): void {
+        console.log('showPossiblesMoves', this.validCaptures.length);
+        if (this.validCaptures.length > 0) {
+            for (const validCapture of this.validCaptures) {
+                const captureCoord: Coord = validCapture.getStartingCoord();
+                for (const pieceInfo of this.adaptedBoard[captureCoord.y][captureCoord.x].pieceInfos) {
+                    pieceInfo.classes.push('selected-stroke');
+                }
+            }
         }
     }
     private hideLastMove(): void {

@@ -14,13 +14,13 @@ export class LascaNode extends MGPNode<Rules<LascaMove, LascaState>, LascaMove, 
 
 export class LascaRulesFailure {
 
-    public static readonly CANNOT_GO_BACKWARD: Localized = () => $localize`CANNOT_GO_BACKWARD`;
+    public static readonly CANNOT_GO_BACKWARD: Localized = () => $localize`Cannot go backward with normal piece`;
 
-    public static readonly CANNOT_CAPTURE_EMPTY_SPACE: Localized = () => $localize`CANNOT_CAPTURE_EMPTY_SPACE`;
+    public static readonly CANNOT_CAPTURE_EMPTY_SPACE: Localized = () => $localize`Cannot capture empty space (nor jump over it)`;
 
-    public static readonly CANNOT_SKIP_CAPTURE: Localized = () => $localize`CANNOT_SKIP_CAPTURE`;
+    public static readonly CANNOT_SKIP_CAPTURE: Localized = () => $localize`Capture is mandatory`;
 
-    public static readonly MUST_FINISH_CAPTURING: Localized = () => $localize`MUST_FINISH_CAPTURING`;
+    public static readonly MUST_FINISH_CAPTURING: Localized = () => $localize`You must finish this capture`;
 }
 
 export class LascaRules extends Rules<LascaMove, LascaState> {

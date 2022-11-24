@@ -11,7 +11,7 @@ fdescribe('LascaControlAndDominateMinimax', () => {
     const O: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
     const X: LascaSpace = new LascaSpace([LascaPiece.ONE]);
     const _: LascaSpace = LascaSpace.EMPTY;
-    let minimax: LascaControlMinimax; // TODOTODO DUPLICATE TEST AND SHOW HOW DOMINATION DOMINATES
+    let minimax: LascaControlMinimax;
 
     beforeEach(() => {
         const ruler: LascaRules = LascaRules.get();
