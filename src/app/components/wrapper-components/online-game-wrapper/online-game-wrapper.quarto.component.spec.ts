@@ -650,7 +650,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should update observed part again to match current part when observer leaves this part from another tab', fakeAsync(async() => {
-            // Given a part where the user is observer (or plaer)
+            // Given a part where the user is observer (or player)
             await prepareTestUtilsFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
