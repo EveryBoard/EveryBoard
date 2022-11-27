@@ -1338,7 +1338,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When he reach time out
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
@@ -1352,7 +1352,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When he reach time out
             tick(wrapper.configRoom.maximalMoveDuration * 1000); // TODO: maximalPartDuration, for this one!!
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
         }));
@@ -1367,7 +1367,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When he reach time out
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
@@ -1384,7 +1384,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When opponent reach time out locally
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
