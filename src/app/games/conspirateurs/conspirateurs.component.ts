@@ -146,7 +146,7 @@ export class ConspirateursComponent
             }
         }
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         const lastMove: ConspirateursMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
             this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');

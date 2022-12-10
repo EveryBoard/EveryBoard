@@ -99,7 +99,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             return MGPFallible.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
         }
         if (state.getPieceAt(move.end) === state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
+            return MGPFallible.failure(RulesFailure.CANNOT_SELF_LAND());
         }
         return MGPFallible.success(undefined);
     }

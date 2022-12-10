@@ -184,7 +184,7 @@ describe('ConspirateursComponent', () => {
             testUtils.expectElementNotToExist('#sidePiece_0_0');
             testUtils.expectElementNotToExist('#sidePiece_1_0');
         }));
-        it('should deselect piece when double clicking it', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board on which a piece is selected
             await testUtils.expectClickSuccess('#click_5_4');
             testUtils.expectElementToHaveClass('#piece_5_4', 'selected-stroke');

@@ -124,6 +124,10 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
         }
         return range;
     }
+    public showLastMove(): void {
+        console.log('GC.show last move')
+        // Not needed by default
+    }
 }
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, unknown>,

@@ -10,7 +10,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules, LascaRulesFailure } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-fdescribe('LascaRules', () => {
+describe('LascaRules', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;
@@ -167,6 +167,71 @@ fdescribe('LascaRules', () => {
             const reason: string = LascaRulesFailure.MUST_FINISH_CAPTURING();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+        it('should forbid self-capturing', () => {
+            // Given a board on which a piece could try to capture its ally
+            const state: LascaState = LascaState.from([
+                [__, __, __, __, __, __, __],
+                [__, _v, __, __, __, __, __],
+                [__, __, _v, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, _u, __],
+                [__, __, __, __, __, __, __],
+            ], 1).get();
+
+            // When doing so
+            const move: LascaMove = LascaMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+
+            // Then it should fail
+            const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+        it('should forbid backward capture with normal piece', () => {
+            // Given a board on which a normal-piece could try to capture backward
+            const state: LascaState = LascaState.from([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, _u, __, __],
+                [__, __, __, _v, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+            ], 1).get();
+
+            // When doing so
+            const move: LascaMove = LascaMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
+
+            // Then it should fail
+            const reason: string = LascaRulesFailure.CANNOT_GO_BACKWARD();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+        it('should allow backward capture with officer', () => {
+            // Given a board on which an officer can capture backward
+            const state: LascaState = LascaState.from([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, _v, __],
+                [__, __, __, __, _O, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, _v, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+            ], 2).get();
+
+            // When doing it
+            const move: LascaMove = LascaMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]).get();
+
+            // Then it should be a success
+            const expectedState: LascaState = LascaState.from([
+                [__, __, __, __, __, __, Ov],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, _v, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+            ], 3).get();
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        });
         it('should allow to do small capture when big capture available', () => {
             // Given a board where two different sized captures are possible
             const state: LascaState = LascaState.from([
@@ -249,7 +314,7 @@ fdescribe('LascaRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow multiple-capture', () => {
-            // Given a board where a multiple capture is possible
+            // Given a board where a multiple captures is possible
             const RE: LascaSpace = new LascaSpace([LascaPiece.ONE, LascaPiece.ZERO, LascaPiece.ZERO]);
             const state: LascaState = LascaState.from([
                 [__, __, _v, __, __, __, __],

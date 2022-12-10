@@ -918,9 +918,6 @@
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
       </trans-unit>
-      <trans-unit id="1137390440747939689" datatype="html">
-        <source>You cannot capture your own pieces.</source>
-      </trans-unit>
       <trans-unit id="7117895259187122182" datatype="html">
         <source>Board and goal of the game</source>
       </trans-unit>
@@ -1661,6 +1658,42 @@
       </trans-unit>
       <trans-unit id="4753584102674404468" datatype="html">
         <source>You must finish this capture</source>
+      </trans-unit>
+      <trans-unit id="8274439231274366704" datatype="html">
+        <source>Lasca: origins</source>
+      </trans-unit>
+      <trans-unit id="9130733749994426297" datatype="html">
+        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each players has 11 pieces.</source>
+      </trans-unit>
+      <trans-unit id="3198994967671406143" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to put the opponent out of possible move, either by capturing all his pieces, either by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+      </trans-unit>
+      <trans-unit id="5328481068359252467" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right, click on the chosen piece, then on it&apos;s landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      </trans-unit>
+      <trans-unit id="1675047371672154041" datatype="html">
+        <source>You have to capture when you can, it is the case, click on the piece that must capture and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+      </trans-unit>
+      <trans-unit id="3662184238859847370" datatype="html">
+        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
+      </trans-unit>
+      <trans-unit id="1430493612123692909" datatype="html">
+        <source>Multiple captures (1/2)</source>
+      </trans-unit>
+      <trans-unit id="7841021460101071710" datatype="html">
+        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, she has to capture until she can no longer. To do so, you must then click again on the next landing space. Note when capturing with an officer, you cannot jump twice over the same pile.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+      </trans-unit>
+      <trans-unit id="580945753043190834" datatype="html">
+        <source>Congratulations, you captured two pieces, and, by reaching the last line, your piece has now been promoted to the rank of officer ! Now, it can move and capture backward, which is illegal for normal piece.</source>
+      </trans-unit>
+      <trans-unit id="5195324594588038758" datatype="html">
+        <source>Minoritary capture is allowed</source>
+      </trans-unit>
+      <trans-unit id="4679021376416043335" datatype="html">
+        <source>If you have several capture choices, one capturing one piece, one capture two, you are allowed to choose both.</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -2647,6 +2680,9 @@
       </trans-unit>
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="1137390440747939689" datatype="html">
+        <source>You cannot capture your own pieces.</source>
       </trans-unit>
       <trans-unit id="6986218395331151516" datatype="html">
         <source>You must pick one of your pieces.</source>

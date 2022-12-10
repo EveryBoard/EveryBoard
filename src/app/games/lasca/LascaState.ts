@@ -11,19 +11,11 @@ export class LascaPiece {
     public static readonly ZERO_OFFICER: LascaPiece = new LascaPiece(Player.ZERO, true);
     public static readonly ONE_OFFICER: LascaPiece = new LascaPiece(Player.ONE, true);
 
-    public static from(player: Player, isOfficer: boolean): LascaPiece {
+    public static getPlayerOfficer(player: Player): LascaPiece {
         if (player === Player.ZERO) {
-            if (isOfficer) {
-                return LascaPiece.ZERO_OFFICER;
-            } else {
-                return LascaPiece.ZERO;
-            }
+            return LascaPiece.ZERO_OFFICER;
         } else {
-            if (isOfficer) {
-                return LascaPiece.ONE_OFFICER;
-            } else {
-                return LascaPiece.ONE;
-            }
+            return LascaPiece.ONE_OFFICER;
         }
     }
     private constructor(public readonly player: Player, public readonly isOfficer: boolean) {}
@@ -80,7 +72,7 @@ export class LascaSpace {
         if (commander.isOfficer) {
             return this;
         } else {
-            commander = LascaPiece.from(commander.player, true);
+            commander = LascaPiece.getPlayerOfficer(commander.player);
             const remainingPile: LascaSpace = this.getCommandedPile();
             const commandingPile: LascaSpace = new LascaSpace([commander]);
             return commandingPile.addPileBelow(remainingPile);

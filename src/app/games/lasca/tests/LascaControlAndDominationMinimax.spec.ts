@@ -6,7 +6,7 @@ import { LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
 import { LascaRules } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-fdescribe('LascaControlAndDominateMinimax', () => {
+describe('LascaControlAndDominateMinimax', () => {
 
     const O: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
     const X: LascaSpace = new LascaSpace([LascaPiece.ONE]);

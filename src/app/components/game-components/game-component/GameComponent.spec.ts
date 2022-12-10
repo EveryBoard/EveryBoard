@@ -76,6 +76,7 @@ describe('GameComponent', () => {
             Go: { onClick: [0, 0] },
             Hnefatafl: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
+            Lasca: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },
             Lodestone: {
                 selectCoord: [new Coord(0, 0)],

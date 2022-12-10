@@ -2323,6 +2323,54 @@
         <source>You must finish this capture</source>
         <target>Vous devez finir cette capture</target>
       </trans-unit>
+      <trans-unit id="8274439231274366704" datatype="html">
+        <source>Lasca: origins</source>
+        <target>Lasca: les origines</target>
+      </trans-unit>
+      <trans-unit id="9130733749994426297" datatype="html">
+        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each players has 11 pieces.</source>
+        <target>Lasca est un jeu basé sur le jeu de dames, crée en 1911 par Emanuel Lasker, champion du monde d'échecs. Lasca se joue sur un plateau de 7x7 cases, chaque joueur a 11 pièces.</target>
+      </trans-unit>
+      <trans-unit id="3198994967671406143" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to put the opponent out of possible move, either by capturing all his pieces, either by blocking them.</source>
+        <target>Le but de Lasca est, comme aux dames, de rendre l'adversaire incapable de jouer, soit en capturant toutes ses pièces, soit en les bloquant</target>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+        <target>Pas</target>
+      </trans-unit>
+      <trans-unit id="5328481068359252467" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right, click on the chosen piece, then on it&apos;s landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+        <target>Un simple pas est un déplacement de un en diagonal, en avant, vers la gauche ou la droite, cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
+      </trans-unit>
+      <trans-unit id="1675047371672154041" datatype="html">
+        <source>You have to capture when you can, it is the case, click on the piece that must capture and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+        <target>Vous devez capturer quand vous le pouvez, c'est le cas ici, cliquez sur la pièce qui doit capturer, et ensuite sur sa case d'atterrissage&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
+      </trans-unit>
+      <trans-unit id="3662184238859847370" datatype="html">
+        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
+        <target>Félicitations, constatez que la pièce capturée n'as pas été enlevée du plateau, mais placée en dessous de la pièce qui l'as capturé.</target>
+      </trans-unit>
+      <trans-unit id="1430493612123692909" datatype="html">
+        <source>Multiple captures (1/2)</source>
+        <target>Captures multiples (1/2)</target>
+      </trans-unit>
+      <trans-unit id="7841021460101071710" datatype="html">
+        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, she has to capture until she can no longer. To do so, you must then click again on the next landing space. Note when capturing with an officer, you cannot jump twice over the same pile.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+        <target>Si, après le début de la capture, la pièce que vous venez de bouger peux encore capturer une autre pièce, elle doit le faire tant qu'elle peut. Pour ce faire, vous devez juste cliquer à nouveau sur la case d'atterrissage suivante. Notez que quand vous capture avec un officier, vous ne pouvez pas sauter deux fois au dessus de la même pile.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, une double capture est possible, faites-le.</target>
+      </trans-unit>
+      <trans-unit id="580945753043190834" datatype="html">
+        <source>Congratulations, you captured two pieces, and, by reaching the last line, your piece has now been promoted to the rank of officer ! Now, it can move and capture backward, which is illegal for normal piece.</source>
+        <target>Félicitation, vous avez capturé deux pièces, et, en atteignant la dernière ligne, votre pièce est maintenant promue au rang d'officier ! Maintenant, vous pouvez vous déplacer et capturer en arrière, ce qui est illégal pour les pièces normale.</target>
+      </trans-unit>
+      <trans-unit id="5195324594588038758" datatype="html">
+        <source>Minoritary capture is allowed</source>
+        <target>La capture minoritaire est authorisée</target>
+      </trans-unit>
+      <trans-unit id="4679021376416043335" datatype="html">
+        <source>If you have several capture choices, one capturing one piece, one capture two, you are allowed to choose both.</source>
+        <target>Si vous avez plusieurs choix de captures, une capturant une seule pièce, l'autre deux, vous êtes authorisé de choisir les deux.</target>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
         <target>Vous devez vous effectuer un déplacement de longueur égale au nombre de pièces présente sur la ligne de votre déplacement.</target>

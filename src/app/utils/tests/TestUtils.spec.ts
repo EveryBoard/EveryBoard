@@ -299,9 +299,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
     }
-    public async expectClickSuccess(elementName: string): Promise<void> {
+    public async expectClickSuccess(elementName: string, actualName?: string): Promise<void> {
         await this.expectInterfaceClickSuccess(elementName);
-        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(actualName ?? elementName);
         this.canUserPlaySpy.calls.reset();
     }
     public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {

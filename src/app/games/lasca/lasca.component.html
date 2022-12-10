@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 -100 900 900"
+     [attr.viewBox]="LEFT + ' ' + UP + ' ' + WIDTH + ' ' + HEIGHT"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <g id="piece">
@@ -10,11 +10,11 @@
     </defs>
     <g *ngFor="let line of adaptedBoard; index as y">
         <g *ngFor="let spaceInfo of line; index as x">
-            <g id="coord_{{ x }}_{{ y }}"
+            <g id="space_{{ x }}_{{ y }}"
                (click)="onClick(x, y)"
                [attr.transform]="getCoordTransform(x, y)">
-                <polygon id="space_{{ x }}_{{ y }}"
-                         [attr.points]="getLosangePoints()"
+                <polygon id="rhombus_{{ x }}_{{ y }}"
+                         [attr.points]="getRhombusPoints()"
                          [ngClass]="spaceInfo.spaceClasses"
                          class="base-no-fill"
                          [attr.fill]="backgroundColor(x, y)"/>
@@ -22,13 +22,13 @@
                     pointer-events="fill"
                     [attr.transform]="'translate(15 ' + (35 - (z * 15)) + ')'"
                     class="base mid-small-stroke">
-                    <use id="coord_{{ x }}_{{ y }}_piece_{{ z }}"
+                    <use id="space_{{ x }}_{{ y }}_piece_{{ z }}"
                          x="10"
                          y="0"
                          xlink:href="#piece"
                          [ngClass]="pieceInfo.classes"
                          class="base mid-stroke"/>
-                    <circle id="coord_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
+                    <circle id="space_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
                             *ngIf="pieceInfo.isOfficer"
                             [attr.cx]="10 + (SPACE_SIZE * 0.5)"
                             [attr.cy]="37.5"
@@ -38,6 +38,11 @@
             </g>
         </g>
     </g>
-    <rect x="0" y="700" [attr.width]="700 * HORIZONTAL_WIDTH_RATIO" [attr.height]="EPAISSEUR" class="base"/>
-    <polygon [attr.points]="getDiagonalVolumeLanPoints()" class="base"/>
+    <rect x="0"
+          y="700"
+          [attr.width]="700 * HORIZONTAL_WIDTH_RATIO"
+          [attr.height]="EPAISSEUR"
+          class="base"/>
+    <polygon [attr.points]="getDiagonalVolumeLanPoints()"
+             class="base"/>
 </svg>

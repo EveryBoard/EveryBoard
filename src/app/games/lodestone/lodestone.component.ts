@@ -449,7 +449,7 @@ export class LodestoneComponent
             this.viewInfo.pressurePlates.push({ position: pressurePlate, coords: plateCoordInfos });
         }
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         const lastState: LodestoneState = this.rules.node.mother.get().gameState;
         const lastMove: LodestoneMove = this.rules.node.move.get();
         this.lastInfos = MGPOptional.of(

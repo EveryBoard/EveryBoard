@@ -240,7 +240,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             };
         }
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         this.showLastMoveOnSpaces();
         this.showLastMoveOnPieces();
     }

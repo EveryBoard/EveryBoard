@@ -913,6 +913,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.chronoOneGlobal.changeDuration(currentDuration + addedMs);
         }
     }
+    public onCancelMove(reason?: string): void {
+        console.log('OGWC.on cancel move');
+        this.gameComponent.showLastMove();
+    }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');
         this.routerEventsSubscription.unsubscribe();

@@ -30,7 +30,7 @@ export class LascaMove extends Move {
         const jumpedOverCoords: MGPSet<Coord> = new MGPSet();
         for (const coord of coords) {
             if (coord.isNotInRange(7, 7)) {
-                return MGPFallible.failure('OUT OF RANGE COORD');
+                return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
             if (lastCoordOpt.isPresent()) {
                 const lastCoord: Coord = lastCoordOpt.get();
@@ -90,13 +90,17 @@ export class LascaMove extends Move {
         return 'LascaMove(' + coordString + ')';
     }
     public equals(other: LascaMove): boolean {
-        if (other.coords.length !== this.coords.length) return false;
-        let i: number = 0;
-        for (const coord of this.coords) {
-            if (coord.equals(other.coords[i]) === false) return false;
-            i++;
+        return this.getRelation(other) === 'EQUALITY';
+    }
+    public getRelation(other: LascaMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
+        const thisLength: number = this.coords.length;
+        const otherLength: number = other.coords.length;
+        const minimalLength: number = Math.min(thisLength, otherLength);
+        for (let i: number = 0; i < minimalLength; i++) {
+            if (this.coords[i].equals(other.coords[i]) === false) return 'INEQUALITY';
         }
-        return true;
+        if (thisLength === otherLength) return 'EQUALITY';
+        else return 'PREFIX';
     }
     public getCoord(index: number): MGPFallible<Coord> {
         if (index < 0 || index >= this.coords.length) {
