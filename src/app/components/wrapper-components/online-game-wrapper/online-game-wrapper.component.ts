@@ -914,7 +914,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public onCancelMove(reason?: string): void {
-        console.log('OGWC.on cancel move');
         this.gameComponent.showLastMove();
     }
     public async ngOnDestroy(): Promise<void> {

@@ -169,7 +169,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return 'human';
     }
     public onCancelMove(reason?: string): void {
-        console.log('LGW.on cancel move');
         if (this.gameComponent.rules.node.move.isPresent()) {
             this.gameComponent.showLastMove();
         }

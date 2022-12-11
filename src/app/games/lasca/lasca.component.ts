@@ -74,7 +74,6 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         }
     }
     public updateBoard(): void {
-        console.log('update board!')
         this.lastMove = this.rules.node.move;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
@@ -82,13 +81,10 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         this.validSteps = LascaRules.getSteps(state);
         this.updateAdaptedBoardFrom(state);
         this.showLastMove();
-        console.log(state.toString())
-        console.log('updated valid captures', this.validCaptures)
         this.showPossiblesMoves();
         this.rotateAdaptedBoard();
     }
     private updateAdaptedBoardFrom(state: LascaState): void {
-        console.log('updateAdaptedBoardFrom')
         this.adaptedBoard = [];
         for (let y: number = 0; y < 7; y++) {
             const newRow: SpaceInfo[] = [];
@@ -160,7 +156,6 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         }
     }
     private showPossiblesMoves(): void {
-        console.log('show possibles moves')
         let possiblesMoves: LascaMove[] = [];
         if (this.validCaptures.length > 0) {
             possiblesMoves = this.validCaptures;
@@ -182,12 +177,9 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
                 }
             }
             this.adaptedBoard = rotatedAdaptedBoard;
-        } else {
-            console.log('plateau à landrwa')
         }
     }
     private hideLastMove(): void {
-        console.log('hide last move')
         this.updateAdaptedBoardFrom(this.getState());
         this.rotateAdaptedBoard();
     }
@@ -195,10 +187,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         if (this.role === Player.ONE) {
             x = 6 - x;
             y = 6 - y;
-        } else {
-            console.log('à lindrwa')
         }
-        console.log('(click', x, y)
         const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
