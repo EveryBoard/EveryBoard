@@ -12,7 +12,7 @@
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./ --quiet",
-    "e2e": "ng e2e"
+    "e2e": "bash ./e2e/e2e.sh"
   },
   "private": true,
   "dependencies": {
