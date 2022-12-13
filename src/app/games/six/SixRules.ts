@@ -84,7 +84,7 @@ export class SixRules extends Rules<SixMove,
             default:
                 // Current player, this is OK
         }
-        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(state, move);
+        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.movePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixState.getGroups(piecesAfterDeplacement, move.start.get());
         if (SixRules.isSplit(groupsAfterMove)) {

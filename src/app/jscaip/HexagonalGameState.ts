@@ -9,16 +9,6 @@ import { HexaLine } from './HexaLine';
 
 export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
 
-    public static neighbors(coord: Coord, distance: number): Coord[] {
-        return [
-            new Coord(coord.x + distance, coord.y - distance),
-            new Coord(coord.x + distance, coord.y),
-            new Coord(coord.x - distance, coord.y + distance),
-            new Coord(coord.x - distance, coord.y),
-            new Coord(coord.x, coord.y + distance),
-            new Coord(coord.x, coord.y - distance),
-        ];
-    }
     public constructor(turn: number,
                        public readonly board: Table<P>,
                        public readonly width: number,

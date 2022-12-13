@@ -232,9 +232,9 @@ export class SixComponent
     }
     private showCuttable(): void {
         const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), this.chosenLanding.get());
-        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(this.state, movement);
+        const piecesAfterMove: ReversibleMap<Coord, Player> = SixState.movePiece(this.state, movement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixState.getGroups(piecesAfterDeplacement, movement.start.get());
+            SixState.getGroups(piecesAfterMove, movement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (const cuttableGroup of biggerGroups) {

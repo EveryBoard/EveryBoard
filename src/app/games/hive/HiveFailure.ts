@@ -1,0 +1,39 @@
+import { Localized } from 'src/app/utils/LocaleUtils';
+
+export class HiveFailure {
+
+    public static readonly CANNOT_DROP_PIECE_YOU_DONT_HAVE: Localized = () => `You cannot drop a piece that you do not have in your reserve`;
+
+    public static readonly QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS: Localized = () => $localize`The queen bee can only move to one of its direct neighbors.`;
+
+    public static readonly BEETLE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS: Localized = () => $localize`The beetle can only move to one of its direct neighbors.`;
+
+    public static readonly GRASSHOPPER_MUST_MOVE_IN_STRAIGHT_LINE: Localized = () => $localize`The grasshopper must move in a straight line.`;
+
+    public static readonly GRASSHOPPER_MUST_JUMP_OVER_PIECES: Localized = () => $localize`The grasshopper must jump over other pieces, without any empty spaces.`;
+
+    public static readonly SPIDER_MUST_MOVE_OF_3_NEIGHBORS: Localized = () => $localize`The spider must move of exactly three neighboring spaces.`;
+
+    public static readonly SPIDER_CAN_ONLY_MOVE_ON_EMPTY_SPACES: Localized = () => $localize`A spider can move only on empty spaces.`;
+
+    public static readonly SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT: Localized = () => $localize`A spider can only move around pieces that it is in direct contact with.`;
+
+    public static readonly SPIDER_CANNOT_BACKTRACK: Localized = () => $localize`A spider cannot go twice through the same space in the same move.`;
+
+    public static readonly QUEEN_BEE_MUST_BE_ON_BOARD_BEFORE_MOVE: Localized = () => $localize`The queen bee must be placed on the board before moving a piece.`;
+
+    public static readonly THIS_PIECE_CANNOT_CLIMB: Localized = () => $localize`This piece is not allowed to climb over other pieces.`;
+
+    public static readonly CANNOT_DISCONNECT_HIVE: Localized = () => $localize`You are not allowed to split the hive.`;
+
+    public static readonly MUST_HAVE_FREEDOM_TO_MOVE: Localized = () => $localize`This piece must have the freedom to move: its starting and ending space must have at most 4 neighbors`;
+
+    public static readonly MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN: Localized = () => $localize`You must place your queen bee before at your fourth turn at the latest.`;
+
+    public static readonly CANNOT_DROP_NEXT_TO_OPPONENT: Localized = () => $localize`You cannot drop a piece next to one of your opponent's piece.`;
+
+    public static readonly MUST_DROP_ON_EMPTY_SPACE: Localized = () => $localize`You must always drop your piece on an empty space.`;
+
+    public static readonly MUST_BE_CONNECTED_TO_HIVE: Localized = () => $localize`The piece you are dropping must be connected to the hive.`;
+
+}

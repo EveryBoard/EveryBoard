@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { DvonnPieceStack } from './DvonnPieceStack';
 
@@ -58,7 +59,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         return pieces;
     }
     public numberOfNeighbors(coord: Coord): number {
-        return HexagonalGameState.neighbors(coord, 1)
+        return HexagonalUtils.neighbors(coord, 1)
             .filter((c: Coord): boolean => this.isOnBoard(c) && this.getPieceAt(c).isEmpty() === false)
             .length;
     }

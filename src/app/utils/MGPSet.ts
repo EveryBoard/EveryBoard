@@ -43,6 +43,14 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return true;
         }
     }
+    public remove(element: T): void {
+        for (let i: number = 0; i < this.values.length; i++) {
+            if (comparableEquals(this.values[i], element)) {
+                this.values.splice(i, 1);
+                return;
+            }
+        }
+    }
     public union(otherSet: MGPSet<T>): void {
         for (const element of otherSet) {
             this.add(element);
@@ -75,6 +83,30 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     }
     public isEmpty(): boolean {
         return this.values.length === 0;
+    }
+    public flatMap(f: (element: T) => MGPSet<T>): MGPSet<T> {
+        const result: MGPSet<T> = new MGPSet();
+        for (const element of this) {
+            result.union(f(element));
+        }
+        return result;
+    }
+    public filter(f: (element: T) => boolean): MGPSet<T> {
+        const result: MGPSet<T> = new MGPSet();
+        for (const element of this) {
+            if (f(element)) {
+                result.add(element);
+            }
+        }
+        return result;
+    }
+    public findCommonElement(other: MGPSet<T>): MGPOptional<T> {
+        for (const element of other) {
+            if (this.contains(element)) {
+                return MGPOptional.of(element);
+            }
+        }
+        return MGPOptional.empty();
     }
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
