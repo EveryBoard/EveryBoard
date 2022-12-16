@@ -49,22 +49,22 @@ export class LascaSpace {
     public getCommander(): LascaPiece {
         return this.pieces[0];
     }
-    public getCommandedPile(): LascaSpace {
+    public getCommandedStack(): LascaSpace {
         return new LascaSpace(ArrayUtils.copyImmutableArray(this.pieces).slice(1));
     }
     public capturePiece(piece: LascaPiece): LascaSpace {
         return new LascaSpace(ArrayUtils.copyImmutableArray(this.pieces).concat(piece));
     }
-    public addPileBelow(pile: LascaSpace): LascaSpace {
-        const belowPieces: LascaPiece[] = ArrayUtils.copyImmutableArray(pile.pieces);
+    public addStackBelow(stack: LascaSpace): LascaSpace {
+        const belowPieces: LascaPiece[] = ArrayUtils.copyImmutableArray(stack.pieces);
         // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let resultingPile: LascaSpace = this;
+        let resultingStack: LascaSpace = this;
         for (const piece of belowPieces) {
-            resultingPile = resultingPile.capturePiece(piece);
+            resultingStack = resultingStack.capturePiece(piece);
         }
-        return resultingPile;
+        return resultingStack;
     }
-    public getPileSize(): number {
+    public getStackSize(): number {
         return this.pieces.length;
     }
     public promoteCommander(): LascaSpace {
@@ -73,16 +73,16 @@ export class LascaSpace {
             return this;
         } else {
             commander = LascaPiece.getPlayerOfficer(commander.player);
-            const remainingPile: LascaSpace = this.getCommandedPile();
-            const commandingPile: LascaSpace = new LascaSpace([commander]);
-            return commandingPile.addPileBelow(remainingPile);
+            const remainingStack: LascaSpace = this.getCommandedStack();
+            const commandingStack: LascaSpace = new LascaSpace([commander]);
+            return commandingStack.addStackBelow(remainingStack);
         }
     }
     public get(index: number): LascaPiece {
         return this.pieces[index];
     }
     public toString(length: number): string {
-        let leftFill: number = length - this.getPileSize();
+        let leftFill: number = length - this.getStackSize();
         let result: string = '';
         while (leftFill > 0) {
             result += '_';
@@ -96,6 +96,8 @@ export class LascaSpace {
 }
 
 export class LascaState extends GameStateWithTable<LascaSpace> {
+
+    public static readonly SIZE: number = 7;
 
     public static getInitialState(): LascaState {
         const O: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
@@ -115,16 +117,16 @@ export class LascaState extends GameStateWithTable<LascaSpace> {
     public static from(board: Table<LascaSpace>, turn: number): MGPFallible<LascaState> {
         return MGPFallible.success(new LascaState(board, turn));
     }
-    public getPileOf(player: Player): Coord[] {
-        const pileCoords: Coord[] = [];
-        for (let y: number = 0; y < 7; y++) {
-            for (let x: number = 0; x < 7; x++) {
+    public getStacksOf(player: Player): Coord[] {
+        const stackCoords: Coord[] = [];
+        for (let y: number = 0; y < LascaState.SIZE; y++) {
+            for (let x: number = 0; x < LascaState.SIZE; x++) {
                 if (this.getPieceAtXY(x, y).isCommandedBy(player)) {
-                    pileCoords.push(new Coord(x, y));
+                    stackCoords.push(new Coord(x, y));
                 }
             }
         }
-        return pileCoords;
+        return stackCoords;
     }
     public set(coord: Coord, value: LascaSpace): LascaState {
         const newBoard: LascaSpace[][] = this.getCopiedBoard();
@@ -141,22 +143,22 @@ export class LascaState extends GameStateWithTable<LascaSpace> {
         if (player === Player.ZERO) {
             return 0;
         } else {
-            return 6;
+            return LascaState.SIZE - 1;
         }
     }
     public toString(): string {
-        let biggerPile: number = 1;
-        for (let y: number = 0; y < 7; y++) {
-            for (let x: number = 0; x < 7; x++) {
-                const newPileSize: number = this.getPieceAtXY(x, y).getPileSize();
-                biggerPile = Math.max(biggerPile, newPileSize);
+        let biggerStack: number = 1;
+        for (let y: number = 0; y < LascaState.SIZE; y++) {
+            for (let x: number = 0; x < LascaState.SIZE; x++) {
+                const newStackSize: number = this.getPieceAtXY(x, y).getStackSize();
+                biggerStack = Math.max(biggerStack, newStackSize);
             }
         }
         const lines: string[] = [];
-        for (let y: number = 0; y < 7; y++) {
+        for (let y: number = 0; y < LascaState.SIZE; y++) {
             const spaces: string[] = [];
-            for (let x: number = 0; x < 7; x++) {
-                spaces.push(this.getPieceAtXY(x, y).toString(biggerPile));
+            for (let x: number = 0; x < LascaState.SIZE; x++) {
+                spaces.push(this.getPieceAtXY(x, y).toString(biggerStack));
             }
             lines.push(spaces.join(' '));
         }

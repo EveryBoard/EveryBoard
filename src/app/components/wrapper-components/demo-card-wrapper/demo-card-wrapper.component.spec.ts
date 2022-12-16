@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { LodestoneNode } from 'src/app/games/lodestone/LodestoneRules';

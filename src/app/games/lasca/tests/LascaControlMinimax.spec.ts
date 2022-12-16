@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { min } from 'rxjs';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -9,7 +8,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-describe('LascaControlAndDominateMinimax', () => {
+fdescribe('LascaControlAndDominateMinimax', () => {
 
     const u: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
     const v: LascaSpace = new LascaSpace([LascaPiece.ONE]);
@@ -50,8 +49,8 @@ describe('LascaControlAndDominateMinimax', () => {
         // Then it should return the list of steps
         expect(moves.length).toBe(6);
     });
-    it('should not count the immobilised piles', () => {
-        // Given two board with the exact same piles, one having blocked piles
+    it('should not count the immobilized stacks', () => {
+        // Given two board with the exact same stacks, one having blocked stacks
         const immobilizedState: LascaState = LascaState.from([
             [v, _, _, _, _, _, _],
             [_, u, _, _, _, _, _],
@@ -72,7 +71,7 @@ describe('LascaControlAndDominateMinimax', () => {
         ], 0).get();
 
         // When comparing them
-        // Then the one with blocked pile should be considered lesser
+        // Then the one with blocked stack should be considered lesser
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            immobilizedState,
                                                            MGPOptional.empty(),
@@ -81,7 +80,7 @@ describe('LascaControlAndDominateMinimax', () => {
                                                            Player.ONE);
     });
     it('should count the potential mobility as primary board value', () => {
-        // Given two board with the same piles, one with an unique forced capture, the other without
+        // Given two board with the same stacks, one with an unique forced capture, the other without
         const forcedState: LascaState = LascaState.from([
             [v, _, _, _, _, _, _],
             [_, u, _, _, _, _, _],
@@ -90,7 +89,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, v, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get(); // O has 1 pile, X has 2
+        ], 0).get(); // O has 1 stack, X has 2
         const freeState: LascaState = LascaState.from([
             [v, _, _, _, _, _, _],
             [_, _, _, u, _, _, _],
@@ -99,10 +98,10 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, v, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get(); // O has 1 pile, X has 2
+        ], 0).get(); // O has 1 stack, X has 2
 
         // When comparing them
-        // Then the two should be of equal value: the number of non-blocked piles times 11
+        // Then the two should be of equal value: the number of non-blocked stacks times 11
         RulesUtils.expectStatesToBeOfEqualValue(minimax, forcedState, freeState);
     });
 });

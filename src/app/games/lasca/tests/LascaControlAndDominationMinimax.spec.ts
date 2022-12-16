@@ -6,7 +6,7 @@ import { LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
 import { LascaRules } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-describe('LascaControlAndDominateMinimax', () => {
+fdescribe('LascaControlAndDominateMinimax', () => {
 
     const O: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
     const X: LascaSpace = new LascaSpace([LascaPiece.ONE]);
@@ -17,8 +17,8 @@ describe('LascaControlAndDominateMinimax', () => {
         const ruler: LascaRules = LascaRules.get();
         minimax = new LascaControlAndDominationMinimax(ruler, 'Lasca Control And Dominate Minimax');
     });
-    it('should not count the immobilised piles', () => {
-        // Given two board with the exact same piles, one having blocked piles
+    it('should not count the immobilized stacks', () => {
+        // Given two board with the exact same stacks, one having blocked stacks
         const immobilizedState: LascaState = LascaState.from([
             [X, _, _, _, _, _, _],
             [_, O, _, _, _, _, _],
@@ -39,7 +39,7 @@ describe('LascaControlAndDominateMinimax', () => {
         ], 0).get();
 
         // When comparing them
-        // Then the one with blocked pile should be considered lesser
+        // Then the one with blocked stack should be considered lesser
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            immobilizedState,
                                                            MGPOptional.empty(),
@@ -48,7 +48,7 @@ describe('LascaControlAndDominateMinimax', () => {
                                                            Player.ONE);
     });
     it('should count the potential mobility as primary board value', () => {
-        // Given two board with the same piles, one with an unique forced capture, the other without
+        // Given two board with the same stacks, one with an unique forced capture, the other without
         const forcedState: LascaState = LascaState.from([
             [X, _, _, _, _, _, _],
             [_, O, _, _, _, _, _],
@@ -57,7 +57,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, X, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get(); // O has 1 pile, X has 2
+        ], 0).get(); // O has 1 stack, X has 2
         const freeState: LascaState = LascaState.from([
             [X, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
@@ -66,10 +66,10 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, X, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get(); // O has 1 pile, X has 2
+        ], 0).get(); // O has 1 stack, X has 2
 
         // When comparing them
-        // Then the two should be of equal value: the number of non-blocked piles times 11
+        // Then the two should be of equal value: the number of non-blocked stacks times 11
         RulesUtils.expectStatesToBeOfEqualValue(minimax, forcedState, freeState);
     });
     it('should count the dominating piece as secondary board value (at equal potential mobility)', () => {

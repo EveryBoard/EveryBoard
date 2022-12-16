@@ -9,7 +9,6 @@ import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SCORE } from '../SCORE';
-import { min } from 'rxjs';
 
 export class RulesUtils {
 

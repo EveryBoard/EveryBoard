@@ -141,7 +141,7 @@ class GameDescription {
 
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
-    public static readonly LASCA: Localized = () => $localize`Close to checkers, capture opponent pieces, free your own, and immobilize you opponent to win the game!`;
+    public static readonly LASCA: Localized = () => $localize`Similar to checkers, capture opponent pieces, free your own, and immobilize your opponent to win the game!`;
 
     public static readonly LINES_OF_ACTION: Localized = () => $localize`Regroup your pieces to win. But your possible moves will often change!`;
 

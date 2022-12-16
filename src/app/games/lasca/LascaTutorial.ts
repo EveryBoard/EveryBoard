@@ -48,7 +48,7 @@ export class LascaTutorial extends Tutorial {
         // 5. Longer capture
         TutorialStep.anyMove(
             $localize`Multiple captures (1/2)`,
-            $localize`If, after the beginning of your capture, the piece that just moved can capture another piece, she has to capture until she can no longer. To do so, you must then click again on the next landing space. Note when capturing with an officer, you cannot jump twice over the same pile.<br/><br/>You are playing Dark, a double capture is possible, go ahead.`,
+            $localize`If, after the beginning of your capture, the piece that just moved can capture another piece, she has to capture until she can no longer. To do so, you must then click again on the next landing space. Note when capturing with an officer, you cannot jump twice over the same stack.<br/><br/>You are playing Dark, a double capture is possible, go ahead.`,
             LascaState.from([
                 [_v, __, __, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],

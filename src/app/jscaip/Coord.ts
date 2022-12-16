@@ -6,7 +6,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder, NumberEncoder } from '../utils/Encoder';
 
 export class CoordFailure {
-    public static readonly OUT_OF_RANGE: (coord: Coord) => string = (coord: Coord) => $localize`Coord out of range, invalid move! ` + coord.toString();
+    public static readonly OUT_OF_RANGE: (coord: Coord) => string = (coord: Coord) => $localize`The coordinate ${ coord.toString() } is not on the board`;
 }
 
 export class Coord implements ComparableObject {

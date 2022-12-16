@@ -10,7 +10,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules, LascaRulesFailure } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-describe('LascaRules', () => {
+fdescribe('LascaRules', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;
@@ -286,8 +286,8 @@ describe('LascaRules', () => {
             ], 2).get();
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should allow capturing commander of an opponent pile', () => {
-            // Given a board with a possible pile-capture
+        it('should allow capturing commander of an opponent stack', () => {
+            // Given a board with a possible stack-capture
             const state: LascaState = LascaState.from([
                 [_v, __, _v, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],
@@ -298,7 +298,7 @@ describe('LascaRules', () => {
                 [_u, __, __, __, _u, __, _u],
             ], 1).get();
 
-            // When capturing the commander of the pile
+            // When capturing the commander of the stack
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then it should succeed
@@ -346,8 +346,8 @@ describe('LascaRules', () => {
         });
     });
     describe('Promotion', () => {
-        it('should promote the commander of a pile that reached last line', () => {
-            // Given a board where a pile is about to reach final line
+        it('should promote the commander of a stack that reached last line', () => {
+            // Given a board where a stack is about to reach final line
             const state: LascaState = LascaState.from([
                 [__, __, __, __, _v, __, _v],
                 [__, uv, __, _v, __, _v, __],
@@ -361,7 +361,7 @@ describe('LascaRules', () => {
             // When doing that move
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 1), new Coord(0, 0)).get();
 
-            // Then the commander of the pile should be promoted
+            // Then the commander of the stack should be promoted
             const expectedState: LascaState = LascaState.from([
                 [Ov, __, __, __, _v, __, _v],
                 [__, __, __, _v, __, _v, __],
@@ -432,7 +432,7 @@ describe('LascaRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it(`should declare current player winner when blocking last opponent's piece`, () => {
-            // Given a board where the last free piece or pile of the opponent is about to be blocked
+            // Given a board where the last free piece or stack of the opponent is about to be blocked
             const state: LascaState = LascaState.from([
                 [_O, __, _X, __, __, __, __],
                 [__, __, __, __, __, __, __],

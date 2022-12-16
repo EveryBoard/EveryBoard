@@ -182,8 +182,8 @@
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
       </trans-unit>
-      <trans-unit id="4680238838438366543" datatype="html">
-        <source>Close to checkers, capture opponent pieces, free your own, and immobilize you opponent to win the game!</source>
+      <trans-unit id="658738805737752450" datatype="html">
+        <source>Similar to checkers, capture opponent pieces, free your own, and immobilize your opponent to win the game!</source>
       </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
@@ -1638,26 +1638,26 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
-      <trans-unit id="2020802782007615776" datatype="html">
-        <source>Capture must be double diagonal steps</source>
+      <trans-unit id="8185870119793056756" datatype="html">
+        <source>Capture must be double diagonal steps!</source>
       </trans-unit>
-      <trans-unit id="3722504673049657082" datatype="html">
-        <source>Move must be single diagonal steps</source>
+      <trans-unit id="6753567388037209218" datatype="html">
+        <source>Move must be single diagonal steps!</source>
       </trans-unit>
-      <trans-unit id="8722600729890521244" datatype="html">
-        <source>You cannot jump over the same coord several time</source>
+      <trans-unit id="2319854305443619821" datatype="html">
+        <source>You cannot jump over the same coord several time!</source>
       </trans-unit>
-      <trans-unit id="8833682869379041729" datatype="html">
-        <source>Cannot go backward with normal piece</source>
+      <trans-unit id="4571341833463764401" datatype="html">
+        <source>Cannot go backward with normal piece!</source>
       </trans-unit>
-      <trans-unit id="8649496248690252329" datatype="html">
-        <source>Cannot capture empty space (nor jump over it)</source>
+      <trans-unit id="8451802215362814436" datatype="html">
+        <source>Cannot capture empty space (nor jump over it)!</source>
       </trans-unit>
-      <trans-unit id="8144038524408187730" datatype="html">
-        <source>Capture is mandatory</source>
+      <trans-unit id="4873069599349345494" datatype="html">
+        <source>Capture is mandatory!</source>
       </trans-unit>
-      <trans-unit id="4753584102674404468" datatype="html">
-        <source>You must finish this capture</source>
+      <trans-unit id="3183138660002989080" datatype="html">
+        <source>You must finish this capture!</source>
       </trans-unit>
       <trans-unit id="8274439231274366704" datatype="html">
         <source>Lasca: origins</source>
@@ -1683,8 +1683,8 @@
       <trans-unit id="1430493612123692909" datatype="html">
         <source>Multiple captures (1/2)</source>
       </trans-unit>
-      <trans-unit id="7841021460101071710" datatype="html">
-        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, she has to capture until she can no longer. To do so, you must then click again on the next landing space. Note when capturing with an officer, you cannot jump twice over the same pile.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+      <trans-unit id="6418790741340638153" datatype="html">
+        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, she has to capture until she can no longer. To do so, you must then click again on the next landing space. Note when capturing with an officer, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
       </trans-unit>
       <trans-unit id="580945753043190834" datatype="html">
         <source>Congratulations, you captured two pieces, and, by reaching the last line, your piece has now been promoted to the rank of officer ! Now, it can move and capture backward, which is illegal for normal piece.</source>
@@ -2663,8 +2663,8 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
       </trans-unit>
-      <trans-unit id="4246775244288947688" datatype="html">
-        <source>Coord out of range, invalid move! </source>
+      <trans-unit id="6170490463319981675" datatype="html">
+        <source>The coordinate <x id="PH" equiv-text="coord.toString()"/> is not on the board</source>
       </trans-unit>
       <trans-unit id="7542102025019708759" datatype="html">
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
