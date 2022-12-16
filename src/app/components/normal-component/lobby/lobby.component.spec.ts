@@ -95,7 +95,7 @@ describe('LobbyComponent', () => {
         // When clicking on the first part
         await testUtils.clickElement('#part_0');
 
-        // The the component should have navigate to the part
+        // Then the component should have navigate to the part
         expectValidRouting(router, ['/play', 'Quarto', partList[0].id], OnlineGameWrapperComponent);
     }
     async function shouldForbidToJoinPart(partList: PartDocument[], reason: string): Promise<void> {

@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TrexoMove, TrexoMoveFailure } from '../TrexoMove';
+import { TrexoState } from '../TrexoState';
 
 fdescribe('TrexoMove', () => {
     it('should refuse to create out of board move (player.zero piece)', () => {
@@ -17,7 +18,7 @@ fdescribe('TrexoMove', () => {
     it('should refuse to create out of board move (player.one piece)', () => {
         // When coord of piece one is out of range
         const zero: Coord = new Coord(9, 9);
-        const one: Coord = new Coord(10, 9);
+        const one: Coord = new Coord(TrexoState.SIZE, 9);
 
         // When trying to pass it as param
         const move: MGPFallible<TrexoMove> = TrexoMove.from(zero, one);

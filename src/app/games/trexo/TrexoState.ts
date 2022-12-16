@@ -22,16 +22,18 @@ export class TrexoSpace {
 
 export class TrexoState extends GameStateWithTable<TrexoSpace> {
 
+    public static readonly SIZE: number = 10;
+
     public static getInitialState(): TrexoState {
-        const board: TrexoSpace[][] = ArrayUtils.createTable(10, 10, TrexoSpace.EMPTY);
+        const board: TrexoSpace[][] = ArrayUtils.createTable(TrexoState.SIZE, TrexoState.SIZE, TrexoSpace.EMPTY);
         return new TrexoState(board, 0);
     }
     public static from(board: TrexoSpace[][], turn: number): MGPFallible<TrexoState> {
-        if (board.length !== 10) {
+        if (board.length !== TrexoState.SIZE) {
             return MGPFallible.failure(TrexoStateFailure.INVALID_DIMENSIONS());
         }
         for (const lines of board) {
-            if (lines.length !== 10) {
+            if (lines.length !== TrexoState.SIZE) {
                 return MGPFallible.failure(TrexoStateFailure.INVALID_DIMENSIONS());
             }
         }

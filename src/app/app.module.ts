@@ -70,6 +70,7 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
+import { TrexoComponent } from './games/trexo/trexo.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
@@ -201,6 +202,7 @@ export class FirebaseProviders {
         SiamComponent,
         SixComponent,
         TablutComponent,
+        TrexoComponent,
         YinshComponent,
 
         HumanDurationPipe,

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="(-STROKE_WIDTH / 2) + ' ' + (-STROKE_WIDTH / 2) + ' ' + (10 * SPACE_SIZE + STROKE_WIDTH) + ' ' + (10 * SPACE_SIZE + STROKE_WIDTH)">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let space of line; index as x"
+           id="space_{{ x }}_{{ y }}"
+           [attr.transform]="'translate(' + (SPACE_SIZE * x) + ' ' + (SPACE_SIZE * y) + ')'"
+           (click)="onClick(x, y)">
+            <rect [attr.x]="0"
+                  [attr.y]="0"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  class="base"
+            />
+            <circle *ngIf="space.owner.isPlayer()"
+                    id="todo"
+                    [attr.cx]="0.5 * SPACE_SIZE"
+                    [attr.cy]="0.5 * SPACE_SIZE"
+                    [attr.r]="0.5 * SPACE_SIZE"
+                    [ngClass]="getPlayerClass(space.owner)"
+                    class="base"
+            />
+        </g>
+    </g>
+    <circle *ngIf="droppedPiece.isPresent()"
+            [attr.transform]="'translate(' + (SPACE_SIZE * droppedPiece.get().x) + ' ' + (SPACE_SIZE * droppedPiece.get().y) + ')'"
+            id="todo"
+            [attr.cx]="0.5 * SPACE_SIZE"
+            [attr.cy]="0.5 * SPACE_SIZE"
+            [attr.r]="0.5 * SPACE_SIZE"
+            [ngClass]="currentOpponentClass"
+            class="base"
+    />
+</svg>

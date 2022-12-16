@@ -10,15 +10,15 @@ import { TrexoSpace, TrexoState } from '../TrexoState';
 
 const _____: TrexoSpace = TrexoSpace.EMPTY;
 const O1_T0: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 0);
-const X1_T0: TrexoSpace = new TrexoSpace(Player.ONE, 1, 0);
 const O1_T1: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 1);
-const X1_T1: TrexoSpace = new TrexoSpace(Player.ONE, 1, 1);
 const O2_T2: TrexoSpace = new TrexoSpace(Player.ZERO, 2, 2);
+const O1_T3: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 3);
+const O1_T4: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 4);
+const X1_T0: TrexoSpace = new TrexoSpace(Player.ONE, 1, 0);
+const X1_T1: TrexoSpace = new TrexoSpace(Player.ONE, 1, 1);
 const X2_T2: TrexoSpace = new TrexoSpace(Player.ONE, 2, 2);
 const X1_T3: TrexoSpace = new TrexoSpace(Player.ONE, 1, 3);
-const O1_T3: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 3);
 const X1_T4: TrexoSpace = new TrexoSpace(Player.ONE, 1, 4);
-const O1_T4: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 4);
 
 fdescribe('TrexoRules', () => {
 
@@ -175,7 +175,7 @@ fdescribe('TrexoRules', () => {
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-        ], 5).get();
+        ], 3).get();
 
         // When the drop align a fifth piece of the opponent
         const move: TrexoMove = TrexoMove.from(new Coord(7, 2), new Coord(7, 3)).get();
@@ -184,9 +184,44 @@ fdescribe('TrexoRules', () => {
         const expectedState: TrexoState = TrexoState.from([
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            [_____, _____, _____, O1_T0, _____, O2_T2, _____, O1_T4, _____, _____],
-            [_____, _____, _____, X1_T0, X1_T1, X2_T2, X1_T3, X1_T4, _____, _____],
+            [_____, _____, _____, O1_T0, _____, O2_T2, _____, O1_T3, _____, _____],
+            [_____, _____, _____, X1_T0, X1_T1, X2_T2, X1_T3, X1_T3, _____, _____],
             [_____, _____, _____, _____, O1_T1, _____, O1_T3, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+        ], 4).get();
+        const node: TrexoNode = new MGPNode(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+    });
+    it('should declare looser the player who align 5 piece of both players', () => {
+        // Given a board where two player have 4 pieces aligned
+        const state: TrexoState = TrexoState.from([
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, O1_T0, O1_T1, O2_T2, O1_T3, _____, _____, _____],
+            [_____, _____, _____, X1_T0, X1_T1, X2_T2, X1_T3, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+        ], 4).get();
+
+        // When the drop align a fifth piece of the opponent and yours
+        const move: TrexoMove = TrexoMove.from(new Coord(7, 2), new Coord(7, 3)).get();
+
+        // Then you should be declared looser
+        const expectedState: TrexoState = TrexoState.from([
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
+            [_____, _____, _____, O1_T0, O1_T1, O2_T2, O1_T3, O1_T4, _____, _____],
+            [_____, _____, _____, X1_T0, X1_T1, X2_T2, X1_T3, X1_T4, _____, _____],
+            [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -196,14 +231,5 @@ fdescribe('TrexoRules', () => {
         const node: TrexoNode = new MGPNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
-    });
-    it('should declare winner the player who align 5 piece of both players', () => {
-        // TODO FOF REVIEW: this is not mentionned in the rules, afain
-        // Alternatives to this,
-        //      the epaminondas way, first to have one more victory than the opponent ?
-        //      the lame way, draw:
-        //          I don't think it applies (they just say "when *you* aligne 5 of your pieces, you win")
-        //      the weird way: you win ?
-
     });
 });

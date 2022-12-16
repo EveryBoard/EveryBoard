@@ -1,6 +1,10 @@
+import { Coord } from 'src/app/jscaip/Coord';
+import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { SCORE } from 'src/app/jscaip/SCORE';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -55,8 +59,76 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         }
         return zeroSpace.landingTurn === oneSpace.landingTurn;
     }
-    public getGameStatus(node: TrexoNode): GameStatus {
-        throw new Error('getGameStatus not implemented.');
+    public static getSquareScore(state: TrexoState, coord: Coord): number {
+        // TODOTODO: assert correct casting
+        const getOwner: (piece: TrexoSpace) => PlayerOrNone = (piece: TrexoSpace) => {
+            return piece.owner;
+        };
+        const isInRange: (coord: Coord) => boolean = (coord: Coord) => {
+            return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
+        };
+        return NInARowHelper.getSquareScore(state, coord, getOwner, 4, isInRange);
     }
-
+    public getGameStatus(node: TrexoNode): GameStatus {
+        const state: TrexoState = node.gameState;
+        const lastPlayer: Player = state.getCurrentOpponent();
+        let lastPlayerAligned5: boolean = false;
+        for (let x: number = 0; x < TrexoState.SIZE; x++) {
+            // for every column, starting from the bottom of each column
+            for (let y: number = 0; y < TrexoState.SIZE; y++) {
+                // while we haven't reached the top or an empty space
+                const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).owner;
+                if (pieceOwner.isPlayer()) {
+                    const tmpScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
+                    if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                        if (pieceOwner === lastPlayer) {
+                            lastPlayerAligned5 = true;
+                        } else {
+                            return GameStatus.getVictory(pieceOwner);
+                        }
+                    }
+                }
+            }
+        }
+        if (lastPlayerAligned5) {
+            return GameStatus.getVictory(lastPlayer);
+        }
+        return GameStatus.ONGOING;
+    }
+    public getLegalMoves(state: TrexoState): TrexoMove[] {
+        const moves: TrexoMove[] = [];
+        for (let x: number = 0; x < TrexoState.SIZE; x++) {
+            for (let y: number = 0; y < TrexoState.SIZE; y++) {
+                const upOrleftCord: Coord = new Coord(x, y);
+                if (x + 1 < TrexoState.SIZE) {
+                    const rightCoord: Coord = new Coord(x + 1, y);
+                    moves.push(...this.getPossiblesMoves(state, upOrleftCord, rightCoord));
+                }
+                if (y + 1 < TrexoState.SIZE) {
+                    const downCoord: Coord = new Coord(x, y + 1);
+                    moves.push(...this.getPossiblesMoves(state, upOrleftCord, downCoord));
+                }
+            }
+        }
+        return moves;
+    }
+    public getPossiblesMoves(state: TrexoState, first: Coord, second: Coord): TrexoMove[] {
+        const firstPiece: TrexoSpace = state.getPieceAt(first);
+        const secondPiece: TrexoSpace = state.getPieceAt(second);
+        let piecesHideEntirelyOnePiece: boolean;
+        if (firstPiece.landingTurn === -1) {
+            piecesHideEntirelyOnePiece = false; // worst case scenario they both cover "turn -1"
+        } else {
+            piecesHideEntirelyOnePiece = (firstPiece.landingTurn === secondPiece.landingTurn);
+        }
+        const pieceIsAllDeTravers: boolean = firstPiece.height !== secondPiece.height;
+        if (piecesHideEntirelyOnePiece || pieceIsAllDeTravers) {
+            return [];
+        } else {
+            return [
+                TrexoMove.from(first, second).get(),
+                TrexoMove.from(second, first).get(),
+            ];
+        }
+    }
 }

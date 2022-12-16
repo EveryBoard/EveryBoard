@@ -26,6 +26,7 @@ import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
 import { SiamComponent } from 'src/app/games/siam/siam.component';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
+import { TrexoComponent } from 'src/app/games/trexo/trexo.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -107,6 +108,8 @@ import { MartianChessState } from 'src/app/games/martian-chess/MartianChessState
 import { HnefataflTutorial } from 'src/app/games/tafl/hnefatafl/HnefataflTutorial';
 import { HnefataflRules } from 'src/app/games/tafl/hnefatafl/HnefataflRules';
 import { AbstractRules } from 'src/app/jscaip/Rules';
+import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
+import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
 
 class GameDescription {
 
@@ -164,6 +167,8 @@ class GameDescription {
 
     public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
+    public static readonly TREXO: Localized = () => $localize`TODOTODO TOUBIDOU`;
+
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 
 }
@@ -203,6 +208,7 @@ export class GameInfo {
         new GameInfo($localize`Lodestone`, 'Lodestone', LodestoneComponent, new LodestoneTutorial(), LodestoneRules.get(), new Date('2022-06-24'), GameDescription.LODESTONE()),
         new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new MartianChessTutorial(), new MartianChessRules(MartianChessState), new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()),
         new GameInfo($localize`Hnefatafl`, 'Hnefatafl', HnefataflComponent, new HnefataflTutorial(), HnefataflRules.get(), new Date('2022-09-21'), GameDescription.HNEFATAFL()),
+        new GameInfo($localize`Trexo`, 'Trexo', TrexoComponent, new TrexoTutorial(), TrexoRules.get(), new Date('2022-12-14'), GameDescription.TREXO()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

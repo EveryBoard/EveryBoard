@@ -1,16 +1,30 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Move } from 'src/app/jscaip/Move';
+import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { TrexoState } from './TrexoState';
 
 export class TrexoMoveFailure {
 
     public static readonly NON_NEIGHBOR_COORDS: Localized = () => $localize`TODOTODO: NON_NEIGHBOR_COORDS`;
 }
 
-export class TrexoMove extends Move {
+/**
+ * It's not really a move coord to coord but rather a "drop two coords" (that are neighbor)
+ */
+export class TrexoMove extends MoveCoordToCoord {
+
+    public static encoder: NumberEncoder<TrexoMove> =
+        MoveCoordToCoord.getEncoder<TrexoMove>(TrexoState.SIZE, TrexoState.SIZE,
+                                               (zero: Coord, one: Coord): TrexoMove => {
+                                                   return TrexoMove.from(zero, one).get();
+                                               });
+
     public static from(zero: Coord, one: Coord): MGPFallible<TrexoMove> {
-        if (zero.isNotInRange(10, 10) || one.isNotInRange(10, 10)) {
+        if (zero.isNotInRange(TrexoState.SIZE, TrexoState.SIZE) ||
+            one.isNotInRange(TrexoState.SIZE, TrexoState.SIZE))
+        {
             return MGPFallible.failure('TODOTODO OUT OF RANGE FROM Lasca');
         }
         const distance: number = zero.getOrthogonalDistance(one);
@@ -21,10 +35,10 @@ export class TrexoMove extends Move {
         }
     }
     private constructor(public readonly zero: Coord, public readonly one: Coord) {
-        super();
+        super(zero, one);
     }
     public toString(): string {
-        throw new Error('toString not implemented.');
+        return this.coord.toString() + ' && ' + this.end.toString();
     }
     public equals(o: this): boolean {
         throw new Error('equals not implemented.');
