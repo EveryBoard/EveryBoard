@@ -1644,14 +1644,14 @@
       <trans-unit id="6753567388037209218" datatype="html">
         <source>Move must be single diagonal steps!</source>
       </trans-unit>
-      <trans-unit id="2319854305443619821" datatype="html">
-        <source>You cannot jump over the same coord several time!</source>
+      <trans-unit id="494699409056885328" datatype="html">
+        <source>You cannot jump over the same space several times!</source>
       </trans-unit>
-      <trans-unit id="4571341833463764401" datatype="html">
-        <source>Cannot go backward with normal piece!</source>
+      <trans-unit id="3581037377692107358" datatype="html">
+        <source>You cannot go backward with normal pieces!</source>
       </trans-unit>
-      <trans-unit id="8451802215362814436" datatype="html">
-        <source>Cannot capture empty space (nor jump over it)!</source>
+      <trans-unit id="4712855775149366403" datatype="html">
+        <source>You cannot capture empty space (nor jump over it)!</source>
       </trans-unit>
       <trans-unit id="4873069599349345494" datatype="html">
         <source>Capture is mandatory!</source>
@@ -1662,20 +1662,20 @@
       <trans-unit id="8274439231274366704" datatype="html">
         <source>Lasca: origins</source>
       </trans-unit>
-      <trans-unit id="9130733749994426297" datatype="html">
-        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each players has 11 pieces.</source>
+      <trans-unit id="3954016636522783040" datatype="html">
+        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
       </trans-unit>
-      <trans-unit id="3198994967671406143" datatype="html">
-        <source>The goal of Lasca is, like for draughts, to put the opponent out of possible move, either by capturing all his pieces, either by blocking them.</source>
+      <trans-unit id="8228991594058357867" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to render the opponent out of possible move, either by capturing all his pieces, either by blocking them.</source>
       </trans-unit>
       <trans-unit id="1534367694207535197" datatype="html">
         <source>Steps</source>
       </trans-unit>
-      <trans-unit id="5328481068359252467" datatype="html">
-        <source>A simple step is made by one diagonal move forward, left or right, click on the chosen piece, then on it&apos;s landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      <trans-unit id="4701749826555333352" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on it&apos;s landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
       </trans-unit>
-      <trans-unit id="1675047371672154041" datatype="html">
-        <source>You have to capture when you can, it is the case, click on the piece that must capture and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+      <trans-unit id="7763413917819120355" datatype="html">
+        <source>You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
@@ -1683,8 +1683,8 @@
       <trans-unit id="1430493612123692909" datatype="html">
         <source>Multiple captures (1/2)</source>
       </trans-unit>
-      <trans-unit id="6418790741340638153" datatype="html">
-        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, she has to capture until she can no longer. To do so, you must then click again on the next landing space. Note when capturing with an officer, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+      <trans-unit id="6157883150195310948" datatype="html">
+        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, it has to capture until she can no longer. To do so, you must then click again on the next landing space. Note that, when capturing with an officer, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
       </trans-unit>
       <trans-unit id="580945753043190834" datatype="html">
         <source>Congratulations, you captured two pieces, and, by reaching the last line, your piece has now been promoted to the rank of officer ! Now, it can move and capture backward, which is illegal for normal piece.</source>
@@ -1692,8 +1692,8 @@
       <trans-unit id="5195324594588038758" datatype="html">
         <source>Minoritary capture is allowed</source>
       </trans-unit>
-      <trans-unit id="8070706057061255095" datatype="html">
-        <source>If you have several capture choices, one capturing one piece, one capture two, you are allowed to choose both.</source>
+      <trans-unit id="1663023095327432443" datatype="html">
+        <source>If you have several capture choices, one capturing one piece, one capture two, you are allowed to choose either.</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -2662,9 +2662,6 @@
         or you could even capture multiple times!
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
-      </trans-unit>
-      <trans-unit id="6170490463319981675" datatype="html">
-        <source>The coordinate <x id="PH" equiv-text="coord.toString()"/> is not on the board</source>
       </trans-unit>
       <trans-unit id="7542102025019708759" datatype="html">
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>

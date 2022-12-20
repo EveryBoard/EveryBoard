@@ -130,10 +130,10 @@ export class LascaMove extends Move {
     public getCapturedCoords(): MGPFallible<MGPSet<Coord>> {
         return LascaMove.getSteppedOverCoords(this.coords);
     }
-    public concatene(move: LascaMove): LascaMove {
+    public concatenate(move: LascaMove): LascaMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
         const startOfSecondMove: Coord = move.coords[0];
-        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatene non-touching move'); // je veux être ému!!!
+        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move'); // je veux être ému!!!
         const firstPart: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
         const secondPart: Coord[] = ArrayUtils.copyImmutableArray(move.coords).slice(1);
         return LascaMove.fromCapture(firstPart.concat(secondPart)).get();

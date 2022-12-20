@@ -88,7 +88,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         this.adaptedBoard = [];
         for (let y: number = 0; y < LascaState.SIZE; y++) {
             const newRow: SpaceInfo[] = [];
-            for (let x: number = 0; x < 7; x++) {
+            for (let x: number = 0; x < LascaState.SIZE; x++) {
                 const newSpace: SpaceInfo = this.getSpaceInfo(state, x, y);
                 newRow.push(newSpace);
             }
@@ -255,7 +255,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         for (const captured of this.capturedCoords) {
             const previousSpace: LascaSpace = this.getState().getPieceAt(captured);
             const capturedCommander: LascaPiece = previousSpace.getCommander();
-            const commandedStack: LascaSpace = previousSpace.getCommandedStack();
+            const commandedStack: LascaSpace = previousSpace.getPiecesUnderCommander();
             partialState = partialState.set(captured, commandedStack);
             movingStack = movingStack.capturePiece(capturedCommander);
         }

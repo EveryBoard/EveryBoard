@@ -63,7 +63,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
                     if (endsOfMoves.length === 0) {
                         pieceMoves = pieceMoves.concat(startOfMove);
                     } else {
-                        const mergedMoves: LascaMove[] = endsOfMoves.map((m: LascaMove) => startOfMove.concatene(m));
+                        const mergedMoves: LascaMove[] = endsOfMoves.map((m: LascaMove) => startOfMove.concatenate(m));
                         pieceMoves = pieceMoves.concat(mergedMoves);
                     }
                 }
@@ -108,7 +108,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
                 const commander: LascaPiece = capturedSpace.getCommander();
                 movingStack = movingStack.capturePiece(commander);
 
-                const reaminingStack: LascaSpace = capturedSpace.getCommandedStack();
+                const reaminingStack: LascaSpace = capturedSpace.getPiecesUnderCommander();
                 resultingState = resultingState.set(capturedCoord, reaminingStack);
             }
         }
@@ -141,7 +141,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         const possibleCaptures: LascaMove[] = LascaRules.getCaptures(state);
         if (move.isStep) {
-            if (this.isTherePossibleCapture(possibleCaptures)) {
+            if (possibleCaptures.length > 0) {
                 return MGPFallible.failure(LascaRulesFailure.CANNOT_SKIP_CAPTURE());
             } else {
                 return MGPFallible.success(undefined);
@@ -149,9 +149,6 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         } else {
             return this.isLegalCapture(move, state, possibleCaptures);
         }
-    }
-    public isTherePossibleCapture(possibleCaptures: LascaMove[]): boolean {
-        return possibleCaptures.length > 0;
     }
     public isLegalCapture(move: LascaMove, state: LascaState, possibleCaptures: LascaMove[]): MGPFallible<void> {
         const player: Player = state.getCurrentPlayer();
@@ -174,12 +171,12 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
     public getGameStatus(node: LascaNode): GameStatus {
         const state: LascaState = node.gameState;
         const captures: LascaMove[] = LascaRules.getCaptures(state);
-        if (captures.length === 0) {
-            const steps: LascaMove[] = LascaRules.getSteps(state);
-            if (steps.length === 0) {
-                return GameStatus.getVictory(state.getCurrentOpponent());
-            }
+        if (captures.length > 0 ||
+            LascaRules.getSteps(state).length > 0)
+        {
+            return GameStatus.ONGOING;
+        } else {
+            return GameStatus.getVictory(state.getCurrentOpponent());
         }
-        return GameStatus.ONGOING;
     }
 }

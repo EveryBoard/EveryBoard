@@ -49,17 +49,17 @@ export class LascaSpace {
     public getCommander(): LascaPiece {
         return this.pieces[0];
     }
-    public getCommandedStack(): LascaSpace {
+    public getPiecesUnderCommander(): LascaSpace {
         return new LascaSpace(ArrayUtils.copyImmutableArray(this.pieces).slice(1));
     }
     public capturePiece(piece: LascaPiece): LascaSpace {
         return new LascaSpace(ArrayUtils.copyImmutableArray(this.pieces).concat(piece));
     }
     public addStackBelow(stack: LascaSpace): LascaSpace {
-        const belowPieces: LascaPiece[] = ArrayUtils.copyImmutableArray(stack.pieces);
+        const piecesBelow: LascaPiece[] = ArrayUtils.copyImmutableArray(stack.pieces);
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingStack: LascaSpace = this;
-        for (const piece of belowPieces) {
+        for (const piece of piecesBelow) {
             resultingStack = resultingStack.capturePiece(piece);
         }
         return resultingStack;
@@ -73,7 +73,7 @@ export class LascaSpace {
             return this;
         } else {
             commander = LascaPiece.getPlayerOfficer(commander.player);
-            const remainingStack: LascaSpace = this.getCommandedStack();
+            const remainingStack: LascaSpace = this.getPiecesUnderCommander();
             const commandingStack: LascaSpace = new LascaSpace([commander]);
             return commandingStack.addStackBelow(remainingStack);
         }

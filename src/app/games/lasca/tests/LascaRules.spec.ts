@@ -259,6 +259,34 @@ fdescribe('LascaRules', () => {
             ], 2).get();
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+        it('should allow to do bug capture when samll capture available', () => {
+            // Given a board where two different sized captures are possible
+            const state: LascaState = LascaState.from([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, _v, __, __, __, __],
+                [__, _u, __, _u, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, _u, __],
+                [__, __, __, __, __, __, __],
+            ], 1).get();
+
+            // When doing the big capture
+            const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]).get();
+
+            // Then it should succeed
+            const Xoo: LascaSpace = new LascaSpace([LascaPiece.ONE_OFFICER, LascaPiece.ZERO, LascaPiece.ZERO]);
+            const expectedState: LascaState = LascaState.from([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, _u, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, Xoo],
+            ], 2).get();
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        });
         it('should allow capturing standalone opponent piece', () => {
             // Given a board with a possible single-capture
             const state: LascaState = LascaState.from([
@@ -326,7 +354,7 @@ fdescribe('LascaRules', () => {
                 [_u, __, __, __, __, __, __],
             ], 1).get();
 
-            // When doing the small capture
+            // When doing the multiple capture
             const move: LascaMove = LascaMove.fromCapture([
                 new Coord(2, 0),
                 new Coord(4, 2),
@@ -431,7 +459,7 @@ fdescribe('LascaRules', () => {
             const node: LascaNode = new LascaNode(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
-        it(`should declare current player winner when blocking last opponent's piece`, () => {
+        it(`should declare current player winner when blocking all opponent's pieces`, () => {
             // Given a board where the last free piece or stack of the opponent is about to be blocked
             const state: LascaState = LascaState.from([
                 [_O, __, _X, __, __, __, __],
