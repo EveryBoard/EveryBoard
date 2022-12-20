@@ -4,7 +4,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
 import { LascaMove, LascaMoveFailure } from '../LascaMove';
 
-fdescribe('LascaMove', () => {
+describe('LascaMove', () => {
 
     describe('Move', () => {
         it('should forbid vertical move', () => {

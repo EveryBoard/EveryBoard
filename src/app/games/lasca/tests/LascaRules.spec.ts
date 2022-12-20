@@ -10,7 +10,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules, LascaRulesFailure } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-fdescribe('LascaRules', () => {
+describe('LascaRules', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;

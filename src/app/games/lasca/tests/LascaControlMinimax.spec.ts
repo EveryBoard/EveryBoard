@@ -8,7 +8,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-fdescribe('LascaControlAndDominateMinimax', () => {
+describe('LascaControlAndDominateMinimax', () => {
 
     const u: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
     const v: LascaSpace = new LascaSpace([LascaPiece.ONE]);

@@ -8,7 +8,7 @@ import { LascaComponent } from '../lasca.component';
 import { LascaMove, LascaMoveFailure } from '../LascaMove';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-fdescribe('LascaComponent', () => {
+describe('LascaComponent', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;
