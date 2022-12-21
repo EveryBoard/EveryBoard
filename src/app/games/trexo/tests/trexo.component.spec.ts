@@ -12,12 +12,10 @@ const O1_T0: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 0);
 const O1_T1: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 1);
 const O2_T2: TrexoSpace = new TrexoSpace(Player.ZERO, 2, 2);
 const O1_T3: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 3);
-const O1_T4: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 4);
 const X1_T0: TrexoSpace = new TrexoSpace(Player.ONE, 1, 0);
 const X1_T1: TrexoSpace = new TrexoSpace(Player.ONE, 1, 1);
 const X2_T2: TrexoSpace = new TrexoSpace(Player.ONE, 2, 2);
 const X1_T3: TrexoSpace = new TrexoSpace(Player.ONE, 1, 3);
-const X1_T4: TrexoSpace = new TrexoSpace(Player.ONE, 1, 4);
 
 // eslint-disable-next-line max-lines-per-function
 fdescribe('TrexoComponent', () => {
@@ -62,36 +60,22 @@ fdescribe('TrexoComponent', () => {
             // When clicking on a possible first coord
             await testUtils.expectClickSuccess('#space_5_5');
             // Then the possible next click should be highlighted
-            testUtils.expectElementToHaveClass('#space_4_5', 'highlighted');
-            testUtils.expectElementToHaveClass('#space_6_5', 'highlighted');
-            testUtils.expectElementToHaveClass('#space_5_4', 'highlighted');
-            testUtils.expectElementToHaveClass('#space_5_6', 'highlighted');
+            testUtils.expectElementToExist('#indicator_4_5');
+            testUtils.expectElementToExist('#indicator_6_5');
+            testUtils.expectElementToExist('#indicator_5_4');
+            testUtils.expectElementToExist('#indicator_5_6');
         }));
     });
-    describe(`second click`, () => {
+    fdescribe(`second click`, () => {
         it(`should allow legal move`, fakeAsync(async() => {
             // Given any board on which a first click has been made
             await testUtils.expectClickSuccess('#space_5_5');
 
             // When clicking on a valid neighbor coord
-            await testUtils.expectClickSuccess('#space_4_5');
-
             // Then the move should be a success, and the first click should be the piece of Player.ONE
             // Because the opponent piece is dropped first
-            const move: TrexoMove = TrexoMove.from(new Coord(4, 5), new Coord(5, 5)).get();
-            const state: TrexoState = TrexoState.from([
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, X1_T0, O1_T0, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            ], 1).get();
-            await testUtils.expectMoveSuccess('#space_6_5', move, state);
+            const move: TrexoMove = TrexoMove.from(new Coord(6, 5), new Coord(5, 5)).get();
+            await testUtils.expectMoveSuccess('#space_6_5', move);
         }));
         it(`should change the first dropped coord when clicking too far`, fakeAsync(async() => {
             // Given any board on which a first click has been made
@@ -110,22 +94,11 @@ fdescribe('TrexoComponent', () => {
 
             // When finalizing the move
             const move: TrexoMove = TrexoMove.from(new Coord(4, 5), new Coord(5, 5)).get();
-            const state: TrexoState = TrexoState.from([
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, O1_T0, X1_T0, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            ], 1).get();
-            await testUtils.expectMoveSuccess('#space_4_5', move, state);
+            await testUtils.expectMoveSuccess('#space_4_5', move);
+
             // Then the dropped coords should be highlighted
-            testUtils.expectElementToHaveClass('#space_4_5', 'highlighted');
-            testUtils.expectElementToHaveClass('#space_5_5', 'highlighted');
+            testUtils.expectElementToHaveClass('#piece_4_5', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#piece_5_5', 'last-move-stroke');
         }));
         it(`should cancel move when clicking again on the same coord`, fakeAsync(async() => {
             // Given any board on which a first click has been made
@@ -152,25 +125,18 @@ fdescribe('TrexoComponent', () => {
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             ], 4).get();
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#space_7_2');
+            await testUtils.expectClickSuccess('#space_7_3');
 
             // When doing the victorious move
             const move: TrexoMove = TrexoMove.from(new Coord(7, 2), new Coord(7, 3)).get();
 
             // Then the 5 victory coords should be highlighted
-            const resultingState: TrexoState = TrexoState.from([
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, O1_T0, _____, O2_T2, _____, O1_T4, _____, _____],
-                [_____, _____, _____, X1_T0, X1_T1, X2_T2, X1_T3, X1_T4, _____, _____],
-                [_____, _____, _____, _____, O1_T1, _____, O1_T3, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            ], 5).get();
-            await testUtils.expectMoveSuccess('#space_7_3', move, resultingState);
+            await testUtils.expectMoveSuccess('#space_7_2', move);
+            testUtils.expectElementToHaveClass('#piece_3_3', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece_4_3', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece_5_3', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece_6_3', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece_7_3', 'victory-stroke');
         }));
     });
 });

@@ -13,22 +13,30 @@
                   class="base"
             />
             <circle *ngIf="space.owner.isPlayer()"
-                    id="todo"
+                    id="piece_{{ x }}_{{ y }}"
                     [attr.cx]="0.5 * SPACE_SIZE"
                     [attr.cy]="0.5 * SPACE_SIZE"
-                    [attr.r]="0.5 * SPACE_SIZE"
-                    [ngClass]="getPlayerClass(space.owner)"
+                    [attr.r]="0.5 * (SPACE_SIZE - 2 * STROKE_WIDTH)"
+                    [ngClass]="getPieceClasses(x, y)"
                     class="base"
             />
         </g>
     </g>
     <circle *ngIf="droppedPiece.isPresent()"
             [attr.transform]="'translate(' + (SPACE_SIZE * droppedPiece.get().x) + ' ' + (SPACE_SIZE * droppedPiece.get().y) + ')'"
-            id="todo"
+            [attr.id]="getDroppedPieceId()"
             [attr.cx]="0.5 * SPACE_SIZE"
             [attr.cy]="0.5 * SPACE_SIZE"
-            [attr.r]="0.5 * SPACE_SIZE"
+            [attr.r]="0.5 * (SPACE_SIZE - 2 * STROKE_WIDTH)"
             [ngClass]="currentOpponentClass"
-            class="base"
+            class="base highlight"
     />
+    <rect *ngFor="let possibleNextClick of possibleNextClicks"
+          id="indicator_{{ possibleNextClick.x }}_{{ possibleNextClick.y }}"
+          (click)="onClick(possibleNextClick.x, possibleNextClick.y)"
+          [attr.x]="(possibleNextClick.x + 0.45) * SPACE_SIZE"
+          [attr.y]="(possibleNextClick.y + 0.45) * SPACE_SIZE"
+          [attr.width]="0.1 * SPACE_SIZE"
+          [attr.height]="0.1 * SPACE_SIZE"
+          class="indicator" />
 </svg>

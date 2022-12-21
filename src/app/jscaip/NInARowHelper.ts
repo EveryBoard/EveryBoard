@@ -56,7 +56,6 @@ export class NInARowHelper {
                 score += lineDist - 2;
             }
         }
-        console.log('score for ' + coord.toString() + ' = ' + score * ally.getScoreModifier())
         return score * ally.getScoreModifier();
     }
     public static getNumberOfFreeSpacesAndAllies<T>(
@@ -84,7 +83,6 @@ export class NInARowHelper {
             // while we're on the board
             const currentSpace: T = state.getPieceAt(coord);
             if (getOwner(currentSpace) === opponent) {
-                console.log('for ' + i.toString() + ' in ' + dir.toString() + ' : ' + allies + ' allies and ' + freeSpaces + ' free spaces; ENNEMY IN ' + coord.toString())
                 return [freeSpaces, allies];
             }
             if (getOwner(currentSpace) === ally && allAlliesAreSideBySide) {
@@ -99,7 +97,6 @@ export class NInARowHelper {
             }
             coord = coord.getNext(dir);
         }
-        console.log('for ' + i.toString() + ' in ' + dir.toString() + ' : ' + allies + ' allies and ' + freeSpaces + ' free spaces')
         return [freeSpaces, allies];
     }
 }

@@ -464,7 +464,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         if (element.attributes.class == null) {
-            expect(false).withContext(elementName + ' should have class atrribute').toBeTrue();
+            expect(false).withContext(elementName + ' should have class attribute').toBeTrue();
         } else {
             const classAttribute: string = element.attributes.class;
             expect(classAttribute).withContext(elementName + ' should have a class attribute').toBeTruthy();

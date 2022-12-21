@@ -10,8 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TrexoTutorial } from './TrexoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class TrexoComponentFailure {
 
@@ -46,9 +45,12 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         this.updateBoard();
     }
     public updateBoard(): void {
-        this.board = this.rules.node.gameState.getCopiedBoard();
-        this.currentOpponentClass = this.getPlayerClass(this.getState().getCurrentOpponent());
-        this.possibleMoves = this.rules.getLegalMoves(this.getState());
+        const state: TrexoState = this.getState();
+        this.board = state.getCopiedBoard();
+        this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());
+        this.possibleMoves = this.rules.getLegalMoves(state);
+        this.victoryCoords = TrexoRules.getVictoriousCoords(state);
+        console.table(this.victoryCoords)
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         console.log('click', x, y)
@@ -60,35 +62,58 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         if (this.droppedPiece.isPresent()) {
             console.log('second click')
             const dropped: Coord = this.droppedPiece.get();
+            if (this.droppedPiece.equalsValue(clicked)) {
+                this.cancelMoveAttempt();
+                return MGPValidation.SUCCESS;
+            }
             if (this.possibleNextClicks.some((c: Coord) => c.equals(clicked))) {
                 const isPlayerZero: boolean = this.getState().getCurrentPlayer() === Player.ZERO;
                 const first: Coord = isPlayerZero ? clicked : dropped;
                 const second: Coord = isPlayerZero ? dropped : clicked;
                 const move: TrexoMove = TrexoMove.from(first, second).get();
                 return this.chooseMove(move, this.getState());
-            } else {
-                this.cancelMoveAttempt();
-                return this.onClick(clicked.x, clicked.y);
             }
-        } else {
-            console.log('selecting piece')
-            this.droppedPiece = MGPOptional.of(clicked);
-            this.possibleNextClicks = this.getPossibleNextClicks(clicked);
-            return MGPValidation.SUCCESS;
         }
+        return this.selectPiece(clicked);
+    }
+    private selectPiece(clicked: Coord): MGPValidation {
+        console.log('selecting piece')
+        this.droppedPiece = MGPOptional.of(clicked);
+        this.possibleNextClicks = this.getPossibleNextClicks(clicked);
+        return MGPValidation.SUCCESS;
     }
     public getPossibleNextClicks(coord: Coord): Coord[] {
-        console.log('total list')
-        console.table(this.possibleMoves)
         const potentiallyStartedMove: TrexoMove[] = this.possibleMoves.filter((move: TrexoMove) => {
             return move.coord.equals(coord);
         });
-        console.log('filtered list')
-        console.table(potentiallyStartedMove)
         return potentiallyStartedMove.map((move: TrexoMove) => move.end);
     }
     public cancelMoveAttempt(): void {
         this.droppedPiece = MGPOptional.empty();
         this.possibleNextClicks = [];
+    }
+    public getPieceClasses(x: number, y: number): string[] {
+        const piece: Coord = new Coord(x, y);
+        const pieceOwner: PlayerOrNone = this.getState().getPieceAt(piece).owner;
+        const classes: string[] = [this.getPlayerClass(pieceOwner)];
+        for (const victoryCoord of this.victoryCoords) {
+            if (victoryCoord.equals(piece)) {
+                console.log('on a trouvé une vektoreuuuuu')
+                classes.push('victory-stroke');
+                break;
+            }
+        }
+        if (this.rules.node.move.isPresent()) {
+            const lastMove: TrexoMove = this.rules.node.move.get();
+            if (lastMove.coord.equals(piece) || lastMove.end.equals(piece)) {
+                classes.push('last-move-stroke');
+            }
+        }
+        return classes;
+    }
+    public getDroppedPieceId(): string {
+        const player: string = this.getState().getCurrentOpponent() === Player.ZERO ? 'piece_zero' : 'piece_one';
+        const dropped: Coord = this.droppedPiece.get();
+        return player + '_' + dropped.x + '_' + dropped.y;
     }
 }

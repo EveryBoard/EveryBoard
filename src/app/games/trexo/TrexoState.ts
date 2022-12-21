@@ -18,6 +18,21 @@ export class TrexoSpace {
                 public readonly landingTurn: number)
     {
     }
+    public toString(): string {
+        let player: string = '';
+        switch (this.owner) {
+            case PlayerOrNone.ZERO:
+                player = 'O';
+                break;
+            case PlayerOrNone.ONE:
+                player = 'X';
+                break;
+            default:
+                player = '_';
+                break;
+        }
+        return '(' + player + ', ' + this.height + ', ' + this.landingTurn + ')';
+    }
 }
 
 export class TrexoState extends GameStateWithTable<TrexoSpace> {
@@ -47,5 +62,12 @@ export class TrexoState extends GameStateWithTable<TrexoSpace> {
     }
     public incrementTurn(): TrexoState {
         return new TrexoState(this.getCopiedBoard(), this.turn + 1);
+    }
+    public toString(): string {
+        return this.board.map((list: TrexoSpace[]) => {
+            return list.map((space: TrexoSpace) => {
+                return '(' + space.toString() + ')';
+            }).join(' ');
+        }).join('\n');
     }
 }

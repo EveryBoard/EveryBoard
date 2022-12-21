@@ -161,6 +161,8 @@ fdescribe('TrexoRules', () => {
         const node: TrexoNode = new MGPNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
+        expect(victoryCoords.length).toBe(5);
     });
     it('shoud declare looser the player who align 5 piece of the opponent', () => {
         // Given a board where a player's opponent has a line of 4
@@ -231,5 +233,7 @@ fdescribe('TrexoRules', () => {
         const node: TrexoNode = new MGPNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
+        expect(victoryCoords.length).toBe(5);
     });
 });

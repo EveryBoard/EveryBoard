@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -69,6 +68,34 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         };
         return NInARowHelper.getSquareScore(state, coord, getOwner, 4, isInRange);
     }
+    public static getVictoriousCoords(state: TrexoState): Coord[] {
+        const victoryOfLastPlayer: Coord[] = [];
+        const victoryOfNextPlayer: Coord[] = [];
+        const lastPlayer: Player = state.getCurrentOpponent();
+        for (let x: number = 0; x < TrexoState.SIZE; x++) {
+            // for every column, starting from the bottom of each column
+            for (let y: number = 0; y < TrexoState.SIZE; y++) {
+                // while we haven't reached the top or an empty space
+                const coord: Coord = new Coord(x, y);
+                const pieceOwner: PlayerOrNone = state.getPieceAt(coord).owner;
+                if (pieceOwner.isPlayer()) {
+                    const tmpScore: number = TrexoRules.getSquareScore(state, coord);
+                    if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                        if (pieceOwner === lastPlayer) {
+                            victoryOfLastPlayer.push(coord);
+                        } else {
+                            victoryOfNextPlayer.push(coord);
+                        }
+                    }
+                }
+            }
+        }
+        if (victoryOfNextPlayer.length > 0) {
+            return victoryOfNextPlayer;
+        } else {
+            return victoryOfLastPlayer;
+        }
+    }
     public getGameStatus(node: TrexoNode): GameStatus {
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();
@@ -84,7 +111,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
                         if (pieceOwner === lastPlayer) {
                             lastPlayerAligned5 = true;
                         } else {
-                            return GameStatus.getVictory(pieceOwner);
+                            return GameStatus.getDefeat(lastPlayer);
                         }
                     }
                 }
