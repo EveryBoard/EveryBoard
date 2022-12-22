@@ -158,6 +158,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         const remainingPiece: HivePiece = remainingPieceOpt.get();
+        console.log(remainingPiece.toString());
         const locations: MGPSet<Coord> = new MGPSet();
         // We can only drop next to one of our piece
         for (const coord of state.occupiedSpaces()) {
@@ -170,6 +171,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
                 }
             }
         }
+        console.log(locations.toString());
         return locations;
     }
 
@@ -181,6 +183,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             if (topPiece.owner === player) {
                 for (const move of topPiece.getPossibleMoves(coord, state)) {
                     if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
+                        console.log(move.toString())
                         moves.add(move);
                     }
                 }

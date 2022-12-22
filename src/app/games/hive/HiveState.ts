@@ -7,7 +7,6 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
 import { Utils } from 'src/app/utils/utils';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
 
@@ -52,10 +51,20 @@ export class HiveRemainingPieces implements ComparableObject {
         }
         return MGPOptional.empty();
     }
+
     public remove(piece: HivePiece): void {
         const remaining: number = this.pieces.get(piece).get();
         Utils.assert(remaining > 0, 'HiveRemainingPieces cannot remove a non-remainingPiece');
         this.pieces.replace(piece, remaining-1);
+    }
+
+    public toList(): [HivePiece, number][] {
+        const remaining: [HivePiece, number][] = [];
+        this.pieces.forEach((item: {key: HivePiece, value: number}) => {
+            remaining.push([item.key, item.value]);
+        });
+        return remaining;
+
     }
 }
 
@@ -85,6 +94,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
                         queenBees.set(queenBee.get().owner, new Coord(x, y));
                     }
                     for (const piece of board[y][x]) {
+                        console.log('removing ' + piece.toString());
                         remainingPieces.remove(piece);
                     }
                 }

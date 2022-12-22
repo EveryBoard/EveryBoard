@@ -25,13 +25,7 @@ export abstract class HexagonalGameComponent<R extends Rules<M, S, L>,
         return this.getHexaCoordsAt(coord);
     }
     public getHexaCoordsAt(coord: Coord): string {
-        let desc: string = '';
-        const coords: ReadonlyArray<Coord> = this.hexaLayout.getHexaCoordsAt(coord);
-        for (const corner of coords) {
-            desc += corner.x + ' ' + corner.y + ' ';
-        }
-        desc += coords[0].x + ' ' + coords[0].y;
-        return desc;
+        return this.hexaLayout.getHexaCoordsAt(coord);
     }
     public getCenterBy(x: number, y: number): Coord {
         const coord: Coord = new Coord(x, y);

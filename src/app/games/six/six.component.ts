@@ -100,7 +100,7 @@ export class SixComponent
     private mapAbstractCoordToCornerCoords(): Coord[] {
         const abstractCoords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
         const pieceCornersGrouped: Coord[][] =
-            abstractCoords.map((coord: Coord) => this.hexaLayout.getHexaCoordsAt(coord));
+            abstractCoords.map((coord: Coord) => this.hexaLayout.getHexaCoordListAt(coord));
         let cornerCoords: Coord[] = [];
         for (const pieceCornerGroup of pieceCornersGrouped) {
             cornerCoords = cornerCoords.concat(pieceCornerGroup);

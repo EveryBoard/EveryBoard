@@ -12,7 +12,7 @@ import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, Hi
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
-fdescribe('HiveRules', () => {
+describe('HiveRules', () => {
     let rules: HiveRules;
     let minimaxes: Minimax<HiveMove, HiveState>[];
 
@@ -660,7 +660,37 @@ fdescribe('HiveRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
-    it('should allow passing if a player cannot perform any action');
+    xit('should allow passing if a player cannot perform any action', () => {
+        // Given a board in a stuck position for a player
+        // TODO: does such a board exist?
+        const board: Table<HivePiece[]> = [
+            [[G], [G], [G], [Q], [B], [B], [S], [S], [A], [A], [A],
+                [q], [b], [b], [s], [s], [a], [a], [a], [g], [g], [g]],
+        ];
+        const state: HiveState = HiveState.fromRepresentation(board, 4);
+
+        // When passing
+        const move: HiveMove = HiveMove.PASS;
+
+        // Then the move should succeed
+        const expectedState: HiveState = HiveState.fromRepresentation(board, 5);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('should forbid passing if a player can perform any action', () => {
+        // Given a board where the player can do something
+        const board: Table<HivePiece[]> = [
+            [[Q], [q]],
+        ];
+        const state: HiveState = HiveState.fromRepresentation(board, 4);
+
+        // When trying to pass
+        const move: HiveMove = HiveMove.PASS;
+
+        // Then the move should fail
+        const reason: string = RulesFailure.CANNOT_PASS();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+
     describe('victories', () => {
         it('should consider winning player the one who has fully surrounded the queen bee of the opponent (Player.ZERO)', () => {
             // Given a board where the queen of player one is surrounded

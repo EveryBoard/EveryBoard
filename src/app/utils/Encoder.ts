@@ -7,7 +7,34 @@ export abstract class Encoder<T> {
     public abstract decode(encoded: JSONValue): T;
 }
 
+// Used internally. If T = [A, B, C], then
+// EncoderArray<T> = [Encoder<A>, Encoder<B>, Encoder<C>]
+type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
+
 export abstract class MoveEncoder<T> extends Encoder<T> {
+    public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
+                                                  encode: (t: T) => Fields,
+                                                  decode: (fields: Fields) => T): MoveEncoder<T> {
+        return new class extends MoveEncoder<T> {
+            public encodeMove(value: T): JSONValueWithoutArray {
+                const fields: Fields = encode(value);
+                const encoded: JSONValueWithoutArray = {};
+                Object.keys(fields).forEach((key: string): void => {
+                    encoded[key] = encoders[key].encode(fields[key]);
+                });
+                return encoded;
+            }
+            public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): T {
+                const fields: Record<string, unknown> = {};
+                Object.keys(encoders).reverse().forEach((key: string): void => {
+                    assert(encoded[key] != null, 'Invalid encoded value');
+                    const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
+                    fields[key] = encoders[key].decode(field[key]);
+                });
+                return decode(fields as Fields);
+            }
+        };
+    }
 
     public static disjunction3<T1, T2, T3>(encoder1: MoveEncoder<T1>,
                                            encoder2: MoveEncoder<T2>,
@@ -49,7 +76,6 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
             }
         };
     }
-
 
     public encode(t: T): JSONValue {
         return this.encodeMove(t);

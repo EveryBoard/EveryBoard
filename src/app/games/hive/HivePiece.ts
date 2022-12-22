@@ -2,10 +2,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { Player } from 'src/app/jscaip/Player';
+import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from 'src/app/utils/Comparable';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { Utils } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { HiveFailure } from './HiveFailure';
 import { HiveMoveCoordToCoord, HiveMoveSpider } from './HiveMove';
 import { HiveState } from './HiveState';
@@ -14,11 +16,41 @@ type HivePieceKind = 'QueenBee' | 'Beetle' | 'Grasshopper' | 'Spider' | 'Soldier
 
 export abstract class HivePiece implements ComparableObject {
 
+    public static encoder: Encoder<HivePiece> = new class extends Encoder<HivePiece> {
+
+        public encode(piece: HivePiece): JSONValue {
+            return { owner: piece.owner.value, kind: piece.kind };
+        }
+
+        public decode(encoded: JSONValue): HivePiece {
+            // eslint-disable-next-line dot-notation
+            assert(Utils.getNonNullable(encoded)['kind'] !== null, 'invalid encoded HivePiece');
+            // eslint-disable-next-line dot-notation
+            assert(Utils.getNonNullable(encoded)['owner'] !== null, 'invalid encoded HivePiece');
+            // eslint-disable-next-line dot-notation
+            const kind: string = Utils.getNonNullable(encoded)['kind'] as HivePieceKind;
+            // eslint-disable-next-line dot-notation
+            const owner: Player = Player.of(Utils.getNonNullable(encoded)['owner']);
+            switch (kind) {
+                case 'QueenBee': return new HivePieceQueenBee(owner);
+                case 'Beetle': return new HivePieceBeetle(owner);
+                case 'Grasshopper': return new HivePieceGrasshopper(owner);
+                case 'Spider': return new HivePieceSpider(owner);
+                default:
+                    Utils.expectToBe(kind, 'SoldierAnt');
+                    return new HivePieceSoldierAnt(owner);
+            }
+        }
+    };
+
     protected constructor(public readonly owner: Player,
-                          private readonly kind: HivePieceKind,
-                          public readonly canClimb: boolean,
+                          public readonly kind: HivePieceKind,
                           public readonly mustHaveFreedomToMove: boolean)
     {
+    }
+
+    public toString(): string {
+        return `${this.kind}_${this.owner.toString()}`;
     }
 
     public equals(other: HivePiece): boolean {
@@ -37,7 +69,7 @@ export abstract class HivePiece implements ComparableObject {
 export class HivePieceQueenBee extends HivePiece {
 
     public constructor(owner: Player) {
-        super(owner, 'QueenBee', false, true);
+        super(owner, 'QueenBee', true);
     }
 
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
@@ -65,7 +97,7 @@ export class HivePieceQueenBee extends HivePiece {
 export class HivePieceBeetle extends HivePiece {
 
     public constructor(owner: Player) {
-        super(owner, 'Beetle', true, false);
+        super(owner, 'Beetle', false);
     }
 
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
@@ -87,7 +119,7 @@ export class HivePieceBeetle extends HivePiece {
 export class HivePieceGrasshopper extends HivePiece {
 
     public constructor(owner: Player) {
-        super(owner, 'Grasshopper', false, false);
+        super(owner, 'Grasshopper', false);
     }
 
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
@@ -127,7 +159,7 @@ export class HivePieceGrasshopper extends HivePiece {
 export class HivePieceSpider extends HivePiece {
 
     public constructor(owner: Player) {
-        super(owner, 'Spider', false, true);
+        super(owner, 'Spider', true);
     }
 
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
@@ -145,7 +177,7 @@ export class HivePieceSpider extends HivePiece {
             if (HexagonalUtils.areNeighbors(spiderMove.coords[i-1], spiderMove.coords[i]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_OF_3_NEIGHBORS());
             }
-            if (this.haveCommonNeighbor(state, spiderMove.coords[i], spiderMove.coords[i-1])) {
+            if (this.haveCommonNeighbor(state, spiderMove.coords[i], spiderMove.coords[i-1]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT());
             }
             if (visited.contains(spiderMove.coords[i])) {
@@ -157,9 +189,7 @@ export class HivePieceSpider extends HivePiece {
     }
 
     private haveCommonNeighbor(state: HiveState, coord1: Coord, coord2: Coord): boolean {
-        const occupiedNeighbors: MGPSet<Coord> = state.getOccupiedNeighbors(coord1);
-        const previousOccupiedNeighbors: MGPSet<Coord> = state.getOccupiedNeighbors(coord2);
-        return occupiedNeighbors.findCommonElement(previousOccupiedNeighbors).isPresent();
+        return state.getOccupiedNeighbors(coord1).findCommonElement(state.getOccupiedNeighbors(coord2)).isPresent();
     }
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
@@ -186,7 +216,7 @@ export class HivePieceSpider extends HivePiece {
 export class HivePieceSoldierAnt extends HivePiece {
 
     public constructor(owner: Player) {
-        super(owner, 'SoldierAnt', false, true);
+        super(owner, 'SoldierAnt', true);
     }
 
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
@@ -215,7 +245,7 @@ export class HivePieceStack implements ComparableObject {
     }
 
     public equals(other: HivePieceStack): boolean {
-        if (this.pieces.length !== other.pieces.length) return false;
+        if (this.size() !== other.size()) return false;
         for (let i: number = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].equals(other.pieces[i]) === false) {
                 return false;
@@ -241,5 +271,9 @@ export class HivePieceStack implements ComparableObject {
         const pieces: HivePiece[] = [...this.pieces];
         pieces.shift();
         return new HivePieceStack(pieces);
+    }
+
+    public size(): number {
+        return this.pieces.length;
     }
 }
