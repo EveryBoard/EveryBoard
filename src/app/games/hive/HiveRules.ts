@@ -115,6 +115,11 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     public isLegalDrop(move: HiveMoveDrop, state: HiveState): MGPFallible<void> {
         const player: Player = state.getCurrentPlayer();
 
+        // This should be a piece of the player
+        if (move.piece.owner !== state.getCurrentPlayer()) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        }
+
         // The player must have the piece in its reserve to drop it
         if (state.remainingPieces.hasRemaining(move.piece) === false) {
             return MGPFallible.failure(HiveFailure.CANNOT_DROP_PIECE_YOU_DONT_HAVE());

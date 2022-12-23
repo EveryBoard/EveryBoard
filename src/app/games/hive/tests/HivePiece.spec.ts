@@ -14,7 +14,7 @@ fdescribe('HivePiece', () => {
     const q: HivePiece = new HivePieceQueenBee(Player.ONE);
 
     it('should define toString', () => {
-        expect(Q.toString()).toEqual('QueenBee(PLAYER_ZERO)');
+        expect(Q.toString()).toEqual('QueenBee_PLAYER_ZERO');
     });
     it('should define equality', () => {
         expect(Q.equals(Q)).toBeTrue();

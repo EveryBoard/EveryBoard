@@ -12,15 +12,17 @@
     <polygon *ngFor="let neighbor of neighbors"
              id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
-             class="base round"/>
+             class="base round"
+             (click)="selectSpace(neighbor)"/>
     <g *ngFor="let pieceAndCount of remainingPieces">
        <g *ngFor="let y of range(pieceAndCount[1])"
-          id="remainingPiece_{{ pieceAndCount[0].toString() }}_{{ pieceAndCount[1] }}"
+          id="remainingPiece_{{ pieceAndCount[0].toString() }}_{{ pieceAndCount[1] }}_{{ y }}_{{ pieceAndCount[1] }}"
+          app-hive-piece
           [attr.transform]="'translate(0, ' + (y*SPACE_SIZE) + ')'"
           [piece]="pieceAndCount[0]"
           [coord]="getRemainingPieceCoord(pieceAndCount[0])"
           [hexaLayout]="hexaLayout"
-          [selected]="isSelected(pieceAndCount[0]) && y - 1 === pieceAndCount[1]"
+          [selected]="isSelected(pieceAndCount[0]) && y === pieceAndCount[1] - 1"
           (click)="selectRemaining(pieceAndCount[0])"/>
     </g>
 </svg>

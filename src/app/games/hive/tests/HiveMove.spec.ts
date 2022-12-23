@@ -10,7 +10,7 @@ fdescribe('HiveMove', () => {
         new Coord(0, 0), new Coord(1, 0), new Coord(2, 0), new Coord(3, 0),
     ]);
     it('should redefine toString', () => {
-        expect(drop.toString()).toEqual('HiveDrop(QueenBee(PLAYER_ZERO), (0, 0))');
+        expect(drop.toString()).toEqual('HiveDrop(QueenBee_PLAYER_ZERO, (0, 0))');
         expect(move.toString()).toEqual('HiveMoveCoordToCoord((0, 0) -> (1, 0))');
         expect(spiderMove.toString()).toEqual('HiveMoveSpider((0, 0) -> (3, 0))');
         expect(HiveMove.PASS.toString()).toEqual('HiveMovePass');

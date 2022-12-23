@@ -7,6 +7,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveMove } from './HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
@@ -138,6 +139,16 @@ export class HiveComponent
     public isSelected(piece: HivePiece): boolean {
         console.log('isSelected(' + piece.toString() + ')?' + this.selectedRemaining.equalsValue(piece))
         return this.selectedRemaining.equalsValue(piece);
+    }
+
+    public async selectSpace(coord: Coord): Promise<MGPValidation> {
+        console.log('selectSpace')
+        if (this.selectedRemaining.isPresent()) {
+            const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord.x, coord.y);
+            return this.chooseMove(move, this.getState());
+        } else {
+            throw new Error('TODO');
+        }
     }
 
     // TODO: the rest here is stolen from SixComponent, try to generalize this

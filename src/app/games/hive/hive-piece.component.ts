@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, Input, OnInit } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -10,7 +10,7 @@ import { HivePiece } from './HivePiece';
     templateUrl: './hive-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class HivePieceComponent implements OnInit {
+export class HivePieceComponent implements AfterContentChecked {
 
     @Input() piece: HivePiece;
     @Input() coord: Coord;
@@ -20,11 +20,11 @@ export class HivePieceComponent implements OnInit {
 
     public pieceClasses: string[] = [];
 
-    public ngOnInit() {
+    public ngAfterContentChecked() {
+        // This needs to be done after every content check,
+        // otherwise modifcations to selected will not be properly propagated
         this.pieceClasses = [this.getPlayerClass(this.piece.owner)];
-        console.log('init ' + this.piece.toString())
         if (this.selected) {
-            console.log('selected!')
             this.pieceClasses.push('selected-stroke');
         }
     }

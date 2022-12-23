@@ -163,11 +163,25 @@ describe('HiveRules', () => {
             ];
             const state: HiveState = HiveState.fromRepresentation(board, 4);
 
-            // When tring to drop yet another beetle
+            // When trying to drop yet another beetle
             const move: HiveMove = HiveMove.drop(B, 4, 0);
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DROP_PIECE_YOU_DONT_HAVE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+        fit('should forbid dropping a piece of the opponent', () => {
+            // Given any state
+            const board: Table<HivePiece[]> = [
+                [[Q]],
+            ];
+            const state: HiveState = HiveState.fromRepresentation(board, 1);
+
+            // When trying to drop a piece of the opponent
+            const move: HiveMove = HiveMove.drop(B, 0, 1);
+
+            // Then the move should fail
+            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
