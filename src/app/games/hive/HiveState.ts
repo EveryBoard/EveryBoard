@@ -147,6 +147,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     public override setAt(coord: Coord, pieces: HivePieceStack): void {
         for (const player of Player.PLAYERS) {
             // If there was a queen bee here, we remove it from the cache
+            console.log('queen bee deleted')
             if (this.queenBees.get(player).equalsValue(coord)) {
                 this.queenBees.delete(player);
             }

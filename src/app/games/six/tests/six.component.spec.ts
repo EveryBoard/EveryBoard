@@ -22,8 +22,7 @@ describe('SixComponent', () => {
         testUtils = await ComponentTestUtils.forGame<SixComponent>('Six');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click (drop/selection)', () => {
         it('should cancel move when clicking on opponent piece', fakeAsync(async() => {

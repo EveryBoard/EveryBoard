@@ -4,7 +4,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -40,7 +42,11 @@ export class HiveComponent
     public pieces: PieceWithCoord[] = [];
     public neighbors: Coord[] = [];
 
-    public selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
+    private selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
+    private selectedStart: MGPOptional<Coord> = MGPOptional.empty();
+    private selectedSpiderCoords: Coord[] = [];
+
+    public selected: Coord[] = [];
 
     public viewBox: string;
 
@@ -84,6 +90,13 @@ export class HiveComponent
             neighbors.add(new Coord(0, 0));
         }
         return neighbors.toList();
+    }
+
+    public cancelMoveAttempt(): void {
+        this.selectedRemaining = MGPOptional.empty();
+        this.selectedStart = MGPOptional.empty();
+        this.selectedSpiderCoords = [];
+        this.selected = [];
     }
 
     public computeRemainingPiecesPosition(): Coord[] {
@@ -130,25 +143,67 @@ export class HiveComponent
         return 4;
     }
 
-    public selectRemaining(piece: HivePiece): void {
+    public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
         this.cancelMoveAttempt();
-        console.log('selecting ' + piece.toString())
+        if (piece.owner !== this.getCurrentPlayer()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        }
         this.selectedRemaining = MGPOptional.of(piece);
+        this.selected.push(this.getRemainingPieceCoord(piece)) // TODO
+        return MGPValidation.SUCCESS;
     }
 
-    public isSelected(piece: HivePiece): boolean {
-        console.log('isSelected(' + piece.toString() + ')?' + this.selectedRemaining.equalsValue(piece))
+    public isRemainingSelected(piece: HivePiece): boolean {
         return this.selectedRemaining.equalsValue(piece);
     }
 
     public async selectSpace(coord: Coord): Promise<MGPValidation> {
-        console.log('selectSpace')
+        const state: HiveState = this.getState();
+        const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
             const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord.x, coord.y);
-            return this.chooseMove(move, this.getState());
-        } else {
-            throw new Error('TODO');
+            return this.chooseMove(move, state);
         }
+        if (this.selectedStart.isPresent()) {
+            const topPiece: HivePiece = state.getAt(this.selectedStart.get()).topPiece();
+            if (topPiece instanceof HivePieceSpider) {
+                return this.selectNextSpiderSpace(coord, topPiece);
+            } else {
+                const move: HiveMove = HiveMove.move(this.selectedStart.get(), coord);
+                return this.chooseMove(move, state);
+            }
+        } else {
+            if (stack.topPiece().owner !== state.getCurrentPlayer()) {
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            }
+            this.selectedStart = MGPOptional.of(coord);
+            this.selected.push(coord);
+        }
+        return MGPValidation.SUCCESS;
+    }
+
+    private async selectNextSpiderSpace(coord: Coord, spider: HivePieceSpider): Promise<MGPValidation> {
+        if (this.selectedSpiderCoords.length === 0) {
+            this.selectedSpiderCoords.push(this.selectedStart.get());
+        }
+        this.selectedSpiderCoords.push(coord);
+        if (this.selectedSpiderCoords.length === 4) {
+            const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
+            return this.chooseMove(move, this.getState());
+        }
+        const validity: MGPFallible<void> = spider.prefixValidity(this.selectedSpiderCoords.reverse(), this.getState());
+        if (validity.isFailure()) {
+            return this.cancelMove(validity.getReason());
+        }
+        return MGPValidation.SUCCESS;
+    }
+
+    public isSelected(coord: Coord): boolean {
+        console.log(`isSelected(${coord.toString()}`)
+        if (this.selectedStart.equalsValue(coord)) return true;
+        if (this.selectedSpiderCoords.some((selected: Coord) => selected.equals(coord))) return true;
+        console.log('not selected')
+        return false;
     }
 
     // TODO: the rest here is stolen from SixComponent, try to generalize this

@@ -24,9 +24,6 @@ export class HivePieceComponent implements AfterContentChecked {
         // This needs to be done after every content check,
         // otherwise modifcations to selected will not be properly propagated
         this.pieceClasses = [this.getPlayerClass(this.piece.owner)];
-        if (this.selected) {
-            this.pieceClasses.push('selected-stroke');
-        }
     }
 
     // TODO: this is a duplicate from GameComponent. Put this in common somehow (static method on GameComponent, or have a BaseComponent containing such method, inherited by all other components, including HivePieceComponent?)

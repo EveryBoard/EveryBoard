@@ -188,7 +188,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             if (topPiece.owner === player) {
                 for (const move of topPiece.getPossibleMoves(coord, state)) {
                     if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
-                        console.log(move.toString())
                         moves.add(move);
                     }
                 }

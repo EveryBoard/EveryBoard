@@ -162,6 +162,26 @@ export class HivePieceSpider extends HivePiece {
         super(owner, 'Spider', true);
     }
 
+    public prefixValidity(coords: Coord[], state: HiveState): MGPFallible<void> {
+        const visited: MGPSet<Coord> = new MGPSet();
+        for (let i: number = 1; i < coords.length; i++) {
+            if (state.getAt(coords[i]).isEmpty() === false) {
+                return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_ON_EMPTY_SPACES());
+            }
+            if (HexagonalUtils.areNeighbors(coords[i-1], coords[i]) === false) {
+                return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_OF_3_NEIGHBORS());
+            }
+            if (this.haveCommonNeighbor(state, coords[i], coords[i-1]) === false) {
+                return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT());
+            }
+            if (visited.contains(coords[i])) {
+                return MGPFallible.failure(HiveFailure.SPIDER_CANNOT_BACKTRACK());
+            }
+            visited.add(coords[i]);
+        }
+        return MGPFallible.success(undefined);
+    }
+
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         if (this.destinationIsEmpty(move, state) === false) {
             return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
@@ -169,23 +189,7 @@ export class HivePieceSpider extends HivePiece {
 
         Utils.assert(move instanceof HiveMoveSpider, 'move should be a spider move');
         const spiderMove: HiveMoveSpider = move as HiveMoveSpider;
-        const visited: MGPSet<Coord> = new MGPSet();
-        for (let i: number = 1; i <= 3; i++) {
-            if (state.getAt(spiderMove.coords[i]).isEmpty() === false) {
-                return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_ON_EMPTY_SPACES());
-            }
-            if (HexagonalUtils.areNeighbors(spiderMove.coords[i-1], spiderMove.coords[i]) === false) {
-                return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_OF_3_NEIGHBORS());
-            }
-            if (this.haveCommonNeighbor(state, spiderMove.coords[i], spiderMove.coords[i-1]) === false) {
-                return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT());
-            }
-            if (visited.contains(spiderMove.coords[i])) {
-                return MGPFallible.failure(HiveFailure.SPIDER_CANNOT_BACKTRACK());
-            }
-            visited.add(spiderMove.coords[i]);
-        }
-        return MGPFallible.success(undefined);
+        return this.prefixValidity(spiderMove.coords, state);
     }
 
     private haveCommonNeighbor(state: HiveState, coord1: Coord, coord2: Coord): boolean {

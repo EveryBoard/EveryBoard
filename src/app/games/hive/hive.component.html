@@ -8,7 +8,9 @@
        [piece]="piece.stack.topPiece()"
        [numberOfPieces]="piece.stack.size()"
        [coord]="piece.coord"
-       [hexaLayout]="hexaLayout"/>
+       [hexaLayout]="hexaLayout"
+       [selected]="isSelected(piece.coord)"
+       (click)="selectSpace(piece.coord)"/>
     <polygon *ngFor="let neighbor of neighbors"
              id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
@@ -22,7 +24,10 @@
           [piece]="pieceAndCount[0]"
           [coord]="getRemainingPieceCoord(pieceAndCount[0])"
           [hexaLayout]="hexaLayout"
-          [selected]="isSelected(pieceAndCount[0]) && y === pieceAndCount[1] - 1"
+          [selected]="isRemainingSelected(pieceAndCount[0]) && y === pieceAndCount[1] - 1"
           (click)="selectRemaining(pieceAndCount[0])"/>
     </g>
+    <polygon *ngFor="let coord of selected"
+             [attr.points]="getHexaCoordsAt(coord)"
+             class="base no-fill round selected-stroke" />
 </svg>
