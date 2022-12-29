@@ -14,7 +14,7 @@
     <polygon *ngFor="let neighbor of neighbors"
              id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
-             class="base round"
+             class="base"
              (click)="selectSpace(neighbor)"/>
     <g *ngFor="let pieceAndCount of remainingPieces">
        <g *ngFor="let y of range(pieceAndCount[1])"
@@ -29,5 +29,5 @@
     </g>
     <polygon *ngFor="let coord of selected"
              [attr.points]="getHexaCoordsAt(coord)"
-             class="base no-fill round selected-stroke" />
+             class="base no-fill selected-stroke" />
 </svg>

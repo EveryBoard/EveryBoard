@@ -200,10 +200,8 @@ export class HiveComponent
     }
 
     public isSelected(coord: Coord): boolean {
-        console.log(`isSelected(${coord.toString()}`)
         if (this.selectedStart.equalsValue(coord)) return true;
         if (this.selectedSpiderCoords.some((selected: Coord) => selected.equals(coord))) return true;
-        console.log('not selected')
         return false;
     }
 

@@ -1,5 +1,6 @@
+import { Utils } from '../utils/utils';
 import { Coord } from './Coord';
-import { HexaOrientation } from './HexaOrientation';
+import { FlatHexaOrientation, HexaOrientation } from './HexaOrientation';
 
 export class HexaLayout {
     public constructor(public readonly size: number,
@@ -33,5 +34,34 @@ export class HexaLayout {
         }
         desc += coords[0].x + ' ' + coords[0].y;
         return desc;
+    }
+    /**
+     * Returns the points to draw two polygons to render an hexagon in an isometric view.
+     * The first polygon is the one on the bottom left.
+     * The second polygon is the one on the bottom and bottom right.
+     * So far, only used in a pointy orientation, may need to be adapted for a flat orientation.
+     */
+    public getIsoPoints(coord: Coord, height: number): [Coord[], Coord[]] {
+        Utils.assert(this.orientation === FlatHexaOrientation.INSTANCE, 'HexaLayout.getIsoPoints can only be used with flat orientation');
+        const center: Coord = this.getCenterAt(coord);
+        const right: Coord = this.getCornerOffset(0);
+        const bottomRight: Coord = this.getCornerOffset(1);
+        const bottomLeft: Coord = this.getCornerOffset(2);
+        const left: Coord = this.getCornerOffset(3);
+        const bottomLeftPolygon: Coord[] = [
+            new Coord(center.x + left.x, center.y + left.y),
+            new Coord(center.x + left.x, center.y + left.y + height),
+            new Coord(center.x + bottomLeft.x, center.y + bottomLeft.y + height),
+            new Coord(center.x + bottomLeft.x, center.y + bottomLeft.y),
+        ];
+        const bottomRightPolygon: Coord[] = [
+            new Coord(center.x + right.x, center.y + right.y),
+            new Coord(center.x + right.x, center.y + right.y + height),
+            new Coord(center.x + bottomRight.x, center.y + bottomRight.y + height),
+            new Coord(center.x + bottomLeft.x, center.y + bottomLeft.y + height),
+            new Coord(center.x + bottomLeft.x, center.y + bottomLeft.y),
+            new Coord(center.x + bottomRight.x, center.y + bottomRight.y),
+        ];
+        return [bottomLeftPolygon, bottomRightPolygon];
     }
 }

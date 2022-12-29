@@ -55,7 +55,7 @@ fdescribe('HivePiece', () => {
         // Then we should have exactly 3 moves
         expect(G.getPossibleMoves(new Coord(2, 0), state).length).toBe(3);
     });
-    fit('should compute all possible moves for the spider', () => {
+    it('should compute all possible moves for the spider', () => {
         // Given a state
         const board: Table<HivePiece[]> = [
             [[Q], [S], [], [A]],

@@ -200,4 +200,7 @@ export class Coord implements ComparableObject {
     public toString(): string {
         return '(' + this.x + ', ' + this.y + ')';
     }
+    public toSVGCoord(): string {
+        return this.x + ',' + this.y;
+    }
 }

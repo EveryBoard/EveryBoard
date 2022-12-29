@@ -172,7 +172,7 @@ describe('HiveRules', () => {
             const reason: string = HiveFailure.CANNOT_DROP_PIECE_YOU_DONT_HAVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        fit('should forbid dropping a piece of the opponent', () => {
+        it('should forbid dropping a piece of the opponent', () => {
             // Given any state
             const board: Table<HivePiece[]> = [
                 [[Q]],
