@@ -197,6 +197,9 @@ export class HivePieceSpider extends HivePiece {
     }
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
+        const stateWithoutSpider: HiveState = state.getCopy();
+        stateWithoutSpider.setAt(coord, HivePieceStack.EMPTY);
+
         let moves: Coord[][] = [[coord]];
         for (let i: number = 0; i < 3; i++) {
             moves = moves.flatMap((move: Coord[]) => {
@@ -204,11 +207,11 @@ export class HivePieceSpider extends HivePiece {
                 return new MGPSet(HexagonalUtils.neighbors(lastCoord))
                     .filter((coord: Coord): boolean =>
                         // We can only go through empty spaces
-                        state.getAt(coord).isEmpty() &&
+                        stateWithoutSpider.getAt(coord).isEmpty() &&
                         // We cannot backtrack
                         move.find((coord2: Coord) => coord.equals(coord2)) === undefined &&
                         // Must have a common neighbor with the previous coord
-                        this.haveCommonNeighbor(state, coord, lastCoord))
+                        this.haveCommonNeighbor(stateWithoutSpider, coord, lastCoord))
                     .toList()
                     .map((coord: Coord): Coord[] => [...move, coord]);
             });
@@ -234,6 +237,10 @@ export class HivePieceSoldierAnt extends HivePiece {
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
         const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
         for (const occupiedSpace of state.occupiedSpaces()) {
+            if (occupiedSpace.equals(coord)) {
+                // We will move so we don't look at this space
+                continue;
+            }
             for (const unoccupied of state.emptyNeighbors(occupiedSpace)) {
                 moves.add(new HiveMoveCoordToCoord(coord, unoccupied));
             }

@@ -68,7 +68,8 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
     }
 
     public toString(): string {
-        return `HiveMoveSpider(${this.coords[0].toString()} -> ${this.coords[3].toString()})`;
+        const coords: string = this.coords.map((coord: Coord) => coord.toString()).join(', ');
+        return `HiveMoveSpider(${coords})`;
     }
 
     public equals(other: HiveMove): boolean {

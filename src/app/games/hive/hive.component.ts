@@ -11,6 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
+import { HiveDummyMinimax } from './HiveDummyMinimax';
 import { HiveMove } from './HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
 import { HiveRules } from './HiveRules';
@@ -54,7 +55,7 @@ export class HiveComponent
         super(messageDisplayer);
         this.rules = HiveRules.get();
         this.availableMinimaxes = [
-            // TODO
+            new HiveDummyMinimax(this.rules, 'HiveDummyMinimax'),
         ];
         this.encoder = HiveMove.encoder;
         this.tutorial = new HiveTutorial().tutorial;

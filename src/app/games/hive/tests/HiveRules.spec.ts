@@ -6,6 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { HiveDummyMinimax } from '../HiveDummyMinimax';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove } from '../HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from '../HivePiece';
@@ -30,6 +31,7 @@ describe('HiveRules', () => {
     beforeEach(() => {
         rules = HiveRules.get();
         minimaxes = [
+            new HiveDummyMinimax(rules, 'HiveDummyMinimax'),
         ];
     });
 

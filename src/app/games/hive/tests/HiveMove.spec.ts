@@ -3,7 +3,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { HiveMove } from '../HiveMove';
 import { HivePieceQueenBee } from '../HivePiece';
 
-fdescribe('HiveMove', () => {
+describe('HiveMove', () => {
     const drop: HiveMove = HiveMove.drop(new HivePieceQueenBee(Player.ZERO), 0, 0);
     const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 0));
     const spiderMove: HiveMove = HiveMove.spiderMove([

@@ -55,7 +55,7 @@ fdescribe('HivePiece', () => {
         // Then we should have exactly 3 moves
         expect(G.getPossibleMoves(new Coord(2, 0), state).length).toBe(3);
     });
-    it('should compute all possible moves for the spider', () => {
+    fit('should compute all possible moves for the spider', () => {
         // Given a state
         const board: Table<HivePiece[]> = [
             [[Q], [S], [], [A]],
@@ -65,7 +65,10 @@ fdescribe('HivePiece', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 4);
 
         // When computing the possible moves for the spider
-        // Then we should have exactly TODO moves
+        // Then we should have exactly 2 moves
+        for (const move of S.getPossibleMoves(new Coord(1, 0), state)) {
+            console.log(move.toString())
+        }
         expect(S.getPossibleMoves(new Coord(1, 0), state).length).toBe(2);
     });
     it('should compute all possible moves for the soldier ant', () => {

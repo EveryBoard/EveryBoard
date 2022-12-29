@@ -94,7 +94,6 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
                         queenBees.set(queenBee.get().owner, new Coord(x, y));
                     }
                     for (const piece of board[y][x]) {
-                        console.log('removing ' + piece.toString());
                         remainingPieces.remove(piece);
                     }
                 }
