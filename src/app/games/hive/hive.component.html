@@ -2,6 +2,11 @@
      width="100%" height="100%"
      [attr.viewBox]="viewBox"
      preserveAspectRatio="xMidYMid meet">
+   <polygon *ngFor="let neighbor of neighbors"
+             id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
+             [attr.points]="getHexaCoordsAt(neighbor)"
+             class="base"
+             (click)="selectSpace(neighbor)"/>
     <g *ngFor="let piece of pieces"
        id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
        app-hive-piece
@@ -11,11 +16,6 @@
        [hexaLayout]="hexaLayout"
        [selected]="isSelected(piece.coord)"
        (click)="selectSpace(piece.coord)"/>
-    <polygon *ngFor="let neighbor of neighbors"
-             id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
-             [attr.points]="getHexaCoordsAt(neighbor)"
-             class="base"
-             (click)="selectSpace(neighbor)"/>
     <g *ngFor="let pieceAndCount of remainingPieces">
        <g *ngFor="let y of range(pieceAndCount[1])"
           id="remainingPiece_{{ pieceAndCount[0].toString() }}_{{ pieceAndCount[1] }}_{{ y }}_{{ pieceAndCount[1] }}"

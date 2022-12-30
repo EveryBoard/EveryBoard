@@ -72,6 +72,10 @@ export class HiveComponent
             const stack: HivePieceStack = this.getState().getAt(coord);
             this.pieces.push({ coord, stack });
         }
+        this.pieces.sort((piece1: PieceWithCoord, piece2: PieceWithCoord): number => {
+            if (piece1.coord.y === piece2.coord.y) return piece1.coord.x - piece2.coord.x;
+            else return piece1.coord.y - piece2.coord.y;
+        });
         this.neighbors = this.getAllNeighbors();
         this.computeViewBoxAndRemainingCoords();
         this.remainingPieces = this.getState().remainingPieces.toList();

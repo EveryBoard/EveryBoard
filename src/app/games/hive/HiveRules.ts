@@ -30,6 +30,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     }
 
     public applyLegalMove(move: HiveMove, state: HiveState, info: void): HiveState {
+        console.log('applying move: ' + move.toString());
         if (move instanceof HiveMoveDrop) {
             return this.applyLegalDrop(move, state);
         } else if (move instanceof HiveMoveCoordToCoord) {

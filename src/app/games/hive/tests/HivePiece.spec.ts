@@ -5,7 +5,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from '../HivePiece';
 import { HiveState } from '../HiveState';
 
-fdescribe('HivePiece', () => {
+describe('HivePiece', () => {
     const Q: HivePiece = new HivePieceQueenBee(Player.ZERO);
     const B: HivePiece = new HivePieceBeetle(Player.ZERO);
     const G: HivePiece = new HivePieceGrasshopper(Player.ZERO);
