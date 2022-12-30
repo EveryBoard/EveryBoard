@@ -47,7 +47,9 @@ export class HiveComponent
     private selectedStart: MGPOptional<Coord> = MGPOptional.empty();
     private selectedSpiderCoords: Coord[] = [];
 
-    public selected: Coord[] = [];
+    public PIECE_HEIGHT: number;
+
+    public selected: { coord: Coord, height: number }[] = [];
 
     public viewBox: string;
 
@@ -60,6 +62,7 @@ export class HiveComponent
         this.encoder = HiveMove.encoder;
         this.tutorial = new HiveTutorial().tutorial;
         this.SPACE_SIZE = 30;
+        this.PIECE_HEIGHT = this.SPACE_SIZE / 3;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.5,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
@@ -154,7 +157,7 @@ export class HiveComponent
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selectedRemaining = MGPOptional.of(piece);
-        this.selected.push(this.getRemainingPieceCoord(piece)) // TODO
+        this.selected.push({ coord: this.getRemainingPieceCoord(piece), height: 1 }) // TODO
         return MGPValidation.SUCCESS;
     }
 
@@ -182,7 +185,7 @@ export class HiveComponent
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
             this.selectedStart = MGPOptional.of(coord);
-            this.selected.push(coord);
+            this.selected.push({ coord, height: stack.size() });
         }
         return MGPValidation.SUCCESS;
     }

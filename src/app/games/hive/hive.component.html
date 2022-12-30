@@ -11,6 +11,7 @@
        id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
        app-hive-piece
        [piece]="piece.stack.topPiece()"
+       [pieceHeight]="PIECE_HEIGHT"
        [numberOfPieces]="piece.stack.size()"
        [coord]="piece.coord"
        [hexaLayout]="hexaLayout"
@@ -22,12 +23,14 @@
           app-hive-piece
           [attr.transform]="'translate(0, ' + (y*SPACE_SIZE) + ')'"
           [piece]="pieceAndCount[0]"
+          [pieceHeight]="PIECE_HEIGHT"
           [coord]="getRemainingPieceCoord(pieceAndCount[0])"
           [hexaLayout]="hexaLayout"
           [selected]="isRemainingSelected(pieceAndCount[0]) && y === pieceAndCount[1] - 1"
           (click)="selectRemaining(pieceAndCount[0])"/>
     </g>
-    <polygon *ngFor="let coord of selected"
-             [attr.points]="getHexaCoordsAt(coord)"
+    <polygon *ngFor="let coordAndHeight of selected"
+             [attr.transform]="'translate(0 ' + -coordAndHeight.height*PIECE_HEIGHT+ ')'"
+             [attr.points]="getHexaCoordsAt(coordAndHeight.coord)"
              class="base no-fill selected-stroke" />
 </svg>

@@ -13,6 +13,7 @@ import { HivePiece } from './HivePiece';
 export class HivePieceComponent implements AfterContentChecked {
 
     @Input() piece: HivePiece;
+    @Input() pieceHeight: number;
     @Input() coord: Coord;
     @Input() hexaLayout: HexaLayout;
     @Input() numberOfPieces: number;
@@ -23,7 +24,6 @@ export class HivePieceComponent implements AfterContentChecked {
     public isoPointsLight: string = '';
     public isoPointsDark: string = '';
     public hexaCenter: Coord = new Coord(0, 0);
-    public readonly PIECE_HEIGHT: number = 10;
 
     public ngAfterContentChecked() {
         // This needs to be done after every content check,
@@ -31,7 +31,7 @@ export class HivePieceComponent implements AfterContentChecked {
         this.pieceClasses = [this.getPlayerClass(this.piece.owner)];
         this.hexaPoints = this.hexaLayout.getHexaCoordsAt(this.coord);
         this.hexaCenter = this.hexaLayout.getCenterAt(this.coord);
-        const isoPoints: [Coord[], Coord[]] = this.hexaLayout.getIsoPoints(this.coord, this.PIECE_HEIGHT);
+        const isoPoints: [Coord[], Coord[]] = this.hexaLayout.getIsoPoints(this.coord, this.pieceHeight);
         this.isoPointsLight = isoPoints[0].map((coord: Coord) => coord.toSVGCoord()).join(' ');
         this.isoPointsDark = isoPoints[1].map((coord: Coord) => coord.toSVGCoord()).join(' ');
     }
