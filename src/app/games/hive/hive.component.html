@@ -10,9 +10,8 @@
     <g *ngFor="let piece of pieces"
        id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
        app-hive-piece
-       [piece]="piece.stack.topPiece()"
+       [stack]="piece.stack"
        [pieceHeight]="PIECE_HEIGHT"
-       [numberOfPieces]="piece.stack.size()"
        [coord]="piece.coord"
        [hexaLayout]="hexaLayout"
        [selected]="isSelected(piece.coord)"
@@ -22,7 +21,7 @@
           id="remainingPiece_{{ pieceAndCount[0].toString() }}_{{ pieceAndCount[1] }}_{{ y }}_{{ pieceAndCount[1] }}"
           app-hive-piece
           [attr.transform]="'translate(0, ' + (y*SPACE_SIZE) + ')'"
-          [piece]="pieceAndCount[0]"
+          [stack]="pieceAndCount[0]"
           [pieceHeight]="PIECE_HEIGHT"
           [coord]="getRemainingPieceCoord(pieceAndCount[0])"
           [hexaLayout]="hexaLayout"

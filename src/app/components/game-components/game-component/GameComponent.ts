@@ -13,6 +13,37 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 /**
+ * Define some methods that are useful to have in game components.
+ * We can't define these in GameComponent itself, as they are required
+ * by sub components which themselves are not GameComponent subclasses
+ */
+export abstract class BaseGameComponent {
+    /**
+     * Enables doing *ngFor="let x in range(5)" in an Angular template
+     */
+    public range(n: number): number[] {
+        const range: number[] = [];
+        for (let i: number = 0; i < n; i++) {
+            range.push(i);
+        }
+        return range;
+    }
+
+    /**
+     * Gets the CSS class for a player color
+     */
+    public getPlayerClass(player: PlayerOrNone): string {
+        switch (player) {
+            case Player.ZERO: return 'player0-fill';
+            case Player.ONE: return 'player1-fill';
+            default:
+                Utils.expectToBe(player, PlayerOrNone.NONE);
+                return '';
+        }
+    }
+}
+
+/**
  * All method are to be implemented by the "final" GameComponent classes
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
@@ -25,6 +56,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L = void>
+    extends BaseGameComponent
 {
     public encoder: MoveEncoder<M>;
 
@@ -72,6 +104,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
      */
 
     constructor(public readonly messageDisplayer: MessageDisplayer) {
+        super();
     }
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
@@ -91,15 +124,6 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
     public abstract updateBoard(): void;
 
-    public getPlayerClass(player: PlayerOrNone): string {
-        switch (player) {
-            case Player.ZERO: return 'player0-fill';
-            case Player.ONE: return 'player1-fill';
-            default:
-                Utils.expectToBe(player, PlayerOrNone.NONE);
-                return '';
-        }
-    }
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
         const error: string = `pass() called on a game that does not redefine it`;
@@ -116,13 +140,6 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
     public getPreviousState(): S {
         return this.rules.node.mother.get().gameState;
-    }
-    public range(n: number): number[] {
-        const range: number[] = [];
-        for (let i: number = 0; i < n; i++) {
-            range.push(i);
-        }
-        return range;
     }
 }
 

@@ -38,7 +38,7 @@ interface PieceWithCoord {
 export class HiveComponent
     extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 
-    public remainingPieces: [HivePiece, number][] = [];
+    public remainingPieces: [HivePieceStack, number][] = [];
     private remainingPiecesPositions: { left: number, top: number, bottom: number };
     public pieces: PieceWithCoord[] = [];
     public neighbors: Coord[] = [];
@@ -70,6 +70,7 @@ export class HiveComponent
     }
 
     public updateBoard(): void {
+        // TODO: player should be able to pass when needed
         this.pieces = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
@@ -81,7 +82,10 @@ export class HiveComponent
         });
         this.neighbors = this.getAllNeighbors();
         this.computeViewBoxAndRemainingCoords();
-        this.remainingPieces = this.getState().remainingPieces.toList();
+        this.remainingPieces = this.getState().remainingPieces.toList()
+            // TODO: improve this
+            .map((pieceAndCount: [HivePiece, number]) =>
+                [new HivePieceStack([pieceAndCount[0]]), pieceAndCount[1]]);
     }
 
     private computeViewBoxAndRemainingCoords(): void {
@@ -117,28 +121,28 @@ export class HiveComponent
             if (coord.y > below) below = coord.y;
         }
         // Remaining pieces will appear on the left
-        const minX: number = left;
+        const minX: number = left - 4
         // There can be up to 5 types of remaining pieces
         const maxX: number = left + 4;
-        // Pieces will be above and below, one space away from the board
+        // Pieces will be above and below, one space away from empty spaces of the board
         const minY: number = above - 2;
-        const maxY: number = below + 2;
+        const maxY: number = below + 5;
 
-        this.remainingPiecesPositions = { left, top: minY, bottom: maxY };
-        return [new Coord(minX*2, minY), new Coord(maxX*2, maxY)];
+        this.remainingPiecesPositions = { left: minX, top: minY, bottom: maxY };
+        return [new Coord(minX, minY), new Coord(maxX, maxY)];
     }
 
-
-    public getRemainingPieceCoord(piece: HivePiece): Coord {
+    public getRemainingPieceCoord(stack: HivePieceStack): Coord {
+        const piece: HivePiece = stack.topPiece();
         const x: number = this.getRemainingPieceShift(piece);
 
         // TODO: change based on role
         if (piece.owner === Player.ZERO) {
             // Player zero is below
-            return new Coord(x*2, this.remainingPiecesPositions.bottom-x);
+            return new Coord(this.remainingPiecesPositions.left + x*2, this.remainingPiecesPositions.bottom-x);
         } else {
             // Player one is above
-            return new Coord(x*2, this.remainingPiecesPositions.top-x);
+            return new Coord(this.remainingPiecesPositions.left + x*2, this.remainingPiecesPositions.top-x);
         }
     }
 
@@ -151,18 +155,19 @@ export class HiveComponent
         return 4;
     }
 
-    public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
+    public async selectRemaining(stack: HivePieceStack): Promise<MGPValidation> {
         this.cancelMoveAttempt();
+        const piece: HivePiece = stack.topPiece();
         if (piece.owner !== this.getCurrentPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selectedRemaining = MGPOptional.of(piece);
-        this.selected.push({ coord: this.getRemainingPieceCoord(piece), height: 1 }) // TODO
+        this.selected.push({ coord: this.getRemainingPieceCoord(new HivePieceStack([piece])), height: 1 }) // TODO
         return MGPValidation.SUCCESS;
     }
 
-    public isRemainingSelected(piece: HivePiece): boolean {
-        return this.selectedRemaining.equalsValue(piece);
+    public isRemainingSelected(stack: HivePieceStack): boolean {
+        return this.selectedRemaining.equalsValue(stack.topPiece());
     }
 
     public async selectSpace(coord: Coord): Promise<MGPValidation> {

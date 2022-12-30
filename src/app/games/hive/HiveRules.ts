@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveFailure } from './HiveFailure';
 import { HiveMoveDrop, HiveMove, HiveMoveCoordToCoord } from './HiveMove';
-import { HivePiece, HivePieceStack } from './HivePiece';
+import { HivePiece, HivePieceQueenBee, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
 
 export class HiveNode extends MGPNode<HiveRules, HiveMove, HiveState> {}
@@ -127,7 +127,10 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         // The queen bee must be placed at the latest at the fourth turn of a player
-        if (state.turn >= 6 && state.queenBeeLocation(player).isAbsent()) {
+        if (move.piece instanceof HivePieceQueenBee === false &&
+            state.turn >= 6 &&
+            state.queenBeeLocation(player).isAbsent())
+        {
             return MGPFallible.failure(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 

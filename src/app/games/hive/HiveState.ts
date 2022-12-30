@@ -64,7 +64,6 @@ export class HiveRemainingPieces implements ComparableObject {
             remaining.push([item.key, item.value]);
         });
         return remaining;
-
     }
 }
 

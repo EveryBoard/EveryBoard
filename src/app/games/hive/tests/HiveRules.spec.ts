@@ -116,6 +116,24 @@ describe('HiveRules', () => {
             const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+        it('should allow dropping the queen bee at the fourth turn of a player', () => {
+            // Given a state in the fourth turn of player zero, without queen bee
+            const board: Table<HivePiece[]> = [
+                [[B], [G], [S], [b], [g], [s]],
+            ];
+            const state: HiveState = HiveState.fromRepresentation(board, 6);
+
+            // When dropping the queen bee
+            const move: HiveMove = HiveMove.drop(Q, 0, 1);
+
+            // Then the move should succeed
+            const expectedBoard: Table<HivePiece[]> = [
+                [[B], [G], [S], [b], [g], [s]],
+                [[Q], [], [], [], [], []],
+            ];
+            const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 7);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        });
         it('should force dropping the queen bee by the fourth turn of a player (Player.ZERO)', () => {
             // Given a state in the fourth turn of player zero, without queen bee
             const board: Table<HivePiece[]> = [
@@ -676,20 +694,19 @@ describe('HiveRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
-    xit('should allow passing if a player cannot perform any action', () => {
-        // Given a board in a stuck position for a player
-        // TODO: does such a board exist?
+    fit('should allow passing if a player cannot perform any action', () => {
+        // Given a board in a stuck position for a player: here, the player cannot
+        // drop a piece nor move one as its only pieces are below an opponent
         const board: Table<HivePiece[]> = [
-            [[G], [G], [G], [Q], [B], [B], [S], [S], [A], [A], [A],
-                [q], [b], [b], [s], [s], [a], [a], [a], [g], [g], [g]],
+            [[Q], [B, b, q]],
         ];
-        const state: HiveState = HiveState.fromRepresentation(board, 4);
+        const state: HiveState = HiveState.fromRepresentation(board, 5);
 
         // When passing
         const move: HiveMove = HiveMove.PASS;
 
         // Then the move should succeed
-        const expectedState: HiveState = HiveState.fromRepresentation(board, 5);
+        const expectedState: HiveState = HiveState.fromRepresentation(board, 6);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid passing if a player can perform any action', () => {
