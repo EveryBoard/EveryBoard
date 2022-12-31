@@ -11,7 +11,7 @@ import { HiveMove } from '../HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from '../HivePiece';
 import { HiveState } from '../HiveState';
 
-describe('HiveComponent', () => {
+fdescribe('HiveComponent', () => {
     let testUtils: ComponentTestUtils<HiveComponent>;
 
     const Q: HivePiece = new HivePieceQueenBee(Player.ZERO);
@@ -34,13 +34,13 @@ describe('HiveComponent', () => {
     });
     describe('drop', () => {
         describe('selection', () => {
-            it('should select one of your pieces by clicking on it', fakeAsync(async() => {
+            fit('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
                 testUtils.setupState(state);
 
                 // When clicking on a remaining piece
-                await testUtils.expectClickSuccess('#remaining_QueenBee_0_0');
+                await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO_0');
 
                 // Then it should be selected
                 testUtils.expectElementToExist('#remaining_highlight');

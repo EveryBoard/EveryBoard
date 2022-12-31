@@ -25,6 +25,45 @@ interface Limits {
     maxY: number
 }
 
+class ViewBox {
+    public constructor(public readonly left: number,
+                       public readonly up: number,
+                       public readonly width: number,
+                       public readonly height: number)
+    {
+    }
+
+    public center(): Coord {
+        return new Coord(this.left + this.width / 2, this.up + this.height / 2);
+    }
+
+    public bottom(): number {
+        return this.up + this.height;
+    }
+
+    public right(): number {
+        return this.left + this.width;
+    }
+
+    public expand(left: number, right: number, above: number, below: number): ViewBox {
+        return new ViewBox(this.left - left, this.up - above, this.width + left + right, this.height + above + below);
+    }
+
+    public containingAtLeast(viewBox: ViewBox): ViewBox {
+        const left: number = Math.max(this.left - viewBox.left, 0);
+        console.log(`my left: ${this.left}, their left: ${viewBox.left}, so I should expand by ${left}`)
+        const right: number = Math.max(viewBox.right() - this.right(), 0);
+        console.log(`my right: ${this.right}, their right: ${viewBox.right}, so I should expand by ${right}`)
+        const above: number = Math.max(this.up - viewBox.up, 0);
+        const below: number = Math.max(viewBox.bottom() - this.bottom(), 0);
+        return this.expand(left, right, above, below);
+    }
+
+    public toSVGString(): string {
+        return `${this.left} ${this.up} ${this.width} ${this.height}`;
+    }
+}
+
 interface PieceWithCoord {
     stack: HivePieceStack;
     coord: Coord;
@@ -38,8 +77,9 @@ interface PieceWithCoord {
 export class HiveComponent
     extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 
-    public remainingPieces: [HivePieceStack, number][] = [];
-    private remainingPiecesPositions: { left: number, top: number, bottom: number };
+    public readonly ORIGIN: Coord = new Coord(0, 0);
+
+    public remainingPieces: HivePieceStack[] = [];
     public pieces: PieceWithCoord[] = [];
     public neighbors: Coord[] = [];
 
@@ -47,10 +87,11 @@ export class HiveComponent
     private selectedStart: MGPOptional<Coord> = MGPOptional.empty();
     private selectedSpiderCoords: Coord[] = [];
 
-    public PIECE_HEIGHT: number;
+    public readonly PIECE_HEIGHT: number;
 
     public selected: { coord: Coord, height: number }[] = [];
 
+    private boardViewBox: ViewBox;
     public viewBox: string;
 
     constructor(messageDisplayer: MessageDisplayer) {
@@ -81,15 +122,27 @@ export class HiveComponent
             else return piece1.coord.y - piece2.coord.y;
         });
         this.neighbors = this.getAllNeighbors();
-        this.computeViewBoxAndRemainingCoords();
-        this.remainingPieces = this.getState().remainingPieces.toList()
-            // TODO: improve this
-            .map((pieceAndCount: [HivePiece, number]) =>
-                [new HivePieceStack([pieceAndCount[0]]), pieceAndCount[1]]);
+        this.computeViewBox();
+        this.remainingPieces = this.getState().remainingPieces.toListOfStacks();
     }
 
-    private computeViewBoxAndRemainingCoords(): void {
-        this.viewBox = this.getViewBox();
+    public minimalViewBox: ViewBox;
+    public actualViewBox: ViewBox;
+    private computeViewBox(): void {
+        this.boardViewBox = this.getViewBox();
+        const minimalViewBox: ViewBox = new ViewBox(
+            this.boardViewBox.center().x - 2.5 * this.SPACE_SIZE * 4,
+            0,
+            this.SPACE_SIZE * 4 * 5,
+            0);
+        this.minimalViewBox = minimalViewBox; // for debug only
+        this.actualViewBox = this.boardViewBox
+            .containingAtLeast(this.minimalViewBox)
+            .expand(0, 0, this.SPACE_SIZE*5, this.SPACE_SIZE*5);
+        this.viewBox = this.boardViewBox
+            .containingAtLeast(this.minimalViewBox)
+            .expand(0, 0, this.SPACE_SIZE*5, this.SPACE_SIZE*5)
+            .toSVGString();
     }
 
     private getAllNeighbors(): Coord[] {
@@ -111,63 +164,45 @@ export class HiveComponent
         this.selected = [];
     }
 
-    public computeRemainingPiecesPosition(): Coord[] {
-        let left: number = 0;
-        let above: number = 0;
-        let below: number = 0;
-        for (const coord of this.getState().occupiedSpaces()) {
-            if (coord.x < left) left = coord.x;
-            if (coord.y < above) above = coord.y;
-            if (coord.y > below) below = coord.y;
-        }
-        // Remaining pieces will appear on the left
-        const minX: number = left - 4
-        // There can be up to 5 types of remaining pieces
-        const maxX: number = left + 4;
-        // Pieces will be above and below, one space away from empty spaces of the board
-        const minY: number = above - 2;
-        const maxY: number = below + 5;
-
-        this.remainingPiecesPositions = { left: minX, top: minY, bottom: maxY };
-        return [new Coord(minX, minY), new Coord(maxX, maxY)];
-    }
-
-    public getRemainingPieceCoord(stack: HivePieceStack): Coord {
-        const piece: HivePiece = stack.topPiece();
-        const x: number = this.getRemainingPieceShift(piece);
-
+    public getRemainingPieceTransform(piece: HivePiece): string {
+        const shift: number = this.getRemainingPieceShift(piece);
+        const x: number = this.boardViewBox.center().x + shift * this.SPACE_SIZE * 4;
         // TODO: change based on role
+        let y: number;
         if (piece.owner === Player.ZERO) {
             // Player zero is below
-            return new Coord(this.remainingPiecesPositions.left + x*2, this.remainingPiecesPositions.bottom-x);
+            y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 3);
         } else {
-            // Player one is above
-            return new Coord(this.remainingPiecesPositions.left + x*2, this.remainingPiecesPositions.top-x);
+            y = this.boardViewBox.up - (this.SPACE_SIZE * 2);
         }
+        return `translate(${x} ${y})`;
     }
 
     private getRemainingPieceShift(piece: HivePiece): number {
-        if (piece instanceof HivePieceQueenBee) return 0;
-        if (piece instanceof HivePieceBeetle) return 1;
-        if (piece instanceof HivePieceGrasshopper) return 2;
-        if (piece instanceof HivePieceSpider) return 3;
+        if (piece instanceof HivePieceQueenBee) return -2.5;
+        if (piece instanceof HivePieceBeetle) return -1.5;
+        if (piece instanceof HivePieceGrasshopper) return -0.5;
+        if (piece instanceof HivePieceSpider) return 0.5;
         Utils.assert(piece instanceof HivePieceSoldierAnt, 'piece must be a soldier ant');
-        return 4;
+        return 1.5;
     }
 
-    public async selectRemaining(stack: HivePieceStack): Promise<MGPValidation> {
+    public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay(`#remainingPiece_${piece.toString() }`);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         this.cancelMoveAttempt();
-        const piece: HivePiece = stack.topPiece();
         if (piece.owner !== this.getCurrentPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selectedRemaining = MGPOptional.of(piece);
-        this.selected.push({ coord: this.getRemainingPieceCoord(new HivePieceStack([piece])), height: 1 }) // TODO
+        // TODO this.selected.push({ coord: this.getRemainingPieceCoord(piece), height: 1 }); // TODO
         return MGPValidation.SUCCESS;
     }
 
-    public isRemainingSelected(stack: HivePieceStack): boolean {
-        return this.selectedRemaining.equalsValue(stack.topPiece());
+    public isRemainingSelected(piece: HivePiece): boolean {
+        return this.selectedRemaining.equalsValue(piece);
     }
 
     public async selectSpace(coord: Coord): Promise<MGPValidation> {
@@ -217,21 +252,20 @@ export class HiveComponent
         return false;
     }
 
-    // TODO: the rest here is stolen from SixComponent, try to generalize this
-    private getViewBox(): string {
+    // TODO: the rest here is (almost) stolen from SixComponent, try to generalize this
+    private getViewBox(): ViewBox {
         const hexaCoords: Coord[] = this.mapAbstractCoordToCornerCoords();
         const limits: Limits = this.getLimits(hexaCoords);
         const left: number = limits.minX - (this.STROKE_WIDTH / 2);
         const up: number = limits.minY - (this.STROKE_WIDTH / 2);
         const width: number = this.STROKE_WIDTH + limits.maxX - limits.minX;
         const height: number = this.STROKE_WIDTH + limits.maxY - limits.minY;
-        return left + ' ' + up + ' ' + width + ' ' + height;
+        return new ViewBox(left, up, width, height);
     }
     private mapAbstractCoordToCornerCoords(): Coord[] {
         const abstractCoords: Coord[] =
             this.pieces.map((piece: PieceWithCoord) => piece.coord)
-                .concat(this.neighbors)
-                .concat(this.computeRemainingPiecesPosition());
+                .concat(this.neighbors);
         abstractCoords.push(new Coord(0, 0)); // Need at least one coord for Hive
         const pieceCornersGrouped: Coord[][] =
             abstractCoords.map((coord: Coord) => this.hexaLayout.getHexaCoordListAt(coord));

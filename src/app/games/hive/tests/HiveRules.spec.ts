@@ -694,7 +694,7 @@ describe('HiveRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
-    fit('should allow passing if a player cannot perform any action', () => {
+    it('should allow passing if a player cannot perform any action', () => {
         // Given a board in a stuck position for a player: here, the player cannot
         // drop a piece nor move one as its only pieces are below an opponent
         const board: Table<HivePiece[]> = [

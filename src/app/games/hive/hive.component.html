@@ -16,17 +16,18 @@
        [hexaLayout]="hexaLayout"
        [selected]="isSelected(piece.coord)"
        (click)="selectSpace(piece.coord)"/>
-    <g *ngFor="let pieceAndCount of remainingPieces">
-       <g *ngFor="let y of range(pieceAndCount[1])"
-          id="remainingPiece_{{ pieceAndCount[0].toString() }}_{{ pieceAndCount[1] }}_{{ y }}_{{ pieceAndCount[1] }}"
+
+    <g *ngFor="let stack of remainingPieces">
+       <g *ngIf="stack.isEmpty() === false"
+          id="remainingPiece_{{ stack.topPiece().toString() }}"
           app-hive-piece
-          [attr.transform]="'translate(0, ' + (y*SPACE_SIZE) + ')'"
-          [stack]="pieceAndCount[0]"
+          [attr.transform]="getRemainingPieceTransform(stack.topPiece())"
+          [stack]="stack"
           [pieceHeight]="PIECE_HEIGHT"
-          [coord]="getRemainingPieceCoord(pieceAndCount[0])"
+          [coord]="ORIGIN"
           [hexaLayout]="hexaLayout"
-          [selected]="isRemainingSelected(pieceAndCount[0]) && y === pieceAndCount[1] - 1"
-          (click)="selectRemaining(pieceAndCount[0])"/>
+          [selected]="isRemainingSelected(stack.topPiece())"
+          (click)="selectRemaining(stack.topPiece())"/>
     </g>
     <polygon *ngFor="let coordAndHeight of selected"
              [attr.transform]="'translate(0 ' + -coordAndHeight.height*PIECE_HEIGHT+ ')'"

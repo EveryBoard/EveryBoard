@@ -58,10 +58,14 @@ export class HiveRemainingPieces implements ComparableObject {
         this.pieces.replace(piece, remaining-1);
     }
 
-    public toList(): [HivePiece, number][] {
-        const remaining: [HivePiece, number][] = [];
+    public toListOfStacks(): HivePieceStack[] {
+        const remaining: HivePieceStack[] = [];
         this.pieces.forEach((item: {key: HivePiece, value: number}) => {
-            remaining.push([item.key, item.value]);
+            const pieces: HivePiece[] = [];
+            for (let i: number = 0; i < item.value; i++) {
+                pieces.push(item.key);
+            }
+            remaining.push(new HivePieceStack(pieces));
         });
         return remaining;
     }
