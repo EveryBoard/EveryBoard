@@ -50,7 +50,7 @@ describe('LascaControlAndDominateMinimax', () => {
         expect(moves.length).toBe(6);
     });
     it('should not count the immobilized stacks', () => {
-        // Given two board with the exact same stacks, one having blocked stacks
+        // Given two boards with the exact same stacks, one having blocked stacks
         const immobilizedState: LascaState = LascaState.from([
             [v, _, _, _, _, _, _],
             [_, u, _, _, _, _, _],
@@ -71,7 +71,7 @@ describe('LascaControlAndDominateMinimax', () => {
         ], 0).get();
 
         // When comparing them
-        // Then the one with blocked stack should be considered lesser
+        // Then the one with mobile stacks should be considered better
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            immobilizedState,
                                                            MGPOptional.empty(),
@@ -80,7 +80,7 @@ describe('LascaControlAndDominateMinimax', () => {
                                                            Player.ONE);
     });
     it('should count the potential mobility as primary board value', () => {
-        // Given two board with the same stacks, one with an unique forced capture, the other without
+        // Given two boards with the same stacks, one with an unique forced capture, the other without
         const forcedState: LascaState = LascaState.from([
             [v, _, _, _, _, _, _],
             [_, u, _, _, _, _, _],

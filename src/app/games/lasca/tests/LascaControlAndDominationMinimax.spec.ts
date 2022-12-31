@@ -18,7 +18,7 @@ describe('LascaControlAndDominateMinimax', () => {
         minimax = new LascaControlAndDominationMinimax(ruler, 'Lasca Control And Dominate Minimax');
     });
     it('should not count the immobilized stacks', () => {
-        // Given two board with the exact same stacks, one having blocked stacks
+        // Given two boards with the exact same stacks, one having blocked stacks
         const immobilizedState: LascaState = LascaState.from([
             [X, _, _, _, _, _, _],
             [_, O, _, _, _, _, _],
@@ -39,7 +39,7 @@ describe('LascaControlAndDominateMinimax', () => {
         ], 0).get();
 
         // When comparing them
-        // Then the one with blocked stack should be considered lesser
+        // Then the one with mobile stacks should be considered better
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            immobilizedState,
                                                            MGPOptional.empty(),
@@ -48,7 +48,7 @@ describe('LascaControlAndDominateMinimax', () => {
                                                            Player.ONE);
     });
     it('should count the potential mobility as primary board value', () => {
-        // Given two board with the same stacks, one with an unique forced capture, the other without
+        // Given two boards with the same stacks, one with an unique forced capture, the other without
         const forcedState: LascaState = LascaState.from([
             [X, _, _, _, _, _, _],
             [_, O, _, _, _, _, _],
@@ -73,7 +73,7 @@ describe('LascaControlAndDominateMinimax', () => {
         RulesUtils.expectStatesToBeOfEqualValue(minimax, forcedState, freeState);
     });
     it('should count the dominating piece as secondary board value (at equal potential mobility)', () => {
-        // Given two board with the same potential mobility, one with more " dominant pieces" than the other
+        // Given two boards with the same potential mobility, one with more " dominant pieces" than the other
         // (dominant = that is of the same color as the commander)
         const d: LascaSpace = new LascaSpace([LascaPiece.ONE, LascaPiece.ZERO, LascaPiece.ZERO]);
         const dominatedState: LascaState = LascaState.from([

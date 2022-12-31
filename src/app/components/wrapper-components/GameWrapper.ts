@@ -120,7 +120,7 @@ export abstract class GameWrapper<P extends Comparable> {
         if (this.gameComponent.hasAsymetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
-        this.gameComponent.updateBoard();
+        this.gameComponent.updateBoard(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,

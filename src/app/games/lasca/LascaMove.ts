@@ -21,10 +21,10 @@ export class LascaMoveFailure {
 
 export class LascaMove extends Move {
 
-    public static isNotInRange(coord: Coord): boolean {
+    public static isNotOnBoard(coord: Coord): boolean {
         return coord.isNotInRange(LascaState.SIZE, LascaState.SIZE);
     }
-    public static isInRange(coord: Coord): boolean {
+    public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(LascaState.SIZE, LascaState.SIZE);
     }
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
@@ -39,7 +39,7 @@ export class LascaMove extends Move {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
         const jumpedOverCoords: MGPSet<Coord> = new MGPSet();
         for (const coord of coords) {
-            if (LascaMove.isNotInRange(coord)) {
+            if (LascaMove.isNotOnBoard(coord)) {
                 return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
             if (lastCoordOpt.isPresent()) {
@@ -59,10 +59,10 @@ export class LascaMove extends Move {
         return MGPFallible.success(jumpedOverCoords);
     }
     public static fromStep(start: Coord, end: Coord): MGPFallible<LascaMove> {
-        if (LascaMove.isNotInRange(start)) {
+        if (LascaMove.isNotOnBoard(start)) {
             return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
         }
-        if (LascaMove.isNotInRange(end)) {
+        if (LascaMove.isNotOnBoard(end)) {
             return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
         }
         const vector: Coord = start.getVectorToward(end);
@@ -90,52 +90,54 @@ export class LascaMove extends Move {
             return new LascaMove(coords, casted.isStep as boolean);
         }
     };
-    private constructor(private readonly coords: Coord[], public readonly isStep: boolean) {
+    public readonly coords: MGPSet<Coord>;
+
+    private constructor(coords: Coord[], public readonly isStep: boolean) {
         super();
+        this.coords = new MGPSet(coords);
     }
     public toString(): string {
-        const coords: Coord[] = this.coords;
-        const coordStrings: string[] = coords.map((coord: Coord) => coord.toString());
+        const coordStrings: string[] = this.coords.map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');
         return 'LascaMove(' + coordString + ')';
     }
-    public equals(other: LascaMove): boolean {
-        return this.getRelation(other) === 'EQUALITY';
-    }
     public getRelation(other: LascaMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
-        const thisLength: number = this.coords.length;
-        const otherLength: number = other.coords.length;
+        const thisLength: number = this.coords.size();
+        const otherLength: number = other.coords.size();
         const minimalLength: number = Math.min(thisLength, otherLength);
         for (let i: number = 0; i < minimalLength; i++) {
-            if (this.coords[i].equals(other.coords[i]) === false) return 'INEQUALITY';
+            if (this.coords.getByIndex(i).equals(other.coords.getByIndex(i)) === false) return 'INEQUALITY';
         }
         if (thisLength === otherLength) return 'EQUALITY';
         else return 'PREFIX';
     }
+    public equals(other: LascaMove): boolean {
+        return this.getRelation(other) === 'EQUALITY';
+    }
+    public isPrefix(other: LascaMove): boolean {
+        return this.getRelation(other) === 'PREFIX';
+    }
     public getCoord(index: number): MGPFallible<Coord> {
-        if (index < 0 || index >= this.coords.length) {
+        if (index < 0 || index >= this.coords.size()) {
             return MGPFallible.failure('invalid index');
         }
-        return MGPFallible.success(this.coords[index]);
-    }
-    public getCoordsCopy(): Coord[] {
-        return ArrayUtils.copyImmutableArray(this.coords);
+        return MGPFallible.success(this.coords.getByIndex(index));
     }
     public getStartingCoord(): Coord {
         return this.getCoord(0).get();
     }
     public getEndingCoord(): Coord {
-        return this.coords[this.coords.length - 1];
+        return this.coords.getByIndex(-1);
     }
     public getCapturedCoords(): MGPFallible<MGPSet<Coord>> {
-        return LascaMove.getSteppedOverCoords(this.coords);
+        return LascaMove.getSteppedOverCoords(this.coords.toList());
     }
     public concatenate(move: LascaMove): LascaMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
-        const startOfSecondMove: Coord = move.coords[0];
-        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move'); // je veux être ému!!!
-        const firstPart: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
-        const secondPart: Coord[] = ArrayUtils.copyImmutableArray(move.coords).slice(1);
+        const startOfSecondMove: Coord = move.coords.getByIndex(0);
+        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
+        const firstPart: Coord[] = ArrayUtils.copyImmutableArray(this.coords.toList());
+        const secondPart: Coord[] = ArrayUtils.copyImmutableArray(move.coords.toList()).slice(1);
         return LascaMove.fromCapture(firstPart.concat(secondPart)).get();
     }
 }

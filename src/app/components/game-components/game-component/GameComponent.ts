@@ -67,8 +67,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow
-     * ie:  - if it's online, he'll tell the game-component when the remote opponent has played
-     *      - if it's offline, he'll tell the game-component what the bot have done
+     * ie: - if it's online, he'll tell the game-component when the remote opponent has played
+     *     - if it's offline, he'll tell the game-component what the bot have done
      */
 
     constructor(public readonly messageDisplayer: MessageDisplayer) {

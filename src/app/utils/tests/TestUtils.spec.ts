@@ -301,7 +301,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     /**
      * @param nameInHtml The real name (id) of the element in the XML
-     * @param nameInFunction It's name inside the code
+     * @param nameInFunction Its name inside the code
      */
     public async expectClickSuccessWithAsymetricNaming(nameInHtml: string, nameInFunction?: string): Promise<void> {
         await this.expectInterfaceClickSuccess(nameInHtml);

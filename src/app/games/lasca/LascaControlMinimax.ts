@@ -4,6 +4,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
@@ -13,12 +14,21 @@ class LascaNode extends MGPNode<LascaRules, LascaMove, LascaState> {}
 
 export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
 
+    private static singleton: MGPOptional<LascaControlMinimax> = MGPOptional.empty();
+
+    public static get(): LascaControlMinimax {
+        if (LascaControlMinimax.singleton.isAbsent()) {
+            const minimax: LascaControlMinimax = new LascaControlMinimax(LascaRules.get(), 'Lasca Control Minimax');
+            LascaControlMinimax.singleton = MGPOptional.of(minimax);
+        }
+        return LascaControlMinimax.singleton.get();
+    }
     public getListMoves(node: LascaNode): LascaMove[] {
-        const possiblesCaptures: LascaMove[] = LascaRules.getCaptures(node.gameState);
+        const possiblesCaptures: LascaMove[] = LascaRules.get().getCaptures(node.gameState);
         if (possiblesCaptures.length > 0) {
             return possiblesCaptures;
         } else {
-            return LascaRules.getSteps(node.gameState);
+            return LascaRules.get().getSteps(node.gameState);
         }
     }
     public getBoardValue(node: LascaNode): BoardValue {
@@ -41,8 +51,8 @@ export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
         if (state.getCurrentOpponent() === player) {
             return this.getCapturesAndSteps(state.incrementTurn(), player);
         }
-        const captures: LascaMove[] = LascaRules.getCaptures(state);
-        const steps: LascaMove[] = LascaRules.getSteps(state);
+        const captures: LascaMove[] = LascaRules.get().getCaptures(state);
+        const steps: LascaMove[] = LascaRules.get().getSteps(state);
         return captures.concat(steps);
     }
 }

@@ -2311,13 +2311,13 @@
         <source>You cannot go backward with normal pieces!</source>
         <target>Vous ne pouvez pas aller en arrière avec une pièce normale</target>
       </trans-unit>
-      <trans-unit id="4712855775149366403" datatype="html">
-        <source>You cannot capture empty space (nor jump over it)!</source>
-        <target>Vous ne pouvez pas capturer une case vide (ni sauter par dessus) !</target>
+      <trans-unit id="5146778338724180791" datatype="html">
+        <source>You cannot capture an empty space, nor jump over it!</source>
+        <target>Vous ne pouvez pas capturer une case vide, ni sauter par dessus !</target>
       </trans-unit>
-      <trans-unit id="4873069599349345494" datatype="html">
-        <source>Capture is mandatory!</source>
-        <target>La capture est obligatoire !</target>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
+        <target>Vous devez capturer quand c'est possible !</target>
       </trans-unit>
       <trans-unit id="3183138660002989080" datatype="html">
         <source>You must finish this capture!</source>
@@ -2339,8 +2339,8 @@
         <source>Steps</source>
         <target>Pas</target>
       </trans-unit>
-      <trans-unit id="4701749826555333352" datatype="html">
-        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on it&apos;s landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      <trans-unit id="5101419651122121441" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
         <target>Un simple pas est un déplacement de un en diagonal, en avant, vers la gauche ou la droite, cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
       </trans-unit>
       <trans-unit id="7763413917819120355" datatype="html">
@@ -2355,20 +2355,20 @@
         <source>Multiple captures (1/2)</source>
         <target>Captures multiples (1/2)</target>
       </trans-unit>
-      <trans-unit id="6157883150195310948" datatype="html">
-        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, it has to capture until she can no longer. To do so, you must then click again on the next landing space. Note that, when capturing with an officer, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+      <trans-unit id="944933553092470959" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing space. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
         <target>Si, après le début de la capture, la pièce que vous venez de bouger peux encore capturer une autre pièce, elle doit le faire tant qu'elle peut. Pour ce faire, vous devez juste cliquer à nouveau sur la case d'atterrissage suivante. Notez que quand vous capture avec un officier, vous ne pouvez pas sauter deux fois au dessus de la même pile.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, une double capture est possible, faites-le.</target>
       </trans-unit>
       <trans-unit id="580945753043190834" datatype="html">
-        <source>Congratulations, you captured two pieces, and, by reaching the last line, your piece has now been promoted to the rank of officer ! Now, it can move and capture backward, which is illegal for normal piece.</source>
+        <source>Congratulations, you captured two pieces. By reaching the last line, your piece has now been promoted to the rank of officer! Now, it can move and capture backward, which is illegal for normal piece.</source>
         <target>Félicitations, vous avez capturé deux pièces, et, en atteignant la dernière ligne, votre pièce est maintenant promue au rang d'officier ! Maintenant, vous pouvez vous déplacer et capturer en arrière, ce qui est illégal pour les pièces normale.</target>
       </trans-unit>
       <trans-unit id="5195324594588038758" datatype="html">
-        <source>Minoritary capture is allowed</source>
+        <source>Minority capture is allowed</source>
         <target>La capture minoritaire est autorisée</target>
       </trans-unit>
       <trans-unit id="1663023095327432443" datatype="html">
-        <source>If you have several capture choices, one capturing one piece, one capture two, you are allowed to choose either.</source>
+        <source>If you have several capture choices, one choice capturing one piece, the other choice capturing two pieces, you are allowed to choose either.</source>
         <target>Si vous avez plusieurs choix de captures, une capturant une seule pièce, l'autre deux, vous êtes autorisé à choisir l'une des deux.</target>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">

@@ -4,13 +4,13 @@ import { MGPSet } from './MGPSet';
 
 export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private readonly map: any;
+    private readonly valueMap: any;
 
     protected abstract toFields(value: T): [[number], number];
 
     constructor(values?: readonly T[]) {
         super();
-        this.map = [];
+        this.valueMap = [];
         this.values = [];
         if (values !== undefined) {
             for (const value of values) {
@@ -21,7 +21,7 @@ export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
     public add(element: T): boolean {
         const fields: [[number], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let indirection: any = this.map;
+        let indirection: any = this.valueMap;
         for (const field of fields[0]) {
             if (indirection[field] === undefined) {
                 indirection[field] = [];
@@ -40,7 +40,7 @@ export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
     public contains(element: T): boolean {
         const fields: [[number], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let indirection: any = this.map;
+        let indirection: any = this.valueMap;
         for (const field of fields[0]) {
             if (indirection[field] === undefined) {
                 return false;

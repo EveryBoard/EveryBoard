@@ -4,7 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { LascaComponent } from '../lasca.component';
+import { LascaComponent, LascaComponentFailure } from '../lasca.component';
 import { LascaMove, LascaMoveFailure } from '../LascaMove';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
@@ -32,8 +32,9 @@ describe('LascaComponent', () => {
             // When clicking selecting piece
             await testUtils.expectClickSuccess('#space_4_4');
 
-            // Then its landing coord should be "capturable-fill", naming is wrong but it must match with captures
-
+            // Then its landing coord should be landable
+            testUtils.expectElementToHaveClass('#rhombus_3_3', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#rhombus_5_3', 'selectable-fill');
         }));
         it('should highlight piece that can move this turn (when step moves)', () => {
             // Given a board where current player can move 4 pieces (by example, the starting board)
@@ -79,6 +80,12 @@ describe('LascaComponent', () => {
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             await testUtils.expectClickFailure('#space_1_0', reason);
         }));
+        it('should forbid clicking on an unmovable stack', fakeAsync(async() => {
+            // Given any board
+            // When clicking a piece that could not move
+            // Then it should fail
+            await testUtils.expectClickFailure('#space_5_5', LascaComponentFailure.THIS_PIECE_CANNOT_MOVE());
+        }));
         it('should show clicked stack as selected', fakeAsync(async() => {
             // Given any board
             // When clicking on one of your pieces
@@ -117,6 +124,20 @@ describe('LascaComponent', () => {
 
             // Then the piece should no longer be selected
             testUtils.expectElementNotToHaveClass('#space_4_4_piece_0', 'selected-stroke');
+        }));
+        it('should show possible first-selection again when deselecting piece', fakeAsync(async() => {
+            // Given any board with a selected piece
+            await testUtils.expectClickSuccess('#space_4_4');
+            testUtils.expectElementToHaveClass('#space_4_4_piece_0', 'selected-stroke');
+
+            // When clicking on the selected piece again
+            await testUtils.expectClickSuccess('#space_4_4');
+
+            // Then the possible first choices should be shown again
+            testUtils.expectElementToHaveClass('#rhombus_0_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#rhombus_2_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#rhombus_4_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#rhombus_6_4', 'selectable-fill');
         }));
         it('should change selected piece when clicking on another one of your pieces', fakeAsync(async() => {
             // Given any board with a selected piece
@@ -213,7 +234,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#rhombus_3_3', 'captured-fill');
         }));
         it('should cancel capturing a piece you cannot capture', fakeAsync(async() => {
-            // Given a board on which [a capture is started and] an illegal capture could be made
+            // Given a board on which an illegal capture could be made
             const state: LascaState = LascaState.from([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
@@ -254,6 +275,10 @@ describe('LascaComponent', () => {
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#space_6_6', move);
+            // Then a stack of three piece should exist
+            testUtils.expectElementToExist('#space_6_6_piece_0');
+            testUtils.expectElementToExist('#space_6_6_piece_1');
+            testUtils.expectElementToExist('#space_6_6_piece_2');
         }));
     });
     describe('displaying reversed board', () => {

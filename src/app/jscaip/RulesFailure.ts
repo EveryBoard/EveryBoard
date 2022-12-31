@@ -8,7 +8,7 @@ export class RulesFailure {
 
     public static readonly MUST_CLICK_ON_EMPTY_SQUARE: Localized = () => $localize`You must click on an empty square.`;
 
-    public static readonly CANNOT_SELF_LAND: Localized = () => $localize`Your landing space should be empty or contain a piece of the opponent.`;
+    public static readonly SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE: Localized = () => $localize`Your landing space should be empty or contain a piece of the opponent.`;
 
     public static readonly CANNOT_SELF_CAPTURE: Localized = () => $localize`You cannot capture your own pieces.`;
 

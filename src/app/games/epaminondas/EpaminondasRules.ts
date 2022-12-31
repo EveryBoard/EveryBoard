@@ -82,7 +82,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
         if (state.getPieceAt(landingCoord) === CURRENT_PLAYER) {
-            return MGPFallible.failure(RulesFailure.CANNOT_SELF_LAND());
+            return MGPFallible.failure(RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE());
         }
         newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
         newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;

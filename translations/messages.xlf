@@ -1650,11 +1650,11 @@
       <trans-unit id="3581037377692107358" datatype="html">
         <source>You cannot go backward with normal pieces!</source>
       </trans-unit>
-      <trans-unit id="4712855775149366403" datatype="html">
-        <source>You cannot capture empty space (nor jump over it)!</source>
+      <trans-unit id="5146778338724180791" datatype="html">
+        <source>You cannot capture an empty space, nor jump over it!</source>
       </trans-unit>
-      <trans-unit id="4873069599349345494" datatype="html">
-        <source>Capture is mandatory!</source>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
       </trans-unit>
       <trans-unit id="3183138660002989080" datatype="html">
         <source>You must finish this capture!</source>
@@ -1671,8 +1671,8 @@
       <trans-unit id="1534367694207535197" datatype="html">
         <source>Steps</source>
       </trans-unit>
-      <trans-unit id="4701749826555333352" datatype="html">
-        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on it&apos;s landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      <trans-unit id="5101419651122121441" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
       </trans-unit>
       <trans-unit id="7763413917819120355" datatype="html">
         <source>You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
@@ -1683,17 +1683,17 @@
       <trans-unit id="1430493612123692909" datatype="html">
         <source>Multiple captures (1/2)</source>
       </trans-unit>
-      <trans-unit id="6157883150195310948" datatype="html">
-        <source>If, after the beginning of your capture, the piece that just moved can capture another piece, it has to capture until she can no longer. To do so, you must then click again on the next landing space. Note that, when capturing with an officer, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+      <trans-unit id="944933553092470959" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing space. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
       </trans-unit>
-      <trans-unit id="580945753043190834" datatype="html">
-        <source>Congratulations, you captured two pieces, and, by reaching the last line, your piece has now been promoted to the rank of officer ! Now, it can move and capture backward, which is illegal for normal piece.</source>
+      <trans-unit id="2552429756683040949" datatype="html">
+        <source>Congratulations, you captured two pieces. By reaching the last line, your piece has now been promoted to the rank of officer! Now, it can move and capture backward, which is illegal for normal piece.</source>
       </trans-unit>
-      <trans-unit id="5195324594588038758" datatype="html">
-        <source>Minoritary capture is allowed</source>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
       </trans-unit>
-      <trans-unit id="1663023095327432443" datatype="html">
-        <source>If you have several capture choices, one capturing one piece, one capture two, you are allowed to choose either.</source>
+      <trans-unit id="8855040566175030591" datatype="html">
+        <source>If you have several capture choices, one choice capturing one piece, the other choice capturing two pieces, you are allowed to choose either.</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>

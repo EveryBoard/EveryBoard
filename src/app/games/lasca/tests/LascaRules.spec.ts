@@ -78,11 +78,11 @@ describe('LascaRules', () => {
             const reason: string = LascaRulesFailure.CANNOT_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('should forbid landing on an occupied space', () => {
+        it('should forbid landing on an occupied square', () => {
             // Given a board where a piece could be tempted to take another's place
             const state: LascaState = LascaState.getInitialState();
 
-            // When trying to land on an occupied space
+            // When trying to land on an occupied square
             const move: LascaMove = LascaMove.fromStep(new Coord(5, 5), new Coord(4, 4)).get();
 
             // Then it should fail
@@ -122,7 +122,7 @@ describe('LascaRules', () => {
                 [_u, __, __, __, _u, __, _u],
             ], 1).get();
 
-            // When doing a move that jump over an empty space after capture
+            // When doing a move that jump over an empty square after capture
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)]).get();
 
             // Then it should fail
@@ -259,7 +259,7 @@ describe('LascaRules', () => {
             ], 2).get();
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should allow to do bug capture when samll capture available', () => {
+        it('should allow to do big capture when small capture available', () => {
             // Given a board where two different sized captures are possible
             const state: LascaState = LascaState.from([
                 [__, __, __, __, __, __, __],

@@ -168,7 +168,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_SELF_LAND());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE());
     });
     it(`should forbid to jump over an opponent's piece`, () => {
         const board: Table<PlayerOrNone> = [

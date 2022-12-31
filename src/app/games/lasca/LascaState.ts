@@ -1,11 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 
 export class LascaPiece {
+
     public static readonly ZERO: LascaPiece = new LascaPiece(Player.ZERO, false);
     public static readonly ONE: LascaPiece = new LascaPiece(Player.ONE, false);
     public static readonly ZERO_OFFICER: LascaPiece = new LascaPiece(Player.ZERO, true);
@@ -30,12 +31,16 @@ export class LascaPiece {
                 return 'X';
         }
     }
+    public equals(other: LascaPiece): boolean {
+        return this === other;
+    }
 }
 export class LascaSpace {
 
     public static EMPTY: LascaSpace = new LascaSpace([]);
 
-    public constructor(private readonly pieces: readonly LascaPiece[]) {}
+    public constructor(public readonly pieces: ReadonlyArray<LascaPiece>) {
+    }
 
     public isEmpty(): boolean {
         return this.pieces.length === 0;
@@ -50,16 +55,15 @@ export class LascaSpace {
         return this.pieces[0];
     }
     public getPiecesUnderCommander(): LascaSpace {
-        return new LascaSpace(ArrayUtils.copyImmutableArray(this.pieces).slice(1));
+        return new LascaSpace(this.pieces.slice(1));
     }
     public capturePiece(piece: LascaPiece): LascaSpace {
-        return new LascaSpace(ArrayUtils.copyImmutableArray(this.pieces).concat(piece));
+        return new LascaSpace(this.pieces.concat(piece));
     }
     public addStackBelow(stack: LascaSpace): LascaSpace {
-        const piecesBelow: LascaPiece[] = ArrayUtils.copyImmutableArray(stack.pieces);
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingStack: LascaSpace = this;
-        for (const piece of piecesBelow) {
+        for (const piece of stack.pieces) {
             resultingStack = resultingStack.capturePiece(piece);
         }
         return resultingStack;

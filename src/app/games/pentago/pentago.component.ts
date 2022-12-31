@@ -42,7 +42,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new PentagoRules(PentagoState);
+        this.rules = PentagoRules.get();
         this.availableMinimaxes = [
             new PentagoMinimax(this.rules, 'PentagoMinimax'),
         ];
@@ -115,7 +115,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             ['M 0 ' + (B - c) + ' q -' + C + ' -' + C + ' 0 -' + (2 * C), 2, true],
             ['M ' + c + ' ' + B + ' q ' + C + ' ' + C + ' ' + (2 * C) + ' 0', 2, false],
             ['M ' + (B - c) + ' ' + B + ' q -' + C + ' ' + C + ' -' + (2 * C) + ' 0', 3, true],
-            ['M ' + B + ' ' + (B - c) + '  q ' + C + ' -' + C + ' 0 -' + (2 * C), 3, false],
+            ['M ' + B + ' ' + (B - c) + ' q ' + C + ' -' + C + ' 0 -' + (2 * C), 3, false],
         ];
     }
     public cancelMoveAttempt(): void {
