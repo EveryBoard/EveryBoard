@@ -83,7 +83,7 @@ export class HiveComponent
     public pieces: PieceWithCoord[] = [];
     public neighbors: Coord[] = [];
 
-    private selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
+    public selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
     private selectedStart: MGPOptional<Coord> = MGPOptional.empty();
     private selectedSpiderCoords: Coord[] = [];
 
@@ -131,7 +131,8 @@ export class HiveComponent
     private computeViewBox(): void {
         this.boardViewBox = this.getViewBox();
         const minimalViewBox: ViewBox = new ViewBox(
-            this.boardViewBox.center().x - 2.5 * this.SPACE_SIZE * 4,
+            this.getRemainingPieceTransformAsCoord(new HivePieceQueenBee(Player.ZERO)).x,
+//            this.boardViewBox.center().x - 2.5 * this.SPACE_SIZE * 4,
             0,
             this.SPACE_SIZE * 4 * 5,
             0);
@@ -164,7 +165,7 @@ export class HiveComponent
         this.selected = [];
     }
 
-    public getRemainingPieceTransform(piece: HivePiece): string {
+    public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {
         const shift: number = this.getRemainingPieceShift(piece);
         const x: number = this.boardViewBox.center().x + shift * this.SPACE_SIZE * 4;
         // TODO: change based on role
@@ -175,7 +176,18 @@ export class HiveComponent
         } else {
             y = this.boardViewBox.up - (this.SPACE_SIZE * 2);
         }
-        return `translate(${x} ${y})`;
+        return new Coord(x, y);
+    }
+
+    public getRemainingPieceTransform(piece: HivePiece): string {
+        const transform: Coord = this.getRemainingPieceTransformAsCoord(piece);
+        return `translate(${transform.x} ${transform.y})`;
+    }
+
+    public getRemainingPieceHighlightTransform(piece: HivePiece): string {
+        const transform: Coord = this.getRemainingPieceTransformAsCoord(piece);
+        const size: number = this.getState().remainingPieces.getRemaining(piece);
+        return `translate(${transform.x} ${transform.y - (this.PIECE_HEIGHT * size)})`;
     }
 
     private getRemainingPieceShift(piece: HivePiece): number {

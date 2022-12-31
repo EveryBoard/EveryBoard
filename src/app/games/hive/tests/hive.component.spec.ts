@@ -34,18 +34,18 @@ fdescribe('HiveComponent', () => {
     });
     describe('drop', () => {
         describe('selection', () => {
-            fit('should select one of your pieces by clicking on it', fakeAsync(async() => {
+            it('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
                 testUtils.setupState(state);
 
                 // When clicking on a remaining piece
-                await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO_0');
+                await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
                 // Then it should be selected
                 testUtils.expectElementToExist('#remaining_highlight');
             }));
-            it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
+            fit('should forbid selecting a piece of the opponent', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
                 testUtils.setupState(state);
@@ -53,7 +53,7 @@ fdescribe('HiveComponent', () => {
                 // When clicking on a remaining piece of the opponent
                 // Then it should fail
                 const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
-                await testUtils.expectClickFailure('#remaining_QueenBee_1_0', reason);
+                await testUtils.expectClickFailure('#remainingPiece_QueenBee_PLAYER_ONE', reason);
             }));
             it('should show valid landings after selection', fakeAsync(async() => {
                 // Given a state with remaining pieces
@@ -61,7 +61,7 @@ fdescribe('HiveComponent', () => {
                 testUtils.setupState(state);
 
                 // When clicking on a remaining piece
-                await testUtils.expectClickSuccess('#remaining_QueenBee_0_0');
+                await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
                 // Then it should show valid landings
                 testUtils.expectElementToExist('#indicator_0_0');

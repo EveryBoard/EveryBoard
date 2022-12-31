@@ -35,8 +35,12 @@ export class HiveRemainingPieces implements ComparableObject {
         return new HiveRemainingPieces(this.pieces.getCopy());
     }
 
+    public getRemaining(piece: HivePiece): number {
+        return this.pieces.get(piece).get();
+    }
+
     public hasRemaining(piece: HivePiece): boolean {
-        return this.pieces.get(piece).get() > 0;
+        return this.getRemaining(piece) > 0;
     }
 
     public hasRemainingPieces(player: Player): boolean {

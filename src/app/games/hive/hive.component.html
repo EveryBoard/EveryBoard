@@ -29,8 +29,9 @@
           [selected]="isRemainingSelected(stack.topPiece())"
           (click)="selectRemaining(stack.topPiece())"/>
     </g>
-    <polygon *ngFor="let coordAndHeight of selected"
-             [attr.transform]="'translate(0 ' + -coordAndHeight.height*PIECE_HEIGHT+ ')'"
-             [attr.points]="getHexaCoordsAt(coordAndHeight.coord)"
+    <polygon *ngIf="selectedRemaining.isPresent()"
+             id="remaining_highlight"
+             [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
+             [attr.points]="getHexaCoordsAt(ORIGIN)"
              class="base no-fill selected-stroke" />
 </svg>
