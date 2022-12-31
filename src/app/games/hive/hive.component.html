@@ -7,17 +7,22 @@
              [attr.points]="getHexaCoordsAt(neighbor)"
              class="base"
              (click)="selectSpace(neighbor)"/>
-    <g *ngFor="let piece of pieces"
-       id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
-       app-hive-piece
-       [stack]="piece.stack"
-       [pieceHeight]="PIECE_HEIGHT"
-       [coord]="piece.coord"
-       [hexaLayout]="hexaLayout"
-       [selected]="isSelected(piece.coord)"
-       (click)="selectSpace(piece.coord)"/>
-
-    <g *ngFor="let stack of remainingPieces">
+   <polygon *ngFor="let indicator of indicators"
+            id="indicator_{{ indicator.x }}_{{ indicator.y }}"
+            [attr.points]="getHexaCoordsAt(indicator)"
+            class="base no-fill clickable-stroke" />
+   
+   <g *ngFor="let piece of pieces"
+      id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
+      app-hive-piece
+      [stack]="piece.stack"
+      [pieceHeight]="PIECE_HEIGHT"
+      [coord]="piece.coord"
+      [hexaLayout]="hexaLayout"
+      [selected]="isSelected(piece.coord)"
+      (click)="selectSpace(piece.coord)"/>
+   
+   <g *ngFor="let stack of remainingPieces">
        <g *ngIf="stack.isEmpty() === false"
           id="remainingPiece_{{ stack.topPiece().toString() }}"
           app-hive-piece
@@ -28,10 +33,10 @@
           [hexaLayout]="hexaLayout"
           [selected]="isRemainingSelected(stack.topPiece())"
           (click)="selectRemaining(stack.topPiece())"/>
-    </g>
-    <polygon *ngIf="selectedRemaining.isPresent()"
-             id="remaining_highlight"
-             [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
-             [attr.points]="getHexaCoordsAt(ORIGIN)"
-             class="base no-fill selected-stroke" />
+   </g>
+   <polygon *ngIf="selectedRemaining.isPresent()"
+            id="remaining_highlight"
+            [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
+            [attr.points]="getHexaCoordsAt(ORIGIN)"
+            class="base no-fill selected-stroke" />
 </svg>

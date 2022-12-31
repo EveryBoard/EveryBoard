@@ -51,9 +51,7 @@ class ViewBox {
 
     public containingAtLeast(viewBox: ViewBox): ViewBox {
         const left: number = Math.max(this.left - viewBox.left, 0);
-        console.log(`my left: ${this.left}, their left: ${viewBox.left}, so I should expand by ${left}`)
         const right: number = Math.max(viewBox.right() - this.right(), 0);
-        console.log(`my right: ${this.right}, their right: ${viewBox.right}, so I should expand by ${right}`)
         const above: number = Math.max(this.up - viewBox.up, 0);
         const below: number = Math.max(viewBox.bottom() - this.bottom(), 0);
         return this.expand(left, right, above, below);
@@ -82,6 +80,7 @@ export class HiveComponent
     public remainingPieces: HivePieceStack[] = [];
     public pieces: PieceWithCoord[] = [];
     public neighbors: Coord[] = [];
+    public indicators: Coord[] = [];
 
     public selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
     private selectedStart: MGPOptional<Coord> = MGPOptional.empty();
@@ -163,6 +162,7 @@ export class HiveComponent
         this.selectedStart = MGPOptional.empty();
         this.selectedSpiderCoords = [];
         this.selected = [];
+        this.indicators = [];
     }
 
     public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {
@@ -209,7 +209,7 @@ export class HiveComponent
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selectedRemaining = MGPOptional.of(piece);
-        // TODO this.selected.push({ coord: this.getRemainingPieceCoord(piece), height: 1 }); // TODO
+        this.indicators = HiveRules.get().getPossibleDropLocations(this.getState()).toList();
         return MGPValidation.SUCCESS;
     }
 

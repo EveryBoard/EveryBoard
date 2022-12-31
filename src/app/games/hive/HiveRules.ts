@@ -167,9 +167,9 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         const remainingPiece: HivePiece = remainingPieceOpt.get();
-        console.log(remainingPiece.toString());
         const locations: MGPSet<Coord> = new MGPSet();
         // We can only drop next to one of our piece
+        // TODO: except at turn 0 and 1
         for (const coord of state.occupiedSpaces()) {
             if (state.getAt(coord).topPiece().owner === player) {
                 for (const neighbor of state.emptyNeighbors(coord)) {
@@ -180,7 +180,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
                 }
             }
         }
-        console.log(locations.toString());
         return locations;
     }
 
@@ -199,7 +198,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return moves;
     }
-
 
     public shouldPass(state: HiveState): boolean {
         return this.getPossibleDropLocations(state).size() === 0 &&
