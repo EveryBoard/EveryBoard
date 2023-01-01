@@ -247,6 +247,7 @@ export class HiveComponent
     }
 
     public getHighlightTransform(coord: Coord): string {
+        // TODO: should draw indicators and pieces per layer (z = 0 first, then z = 1) for proper view
         const height: number = this.getState().getAt(coord).size() * this.PIECE_HEIGHT;
         return `translate(0 -${height})`;
     }

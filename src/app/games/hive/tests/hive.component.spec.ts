@@ -11,7 +11,7 @@ import { HiveMove } from '../HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from '../HivePiece';
 import { HiveState } from '../HiveState';
 
-fdescribe('HiveComponent', () => {
+describe('HiveComponent', () => {
     let testUtils: ComponentTestUtils<HiveComponent>;
 
     const Q: HivePiece = new HivePieceQueenBee(Player.ZERO);
@@ -109,8 +109,8 @@ fdescribe('HiveComponent', () => {
             }));
         });
     });
-    fdescribe('moving', () => {
-        fdescribe('selection', () => {
+    describe('moving', () => {
+        describe('selection', () => {
             it('should select the piece clicked', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([

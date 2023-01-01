@@ -642,6 +642,21 @@ describe('HiveRules', () => {
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+        it('should be forbidden to have a piece escape from the hive', () => {
+            // Given a board
+            const board: Table<HivePiece[]> = [
+                [[Q], [q]],
+            ];
+            const state: HiveState = HiveState.fromRepresentation(board, 2);
+
+            // When trying to perform a move that would split the hive in two
+            const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(-1, 0));
+
+            // Then the move should fail
+            const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+
         it('should be forbidden to split the hive in two, even in the middle of a turn', () => {
             // Given a board
             const board: Table<HivePiece[]> = [
