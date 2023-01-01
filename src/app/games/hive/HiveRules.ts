@@ -161,6 +161,14 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
 
     public getPossibleDropLocations(state: HiveState): MGPSet<Coord> {
         const player: Player = state.getCurrentPlayer();
+        // At turn 0 and 1, the possible drop locations are already known
+        if (state.turn === 0) {
+            return new MGPSet([new Coord(0, 0)]);
+        }
+        if (state.turn === 1) {
+            return new MGPSet(HexagonalUtils.neighbors(new Coord(0, 0)));
+        }
+
         const remainingPieceOpt: MGPOptional<HivePiece> = state.remainingPieces.getAnyRemainingPiece(player);
         if (remainingPieceOpt.isAbsent()) {
             return new MGPSet();
@@ -169,7 +177,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const remainingPiece: HivePiece = remainingPieceOpt.get();
         const locations: MGPSet<Coord> = new MGPSet();
         // We can only drop next to one of our piece
-        // TODO: except at turn 0 and 1
         for (const coord of state.occupiedSpaces()) {
             if (state.getAt(coord).topPiece().owner === player) {
                 for (const neighbor of state.emptyNeighbors(coord)) {

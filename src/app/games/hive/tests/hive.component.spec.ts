@@ -33,7 +33,7 @@ fdescribe('HiveComponent', () => {
         testUtils.expectToBeCreated();
     });
     describe('drop', () => {
-        describe('selection', () => {
+        fdescribe('selection', () => {
             it('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
@@ -45,7 +45,7 @@ fdescribe('HiveComponent', () => {
                 // Then it should be selected
                 testUtils.expectElementToExist('#remaining_highlight');
             }));
-            fit('should forbid selecting a piece of the opponent', fakeAsync(async() => {
+            it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
                 testUtils.setupState(state);
