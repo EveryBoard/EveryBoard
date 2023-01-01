@@ -3,7 +3,7 @@
      [attr.viewBox]="viewBox"
      preserveAspectRatio="xMidYMid meet">
    <polygon *ngFor="let neighbor of neighbors"
-             id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
+             id="space_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
              class="base"
              (click)="selectSpace(neighbor)"/>

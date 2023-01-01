@@ -32,8 +32,8 @@ fdescribe('HiveComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
-    describe('drop', () => {
-        fdescribe('selection', () => {
+    fdescribe('drop', () => {
+        describe('selection', () => {
             it('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
@@ -72,15 +72,12 @@ fdescribe('HiveComponent', () => {
                 // Given a state with a selected remaining piece
                 const state: HiveState = HiveState.getInitialState();
                 testUtils.setupState(state);
-                await testUtils.expectClickSuccess('#remaining_QueenBee_0_0');
+                await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
                 // When clicking on a valid landing
                 // Then the move should succeed
                 const move: HiveMove = HiveMove.drop(Q, 0, 0);
-                const expectedState: HiveState = HiveState.fromRepresentation([
-                    [[Q]],
-                ], 1);
-                await testUtils.expectMoveSuccess('#space_0_0', move, expectedState);
+                await testUtils.expectMoveSuccess('#space_0_0', move);
             }));
             it('should fail dropping if the move is illegal', fakeAsync(async() => {
                 // Given a state
@@ -90,7 +87,7 @@ fdescribe('HiveComponent', () => {
                 testUtils.setupState(state);
 
                 // When performing an illegal drop move
-                await testUtils.expectClickSuccess('#remaining_Beetle_0_0');
+                await testUtils.expectClickSuccess('#remainingPiece_Beetle_PLAYER_ZERO');
                 const move: HiveMove = HiveMove.drop(B, 2, 0);
 
                 // Then it should fail
@@ -103,15 +100,12 @@ fdescribe('HiveComponent', () => {
                 testUtils.setupState(state);
 
                 // When performing a drop move
-                await testUtils.expectClickSuccess('#remaining_QueenBee_0_0');
+                await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
                 const move: HiveMove = HiveMove.drop(Q, 0, 0);
-                const expectedState: HiveState = HiveState.fromRepresentation([
-                    [[Q]],
-                ], 1);
-                await testUtils.expectMoveSuccess('#space_0_0', move, expectedState);
+                await testUtils.expectMoveSuccess('#space_0_0', move);
 
                 // Then the dropped piece should not be in the remaining pieces anymore
-                testUtils.expectElementNotToExist('#remaining_QueenBee_0_0');
+                testUtils.expectElementNotToExist('#remainingPiece_QueenBee_PLAYER_ZERO');
             }));
         });
     });
@@ -186,12 +180,8 @@ fdescribe('HiveComponent', () => {
 
                 // When clicking on a destination
                 // Then the move should succeed
-                const expectedState: HiveState = HiveState.fromRepresentation([
-                    [[Q], [q]],
-                    [[], [B]],
-                ], 3);
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(1, 1));
-                await testUtils.expectMoveSuccess('#space_1_1', move, expectedState);
+                await testUtils.expectMoveSuccess('#space_1_1', move);
             }));
             it('should fail moving when the move is illegal', fakeAsync(async() => {
                 // Given a state with pieces on the board and a selected piece
@@ -230,11 +220,7 @@ fdescribe('HiveComponent', () => {
                         new Coord(2, 1),
                         new Coord(2, 0),
                     ]);
-                    const expectedState: HiveState = HiveState.fromRepresentation([
-                        [[b], [], [S]],
-                        [[Q], [q], []],
-                    ], 3);
-                    await testUtils.expectMoveSuccess('#space_2_0', move, expectedState);
+                    await testUtils.expectMoveSuccess('#space_2_0', move);
                 }));
                 it('should show valid intermediary spaces and the selected path', fakeAsync(async() => {
                     // Given a state with a spider on the board

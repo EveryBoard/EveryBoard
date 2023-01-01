@@ -218,6 +218,10 @@ export class HiveComponent
     }
 
     public async selectSpace(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay(`#space_${coord.x}_${coord.y}`);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         const state: HiveState = this.getState();
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
