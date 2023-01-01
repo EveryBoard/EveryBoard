@@ -738,6 +738,23 @@ describe('HiveRules', () => {
         const reason: string = RulesFailure.CANNOT_PASS();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+    fit('should correctly update the queen bee location when board is extended in the negatives', () => {
+        // Given a board with the queen bee
+        const board: Table<HivePiece[]> = [
+            [[Q]],
+        ];
+        const state: HiveState = HiveState.fromRepresentation(board, 1);
+
+        // When extending the board in the negatives
+        const move: HiveMove = HiveMove.drop(q, -1, 0);
+
+        // Then the move should succeed and the board should be correctly adapted
+        const expectedBoard: Table<HivePiece[]> = [
+            [[q], [Q]],
+        ];
+        const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 2);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
 
     describe('victories', () => {
         it('should consider winning player the one who has fully surrounded the queen bee of the opponent (Player.ZERO)', () => {

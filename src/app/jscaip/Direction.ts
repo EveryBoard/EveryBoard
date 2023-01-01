@@ -12,6 +12,9 @@ export class Vector implements ComparableObject {
     }
     public constructor(public readonly x: number,
                        public readonly y: number) {}
+    public toString(): string {
+        return this.x + ',' + this.y;
+    }
 }
 
 export abstract class BaseDirection extends Vector {

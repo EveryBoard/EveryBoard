@@ -263,6 +263,7 @@ export class HiveComponent
         const state: HiveState = this.getState();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         if (topPiece instanceof HivePieceSpider) {
+
             return []; // TODO
         } else {
             return HiveRules.get().getPossibleMovesFrom(state, coord)

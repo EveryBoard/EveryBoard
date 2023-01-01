@@ -115,6 +115,11 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
                        turn: number)
     {
         super(pieces, turn);
+        for (const player of queenBees.listKeys()) {
+            const oldCoord: Coord = queenBees.get(player).get();
+            const newCoord: Coord = oldCoord.getNext(this.offset);
+            queenBees.replace(player, newCoord);
+        }
     }
 
     public equals(other: HiveState): boolean {

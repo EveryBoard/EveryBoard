@@ -121,7 +121,7 @@ describe('HiveComponent', () => {
             }));
         });
     });
-    fdescribe('moving', () => {
+    describe('moving', () => {
         describe('selection', () => {
             it('should select the piece clicked', fakeAsync(async() => {
                 // Given a state with pieces on the board
@@ -211,7 +211,7 @@ describe('HiveComponent', () => {
                 await testUtils.expectMoveFailure('#space_0_2', reason, move);
             }));
             describe('spider', () => {
-                fit('should allow selecting all intermediary spaces for spider', fakeAsync(async() => {
+                it('should allow selecting all intermediary spaces for spider', fakeAsync(async() => {
                     // Given a state with a spider on the board
                     const state: HiveState = HiveState.fromRepresentation([
                         [[b], []],
