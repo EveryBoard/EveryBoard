@@ -32,7 +32,7 @@ fdescribe('HiveComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
-    fdescribe('drop', () => {
+    describe('drop', () => {
         describe('selection', () => {
             it('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
@@ -109,9 +109,9 @@ fdescribe('HiveComponent', () => {
             }));
         });
     });
-    describe('moving', () => {
+    fdescribe('moving', () => {
         describe('selection', () => {
-            it('should select the piece clicked', fakeAsync(async() => {
+            fit('should select the piece clicked', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],

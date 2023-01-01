@@ -217,8 +217,8 @@ export class HiveComponent
         return this.selectedRemaining.equalsValue(piece);
     }
 
-    public async selectSpace(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(`#space_${coord.x}_${coord.y}`);
+    public async selectSpace(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

@@ -6,12 +6,12 @@
              id="space_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
              class="base"
-             (click)="selectSpace(neighbor)"/>
+             (click)="selectSpace(neighbor, 'space')"/>
    <polygon *ngFor="let indicator of indicators"
             id="indicator_{{ indicator.x }}_{{ indicator.y }}"
             [attr.points]="getHexaCoordsAt(indicator)"
             class="base no-fill clickable-stroke" />
-   
+
    <g *ngFor="let piece of pieces"
       id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
       app-hive-piece
@@ -20,8 +20,14 @@
       [coord]="piece.coord"
       [hexaLayout]="hexaLayout"
       [selected]="isSelected(piece.coord)"
-      (click)="selectSpace(piece.coord)"/>
-   
+      (click)="selectSpace(piece.coord, 'piece')"/>
+
+   <polygon *ngFor="let coordAndHeight of selected"
+            id="selected_{{ coordAndHeight.coord.x }}_{{ coordAndHeight.coord.y }}"
+            [attr.transform]="'translate(0 ' + (-coordAndHeight.height * PIECE_HEIGHT) + ')'"
+            [attr.points]="getHexaCoordsAt(coordAndHeight.coord)"
+            class="base no-fill selected-stroke" />
+
    <g *ngFor="let stack of remainingPieces">
        <g *ngIf="stack.isEmpty() === false"
           id="remainingPiece_{{ stack.topPiece().toString() }}"
