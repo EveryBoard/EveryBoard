@@ -84,8 +84,15 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public isEmpty(): boolean {
         return this.values.length === 0;
     }
-    public flatMap(f: (element: T) => MGPSet<T>): MGPSet<T> {
-        const result: MGPSet<T> = new MGPSet();
+    public map<T2 extends Comparable>(f: (element: T) => T2): MGPSet<T2> {
+        const result: MGPSet<T2> = new MGPSet();
+        for (const element of this) {
+            result.add(f(element));
+        }
+        return result
+    }
+    public flatMap<T2 extends Comparable>(f: (element: T) => MGPSet<T2>): MGPSet<T2> {
+        const result: MGPSet<T2> = new MGPSet();
         for (const element of this) {
             result.union(f(element));
         }

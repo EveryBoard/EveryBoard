@@ -9,6 +9,7 @@
              (click)="selectSpace(neighbor, 'space')"/>
    <polygon *ngFor="let indicator of indicators"
             id="indicator_{{ indicator.x }}_{{ indicator.y }}"
+            [attr.transform]="getHighlightTransform(indicator)"
             [attr.points]="getHexaCoordsAt(indicator)"
             class="base no-fill clickable-stroke" />
 
@@ -22,10 +23,10 @@
       [selected]="isSelected(piece.coord)"
       (click)="selectSpace(piece.coord, 'piece')"/>
 
-   <polygon *ngFor="let coordAndHeight of selected"
-            id="selected_{{ coordAndHeight.coord.x }}_{{ coordAndHeight.coord.y }}"
-            [attr.transform]="'translate(0 ' + (-coordAndHeight.height * PIECE_HEIGHT) + ')'"
-            [attr.points]="getHexaCoordsAt(coordAndHeight.coord)"
+   <polygon *ngFor="let coord of selected"
+            id="selected_{{ coord.x }}_{{ coord.y }}"
+            [attr.transform]="getHighlightTransform(coord)"
+            [attr.points]="getHexaCoordsAt(coord)"
             class="base no-fill selected-stroke" />
 
    <g *ngFor="let stack of remainingPieces">

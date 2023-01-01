@@ -190,18 +190,24 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return locations;
     }
 
-    public getPossibleMovesOnBoard(state: HiveState): MGPSet<HiveMoveCoordToCoord> {
+    public getPossibleMovesFrom(state: HiveState, coord: Coord): MGPSet<HiveMoveCoordToCoord> {
         const player: Player = state.getCurrentPlayer();
         const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
-        for (const coord of state.occupiedSpaces()) {
-            const topPiece: HivePiece = state.getAt(coord).topPiece();
-            if (topPiece.owner === player) {
-                for (const move of topPiece.getPossibleMoves(coord, state)) {
-                    if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
-                        moves.add(move);
-                    }
+        const topPiece: HivePiece = state.getAt(coord).topPiece();
+        if (topPiece.owner === player) {
+            for (const move of topPiece.getPossibleMoves(coord, state)) {
+                if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
+                    moves.add(move);
                 }
             }
+        }
+        return moves;
+    }
+
+    public getPossibleMovesOnBoard(state: HiveState): MGPSet<HiveMoveCoordToCoord> {
+        const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
+        for (const coord of state.occupiedSpaces()) {
+            moves.union(this.getPossibleMovesFrom(state, coord));
         }
         return moves;
     }

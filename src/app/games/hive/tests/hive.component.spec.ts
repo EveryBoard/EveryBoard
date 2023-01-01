@@ -110,8 +110,8 @@ fdescribe('HiveComponent', () => {
         });
     });
     fdescribe('moving', () => {
-        describe('selection', () => {
-            fit('should select the piece clicked', fakeAsync(async() => {
+        fdescribe('selection', () => {
+            it('should select the piece clicked', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
@@ -134,9 +134,9 @@ fdescribe('HiveComponent', () => {
                 // When clicking on a piece of the opponent
                 // Then it should fail
                 const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
-                await testUtils.expectClickFailure('#piece_0_0', reason);
+                await testUtils.expectClickFailure('#piece_1_0', reason);
             }));
-            it('should show valid landings after selection', fakeAsync(async() => {
+            fit('should show valid landings after selection', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],

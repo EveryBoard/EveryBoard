@@ -12,7 +12,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveDummyMinimax } from './HiveDummyMinimax';
-import { HiveMove } from './HiveMove';
+import { HiveMove, HiveMoveCoordToCoord } from './HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
@@ -88,7 +88,7 @@ export class HiveComponent
 
     public readonly PIECE_HEIGHT: number;
 
-    public selected: { coord: Coord, height: number }[] = [];
+    public selected: Coord[] = [];
 
     private boardViewBox: ViewBox;
     public viewBox: string;
@@ -131,7 +131,6 @@ export class HiveComponent
         this.boardViewBox = this.getViewBox();
         const minimalViewBox: ViewBox = new ViewBox(
             this.getRemainingPieceTransformAsCoord(new HivePieceQueenBee(Player.ZERO)).x,
-//            this.boardViewBox.center().x - 2.5 * this.SPACE_SIZE * 4,
             0,
             this.SPACE_SIZE * 4 * 5,
             0);
@@ -241,10 +240,29 @@ export class HiveComponent
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
             this.selectedStart = MGPOptional.of(coord);
-            this.selected.push({ coord, height: stack.size() });
+            this.selected.push(coord);
+            this.indicators = this.getNextPossibleCoords(coord);
         }
         return MGPValidation.SUCCESS;
     }
+
+    public getHighlightTransform(coord: Coord): string {
+        const height: number = this.getState().getAt(coord).size() * this.PIECE_HEIGHT;
+        return `translate(0 -${height})`;
+    }
+
+    private getNextPossibleCoords(coord: Coord): Coord[] {
+        const state: HiveState = this.getState();
+        const topPiece: HivePiece = state.getAt(coord).topPiece();
+        if (topPiece instanceof HivePieceSpider) {
+            return []; // TODO
+        } else {
+            return HiveRules.get().getPossibleMovesFrom(state, coord)
+                .map((move: HiveMoveCoordToCoord) => move.end)
+                .toList();
+        }
+    }
+
 
     private async selectNextSpiderSpace(coord: Coord, spider: HivePieceSpider): Promise<MGPValidation> {
         if (this.selectedSpiderCoords.length === 0) {
