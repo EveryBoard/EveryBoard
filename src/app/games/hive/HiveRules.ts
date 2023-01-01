@@ -118,6 +118,10 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return MGPFallible.success(undefined);
     }
 
+    public mustPlaceQueenBee(state: HiveState): boolean {
+        return state.turn >= 6 && state.queenBeeLocation(state.getCurrentPlayer()).isAbsent();
+    }
+
     public isLegalDrop(move: HiveMoveDrop, state: HiveState): MGPFallible<void> {
         const player: Player = state.getCurrentPlayer();
 
@@ -132,10 +136,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         // The queen bee must be placed at the latest at the fourth turn of a player
-        if (move.piece instanceof HivePieceQueenBee === false &&
-            state.turn >= 6 &&
-            state.queenBeeLocation(player).isAbsent())
-        {
+        if (move.piece instanceof HivePieceQueenBee === false && this.mustPlaceQueenBee(state)) {
             return MGPFallible.failure(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 

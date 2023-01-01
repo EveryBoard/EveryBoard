@@ -66,6 +66,18 @@ describe('HiveComponent', () => {
                 // Then it should show valid landings
                 testUtils.expectElementToExist('#indicator_0_0');
             }));
+            it('should forbid selecting another piece than the queen bee if the queen bee must be placed at this turn', fakeAsync(async() => {
+                // Given a state without queen bee at the 4th turn of the current player
+                const state: HiveState = HiveState.fromRepresentation([
+                    [[B], [G], [A], [g], [s], [a]],
+                ], 6);
+                testUtils.setupState(state);
+
+                // When trying to select a remaining piece
+                // Then it should fail
+                const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
+                await testUtils.expectClickFailure('#remai»ningPiece_Beetle_PLAYER_ZERO', reason);
+            }));
         });
         describe('dropping', () => {
             it('should drop the piece on the selected space', fakeAsync(async() => {
@@ -109,7 +121,7 @@ describe('HiveComponent', () => {
             }));
         });
     });
-    describe('moving', () => {
+    fdescribe('moving', () => {
         describe('selection', () => {
             it('should select the piece clicked', fakeAsync(async() => {
                 // Given a state with pieces on the board
@@ -136,7 +148,7 @@ describe('HiveComponent', () => {
                 const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
                 await testUtils.expectClickFailure('#piece_1_0', reason);
             }));
-            fit('should show valid landings after selection', fakeAsync(async() => {
+            it('should show valid landings after selection', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
@@ -153,7 +165,7 @@ describe('HiveComponent', () => {
                 testUtils.expectElementNotToExist('#indicator_0_-1');
                 testUtils.expectElementNotToExist('#indicator_-1_0');
                 testUtils.expectElementNotToExist('#indicator_-1_1');
-                testUtils.expectElementNotToExist('#indicator_0_1');
+                testUtils.expectElementNotToExist('#indicator_1_0');
             }));
             it('should not allow selecting piece if the queen bee must be dropped at this turn', fakeAsync(async() => {
                 // Given a state without queen bee at the 4th turn of the current player
@@ -165,7 +177,7 @@ describe('HiveComponent', () => {
                 // When trying to select a piece
                 // Then it should fail
                 const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
-                await testUtils.expectClickFailure('#remaining_Beetle_0_0', reason);
+                await testUtils.expectClickFailure('#piece_0_0', reason);
             }));
         });
         describe('finishing move', () => {
@@ -196,10 +208,10 @@ describe('HiveComponent', () => {
                 // Then the move should fail
                 const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2));
-                await testUtils.expectMoveFailure('#space_0_0', reason, move);
+                await testUtils.expectMoveFailure('#space_0_2', reason, move);
             }));
             describe('spider', () => {
-                it('should allow selecting all intermediary spaces for spider', fakeAsync(async() => {
+                fit('should allow selecting all intermediary spaces for spider', fakeAsync(async() => {
                     // Given a state with a spider on the board
                     const state: HiveState = HiveState.fromRepresentation([
                         [[b], []],

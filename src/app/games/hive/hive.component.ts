@@ -12,6 +12,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveDummyMinimax } from './HiveDummyMinimax';
+import { HiveFailure } from './HiveFailure';
 import { HiveMove, HiveMoveCoordToCoord } from './HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
 import { HiveRules } from './HiveRules';
@@ -203,17 +204,18 @@ export class HiveComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.cancelMoveAttempt();
         if (piece.owner !== this.getCurrentPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
+        if (piece instanceof HivePieceQueenBee === false &&
+            HiveRules.get().mustPlaceQueenBee(this.getState())) {
+            return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
+        }
+
+        this.cancelMoveAttempt();
         this.selectedRemaining = MGPOptional.of(piece);
         this.indicators = HiveRules.get().getPossibleDropLocations(this.getState()).toList();
         return MGPValidation.SUCCESS;
-    }
-
-    public isRemainingSelected(piece: HivePiece): boolean {
-        return this.selectedRemaining.equalsValue(piece);
     }
 
     public async selectSpace(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
@@ -236,8 +238,13 @@ export class HiveComponent
                 return this.chooseMove(move, state);
             }
         } else {
-            if (stack.topPiece().owner !== state.getCurrentPlayer()) {
+            const piece: HivePiece = stack.topPiece();
+            if (piece.owner !== state.getCurrentPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            }
+            if (piece instanceof HivePieceQueenBee === false &&
+                HiveRules.get().mustPlaceQueenBee(state)) {
+                return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
             }
             this.selectedStart = MGPOptional.of(coord);
             this.selected.push(coord);
@@ -264,7 +271,6 @@ export class HiveComponent
         }
     }
 
-
     private async selectNextSpiderSpace(coord: Coord, spider: HivePieceSpider): Promise<MGPValidation> {
         if (this.selectedSpiderCoords.length === 0) {
             this.selectedSpiderCoords.push(this.selectedStart.get());
@@ -279,12 +285,6 @@ export class HiveComponent
             return this.cancelMove(validity.getReason());
         }
         return MGPValidation.SUCCESS;
-    }
-
-    public isSelected(coord: Coord): boolean {
-        if (this.selectedStart.equalsValue(coord)) return true;
-        if (this.selectedSpiderCoords.some((selected: Coord) => selected.equals(coord))) return true;
-        return false;
     }
 
     // TODO: the rest here is (almost) stolen from SixComponent, try to generalize this

@@ -20,7 +20,6 @@
       [pieceHeight]="PIECE_HEIGHT"
       [coord]="piece.coord"
       [hexaLayout]="hexaLayout"
-      [selected]="isSelected(piece.coord)"
       (click)="selectSpace(piece.coord, 'piece')"/>
 
    <polygon *ngFor="let coord of selected"
@@ -38,7 +37,6 @@
           [pieceHeight]="PIECE_HEIGHT"
           [coord]="ORIGIN"
           [hexaLayout]="hexaLayout"
-          [selected]="isRemainingSelected(stack.topPiece())"
           (click)="selectRemaining(stack.topPiece())"/>
    </g>
    <polygon *ngIf="selectedRemaining.isPresent()"
