@@ -210,7 +210,7 @@ describe('HiveComponent', () => {
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2));
                 await testUtils.expectMoveFailure('#space_0_2', reason, move);
             }));
-            describe('spider', () => {
+            fdescribe('spider', () => {
                 it('should allow selecting all intermediary spaces for spider', fakeAsync(async() => {
                     // Given a state with a spider on the board
                     const state: HiveState = HiveState.fromRepresentation([

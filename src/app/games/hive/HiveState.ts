@@ -159,14 +159,12 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         for (const player of Player.PLAYERS) {
             // If there was a queen bee here, we remove it from the cache
             if (this.queenBees.get(player).equalsValue(coord)) {
-                console.log(`queen bee ${player.toString()} deleted from ${coord.toString()}`)
                 this.queenBees.delete(player);
             }
         }
         for (const piece of pieces.pieces) {
             // Add any queen added here to the cache
             if (piece instanceof HivePieceQueenBee) {
-                console.log(`queen bee ${piece.toString()} moved at ${coord.toString()}`)
                 this.queenBees.put(piece.owner, coord);
             }
         }

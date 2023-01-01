@@ -738,7 +738,7 @@ describe('HiveRules', () => {
         const reason: string = RulesFailure.CANNOT_PASS();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    fit('should correctly update the queen bee location when board is extended in the negatives', () => {
+    it('should correctly update the queen bee location when board is extended in the negatives', () => {
         // Given a board with the queen bee
         const board: Table<HivePiece[]> = [
             [[Q]],

@@ -277,11 +277,12 @@ export class HiveComponent
             this.selectedSpiderCoords.push(this.selectedStart.get());
         }
         this.selectedSpiderCoords.push(coord);
+        this.selected.push(coord);
         if (this.selectedSpiderCoords.length === 4) {
             const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
             return this.chooseMove(move, this.getState());
         }
-        const validity: MGPFallible<void> = spider.prefixValidity(this.selectedSpiderCoords.reverse(), this.getState());
+        const validity: MGPFallible<void> = spider.prefixValidity(this.selectedSpiderCoords, this.getState());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
