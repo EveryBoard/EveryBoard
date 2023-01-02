@@ -76,7 +76,7 @@ describe('HiveComponent', () => {
                 // When trying to select a remaining piece
                 // Then it should fail
                 const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
-                await testUtils.expectClickFailure('#remai»ningPiece_Beetle_PLAYER_ZERO', reason);
+                await testUtils.expectClickFailure('#remainingPiece_Beetle_PLAYER_ZERO', reason);
             }));
         });
         describe('dropping', () => {
@@ -210,7 +210,7 @@ describe('HiveComponent', () => {
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2));
                 await testUtils.expectMoveFailure('#space_0_2', reason, move);
             }));
-            fdescribe('spider', () => {
+            describe('spider', () => {
                 it('should allow selecting all intermediary spaces for spider', fakeAsync(async() => {
                     // Given a state with a spider on the board
                     const state: HiveState = HiveState.fromRepresentation([
@@ -283,10 +283,7 @@ describe('HiveComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // Then the stack should be displayed next to the board
-            testUtils.expectElementToExist('#stack_0');
-            testUtils.expectElementToExist('#stack_1');
-            testUtils.expectElementToExist('#stack_2');
-            testUtils.expectElementNotToExist('#stack_3');
+            testUtils.expectElementToExist('#inspectedStack');
         }));
         it('should allow clicking on a stack with a beetle to inspect it, even if controlled by the opponent', fakeAsync(async() => {
             // Given a state with a stack of pieces with a beetle of the player on top
@@ -299,10 +296,7 @@ describe('HiveComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // Then the stack should be displayed next to the board
-            testUtils.expectElementToExist('#stack_0');
-            testUtils.expectElementToExist('#stack_1');
-            testUtils.expectElementToExist('#stack_2');
-            testUtils.expectElementNotToExist('#stack_3');
+            testUtils.expectElementToExist('#inspectedStack');
         }));
         it('should forbid clicking on a single beetle of the opponent', fakeAsync(async() => {
             // Given a state with a beetle of the opponent

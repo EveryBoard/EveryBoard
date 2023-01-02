@@ -37,6 +37,7 @@ export class SixRules extends Rules<SixMove,
 
     public applyLegalMove(move: SixMove, state: SixState, kept: SixLegalityInformation): SixState {
         if (state.turn < 40) {
+            console.log('moving to ' + move.landing.toString());
             return state.applyLegalDrop(move.landing);
         } else {
             return state.applyLegalDeplacement(move, kept);

@@ -118,7 +118,7 @@ export class SixState extends FreeHexagonalGameState<Player> {
     }
     public applyLegalDrop(coord: Coord): SixState {
         const pieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
-        this.setAt(coord, this.getCurrentPlayer());
+        pieces.put(coord, this.getCurrentPlayer());
         return new SixState(pieces, this.turn + 1);
     }
     public applyLegalDeplacement(move: SixMove, kept: MGPSet<Coord>): SixState {
