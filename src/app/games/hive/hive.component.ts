@@ -95,6 +95,7 @@ export class HiveComponent
 
     private boardViewBox: ViewBox;
     public viewBox: string;
+    public inspectedStackTransform: string;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -128,8 +129,6 @@ export class HiveComponent
         this.remainingPieces = this.getState().remainingPieces.toListOfStacks();
     }
 
-    public minimalViewBox: ViewBox;
-    public actualViewBox: ViewBox;
     private computeViewBox(): void {
         this.boardViewBox = this.getViewBox();
         const minimalViewBox: ViewBox = new ViewBox(
@@ -137,13 +136,18 @@ export class HiveComponent
             0,
             this.SPACE_SIZE * 4 * 5,
             0);
-        this.minimalViewBox = minimalViewBox; // for debug only
-        this.actualViewBox = this.boardViewBox
-            .containingAtLeast(this.minimalViewBox)
-            .expand(0, 0, this.SPACE_SIZE*5, this.SPACE_SIZE*5);
-        this.viewBox = this.boardViewBox
-            .containingAtLeast(this.minimalViewBox)
-            .expand(0, 0, this.SPACE_SIZE*5, this.SPACE_SIZE*5)
+        const spaceForRemainingPieces: number = this.SPACE_SIZE*5;
+        const boardAndRemainingViewBox: ViewBox = this.boardViewBox
+            .containingAtLeast(minimalViewBox)
+            .expand(0, 0, spaceForRemainingPieces, spaceForRemainingPieces);
+        const inspectedStackPosition: Coord =
+            new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
+                      boardAndRemainingViewBox.center().y);
+        this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${inspectedStackPosition.y})`;
+
+        const spaceForInspectedStack: number = this.SPACE_SIZE*5;
+        this.viewBox = boardAndRemainingViewBox
+            .expand(0, spaceForInspectedStack, 0, 0)
             .toSVGString();
     }
 

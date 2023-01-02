@@ -50,7 +50,7 @@
    <g *ngIf="inspectedStack.isPresent()"
       id="inspectedStack"
       app-hive-piece
-      [attr.transform]="'translate(100 100)'"
+      [attr.transform]="inspectedStackTransform + 'translate(0 ' + inspectedStack.get().size() * PIECE_HEIGHT * 5 + ')'"
       [stack]="inspectedStack.get()"
       [pieceHeight]="PIECE_HEIGHT"
       [coord]="ORIGIN"
