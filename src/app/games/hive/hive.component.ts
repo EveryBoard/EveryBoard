@@ -84,6 +84,7 @@ export class HiveComponent
     public neighbors: Coord[] = [];
     public indicators: Coord[] = [];
 
+    public inspectedStack: MGPOptional<HivePieceStack> = MGPOptional.empty();
     public selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
     private selectedStart: MGPOptional<Coord> = MGPOptional.empty();
     private selectedSpiderCoords: Coord[] = [];
@@ -164,6 +165,7 @@ export class HiveComponent
         this.selectedSpiderCoords = [];
         this.selected = [];
         this.indicators = [];
+        this.inspectedStack = MGPOptional.empty();
     }
 
     public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {
@@ -238,9 +240,19 @@ export class HiveComponent
                 return this.chooseMove(move, state);
             }
         } else {
+            if (stack.size() === 0) {
+                return this.cancelMove();
+            }
             const piece: HivePiece = stack.topPiece();
             if (piece.owner !== state.getCurrentPlayer()) {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                if (stack.size() === 1) {
+                    return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                } else {
+                    // We will only inspect the opponent stack, not do a move
+                    this.selected.push(coord);
+                    this.inspectedStack = MGPOptional.of(stack);
+                    return MGPValidation.SUCCESS;
+                }
             }
             if (piece instanceof HivePieceQueenBee === false &&
                 HiveRules.get().mustPlaceQueenBee(state)) {
@@ -250,6 +262,9 @@ export class HiveComponent
             this.selected.push(coord);
             if (piece instanceof HivePieceSpider) {
                 this.selectedSpiderCoords.push(this.selectedStart.get());
+            }
+            if (stack.size() > 1) {
+                this.inspectedStack = MGPOptional.of(stack);
             }
             this.indicators = this.getNextPossibleCoords(coord);
         }

@@ -66,9 +66,6 @@ describe('HivePiece', () => {
 
         // When computing the possible moves for the spider
         // Then we should have exactly 2 moves
-        for (const move of S.getPossibleMoves(new Coord(1, 0), state)) {
-            console.log(move.toString())
-        }
         expect(S.getPossibleMoves(new Coord(1, 0), state).length).toBe(2);
     });
     it('should compute all possible moves for the soldier ant', () => {

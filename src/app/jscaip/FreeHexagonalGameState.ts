@@ -29,7 +29,6 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
         this.width = scale.width;
         this.height = scale.height;
         this.offset = offset ?? scale.offset;
-        console.log(this.offset.toString())
         this.pieces.makeImmutable();
     }
     public computeScale(): Scale<T> {
@@ -73,7 +72,6 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
         if (this.isEmpty(piece)) {
             this.pieces.delete(coord);
         } else {
-            console.log(`setAt(${coord.toString()})`);
             this.pieces.put(coord, piece);
         }
         this.pieces.makeImmutable();

@@ -15,12 +15,14 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
     @Input() pieceHeight: number;
     @Input() coord: Coord;
     @Input() hexaLayout: HexaLayout;
+    @Input() sideView: boolean;
 
     public pieceClass: string[] = [];
     public hexaPoints: string = '';
     public isoPointsLight: string = '';
     public isoPointsDark: string = '';
     public hexaCenter: Coord = new Coord(0, 0);
+    public sideViewFactor: number = 1;
 
     public ngAfterContentChecked() {
         // This needs to be done after every content check,
@@ -31,5 +33,6 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
         const isoPoints: [Coord[], Coord[]] = this.hexaLayout.getIsoPoints(this.coord, this.pieceHeight);
         this.isoPointsLight = isoPoints[0].map((coord: Coord) => coord.toSVGCoord()).join(' ');
         this.isoPointsDark = isoPoints[1].map((coord: Coord) => coord.toSVGCoord()).join(' ');
+        this.sideViewFactor = this.sideView ? 6 : 1;
     }
 }

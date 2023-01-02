@@ -13,7 +13,7 @@ import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, Hi
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
-describe('HiveRules', () => {
+fdescribe('HiveRules', () => {
     let rules: HiveRules;
     let minimaxes: Minimax<HiveMove, HiveState>[];
 

@@ -20,6 +20,7 @@
       [pieceHeight]="PIECE_HEIGHT"
       [coord]="piece.coord"
       [hexaLayout]="hexaLayout"
+      [sideView]="false"
       (click)="selectSpace(piece.coord, 'piece')"/>
 
    <polygon *ngFor="let coord of selected"
@@ -37,6 +38,7 @@
           [pieceHeight]="PIECE_HEIGHT"
           [coord]="ORIGIN"
           [hexaLayout]="hexaLayout"
+          [sideView]="false"
           (click)="selectRemaining(stack.topPiece())"/>
    </g>
    <polygon *ngIf="selectedRemaining.isPresent()"
@@ -44,4 +46,14 @@
             [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
             [attr.points]="getHexaCoordsAt(ORIGIN)"
             class="base no-fill selected-stroke" />
+
+   <g *ngIf="inspectedStack.isPresent()"
+      id="inspectedStack"
+      app-hive-piece
+      [attr.transform]="'translate(100 100)'"
+      [stack]="inspectedStack.get()"
+      [pieceHeight]="PIECE_HEIGHT"
+      [coord]="ORIGIN"
+      [hexaLayout]="hexaLayout"
+      [sideView]="true"/>
 </svg>
