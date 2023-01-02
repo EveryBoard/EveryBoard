@@ -78,4 +78,8 @@ export class ArrayUtils {
         }
         return true;
     }
+    public static isPrefix<T extends Comparable>(prefix: ReadonlyArray<T>, l: ReadonlyArray<T>): boolean {
+        if (prefix.length > l.length) return false;
+        return ArrayUtils.compareArray(prefix, l.slice(0, prefix.length));
+    }
 }

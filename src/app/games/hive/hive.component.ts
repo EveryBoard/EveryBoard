@@ -6,6 +6,7 @@ import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -13,7 +14,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveDummyMinimax } from './HiveDummyMinimax';
 import { HiveFailure } from './HiveFailure';
-import { HiveMove, HiveMoveCoordToCoord } from './HiveMove';
+import { HiveMove, HiveMoveCoordToCoord, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
@@ -168,10 +169,9 @@ export class HiveComponent
     public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {
         const shift: number = this.getRemainingPieceShift(piece);
         const x: number = this.boardViewBox.center().x + shift * this.SPACE_SIZE * 4;
-        // TODO: change based on role
         let y: number;
-        if (piece.owner === Player.ZERO) {
-            // Player zero is below
+        if (piece.owner === this.role) {
+            // Current player is below
             y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 3);
         } else {
             y = this.boardViewBox.up - (this.SPACE_SIZE * 2);
@@ -248,6 +248,9 @@ export class HiveComponent
             }
             this.selectedStart = MGPOptional.of(coord);
             this.selected.push(coord);
+            if (piece instanceof HivePieceSpider) {
+                this.selectedSpiderCoords.push(this.selectedStart.get());
+            }
             this.indicators = this.getNextPossibleCoords(coord);
         }
         return MGPValidation.SUCCESS;
@@ -262,20 +265,19 @@ export class HiveComponent
     private getNextPossibleCoords(coord: Coord): Coord[] {
         const state: HiveState = this.getState();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
+        const moves: MGPSet<HiveMoveCoordToCoord> = HiveRules.get().getPossibleMovesFrom(state, coord);
         if (topPiece instanceof HivePieceSpider) {
-
-            return []; // TODO
-        } else {
-            return HiveRules.get().getPossibleMovesFrom(state, coord)
-                .map((move: HiveMoveCoordToCoord) => move.end)
+            const spiderMoves: MGPSet<HiveMoveSpider> = moves as MGPSet<HiveMoveSpider>;
+            return spiderMoves
+                .filter((move: HiveMoveSpider) => ArrayUtils.isPrefix(this.selectedSpiderCoords, move.coords))
+                .map((move: HiveMoveSpider) => move.coords[this.selectedSpiderCoords.length])
                 .toList();
+        } else {
+            return moves.map((move: HiveMoveCoordToCoord) => move.end).toList();
         }
     }
 
     private async selectNextSpiderSpace(coord: Coord, spider: HivePieceSpider): Promise<MGPValidation> {
-        if (this.selectedSpiderCoords.length === 0) {
-            this.selectedSpiderCoords.push(this.selectedStart.get());
-        }
         this.selectedSpiderCoords.push(coord);
         this.selected.push(coord);
         if (this.selectedSpiderCoords.length === 4) {
@@ -286,6 +288,7 @@ export class HiveComponent
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        this.indicators = this.getNextPossibleCoords(this.selectedStart.get());
         return MGPValidation.SUCCESS;
     }
 
