@@ -147,7 +147,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             const neighborStack: HivePieceStack = state.getAt(neighbor);
             if (neighborStack.isEmpty() === false) {
                 hasNeighbor = true;
-                if (state.turn !== 1 && neighborStack.topPiece().owner !== player) {
+                if (state.turn !== 1 && neighborStack.containsPieceOf(player)) {
                     return MGPFallible.failure(HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT());
                 }
             }

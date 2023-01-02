@@ -234,7 +234,7 @@ describe('HiveComponent', () => {
                     ]);
                     await testUtils.expectMoveSuccess('#space_2_0', move);
                 }));
-                fit('should show valid intermediary spaces and the selected path', fakeAsync(async() => {
+                it('should show valid intermediary spaces and the selected path', fakeAsync(async() => {
                     // Given a state with a spider on the board
                     const state: HiveState = HiveState.fromRepresentation([
                         [[b], []],

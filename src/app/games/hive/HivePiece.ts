@@ -287,4 +287,11 @@ export class HivePieceStack implements ComparableObject {
     public size(): number {
         return this.pieces.length;
     }
+
+    public containsPieceOf(player: Player) {
+        for (const piece of this.pieces) {
+            if (piece.owner === player) return true;
+        }
+        return false;
+    }
 }

@@ -116,6 +116,20 @@ describe('HiveRules', () => {
             const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+        it('should forbid dropping a piece adjacent to a stack containing a piece of the opponent', () => {
+            // Given a state with a piece of the opponent already on the board, but under another piece
+            const board: Table<HivePiece[]> = [
+                [[B], [B, b]],
+            ];
+            const state: HiveState = HiveState.fromRepresentation(board, 2);
+
+            // When dropping a piece next to the stack
+            const move: HiveMove = HiveMove.drop(A, 2, 0);
+
+            // Then the move should fail
+            const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
         it('should allow dropping the queen bee at the fourth turn of a player', () => {
             // Given a state in the fourth turn of player zero, without queen bee
             const board: Table<HivePiece[]> = [
