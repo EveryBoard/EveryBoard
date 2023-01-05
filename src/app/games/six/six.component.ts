@@ -8,7 +8,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
@@ -232,9 +231,8 @@ export class SixComponent
     }
     private showCuttable(): void {
         const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), this.chosenLanding.get());
-        const piecesAfterMove: ReversibleMap<Coord, Player> = SixState.movePiece(this.state, movement);
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixState.getGroups(piecesAfterMove, movement.start.get());
+        const stateAfterMove: SixState = this.state.movePiece(movement);
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (const cuttableGroup of biggerGroups) {

@@ -45,7 +45,7 @@
     <polygon *ngFor="let victoryCoord of victoryCoords"
              id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
              [attr.points]="getHexaCoordsAt(victoryCoord)"
-             class="base no-fill round victory-fill mid-stroke"/>
+             class="base no-fill round victory-stroke mid-stroke"/>
     <g *ngFor="let cuttableGroup of cuttableGroups"
        pointer-events="fill"
        class="capturable-stroke">

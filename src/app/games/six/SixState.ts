@@ -37,45 +37,12 @@ export class SixState extends FreeHexagonalGameState<Player> {
         }
         return new SixState(pieces, turn, offset);
     }
-    public static movePiece(state: SixState, move: SixMove): ReversibleMap<Coord, Player> {
-        const pieces: ReversibleMap<Coord, Player> = state.pieces.getCopy()
+    public movePiece(move: SixMove): SixState {
+        const pieces: ReversibleMap<Coord, Player> = this.pieces.getCopy()
 ;
         pieces.delete(move.start.get());
-        pieces.set(move.landing, state.getCurrentPlayer());
-        return pieces;
-    }
-/* TODO: remove, it is better implemented in the parent class now */
-    public static getGroups(pieces: ReversibleMap<Coord, Player>, lastRemovedPiece: Coord): MGPSet<MGPSet<Coord>> {
-        let coordsGroup: ReversibleMap<Coord, string> = new ReversibleMap<Coord, string>();
-        let nbGroup: number = 0;
-        for (const dir of HexaDirection.factory.all) {
-            const groupEntry: Coord = lastRemovedPiece.getNext(dir, 1);
-            coordsGroup = SixState.putCoordInGroup(pieces, groupEntry, coordsGroup, '' + nbGroup);
-            nbGroup++;
-        }
-        const reversed: ReversibleMap<string, MGPSet<Coord>> = coordsGroup.reverse();
-        const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
-        for (let i: number = 0; i < reversed.size(); i++) {
-            groups.add(reversed.getByIndex(i).value);
-        }
-        return groups;
-    }
-    private static putCoordInGroup(pieces: ReversibleMap<Coord, Player>,
-                                   piece: Coord,
-                                   coordsGroup: ReversibleMap<Coord, string>,
-                                   group: string)
-    : ReversibleMap<Coord, string>
-    {
-        if (pieces.get(piece).isPresent() &&
-           coordsGroup.get(piece).isAbsent())
-        {
-            coordsGroup.set(piece, group);
-            for (const dir of HexaDirection.factory.all) {
-                const nextCoord: Coord = piece.getNext(dir, 1);
-                coordsGroup = SixState.putCoordInGroup(pieces, nextCoord, coordsGroup, group);
-            }
-        }
-        return coordsGroup;
+        pieces.set(move.landing, this.getCurrentPlayer());
+        return new SixState(pieces, this.turn);
     }
     public isEmpty(piece: PlayerOrNone): boolean {
         return piece === PlayerOrNone.NONE;
@@ -122,17 +89,21 @@ export class SixState extends FreeHexagonalGameState<Player> {
         return new SixState(pieces, this.turn + 1);
     }
     public applyLegalDeplacement(move: SixMove, kept: MGPSet<Coord>): SixState {
-        const afterDeplacementPieces: ReversibleMap<Coord, Player> = SixState.movePiece(this, move);
-        let newPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
+        const stateAfterMove: SixState = this.movePiece(move);
+
         if (kept.size() > 0) {
-            newPieces = new ReversibleMap<Coord, Player>();
+            const newPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             for (const coord of kept) {
-                newPieces.set(coord, afterDeplacementPieces.get(coord).get());
+                const newCoord: Coord = coord; //coord.getPrevious(stateAfterMove.offset);
+                console.log({kept: coord.toString(), newCoord: newCoord.toString(),
+                             content: stateAfterMove.getPieceAt(newCoord)})
+                newPieces.set(newCoord, stateAfterMove.getPieceAt(newCoord) as Player);
             }
+            return new SixState(newPieces, this.turn + 1);
         } else {
-            newPieces = afterDeplacementPieces.getCopy();
+            return new SixState(stateAfterMove.pieces, this.turn + 1, stateAfterMove.offset);
         }
-        return new SixState(newPieces, this.turn + 1);
+
     }
     public countPieces(): [number, number] {
         const pieces: ReversibleMap<Player, MGPSet<Coord>> = this.pieces.reverse();

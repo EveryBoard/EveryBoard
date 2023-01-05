@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -37,7 +36,6 @@ export class SixRules extends Rules<SixMove,
 
     public applyLegalMove(move: SixMove, state: SixState, kept: SixLegalityInformation): SixState {
         if (state.turn < 40) {
-            console.log('moving to ' + move.landing.toString());
             return state.applyLegalDrop(move.landing);
         } else {
             return state.applyLegalDeplacement(move, kept);
@@ -85,9 +83,8 @@ export class SixRules extends Rules<SixMove,
             default:
                 // Current player, this is OK
         }
-        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.movePiece(state, move);
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixState.getGroups(piecesAfterDeplacement, move.start.get());
+        const stateAfterMove: SixState = state.movePiece(move);
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
         if (SixRules.isSplit(groupsAfterMove)) {
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
@@ -97,7 +94,8 @@ export class SixRules extends Rules<SixMove,
                     return MGPFallible.success(biggerGroups.getAnyElement().get());
                 }
             } else {
-                return this.moveKeepBiggerGroup(move.keep, biggerGroups, piecesAfterDeplacement);
+                const keep: MGPOptional<Coord> = move.keep.map((coord: Coord) => coord.getNext(stateAfterMove.offset));
+                return this.moveKeepBiggerGroup(keep, biggerGroups, stateAfterMove);
             }
         } else {
             return MGPFallible.success(new CoordSet());
@@ -122,13 +120,13 @@ export class SixRules extends Rules<SixMove,
     }
     public static moveKeepBiggerGroup(keep: MGPOptional<Coord>,
                                       biggerGroups: MGPSet<MGPSet<Coord>>,
-                                      pieces: MGPMap<Coord, Player>)
+                                      state: SixState)
     : MGPFallible<SixLegalityInformation>
     {
         if (keep.isAbsent()) {
             return MGPFallible.failure(SixFailure.MUST_CUT());
         }
-        if (pieces.get(keep.get()).isAbsent()) {
+        if (state.pieces.get(keep.get()).isAbsent()) {
             return MGPFallible.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD());
         }
         const keptCoord: Coord = keep.get();
