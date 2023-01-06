@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { HiveMove } from '../HiveMove';
-import { HivePieceQueenBee } from '../HivePiece';
+import { HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from '../HivePiece';
 
 describe('HiveMove', () => {
     const drop: HiveMove = HiveMove.drop(new HivePieceQueenBee(Player.ZERO), 0, 0);
@@ -30,9 +30,21 @@ describe('HiveMove', () => {
         expect(regularMove.equals(similarSpiderMove)).toBeFalse();
         expect(similarSpiderMove.equals(regularMove)).toBeFalse();
     });
-    it('should encode and decode correctly', () => {
+    it('should encode and decode all types of moves correctly', () => {
         const moves: HiveMove[] = [drop, move, spiderMove, HiveMove.PASS];
         for (const move of moves) {
+            EncoderTestUtils.expectToBeCorrect(HiveMove.encoder, move);
+        }
+    });
+    it('should encode and decode all pieces correctly', () => {
+        const drops: HiveMove[] = [
+            HiveMove.drop(new HivePieceQueenBee(Player.ZERO), 0, 0),
+            HiveMove.drop(new HivePieceBeetle(Player.ZERO), 0, 0),
+            HiveMove.drop(new HivePieceGrasshopper(Player.ZERO), 0, 0),
+            HiveMove.drop(new HivePieceSpider(Player.ZERO), 0, 0),
+            HiveMove.drop(new HivePieceSoldierAnt(Player.ZERO), 0, 0),
+        ];
+        for (const move of drops) {
             EncoderTestUtils.expectToBeCorrect(HiveMove.encoder, move);
         }
     });

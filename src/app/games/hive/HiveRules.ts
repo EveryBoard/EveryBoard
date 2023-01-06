@@ -163,7 +163,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return MGPFallible.success(undefined);
     }
 
-
     public getPossibleDropLocations(state: HiveState): MGPSet<Coord> {
         const player: Player = state.getCurrentPlayer();
         // At turn 0 and 1, the possible drop locations are already known
