@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { HiveMove } from '../HiveMove';
 import { HivePieceQueenBee } from '../HivePiece';
 
@@ -28,5 +29,11 @@ describe('HiveMove', () => {
         const similarSpiderMove: HiveMove = spiderMove;
         expect(regularMove.equals(similarSpiderMove)).toBeFalse();
         expect(similarSpiderMove.equals(regularMove)).toBeFalse();
+    });
+    it('should encode and decode correctly', () => {
+        const moves: HiveMove[] = [drop, move, spiderMove, HiveMove.PASS];
+        for (const move of moves) {
+            EncoderTestUtils.expectToBeCorrect(HiveMove.encoder, move);
+        }
     });
 });

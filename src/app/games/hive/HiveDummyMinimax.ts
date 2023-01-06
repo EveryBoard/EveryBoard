@@ -11,7 +11,18 @@ import { HiveState } from './HiveState';
 export class HiveDummyMinimax extends Minimax<HiveMove, HiveState> {
 
     public getListMoves(node: HiveNode): HiveMove[] {
-        throw new Error('Method not implemented.');
+        return this.getListDrops(node.gameState)
+            .concat(HiveRules.get().getPossibleMovesOnBoard(node.gameState).toList());
+    }
+
+    public getListDrops(state: HiveState): HiveMove[] {
+        const drops: HiveMove[] = [];
+        for (const coord of HiveRules.get().getPossibleDropLocations(state)) {
+            for (const remaining of state.remainingPieces.getAllRemaining(state.getCurrentPlayer())) {
+                drops.push(HiveMove.drop(remaining, coord.x, coord.y));
+            }
+        }
+        return drops;
     }
 
     public getBoardValue(node: HiveNode): BoardValue {

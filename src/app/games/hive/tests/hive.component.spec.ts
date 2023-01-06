@@ -310,4 +310,15 @@ describe('HiveComponent', () => {
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }));
     });
+    it('should cancel move when clicking on an empty space', fakeAsync(async() => {
+        // Given any state without a move in progress
+        const state: HiveState = HiveState.fromRepresentation([
+            [[Q], [b]],
+        ], 2);
+        testUtils.setupState(state);
+
+        // When clicking on an empty space
+        // Then the move should be canceled
+        await testUtils.expectClickFailure('#space_2_0');
+    }));
 });

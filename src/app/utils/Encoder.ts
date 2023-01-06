@@ -29,7 +29,7 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
                 Object.keys(encoders).reverse().forEach((key: string): void => {
                     assert(encoded[key] != null, 'Invalid encoded value');
                     const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
-                    fields[key] = encoders[key].decode(field[key]);
+                    fields[key] = encoders[key].decode(field);
                 });
                 return decode(fields as Fields);
             }

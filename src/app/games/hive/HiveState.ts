@@ -43,10 +43,6 @@ export class HiveRemainingPieces implements ComparableObject {
         return this.getRemaining(piece) > 0;
     }
 
-    public hasRemainingPieces(player: Player): boolean {
-        return this.getAnyRemainingPiece(player).isPresent();
-    }
-
     public getAnyRemainingPiece(player: Player): MGPOptional<HivePiece> {
         for (const piece of this.pieces.listKeys()) {
             if (piece.owner === player && this.hasRemaining(piece)) {
@@ -70,6 +66,14 @@ export class HiveRemainingPieces implements ComparableObject {
                 pieces.push(item.key);
             }
             remaining.push(new HivePieceStack(pieces));
+        });
+        return remaining;
+    }
+
+    public getAllRemaining(player: Player): HivePiece[] {
+        const remaining: HivePiece[] = [];
+        this.pieces.forEach((item: {key: HivePiece, value: number}) => {
+            if (item.key.owner === player && item.value > 0) remaining.push(item.key);
         });
         return remaining;
     }

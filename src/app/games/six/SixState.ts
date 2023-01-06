@@ -94,10 +94,7 @@ export class SixState extends FreeHexagonalGameState<Player> {
         if (kept.size() > 0) {
             const newPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             for (const coord of kept) {
-                const newCoord: Coord = coord; //coord.getPrevious(stateAfterMove.offset);
-                console.log({kept: coord.toString(), newCoord: newCoord.toString(),
-                             content: stateAfterMove.getPieceAt(newCoord)})
-                newPieces.set(newCoord, stateAfterMove.getPieceAt(newCoord) as Player);
+                newPieces.set(coord, stateAfterMove.getPieceAt(coord) as Player);
             }
             return new SixState(newPieces, this.turn + 1);
         } else {

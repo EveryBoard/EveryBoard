@@ -6,6 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveDummyMinimax } from '../HiveDummyMinimax';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove } from '../HiveMove';
@@ -768,6 +769,22 @@ describe('HiveRules', () => {
         ];
         const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('should not have drop locations if all pieces are already on the board', () => {
+        // Given a board containing all pieces
+        const board: Table<HivePiece[]> = [
+            [[Q], [q], [B], [B], [b], [b]],
+            [[G], [G], [G], [g], [g], [g]],
+            [[A], [A], [A], [a], [a], [a]],
+            [[S], [S], [s], [s], [], []],
+        ];
+        const state: HiveState = HiveState.fromRepresentation(board, 12);
+
+        // When computing the possible drop locations
+        const dropLocations: MGPSet<Coord> = rules.getPossibleDropLocations(state);
+
+        // Then there should be none
+        expect(dropLocations.size()).toBe(0);
     });
 
     describe('victories', () => {
