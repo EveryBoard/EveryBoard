@@ -2,6 +2,8 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { HiveState } from './HiveState';
 import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from './HivePiece';
 import { Player } from 'src/app/jscaip/Player';
+import { HiveMove } from './HiveMove';
+import { Coord } from 'src/app/jscaip/Coord';
 
 const Q: HivePiece = new HivePieceQueenBee(Player.ZERO);
 const B: HivePiece = new HivePieceBeetle(Player.ZERO);
@@ -25,15 +27,100 @@ export class HiveTutorial extends Tutorial {
                 [[G], [], [A], []],
                 [[A], [], [], []],
             ], 8)),
-    // Board (show a board in the middle of a game)
-    // Object of the game
-    // Placing the first piece
-    // Placing the second piece
-    // Placing any later piece
-    // Moving the queen bee
-    // Moving each other piece (one step per piece)
-    // Splitting the hive is forbidden
-    // Piece must be able to slide to its destination
-    // Passing
+        TutorialStep.informational(
+            $localize`Object of the game`,
+            $localize`The object of the game at Hive is to surround the opponent's queen. Once the queen is surrounded by 6 pieces, no matter the owner of these pieces, the game ends. The player with a queen that is not surrounded wins. In case both queens are fully surrounded at the same turn, it is a draw. Here, Dark wins.`,
+            HiveState.fromRepresentation([
+                [[], [b], [S]],
+                [[a], [q], [Q]],
+                [[G], [B], []],
+            ], 7)),
+        TutorialStep.anyMove(
+            $localize`Placing the first and second piece`,
+            $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring spac of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
+            HiveState.getInitialState(),
+            HiveMove.drop(B, 0, 0),
+            $localize`Congratulations!`),
+        TutorialStep.anyMove(
+            $localize`Placing pieces after the second turn`,
+            $localize`After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: <ol><li>your piece must be connected to the hive, and</li><li>the space on which you drop your piece must not touch a piece of the opponent.</li></ol><br/><br/>You're playing Dark here, drop a piece on the board.`,
+            HiveState.fromRepresentation([
+                [[b], [G]],
+            ], 2),
+            HiveMove.drop(Q, 2, 0),
+            $localize`Congratulations!`),
+        TutorialStep.fromMove(
+            $localize`Moving pieces: the queen bee`,
+            $localize`Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:<ol><li>the hive must always remain fully connected, and</li><li>pieces that are moved by sliding should be able to physically slide to their destination</li></ol>. The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.<br/><br/>You are playing Dark, move your queen bee.`,
+            HiveState.fromRepresentation([
+                [[], [S], [g]],
+                [[b], [Q], [B]],
+            ], 4),
+            [HiveMove.move(new Coord(1, 1), new Coord(0, 2)), HiveMove.move(new Coord(1, 1), new Coord(1, 2))],
+            $localize`Congratulations!`,
+            $localize`Failed, try again!`),
+        TutorialStep.fromMove(
+            $localize`Moving the beetle`,
+            $localize`The beetle moves like the queen bee, but it is allowed to climb on top of other pieces! Therefore, it need not adhere to the sliding restriction. Note that you are not allowed to drop the beetle on top of another piece in the drop phase, this can only be achieved when moving a beetle already on the board. A piece with a beetle on top is not allowed to move.<br/><br/>You're playing Dark, block your opponent's queen by moving on top of it!`,
+            HiveState.fromRepresentation([
+                [[Q], [q], [B]],
+                [[b], [], []],
+            ], 6),
+            [HiveMove.move(new Coord(2, 0), new Coord(1, 0))],
+            $localize`Congratulations!`,
+            $localize`Failed, try again!`),
+        TutorialStep.forClick(
+            $localize`Inspecting stacks`,
+            $localize`When pieces are stacked together, you are allowed to inspect the stack to see which pieces are under the beetle. To do so, you can simply click on any stack, including your opponent's, to see their composition.<br/><br/>Your opponent has a beetle on top of one of your piece, click on it to inspect it.`,
+            HiveState.fromRepresentation([
+                [[b, Q], [q], [B]],
+            ], 2),
+            ['#piece_0_0'],
+            $localize`Congratulations!`,
+            $localize`Failed, try again!`),
+        TutorialStep.fromMove(
+            $localize`Moving the grasshopper`,
+            $localize`The grasshopper jumps over one or more pieces in a straight line, and stops at the first empty space encountered. It cannot jump over empty spaces, and can only move through jumps. Because it jumps, it does not adhere to the sliding restriction.<br/><br/>Jump over three pieces with your grasshopper!`,
+            HiveState.fromRepresentation([
+                [[G], [Q], [b], [a]],
+                [[g], [], [], []],
+            ], 6),
+            [HiveMove.move(new Coord(0, 0), new Coord(4, 0))],
+            $localize`Congratulations`,
+            $localize`Failed, try again!`),
+        TutorialStep.anyMove(
+            $localize`Moving the soldier ant`,
+            $localize`The soldier ant is a powerful piece: it can move anywhere in the hive as long as it respects the sliding and the one hive restrictions!<br/><br/>Your queen bee is stuck, move your soldier ant to free up your queen!`,
+            HiveState.fromRepresentation([
+                [[], [A], [q]],
+                [[], [Q], [b]],
+                [[a], [s], []],
+            ], 6),
+            HiveMove.move(new Coord(1, 0), new Coord(2, 0)),
+            $localize`Congratulations!`),
+        TutorialStep.anyMove(
+            $localize`Moving the spider`,
+            $localize`Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. To do a spider move, select a spider and click on the three spaces that compose the move.<br/><br/>Again, your queen bee is stuck but you can free it by moving your spider, do it!`,
+            HiveState.fromRepresentation([
+                [[], [S], [q]],
+                [[], [Q], [b]],
+                [[a], [s], []],
+            ], 6),
+            HiveMove.spiderMove([new Coord(1, 0), new Coord(2, -1), new Coord(3, -1), new Coord(3, 0)]),
+            $localize`Congratulations!`),
+        TutorialStep.informational(
+            $localize`Restrictions`,
+            $localize`Let us clarify the two restrictions during moves.<ol><li>At all times, all pieces of the hive should always be connected in a way that there is a single hive. This should also be the case that during a move, when you slide your piece.</li><li>Except grasshoppers and beetles, all moves should be done by sliding the piece without disturbing the rest of the hive.</li></ol>Observe here how the queen bee is stuck, as it is not possible to slide it without moving one of the other pieces. Moreover, moving it would split the hive in two.`,
+            HiveState.fromRepresentation([
+                [[], [S], []],
+                [[], [Q], [b]],
+                [[a], [], []],
+            ], 6)),
+        TutorialStep.informational(
+            $localize`Passing your turn`,
+            $localize`Finally, it is possible that you are not able to do any move: when it is the case, you must pass your turn. Here, Dark must pass: the queen bee cannot move without disconnecting the hive, the beetle is stuck beneath another beetle, and a dropped piece would be in contact with an opponent's piece.`,
+            HiveState.fromRepresentation([
+                [[b, B], [Q], [q]],
+            ], 4)),
     ];
 }
