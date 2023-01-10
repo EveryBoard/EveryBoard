@@ -39,7 +39,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Placing the first and second piece`,
             $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring spac of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
             HiveState.getInitialState(),
-            HiveMove.drop(B, 0, 0),
+            HiveMove.drop(B, 0, 0).get(),
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Placing pieces after the second turn`,
@@ -47,7 +47,7 @@ export class HiveTutorial extends Tutorial {
             HiveState.fromRepresentation([
                 [[b], [G]],
             ], 2),
-            HiveMove.drop(Q, 2, 0),
+            HiveMove.drop(Q, 2, 0).get(),
             $localize`Congratulations!`),
         TutorialStep.fromMove(
             $localize`Moving pieces: the queen bee`,
@@ -56,7 +56,10 @@ export class HiveTutorial extends Tutorial {
                 [[], [S], [g]],
                 [[b], [Q], [B]],
             ], 4),
-            [HiveMove.move(new Coord(1, 1), new Coord(0, 2)), HiveMove.move(new Coord(1, 1), new Coord(1, 2))],
+            [
+                HiveMove.move(new Coord(1, 1), new Coord(0, 2)).get(),
+                HiveMove.move(new Coord(1, 1), new Coord(1, 2)).get(),
+            ],
             $localize`Congratulations!`,
             $localize`Failed, try again!`),
         TutorialStep.fromMove(
@@ -66,7 +69,7 @@ export class HiveTutorial extends Tutorial {
                 [[Q], [q], [B]],
                 [[b], [], []],
             ], 6),
-            [HiveMove.move(new Coord(2, 0), new Coord(1, 0))],
+            [HiveMove.move(new Coord(2, 0), new Coord(1, 0)).get()],
             $localize`Congratulations!`,
             $localize`Failed, try again!`),
         TutorialStep.forClick(
@@ -85,7 +88,7 @@ export class HiveTutorial extends Tutorial {
                 [[G], [Q], [b], [a]],
                 [[g], [], [], []],
             ], 6),
-            [HiveMove.move(new Coord(0, 0), new Coord(4, 0))],
+            [HiveMove.move(new Coord(0, 0), new Coord(4, 0)).get()],
             $localize`Congratulations`,
             $localize`Failed, try again!`),
         TutorialStep.anyMove(
@@ -96,7 +99,7 @@ export class HiveTutorial extends Tutorial {
                 [[], [Q], [b]],
                 [[a], [s], []],
             ], 6),
-            HiveMove.move(new Coord(1, 0), new Coord(2, 0)),
+            HiveMove.move(new Coord(1, 0), new Coord(2, 0)).get(),
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Moving the spider`,
@@ -106,7 +109,7 @@ export class HiveTutorial extends Tutorial {
                 [[], [Q], [b]],
                 [[a], [s], []],
             ], 6),
-            HiveMove.spiderMove([new Coord(1, 0), new Coord(2, -1), new Coord(3, -1), new Coord(3, 0)]),
+            HiveMove.spiderMove([new Coord(1, 0), new Coord(2, -1), new Coord(3, -1), new Coord(3, 0)]).get(),
             $localize`Congratulations!`),
         TutorialStep.informational(
             $localize`Restrictions`,

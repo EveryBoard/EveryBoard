@@ -5,11 +5,11 @@ import { HiveMove } from '../HiveMove';
 import { HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from '../HivePiece';
 
 describe('HiveMove', () => {
-    const drop: HiveMove = HiveMove.drop(new HivePieceQueenBee(Player.ZERO), 0, 0);
-    const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 0));
+    const drop: HiveMove = HiveMove.drop(new HivePieceQueenBee(Player.ZERO), 0, 0).get();
+    const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 0)).get();
     const spiderMove: HiveMove = HiveMove.spiderMove([
         new Coord(0, 0), new Coord(1, 0), new Coord(2, 0), new Coord(3, 0),
-    ]);
+    ]).get();
     it('should redefine toString', () => {
         expect(drop.toString()).toEqual('HiveDrop(QueenBee_PLAYER_ZERO, (0, 0))');
         expect(move.toString()).toEqual('HiveMoveCoordToCoord((0, 0) -> (1, 0))');
@@ -25,7 +25,7 @@ describe('HiveMove', () => {
         expect(HiveMove.PASS.equals(move)).toBeFalse();
     });
     it('should not consider regular move equal to spiderMove even if they have the same start and end', () => {
-        const regularMove: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(3, 0));
+        const regularMove: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(3, 0)).get();
         const similarSpiderMove: HiveMove = spiderMove;
         expect(regularMove.equals(similarSpiderMove)).toBeFalse();
         expect(similarSpiderMove.equals(regularMove)).toBeFalse();
@@ -38,11 +38,11 @@ describe('HiveMove', () => {
     });
     it('should encode and decode all pieces correctly', () => {
         const drops: HiveMove[] = [
-            HiveMove.drop(new HivePieceQueenBee(Player.ZERO), 0, 0),
-            HiveMove.drop(new HivePieceBeetle(Player.ZERO), 0, 0),
-            HiveMove.drop(new HivePieceGrasshopper(Player.ZERO), 0, 0),
-            HiveMove.drop(new HivePieceSpider(Player.ZERO), 0, 0),
-            HiveMove.drop(new HivePieceSoldierAnt(Player.ZERO), 0, 0),
+            HiveMove.drop(new HivePieceQueenBee(Player.ZERO), 0, 0).get(),
+            HiveMove.drop(new HivePieceBeetle(Player.ZERO), 0, 0).get(),
+            HiveMove.drop(new HivePieceGrasshopper(Player.ZERO), 0, 0).get(),
+            HiveMove.drop(new HivePieceSpider(Player.ZERO), 0, 0).get(),
+            HiveMove.drop(new HivePieceSoldierAnt(Player.ZERO), 0, 0).get(),
         ];
         for (const move of drops) {
             EncoderTestUtils.expectToBeCorrect(HiveMove.encoder, move);

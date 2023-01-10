@@ -19,7 +19,7 @@ export class HiveDummyMinimax extends Minimax<HiveMove, HiveState> {
         const drops: HiveMove[] = [];
         for (const coord of HiveRules.get().getPossibleDropLocations(state)) {
             for (const remaining of state.remainingPieces.getAllRemaining(state.getCurrentPlayer())) {
-                drops.push(HiveMove.drop(remaining, coord.x, coord.y));
+                drops.push(HiveMove.drop(remaining, coord.x, coord.y).get());
             }
         }
         return drops;

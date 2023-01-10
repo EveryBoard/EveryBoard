@@ -184,7 +184,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         for (const coord of state.occupiedSpaces()) {
             if (state.getAt(coord).topPiece().owner === player) {
                 for (const neighbor of state.emptyNeighbors(coord)) {
-                    const move: HiveMoveDrop = new HiveMoveDrop(remainingPiece, neighbor.x, neighbor.y);
+                    const move: HiveMoveDrop = HiveMoveDrop.from(remainingPiece, neighbor.x, neighbor.y).get();
                     if (this.isLegalDrop(move, state).isSuccess()) {
                         locations.add(neighbor);
                     }

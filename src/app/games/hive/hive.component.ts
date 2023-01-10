@@ -232,7 +232,7 @@ export class HiveComponent
         const state: HiveState = this.getState();
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
-            const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord.x, coord.y);
+            const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord.x, coord.y).get();
             return this.chooseMove(move, state);
         }
         if (this.selectedStart.isPresent()) {
@@ -240,8 +240,12 @@ export class HiveComponent
             if (topPiece instanceof HivePieceSpider) {
                 return this.selectNextSpiderSpace(coord, topPiece);
             } else {
-                const move: HiveMove = HiveMove.move(this.selectedStart.get(), coord);
-                return this.chooseMove(move, state);
+                const move: MGPFallible<HiveMove> = HiveMove.move(this.selectedStart.get(), coord);
+                if (move.isFailure()) {
+                    return this.cancelMove(move.getReason());
+                } else {
+                    return this.chooseMove(move.get(), state);
+                }
             }
         } else {
             if (stack.size() === 0) {
@@ -300,7 +304,7 @@ export class HiveComponent
         this.selectedSpiderCoords.push(coord);
         this.selected.push(coord);
         if (this.selectedSpiderCoords.length === 4) {
-            const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
+            const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]).get();
             return this.chooseMove(move, this.getState());
         }
         const validity: MGPFallible<void> = spider.prefixValidity(this.selectedSpiderCoords, this.getState());

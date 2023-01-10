@@ -2,7 +2,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { HivePiece } from './HivePiece';
 
@@ -14,7 +16,11 @@ export class HiveMoveDrop extends MoveCoord {
         (fields: [HivePiece, Coord]): HiveMoveDrop => new HiveMoveDrop(fields[0], fields[1].x, fields[1].y),
     );
 
-    public constructor(public readonly piece: HivePiece, x: number, y: number) {
+    public static from(piece: HivePiece, x: number, y: number): MGPFallible<HiveMoveDrop> {
+        return MGPFallible.success(new HiveMoveDrop(piece, x, y));
+    }
+
+    private constructor(public readonly piece: HivePiece, x: number, y: number) {
         super(x, y);
     }
 
@@ -38,6 +44,17 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
         (move: HiveMoveSpider): [Coord, Coord] => [move.coord, move.end],
         (fields: [Coord, Coord]): HiveMoveCoordToCoord => new HiveMoveCoordToCoord(fields[0], fields[1]),
     );
+
+    public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
+        if (start.equals(end)) {
+            return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
+        }
+        return MGPFallible.success(new HiveMoveCoordToCoord(start, end));
+    }
+
+    protected constructor(start: Coord, end: Coord) {
+        super(start, end);
+    }
 
     public toString(): string {
         return `HiveMoveCoordToCoord(${this.coord.toString()} -> ${this.end.toString()})`;
@@ -63,7 +80,11 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
         (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
     );
 
-    public constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
+    public static fromCoords(coords: [Coord, Coord, Coord, Coord]): MGPFallible<HiveMoveSpider> {
+        return MGPFallible.success(new HiveMoveSpider(coords));
+    }
+
+    private constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
         super(coords[0], coords[3]);
     }
 
@@ -98,16 +119,16 @@ export namespace HiveMove {
 
     export const PASS: HiveMove = new HiveMovePass();
 
-    export function drop(piece: HivePiece, x: number, y: number): HiveMove {
-        return new HiveMoveDrop(piece, x, y);
+    export function drop(piece: HivePiece, x: number, y: number): MGPFallible<HiveMove> {
+        return HiveMoveDrop.from(piece, x, y);
     }
 
-    export function move(start: Coord, end: Coord): HiveMove {
-        return new HiveMoveCoordToCoord(start, end);
+    export function move(start: Coord, end: Coord): MGPFallible<HiveMove> {
+        return HiveMoveCoordToCoord.from(start, end);
     }
 
-    export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
-        return new HiveMoveSpider(coords);
+    export function spiderMove(coords: [Coord, Coord, Coord, Coord]): MGPFallible<HiveMove> {
+        return HiveMoveSpider.fromCoords(coords);
     }
 
     export const encoder: MoveEncoder<HiveMove> = new class extends MoveEncoder<HiveMove> {

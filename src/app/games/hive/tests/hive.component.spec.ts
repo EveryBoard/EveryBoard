@@ -88,7 +88,7 @@ describe('HiveComponent', () => {
 
                 // When clicking on a valid landing
                 // Then the move should succeed
-                const move: HiveMove = HiveMove.drop(Q, 0, 0);
+                const move: HiveMove = HiveMove.drop(Q, 0, 0).get();
                 await testUtils.expectMoveSuccess('#space_0_0', move);
             }));
             it('should fail dropping if the move is illegal', fakeAsync(async() => {
@@ -100,7 +100,7 @@ describe('HiveComponent', () => {
 
                 // When performing an illegal drop move
                 await testUtils.expectClickSuccess('#remainingPiece_Beetle_PLAYER_ZERO');
-                const move: HiveMove = HiveMove.drop(B, 2, 0);
+                const move: HiveMove = HiveMove.drop(B, 2, 0).get();
 
                 // Then it should fail
                 const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
@@ -113,7 +113,7 @@ describe('HiveComponent', () => {
 
                 // When performing a drop move
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
-                const move: HiveMove = HiveMove.drop(Q, 0, 0);
+                const move: HiveMove = HiveMove.drop(Q, 0, 0).get();
                 await testUtils.expectMoveSuccess('#space_0_0', move);
 
                 // Then the dropped piece should not be in the remaining pieces anymore
@@ -192,7 +192,7 @@ describe('HiveComponent', () => {
 
                 // When clicking on a destination
                 // Then the move should succeed
-                const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(1, 1));
+                const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(1, 1)).get();
                 await testUtils.expectMoveSuccess('#space_1_1', move);
             }));
             it('should fail moving when the move is illegal', fakeAsync(async() => {
@@ -207,7 +207,7 @@ describe('HiveComponent', () => {
                 // When clicking on an illegal destination
                 // Then the move should fail
                 const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
-                const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2));
+                const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2)).get();
                 await testUtils.expectMoveFailure('#space_0_2', reason, move);
             }));
             describe('spider', () => {
@@ -231,7 +231,7 @@ describe('HiveComponent', () => {
                         new Coord(1, 2),
                         new Coord(2, 1),
                         new Coord(2, 0),
-                    ]);
+                    ]).get();
                     await testUtils.expectMoveSuccess('#space_2_0', move);
                 }));
                 it('should show valid intermediary spaces and the selected path', fakeAsync(async() => {
@@ -269,6 +269,19 @@ describe('HiveComponent', () => {
                     await testUtils.expectClickFailure('#space_1_0', reason);
                 }));
             });
+            it('should fail when doing a static move', fakeAsync(async() => {
+                // Given a state with pieces ready to move
+                const state: HiveState = HiveState.fromRepresentation([
+                    [[Q], [q]],
+                    [[S], []],
+                ], 2);
+                testUtils.setupState(state);
+
+                // When trying to do a static move
+                // Then it should fail
+                await testUtils.expectClickSuccess('#piece_0_0');
+                await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MOVE_CANNOT_BE_STATIC());
+            }));
         });
     });
     describe('stacks', () => {

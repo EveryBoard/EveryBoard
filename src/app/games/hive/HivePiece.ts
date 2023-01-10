@@ -86,7 +86,7 @@ export class HivePieceQueenBee extends HivePiece {
         const moves: HiveMoveCoordToCoord[] = [];
         for (const neighbor of HexagonalUtils.neighbors(coord)) {
             if (state.getAt(neighbor).isEmpty()) {
-                moves.push(new HiveMoveCoordToCoord(coord, neighbor));
+                moves.push(HiveMoveCoordToCoord.from(coord, neighbor).get());
             }
         }
         return moves;
@@ -110,7 +110,7 @@ export class HivePieceBeetle extends HivePiece {
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
         const moves: HiveMoveCoordToCoord[] = [];
         for (const neighbor of HexagonalUtils.neighbors(coord)) {
-            moves.push(new HiveMoveCoordToCoord(coord, neighbor));
+            moves.push(HiveMoveCoordToCoord.from(coord, neighbor).get());
         }
         return moves;
     }
@@ -148,7 +148,7 @@ export class HivePieceGrasshopper extends HivePiece {
                 while (state.getAt(end).isEmpty() === false) {
                     end = end.getNext(direction);
                 }
-                moves.push(new HiveMoveCoordToCoord(coord, end));
+                moves.push(HiveMoveCoordToCoord.from(coord, end).get());
             }
         }
         return moves;
@@ -216,7 +216,7 @@ export class HivePieceSpider extends HivePiece {
                     .map((coord: Coord): Coord[] => [...move, coord]);
             });
         }
-        return moves.map((move: Coord[]) => new HiveMoveSpider(move as [Coord, Coord, Coord, Coord]));
+        return moves.map((move: Coord[]) => HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]).get());
     }
 }
 
@@ -242,7 +242,7 @@ export class HivePieceSoldierAnt extends HivePiece {
                 continue;
             }
             for (const unoccupied of state.emptyNeighbors(occupiedSpace)) {
-                moves.add(new HiveMoveCoordToCoord(coord, unoccupied));
+                moves.add(HiveMoveCoordToCoord.from(coord, unoccupied).get());
             }
         }
         return moves.toList();
