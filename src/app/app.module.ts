@@ -96,6 +96,7 @@ import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { ThreeDIsoSquareComponent } from './games/trexo/three-d-iso-square.component';
 
 registerLocaleData(localeFr);
 
@@ -202,7 +203,7 @@ export class FirebaseProviders {
         SiamComponent,
         SixComponent,
         TablutComponent,
-        TrexoComponent,
+        TrexoComponent, ThreeDIsoSquareComponent,
         YinshComponent,
 
         HumanDurationPipe,

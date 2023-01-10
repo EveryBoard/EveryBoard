@@ -1,10 +1,11 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
+import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
 
-export class PylosCoord extends Coord {
+export class PylosCoord extends CoordXYZ {
 
-    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
+    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number { // TODOTODO: mettre en commun avec classe mère
         let result: number;
         if (optionalCoord.isPresent()) {
             result = PylosCoord.encode(optionalCoord.get()) + 1; // From 1 to 64
@@ -36,31 +37,19 @@ export class PylosCoord extends Coord {
 
         return new PylosCoord(x, y, z);
     }
-    constructor(x: number, y: number, public readonly z: number) {
-        super(x, y);
-        if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
-        if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);
-        if (z < 0 || z > 3) throw new Error(`PylosCoord: Invalid Z: ${z}.`);
+    constructor(x: number, y: number, public readonly z: number) { // TODO: create PylosCoord as a child of CoordXYZ
+        super(x, y, z);
+        if (x < 0 || x > 3) throw new Error(`CoordXYZ: Invalid X: ${x}.`);
+        if (y < 0 || y > 3) throw new Error(`CoordXYZ: Invalid Y: ${y}.`);
+        if (z < 0 || z > 3) throw new Error(`CoordXYZ: Invalid Z: ${z}.`);
         const floorSize: number = 4 - z;
         if (this.isNotInRange(floorSize, floorSize)) throw new Error(this.toString() + ' is not in range.');
     }
     public toString(): string {
         return 'PylosCoord' + this.toShortString();
     }
-    public toShortString(): string {
-        return '(' + this.x + ', ' + this.y + ', ' + this.z + ')';
-    }
-    public equals(o: PylosCoord): boolean {
-        if (this === o) return true;
-        if (o.x !== this.x) return false;
-        if (o.y !== this.y) return false;
-        return o.z === this.z;
-    }
-    public isUpperThan(p: PylosCoord): boolean {
-        return this.z > p.z;
-    }
     public getLowerPieces(): PylosCoord[] {
-        if (this.z === 0) throw new Error(`PylosCoord: floor pieces don't have lower pieces.`);
+        if (this.z === 0) throw new Error(`CoordXYZ: floor pieces don't have lower pieces.`);
         const lowerZ: number = this.z - 1;
         const upLeft: PylosCoord = new PylosCoord(this.x, this.y, lowerZ);
         const upRight: PylosCoord = new PylosCoord(this.x + 1, this.y, lowerZ);

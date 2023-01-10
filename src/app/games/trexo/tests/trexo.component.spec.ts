@@ -1,26 +1,26 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TrexoComponent, TrexoComponentFailure } from '../trexo.component';
 import { TrexoMove } from '../TrexoMove';
-import { TrexoSpace, TrexoState } from '../TrexoState';
-
-const _____: TrexoSpace = TrexoSpace.EMPTY;
-const O1_T0: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 0);
-const O1_T1: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 1);
-const O2_T2: TrexoSpace = new TrexoSpace(Player.ZERO, 2, 2);
-const O1_T3: TrexoSpace = new TrexoSpace(Player.ZERO, 1, 3);
-const X1_T0: TrexoSpace = new TrexoSpace(Player.ONE, 1, 0);
-const X1_T1: TrexoSpace = new TrexoSpace(Player.ONE, 1, 1);
-const X2_T2: TrexoSpace = new TrexoSpace(Player.ONE, 2, 2);
-const X1_T3: TrexoSpace = new TrexoSpace(Player.ONE, 1, 3);
 
 // eslint-disable-next-line max-lines-per-function
 fdescribe('TrexoComponent', () => {
 
     let testUtils: ComponentTestUtils<TrexoComponent>;
+
+    async function doMove(zero: Coord, one: Coord) {
+        let opponent: Coord = zero;
+        let player: Coord = one;
+        if (testUtils.getComponent().getTurn() % 2 === 0) {
+            opponent = one;
+            player = zero;
+        }
+        await testUtils.expectClickSuccess('#space_' + opponent.x + '_' + opponent.y);
+        const move: TrexoMove = TrexoMove.from(zero, one).get();
+        await testUtils.expectMoveSuccess('#space_' + player.x + '_' + player.y, move);
+    }
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<TrexoComponent>('Trexo');
@@ -32,28 +32,16 @@ fdescribe('TrexoComponent', () => {
             // Then the click should be a success
             await testUtils.expectClickSuccess('#space_5_5');
             // and a dropped piece for the opponent should be displayed
-            testUtils.expectElementToExist('#piece_one_5_5');
+            testUtils.expectElementToExist('#dropped_piece_5_5_0');
         }));
         it(`should fail when clicking on an isolated piece`, fakeAsync(async() => {
             // Given a board on which one space is higher than all it's neighbooring space (except it's "twin")
-            const state: TrexoState = TrexoState.from([
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, X1_T0, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, O1_T0, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            ], 1).get();
-            testUtils.setupState(state);
+            await doMove(new Coord(0, 0), new Coord(0, 1));
 
             // When trying to choose it as first coord
             // Then it should fail
             const reason: string = TrexoComponentFailure.NO_WAY_TO_DROP_IT_HERE();
-            await testUtils.expectClickFailure('#space_4_4', reason);
+            await testUtils.expectClickFailure('#space_0_0', reason);
         }));
         it('should show possible next click amongst the possible neigbhors', fakeAsync(async() => {
             // Given any board
@@ -65,8 +53,23 @@ fdescribe('TrexoComponent', () => {
             testUtils.expectElementToExist('#indicator_5_4');
             testUtils.expectElementToExist('#indicator_5_6');
         }));
+        it('should allow clicking on second level', fakeAsync(async() => {
+            // Given any board where two neighboring tiles are on the same level
+            await testUtils.expectClickSuccess('#space_5_5');
+            let move: TrexoMove = TrexoMove.from(new Coord(5, 6), new Coord(5, 5)).get();
+            await testUtils.expectMoveSuccess('#space_5_6', move);
+            await testUtils.expectClickSuccess('#space_6_5');
+            move = TrexoMove.from(new Coord(6, 5), new Coord(6, 6)).get();
+            await testUtils.expectMoveSuccess('#space_6_6', move);
+
+            // When clicking on one of them
+            await testUtils.expectClickSuccess('#space_5_5');
+
+            // Then the droppedPiece should appear on it
+            testUtils.expectElementToExist('#dropped_piece_5_5_1');
+        }));
     });
-    fdescribe(`second click`, () => {
+    describe(`second click`, () => {
         it(`should allow legal move`, fakeAsync(async() => {
             // Given any board on which a first click has been made
             await testUtils.expectClickSuccess('#space_5_5');
@@ -85,8 +88,8 @@ fdescribe('TrexoComponent', () => {
             // Then the click should be a success
             await testUtils.expectClickSuccess('#space_7_7');
             // And the dropped piece changed
-            testUtils.expectElementNotToExist('#piece_one_5_5');
-            testUtils.expectElementToExist('#piece_one_7_7');
+            testUtils.expectElementNotToExist('#dropped_piece_5_5_0');
+            testUtils.expectElementToExist('#dropped_piece_7_7_0');
         }));
         it(`should show last move`, fakeAsync(async() => {
             // Given any board on which a first click has been made
@@ -97,8 +100,8 @@ fdescribe('TrexoComponent', () => {
             await testUtils.expectMoveSuccess('#space_4_5', move);
 
             // Then the dropped coords should be highlighted
-            testUtils.expectElementToHaveClass('#piece_4_5', 'last-move-stroke');
-            testUtils.expectElementToHaveClass('#piece_5_5', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#tile_4_5_0', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#tile_5_5_0', 'last-move-stroke');
         }));
         it(`should cancel move when clicking again on the same coord`, fakeAsync(async() => {
             // Given any board on which a first click has been made
@@ -108,35 +111,26 @@ fdescribe('TrexoComponent', () => {
             // Then the move should be cancelled without toast
             await testUtils.expectClickSuccess('#space_5_5');
             // And the piece deselected
-            testUtils.expectElementNotToExist('#piece_one_5_5');
+            testUtils.expectElementNotToExist('#dropped_piece_5_5');
         }));
         it('should highlight victory', fakeAsync(async() => {
-            // Given any board on which a first click has been made and a victory is possible
-            const state: TrexoState = TrexoState.from([
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, O1_T0, _____, O2_T2, _____, _____, _____, _____],
-                [_____, _____, _____, X1_T0, X1_T1, X2_T2, X1_T3, _____, _____, _____],
-                [_____, _____, _____, _____, O1_T1, _____, O1_T3, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            ], 4).get();
-            testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#space_7_3');
+            // Given any board on which a 4 moves have already been done, aligning piece of Player.ZERO
+            await doMove(new Coord(3, 3), new Coord(3, 2));
+            await doMove(new Coord(4, 3), new Coord(4, 4));
+            await doMove(new Coord(5, 3), new Coord(5, 2));
+            await doMove(new Coord(6, 3), new Coord(6, 4));
+            await testUtils.expectClickSuccess('#space_7_2');
 
             // When doing the victorious move
-            const move: TrexoMove = TrexoMove.from(new Coord(7, 2), new Coord(7, 3)).get();
+            const move: TrexoMove = TrexoMove.from(new Coord(7, 3), new Coord(7, 2)).get();
 
             // Then the 5 victory coords should be highlighted
-            await testUtils.expectMoveSuccess('#space_7_2', move);
-            testUtils.expectElementToHaveClass('#piece_3_3', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_4_3', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_5_3', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_6_3', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_7_3', 'victory-stroke');
+            await testUtils.expectMoveSuccess('#space_7_3', move);
+            testUtils.expectElementToHaveClass('#tile_3_3_0', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#tile_4_3_0', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#tile_5_3_0', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#tile_6_3_0', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#tile_7_3_0', 'victory-stroke');
         }));
     });
 });

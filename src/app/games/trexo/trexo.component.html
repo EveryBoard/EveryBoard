@@ -1,42 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="(-STROKE_WIDTH / 2) + ' ' + (-STROKE_WIDTH / 2) + ' ' + (10 * SPACE_SIZE + STROKE_WIDTH) + ' ' + (10 * SPACE_SIZE + STROKE_WIDTH)">
+     [attr.viewBox]="LEFT + ' ' + UP + ' ' + WIDTH + ' ' + HEIGHT">
+
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let space of line; index as x"
-           id="space_{{ x }}_{{ y }}"
-           [attr.transform]="'translate(' + (SPACE_SIZE * x) + ' ' + (SPACE_SIZE * y) + ')'"
-           (click)="onClick(x, y)">
-            <rect [attr.x]="0"
-                  [attr.y]="0"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-                  class="base"
-            />
-            <circle *ngIf="space.owner.isPlayer()"
-                    id="piece_{{ x }}_{{ y }}"
-                    [attr.cx]="0.5 * SPACE_SIZE"
-                    [attr.cy]="0.5 * SPACE_SIZE"
-                    [attr.r]="0.5 * (SPACE_SIZE - 2 * STROKE_WIDTH)"
-                    [ngClass]="getPieceClasses(x, y)"
-                    class="base"
-            />
+        <g *ngFor="let space of line; index as x">
+            <polygon id="space_{{ x }}_{{ y }}"
+                     [attr.points]="getRhombusPoints()"
+                     [attr.transform]="getTranslate(x, y, 0)"
+                     (click)="onClick(x, y)"
+                     class="base"/>
         </g>
     </g>
-    <circle *ngIf="droppedPiece.isPresent()"
-            [attr.transform]="'translate(' + (SPACE_SIZE * droppedPiece.get().x) + ' ' + (SPACE_SIZE * droppedPiece.get().y) + ')'"
-            [attr.id]="getDroppedPieceId()"
-            [attr.cx]="0.5 * SPACE_SIZE"
-            [attr.cy]="0.5 * SPACE_SIZE"
-            [attr.r]="0.5 * (SPACE_SIZE - 2 * STROKE_WIDTH)"
-            [ngClass]="currentOpponentClass"
-            class="base highlight"
-    />
+    <g *ngFor="let moveZ of pieceOnBoard; index as z">
+        <g *ngFor="let moveYZ of moveZ; index as y">
+            <g *ngFor="let piece of moveYZ; index as x">
+                <g *ngIf="piece.move.isPresent()"
+                   app-3d-iso-square
+                   id="app_3d_iso_square_{{ x }}_{{ y }}_{{ z }}"
+                   (click)="onClick(x, y)"
+                   [attr.transform]="getTranslate(x, y, z + 1)"
+                   [coord]="getCoordXYZ(x, y, z)"
+                   [move]="piece.move.get()"
+                   [pieceClasses]="getPieceClasses(x, y)"/>
+                <g *ngIf="piece.isDroppedPiece"
+                   app-3d-iso-square
+                   id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
+                   (click)="onClick(x, y)"
+                   [attr.transform]="getTranslate(x, y, z + 1)"
+                   [coord]="getCoordXYZ(x, y, z)"
+                   [pieceClasses]="[currentOpponentClass]"/>
+            </g>
+        </g>
+    </g>
     <rect *ngFor="let possibleNextClick of possibleNextClicks"
           id="indicator_{{ possibleNextClick.x }}_{{ possibleNextClick.y }}"
           (click)="onClick(possibleNextClick.x, possibleNextClick.y)"
-          [attr.x]="(possibleNextClick.x + 0.45) * SPACE_SIZE"
-          [attr.y]="(possibleNextClick.y + 0.45) * SPACE_SIZE"
+          [attr.transform]="getPieceTranslate(possibleNextClick.x, possibleNextClick.y)"
+          [attr.x]="0.45 * SPACE_SIZE"
+          [attr.y]="0.45 * SPACE_SIZE"
           [attr.width]="0.1 * SPACE_SIZE"
           [attr.height]="0.1 * SPACE_SIZE"
-          class="indicator" />
+          class="indicator"/>
 </svg>

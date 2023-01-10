@@ -1,0 +1,20 @@
+<svg:polyline id="tile_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+              [attr.points]="getOpenRhombusPoints()"
+              [ngClass]="pieceClasses"
+              class="base"/>
+<svg:polyline *ngIf="pieceIsOnTheRightUp()"
+              id="right_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+              [attr.points]="getOpenDiagonalRightUp()"
+              class="base"/>
+<svg:g *ngIf="pieceIsOnTheRightDown()">
+    <svg:polyline id="down_right_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+                  [attr.points]="getOpenDiagonalRightDown()"
+                  class="base"/>
+    <svg:polyline id="right_down_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+                  [attr.points]="getRhombusHorizontalVolumeRight()"
+                  class="base"/>
+</svg:g>
+<svg:polyline *ngIf="pieceIsOnTheDownLeft()"
+              id="right_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+              [attr.points]="getRhombusHorizontalVolumeLeft()"
+              class="base"/>

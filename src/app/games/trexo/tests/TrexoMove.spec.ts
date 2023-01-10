@@ -1,9 +1,14 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { TrexoMinimax } from '../TrexoMinimax';
 import { TrexoMove, TrexoMoveFailure } from '../TrexoMove';
+import { TrexoRules } from '../TrexoRules';
 import { TrexoState } from '../TrexoState';
 
-fdescribe('TrexoMove', () => {
+describe('TrexoMove', () => {
+
     it('should refuse to create out of board move (player.zero piece)', () => {
         // When coord of piece zero is out of range
         const zero: Coord = new Coord(-1, 0);
@@ -47,5 +52,13 @@ fdescribe('TrexoMove', () => {
 
         // Then it should succeed
         expect(move.isSuccess()).toBeTrue();
+    });
+    it('should have a bijective move encoder', () => {
+        const rules: TrexoRules = TrexoRules.get();
+        const minimax: TrexoMinimax = new TrexoMinimax(rules, 'dummy');
+        const firstTurnMoves: TrexoMove[] = minimax.getListMoves(rules.node);
+        for (const move of firstTurnMoves) {
+            NumberEncoderTestUtils.expectToBeCorrect(TrexoMove.encoder, move);
+        }
     });
 });

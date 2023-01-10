@@ -3,7 +3,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PylosCoord } from '../PylosCoord';
 
-describe('PylosCoord:', () => {
+describe('CoordXYZ:', () => {
 
     it('should encode optional and decode should be symetrical', () => {
         const initialValues: MGPOptional<PylosCoord>[] = [
@@ -20,10 +20,10 @@ describe('PylosCoord:', () => {
     });
 
     it('should forbid invalid coord creation', () => {
-        expect(() => new PylosCoord(-1, 0, 0)).toThrowError('PylosCoord: Invalid X: -1.');
-        expect(() => new PylosCoord(0, -1, 0)).toThrowError('PylosCoord: Invalid Y: -1.');
-        expect(() => new PylosCoord(0, 0, -1)).toThrowError('PylosCoord: Invalid Z: -1.');
-        expect(() => new PylosCoord(3, 3, 3)).toThrowError('PylosCoord(3, 3, 3) is not in range.');
+        expect(() => new PylosCoord(-1, 0, 0)).toThrowError('CoordXYZ: Invalid X: -1.');
+        expect(() => new PylosCoord(0, -1, 0)).toThrowError('CoordXYZ: Invalid Y: -1.');
+        expect(() => new PylosCoord(0, 0, -1)).toThrowError('CoordXYZ: Invalid Z: -1.');
+        expect(() => new PylosCoord(3, 3, 3)).toThrowError('CoordXYZ(3, 3, 3) is not in range.');
     });
 
     it('should override equals correctly', () => {
@@ -53,7 +53,7 @@ describe('PylosCoord:', () => {
         const expectedLowerPieces: PylosCoord[] = [upLeft, upRight, downLeft, downRight];
         const piece: PylosCoord = new PylosCoord(0, 0, 1);
         const lowerPieces: PylosCoord[] = piece.getLowerPieces();
-        expect(() => upLeft.getLowerPieces()).toThrowError(`PylosCoord: floor pieces don't have lower pieces.`);
+        expect(() => upLeft.getLowerPieces()).toThrowError(`CoordXYZ: floor pieces don't have lower pieces.`);
         expect(lowerPieces).toEqual(expectedLowerPieces);
     });
 

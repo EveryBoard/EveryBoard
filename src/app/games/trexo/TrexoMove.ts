@@ -7,7 +7,7 @@ import { TrexoState } from './TrexoState';
 
 export class TrexoMoveFailure {
 
-    public static readonly NON_NEIGHBOR_COORDS: Localized = () => $localize`TODOTODO: NON_NEIGHBOR_COORDS`;
+    public static readonly NON_NEIGHBOR_COORDS: Localized = () => $localize`Thoses two coord are not neighbors!`;
 }
 
 /**
@@ -40,7 +40,7 @@ export class TrexoMove extends MoveCoordToCoord {
     public toString(): string {
         return this.coord.toString() + ' && ' + this.end.toString();
     }
-    public equals(o: this): boolean {
-        throw new Error('equals not implemented.');
+    public equals(o: TrexoMove): boolean {
+        return this.coord.equals(o.coord) && this.end.equals(o.end);
     }
 }

@@ -20,7 +20,7 @@ const X2_T2: TrexoSpace = new TrexoSpace(Player.ONE, 2, 2);
 const X1_T3: TrexoSpace = new TrexoSpace(Player.ONE, 1, 3);
 const X1_T4: TrexoSpace = new TrexoSpace(Player.ONE, 1, 4);
 
-fdescribe('TrexoRules', () => {
+describe('TrexoRules', () => {
 
     let rules: TrexoRules;
     let minimaxes: Minimax<TrexoMove, TrexoState>[];

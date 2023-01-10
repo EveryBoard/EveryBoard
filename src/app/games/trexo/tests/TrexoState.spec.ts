@@ -4,7 +4,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TrexoSpace, TrexoState, TrexoStateFailure } from '../TrexoState';
 
-fdescribe('TrexoState', () => {
+describe('TrexoState', () => {
     it('should refuse creating a board that is not a 10x10', () => {
         // Given a 11x11 board
         const board: TrexoSpace[][] = ArrayUtils.createTable(11, 11, TrexoSpace.EMPTY);
