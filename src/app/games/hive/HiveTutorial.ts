@@ -99,7 +99,7 @@ export class HiveTutorial extends Tutorial {
                 [[], [Q], [b]],
                 [[a], [s], []],
             ], 6),
-            HiveMove.move(new Coord(1, 0), new Coord(2, 0)).get(),
+            HiveMove.move(new Coord(1, 0), new Coord(3, 0)).get(),
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Moving the spider`,
