@@ -16,6 +16,7 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
     @Input() coord: Coord;
     @Input() hexaLayout: HexaLayout;
     @Input() sideView: boolean;
+    @Input() indicator: boolean;
 
     public pieceClass: string[] = [];
     public hexaPoints: string = '';

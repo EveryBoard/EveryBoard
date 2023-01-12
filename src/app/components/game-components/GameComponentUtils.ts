@@ -1,6 +1,78 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
+import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Utils } from 'src/app/utils/utils';
+
+interface Limits {
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number
+}
+
+export class ViewBox {
+    public static fromHexa(coords: Coord[], hexaLayout: HexaLayout, strokeWidth: number): ViewBox {
+        const actualCoords: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaCoordListAt(coord));
+        const limits: Limits = ViewBox.getLimits(actualCoords);
+        const left: number = limits.minX - (strokeWidth / 2);
+        const up: number = limits.minY - (strokeWidth / 2);
+        const width: number = strokeWidth + limits.maxX - limits.minX;
+        const height: number = strokeWidth + limits.maxY - limits.minY;
+        return new ViewBox(left, up, width, height);
+    }
+    private static getLimits(coords: Coord[]): Limits {
+        let maxX: number = Number.MIN_SAFE_INTEGER;
+        let maxY: number = Number.MIN_SAFE_INTEGER;
+        let minX: number = Number.MAX_SAFE_INTEGER;
+        let minY: number = Number.MAX_SAFE_INTEGER;
+        for (const coord of coords) {
+            if (coord.x < minX) {
+                minX = coord.x;
+            }
+            if (coord.y < minY) {
+                minY = coord.y;
+            }
+            maxX = Math.max(maxX, coord.x);
+            maxY = Math.max(maxY, coord.y);
+        }
+        return { minX, minY, maxX, maxY };
+    }
+
+    public constructor(public readonly left: number,
+                       public readonly up: number,
+                       public readonly width: number,
+                       public readonly height: number)
+    {
+    }
+
+    public center(): Coord {
+        return new Coord(this.left + this.width / 2, this.up + this.height / 2);
+    }
+
+    public bottom(): number {
+        return this.up + this.height;
+    }
+
+    public right(): number {
+        return this.left + this.width;
+    }
+
+    public expand(left: number, right: number, above: number, below: number): ViewBox {
+        return new ViewBox(this.left - left, this.up - above, this.width + left + right, this.height + above + below);
+    }
+
+    public containingAtLeast(viewBox: ViewBox): ViewBox {
+        const left: number = Math.max(this.left - viewBox.left, 0);
+        const right: number = Math.max(viewBox.right() - this.right(), 0);
+        const above: number = Math.max(this.up - viewBox.up, 0);
+        const below: number = Math.max(viewBox.bottom() - this.bottom(), 0);
+        return this.expand(left, right, above, below);
+    }
+
+    public toSVGString(): string {
+        return `${this.left} ${this.up} ${this.width} ${this.height}`;
+    }
+}
 
 export class GameComponentUtils {
     public static getArrowTransform(boardWidth: number, coord: Coord, direction: Orthogonal): string {

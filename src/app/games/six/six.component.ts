@@ -17,13 +17,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
-interface Limits {
-    minX: number;
-    minY: number;
-    maxX: number;
-    maxY: number
-}
 @Component({
     selector: 'app-six',
     templateUrl: './six.component.html',
@@ -88,40 +83,8 @@ export class SixComponent
         this.viewBox = this.getViewBox();
     }
     private getViewBox(): string {
-        const hexaCoords: Coord[] = this.mapAbstractCoordToCornerCoords();
-        const limits: Limits = this.getLimits(hexaCoords);
-        const left: number = limits.minX - (this.STROKE_WIDTH / 2);
-        const up: number = limits.minY - (this.STROKE_WIDTH / 2);
-        const width: number = this.STROKE_WIDTH + limits.maxX - limits.minX;
-        const height: number = this.STROKE_WIDTH + limits.maxY - limits.minY;
-        return left + ' ' + up + ' ' + width + ' ' + height;
-    }
-    private mapAbstractCoordToCornerCoords(): Coord[] {
-        const abstractCoords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
-        const pieceCornersGrouped: Coord[][] =
-            abstractCoords.map((coord: Coord) => this.hexaLayout.getHexaCoordListAt(coord));
-        let cornerCoords: Coord[] = [];
-        for (const pieceCornerGroup of pieceCornersGrouped) {
-            cornerCoords = cornerCoords.concat(pieceCornerGroup);
-        }
-        return cornerCoords;
-    }
-    private getLimits(coords: Coord[]): Limits {
-        let maxX: number = Number.MIN_SAFE_INTEGER;
-        let maxY: number = Number.MIN_SAFE_INTEGER;
-        let minX: number = Number.MAX_SAFE_INTEGER;
-        let minY: number = Number.MAX_SAFE_INTEGER;
-        for (const coord of coords) {
-            if (coord.x < minX) {
-                minX = coord.x;
-            }
-            if (coord.y < minY) {
-                minY = coord.y;
-            }
-            maxX = Math.max(maxX, coord.x);
-            maxY = Math.max(maxY, coord.y);
-        }
-        return { minX, minY, maxX, maxY };
+        const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
+        return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH).toSVGString();
     }
     public showLastMove(): void {
         const lastMove: SixMove = this.rules.node.move.get();

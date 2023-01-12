@@ -20,50 +20,6 @@ import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
 
-interface Limits {
-    minX: number;
-    minY: number;
-    maxX: number;
-    maxY: number
-}
-
-class ViewBox {
-    public constructor(public readonly left: number,
-                       public readonly up: number,
-                       public readonly width: number,
-                       public readonly height: number)
-    {
-    }
-
-    public center(): Coord {
-        return new Coord(this.left + this.width / 2, this.up + this.height / 2);
-    }
-
-    public bottom(): number {
-        return this.up + this.height;
-    }
-
-    public right(): number {
-        return this.left + this.width;
-    }
-
-    public expand(left: number, right: number, above: number, below: number): ViewBox {
-        return new ViewBox(this.left - left, this.up - above, this.width + left + right, this.height + above + below);
-    }
-
-    public containingAtLeast(viewBox: ViewBox): ViewBox {
-        const left: number = Math.max(this.left - viewBox.left, 0);
-        const right: number = Math.max(viewBox.right() - this.right(), 0);
-        const above: number = Math.max(this.up - viewBox.up, 0);
-        const below: number = Math.max(viewBox.bottom() - this.bottom(), 0);
-        return this.expand(left, right, above, below);
-    }
-
-    public toSVGString(): string {
-        return `${this.left} ${this.up} ${this.width} ${this.height}`;
-    }
-}
-
 interface PieceWithCoord {
     stack: HivePieceStack;
     coord: Coord;
@@ -130,7 +86,9 @@ export class HiveComponent
     }
 
     private computeViewBox(): void {
-        this.boardViewBox = this.getViewBox();
+        const coords: Coord[] = this.pieces.map((piece: PieceWithCoord) => piece.coord).concat(this.neighbors);
+        coords.push(new Coord(0, 0)); // Need at least one coord for Hive
+        this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
         const minimalViewBox: ViewBox = new ViewBox(
             this.getRemainingPieceTransformAsCoord(new HivePieceQueenBee(Player.ZERO)).x,
             0,
@@ -237,52 +195,64 @@ export class HiveComponent
         }
         if (this.selectedStart.isPresent()) {
             const topPiece: HivePiece = state.getAt(this.selectedStart.get()).topPiece();
-            if (topPiece instanceof HivePieceSpider) {
-                return this.selectNextSpiderSpace(coord, topPiece);
-            } else {
-                const move: MGPFallible<HiveMove> = HiveMove.move(this.selectedStart.get(), coord);
-                if (move.isFailure()) {
-                    return this.cancelMove(move.getReason());
-                } else {
-                    return this.chooseMove(move.get(), state);
-                }
-            }
+            return this.selectTarget(coord, topPiece);
         } else {
             if (stack.size() === 0) {
                 return this.cancelMove();
             }
-            const piece: HivePiece = stack.topPiece();
-            if (piece.owner !== state.getCurrentPlayer()) {
-                if (stack.size() === 1) {
-                    return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
-                } else {
-                    // We will only inspect the opponent stack, not do a move
-                    this.selected.push(coord);
-                    this.inspectedStack = MGPOptional.of(stack);
-                    return MGPValidation.SUCCESS;
-                }
-            }
-            if (piece instanceof HivePieceQueenBee === false &&
-                HiveRules.get().mustPlaceQueenBee(state)) {
-                return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
-            }
-            this.selectedStart = MGPOptional.of(coord);
-            this.selected.push(coord);
-            if (piece instanceof HivePieceSpider) {
-                this.selectedSpiderCoords.push(this.selectedStart.get());
-            }
-            if (stack.size() > 1) {
-                this.inspectedStack = MGPOptional.of(stack);
-            }
-            this.indicators = this.getNextPossibleCoords(coord);
+            return this.selectStart(coord, stack);
         }
+    }
+
+    private async selectTarget(coord: Coord, topPiece: HivePiece): Promise<MGPValidation> {
+        if (topPiece instanceof HivePieceSpider) {
+            return this.selectNextSpiderSpace(coord, topPiece);
+        } else {
+            const move: MGPFallible<HiveMove> = HiveMove.move(this.selectedStart.get(), coord);
+            if (move.isFailure()) {
+                return this.cancelMove(move.getReason());
+            } else {
+                return this.chooseMove(move.get(), this.getState());
+            }
+        }
+    }
+
+    private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
+        const state: HiveState = this.getState();
+        const piece: HivePiece = stack.topPiece();
+        if (piece.owner !== state.getCurrentPlayer()) {
+            if (stack.size() === 1) {
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            } else {
+                // We will only inspect the opponent stack, not do a move
+                this.selected.push(coord);
+                this.inspectedStack = MGPOptional.of(stack);
+                return MGPValidation.SUCCESS;
+            }
+        }
+        if (piece instanceof HivePieceQueenBee === false &&
+            HiveRules.get().mustPlaceQueenBee(state)) {
+            return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
+        }
+        this.selectedStart = MGPOptional.of(coord);
+        this.selected.push(coord);
+        if (piece instanceof HivePieceSpider) {
+            this.selectedSpiderCoords.push(this.selectedStart.get());
+        }
+        if (stack.size() > 1) {
+            this.inspectedStack = MGPOptional.of(stack);
+        }
+        this.indicators = this.getNextPossibleCoords(coord);
         return MGPValidation.SUCCESS;
     }
 
     public getHighlightTransform(coord: Coord): string {
-        // TODO: should draw indicators and pieces per layer (z = 0 first, then z = 1) for proper view
         const height: number = this.getState().getAt(coord).size() * this.PIECE_HEIGHT;
         return `translate(0 -${height})`;
+    }
+
+    public isIndicator(coord: Coord): boolean {
+        return this.indicators.some((indicator: Coord) => coord.equals(indicator));
     }
 
     private getNextPossibleCoords(coord: Coord): Coord[] {
@@ -313,46 +283,5 @@ export class HiveComponent
         }
         this.indicators = this.getNextPossibleCoords(this.selectedStart.get());
         return MGPValidation.SUCCESS;
-    }
-
-    // TODO: the rest here is (almost) stolen from SixComponent, try to generalize this
-    private getViewBox(): ViewBox {
-        const hexaCoords: Coord[] = this.mapAbstractCoordToCornerCoords();
-        const limits: Limits = this.getLimits(hexaCoords);
-        const left: number = limits.minX - (this.STROKE_WIDTH / 2);
-        const up: number = limits.minY - (this.STROKE_WIDTH / 2);
-        const width: number = this.STROKE_WIDTH + limits.maxX - limits.minX;
-        const height: number = this.STROKE_WIDTH + limits.maxY - limits.minY;
-        return new ViewBox(left, up, width, height);
-    }
-    private mapAbstractCoordToCornerCoords(): Coord[] {
-        const abstractCoords: Coord[] =
-            this.pieces.map((piece: PieceWithCoord) => piece.coord)
-                .concat(this.neighbors);
-        abstractCoords.push(new Coord(0, 0)); // Need at least one coord for Hive
-        const pieceCornersGrouped: Coord[][] =
-            abstractCoords.map((coord: Coord) => this.hexaLayout.getHexaCoordListAt(coord));
-        let cornerCoords: Coord[] = [];
-        for (const pieceCornerGroup of pieceCornersGrouped) {
-            cornerCoords = cornerCoords.concat(pieceCornerGroup);
-        }
-        return cornerCoords;
-    }
-    private getLimits(coords: Coord[]): Limits {
-        let maxX: number = Number.MIN_SAFE_INTEGER;
-        let maxY: number = Number.MIN_SAFE_INTEGER;
-        let minX: number = Number.MAX_SAFE_INTEGER;
-        let minY: number = Number.MAX_SAFE_INTEGER;
-        for (const coord of coords) {
-            if (coord.x < minX) {
-                minX = coord.x;
-            }
-            if (coord.y < minY) {
-                minY = coord.y;
-            }
-            maxX = Math.max(maxX, coord.x);
-            maxY = Math.max(maxY, coord.y);
-        }
-        return { minX, minY, maxX, maxY };
     }
 }
