@@ -334,4 +334,17 @@ describe('HiveComponent', () => {
         // Then the move should be canceled
         await testUtils.expectClickFailure('#space_2_0');
     }));
+    it('should allow to pass when player must pass', fakeAsync(async() => {
+        // Given a stuck state
+        const state: HiveState = HiveState.fromRepresentation([
+            [[b, B], [Q], [q]],
+        ], 4);
+
+        // When it is displayed
+        testUtils.setupState(state);
+
+        // Then the player can pass
+        const move: HiveMove = HiveMove.PASS;
+        await testUtils.expectPassSuccess(move);
+    }));
 });

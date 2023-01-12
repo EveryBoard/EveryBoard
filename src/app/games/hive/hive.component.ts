@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
@@ -66,11 +67,11 @@ export class HiveComponent
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.5,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
+        this.canPass = false;
         this.updateBoard();
     }
 
     public updateBoard(): void {
-        // TODO: player should be able to pass when needed
         this.pieces = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
@@ -83,7 +84,14 @@ export class HiveComponent
         this.neighbors = this.getAllNeighbors();
         this.computeViewBox();
         this.remainingPieces = this.getState().remainingPieces.toListOfStacks();
+        this.canPass = HiveRules.get().shouldPass(this.getState());
     }
+
+    public async pass(): Promise<MGPValidation> {
+        Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        return await this.chooseMove(HiveMove.PASS, this.getState());
+    }
+
 
     private computeViewBox(): void {
         const coords: Coord[] = this.pieces.map((piece: PieceWithCoord) => piece.coord).concat(this.neighbors);
