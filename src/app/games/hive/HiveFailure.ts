@@ -26,7 +26,7 @@ export class HiveFailure {
 
     public static readonly CANNOT_DISCONNECT_HIVE: Localized = () => $localize`You are not allowed to split the hive.`;
 
-    public static readonly MUST_HAVE_FREEDOM_TO_MOVE: Localized = () => $localize`This piece must have the freedom to move: its starting and ending space must have at most 4 neighbors`;
+    public static readonly MUST_BE_ABLE_TO_SLIDE: Localized = () => $localize`This piece must be able to slide to its destination.`;
 
     public static readonly MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN: Localized = () => $localize`You must place your queen bee before at your fourth turn at the latest.`;
 

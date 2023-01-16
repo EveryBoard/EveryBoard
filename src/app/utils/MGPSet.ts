@@ -115,6 +115,15 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return MGPOptional.empty();
     }
+    public intersect(other: MGPSet<T>): MGPSet<T> {
+        const result: MGPSet<T> = new MGPSet();
+        for (const element of other) {
+            if (this.contains(element)) {
+                result.add(element);
+            }
+        }
+        return result;
+    }
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }

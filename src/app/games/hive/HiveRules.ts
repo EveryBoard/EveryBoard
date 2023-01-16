@@ -105,15 +105,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return MGPFallible.failure(HiveFailure.CANNOT_DISCONNECT_HIVE());
         }
 
-        if (movedPiece.mustHaveFreedomToMove) {
-            // Piece must have freedom to move, meaning there is more than
-            // one empty space where they are, and where they go
-            if (state.numberOfNeighbors(move.coord) >= 5 ||
-                stateWithoutMovedPiece.numberOfNeighbors(move.end) >= 5) {
-                return MGPFallible.failure(HiveFailure.MUST_HAVE_FREEDOM_TO_MOVE());
-            }
-        }
-
         return MGPFallible.success(undefined);
     }
 

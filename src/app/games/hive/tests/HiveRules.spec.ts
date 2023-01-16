@@ -662,12 +662,12 @@ describe('HiveRules', () => {
         it('should be forbidden to split the hive in two', () => {
             // Given a board
             const board: Table<HivePiece[]> = [
-                [[Q], [A], [q]],
+                [[q], [Q], [A]],
             ];
             const state: HiveState = HiveState.fromRepresentation(board, 4);
 
             // When trying to perform a move that would split the hive in two
-            const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(3, 0)).get();
+            const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(2, -1)).get();
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
@@ -718,7 +718,7 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(1, 1), new Coord(1, 2)).get();
 
             // Then the move should fail
-            const reason: string = HiveFailure.MUST_HAVE_FREEDOM_TO_MOVE();
+            const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
 
         });
@@ -735,7 +735,7 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(1, 2), new Coord(1, 1)).get();
 
             // Then the move should fail
-            const reason: string = HiveFailure.MUST_HAVE_FREEDOM_TO_MOVE();
+            const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should be forbidden to move in a non-sliding movement (with only 3 neighbors)', () => {
@@ -752,14 +752,14 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(2, 1), new Coord(3, 0)).get();
 
             // Then it should fail
-            const reason: string = HiveFailure.MUST_HAVE_FREEDOM_TO_MOVE();
+            const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should be forbidden to move in a non-sliding movement (into a closed space)', () => {
             // Given a board where there is a closed space and a spider outside of the closed space
             const board: Table<HivePiece[]> = [
-                [[S], [A], [q], [Q]],
-                [[A], [], [], [b]],
+                [[A], [A], [q], [Q]],
+                [[a], [], [], [b]],
                 [[a], [a], [], [B]],
                 [[], [b], [B], []],
             ];
@@ -769,7 +769,7 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 1)).get();
 
             // Then it should fail
-            const reason: string = HiveFailure.MUST_HAVE_FREEDOM_TO_MOVE();
+            const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
