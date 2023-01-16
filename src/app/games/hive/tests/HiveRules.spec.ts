@@ -772,6 +772,28 @@ describe('HiveRules', () => {
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+        it('should be able to move in a non-sliding movement (for a spider)', () => {
+            // Given a board
+            const board: Table<HivePiece[]> = [
+                [[], [q], []],
+                [[B], [], [Q]],
+                [[s], [S], []],
+            ];
+            const state: HiveState = HiveState.fromRepresentation(board, 4);
+
+            // When trying to perform a move that could not be done by sliding the piece
+            const move: HiveMove = HiveMove.spiderMove([
+                new Coord(1, 2),
+                new Coord(1, 1),
+                new Coord(2, 0),
+                new Coord(3, 0),
+            ]).get();
+
+            // Then the move should fail
+            const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+
+        });
     });
     it('should allow passing if a player cannot perform any action', () => {
         // Given a board in a stuck position for a player: here, the player cannot

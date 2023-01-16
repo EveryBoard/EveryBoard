@@ -2,17 +2,18 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from '../HivePiece';
+import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from '../HivePiece';
 import { HiveState } from '../HiveState';
 
-describe('HivePiece', () => {
-    const Q: HivePiece = new HivePieceQueenBee(Player.ZERO);
-    const B: HivePiece = new HivePieceBeetle(Player.ZERO);
-    const G: HivePiece = new HivePieceGrasshopper(Player.ZERO);
-    const S: HivePiece = new HivePieceSpider(Player.ZERO);
-    const A: HivePiece = new HivePieceSoldierAnt(Player.ZERO);
-    const q: HivePiece = new HivePieceQueenBee(Player.ONE);
+const Q: HivePiece = new HivePieceQueenBee(Player.ZERO);
+const B: HivePiece = new HivePieceBeetle(Player.ZERO);
+const G: HivePiece = new HivePieceGrasshopper(Player.ZERO);
+const S: HivePiece = new HivePieceSpider(Player.ZERO);
+const A: HivePiece = new HivePieceSoldierAnt(Player.ZERO);
+const q: HivePiece = new HivePieceQueenBee(Player.ONE);
+const b: HivePiece = new HivePieceBeetle(Player.ONE);
 
+describe('HivePiece', () => {
     it('should define toString', () => {
         expect(Q.toString()).toEqual('QueenBee_PLAYER_ZERO');
     });
@@ -78,5 +79,18 @@ describe('HivePiece', () => {
         // When computing the possible moves for the soldier ant
         // Then we should have exactly 7 moves
         expect(A.getPossibleMoves(new Coord(0, 0), state).length).toBe(7);
+    });
+});
+
+describe('HivePieceStack', () => {
+    it('should redefine equals', () => {
+        const emptyStack: HivePieceStack = HivePieceStack.EMPTY;
+        const onePieceStack: HivePieceStack = new HivePieceStack([Q]);
+        const twoPiecesStack: HivePieceStack = new HivePieceStack([B, Q]);
+        const otherTwoPiecesStack: HivePieceStack = new HivePieceStack([b, Q]);
+        expect(emptyStack.equals(onePieceStack)).toBeFalse();
+        expect(onePieceStack.equals(twoPiecesStack)).toBeFalse();
+        expect(twoPiecesStack.equals(otherTwoPiecesStack)).toBeFalse();
+        expect(twoPiecesStack.equals(twoPiecesStack)).toBeTrue();
     });
 });
