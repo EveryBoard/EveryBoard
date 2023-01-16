@@ -8,7 +8,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
 
-describe('LascaControlAndDominateMinimax', () => {
+describe('LascaControlMinimax', () => {
 
     const u: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
     const v: LascaSpace = new LascaSpace([LascaPiece.ONE]);
@@ -20,7 +20,7 @@ describe('LascaControlAndDominateMinimax', () => {
         minimax = new LascaControlMinimax(ruler, 'Lasca Control Minimax');
     });
     it('should return full list of captures when capture must be done', () => {
-        // Given any LascaControlMinimax and a state where current player should capture
+        // Given a state where current player should capture
         const state: LascaState = LascaState.from([
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -29,7 +29,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, u, _],
             [_, _, _, _, _, _, _],
-        ], 1).get();
+        ], 1);
         const node: LascaNode = new MGPNode(state);
 
         // When asking it a list of move for this state
@@ -39,7 +39,7 @@ describe('LascaControlAndDominateMinimax', () => {
         expect(moves.length).toBe(2);
     });
     it('should return full list of steps when no capture must be done', () => {
-        // Given any LascaControlMinimax and a state where only steps can be made
+        // Given a state where only steps can be made
         const state: LascaState = LascaState.getInitialState();
         const node: LascaNode = new MGPNode(state);
 
@@ -59,7 +59,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, v, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get();
+        ], 0);
         const mobileState: LascaState = LascaState.from([
             [v, _, _, _, _, _, _],
             [_, _, _, u, _, _, _],
@@ -68,7 +68,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, v, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get();
+        ], 0);
 
         // When comparing them
         // Then the one with mobile stacks should be considered better
@@ -89,7 +89,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, v, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get(); // O has 1 stack, X has 2
+        ], 0); // O has 1 stack, X has 2
         const freeState: LascaState = LascaState.from([
             [v, _, _, _, _, _, _],
             [_, _, _, u, _, _, _],
@@ -98,10 +98,11 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, v, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-        ], 0).get(); // O has 1 stack, X has 2
+        ], 0); // O has 1 stack, X has 2
 
         // When comparing them
-        // Then the two should be of equal value: the number of non-blocked stacks times 11
+        // Then the two should be of equal value:
+        //     the number of non-blocked stacks times the number of piece (which is 11)
         RulesUtils.expectStatesToBeOfEqualValue(minimax, forcedState, freeState);
     });
 });

@@ -303,7 +303,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code
      */
-    public async expectClickSuccessWithAsymetricNaming(nameInHtml: string, nameInFunction?: string): Promise<void> {
+    public async expectClickSuccessWithAsymetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
         await this.expectInterfaceClickSuccess(nameInHtml);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();

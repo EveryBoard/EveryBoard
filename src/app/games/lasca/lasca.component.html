@@ -9,26 +9,26 @@
         </g>
     </defs>
     <g *ngFor="let line of adaptedBoard; index as y">
-        <g *ngFor="let spaceInfo of line; index as x">
-            <g id="space_{{ x }}_{{ y }}"
+        <g *ngFor="let squareInfo of line; index as x">
+            <g id="coord_{{ x }}_{{ y }}"
                (click)="onClick(x, y)"
                [attr.transform]="getCoordTransform(x, y)">
-                <polygon id="rhombus_{{ x }}_{{ y }}"
+                <polygon id="square_{{ x }}_{{ y }}"
                          [attr.points]="getRhombusPoints()"
-                         [ngClass]="spaceInfo.spaceClasses"
+                         [ngClass]="squareInfo.squareClasses"
                          class="base-no-fill"
                          [attr.fill]="backgroundColor(x, y)"/>
-                <g *ngFor="let pieceInfo of spaceInfo.pieceInfos; index as z"
+                <g *ngFor="let pieceInfo of squareInfo.pieceInfos; index as z"
                     pointer-events="fill"
                     [attr.transform]="getTransform(z)"
                     class="base mid-small-stroke">
-                    <use id="space_{{ x }}_{{ y }}_piece_{{ z }}"
-                         x="10"
-                         y="0"
+                    <use id="square_{{ x }}_{{ y }}_piece_{{ z }}"
+                         x="25"
+                         y="35"
                          xlink:href="#piece"
                          [ngClass]="pieceInfo.classes"
                          class="base mid-stroke"/>
-                    <circle id="space_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
+                    <circle id="square_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
                             *ngIf="pieceInfo.isOfficer"
                             [attr.cx]="10 + (SPACE_SIZE * 0.5)"
                             [attr.cy]="37.5"
@@ -40,9 +40,9 @@
     </g>
     <rect x="0"
           y="700"
-          [attr.width]="700 * HORIZONTAL_WIDTH_RATIO"
+          [attr.width]="700 * WIDTH_RATIO"
           [attr.height]="THICKNESS"
           class="base"/>
-    <polygon [attr.points]="getDiagonalVolumePoints()"
+    <polygon [attr.points]="getBoardThicknessDecorationDiagonalPoints()"
              class="base"/>
 </svg>

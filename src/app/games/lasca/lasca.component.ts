@@ -23,7 +23,7 @@ export class LascaComponentFailure {
 }
 
 interface SpaceInfo {
-    spaceClasses: string[];
+    squareClasses: string[];
     pieceInfos: LascaPieceInfo[];
 }
 interface LascaPieceInfo {
@@ -40,13 +40,13 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
                                                              LascaState,
                                                              LascaSpace>
 {
-    public readonly HORIZONTAL_WIDTH_RATIO: number = 1.2;
+    public readonly WIDTH_RATIO: number = 1.2;
     public readonly DIAGONALISATION: number = 0.4;
     public readonly THICKNESS: number = 40;
 
     public readonly LEFT: number = 0;
     public readonly UP: number = -100;
-    public readonly WIDTH: number = (7 * this.SPACE_SIZE) * (this.HORIZONTAL_WIDTH_RATIO + this.DIAGONALISATION);
+    public readonly WIDTH: number = (7 * this.SPACE_SIZE) * (this.WIDTH_RATIO + this.DIAGONALISATION);
     public readonly HEIGHT: number = (7 * this.SPACE_SIZE) + this.THICKNESS - this.UP;
     public readonly CX: number = this.WIDTH / 2;
     public readonly CY: number = (this.HEIGHT + this.UP) / 2;
@@ -108,18 +108,18 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             this.showPossibleLandings(coord, state);
         }
         for (const captured of this.capturedCoords) {
-            this.adaptedBoard[captured.y][captured.x].spaceClasses.push('captured-fill');
+            this.adaptedBoard[captured.y][captured.x].squareClasses.push('captured-fill');
         }
         for (const moved of this.currentMoveClicks) {
-            this.adaptedBoard[moved.y][moved.x].spaceClasses.push('moved-fill');
+            this.adaptedBoard[moved.y][moved.x].squareClasses.push('moved-fill');
         }
     }
     private getSpaceInfo(state: LascaState, x: number, y: number): SpaceInfo {
-        const space: LascaSpace = state.getPieceAtXY(x, y);
+        const square: LascaSpace = state.getPieceAtXY(x, y);
         const pieceInfos: LascaPieceInfo[] = [];
         // Start by the lower piece
-        for (let pieceIndex: number = space.getStackSize() - 1; pieceIndex >= 0; pieceIndex--) {
-            const piece: LascaPiece = space.get(pieceIndex);
+        for (let pieceIndex: number = square.getStackSize() - 1; pieceIndex >= 0; pieceIndex--) {
+            const piece: LascaPiece = square.get(pieceIndex);
             pieceInfos.push({
                 classes: [this.getPlayerClass(piece.player)],
                 isOfficer: piece.isOfficer,
@@ -127,40 +127,35 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         }
         return {
             pieceInfos,
-            spaceClasses: [],
+            squareClasses: [],
         };
     }
     public showLastMove(): void {
-        this.showLastCapture();
-        this.showSteppedOnCoord();
+        if (this.lastMove.isPresent()) {
+            this.showLastCapture();
+            this.showSteppedOnCoord();
+        }
         this.showPossibleMoves();
     }
     private showLastCapture(): void {
-        if (this.lastMove.isAbsent()) {
-            return;
-        }
         if (this.lastMove.get().isStep === false) {
             const jumpedOverCoord: MGPFallible<MGPSet<Coord>> = this.lastMove.get().getCapturedCoords();
             Utils.assert(jumpedOverCoord.isSuccess(), 'Last move is a capture yet has illegal jumps !?');
             for (const coord of jumpedOverCoord.get()) {
-                this.adaptedBoard[coord.y][coord.x].spaceClasses.push('captured-fill');
+                this.adaptedBoard[coord.y][coord.x].squareClasses.push('captured-fill');
             }
         }
     }
     private showSteppedOnCoord(): void {
-        if (this.lastMove.isPresent()) {
-            const lastMove: LascaMove = this.lastMove.get();
-            for (const steppedCoord of lastMove.coords) {
-                this.adaptedBoard[steppedCoord.y][steppedCoord.x].spaceClasses.push('moved-fill');
-            }
-        } else {
-            return;
+        const lastMove: LascaMove = this.lastMove.get();
+        for (const steppedCoord of lastMove.coords) {
+            this.adaptedBoard[steppedCoord.y][steppedCoord.x].squareClasses.push('moved-fill');
         }
     }
     private showPossibleMoves(): void {
         for (const validMove of this.legalMoves) {
             const startingCoord: Coord = validMove.getStartingCoord();
-            this.adaptedBoard[startingCoord.y][startingCoord.x].spaceClasses.push('selectable-fill');
+            this.adaptedBoard[startingCoord.y][startingCoord.x].squareClasses.push('selectable-fill');
         }
     }
     private rotateAdaptedBoardIfNeeded(): void {
@@ -184,7 +179,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             x = (LascaState.SIZE - 1) - x;
             y = (LascaState.SIZE - 1) - y;
         }
-        const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
+        const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -281,7 +276,6 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(LascaComponentFailure.THIS_PIECE_CANNOT_MOVE());
-            // TODOTODO: QUAND TU CAPTURE DEUX RFOIS LA PILE GRANDI EH
         }
     }
     private showPossibleLandings(coord: Coord, state: LascaState): void {
@@ -291,7 +285,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             for (const possibleStep of possibleSteps) {
                 const landingY: number = possibleStep.getEndingCoord().y;
                 const landingX: number = possibleStep.getEndingCoord().x;
-                this.adaptedBoard[landingY][landingX].spaceClasses.push('selectable-fill');
+                this.adaptedBoard[landingY][landingX].squareClasses.push('selectable-fill');
             }
         } else {
             const currentLocation: number = 1;
@@ -300,14 +294,14 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
                 .filter((capture: MGPFallible<Coord>) => capture.isSuccess())
                 .map((capture: MGPFallible<Coord>) => capture.get());
             for (const nextLegalLanding of nextLegalLandings) {
-                this.adaptedBoard[nextLegalLanding.y][nextLegalLanding.x].spaceClasses.push('capturable-fill');
+                this.adaptedBoard[nextLegalLanding.y][nextLegalLanding.x].squareClasses.push('capturable-fill');
             }
         }
     }
     public getCoordTransform(x: number, y: number): string {
         const WIDTH: number = this.SPACE_SIZE;
         const OFFSET: number = this.DIAGONALISATION * this.SPACE_SIZE;
-        const xBase: number = (x * this.HORIZONTAL_WIDTH_RATIO * WIDTH) + ((6 - y) * OFFSET);
+        const xBase: number = (x * this.WIDTH_RATIO * WIDTH) + ((6 - y) * OFFSET);
         const yBase: number = y * WIDTH;
         const translate: string = 'translate(' + xBase + ' ' + yBase + ')';
         return translate;
@@ -317,16 +311,16 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         const WIDTH: number = this.SPACE_SIZE;
         const x0: number = OFFSET;
         const y0: number = 0;
-        const x1: number = OFFSET + (this.HORIZONTAL_WIDTH_RATIO * WIDTH);
+        const x1: number = OFFSET + (this.WIDTH_RATIO * WIDTH);
         const y1: number = 0;
-        const x2: number = (this.HORIZONTAL_WIDTH_RATIO * WIDTH);
+        const x2: number = (this.WIDTH_RATIO * WIDTH);
         const y2: number = WIDTH;
         const x3: number = 0;
         const y3: number = WIDTH;
         return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
     }
-    public getDiagonalVolumePoints(): string {
-        const WIDTH: number = this.SPACE_SIZE * 7 * this.HORIZONTAL_WIDTH_RATIO;
+    public getBoardThicknessDecorationDiagonalPoints(): string {
+        const WIDTH: number = this.SPACE_SIZE * 7 * this.WIDTH_RATIO;
         const OFFSET: number = this.SPACE_SIZE * 7 * this.DIAGONALISATION;
         const x0: number = OFFSET + WIDTH;
         const y0: number = 0;
@@ -339,6 +333,6 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
     }
     public getTransform(z: number): string {
-        return 'translate(15 ' + (35 - (z * 15)) + ')';
+        return 'translate(0 ' + (0 - (z * 15)) + ')';
     }
 }

@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 
 export class LascaPiece {
@@ -118,8 +117,8 @@ export class LascaState extends GameStateWithTable<LascaSpace> {
         ];
         return new LascaState(board, 0);
     }
-    public static from(board: Table<LascaSpace>, turn: number): MGPFallible<LascaState> {
-        return MGPFallible.success(new LascaState(board, turn));
+    public static from(board: Table<LascaSpace>, turn: number): LascaState {
+        return new LascaState(board, turn);
     }
     public getStacksOf(player: Player): Coord[] {
         const stackCoords: Coord[] = [];
@@ -160,11 +159,11 @@ export class LascaState extends GameStateWithTable<LascaSpace> {
         }
         const lines: string[] = [];
         for (let y: number = 0; y < LascaState.SIZE; y++) {
-            const spaces: string[] = [];
+            const squares: string[] = [];
             for (let x: number = 0; x < LascaState.SIZE; x++) {
-                spaces.push(this.getPieceAtXY(x, y).toString(biggerStack));
+                squares.push(this.getPieceAtXY(x, y).toString(biggerStack));
             }
-            lines.push(spaces.join(' '));
+            lines.push(squares.join(' '));
         }
         return lines.join('\n');
     }

@@ -1638,11 +1638,11 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
-      <trans-unit id="8185870119793056756" datatype="html">
-        <source>Capture must be double diagonal steps!</source>
+      <trans-unit id="4481226927895530871" datatype="html">
+        <source>A capture should be a double diagonal step. Look at the green indicators to help you!</source>
       </trans-unit>
       <trans-unit id="6753567388037209218" datatype="html">
-        <source>Move must be single diagonal steps!</source>
+        <source>You must move in a single diagonal step!</source>
       </trans-unit>
       <trans-unit id="494699409056885328" datatype="html">
         <source>You cannot jump over the same space several times!</source>
@@ -1680,20 +1680,23 @@
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
       </trans-unit>
-      <trans-unit id="1430493612123692909" datatype="html">
-        <source>Multiple captures (1/2)</source>
-      </trans-unit>
       <trans-unit id="944933553092470959" datatype="html">
         <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing space. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
       </trans-unit>
-      <trans-unit id="2552429756683040949" datatype="html">
-        <source>Congratulations, you captured two pieces. By reaching the last line, your piece has now been promoted to the rank of officer! Now, it can move and capture backward, which is illegal for normal piece.</source>
+      <trans-unit id="2693455583384082674" datatype="html">
+        <source>Promotion</source>
+      </trans-unit>
+      <trans-unit id="5594547343498813189" datatype="html">
+        <source>When a pile reach the last line, it&apos;s commander become officer, and gain the ability to go backward, which is illegal for a non-officer piece! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
       </trans-unit>
       <trans-unit id="6522624192206928831" datatype="html">
         <source>Minority capture is allowed</source>
       </trans-unit>
       <trans-unit id="8855040566175030591" datatype="html">
         <source>If you have several capture choices, one choice capturing one piece, the other choice capturing two pieces, you are allowed to choose either.</source>
+      </trans-unit>
+      <trans-unit id="6689969573280113485" datatype="html">
+        <source>This piece cannot move!</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>

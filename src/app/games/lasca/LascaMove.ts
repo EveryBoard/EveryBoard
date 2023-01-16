@@ -12,11 +12,11 @@ import { LascaState } from './LascaState';
 
 export class LascaMoveFailure {
 
-    public static readonly CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL: Localized = () => $localize`Capture must be double diagonal steps!`;
+    public static readonly CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL: Localized = () => $localize`A capture should be a double diagonal step. Look at the green indicators to help you!`;
 
-    public static readonly MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL: Localized = () => $localize`Move must be single diagonal steps!`;
+    public static readonly MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL: Localized = () => $localize`You must move in a single diagonal step!`;
 
-    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot jump over the same space several times!`;
+    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot jump over the same square several times!`;
 }
 
 export class LascaMove extends Move {
@@ -74,7 +74,7 @@ export class LascaMove extends Move {
     public static encoder: MoveEncoder<LascaMove> = new class extends MoveEncoder<LascaMove> {
         public encodeMove(move: LascaMove): JSONValueWithoutArray {
             return {
-                coords: move.coords.map((coord: Coord): JSONValueWithoutArray => {
+                coords: move.coords.toList().map((coord: Coord): JSONValueWithoutArray => {
                     return Coord.encoder.encode(coord) as JSONValueWithoutArray;
                 }),
                 isStep: move.isStep,
@@ -97,11 +97,11 @@ export class LascaMove extends Move {
         this.coords = new MGPSet(coords);
     }
     public toString(): string {
-        const coordStrings: string[] = this.coords.map((coord: Coord) => coord.toString());
+        const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');
         return 'LascaMove(' + coordString + ')';
     }
-    public getRelation(other: LascaMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
+    private getRelation(other: LascaMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
         const thisLength: number = this.coords.size();
         const otherLength: number = other.coords.size();
         const minimalLength: number = Math.min(thisLength, otherLength);

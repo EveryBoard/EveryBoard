@@ -7,6 +7,7 @@ const zero: LascaPiece = LascaPiece.ZERO;
 const one: LascaPiece = LascaPiece.ONE;
 const _u: LascaSpace = new LascaSpace([zero]);
 const _v: LascaSpace = new LascaSpace([one]);
+const uv: LascaSpace = new LascaSpace([zero, one]);
 const __: LascaSpace = LascaSpace.EMPTY;
 
 export class LascaTutorial extends Tutorial {
@@ -39,24 +40,43 @@ export class LascaTutorial extends Tutorial {
                 [_u, __, _u, __, _u, __, _u],
                 [__, _u, __, _u, __, _u, __],
                 [_u, __, _u, __, _u, __, _u],
-            ], 2).get(),
+            ], 2),
             LascaMove.fromCapture([new Coord(2, 4), new Coord(0, 2)]).get(),
             $localize`Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.`,
         ),
         TutorialStep.anyMove(
-            $localize`Multiple captures (1/2)`,
-            $localize`If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing space. Note that, you cannot jump twice over the same stack.<br/><br/>You are playing Dark, a double capture is possible, go ahead.`,
+            $localize`Multiple captures`,
+            $localize`If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.<br/><br/>You are playing Dark, a double capture is possible, go ahead.`,
             LascaState.from([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
                 [_v, __, __, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],
                 [__, __, _v, __, _v, __, _v],
                 [__, _v, __, __, __, __, __],
                 [__, __, _u, __, _u, __, _u],
-                [__, __, __, _u, __, _u, __],
-                [_u, __, __, __, _u, __, _u],
-            ], 2).get(),
-            LascaMove.fromCapture([new Coord(2, 4), new Coord(0, 2), new Coord(2, 0)]).get(),
-            $localize`Congratulations, you captured two pieces. By reaching the last line, your piece has now been promoted to the rank of officer! Now, it can move and capture backward, which is illegal for normal piece.`,
+            ], 2),
+            LascaMove.fromCapture([new Coord(2, 6), new Coord(0, 4), new Coord(2, 2)]).get(),
+            $localize`Congratulations!`,
+        ),
+        TutorialStep.fromMove(
+            $localize`Promotion`,
+            $localize`When a pile reach the last line, it's commander become officer, and gain the ability to go backward, which is illegal for a non-officer piece! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            LascaState.from([
+                [__, __, __, __, __, __, _v],
+                [__, __, __, uv, __, _v, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, _u, __, _u, __, _u],
+            ], 2),
+            [
+                LascaMove.fromStep(new Coord(3, 1), new Coord(2, 0)).get(),
+                LascaMove.fromStep(new Coord(3, 1), new Coord(4, 0)).get(),
+            ],
+            'Congratulations!',
+            'This is not it',
         ),
         TutorialStep.informational(
             $localize`Minority capture is allowed`,
@@ -69,7 +89,7 @@ export class LascaTutorial extends Tutorial {
                 [__, __, _u, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-            ], 2).get(),
+            ], 2),
         ),
     ];
 }

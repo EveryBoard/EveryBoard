@@ -20,12 +20,12 @@ export class LascaControlAndDominationMinimax extends LascaControlMinimax {
         let dominatingPiecesCount: number = 0;
         for (let y: number = 0; y < LascaState.SIZE; y++) {
             for (let x: number = 0; x < LascaState.SIZE; x++) {
-                const space: LascaSpace = node.gameState.getPieceAtXY(x, y);
-                if (space.getStackSize() > 0) {
-                    const stackSize: number = space.getStackSize();
+                const square: LascaSpace = node.gameState.getPieceAtXY(x, y);
+                if (square.getStackSize() > 0) {
+                    const stackSize: number = square.getStackSize();
                     let pieceIndex: number = 0;
-                    const commander: Player = space.getCommander().player;
-                    while (pieceIndex < stackSize && space.get(pieceIndex).player === commander) {
+                    const commander: Player = square.getCommander().player;
+                    while (pieceIndex < stackSize && square.get(pieceIndex).player === commander) {
                         pieceIndex++;
                     }
                     dominatingPiecesCount += pieceIndex * commander.getScoreModifier();

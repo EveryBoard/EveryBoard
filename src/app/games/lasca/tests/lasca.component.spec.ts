@@ -30,20 +30,20 @@ describe('LascaComponent', () => {
         it('should highlight possible step-landing after selecting piece', fakeAsync(async() => {
             // Given any board where step are possible (initial board)
             // When clicking selecting piece
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // Then its landing coord should be landable
-            testUtils.expectElementToHaveClass('#rhombus_3_3', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#rhombus_5_3', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_3_3', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_5_3', 'selectable-fill');
         }));
         it('should highlight piece that can move this turn (when step moves)', () => {
             // Given a board where current player can move 4 pieces (by example, the starting board)
             // When displaying the board
             // Then those 3 coord should be "selectable-fill"
-            testUtils.expectElementToHaveClass('#rhombus_0_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#rhombus_2_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#rhombus_4_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#rhombus_6_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_0_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_2_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_4_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
         });
         it('should highlight piece that can move this turn (when forced capture)', () => {
             // Given a board where current player have 3 "mobile" pieces but one must capture
@@ -55,122 +55,122 @@ describe('LascaComponent', () => {
                 [_u, __, __, __, _u, __, _u],
                 [__, _u, __, _u, __, _u, __],
                 [_u, __, _u, __, _u, __, _u],
-            ], 1).get();
+            ], 1);
 
             // When displaying the board
             testUtils.setupState(state);
 
             // Then only the one that must capture must be "selectable-fill"
-            testUtils.expectElementToHaveClass('#rhombus_0_2', 'selectable-fill');
-            testUtils.expectElementNotToHaveClass('#rhombus_2_2', 'selectable-fill');
-            testUtils.expectElementNotToHaveClass('#rhombus_4_2', 'selectable-fill');
-            testUtils.expectElementNotToHaveClass('#rhombus_6_2', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_0_2', 'selectable-fill');
+            testUtils.expectElementNotToHaveClass('#square_2_2', 'selectable-fill');
+            testUtils.expectElementNotToHaveClass('#square_4_2', 'selectable-fill');
+            testUtils.expectElementNotToHaveClass('#square_6_2', 'selectable-fill');
         });
         it(`should forbid clicking on opponent's pieces`, fakeAsync(async() => {
             // Given any board
             // When clicking on the opponent's piece
             // Then it should fail
             const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
-            await testUtils.expectClickFailure('#space_0_0', reason);
+            await testUtils.expectClickFailure('#coord_0_0', reason);
         }));
-        it('should forbid clicking on empty space', fakeAsync(async() => {
+        it('should forbid clicking on empty square', fakeAsync(async() => {
             // Given any board
-            // When clicking on an empty space
+            // When clicking on an empty square
             // Then it should fail
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
-            await testUtils.expectClickFailure('#space_1_0', reason);
+            await testUtils.expectClickFailure('#coord_1_0', reason);
         }));
         it('should forbid clicking on an unmovable stack', fakeAsync(async() => {
             // Given any board
             // When clicking a piece that could not move
             // Then it should fail
-            await testUtils.expectClickFailure('#space_5_5', LascaComponentFailure.THIS_PIECE_CANNOT_MOVE());
+            await testUtils.expectClickFailure('#coord_5_5', LascaComponentFailure.THIS_PIECE_CANNOT_MOVE());
         }));
         it('should show clicked stack as selected', fakeAsync(async() => {
             // Given any board
             // When clicking on one of your pieces
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // Then it should show the clicked piece as 'selected'
-            testUtils.expectElementToHaveClass('#space_4_4_piece_0', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
         }));
     });
     describe('second click', () => {
         it('should fail when clicking on opponent', fakeAsync(async() => {
             // Given any board with a selected piece
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // When clicking on an opponent
             // Then it should fail
             const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
-            await testUtils.expectClickFailure('#space_2_2', reason);
+            await testUtils.expectClickFailure('#coord_2_2', reason);
         }));
         it('should fail when doing impossible click', fakeAsync(async() => {
             // Given any board with a selected piece
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
-            // When clicking on an empty space in (+2; +1) of selected piece
+            // When clicking on an empty square in (+2; +1) of selected piece
             // Then it should fail
             const reason: string = LascaMoveFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
-            await testUtils.expectClickFailure('#space_6_5', reason);
+            await testUtils.expectClickFailure('#coord_6_5', reason);
         }));
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any board with a selected piece
-            await testUtils.expectClickSuccess('#space_4_4');
-            testUtils.expectElementToHaveClass('#space_4_4_piece_0', 'selected-stroke');
+            await testUtils.expectClickSuccess('#coord_4_4');
+            testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
 
             // When clicking on the selected piece again
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // Then the piece should no longer be selected
-            testUtils.expectElementNotToHaveClass('#space_4_4_piece_0', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#square_4_4_piece_0', 'selected-stroke');
         }));
         it('should show possible first-selection again when deselecting piece', fakeAsync(async() => {
             // Given any board with a selected piece
-            await testUtils.expectClickSuccess('#space_4_4');
-            testUtils.expectElementToHaveClass('#space_4_4_piece_0', 'selected-stroke');
+            await testUtils.expectClickSuccess('#coord_4_4');
+            testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
 
             // When clicking on the selected piece again
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // Then the possible first choices should be shown again
-            testUtils.expectElementToHaveClass('#rhombus_0_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#rhombus_2_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#rhombus_4_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#rhombus_6_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_0_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_2_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_4_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
         }));
         it('should change selected piece when clicking on another one of your pieces', fakeAsync(async() => {
             // Given any board with a selected piece
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // When clicking on another piece
-            await testUtils.expectClickSuccess('#space_2_4');
+            await testUtils.expectClickSuccess('#coord_2_4');
 
             // Then it should deselect the previous and select the new
-            testUtils.expectElementNotToHaveClass('#space_4_4_piece_0', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#space_2_4_piece_0', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#square_4_4_piece_0', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#square_2_4_piece_0', 'selected-stroke');
         }));
         it('should allow simple step', fakeAsync(async() => {
             // Given any board on which a step could be done and with a selected piece
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // When doing a step
             const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
 
             // Then it should succeed
-            await testUtils.expectMoveSuccess('#space_3_3', move);
+            await testUtils.expectMoveSuccess('#coord_3_3', move);
         }));
-        it('should show left space after single step', fakeAsync(async() => {
+        it('should show left square after single step', fakeAsync(async() => {
             // Given any board on which a step could be done and with a selected piece
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // When doing simple step
             const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
-            await testUtils.expectMoveSuccess('#space_3_3', move);
+            await testUtils.expectMoveSuccess('#coord_3_3', move);
 
-            // Then left space and landed space should be showed as moved
-            testUtils.expectElementToHaveClass('#rhombus_4_4', 'moved-fill');
-            testUtils.expectElementToHaveClass('#rhombus_3_3', 'moved-fill');
+            // Then left square and landed square should be showed as moved
+            testUtils.expectElementToHaveClass('#square_4_4', 'moved-fill');
+            testUtils.expectElementToHaveClass('#square_3_3', 'moved-fill');
         }));
         it('should allow simple capture', fakeAsync(async() => {
             // Given a board with a selected piece and a possible capture
@@ -182,17 +182,17 @@ describe('LascaComponent', () => {
                 [__, __, _u, __, _u, __, _u],
                 [__, __, __, _u, __, _u, __],
                 [_u, __, __, __, _u, __, _u],
-            ], 1).get();
+            ], 1);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#space_2_2');
+            await testUtils.expectClickSuccess('#coord_2_2');
 
             // When doing a capture
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then it should be a success
-            await testUtils.expectMoveSuccess('#space_0_4', move);
+            await testUtils.expectMoveSuccess('#coord_0_4', move);
         }));
-        it('should have an officer-symbol on the piece that just got promoted', fakeAsync(async() => {
+        it(`should have an officer's symbol on the piece that just got promoted`, fakeAsync(async() => {
             // Given any board with a selected soldier about to become officer
             const state: LascaState = LascaState.from([
                 [__, __, __, __, _v, __, _v],
@@ -202,16 +202,16 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [_u, __, _u, __, _u, __, _u],
-            ], 0).get();
+            ], 0);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#space_1_1');
+            await testUtils.expectClickSuccess('#coord_1_1');
 
             // When doing the promoting-move
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 1), new Coord(0, 0)).get();
-            await testUtils.expectMoveSuccess('#space_0_0', move);
+            await testUtils.expectMoveSuccess('#coord_0_0', move);
 
             // Then the officier-logo should be on the piece
-            testUtils.expectElementToExist('#space_0_0_piece_1_officer_symbol');
+            testUtils.expectElementToExist('#square_0_0_piece_1_officer_symbol');
         }));
         it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {
             // Given any board with a selected piece that could do a multiple capture
@@ -223,15 +223,15 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
-            ], 1).get();
+            ], 1);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#space_2_2');
+            await testUtils.expectClickSuccess('#coord_2_2');
 
             // When doing the first capture
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // Then it should already be shown as captured, and the next possibles ones displayed
-            testUtils.expectElementToHaveClass('#rhombus_3_3', 'captured-fill');
+            testUtils.expectElementToHaveClass('#square_3_3', 'captured-fill');
         }));
         it('should cancel capturing a piece you cannot capture', fakeAsync(async() => {
             // Given a board on which an illegal capture could be made
@@ -243,15 +243,15 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
-            ], 1).get();
+            ], 1);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#space_2_2');
+            await testUtils.expectClickSuccess('#coord_2_2');
 
             // When doing that illegal capture
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then it should fail
-            await testUtils.expectMoveFailure('#space_0_4', RulesFailure.CANNOT_SELF_CAPTURE(), move);
+            await testUtils.expectMoveFailure('#coord_0_4', RulesFailure.CANNOT_SELF_CAPTURE(), move);
         }));
     });
     describe('multiple capture', () => {
@@ -265,20 +265,20 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
-            ], 1).get();
+            ], 1);
             testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#space_2_2');
-            await testUtils.expectClickSuccess('#space_4_4');
+            await testUtils.expectClickSuccess('#coord_2_2');
+            await testUtils.expectClickSuccess('#coord_4_4');
 
             // When doing the last capture
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]).get();
 
             // Then the move should be finalized
-            await testUtils.expectMoveSuccess('#space_6_6', move);
+            await testUtils.expectMoveSuccess('#coord_6_6', move);
             // Then a stack of three piece should exist
-            testUtils.expectElementToExist('#space_6_6_piece_0');
-            testUtils.expectElementToExist('#space_6_6_piece_1');
-            testUtils.expectElementToExist('#space_6_6_piece_2');
+            testUtils.expectElementToExist('#square_6_6_piece_0');
+            testUtils.expectElementToExist('#square_6_6_piece_1');
+            testUtils.expectElementToExist('#square_6_6_piece_2');
         }));
     });
     describe('displaying reversed board', () => {
@@ -287,8 +287,8 @@ describe('LascaComponent', () => {
             testUtils.wrapper.setRole(Player.ONE);
 
             // When clicking on (2, 2)
-            // Then it should have selected space (4, 4)
-            await testUtils.expectClickSuccessWithAsymetricNaming('#space_2_2', '#space_4_4');
+            // Then it should have selected square (4, 4)
+            await testUtils.expectClickSuccessWithAsymetricNaming('#coord_2_2', '#coord_4_4');
         }));
     });
 });

@@ -3,25 +3,14 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
+import { LascaRulesFailure } from './LascaRulesFailure';
 import { LascaPiece, LascaSpace, LascaState } from './LascaState';
 
 export class LascaNode extends MGPNode<Rules<LascaMove, LascaState>, LascaMove, LascaState> {}
-
-export class LascaRulesFailure {
-
-    public static readonly CANNOT_GO_BACKWARD: Localized = () => $localize`You cannot go backward with normal pieces!`;
-
-    public static readonly CANNOT_CAPTURE_EMPTY_SPACE: Localized = () => $localize`You cannot capture an empty space, nor jump over it!`;
-
-    public static readonly CANNOT_SKIP_CAPTURE: Localized = () => $localize`You must capture when it is possible!`;
-
-    public static readonly MUST_FINISH_CAPTURING: Localized = () => $localize`You must finish this capture!`;
-}
 
 export class LascaRules extends Rules<LascaMove, LascaState> {
 
@@ -34,8 +23,11 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return this.singleton.get();
     }
     public getCaptures(state: LascaState): LascaMove[] {
-        const captures: LascaMove[] = [];
         const player: Player = state.getCurrentPlayer();
+        return this.getCapturesOf(state, player);
+    }
+    public getCapturesOf(state: LascaState, player: Player): LascaMove[] {
+        const captures: LascaMove[] = [];
         const playerPieces: Coord[] = state.getStacksOf(player);
         for (const playerPiece of playerPieces) {
             captures.push(...this.getPieceCaptures(state, playerPiece));
@@ -44,7 +36,9 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
     }
     public getPieceCaptures(state: LascaState, coord: Coord): LascaMove[] {
         let pieceMoves: LascaMove[] = [];
-        const opponent: Player = state.getCurrentOpponent();
+        const piece: LascaSpace = state.getPieceAt(coord);
+        const pieceOwner: Player = piece.getCommander().player;
+        const opponent: Player = pieceOwner.getOpponent();
         const directions: Coord[] = this.getPieceDirections(state, coord);
         const moved: LascaSpace = state.getPieceAt(coord);
         for (const direction of directions) {
@@ -68,7 +62,9 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return pieceMoves;
     }
     private getPieceDirections(state: LascaState, coord: Coord): Coord[] {
-        const upDirection: number = state.getCurrentPlayer().getScoreModifier();
+        const piece: LascaSpace = state.getPieceAt(coord);
+        const pieceOwner: Player = piece.getCommander().player;
+        const upDirection: number = pieceOwner.getScoreModifier();
         const directions: Coord[] = [new Coord(-1, upDirection), new Coord(1, upDirection)];
         if (state.getPieceAt(coord).getCommander().isOfficer) {
             directions.push(new Coord(-1, - upDirection), new Coord(1, - upDirection));
@@ -76,8 +72,11 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return directions;
     }
     public getSteps(state: LascaState): LascaMove[] {
-        const steps: LascaMove[] = [];
         const player: Player = state.getCurrentPlayer();
+        return this.getStepsOf(state, player);
+    }
+    public getStepsOf(state: LascaState, player: Player): LascaMove[] {
+        const steps: LascaMove[] = [];
         const playerPieces: Coord[] = state.getStacksOf(player);
         for (const playerPiece of playerPieces) {
             steps.push(...this.getPieceSteps(state, playerPiece));
@@ -113,8 +112,8 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         resultingState = resultingState.set(moveEnd, movingStack);
         if (moveEnd.y === state.getFinishLineOf(state.getCurrentPlayer())) {
-            const promotedCapturer: LascaSpace = movingStack.promoteCommander();
-            resultingState = resultingState.set(moveEnd, promotedCapturer);
+            const promotedCommander: LascaSpace = movingStack.promoteCommander();
+            resultingState = resultingState.set(moveEnd, promotedCommander);
         }
         return resultingState.incrementTurn();
     }

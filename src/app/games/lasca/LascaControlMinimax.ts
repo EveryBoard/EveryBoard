@@ -48,11 +48,8 @@ export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
         return uniqueFirstCoords.size();
     }
     public getCapturesAndSteps(state: LascaState, player: Player): LascaMove[] {
-        if (state.getCurrentOpponent() === player) {
-            return this.getCapturesAndSteps(state.incrementTurn(), player);
-        }
-        const captures: LascaMove[] = LascaRules.get().getCaptures(state);
-        const steps: LascaMove[] = LascaRules.get().getSteps(state);
+        const captures: LascaMove[] = LascaRules.get().getCapturesOf(state, player);
+        const steps: LascaMove[] = LascaRules.get().getStepsOf(state, player);
         return captures.concat(steps);
     }
 }

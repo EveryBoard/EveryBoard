@@ -65,12 +65,12 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return false;
     }
-    public map<V>(mapper: (element: T) => V): V[] {
+    public mapAndNotToList<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
         const mappedList: V[] = [];
         for (const element of this.values) {
             mappedList.push(mapper(element));
         }
-        return mappedList;
+        return new MGPSet(mappedList, this.isMutable);
     }
     public size(): number {
         return this.values.length;
