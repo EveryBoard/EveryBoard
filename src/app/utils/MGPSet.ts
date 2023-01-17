@@ -89,7 +89,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         for (const element of this) {
             result.add(f(element));
         }
-        return result
+        return result;
     }
     public flatMap<T2 extends Comparable>(f: (element: T) => MGPSet<T2>): MGPSet<T2> {
         const result: MGPSet<T2> = new MGPSet();

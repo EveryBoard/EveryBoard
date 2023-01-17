@@ -37,7 +37,7 @@ export class HiveTutorial extends Tutorial {
             ], 7)),
         TutorialStep.anyMove(
             $localize`Placing the first and second piece`,
-            $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring spac of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
+            $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
             HiveState.getInitialState(),
             HiveMove.drop(B, 0, 0).get(),
             $localize`Congratulations!`),
@@ -51,7 +51,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Congratulations!`),
         TutorialStep.fromMove(
             $localize`Moving pieces: the queen bee`,
-            $localize`Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:<ol><li>the hive must always remain fully connected, and</li><li>pieces that are moved by sliding should be able to physically slide to their destination</li></ol>. The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.<br/><br/>You are playing Dark, move your queen bee.`,
+            $localize`Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:<ol><li>the hive must always remain fully connected, and</li><li>pieces that are moved by sliding should be able to physically slide to their destination.</li></ol> The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.<br/><br/>You are playing Dark, move your queen bee.`,
             HiveState.fromRepresentation([
                 [[], [S], [g]],
                 [[b], [Q], [B]],
@@ -89,7 +89,7 @@ export class HiveTutorial extends Tutorial {
                 [[g], [], [], []],
             ], 6),
             [HiveMove.move(new Coord(0, 0), new Coord(4, 0)).get()],
-            $localize`Congratulations`,
+            $localize`Congratulations!`,
             $localize`Failed, try again!`),
         TutorialStep.anyMove(
             $localize`Moving the soldier ant`,

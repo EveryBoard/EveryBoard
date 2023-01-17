@@ -7,7 +7,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';

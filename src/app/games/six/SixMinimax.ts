@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';

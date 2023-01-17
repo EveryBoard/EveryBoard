@@ -448,6 +448,20 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+        it('should forbid the grasshopper to move without jumping', () => {
+            // Given a state with one grasshopper
+            const board: Table<HivePiece[]> = [
+                [[G], [Q]],
+                [[q], [b]],
+            ];
+            const state: HiveState = HiveState.fromRepresentation(board, 4);
+
+            // When moving the grasshopper without jumping
+            const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, -1)).get();
+
+            // Then it should fail
+            RulesUtils.expectMoveFailure(rules, state, move, 'TODO');
+        });
         it('should allow the grasshopper to jump over more than one piece', () => {
             // Given a state with one grasshopper ready to jump over multiple pieces
             const board: Table<HivePiece[]> = [

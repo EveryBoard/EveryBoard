@@ -14,11 +14,11 @@ export class HiveFailure {
 
     public static readonly SPIDER_MUST_MOVE_OF_3_NEIGHBORS: Localized = () => $localize`The spider must move of exactly three neighboring spaces.`;
 
-    public static readonly SPIDER_CAN_ONLY_MOVE_ON_EMPTY_SPACES: Localized = () => $localize`A spider can move only on empty spaces.`;
+    public static readonly SPIDER_CAN_ONLY_MOVE_ON_EMPTY_SPACES: Localized = () => $localize`The spider can move only on empty spaces.`;
 
-    public static readonly SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT: Localized = () => $localize`A spider can only move around pieces that it is in direct contact with.`;
+    public static readonly SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT: Localized = () => $localize`The spider can only move around pieces that it is in direct contact with.`;
 
-    public static readonly SPIDER_CANNOT_BACKTRACK: Localized = () => $localize`A spider cannot go twice through the same space in the same move.`;
+    public static readonly SPIDER_CANNOT_BACKTRACK: Localized = () => $localize`The spider cannot go twice through the same space in the same move.`;
 
     public static readonly QUEEN_BEE_MUST_BE_ON_BOARD_BEFORE_MOVE: Localized = () => $localize`The queen bee must be placed on the board before moving a piece.`;
 
