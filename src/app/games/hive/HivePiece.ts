@@ -148,7 +148,11 @@ export class HivePieceGrasshopper extends HivePiece {
         if (this.destinationIsEmpty(move, state) === false) {
             return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
         }
-        for (const coord of move.coord.getCoordsToward(move.end)) {
+        const jumpedCoords: Coord[] = move.coord.getCoordsToward(move.end);
+        if (jumpedCoords.length === 0) {
+            return MGPFallible.failure(HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES());
+        }
+        for (const coord of jumpedCoords) {
             if (state.getAt(coord).isEmpty()) {
                 return MGPFallible.failure(HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES());
             }
