@@ -9,7 +9,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveFailure } from './HiveFailure';
 import { HiveMoveDrop, HiveMove, HiveMoveCoordToCoord } from './HiveMove';
-import { HivePiece, HivePieceQueenBee, HivePieceStack } from './HivePiece';
+import { HivePiece, HivePieceStack } from './HivePiece';
+import { HivePieceBehaviour } from './HivePieceBehaviour';
 import { HiveState } from './HiveState';
 
 export class HiveNode extends MGPNode<HiveRules, HiveMove, HiveState> {}
@@ -88,7 +89,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
 
-        const moveValidity: MGPFallible<void> = movedPiece.moveValidity(move, state);
+        const moveValidity: MGPFallible<void> = HivePieceBehaviour.from(movedPiece).moveValidity(move, state);
         if (moveValidity.isFailure()) {
             return moveValidity;
         }
@@ -126,7 +127,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         // The queen bee must be placed at the latest at the fourth turn of a player
-        if (move.piece instanceof HivePieceQueenBee === false && this.mustPlaceQueenBee(state)) {
+        if (move.piece.kind === 'QueenBee' === false && this.mustPlaceQueenBee(state)) {
             return MGPFallible.failure(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 
@@ -190,7 +191,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         if (topPiece.owner === player) {
-            for (const move of topPiece.getPossibleMoves(coord, state)) {
+            for (const move of HivePieceBehaviour.from(topPiece).getPossibleMoves(coord, state)) {
                 if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
                     moves.add(move);
                 }

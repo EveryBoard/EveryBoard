@@ -1,7 +1,7 @@
 import { Player } from 'src/app/jscaip/Player';
 import { HiveDummyMinimax } from '../HiveDummyMinimax';
 import { HiveMove } from '../HiveMove';
-import { HivePieceQueenBee } from '../HivePiece';
+import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
@@ -28,7 +28,7 @@ describe('HiveDummyMinimax', () => {
     it('should propose 6x5 moves at second turn', () => {
         // Given any state in the second turn
         const state: HiveState = HiveState.fromRepresentation([
-            [[new HivePieceQueenBee(Player.ZERO)]],
+            [[new HivePiece(Player.ZERO, 'QueenBee')]],
         ], 1);
         const node: HiveNode = new HiveNode(state);
 

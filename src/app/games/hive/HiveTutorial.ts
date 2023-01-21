@@ -1,20 +1,20 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { HiveState } from './HiveState';
-import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider } from './HivePiece';
+import { HivePiece } from './HivePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { HiveMove } from './HiveMove';
 import { Coord } from 'src/app/jscaip/Coord';
 
-const Q: HivePiece = new HivePieceQueenBee(Player.ZERO);
-const B: HivePiece = new HivePieceBeetle(Player.ZERO);
-const G: HivePiece = new HivePieceGrasshopper(Player.ZERO);
-const S: HivePiece = new HivePieceSpider(Player.ZERO);
-const A: HivePiece = new HivePieceSoldierAnt(Player.ZERO);
-const q: HivePiece = new HivePieceQueenBee(Player.ONE);
-const b: HivePiece = new HivePieceBeetle(Player.ONE);
-const g: HivePiece = new HivePieceGrasshopper(Player.ONE);
-const s: HivePiece = new HivePieceSpider(Player.ONE);
-const a: HivePiece = new HivePieceSoldierAnt(Player.ONE);
+const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
+const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');
+const G: HivePiece = new HivePiece(Player.ZERO, 'Grasshopper');
+const S: HivePiece = new HivePiece(Player.ZERO, 'Spider');
+const A: HivePiece = new HivePiece(Player.ZERO, 'SoldierAnt');
+const q: HivePiece = new HivePiece(Player.ONE, 'QueenBee');
+const b: HivePiece = new HivePiece(Player.ONE, 'Beetle');
+const g: HivePiece = new HivePiece(Player.ONE, 'Grasshopper');
+const s: HivePiece = new HivePiece(Player.ONE, 'Spider');
+const a: HivePiece = new HivePiece(Player.ONE, 'SoldierAnt');
 
 export class HiveTutorial extends Tutorial {
 

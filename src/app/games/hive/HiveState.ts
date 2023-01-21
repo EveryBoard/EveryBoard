@@ -8,18 +8,18 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
-import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
+import { HivePiece, HivePieceStack } from './HivePiece';
 
 export class HiveRemainingPieces implements ComparableObject {
 
     public static getInitial(): HiveRemainingPieces {
         const pieces: MGPMap<HivePiece, number> = new MGPMap();
         for (const player of Player.PLAYERS) {
-            pieces.set(new HivePieceQueenBee(player), 1);
-            pieces.set(new HivePieceBeetle(player), 2);
-            pieces.set(new HivePieceSpider(player), 2);
-            pieces.set(new HivePieceGrasshopper(player), 3);
-            pieces.set(new HivePieceSoldierAnt(player), 3);
+            pieces.set(new HivePiece(player, 'QueenBee'), 1);
+            pieces.set(new HivePiece(player, 'Beetle'), 2);
+            pieces.set(new HivePiece(player, 'Spider'), 2);
+            pieces.set(new HivePiece(player, 'Grasshopper'), 3);
+            pieces.set(new HivePiece(player, 'SoldierAnt'), 3);
         }
         return new HiveRemainingPieces(pieces);
     }
@@ -99,8 +99,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
                 if (board[y][x].length > 0) {
                     pieces.set(new Coord(x, y), new HivePieceStack(board[y][x]));
                     const queenBee: MGPOptional<HivePiece> =
-                        MGPOptional.ofNullable(board[y][x].find((piece: HivePiece) =>
-                            piece instanceof HivePieceQueenBee));
+                        MGPOptional.ofNullable(board[y][x].find((piece: HivePiece) => piece.kind === 'QueenBee'));
                     if (queenBee.isPresent()) {
                         queenBees.set(queenBee.get().owner, new Coord(x, y));
                     }
@@ -168,7 +167,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         }
         for (const piece of pieces.pieces) {
             // Add any queen added here to the cache
-            if (piece instanceof HivePieceQueenBee) {
+            if (piece.kind === 'QueenBee') {
                 this.queenBees.put(piece.owner, coord);
             }
         }

@@ -16,7 +16,8 @@ import { Utils } from 'src/app/utils/utils';
 import { HiveDummyMinimax } from './HiveDummyMinimax';
 import { HiveFailure } from './HiveFailure';
 import { HiveMove, HiveMoveCoordToCoord, HiveMoveSpider } from './HiveMove';
-import { HivePiece, HivePieceBeetle, HivePieceGrasshopper, HivePieceQueenBee, HivePieceSoldierAnt, HivePieceSpider, HivePieceStack } from './HivePiece';
+import { HivePiece, HivePieceStack } from './HivePiece';
+import { HivePieceBehaviourSpider } from './HivePieceBehaviour';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
@@ -98,7 +99,7 @@ export class HiveComponent
         coords.push(new Coord(0, 0)); // Need at least one coord for Hive
         this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
         const minimalViewBox: ViewBox = new ViewBox(
-            this.getRemainingPieceTransformAsCoord(new HivePieceQueenBee(Player.ZERO)).x,
+            this.getRemainingPieceTransformAsCoord(new HivePiece(Player.ZERO, 'QueenBee')).x,
             0,
             this.SPACE_SIZE * 4 * 5,
             0);
@@ -163,12 +164,15 @@ export class HiveComponent
     }
 
     private getRemainingPieceShift(piece: HivePiece): number {
-        if (piece instanceof HivePieceQueenBee) return -2.5;
-        if (piece instanceof HivePieceBeetle) return -1.5;
-        if (piece instanceof HivePieceGrasshopper) return -0.5;
-        if (piece instanceof HivePieceSpider) return 0.5;
-        Utils.assert(piece instanceof HivePieceSoldierAnt, 'piece must be a soldier ant');
-        return 1.5;
+        switch (piece.kind) {
+            case 'QueenBee': return -2.5;
+            case 'Beetle': return -1.5;
+            case 'Grasshopper': return -0.5;
+            case 'Spider': return 0.5;
+            default:
+                Utils.expectToBe(piece.kind, 'SoldierAnt', 'piece must be a soldier ant');
+                return 1.5;
+        }
     }
 
     public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
@@ -179,8 +183,7 @@ export class HiveComponent
         if (piece.owner !== this.getCurrentPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (piece instanceof HivePieceQueenBee === false &&
-            HiveRules.get().mustPlaceQueenBee(this.getState())) {
+        if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(this.getState())) {
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 
@@ -213,8 +216,8 @@ export class HiveComponent
     }
 
     private async selectTarget(coord: Coord, topPiece: HivePiece): Promise<MGPValidation> {
-        if (topPiece instanceof HivePieceSpider) {
-            return this.selectNextSpiderSpace(coord, topPiece);
+        if (topPiece.kind === 'Spider') {
+            return this.selectNextSpiderSpace(coord);
         } else {
             const move: MGPFallible<HiveMove> = HiveMove.move(this.selectedStart.get(), coord);
             if (move.isFailure()) {
@@ -238,13 +241,12 @@ export class HiveComponent
                 return MGPValidation.SUCCESS;
             }
         }
-        if (piece instanceof HivePieceQueenBee === false &&
-            HiveRules.get().mustPlaceQueenBee(state)) {
+        if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(state)) {
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
         this.selectedStart = MGPOptional.of(coord);
         this.selected.push(coord);
-        if (piece instanceof HivePieceSpider) {
+        if (piece.kind === 'Spider') {
             this.selectedSpiderCoords.push(this.selectedStart.get());
         }
         if (stack.size() > 1) {
@@ -267,7 +269,7 @@ export class HiveComponent
         const state: HiveState = this.getState();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         const moves: MGPSet<HiveMoveCoordToCoord> = HiveRules.get().getPossibleMovesFrom(state, coord);
-        if (topPiece instanceof HivePieceSpider) {
+        if (topPiece.kind === 'Spider') {
             const spiderMoves: MGPSet<HiveMoveSpider> = moves as MGPSet<HiveMoveSpider>;
             return spiderMoves
                 .filter((move: HiveMoveSpider) => ArrayUtils.isPrefix(this.selectedSpiderCoords, move.coords))
@@ -278,14 +280,15 @@ export class HiveComponent
         }
     }
 
-    private async selectNextSpiderSpace(coord: Coord, spider: HivePieceSpider): Promise<MGPValidation> {
+    private async selectNextSpiderSpace(coord: Coord): Promise<MGPValidation> {
         this.selectedSpiderCoords.push(coord);
         this.selected.push(coord);
         if (this.selectedSpiderCoords.length === 4) {
             const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]).get();
             return this.chooseMove(move, this.getState());
         }
-        const validity: MGPFallible<void> = spider.prefixValidity(this.selectedSpiderCoords, this.getState());
+        const validity: MGPFallible<void> =
+            HivePieceBehaviourSpider.get().prefixValidity(this.selectedSpiderCoords, this.getState());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
