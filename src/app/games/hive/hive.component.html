@@ -2,60 +2,70 @@
      width="100%" height="100%"
      [attr.viewBox]="viewBox"
      preserveAspectRatio="xMidYMid meet">
-   <polygon *ngFor="let neighbor of neighbors"
+    <polygon *ngFor="let neighbor of neighbors"
              id="space_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
              class="base"
              (click)="selectSpace(neighbor, 'space')"/>
 
-   <polygon *ngFor="let indicator of indicators"
-            id="indicator_{{ indicator.x }}_{{ indicator.y }}"
-            [attr.transform]="getHighlightTransform(indicator)"
-            [attr.points]="getHexaCoordsAt(indicator)"
-            class="base no-fill clickable-stroke" />
+    <polygon *ngFor="let indicator of indicators"
+             id="indicator_{{ indicator.x }}_{{ indicator.y }}"
+             [attr.transform]="getHighlightTransform(indicator)"
+             [attr.points]="getHexaCoordsAt(indicator)"
+             class="base no-fill clickable-stroke" />
 
-   <g *ngFor="let piece of pieces"
-      id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
-      app-hive-piece
-      [stack]="piece.stack"
-      [pieceHeight]="PIECE_HEIGHT"
-      [coord]="piece.coord"
-      [hexaLayout]="hexaLayout"
-      [sideView]="false"
-      [indicator]="isIndicator(piece.coord)"
-      (click)="selectSpace(piece.coord, 'piece')"/>
+    <g *ngFor="let coord of selected">
+        <polygon *ngIf="highlightGround(coord)"
+                 id="selected_{{ coord.x }}_{{ coord.y }}"
+                 [attr.transform]="getHighlightTransform(coord)"
+                 [attr.points]="getHexaCoordsAt(coord)"
+                 class="base no-fill selected-stroke" />
+    </g>
 
-   <polygon *ngFor="let coord of selected"
-            id="selected_{{ coord.x }}_{{ coord.y }}"
-            [attr.transform]="getHighlightTransform(coord)"
-            [attr.points]="getHexaCoordsAt(coord)"
-            class="base no-fill selected-stroke" />
+    <g *ngFor="let piece of pieces"
+       id="piece_{{ piece.coord.x }}_{{ piece.coord.y }}"
+       app-hive-piece
+       [stack]="piece.stack"
+       [pieceHeight]="PIECE_HEIGHT"
+       [coord]="piece.coord"
+       [hexaLayout]="hexaLayout"
+       [sideView]="false"
+       [indicator]="isIndicator(piece.coord)"
+       (click)="selectSpace(piece.coord, 'piece')"/>
 
-   <g *ngFor="let stack of remainingPieces">
-       <g *ngIf="stack.isEmpty() === false"
-          id="remainingPiece_{{ stack.topPiece().toString() }}"
-          app-hive-piece
-          [attr.transform]="getRemainingPieceTransform(stack.topPiece())"
-          [stack]="stack"
-          [pieceHeight]="PIECE_HEIGHT"
-          [coord]="ORIGIN"
-          [hexaLayout]="hexaLayout"
-          [sideView]="false"
-          (click)="selectRemaining(stack.topPiece())"/>
-   </g>
-   <polygon *ngIf="selectedRemaining.isPresent()"
-            id="remaining_highlight"
-            [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
-            [attr.points]="getHexaCoordsAt(ORIGIN)"
-            class="base no-fill selected-stroke" />
+    <g *ngFor="let coord of selected">
+        <polygon *ngIf="highlightGround(coord) === false"
+                 id="selected_{{ coord.x }}_{{ coord.y }}"
+                 [attr.transform]="getHighlightTransform(coord)"
+                 [attr.points]="getHexaCoordsAt(coord)"
+                 class="base no-fill selected-stroke" />
+    </g>
 
-   <g *ngIf="inspectedStack.isPresent()"
-      id="inspectedStack"
-      app-hive-piece
-      [attr.transform]="inspectedStackTransform + 'translate(0 ' + inspectedStack.get().size() * PIECE_HEIGHT * 5 + ')'"
-      [stack]="inspectedStack.get()"
-      [pieceHeight]="PIECE_HEIGHT"
-      [coord]="ORIGIN"
-      [hexaLayout]="hexaLayout"
-      [sideView]="true"/>
+    <g *ngFor="let stack of remainingPieces">
+        <g *ngIf="stack.isEmpty() === false"
+           id="remainingPiece_{{ stack.topPiece().toString() }}"
+           app-hive-piece
+           [attr.transform]="getRemainingPieceTransform(stack.topPiece())"
+           [stack]="stack"
+           [pieceHeight]="PIECE_HEIGHT"
+           [coord]="ORIGIN"
+           [hexaLayout]="hexaLayout"
+           [sideView]="false"
+           (click)="selectRemaining(stack.topPiece())"/>
+    </g>
+    <polygon *ngIf="selectedRemaining.isPresent()"
+             id="remaining_highlight"
+             [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
+             [attr.points]="getHexaCoordsAt(ORIGIN)"
+             class="base no-fill selected-stroke" />
+
+    <g *ngIf="inspectedStack.isPresent()"
+       id="inspectedStack"
+       app-hive-piece
+       [attr.transform]="inspectedStackTransform + 'translate(0 ' + inspectedStack.get().size() * PIECE_HEIGHT * 5 + ')'"
+       [stack]="inspectedStack.get()"
+       [pieceHeight]="PIECE_HEIGHT"
+       [coord]="ORIGIN"
+       [hexaLayout]="hexaLayout"
+       [sideView]="true"/>
 </svg>

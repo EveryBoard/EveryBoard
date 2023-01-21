@@ -256,6 +256,10 @@ export class HiveComponent
         return MGPValidation.SUCCESS;
     }
 
+    public highlightGround(coord: Coord): boolean {
+        return this.getState().getAt(coord).isEmpty();
+    }
+
     public getHighlightTransform(coord: Coord): string {
         const height: number = this.getState().getAt(coord).size() * this.PIECE_HEIGHT;
         return `translate(0 -${height})`;

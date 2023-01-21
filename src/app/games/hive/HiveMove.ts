@@ -85,6 +85,7 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
     }
 
     private constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
+        console.log({coords})
         super(coords[0], coords[3]);
     }
 
