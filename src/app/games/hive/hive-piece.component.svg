@@ -6,6 +6,8 @@
     <svg:polygon [attr.points]="isoPointsDark"
                  [ngClass]="pieceClass[y]"
                  class="base no-stroke darker"/>
+    <svg:polygon [attr.points]="isoPointsStroke"
+                 class="base no-fill small-stroke" />
     <svg:g *ngIf="sideView || y === 0">
         <svg:polygon [attr.points]="hexaPoints"
                      [ngClass]="pieceClass[y]"

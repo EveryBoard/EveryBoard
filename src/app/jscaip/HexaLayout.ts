@@ -36,12 +36,13 @@ export class HexaLayout {
         return desc;
     }
     /**
-     * Returns the points to draw two polygons to render an hexagon in an isometric view.
+     * Returns the points to draw polygons to render an hexagon in an isometric view.
      * The first polygon is the one on the bottom left.
      * The second polygon is the one on the bottom and bottom right.
+     * The third polygon is the polygon formed by the union of the first two
      * So far, only used in a pointy orientation, may need to be adapted for a flat orientation.
      */
-    public getIsoPoints(coord: Coord, height: number): [Coord[], Coord[]] {
+    public getIsoPoints(coord: Coord, height: number): [Coord[], Coord[], Coord[]] {
         Utils.assert(this.orientation === FlatHexaOrientation.INSTANCE, 'HexaLayout.getIsoPoints can only be used with flat orientation');
         const center: Coord = this.getCenterAt(coord);
         const right: Coord = this.getCornerOffset(0);
@@ -62,6 +63,16 @@ export class HexaLayout {
             new Coord(center.x + bottomLeft.x, center.y + bottomLeft.y),
             new Coord(center.x + bottomRight.x, center.y + bottomRight.y),
         ];
-        return [bottomLeftPolygon, bottomRightPolygon];
+        const fullPolygon: Coord[] = [
+            new Coord(center.x + left.x, center.y + left.y),
+            new Coord(center.x + left.x, center.y + left.y + height),
+            new Coord(center.x + bottomLeft.x, center.y + bottomLeft.y + height),
+            new Coord(center.x + bottomRight.x, center.y + bottomRight.y + height),
+            new Coord(center.x + right.x, center.y + right.y + height),
+            new Coord(center.x + right.x, center.y + right.y),
+            new Coord(center.x + bottomRight.x, center.y + bottomRight.y),
+            new Coord(center.x + bottomLeft.x, center.y + bottomLeft.y),
+        ];
+        return [bottomLeftPolygon, bottomRightPolygon, fullPolygon];
     }
 }

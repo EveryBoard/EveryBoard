@@ -22,6 +22,7 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
     public hexaPoints: string = '';
     public isoPointsLight: string = '';
     public isoPointsDark: string = '';
+    public isoPointsStroke: string = '';
     public hexaCenter: Coord = new Coord(0, 0);
     public sideViewFactor: number = 1;
 
@@ -31,9 +32,12 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
         this.pieceClass = this.stack.pieces.map((piece: HivePiece) => this.getPlayerClass(piece.owner));
         this.hexaPoints = this.hexaLayout.getHexaCoordsAt(this.coord);
         this.hexaCenter = this.hexaLayout.getCenterAt(this.coord);
-        const isoPoints: [Coord[], Coord[]] = this.hexaLayout.getIsoPoints(this.coord, this.pieceHeight);
-        this.isoPointsLight = isoPoints[0].map((coord: Coord) => coord.toSVGCoord()).join(' ');
-        this.isoPointsDark = isoPoints[1].map((coord: Coord) => coord.toSVGCoord()).join(' ');
+        const isoPoints: [Coord[], Coord[], Coord[]] = this.hexaLayout.getIsoPoints(this.coord, this.pieceHeight);
+        const isoPointsSVG: string[] = isoPoints.map((coords: Coord[]) =>
+            coords.map((coord: Coord) => coord.toSVGCoord()).join(' '));
+        this.isoPointsLight = isoPointsSVG[0];
+        this.isoPointsDark = isoPointsSVG[1];
+        this.isoPointsStroke = isoPointsSVG[2];
         this.sideViewFactor = this.sideView ? 6 : 1;
     }
 }
