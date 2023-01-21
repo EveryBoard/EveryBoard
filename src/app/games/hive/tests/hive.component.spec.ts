@@ -179,6 +179,18 @@ describe('HiveComponent', () => {
                 const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
                 await testUtils.expectClickFailure('#piece_0_0', reason);
             }));
+            it('should deselect if the piece is clicked a second time', fakeAsync(async() => {
+                // Given a state with pieces on the board and a piece already selected
+                const state: HiveState = HiveState.fromRepresentation([
+                    [[Q], [q]],
+                ], 2);
+                testUtils.setupState(state);
+                await testUtils.expectClickSuccess('#piece_0_0');
+
+                // When clicking on the selected piece again
+                // The nit should cancel the move without error
+                await testUtils.expectClickFailure('#piece_0_0');
+            }));
         });
         describe('finishing move', () => {
             it('should move the piece to the clicked location', fakeAsync(async() => {

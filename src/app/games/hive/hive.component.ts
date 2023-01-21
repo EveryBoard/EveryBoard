@@ -206,7 +206,11 @@ export class HiveComponent
         }
         if (this.selectedStart.isPresent()) {
             const topPiece: HivePiece = state.getAt(this.selectedStart.get()).topPiece();
-            return this.selectTarget(coord, topPiece);
+            if (this.selectedStart.equalsValue(coord)) {
+                return this.cancelMove();
+            } else {
+                return this.selectTarget(coord, topPiece);
+            }
         } else {
             if (stack.size() === 0) {
                 return this.cancelMove();
