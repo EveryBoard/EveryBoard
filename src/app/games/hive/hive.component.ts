@@ -15,7 +15,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveDummyMinimax } from './HiveDummyMinimax';
 import { HiveFailure } from './HiveFailure';
-import { HiveMove, HiveMoveCoordToCoord, HiveMoveSpider } from './HiveMove';
+import { HiveMove, HiveMoveCoordToCoord, HiveMoveDrop, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceBehaviourSpider } from './HivePieceBehaviour';
 import { HiveRules } from './HiveRules';
@@ -41,6 +41,7 @@ export class HiveComponent
     public pieces: PieceWithCoord[] = [];
     public neighbors: Coord[] = [];
     public indicators: Coord[] = [];
+    public lastMove: Coord[] = [];
 
     public inspectedStack: MGPOptional<HivePieceStack> = MGPOptional.empty();
     public selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
@@ -86,6 +87,15 @@ export class HiveComponent
         this.computeViewBox();
         this.remainingPieces = this.getState().remainingPieces.toListOfStacks();
         this.canPass = HiveRules.get().shouldPass(this.getState());
+        this.hideLastMove();
+        if (this.rules.node.move.isPresent()) {
+            const move: HiveMove = this.rules.node.move.get();
+            if (move instanceof HiveMoveDrop) {
+                this.lastMove = [move.coord.getNext(this.getState().offset)];
+            } else if (move instanceof HiveMoveCoordToCoord) {
+                this.lastMove = [move.coord, move.end];
+            }
+        }
     }
 
     public async pass(): Promise<MGPValidation> {
@@ -136,7 +146,12 @@ export class HiveComponent
         this.selectedSpiderCoords = [];
         this.selected = [];
         this.indicators = [];
+        this.hideLastMove();
         this.inspectedStack = MGPOptional.empty();
+    }
+
+    public hideLastMove(): void {
+        this.lastMove = [];
     }
 
     public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {

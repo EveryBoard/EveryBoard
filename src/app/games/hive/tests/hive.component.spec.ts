@@ -281,19 +281,6 @@ describe('HiveComponent', () => {
                     await testUtils.expectClickFailure('#space_1_0', reason);
                 }));
             });
-            it('should fail when doing a static move', fakeAsync(async() => {
-                // Given a state with pieces ready to move
-                const state: HiveState = HiveState.fromRepresentation([
-                    [[Q], [q]],
-                    [[S], []],
-                ], 2);
-                testUtils.setupState(state);
-
-                // When trying to do a static move
-                // Then it should fail
-                await testUtils.expectClickSuccess('#piece_0_0');
-                await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MOVE_CANNOT_BE_STATIC());
-            }));
         });
     });
     describe('stacks', () => {

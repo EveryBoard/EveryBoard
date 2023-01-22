@@ -88,7 +88,7 @@ export class SixComponent
     }
     public showLastMove(): void {
         const lastMove: SixMove = this.rules.node.move.get();
-        this.lastDrop = MGPOptional.of(lastMove.landing.getNext(this.state.offset, 1));
+        this.lastDrop = MGPOptional.of(lastMove.landing.getNext(this.state.offset));
         if (lastMove.isDrop() === false) {
             this.leftCoord = MGPOptional.of(lastMove.start.get().getNext(this.state.offset, 1));
         } else {

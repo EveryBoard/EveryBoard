@@ -5,21 +5,28 @@
     <polygon *ngFor="let neighbor of neighbors"
              id="space_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
-             class="base"
+             class="base mid-stroke"
              (click)="selectSpace(neighbor, 'space')"/>
 
     <polygon *ngFor="let indicator of indicators"
              id="indicator_{{ indicator.x }}_{{ indicator.y }}"
              [attr.transform]="getHighlightTransform(indicator)"
              [attr.points]="getHexaCoordsAt(indicator)"
-             class="base no-fill clickable-stroke" />
+             class="base no-fill mid-stroke clickable-stroke" />
 
     <g *ngFor="let coord of selected">
         <polygon *ngIf="highlightGround(coord)"
                  id="selected_{{ coord.x }}_{{ coord.y }}"
                  [attr.transform]="getHighlightTransform(coord)"
                  [attr.points]="getHexaCoordsAt(coord)"
-                 class="base no-fill selected-stroke" />
+                 class="base no-fill mid-stroke selected-stroke" />
+    </g>
+    <g *ngFor="let coord of lastMove">
+        <polygon *ngIf="highlightGround(coord)"
+                 id="moved_{{ coord.x }}_{{ coord.y }}"
+                 [attr.transform]="getHighlightTransform(coord)"
+                 [attr.points]="getHexaCoordsAt(coord)"
+                 class="base no-fill mid-stroke last-move-stroke" />
     </g>
 
     <g *ngFor="let piece of pieces"
@@ -35,10 +42,17 @@
 
     <g *ngFor="let coord of selected">
         <polygon *ngIf="highlightGround(coord) === false"
+                 id="moved_{{ coord.x }}_{{ coord.y }}"
+                 [attr.transform]="getHighlightTransform(coord)"
+                 [attr.points]="getHexaCoordsAt(coord)"
+                 class="base no-fill mid-stroke selected-stroke" />
+    </g>
+    <g *ngFor="let coord of lastMove">
+        <polygon *ngIf="highlightGround(coord) === false"
                  id="selected_{{ coord.x }}_{{ coord.y }}"
                  [attr.transform]="getHighlightTransform(coord)"
                  [attr.points]="getHexaCoordsAt(coord)"
-                 class="base no-fill selected-stroke" />
+                 class="base no-fill mid-stroke last-move-stroke" />
     </g>
 
     <g *ngFor="let stack of remainingPieces">
@@ -57,7 +71,7 @@
              id="remaining_highlight"
              [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
              [attr.points]="getHexaCoordsAt(ORIGIN)"
-             class="base no-fill selected-stroke" />
+             class="base no-fill mid-stroke selected-stroke" />
 
     <g *ngIf="inspectedStack.isPresent()"
        id="inspectedStack"
