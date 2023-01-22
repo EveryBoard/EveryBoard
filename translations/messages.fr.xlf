@@ -2324,11 +2324,11 @@
       </trans-unit>
       <trans-unit id="8274439231274366704" datatype="html">
         <source>Lasca: origins</source>
-        <target>Lasca: les origines</target>
+        <target>Lasca : les origines</target>
       </trans-unit>
       <trans-unit id="3954016636522783040" datatype="html">
         <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
-        <target>Lasca est un jeu basé sur le jeu de dames, crée en 1911 par Emanuel Lasker, champion du monde d'échecs. Lasca se joue sur un plateau de 7x7 cases, chaque joueur a 11 pièces.</target>
+        <target>Lasca est un jeu basé sur le jeu de dames, créé en 1911 par Emanuel Lasker, champion du monde d'échecs. Lasca se joue sur un plateau de 7x7 cases, chaque joueur a 11 pièces.</target>
       </trans-unit>
       <trans-unit id="8228991594058357867" datatype="html">
         <source>The goal of Lasca is, like for draughts, to render the opponent out of possible move, either by capturing all his pieces, either by blocking them.</source>
@@ -2348,7 +2348,7 @@
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
-        <target>Félicitations, constatez que la pièce capturée n'as pas été enlevée du plateau, mais placée en dessous de la pièce qui l'as capturé.</target>
+        <target>Félicitations, constatez que la pièce capturée n'as pas été enlevée du plateau, mais placée en dessous de la pièce qui l'a capturé.</target>
       </trans-unit>
       <trans-unit id="944933553092470959" datatype="html">
         <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing space. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
