@@ -168,7 +168,7 @@ describe('EncapsuleComponent', () => {
 
             await testUtils.expectClickFailure('#piece_0_SMALL_DARK_0', EncapsuleFailure.END_YOUR_MOVE());
         }));
-        it('should deselect piece when clicking on it again', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any state with a remaining pieces selected
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_5');
 

@@ -224,7 +224,7 @@ export class YinshComponent
         this.currentlyMoved = [];
         this.moveToInitialCaptureOrMovePhase();
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         const moveOptional: MGPOptional<YinshMove> = this.rules.node.move;
         if (moveOptional.isPresent()) {
             const move: YinshMove = moveOptional.get();

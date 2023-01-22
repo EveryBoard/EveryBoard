@@ -51,10 +51,10 @@ describe('QuartoMinimax:', () => {
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
         for (const minimax of minimaxes) {
             // When getting the list of moves
-            const possiblesMoves: QuartoMove[] = minimax.getListMoves(rules.node);
+            const possibleMoves: QuartoMove[] = minimax.getListMoves(rules.node);
             // Then only one move should be listed
-            expect(possiblesMoves.length).toBe(1);
-            expect(possiblesMoves[0]).toEqual(move);
+            expect(possibleMoves.length).toBe(1);
+            expect(possibleMoves[0]).toEqual(move);
         }
     });
 });

@@ -39,7 +39,7 @@ for source_tu in sources.findall('.//%strans-unit' % NS):
         continue
     if target_tu[0].text != source_tu[0].text:
         failed = True
-        print('ERROR: Trans-unit with ID %s has a different <source> than in message.xlf! Changes to the english text should be made in the source code only.'  % source_tu.attrib['id'])
+        print('ERROR: Trans-unit with ID %s has a different <source> than in message.xlf! Changes to the english text should be made in the source code only.' % source_tu.attrib['id'])
         continue
 
 for target_tu in targets.findall('.//%strans-unit' % NS):

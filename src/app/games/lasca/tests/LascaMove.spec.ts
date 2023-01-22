@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
 import { LascaMove, LascaMoveFailure } from '../LascaMove';
@@ -12,21 +12,38 @@ describe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(0, 2));
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEP_MUST_BE_SINGLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
+        });
+        it('should forbid to start out of the board', () => {
+            // When trying to create a move that goes outside of the board
+            const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(-1, 1), new Coord(0, 0));
+
+            // Then it should fail
+            expect(move).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(new Coord(-1, 1))));
         });
         it('should forbid to get out of the board', () => {
             // When trying to create a move that goes outside of the board
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(-1, 1));
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.CANNOT_LEAVE_THE_BOARD()));
+            expect(move).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(new Coord(-1, 1))));
         });
         it('should forbid too long move', () => {
             // When trying to create a move that does too long step
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(2, 2));
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEP_MUST_BE_SINGLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
+        });
+        it('should return a failed fallible for unexisting index getCoord', () => {
+            // Given a move with two coords
+            const move: LascaMove = LascaMove.fromCapture([new Coord(0, 0), new Coord(2, 2)]).get();
+
+            // When trying to get it's third coord
+            const coord: MGPFallible<Coord> = move.getCoord(2);
+
+            // Then it should fail
+            expect(coord.getReason()).toBe('invalid index');
         });
         it('should allow simple move', () => {
             // When trying to create a simple move
@@ -49,7 +66,7 @@ describe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture([new Coord(0, 0), new Coord(-2, 2)]);
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.CANNOT_LEAVE_THE_BOARD()));
+            expect(move).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(new Coord(-2, 2))));
         });
         it('should forbid too long move', () => {
             // When trying to create a capture that does too long step

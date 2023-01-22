@@ -6,12 +6,15 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
 
     protected values: T[];
 
-    constructor(values?: readonly T[]) {
+    constructor(values?: readonly T[], private isMutable: boolean = true) {
         if (values === undefined) {
             this.values = [];
         } else {
             this.values = Sets.toComparableSet(values);
         }
+    }
+    public makeImmutable(): void {
+        this.isMutable = false;
     }
     public equals(other: MGPSet<T>): boolean {
         if (other.size() !== this.size()) {
@@ -36,6 +39,9 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return '[' + result.slice(0, -2) + ']';
     }
     public add(element: T): boolean {
+        if (this.isMutable === false) {
+            throw new Error('Cannot add to immutable MGPSet');
+        }
         if (this.contains(element)) {
             return false;
         } else {
@@ -43,7 +49,10 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return true;
         }
     }
-    public union(otherSet: MGPSet<T>): void {
+    public addAll(otherSet: MGPSet<T>): void {
+        if (this.isMutable === false) {
+            throw new Error('Cannot add to immutable MGPSet');
+        }
         for (const element of otherSet) {
             this.add(element);
         }
@@ -55,6 +64,13 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             }
         }
         return false;
+    }
+    public mapAndNotToList<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
+        const mappedList: V[] = [];
+        for (const element of this.values) {
+            mappedList.push(mapper(element));
+        }
+        return new MGPSet(mappedList, this.isMutable);
     }
     public size(): number {
         return this.values.length;
@@ -71,6 +87,13 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return MGPOptional.of(this.values[0]);
         } else {
             return MGPOptional.empty();
+        }
+    }
+    public getByIndex(index: number): T {
+        if (index < 0) {
+            return this.values[this.size() + index];
+        } else {
+            return this.values[index];
         }
     }
     public isEmpty(): boolean {

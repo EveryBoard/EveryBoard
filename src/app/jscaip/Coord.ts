@@ -5,6 +5,10 @@ import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder, NumberEncoder } from '../utils/Encoder';
 
+export class CoordFailure {
+    public static readonly OUT_OF_RANGE: (coord: Coord) => string = (coord: Coord) => `The coordinate ${ coord.toString() } is not on the board`;
+}
+
 export class Coord implements ComparableObject {
 
     public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {

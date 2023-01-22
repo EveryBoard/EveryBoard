@@ -65,7 +65,7 @@ describe('SiamComponent', () => {
         // Then it should be selected
         testUtils.expectElementToHaveClass('#remainingPieces_0_4', 'selected-stroke');
     }));
-    it('should deselect piece when clicking a second time on the remaining pieces', fakeAsync(async() => {
+    it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
         // Given a component where the player has selected a piece for insertion
         await testUtils.expectClickSuccess('#remainingPieces_0');
         // When clicking a second time on the remaining pieces

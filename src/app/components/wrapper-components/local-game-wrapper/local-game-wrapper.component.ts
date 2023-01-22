@@ -168,4 +168,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public getPlayer(): string {
         return 'human';
     }
+    public onCancelMove(reason?: string): void {
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            this.gameComponent.showLastMove();
+        }
+    }
 }

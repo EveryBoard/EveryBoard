@@ -183,7 +183,7 @@ describe('EpaminondasRules:', () => {
         // When trying to capture one of its own
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_SELF_CAPTURE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE());
     });
     it('should forbid moving opponent pieces', () => {
         // Given a board

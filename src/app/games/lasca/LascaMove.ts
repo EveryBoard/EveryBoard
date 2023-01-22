@@ -1,23 +1,32 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
-import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { JSONObject, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { LascaState } from './LascaState';
 
 export class LascaMoveFailure {
-    public static readonly CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL: Localized = () => $localize`TODOTODO capture must be double diagonal step`;
-    public static readonly MOVE_STEP_MUST_BE_SINGLE_DIAGONAL: Localized = () => $localize`TODOTODO move must be single diagonal step`;
-    public static readonly CANNOT_LEAVE_THE_BOARD: Localized = () => $localize`TODOTODO OUT OF RANGE COORD`;
-    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`TODOTODO must not jump over the same coord several time`;
+
+    public static readonly CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL: Localized = () => $localize`A capture should be a double diagonal step. Look at the green indicators to help you!`;
+
+    public static readonly MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL: Localized = () => $localize`You must move in a single diagonal step!`;
+
+    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot jump over the same square several times!`;
 }
 
 export class LascaMove extends Move {
 
+    public static isNotOnBoard(coord: Coord): boolean {
+        return coord.isNotInRange(LascaState.SIZE, LascaState.SIZE);
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(LascaState.SIZE, LascaState.SIZE);
+    }
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
         const jumpsValidity: MGPFallible<MGPSet<Coord>> = LascaMove.getSteppedOverCoords(coords);
         if (jumpsValidity.isSuccess()) {
@@ -30,8 +39,8 @@ export class LascaMove extends Move {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
         const jumpedOverCoords: MGPSet<Coord> = new MGPSet();
         for (const coord of coords) {
-            if (coord.isNotInRange(7, 7)) {
-                return MGPFallible.failure(LascaMoveFailure.CANNOT_LEAVE_THE_BOARD());
+            if (LascaMove.isNotOnBoard(coord)) {
+                return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
             if (lastCoordOpt.isPresent()) {
                 const lastCoord: Coord = lastCoordOpt.get();
@@ -50,19 +59,22 @@ export class LascaMove extends Move {
         return MGPFallible.success(jumpedOverCoords);
     }
     public static fromStep(start: Coord, end: Coord): MGPFallible<LascaMove> {
-        if (start.isNotInRange(7, 7) || end.isNotInRange(7, 7)) {
-            return MGPFallible.failure(LascaMoveFailure.CANNOT_LEAVE_THE_BOARD());
+        if (LascaMove.isNotOnBoard(start)) {
+            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
+        }
+        if (LascaMove.isNotOnBoard(end)) {
+            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
         }
         const vector: Coord = start.getVectorToward(end);
         if (Math.abs(vector.x) !== 1 || Math.abs(vector.y) !== 1) {
-            return MGPFallible.failure(LascaMoveFailure.MOVE_STEP_MUST_BE_SINGLE_DIAGONAL());
+            return MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL());
         }
         return MGPFallible.success(new LascaMove([start, end], true));
     }
     public static encoder: MoveEncoder<LascaMove> = new class extends MoveEncoder<LascaMove> {
         public encodeMove(move: LascaMove): JSONValueWithoutArray {
             return {
-                coords: move.coords.map((coord: Coord): JSONValueWithoutArray => {
+                coords: move.coords.toList().map((coord: Coord): JSONValueWithoutArray => {
                     return Coord.encoder.encode(coord) as JSONValueWithoutArray;
                 }),
                 isStep: move.isStep,
@@ -78,48 +90,54 @@ export class LascaMove extends Move {
             return new LascaMove(coords, casted.isStep as boolean);
         }
     };
-    private constructor(private readonly coords: Coord[], public readonly isStep: boolean) {
+    public readonly coords: MGPSet<Coord>;
+
+    private constructor(coords: Coord[], public readonly isStep: boolean) {
         super();
+        this.coords = new MGPSet(coords);
     }
     public toString(): string {
-        const coords: Coord[] = this.coords;
-        const coordStrings: string[] = coords.map((coord: Coord) => coord.toString());
+        const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');
         return 'LascaMove(' + coordString + ')';
     }
-    public equals(other: LascaMove): boolean {
-        if (other.coords.length !== this.coords.length) return false;
-        let i: number = 0;
-        for (const coord of this.coords) {
-            if (coord.equals(other.coords[i]) === false) return false;
-            i++;
+    private getRelation(other: LascaMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
+        const thisLength: number = this.coords.size();
+        const otherLength: number = other.coords.size();
+        const minimalLength: number = Math.min(thisLength, otherLength);
+        for (let i: number = 0; i < minimalLength; i++) {
+            if (this.coords.getByIndex(i).equals(other.coords.getByIndex(i)) === false) return 'INEQUALITY';
         }
-        return true;
+        if (thisLength === otherLength) return 'EQUALITY';
+        else return 'PREFIX';
+    }
+    public equals(other: LascaMove): boolean {
+        return this.getRelation(other) === 'EQUALITY';
+    }
+    public isPrefix(other: LascaMove): boolean {
+        return this.getRelation(other) === 'PREFIX';
     }
     public getCoord(index: number): MGPFallible<Coord> {
-        if (index < 0 || index >= this.coords.length) {
+        if (index < 0 || index >= this.coords.size()) {
             return MGPFallible.failure('invalid index');
         }
-        return MGPFallible.success(this.coords[index]);
-    }
-    public getCoordsCopy(): Coord[] {
-        return ArrayUtils.copyImmutableArray(this.coords);
+        return MGPFallible.success(this.coords.getByIndex(index));
     }
     public getStartingCoord(): Coord {
         return this.getCoord(0).get();
     }
     public getEndingCoord(): Coord {
-        return this.coords[this.coords.length - 1];
+        return this.coords.getByIndex(-1);
     }
-    public getSteppedOverCoords(): MGPFallible<MGPSet<Coord>> {
-        return LascaMove.getSteppedOverCoords(this.coords);
+    public getCapturedCoords(): MGPFallible<MGPSet<Coord>> {
+        return LascaMove.getSteppedOverCoords(this.coords.toList());
     }
-    public concatene(move: LascaMove): LascaMove {
+    public concatenate(move: LascaMove): LascaMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
-        const startOfSecondMove: Coord = move.coords[0];
-        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatene non-touching move'); // je veux être ému!!!
-        const firstPart: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
-        const secondPart: Coord[] = ArrayUtils.copyImmutableArray(move.coords).slice(1);
+        const startOfSecondMove: Coord = move.coords.getByIndex(0);
+        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
+        const firstPart: Coord[] = ArrayUtils.copyImmutableArray(this.coords.toList());
+        const secondPart: Coord[] = ArrayUtils.copyImmutableArray(move.coords.toList()).slice(1);
         return LascaMove.fromCapture(firstPart.concat(secondPart)).get();
     }
 }
