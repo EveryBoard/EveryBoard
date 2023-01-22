@@ -31,7 +31,7 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
                     const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
                     fields[key] = encoders[key].decode(field);
                 });
-                return decode(fields as Fields);
+                return decode(Object.values(fields) as Fields);
             }
         };
     }
@@ -161,7 +161,7 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
                     encoded = (encoded - fieldN) / encoders[key].shift();
                     fields[key] = encoders[key].decode(fieldN);
                 });
-                return decode(fields as Fields);
+                return decode(Object.values(fields) as Fields);
             }
         };
     }
