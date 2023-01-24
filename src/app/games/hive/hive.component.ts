@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Vector } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
@@ -118,9 +119,11 @@ export class HiveComponent
         this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${inspectedStackPosition.y})`;
 
         const spaceForInspectedStack: number = this.SPACE_SIZE*5;
-        this.viewBox = boardAndRemainingViewBox
-            .expand(0, spaceForInspectedStack, 0, 0)
-            .toSVGString();
+        if (this.inspectedStack.isPresent()) {
+            this.viewBox = boardAndRemainingViewBox.expand(0, spaceForInspectedStack, 0, 0).toSVGString();
+        } else {
+            this.viewBox = boardAndRemainingViewBox.toSVGString();
+        }
     }
 
     private getAllNeighbors(): Coord[] {
@@ -150,10 +153,13 @@ export class HiveComponent
     private showLastMove(): void {
         const move: HiveMove = this.rules.node.move.get();
         if (move instanceof HiveMoveDrop) {
-            this.lastMove = [move.coord.getNext(this.getState().offset)];
+            this.lastMove = [move.coord];
         } else if (move instanceof HiveMoveCoordToCoord) {
             this.lastMove = [move.coord, move.end];
         }
+        // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
+        const offset: Vector = this.getState().offset;
+        this.lastMove = this.lastMove.map((coord: Coord) => coord.getNext(offset));
     }
 
     public hideLastMove(): void {
@@ -208,13 +214,13 @@ export class HiveComponent
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 
-        if (this.selectedRemaining.isAbsent()) {
+        if (this.selectedRemaining.equalsValue(piece)) {
+            this.cancelMoveAttempt();
+        } else {
             this.cancelMoveAttempt();
             this.hideLastMove();
             this.selectedRemaining = MGPOptional.of(piece);
             this.indicators = HiveRules.get().getPossibleDropLocations(this.getState()).toList();
-        } else {
-            this.cancelMoveAttempt();
         }
         return MGPValidation.SUCCESS;
     }

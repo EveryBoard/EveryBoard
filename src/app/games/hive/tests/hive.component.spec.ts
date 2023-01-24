@@ -119,7 +119,32 @@ describe('HiveComponent', () => {
                 // Then the dropped piece should not be in the remaining pieces anymore
                 testUtils.expectElementNotToExist('#remainingPiece_QueenBee_PLAYER_ZERO');
             }));
+            it('should show the last move after dropping', fakeAsync(async() => {
+                // Given a state
+                const state: HiveState = HiveState.getInitialState();
+                testUtils.setupState(state);
+
+                // When performing a drop move
+                await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
+                const move: HiveMove = HiveMove.drop(Q, 0, 0).get();
+                await testUtils.expectMoveSuccess('#space_0_0', move);
+
+                // Then the last move should be shown
+                testUtils.expectElementToExist('#moved_0_0');
+            }));
         });
+        it('should deselect the piece at second click on it', fakeAsync(async() => {
+            // Given a state with remaining pieces and a selected one
+            const state: HiveState = HiveState.getInitialState();
+            testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
+
+            // When clicking on the selected piece again
+            await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
+
+            // Then it should not be selected anymore
+            testUtils.expectElementNotToExist('#remaining_highlight');
+        }));
     });
     describe('moving', () => {
         describe('selection', () => {
@@ -281,6 +306,24 @@ describe('HiveComponent', () => {
                     await testUtils.expectClickFailure('#space_1_0', reason);
                 }));
             });
+            it('should show the last move', fakeAsync(async() => {
+                // Given a state with a possible move
+                const state: HiveState = HiveState.fromRepresentation([
+                    [[Q], [q]],
+                    [[B], []],
+                ], 2);
+                testUtils.setupState(state);
+                await testUtils.expectClickSuccess('#piece_0_1');
+
+                // When performing a move
+                const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(1, 1)).get();
+                await testUtils.expectMoveSuccess('#space_1_1', move);
+
+                // Then the last move should be shown
+                testUtils.expectElementToExist('#moved_0_1');
+                testUtils.expectElementToExist('#moved_1_1');
+                testUtils.expectElementToHaveClass('#space_0_0', 'last-move');
+            }));
         });
     });
     describe('stacks', () => {
