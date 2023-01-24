@@ -89,12 +89,7 @@ export class HiveComponent
         this.canPass = HiveRules.get().shouldPass(this.getState());
         this.hideLastMove();
         if (this.rules.node.move.isPresent()) {
-            const move: HiveMove = this.rules.node.move.get();
-            if (move instanceof HiveMoveDrop) {
-                this.lastMove = [move.coord.getNext(this.getState().offset)];
-            } else if (move instanceof HiveMoveCoordToCoord) {
-                this.lastMove = [move.coord, move.end];
-            }
+            this.showLastMove();
         }
     }
 
@@ -146,8 +141,19 @@ export class HiveComponent
         this.selectedSpiderCoords = [];
         this.selected = [];
         this.indicators = [];
-        this.hideLastMove();
         this.inspectedStack = MGPOptional.empty();
+        if (this.rules.node.move.isPresent()) {
+            this.showLastMove();
+        }
+    }
+
+    private showLastMove(): void {
+        const move: HiveMove = this.rules.node.move.get();
+        if (move instanceof HiveMoveDrop) {
+            this.lastMove = [move.coord.getNext(this.getState().offset)];
+        } else if (move instanceof HiveMoveCoordToCoord) {
+            this.lastMove = [move.coord, move.end];
+        }
     }
 
     public hideLastMove(): void {
@@ -202,9 +208,14 @@ export class HiveComponent
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 
-        this.cancelMoveAttempt();
-        this.selectedRemaining = MGPOptional.of(piece);
-        this.indicators = HiveRules.get().getPossibleDropLocations(this.getState()).toList();
+        if (this.selectedRemaining.isAbsent()) {
+            this.cancelMoveAttempt();
+            this.hideLastMove();
+            this.selectedRemaining = MGPOptional.of(piece);
+            this.indicators = HiveRules.get().getPossibleDropLocations(this.getState()).toList();
+        } else {
+            this.cancelMoveAttempt();
+        }
         return MGPValidation.SUCCESS;
     }
 
@@ -213,6 +224,7 @@ export class HiveComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        this.hideLastMove();
         const state: HiveState = this.getState();
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
