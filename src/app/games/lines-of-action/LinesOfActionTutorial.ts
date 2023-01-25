@@ -69,7 +69,7 @@ export class LinesOfActionTutorial {
             <li>Diagonally, only one move is possible: on the diagonal that contains three pieces,
                 only in the direction where it does not jump over one of the opponent's pieces.
                 On the other diagonal, there are too many pieces to end the move on the board.</li>
-        </ul><br/><br/>
+        </ul><br/>
         You're playing Dark, make one of these moves.`,
             new LinesOfActionState([
                 [_, _, _, _, _, _, X, _],

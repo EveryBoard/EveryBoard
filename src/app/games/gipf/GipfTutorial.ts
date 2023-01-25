@@ -86,7 +86,7 @@ export class GipfTutorial extends Tutorial {
           <li>Another way captures one of your opponent's pieces.</li>
           <li>The last way captures two of your opponent's pieces.</li>
         </ol>
-        <br/><br/>
+        <br/>
         You're playing Dark, capture the most pieces from your opponent.`,
             new GipfState([
                 [N, N, N, _, _, _, _],
