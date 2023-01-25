@@ -25,7 +25,7 @@ export class TablutTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
-            $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>Capture it.`,
+            $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>You're playing Light, capture Dark's soldier.`,
             new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],
@@ -46,7 +46,7 @@ export class TablutTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
-            $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>Capture it.`,
+            $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>You're playing Dark, capture Light's soldier.`,
             new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],
@@ -64,7 +64,7 @@ export class TablutTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king (1/2)`,
-            $localize`To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.<br/><br/>Capture the king.`,
+            $localize`To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.<br/><br/>You're playing Dark, capture the king.`,
             new TablutState([
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -82,7 +82,7 @@ export class TablutTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king (2/2)`,
-            $localize`Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.<br/><br/>Capture the king.`,
+            $localize`Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.<br/><br/>You're playing Dark, capture the king.`,
             new TablutState([
                 [_, _, x, A, x, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],

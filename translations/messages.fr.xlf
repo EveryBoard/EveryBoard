@@ -2647,7 +2647,7 @@
       </trans-unit>
       <trans-unit id="2420281248578493085" datatype="html">
         <source>If, at any point during the game, your lodestone is situated on a square that crumbles with a pressure plate, you will be allowed to select any lodestone side on your next turn.&lt;br/&gt;&lt;br/&gt;In this board, playing Dark, you can place your lodestone and make a pressure plate crumble so that your lodestone falls too, allowing to choose more freely its side on your next turn. Do it!</source>
-        <target>À tout moment durant le jeu, si votre pierre magnétique se trouve sur une case qui s'effondre avec une plaque de pression, vous pourrez sélectionner n'importe quelle face de votre pierre magnétique lors de votre prochain tour.&lt;br/&gt;&lt;br/&gt;Sur ce plateau, en jouant Foncé, vous pouvez placer votre pierre magnétique et faire s'effondre une plaque de pression de façon à ce que votre pierre magnétique tombe également. Cela vous permettra de choisir plus librement le côté de votre pierre magnétique lors de votre prochain tour. Faites-le !</target>
+        <target>À tout moment durant le jeu, si votre pierre magnétique se trouve sur une case qui s'effondre avec une plaque de pression, vous pourrez sélectionner n'importe quelle face de votre pierre magnétique lors de votre prochain tour.&lt;br/&gt;&lt;br/&gt;Sur ce plateau, en jouant Foncé, vous pouvez placer votre pierre magnétique et faire s'effondrer une plaque de pression de façon à ce que votre pierre magnétique tombe également. Cela vous permettra de choisir plus librement le côté de votre pierre magnétique lors de votre prochain tour. Faites-le !</target>
       </trans-unit>
       <trans-unit id="387688094870283606" datatype="html">
         <source>Congratulations! At your next turn, you will be allowed to place your lodestone on any side.</source>
@@ -2744,7 +2744,7 @@
         To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
         Do it.</source>
         <target>Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d&apos;un quadrant.
-        Tant qu&apos;il existe des quadrants neutres, c&apos;est à dire des quadrants qui ne changeraient pas après avoir été tournés, l&apos;option de ne pas effectueur de rotation est acceptée.
+        Tant qu&apos;il existe des quadrants neutres, c&apos;est à dire des quadrants qui ne changeraient pas après avoir été tournés, l&apos;option de ne pas effectuer de rotation est acceptée.
         Pour ce faire il faut cliquer sur le rond barré qui apparaît au centre du plateau quand c&apos;est possible.&lt;br/&gt;&lt;br/&gt;
         Faites-le.</target>
       </trans-unit>
@@ -3176,7 +3176,7 @@
         &lt;ol&gt;
             &lt;li&gt;Cliquez sur la pyramide à déplacer (celle tout au centre).&lt;/li&gt;
             &lt;li&gt;Cliquez directement sur l&apos;une des 6 destinations possibles en deux pas :
-                les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.&lt;li&gt;
+                les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="5302904876941698020" datatype="html">
