@@ -1,5 +1,4 @@
-import { Component, ComponentFactoryResolver, AfterViewInit,
-    ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
@@ -33,14 +32,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public botTimeOut: number = 1000;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
+    constructor(actRoute: ActivatedRoute,
                 connectedUserService: ConnectedUserService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
                 private readonly cdr: ChangeDetectorRef)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
+        super(actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');

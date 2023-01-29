@@ -1,22 +1,70 @@
-import { FirestoreJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { FirestoreJSONObject, JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from '../utils/assert';
 import { Request } from './Request';
 import { FirestoreTime } from './Time';
-import { MGPOptional } from '../utils/MGPOptional';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MinimalUser } from './MinimalUser';
+import { Player } from '../jscaip/Player';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { MGPOptional } from '../utils/MGPOptional';
+
 
 interface LastUpdateInfo extends FirestoreJSONObject {
     readonly index: number,
     readonly player: number,
 }
+
+// This is what we're going towards
+// But we will get there progressively.
+// First step: have moves as a subcollection
+// Then we can add other "events"
+
+// type MGPResult = 'HARD_DRAW' | 'RESIGN' | 'VICTORY' | 'DRAW_AGREED_BY_ZERO' | 'DRAW_AGREED_BY_ONE' | 'TIMEOUT';
+// /**
+//  * This is a part.
+//  * Time is handled by firestore. When we send the time, it is a FieldValue and
+//  * firestore writes the actual time and sends us back the timestamp as a Time.
+//  */
+// export interface Part extends FirestoreJSONObject {
+//     readonly typeGame: string, // the type of game
+//     readonly playerZero: MinimalUser, // the first player
+//     readonly playerOne?: MinimalUser, // the second player
+//     readonly turn: number, // -1 means not started, 0 is the initial turn
+//     readonly result: MGPResult, // The current result of the part
+//     readonly beginning?: FirestoreTime, // The time at which the part started
+//     readonly winner?: MinimalUser,
+//     readonly loser?: MinimalUser,
+//     readonly scoreZero?: number,
+//     readonly scoreOne?: number,
+//     // A part also contains a subcollection of PartEvents
+// }
+// 
+// export interface PartEvent {
+//     readonly eventType: 'Move' | 'Request' | 'Reply',
+//     readonly time: FirestoreTime,
+//     readonly player: Player,
+// }
+// 
+// export interface PartEventMove extends PartEvent {
+//     readonly eventType: 'Move',
+//     readonly move: JSONValue,
+// }
+// 
+// export interface PartEventRequest {
+//     readonly eventType: 'Request',
+//     readonly requestType: 'Draw' | 'Rematch' | 'TakeBack'
+// }
+// 
+// export interface PartEventReply {
+//     readonly eventType: 'Reply'
+//     readonly reply: 'Accept' | 'Reject'
+// }
+
 export interface Part extends FirestoreJSONObject {
     readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
     readonly playerZero: MinimalUser, // the first player
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn
     readonly result: IMGPResult,
-    readonly listMoves: ReadonlyArray<JSONValueWithoutArray>,
 
     readonly playerOne?: MinimalUser, // the second player
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
@@ -31,7 +79,22 @@ export interface Part extends FirestoreJSONObject {
     readonly scorePlayerZero?: number,
     readonly scorePlayerOne?: number,
     readonly request?: Request | null, // can be null because we should be able to remove a request
+
+    // Extra fields as sub-collections:
+    // events: subcollection of PartEvent
 }
+
+export interface PartEvent extends FirestoreJSONObject {
+    readonly eventType: 'Move' | 'Request' | 'Reply',
+    readonly time: FirestoreTime,
+    readonly player: 0 | 1,
+}
+
+export interface PartEventMove extends PartEvent {
+    readonly eventType: 'Move',
+    readonly move: JSONValue,
+}
+
 
 export class MGPResult {
     public static readonly HARD_DRAW: MGPResult = new MGPResult(0);

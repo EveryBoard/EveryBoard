@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -24,14 +24,13 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     @ViewChild('board', { read: ViewContainerRef })
     public boardRef: ViewContainerRef | null = null;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
+    constructor(actRoute: ActivatedRoute,
                 connectedUserService: ConnectedUserService,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
                 private readonly cdr: ChangeDetectorRef)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
+        super(actRoute, connectedUserService, router, messageDisplayer);
     }
 
     protected override getGameName(): string {

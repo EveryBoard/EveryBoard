@@ -1,4 +1,4 @@
-import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
@@ -48,8 +48,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public Player: typeof Player = Player;
 
-    constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
-                protected readonly actRoute: ActivatedRoute,
+    constructor(protected readonly actRoute: ActivatedRoute,
                 protected readonly connectedUserService: ConnectedUserService,
                 protected readonly router: Router,
                 protected readonly messageDisplayer: MessageDisplayer)
@@ -84,11 +83,9 @@ export abstract class GameWrapper<P extends Comparable> {
             return false;
         }
         assert(this.boardRef != null, 'Board element should be present');
-        const componentFactory: ComponentFactory<AbstractGameComponent> =
-            this.componentFactoryResolver.resolveComponentFactory(component.get());
 
         const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
+            Utils.getNonNullable(this.boardRef).createComponent(component.get());
         this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
