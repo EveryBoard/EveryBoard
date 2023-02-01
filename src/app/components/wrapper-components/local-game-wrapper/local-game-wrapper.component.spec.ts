@@ -195,7 +195,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
             // Once by changing it on the select, once after the AI move and check who is next
         });
-        it('Should rotate the board when selecting AI as player zero', async() => {
+        it('should rotate the board when selecting AI as player zero', async() => {
             // Given a board of a reversible component
             testUtils.getComponent().hasAsymetricBoard = true;
 
@@ -206,7 +206,7 @@ describe('LocalGameWrapperComponent', () => {
             const rotation: string = testUtils.getComponent().rotation;
             expect(rotation).toBe('rotate(180)');
         });
-        it('Should de-rotate the board when selecting human as player zero again', async() => {
+        it('should de-rotate the board when selecting human as player zero again', async() => {
             // Given a board of a reversible component, where AI is player zero
             testUtils.getComponent().hasAsymetricBoard = true;
             await selectAIPlayer(Player.ZERO);

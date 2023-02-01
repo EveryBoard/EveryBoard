@@ -5,8 +5,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TrexoComponent, TrexoComponentFailure } from '../trexo.component';
 import { TrexoMove } from '../TrexoMove';
 
-// eslint-disable-next-line max-lines-per-function
-fdescribe('TrexoComponent', () => {
+describe('TrexoComponent', () => {
 
     let testUtils: ComponentTestUtils<TrexoComponent>;
 
@@ -55,18 +54,35 @@ fdescribe('TrexoComponent', () => {
         }));
         it('should allow clicking on second level', fakeAsync(async() => {
             // Given any board where two neighboring tiles are on the same level
-            await testUtils.expectClickSuccess('#space_5_5');
-            let move: TrexoMove = TrexoMove.from(new Coord(5, 6), new Coord(5, 5)).get();
-            await testUtils.expectMoveSuccess('#space_5_6', move);
-            await testUtils.expectClickSuccess('#space_6_5');
-            move = TrexoMove.from(new Coord(6, 5), new Coord(6, 6)).get();
-            await testUtils.expectMoveSuccess('#space_6_6', move);
+            await testUtils.expectClickSuccess('#space_0_0');
+            let move: TrexoMove = TrexoMove.from(new Coord(0, 1), new Coord(0, 0)).get();
+            await testUtils.expectMoveSuccess('#space_0_1', move);
+            await testUtils.expectClickSuccess('#space_1_0');
+            move = TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get();
+            await testUtils.expectMoveSuccess('#space_1_1', move);
 
             // When clicking on one of them
-            await testUtils.expectClickSuccess('#space_5_5');
+            await testUtils.expectClickSuccess('#space_0_0');
 
             // Then the droppedPiece should appear on it
-            testUtils.expectElementToExist('#dropped_piece_5_5_1');
+            testUtils.expectElementToExist('#dropped_piece_0_0_1');
+        }));
+        it('should allow dropping on second level', fakeAsync(async() => {
+            // Given any board where two neighboring tiles are on the same level
+            await testUtils.expectClickSuccess('#space_0_0');
+            let move: TrexoMove = TrexoMove.from(new Coord(0, 1), new Coord(0, 0)).get();
+            await testUtils.expectMoveSuccess('#space_0_1', move);
+            await testUtils.expectClickSuccess('#space_1_0');
+            move = TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get();
+            await testUtils.expectMoveSuccess('#space_1_1', move);
+            // And a first click has been done on that level
+            await testUtils.expectClickSuccess('#space_0_0');
+
+            // When clicking a second time
+            move = TrexoMove.from(new Coord(1, 0), new Coord(0, 0)).get();
+
+            // Then the move should be a success
+            await testUtils.expectMoveSuccess('#space_1_0', move);
         }));
     });
     describe(`second click`, () => {
@@ -131,6 +147,26 @@ fdescribe('TrexoComponent', () => {
             testUtils.expectElementToHaveClass('#tile_5_3_0', 'victory-stroke');
             testUtils.expectElementToHaveClass('#tile_6_3_0', 'victory-stroke');
             testUtils.expectElementToHaveClass('#tile_7_3_0', 'victory-stroke');
+        }));
+    });
+    describe(`view`, () => {
+        it(`should provide a button to switch 2D`, fakeAsync(async() => {
+            // Given a component just started
+            // When clicking on the switchTo2D button
+            await testUtils.clickElement('#switchTo2D');
+
+            // Then switchTo3D should now be visible
+            testUtils.expectElementToExist('#switchTo3D');
+        }));
+        it(`should provide a button to switch to 3D when in 2D`, fakeAsync(async() => {
+            // Given a component on which we are in 2D mode
+            await testUtils.clickElement('#switchTo2D');
+
+            // When clicking on the switchTo3D button
+            await testUtils.clickElement('#switchTo3D');
+
+            // Then switchTo2D should now be visible again
+            testUtils.expectElementToExist('#switchTo2D');
         }));
     });
 });

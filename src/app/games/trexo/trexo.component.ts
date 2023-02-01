@@ -24,6 +24,18 @@ interface PieceOnBoard {
 
     move: MGPOptional<TrexoMove>;
 }
+
+type ModeType = '2D' | '3D';
+
+export interface ModeConfig {
+
+    OFFSET_RATIO: number;
+
+    HORIZONTAL_WIDTH_RATIO: number;
+
+    PIECE_HEIGHT_RATIO: number;
+}
+
 @Component({
     selector: 'app-trexo',
     templateUrl: './trexo.component.html',
@@ -32,18 +44,26 @@ interface PieceOnBoard {
 export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoSpace> {
 
     public static VERBOSE: boolean = false;
-    public static readonly OFFSET_RATIO: number = 0.4;
-    public static readonly HORIZONTAL_WIDTH_RATIO: number = 1.2;
-    public static readonly PIECE_HEIGHT_RATIO: number = 0.4;
-    public readonly LEFT: number = (- this.STROKE_WIDTH / 2) + (TrexoComponent.OFFSET_RATIO * this.SPACE_SIZE);
-    public readonly UP: number = - this.STROKE_WIDTH / 2;
-    public readonly WIDTH: number =
-        (TrexoState.SIZE * this.SPACE_SIZE) * (TrexoComponent.HORIZONTAL_WIDTH_RATIO + TrexoComponent.OFFSET_RATIO);
-    public readonly HEIGHT: number =
-        (TrexoState.SIZE * this.SPACE_SIZE) + this.STROKE_WIDTH;
     public static SPACE_SIZE: number;
-
+    public static modeMap: Record<ModeType, ModeConfig> = {
+        '2D': {
+            OFFSET_RATIO: 0,
+            HORIZONTAL_WIDTH_RATIO: 1,
+            PIECE_HEIGHT_RATIO: 0,
+        },
+        '3D': {
+            OFFSET_RATIO: 0.4,
+            HORIZONTAL_WIDTH_RATIO: 1.2,
+            PIECE_HEIGHT_RATIO: 0.2,
+        },
+    };
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
+    public readonly LEFT: number = - this.STROKE_WIDTH / 2;
+    public UP: number = 0;
+    public WIDTH: number = 10 * this.SPACE_SIZE; // Real value will be put in constructor
+    public HEIGHT: number = 10 * this.SPACE_SIZE; // Real value will be put in constructor
+    public mode: ModeConfig;
+    public chosenMode: ModeType = '3D';
 
     public victoryCoords: Coord[] = [];
 
@@ -63,7 +83,52 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         this.encoder = TrexoMove.encoder;
         this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.SPACE_SIZE = this.SPACE_SIZE;
+        this.switchToMode('3D');
         this.updateBoard();
+    }
+    public switchToMode(mode: ModeType): void {
+        this.chosenMode = mode;
+        this.WIDTH = this.getWidth();
+        this.UP = this.getUp();
+        this.HEIGHT = this.getHeight();
+        this.mode = TrexoComponent.modeMap[mode];
+    }
+    private getWidth(): number {
+        const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
+        const boardWidth: number = TrexoState.SIZE;
+        const widification: number = mode3D.HORIZONTAL_WIDTH_RATIO + mode3D.OFFSET_RATIO;
+        const spaceWidth3D: number = this.SPACE_SIZE * widification;
+        if (this.chosenMode === '2D') {
+            return ((boardWidth + 1) * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
+        } else {
+            // Mais je saiiiiis (stratégie de l'échec, Luc)
+            return (boardWidth * spaceWidth3D) + this.STROKE_WIDTH;
+        }
+    }
+    private getHeight(): number {
+        const stroke: number = this.STROKE_WIDTH;
+        const boardHeight: number = TrexoState.SIZE * this.SPACE_SIZE;
+        if (this.chosenMode === '2D') {
+            return boardHeight;
+        } else {
+            const pieceBonus: number = this.getHigherEmpilementHeight();
+            return stroke + boardHeight + pieceBonus;
+        }
+    }
+    private getUp(): number {
+        if (this.chosenMode === '2D') {
+            return 0;
+        } else {
+            const empilementHeight: number = this.getHigherEmpilementHeight();
+            const stroke: number = this.STROKE_WIDTH / 2;
+            return - (stroke + empilementHeight);
+        }
+    }
+    private getHigherEmpilementHeight(): number {
+        const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
+        const maxZ: number = this.pieceOnBoard.length + 1;
+        const pieceBonus: number = maxZ * mode.PIECE_HEIGHT_RATIO * this.SPACE_SIZE;
+        return pieceBonus;
     }
     public updateBoard(): void {
         const state: TrexoState = this.getState();
@@ -72,6 +137,8 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         this.possibleMoves = this.rules.getLegalMoves(state);
         this.victoryCoords = TrexoRules.getVictoriousCoords(state);
         this.pieceOnBoard = this.getMoveHistory();
+        this.HEIGHT = this.getHeight();
+        this.UP = this.getUp();
     }
     private getMoveHistory(): PieceOnBoard[][][] {
         const initialValue: PieceOnBoard = {
@@ -187,16 +254,8 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         }
         return classes;
     }
-    public getDroppedPieceId(): string {
-        const player: string = this.getState().getCurrentOpponent() === Player.ZERO ? 'piece_zero' : 'piece_one';
-        const dropped: Coord = this.droppedPiece.get();
-        return player + '_' + dropped.x + '_' + dropped.y;
-    }
     public getPieceTranslate(x: number, y: number): string {
-        let z: number = this.getState().getPieceAtXY(x, y).height;
-        if (this.droppedPiece.equalsValue(new Coord(x, y))) {
-            z += 1;
-        }
+        const z: number = this.getState().getPieceAtXY(x, y).height;
         return this.getTranslate(x, y, z);
     }
     /**
@@ -204,17 +263,18 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
      * @param y the x coord on the state of the piece to draw
      * @returns the coord(x, y) of the upper left parallelogram to draw on the SVG;
      */
-    private static getCoordTranslate(x: number, y: number, z: number): Coord {
-        const SPACE_WIDTH: number = this.SPACE_SIZE * this.HORIZONTAL_WIDTH_RATIO;
+    private static getCoordTranslate(x: number, y: number, z: number, mode: ModeConfig): Coord {
+        const SPACE_WIDTH: number = this.SPACE_SIZE * mode.HORIZONTAL_WIDTH_RATIO;
         const SPACE_HEIGHT: number = this.SPACE_SIZE;
-        const SPACE_OFFSET: number = TrexoComponent.OFFSET_RATIO * this.SPACE_SIZE;
+        const SPACE_OFFSET: number = mode.OFFSET_RATIO * this.SPACE_SIZE;
         const numberOfOffset: number = TrexoState.SIZE - y;
         const xBase: number = (x * SPACE_WIDTH) + (numberOfOffset * SPACE_OFFSET);
-        const yBase: number = (y * SPACE_HEIGHT) - (TrexoComponent.PIECE_HEIGHT_RATIO * this.SPACE_SIZE * (z - 1));
+        const yBase: number = (y * SPACE_HEIGHT) - (mode.PIECE_HEIGHT_RATIO * this.SPACE_SIZE * z);
         return new Coord(xBase, yBase);
     }
     public getTranslate(x: number, y: number, z: number): string { // TODOTODO: mettre en commun code avec Lasca
-        const coordTransform: Coord = TrexoComponent.getCoordTranslate(x, y, z);
+        const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
+        const coordTransform: Coord = TrexoComponent.getCoordTranslate(x, y, z, mode);
         const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
         return translate;
     }
@@ -230,9 +290,10 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
      * @returns a list of concrete coord for the rhombus, with (0, 0) as lefter and upper coord
      */
     private getRhombusCoords(): Coord[] { // TODOTODO: mettre en commun code avec Lasca
-        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * TrexoComponent.HORIZONTAL_WIDTH_RATIO;
+        const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
+        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * mode.HORIZONTAL_WIDTH_RATIO;
         const RHOMBUS_HEIGHT: number = TrexoComponent.SPACE_SIZE;
-        const RHOMBUS_OFFSET: number = TrexoComponent.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
+        const RHOMBUS_OFFSET: number = mode.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
         const x1: number = RHOMBUS_WIDTH;
         const y1: number = 0;
         const x2: number = RHOMBUS_WIDTH - RHOMBUS_OFFSET;
@@ -249,10 +310,14 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     public getCoordXYZ(x: number, y: number, z: number): CoordXYZ {
         return new CoordXYZ(x, y, z);
     }
-    public getDroppedPieceCoord(): CoordXYZ {
-        const x: number = this.droppedPiece.get().x;
-        const y: number = this.droppedPiece.get().y;
-        const z: number = this.getState().getPieceAtXY(x, y).height + 1;
-        return this.getCoordXYZ(x, y, z);
+    public get3DSwitcherTransform(): string {
+        const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
+        const widness: number = mode3D.HORIZONTAL_WIDTH_RATIO + mode3D.OFFSET_RATIO;
+        const scale: string = ' scale(' + (1 / widness) + ')';
+        const verticalUnWideness: number = (1 - (1 / widness)) / 2;
+        const xTranslate: number = (10 + mode3D.OFFSET_RATIO) * this.SPACE_SIZE;
+        const yTranslate: number = (9 + verticalUnWideness) * this.SPACE_SIZE;
+        const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
+        return translate + scale;
     }
 }

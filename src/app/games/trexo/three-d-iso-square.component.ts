@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
 import { Direction } from 'src/app/jscaip/Direction';
-import { TrexoComponent } from './trexo.component';
+import { ModeConfig, TrexoComponent } from './trexo.component';
 import { TrexoMove } from './TrexoMove';
 
 @Component({
@@ -10,16 +10,12 @@ import { TrexoMove } from './TrexoMove';
     templateUrl: './three-d-iso-square.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ThreeDIsoSquareComponent implements OnInit {
-    ngOnInit(): void {
-        console.log('yelau', this.coord.toShortString(), this.move, this.pieceClasses);
-    }
-
-    public TrexoComponent: typeof TrexoComponent = TrexoComponent;
+export class ThreeDIsoSquareComponent {
 
     @Input() coord: CoordXYZ;
     @Input() move: TrexoMove | null;
     @Input() pieceClasses: string[];
+    @Input() mode: ModeConfig;
 
     public getOpenRhombusPoints(): string {
         const coords: Coord[] = this.getOpenRhombusCoords();
@@ -29,9 +25,9 @@ export class ThreeDIsoSquareComponent implements OnInit {
     }
     private getOpenRhombusCoords(): Coord[] {
         const orientation: Direction | null = this.getMoveOrientation();
-        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * TrexoComponent.HORIZONTAL_WIDTH_RATIO;
+        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * this.mode.HORIZONTAL_WIDTH_RATIO;
         const RHOMBUS_HEIGHT: number = TrexoComponent.SPACE_SIZE;
-        const RHOMBUS_OFFSET: number = TrexoComponent.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
+        const RHOMBUS_OFFSET: number = this.mode.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
         const x1: number = RHOMBUS_WIDTH;
         const y1: number = 0;
         const x2: number = RHOMBUS_WIDTH - RHOMBUS_OFFSET;
@@ -62,10 +58,10 @@ export class ThreeDIsoSquareComponent implements OnInit {
         }
     }
     public getRhombusHorizontalVolumeLeft(): string {
-        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * TrexoComponent.HORIZONTAL_WIDTH_RATIO;
+        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * this.mode.HORIZONTAL_WIDTH_RATIO;
         const RHOMBUS_HEIGHT: number = TrexoComponent.SPACE_SIZE;
-        const RHOMBUS_OFFSET: number = TrexoComponent.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
-        const PIECE_HEIGHT: number = TrexoComponent.SPACE_SIZE * TrexoComponent.PIECE_HEIGHT_RATIO;
+        const RHOMBUS_OFFSET: number = this.mode.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
+        const PIECE_HEIGHT: number = TrexoComponent.SPACE_SIZE * this.mode.PIECE_HEIGHT_RATIO;
 
         const x0: number = - RHOMBUS_OFFSET;
         const y0: number = RHOMBUS_HEIGHT;
@@ -80,13 +76,14 @@ export class ThreeDIsoSquareComponent implements OnInit {
             new Coord(x0, y0), // upper left coord, 0, 0
             new Coord(x3, y3),
             new Coord(x2, y2),
+            new Coord(x1, y1),
         ].map((coord: Coord) => coord.x + ' ' + coord.y).join(' ');
     }
     public getRhombusHorizontalVolumeRight(): string {
-        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * TrexoComponent.HORIZONTAL_WIDTH_RATIO;
+        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * this.mode.HORIZONTAL_WIDTH_RATIO;
         const RHOMBUS_HEIGHT: number = TrexoComponent.SPACE_SIZE;
-        const RHOMBUS_OFFSET: number = TrexoComponent.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
-        const PIECE_HEIGHT: number = TrexoComponent.SPACE_SIZE * TrexoComponent.PIECE_HEIGHT_RATIO;
+        const RHOMBUS_OFFSET: number = this.mode.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
+        const PIECE_HEIGHT: number = TrexoComponent.SPACE_SIZE * this.mode.PIECE_HEIGHT_RATIO;
 
         const x0: number = - RHOMBUS_OFFSET;
         const y0: number = RHOMBUS_HEIGHT;
@@ -104,10 +101,10 @@ export class ThreeDIsoSquareComponent implements OnInit {
         ].map((coord: Coord) => coord.x + ' ' + coord.y).join(' ');
     }
     private getOpenDiagonalPoints(upRight: boolean): string {
-        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * TrexoComponent.HORIZONTAL_WIDTH_RATIO;
+        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * this.mode.HORIZONTAL_WIDTH_RATIO;
         const RHOMBUS_HEIGHT: number = TrexoComponent.SPACE_SIZE;
-        const RHOMBUS_OFFSET: number = TrexoComponent.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
-        const PIECE_HEIGHT: number = TrexoComponent.SPACE_SIZE * TrexoComponent.PIECE_HEIGHT_RATIO;
+        const RHOMBUS_OFFSET: number = this.mode.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
+        const PIECE_HEIGHT: number = TrexoComponent.SPACE_SIZE * this.mode.PIECE_HEIGHT_RATIO;
 
         const x0: number = RHOMBUS_WIDTH - RHOMBUS_OFFSET;
         const y0: number = RHOMBUS_HEIGHT;
@@ -132,6 +129,7 @@ export class ThreeDIsoSquareComponent implements OnInit {
                 new Coord(x0, y0),
                 new Coord(x3, y3),
                 new Coord(x2, y2),
+                new Coord(x1, y1),
             ];
         }
         return coords.map((coord: Coord) => coord.x + ' ' + coord.y).join(' ');

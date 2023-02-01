@@ -40,9 +40,12 @@ export class P4Rules extends Rules<P4Move, P4State> {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
+                if (x===3 && y===5) console.log('about to find victory on ', state, x, y)
                 const tmpScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
+                if (x===3 && y===5) console.log('victyory (1) found, value =', tmpScore)
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
                     // if we find a pre-victory
+                    if (x===3 && y===5) console.log('victyory (yes) found, value =', tmpScore)
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { state, tmpScore, coord: { x, y } } });
                     return new BoardValue(tmpScore); // we return it
                     // TODO check that PRE_VICTORY does not overwrite VICTORY in this case
@@ -111,6 +114,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         return MGPFallible.success(undefined);
     }
     public getGameStatus(node: P4Node): GameStatus {
+        console.log('getGameStatus on a state at', node.gameState.getCurrentPlayer().toString(), 'turn')
         const state: P4State = node.gameState;
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
@@ -118,6 +122,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 // while we haven't reached the top or an empty space
                 const tmpScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                    console.log(state.getCurrentOpponent().toString() + ' just won with score ' + GameStatus.getVictory(state.getCurrentOpponent()).toBoardValue());
                     return GameStatus.getVictory(state.getCurrentOpponent());
                 }
             }

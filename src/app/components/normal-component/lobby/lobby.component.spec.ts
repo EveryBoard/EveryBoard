@@ -135,7 +135,7 @@ describe('LobbyComponent', () => {
                 // Given an user not part of any part
                 ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
             });
-            it('Should redirect to /play', fakeAsync(async() => {
+            it('should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
                 await shouldAllowJoinPart([startedPartUserDoNotPlay]);
             }));
@@ -242,7 +242,7 @@ describe('LobbyComponent', () => {
                 // Given an user not part of any part
                 ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
             });
-            it('Should redirect to /play', fakeAsync(async() => {
+            it('should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
                 await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
             }));

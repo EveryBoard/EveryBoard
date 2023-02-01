@@ -3,18 +3,23 @@
               [ngClass]="pieceClasses"
               class="base"/>
 <svg:polyline *ngIf="pieceIsOnTheRightUp()"
-              id="right_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+              id="right_up_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
               [attr.points]="getOpenDiagonalRightUp()"
+              [ngClass]="pieceClasses"
               class="base"/>
 <svg:g *ngIf="pieceIsOnTheRightDown()">
     <svg:polyline id="down_right_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
                   [attr.points]="getOpenDiagonalRightDown()"
+                  [ngClass]="pieceClasses"
+                  stroke-dashoffset="20"
                   class="base"/>
     <svg:polyline id="right_down_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
                   [attr.points]="getRhombusHorizontalVolumeRight()"
+                  [ngClass]="pieceClasses"
                   class="base"/>
 </svg:g>
 <svg:polyline *ngIf="pieceIsOnTheDownLeft()"
-              id="right_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+              id="down_left_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
               [attr.points]="getRhombusHorizontalVolumeLeft()"
+              [ngClass]="pieceClasses"
               class="base"/>

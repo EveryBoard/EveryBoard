@@ -5,9 +5,19 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TrexoSpace, TrexoState, TrexoStateFailure } from '../TrexoState';
 
 describe('TrexoState', () => {
-    it('should refuse creating a board that is not a 10x10', () => {
-        // Given a 11x11 board
-        const board: TrexoSpace[][] = ArrayUtils.createTable(11, 11, TrexoSpace.EMPTY);
+    it('should refuse creating a board that is not a Nx10', () => {
+        // Given a 11x10 board
+        const board: TrexoSpace[][] = ArrayUtils.createTable(11, 10, TrexoSpace.EMPTY);
+
+        // When passing it as a param
+        const state: MGPFallible<TrexoState> = TrexoState.from(board, 0);
+
+        // Then it should fail
+        expect(state.getReason()).toBe(TrexoStateFailure.INVALID_DIMENSIONS());
+    });
+    it('should refuse creating a board that is not a 10xN', () => {
+        // Given a 10x11 board
+        const board: TrexoSpace[][] = ArrayUtils.createTable(10, 11, TrexoSpace.EMPTY);
 
         // When passing it as a param
         const state: MGPFallible<TrexoState> = TrexoState.from(board, 0);

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
      [attr.viewBox]="LEFT + ' ' + UP + ' ' + WIDTH + ' ' + HEIGHT">
-
+    <rect [attr.x]="LEFT" [attr.y]="UP" [attr.width]="WIDTH" [attr.height]="HEIGHT" fill="red" />
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let space of line; index as x">
             <polygon id="space_{{ x }}_{{ y }}"
@@ -19,11 +19,13 @@
                    id="app_3d_iso_square_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
                    [attr.transform]="getTranslate(x, y, z + 1)"
+                   [mode]="mode"
                    [coord]="getCoordXYZ(x, y, z)"
                    [move]="piece.move.get()"
                    [pieceClasses]="getPieceClasses(x, y)"/>
                 <g *ngIf="piece.isDroppedPiece"
                    app-3d-iso-square
+                   [mode]="mode"
                    id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
                    [attr.transform]="getTranslate(x, y, z + 1)"
@@ -41,4 +43,23 @@
           [attr.width]="0.1 * SPACE_SIZE"
           [attr.height]="0.1 * SPACE_SIZE"
           class="indicator"/>
+    <g #switchModeIndicator>
+        <g *ngIf="chosenMode === '2D' else Mode2D"
+           id="switchTo3D"
+           app-3d-iso-square
+           (click)="switchToMode('3D')"
+           [mode]="TrexoComponent.modeMap['3D']"
+           [attr.transform]="get3DSwitcherTransform()"
+           [coord]="getCoordXYZ(10.5, 8.5, 0)"
+           [pieceClasses]="['player0-fill']"/>
+        <ng-template #Mode2D>
+            <g app-3d-iso-square
+               id="switchTo2D"
+               (click)="switchToMode('2D')"
+               [mode]="TrexoComponent.modeMap['2D']"
+               [attr.transform]="getTranslate(12, 9, 0)"
+               [coord]="getCoordXYZ(12, 9, 0)"
+               [pieceClasses]="['player0-fill']"/>
+        </ng-template>
+    </g>
 </svg>

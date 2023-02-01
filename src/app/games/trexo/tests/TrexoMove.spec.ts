@@ -61,4 +61,28 @@ describe('TrexoMove', () => {
             NumberEncoderTestUtils.expectToBeCorrect(TrexoMove.encoder, move);
         }
     });
+    describe('equals', () => {
+        it('should be true when two move are equal', () => {
+            // Given two identical moves
+            const first: TrexoMove = TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get();
+            const second: TrexoMove = TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get();
+
+            // When comparing them
+            const equals: boolean = first.equals(second);
+
+            // Then it should be true
+            expect(equals).toBeTrue();
+        });
+        it('should be false when two move are differents', () => {
+            // Given two differents moves
+            const first: TrexoMove = TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get();
+            const second: TrexoMove = TrexoMove.from(new Coord(1, 0), new Coord(0, 0)).get();
+
+            // When comparing them
+            const equals: boolean = first.equals(second);
+
+            // Then it should be true
+            expect(equals).toBeFalse();
+        });
+    });
 });
