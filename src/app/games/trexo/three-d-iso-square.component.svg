@@ -2,6 +2,13 @@
               [attr.points]="getOpenRhombusPoints()"
               [ngClass]="pieceClasses"
               class="base"/>
+<svg:text id="height_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
+          *ngIf="mustDisplayHeight"
+          x="50"
+          y="66"
+          class="text-big text-center"
+          [innerHTML]="coord.z"
+></svg:text>
 <svg:polyline *ngIf="pieceIsOnTheRightUp()"
               id="right_up_{{ coord.x }}_{{ coord.y }}_{{ coord.z }}"
               [attr.points]="getOpenDiagonalRightUp()"

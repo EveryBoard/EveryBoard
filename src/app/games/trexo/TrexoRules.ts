@@ -66,7 +66,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         const isInRange: (coord: Coord) => boolean = (coord: Coord) => {
             return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
         };
-        return NInARowHelper.getSquareScore(state, coord, getOwner, 4, isInRange);
+        return NInARowHelper.getSquareScore(state, coord, getOwner, 5, isInRange);
     }
     public static getVictoriousCoords(state: TrexoState): Coord[] {
         const victoryOfLastPlayer: Coord[] = [];

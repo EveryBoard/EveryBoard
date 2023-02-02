@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
@@ -118,5 +119,27 @@ describe('ThreeDIsoSquareComponent', () => {
         testUtils.expectElementToExist('#down_left_1_1_0');
 
         testUtils.expectElementNotToExist('#right_up_1_1_0');
+    });
+
+    it(`should display 'Z' on the piece when mustDisplayHeight is true`, () => {
+        // Given a component with mustDisplayHeight as true
+        component.mustDisplayHeight = true;
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then height should be displayed
+        const height: DebugElement = testUtils.findElement('#height_1_1_0');
+        expect(height.nativeElement.innerHTML).toBe('0');
+    });
+    it(`should not display 'Z' on the piece when mustDisplayHeight is false`, () => {
+        // Given a component with mustDisplayHeight as true
+        component.mustDisplayHeight = false;
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then height should be displayed
+        testUtils.expectElementNotToExist('#height_1_1_0');
     });
 });

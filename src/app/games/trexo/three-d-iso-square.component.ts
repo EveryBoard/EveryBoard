@@ -16,6 +16,7 @@ export class ThreeDIsoSquareComponent {
     @Input() move: TrexoMove | null;
     @Input() pieceClasses: string[];
     @Input() mode: ModeConfig;
+    @Input() mustDisplayHeight: boolean;
 
     public getOpenRhombusPoints(): string {
         const coords: Coord[] = this.getOpenRhombusCoords();

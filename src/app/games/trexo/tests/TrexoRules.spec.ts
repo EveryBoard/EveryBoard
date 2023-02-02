@@ -4,6 +4,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TrexoMinimax } from '../TrexoMinimax';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules, TrexoRulesFailure } from '../TrexoRules';
 import { TrexoSpace, TrexoState } from '../TrexoState';
@@ -28,7 +29,8 @@ describe('TrexoRules', () => {
     beforeEach(() => {
         rules = TrexoRules.get();
         minimaxes = [
-        ];// TODOTODO
+            new TrexoMinimax(rules, 'Trexo Minimax'),
+        ];
     });
     it('should accept to drop piece on the floor', () => {
         // Given any board where to space on the floor are free

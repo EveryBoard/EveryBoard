@@ -21,6 +21,7 @@
                    [attr.transform]="getTranslate(x, y, z + 1)"
                    [mode]="mode"
                    [coord]="getCoordXYZ(x, y, z)"
+                   [mustDisplayHeight]="chosenMode === '2D'"
                    [move]="piece.move.get()"
                    [pieceClasses]="getPieceClasses(x, y)"/>
                 <g *ngIf="piece.isDroppedPiece"
@@ -44,7 +45,7 @@
           [attr.height]="0.1 * SPACE_SIZE"
           class="indicator"/>
     <g #switchModeIndicator>
-        <g *ngIf="chosenMode === '2D' else Mode2D"
+        <g *ngIf="chosenMode === '2D' else switchTo2D"
            id="switchTo3D"
            app-3d-iso-square
            (click)="switchToMode('3D')"
@@ -52,7 +53,7 @@
            [attr.transform]="get3DSwitcherTransform()"
            [coord]="getCoordXYZ(10.5, 8.5, 0)"
            [pieceClasses]="['player0-fill']"/>
-        <ng-template #Mode2D>
+        <ng-template #switchTo2D>
             <g app-3d-iso-square
                id="switchTo2D"
                (click)="switchToMode('2D')"

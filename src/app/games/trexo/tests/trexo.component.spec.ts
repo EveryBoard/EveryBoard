@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -167,6 +168,19 @@ describe('TrexoComponent', () => {
 
             // Then switchTo2D should now be visible again
             testUtils.expectElementToExist('#switchTo2D');
+        }));
+        it('should ask tile to display number when 2D mode', fakeAsync(async() => {
+            // Given a board in 3D move with one move done already
+            await testUtils.expectClickSuccess('#space_5_5');
+            const move: TrexoMove = TrexoMove.from(new Coord(4, 5), new Coord(5, 5)).get();
+            await testUtils.expectMoveSuccess('#space_4_5', move);
+
+            // When choosing 2D move
+            await testUtils.clickElement('#switchTo2D');
+
+            // Then number indicating the height should be present on pieces
+            const height: DebugElement = testUtils.findElement('#height_5_5_0');
+            expect(height.nativeElement.innerHTML).toBe('0');
         }));
     });
 });

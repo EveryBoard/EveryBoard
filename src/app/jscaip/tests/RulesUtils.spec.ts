@@ -50,14 +50,11 @@ export class RulesUtils {
         minimaxes: Minimax<M, S, L>[])
     : void
     {
-        console.log('expecting victory of ' + player.toString() + ' hence ' + GameStatus.getVictory(player).toBoardValue())
         const gameStatus: GameStatus = rules.getGameStatus(node);
         expect(gameStatus)
             .withContext('Rules should consider gameStatus a victory for player ' + player.value)
             .toEqual(GameStatus.getVictory(player));
         for (const minimax of minimaxes) {
-            console.log('>>>>', minimax.name, 'is about to calculate: let us see:')
-            console.log('>>>> result = ', minimax.getBoardValue(node).value)
             expect(minimax.getBoardValue(node).value)
                 .withContext(minimax.name + ' should consider part a victory for player ' + player.value)
                 .toEqual(player.getVictoryValue());

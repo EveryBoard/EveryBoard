@@ -17,11 +17,6 @@ export class NInARowHelper {
                                     isInRange: (coord: Coord) => boolean,
     ): number
     {
-        if (coord.equals(new Coord(3, 5))) {
-            console.log('NIN.getSquareScore called on')
-            console.table(ArrayUtils.mapBiArray(state.board, (p: T) => p['value']))
-        }
-        if (coord.equals(new Coord(3, 5))) console.log('NIN.getSquareScore of a piece owner by ', (state.getPieceAt(coord) as PlayerOrNone).toString(), ' at ', state.getCurrentPlayer().toString(), ' turns')
         const piece: T = state.getPieceAt(coord);
         const ally: Player = getOwner(piece) as Player;
         assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
@@ -45,14 +40,14 @@ export class NInARowHelper {
             alliesByDirs.set(dir, tmpData[1]);
         }
 
-        const score: number = NInARowHelper.getScoreFromDirectionAllies(alliesByDirs, freeSpaceByDirs, ally, N);
-        if (coord.equals(new Coord(3, 5))) console.log('NIN.getSquareScore where ally is ', ally.toString(), 'has score', score, 'NO LONGER multiplied by ', ally.getScoreModifier())
-        return score; // * ally.getScoreModifier();
+        const score: number = NInARowHelper.getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs,
+                                                                                     freeSpaceByDirs,
+                                                                                     N);
+        return score * ally.getScoreModifier();
     }
-    public static getScoreFromDirectionAllies(alliesByDirs: MGPMap<Direction, number>,
-                                              freeSpaceByDirs: MGPMap<Direction, number>,
-                                              ally: Player,
-                                              N: number,
+    public static getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Direction, number>,
+                                                           freeSpaceByDirs: MGPMap<Direction, number>,
+                                                           N: number,
     ): number
     {
         let score: number = 0;
@@ -62,15 +57,15 @@ export class NInARowHelper {
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();
             const lineAllies: number = directionAllies + oppositeDirectionAllies;
             if (lineAllies + 1 >= N) {
-                return ally.getVictoryValue();
+                return Number.MAX_SAFE_INTEGER;
             }
             const directionFreeSpaces: number = freeSpaceByDirs.get(dir).get();
             const oppositeDirectionFreeSpaces: number = freeSpaceByDirs.get(dir.getOpposite()).get();
-            const lineDist: number = directionFreeSpaces + oppositeDirectionFreeSpaces;
-            if (lineDist === 3) { // TODO: why the 3 ? N-1 non ?
+            const lineFreeSpaces: number = directionFreeSpaces + oppositeDirectionFreeSpaces;
+            if (lineFreeSpaces === 3) { // TODO: why the 3 ? N-1 non ?
                 score += 2;
-            } else if (lineDist > 3) {
-                score += lineDist - 2;
+            } else if (lineFreeSpaces > 3) {
+                score += lineFreeSpaces - 2; // TODO: why would 4 freeSpace be worth as much as 3 ?
             }
         }
         return score;

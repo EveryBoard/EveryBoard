@@ -39,9 +39,9 @@ export class PylosCoord extends CoordXYZ {
     }
     constructor(x: number, y: number, public readonly z: number) { // TODO: create PylosCoord as a child of CoordXYZ
         super(x, y, z);
-        if (x < 0 || x > 3) throw new Error(`CoordXYZ: Invalid X: ${x}.`);
-        if (y < 0 || y > 3) throw new Error(`CoordXYZ: Invalid Y: ${y}.`);
-        if (z < 0 || z > 3) throw new Error(`CoordXYZ: Invalid Z: ${z}.`);
+        if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
+        if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);
+        if (z < 0 || z > 3) throw new Error(`PylosCoord: Invalid Z: ${z}.`);
         const floorSize: number = 4 - z;
         if (this.isNotInRange(floorSize, floorSize)) throw new Error(this.toString() + ' is not in range.');
     }
