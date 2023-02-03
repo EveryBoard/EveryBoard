@@ -21,9 +21,6 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     public makeImmutable(): void {
         this.isImmutable = true;
     }
-    public makeMutable(): void {
-        this.isImmutable = false;
-    }
     public get(key: K): MGPOptional<V> {
         for (const keymap of this.map) {
             if (comparableEquals(keymap.key, key)) {

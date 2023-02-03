@@ -234,7 +234,7 @@ export class HiveComponent
         const state: HiveState = this.getState();
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
-            const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord.x, coord.y).get();
+            const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord);
             return this.chooseMove(move, state);
         }
         if (this.selectedStart.isPresent()) {

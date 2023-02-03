@@ -55,7 +55,7 @@ export class SixRules extends Rules<SixMove,
     }
     public static getLegalLandings(state: SixState): Coord[] {
         const neighbors: MGPSet<Coord> = new CoordSet();
-        for (const piece of state.pieces.listKeys()) {
+        for (const piece of state.getPieceCoords()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighbor: Coord = piece.getNext(dir, 1);
                 if (state.getPieceAt(neighbor) === PlayerOrNone.NONE) {
@@ -69,7 +69,7 @@ export class SixRules extends Rules<SixMove,
         if (move.isDrop() === false) {
             return MGPFallible.failure(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }
-        return MGPFallible.success(state.pieces.getKeySet());
+        return MGPFallible.success(new MGPSet(state.getPieceCoords()));
     }
     public static isLegalPhaseTwoMove(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop()) {
@@ -126,7 +126,7 @@ export class SixRules extends Rules<SixMove,
         if (keep.isAbsent()) {
             return MGPFallible.failure(SixFailure.MUST_CUT());
         }
-        if (state.pieces.get(keep.get()).isAbsent()) {
+        if (state.getPieces().get(keep.get()).isAbsent()) {
             return MGPFallible.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD());
         }
         const keptCoord: Coord = keep.get();

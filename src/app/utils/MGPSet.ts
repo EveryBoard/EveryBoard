@@ -43,13 +43,18 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return true;
         }
     }
-    public remove(element: T): void {
+    /**
+     * Remove an element from the set.
+     * Returns true if something was actually removed, false otherwise.
+     */
+    public remove(element: T): boolean {
         for (let i: number = 0; i < this.values.length; i++) {
             if (comparableEquals(this.values[i], element)) {
                 this.values.splice(i, 1);
-                return;
+                return true;
             }
         }
+        return false;
     }
     public union(otherSet: MGPSet<T>): void {
         for (const element of otherSet) {

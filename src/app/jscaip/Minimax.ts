@@ -11,7 +11,7 @@ export abstract class Minimax<M extends Move,
                               R extends Rules<M, S, L> = Rules<M, S, L>>
 {
 
-    public constructor(public readonly ruler: R, // TODO: we don't need this here, remove it
+    public constructor(public readonly ruler: R,
                        public readonly name: string) {
     }
     /**

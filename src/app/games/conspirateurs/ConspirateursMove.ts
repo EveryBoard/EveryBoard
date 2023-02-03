@@ -14,7 +14,7 @@ import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
 
 export class ConspirateursMoveDrop extends MoveCoord {
-    public static encoder: NumberEncoder<ConspirateursMoveDrop> =
+    public static encoder: MoveEncoder<ConspirateursMoveDrop> =
         MoveCoordEncoder.getEncoder(ConspirateursState.WIDTH,
                                     ConspirateursState.HEIGHT,
                                     (coord: Coord) => ConspirateursMoveDrop.of(coord).get());
@@ -51,10 +51,8 @@ export class ConspirateursMoveDrop extends MoveCoord {
 }
 
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
-    public static encoder: NumberEncoder<ConspirateursMoveSimple> =
-        MoveCoordToCoord.getEncoder(ConspirateursState.WIDTH,
-                                    ConspirateursState.HEIGHT,
-                                    (start: Coord, end: Coord) => ConspirateursMoveSimple.of(start, end).get());
+    public static encoder: MoveEncoder<ConspirateursMoveSimple> =
+        MoveCoordToCoord.getEncoder((start: Coord, end: Coord) => ConspirateursMoveSimple.of(start, end).get());
 
     public static of(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
         if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&

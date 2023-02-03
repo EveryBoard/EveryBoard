@@ -20,7 +20,7 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
 
     public readonly offset: Vector;
 
-    public constructor(public readonly pieces: ReversibleMap<Coord, T>,
+    public constructor(protected pieces: ReversibleMap<Coord, T>,
                        turn: number,
                        offset?: Vector) {
         super(turn);
@@ -30,6 +30,12 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
         this.height = scale.height;
         this.offset = offset ?? scale.offset;
         this.pieces.makeImmutable();
+    }
+    public getPieces(): ReversibleMap<Coord, T> {
+        return this.pieces;
+    }
+    public getPieceCoords(): Coord[] {
+        return this.pieces.listKeys();
     }
     public computeScale(): Scale<T> {
         let minWidth: number = Number.MAX_SAFE_INTEGER;
@@ -68,7 +74,7 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
     }
 
     public setAt(coord: Coord, piece: T): void {
-        this.pieces.makeMutable();
+        this.pieces = this.pieces.getCopy();
         if (this.isEmpty(piece)) {
             this.pieces.delete(coord);
         } else {

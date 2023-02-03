@@ -33,7 +33,7 @@ export abstract class HivePieceBehaviour {
 
     protected canSlide(state: HiveState, start: Coord, end: Coord): boolean {
         // For the piece to slide from start to end,
-        // one of the two common neighbors of start and coord should be empty
+        // one of the two common neighbors of start and end coord should be empty
         const startNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.neighbors(start));
         const endNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.neighbors(end));
         const commonNeighbors: MGPSet<Coord> = startNeighbors.intersect(endNeighbors);

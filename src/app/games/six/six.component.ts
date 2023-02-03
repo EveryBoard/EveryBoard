@@ -78,7 +78,7 @@ export class SixComponent
             this.victoryCoords = [];
             this.disconnecteds = [];
         }
-        this.pieces = this.state.pieces.listKeys();
+        this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
         this.viewBox = this.getViewBox();
     }
@@ -101,8 +101,8 @@ export class SixComponent
         this.disconnecteds = this.getDisconnected();
     }
     private getDisconnected(): Coord[] {
-        const oldPieces: Coord[] = this.rules.node.mother.get().gameState.pieces.listKeys();
-        const newPieces: Coord[] = this.getState().pieces.listKeys();
+        const oldPieces: Coord[] = this.rules.node.mother.get().gameState.getPieceCoords();
+        const newPieces: Coord[] = this.getState().getPieceCoords();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
             const start: MGPOptional<Coord> = this.rules.node.move.get().start;

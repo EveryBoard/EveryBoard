@@ -59,9 +59,10 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         return pieces;
     }
     public numberOfNeighbors(coord: Coord): number {
-        return HexagonalUtils.neighbors(coord, 1)
-            .filter((c: Coord): boolean => this.isOnBoard(c) && this.getPieceAt(c).isEmpty() === false)
-            .length;
+        const neighbors: Coord[] = HexagonalUtils.neighbors(coord, 1);
+        const occupiedNeighbors: Coord[] = neighbors.filter((c: Coord): boolean =>
+            this.isOnBoard(c) && this.getPieceAt(c).isEmpty() === false);
+        return occupiedNeighbors.length;
     }
     public setAtUnsafe(coord: Coord, value: DvonnPieceStack): this {
         const newBoard: DvonnPieceStack[][] = ArrayUtils.copyBiArray(this.board);

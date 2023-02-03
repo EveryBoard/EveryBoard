@@ -2,7 +2,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class HiveFailure {
 
-    public static readonly CANNOT_DROP_PIECE_YOU_DONT_HAVE: Localized = () => `You cannot drop a piece that you do not have in your reserve`;
+    public static readonly CANNOT_DROP_PIECE_YOU_DONT_HAVE: Localized = () => `You cannot drop a piece that you do not have in your reserve.`;
 
     public static readonly QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS: Localized = () => $localize`The queen bee can only move to one of its direct neighbors.`;
 
@@ -28,7 +28,7 @@ export class HiveFailure {
 
     public static readonly MUST_BE_ABLE_TO_SLIDE: Localized = () => $localize`This piece must be able to slide to its destination.`;
 
-    public static readonly MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN: Localized = () => $localize`You must place your queen bee before at your fourth turn at the latest.`;
+    public static readonly MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN: Localized = () => $localize`You must place your queen bee at this turn!`;
 
     public static readonly CANNOT_DROP_NEXT_TO_OPPONENT: Localized = () => $localize`You cannot drop a piece next to one of your opponent's piece.`;
 

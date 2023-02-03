@@ -4,7 +4,7 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { Encoder } from 'src/app/utils/Encoder';
 import { JSONValue, Utils } from 'src/app/utils/utils';
 
-export type HivePieceKind = 'QueenBee' | 'Beetle' | 'Grasshopper' | 'Spider' | 'SoldierAnt'
+export type HivePieceKind = 'QueenBee' | 'Beetle' | 'Grasshopper' | 'Spider' | 'SoldierAnt';
 
 export class HivePiece implements ComparableObject {
 
@@ -15,15 +15,13 @@ export class HivePiece implements ComparableObject {
         }
 
         public decode(encoded: JSONValue): HivePiece {
-            // eslint-disable-next-line dot-notation
+            // eslint-disable dot-notation
             assert(Utils.getNonNullable(encoded)['kind'] !== null, 'invalid encoded HivePiece');
-            // eslint-disable-next-line dot-notation
             assert(Utils.getNonNullable(encoded)['owner'] !== null, 'invalid encoded HivePiece');
-            // eslint-disable-next-line dot-notation
             const kind: HivePieceKind = Utils.getNonNullable(encoded)['kind'] as HivePieceKind;
-            // eslint-disable-next-line dot-notation
             const owner: Player = Player.of(Utils.getNonNullable(encoded)['owner']);
             return new HivePiece(owner, kind);
+            // eslint-enable dot-notation
         }
     };
 

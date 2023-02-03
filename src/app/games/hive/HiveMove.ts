@@ -16,8 +16,8 @@ export class HiveMoveDrop extends MoveCoord {
         (fields: [HivePiece, Coord]): HiveMoveDrop => new HiveMoveDrop(fields[0], fields[1].x, fields[1].y),
     );
 
-    public static from(piece: HivePiece, x: number, y: number): MGPFallible<HiveMoveDrop> {
-        return MGPFallible.success(new HiveMoveDrop(piece, x, y));
+    public static from(piece: HivePiece, coord: Coord): HiveMoveDrop {
+        return new HiveMoveDrop(piece, coord.x, coord.y);
     }
 
     private constructor(public readonly piece: HivePiece, x: number, y: number) {
@@ -30,7 +30,7 @@ export class HiveMoveDrop extends MoveCoord {
 
     public equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveDrop) {
-            return this.coord.equals(other.coord);
+            return this.piece.equals(other.piece) && this.coord.equals(other.coord);
         }
         return false;
     }
@@ -39,11 +39,9 @@ export class HiveMoveDrop extends MoveCoord {
 
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
-    public static encoder: Encoder<HiveMoveCoordToCoord> = MoveEncoder.tuple(
-        [Coord.encoder, Coord.encoder],
-        (move: HiveMoveSpider): [Coord, Coord] => [move.coord, move.end],
-        (fields: [Coord, Coord]): HiveMoveCoordToCoord => new HiveMoveCoordToCoord(fields[0], fields[1]),
-    );
+    public static encoder: Encoder<HiveMoveCoordToCoord> = MoveCoordToCoord.getEncoder((start: Coord, end: Coord) => {
+       return new HiveMoveCoordToCoord(start, end);
+    });
 
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
         if (start.equals(end)) {
@@ -112,15 +110,15 @@ export class HiveMovePass extends Move {
     }
 }
 
-export type HiveMove = HiveMoveDrop | HiveMoveCoordToCoord | HiveMoveSpider | HiveMovePass
+export type HiveMove = HiveMoveDrop | HiveMoveCoordToCoord | HiveMoveSpider | HiveMovePass;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace HiveMove {
 
     export const PASS: HiveMove = new HiveMovePass();
 
-    export function drop(piece: HivePiece, x: number, y: number): MGPFallible<HiveMove> {
-        return HiveMoveDrop.from(piece, x, y);
+    export function drop(piece: HivePiece, coord: Coord): HiveMove {
+        return HiveMoveDrop.from(piece, coord);
     }
 
     export function move(start: Coord, end: Coord): MGPFallible<HiveMove> {
@@ -156,14 +154,14 @@ export namespace HiveMove {
         }
         public decodeMove(encoded: JSONValueWithoutArray): HiveMove {
             // eslint-disable-next-line dot-notation
-            const type_: string = Utils.getNonNullable(encoded)['type'];
+            const moveType: string = Utils.getNonNullable(encoded)['type'];
             // eslint-disable-next-line dot-notation
             const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
-            if (type_ === 'Drop') {
+            if (moveType === 'Drop') {
                 return HiveMoveDrop.encoder.decode(content);
-            } else if (type_ === 'Spider') {
+            } else if (moveType === 'Spider') {
                 return HiveMoveSpider.encoder.decode(content);
-            } else if (type_ === 'CoordToCoord') {
+            } else if (moveType === 'CoordToCoord') {
                 return HiveMoveCoordToCoord.encoder.decode(content);
             } else {
                 return HiveMove.PASS;

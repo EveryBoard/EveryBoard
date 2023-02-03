@@ -200,7 +200,7 @@
       </trans-unit>
       <trans-unit id="5275095432470206038" datatype="html">
         <source>You are in charge of a hive full of insects. Use your insects&apos; abilities to block the opponent&apos;s queen in order to win!</source>
-        <target>Vous représentez une colonie d'insectes. Utilisez les capacités de vos insectes pour bloquer la reine de votre adversaire afin de gagner !</target>
+        <target>Vous contrôlez une colonie d'insectes. Utilisez les capacités de vos insectes pour bloquer la reine de votre adversaire afin de gagner !</target>
       </trans-unit>
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>

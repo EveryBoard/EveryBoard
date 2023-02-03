@@ -11,6 +11,11 @@ interface Limits {
 }
 
 export class ViewBox {
+    public static fromLimits(left: number, right: number, up: number, down: number): ViewBox {
+        const width: number = right - left;
+        const height: number = down - up;
+        return new ViewBox(left, up, width, height);
+    }
     public static fromHexa(coords: Coord[], hexaLayout: HexaLayout, strokeWidth: number): ViewBox {
         const actualCoords: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaCoordListAt(coord));
         const limits: Limits = ViewBox.getLimits(actualCoords);
@@ -26,12 +31,8 @@ export class ViewBox {
         let minX: number = Number.MAX_SAFE_INTEGER;
         let minY: number = Number.MAX_SAFE_INTEGER;
         for (const coord of coords) {
-            if (coord.x < minX) {
-                minX = coord.x;
-            }
-            if (coord.y < minY) {
-                minY = coord.y;
-            }
+            minX = Math.min(minX, coord.x);
+            minY = Math.min(minY, coord.y);
             maxX = Math.max(maxX, coord.x);
             maxY = Math.max(maxY, coord.y);
         }
@@ -62,11 +63,11 @@ export class ViewBox {
     }
 
     public containingAtLeast(viewBox: ViewBox): ViewBox {
-        const left: number = Math.max(this.left - viewBox.left, 0);
-        const right: number = Math.max(viewBox.right() - this.right(), 0);
-        const above: number = Math.max(this.up - viewBox.up, 0);
-        const below: number = Math.max(viewBox.bottom() - this.bottom(), 0);
-        return this.expand(left, right, above, below);
+        const left: number = Math.min(this.left, viewBox.left);
+        const right: number = Math.max(this.right(), viewBox.right());
+        const up: number = Math.min(this.up, viewBox.up);
+        const bottom: number = Math.min(this.bottom(), viewBox.bottom());
+        return ViewBox.fromLimits(left, right, up, bottom);
     }
 
     public toSVGString(): string {

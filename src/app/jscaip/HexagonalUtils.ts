@@ -11,9 +11,9 @@ export class HexagonalUtils {
         return result;
     }
 
-    public static areNeighbors(coord1: Coord, coord2: Coord): boolean {
+    public static areNeighbors(first: Coord, second: Coord): boolean {
         for (const direction of HexaDirection.factory.all) {
-            if (coord1.getNext(direction).equals(coord2)) {
+            if (first.getNext(direction).equals(second)) {
                 return true;
             }
         }

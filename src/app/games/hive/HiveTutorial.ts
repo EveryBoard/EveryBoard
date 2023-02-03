@@ -39,7 +39,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Placing the first and second piece`,
             $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
             HiveState.getInitialState(),
-            HiveMove.drop(B, 0, 0).get(),
+            HiveMove.drop(B, new Coord(0, 0)),
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Placing pieces after the second turn`,
@@ -47,7 +47,7 @@ export class HiveTutorial extends Tutorial {
             HiveState.fromRepresentation([
                 [[b], [G]],
             ], 2),
-            HiveMove.drop(Q, 2, 0).get(),
+            HiveMove.drop(Q, new Coord(2, 0)),
             $localize`Congratulations!`),
         TutorialStep.fromMove(
             $localize`Moving pieces: the queen bee`,
