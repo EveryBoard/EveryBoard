@@ -3,16 +3,16 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration=production",
+    "start": "ng serve --configuration=debug",
     "start:emulator": "bash ./scripts/start-in-emulator.sh",
     "build": "ng build --configuration=production",
-    "build:netlify": "ng build --configuration=production-netlify",
+    "build:netlify": "ng build --configuration=debug",
     "build:dev": "ng build --configuration=production,dev",
     "build:test": "ng build --configuration=test",
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./ --quiet",
-    "e2e": "ng e2e"
+    "e2e": "bash ./e2e/e2e.sh"
   },
   "private": true,
   "dependencies": {
