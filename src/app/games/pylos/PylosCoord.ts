@@ -5,7 +5,8 @@ import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
 
 export class PylosCoord extends CoordXYZ {
 
-    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number { // TODOTODO: mettre en commun avec classe mère
+    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
+        // TODOTODO: mettre en commun avec classe mère
         let result: number;
         if (optionalCoord.isPresent()) {
             result = PylosCoord.encode(optionalCoord.get()) + 1; // From 1 to 64
@@ -37,7 +38,8 @@ export class PylosCoord extends CoordXYZ {
 
         return new PylosCoord(x, y, z);
     }
-    constructor(x: number, y: number, public readonly z: number) { // TODO: create PylosCoord as a child of CoordXYZ
+    constructor(x: number, y: number, public readonly z: number) {
+        // TODOTODO: create PylosCoord as a child of CoordXYZ
         super(x, y, z);
         if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
         if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);

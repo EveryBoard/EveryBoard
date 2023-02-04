@@ -11,8 +11,8 @@ import { TrexoMove } from './TrexoMove';
 import { TrexoSpace, TrexoState } from './TrexoState';
 
 export class TrexoRulesFailure {
-    public static readonly CANNOT_DROP_ON_ONLY_ONE_PIECE: Localized = () => $localize`TODOTOD: CANNOT_DROP_ON_ONLY_ONE_PIECE`;
-    public static readonly CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS: Localized = () => $localize`TODOTOD: CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS`;
+    public static readonly CANNOT_DROP_ON_ONLY_ONE_PIECE: Localized = () => $localize`TODOTODO: CANNOT_DROP_ON_ONLY_ONE_PIECE`;
+    public static readonly CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS: Localized = () => $localize`TODOTODO: CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS`;
 }
 
 export class TrexoNode extends MGPNode<Rules<TrexoMove, TrexoState>, TrexoMove, TrexoState> {}

@@ -127,7 +127,7 @@ describe('TrexoRules', () => {
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get();
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, TrexoRulesFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS())
+        RulesUtils.expectMoveFailure(rules, state, move, TrexoRulesFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
     });
     it('should declare as winner player who has a line of 5', () => {
         // Given a board where a player has a line of 4

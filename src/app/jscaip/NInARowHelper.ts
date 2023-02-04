@@ -1,4 +1,3 @@
-import { ArrayUtils } from '../utils/ArrayUtils';
 import { assert } from '../utils/assert';
 import { MGPMap } from '../utils/MGPMap';
 import { Coord } from './Coord';
@@ -62,10 +61,10 @@ export class NInARowHelper {
             const directionFreeSpaces: number = freeSpaceByDirs.get(dir).get();
             const oppositeDirectionFreeSpaces: number = freeSpaceByDirs.get(dir.getOpposite()).get();
             const lineFreeSpaces: number = directionFreeSpaces + oppositeDirectionFreeSpaces;
-            if (lineFreeSpaces === 3) { // TODO: why the 3 ? N-1 non ?
+            if (lineFreeSpaces === 3) { // TODOTODO: why the 3 ? N-1 non ?
                 score += 2;
             } else if (lineFreeSpaces > 3) {
-                score += lineFreeSpaces - 2; // TODO: why would 4 freeSpace be worth as much as 3 ?
+                score += lineFreeSpaces - 2; // TODOTODO: why would 4 freeSpace be worth as much as 3 ?
             }
         }
         return score;
@@ -104,7 +103,7 @@ export class NInARowHelper {
             }
             // as soon as there is a hole
             if (currentSpace !== opponent && currentSpace !== ally) {
-                // TODO: this condition was not there before, check that it makes sense (but the body was there)
+                // TODOTODO: this condition was not there before, check that it makes sense (but the body was there)
                 freeSpaces++;
             }
             coord = coord.getNext(dir);
