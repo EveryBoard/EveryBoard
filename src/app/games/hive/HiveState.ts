@@ -35,12 +35,12 @@ export class HiveRemainingPieces implements ComparableObject {
         return new HiveRemainingPieces(this.pieces.getCopy());
     }
 
-    public getRemaining(piece: HivePiece): number {
+    public getQuantity(piece: HivePiece): number {
         return this.pieces.get(piece).get();
     }
 
     public hasRemaining(piece: HivePiece): boolean {
-        return this.getRemaining(piece) > 0;
+        return this.getQuantity(piece) > 0;
     }
 
     public getAnyRemainingPiece(player: Player): MGPOptional<HivePiece> {

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils, NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { Move } from '../Move';
@@ -43,12 +43,24 @@ describe('MoveCoordToCoord', () => {
     });
     describe('encoder', () => {
         it('should correctly encode and decode moves', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(
-                NonAbstractMoveCoordToCoord.getEncoder(10, 10,
-                                                       (start: Coord, end: Coord): NonAbstractMoveCoordToCoord => {
+            EncoderTestUtils.expectToBeCorrect(
+                NonAbstractMoveCoordToCoord.getEncoder((start: Coord, end: Coord): NonAbstractMoveCoordToCoord => {
                                                            return new NonAbstractMoveCoordToCoord(start, end);
                                                        }),
                 new NonAbstractMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });
+    describe('numberEncoder', () => {
+        it('should correctly encode and decode moves', () => {
+            NumberEncoderTestUtils.expectToBeCorrect(
+                NonAbstractMoveCoordToCoord.getNumberEncoder(10, 10,
+                                                             (start: Coord, end: Coord):
+                                                             NonAbstractMoveCoordToCoord =>
+                                                             {
+                                                                 return new NonAbstractMoveCoordToCoord(start, end);
+                                                             }),
+                new NonAbstractMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
+        });
+    });
+
 });

@@ -89,15 +89,15 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public isEmpty(): boolean {
         return this.values.length === 0;
     }
-    public map<T2 extends Comparable>(f: (element: T) => T2): MGPSet<T2> {
-        const result: MGPSet<T2> = new MGPSet();
+    public map<U extends Comparable>(f: (element: T) => U): MGPSet<U> {
+        const result: MGPSet<U> = new MGPSet();
         for (const element of this) {
             result.add(f(element));
         }
         return result;
     }
-    public flatMap<T2 extends Comparable>(f: (element: T) => MGPSet<T2>): MGPSet<T2> {
-        const result: MGPSet<T2> = new MGPSet();
+    public flatMap<U extends Comparable>(f: (element: T) => MGPSet<U>): MGPSet<U> {
+        const result: MGPSet<U> = new MGPSet();
         for (const element of this) {
             result.union(f(element));
         }
@@ -112,7 +112,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return result;
     }
-    public findCommonElement(other: MGPSet<T>): MGPOptional<T> {
+    public findAnyCommonElement(other: MGPSet<T>): MGPOptional<T> {
         for (const element of other) {
             if (this.contains(element)) {
                 return MGPOptional.of(element);
@@ -120,7 +120,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return MGPOptional.empty();
     }
-    public intersect(other: MGPSet<T>): MGPSet<T> {
+    public intersection(other: MGPSet<T>): MGPSet<T> {
         const result: MGPSet<T> = new MGPSet();
         for (const element of other) {
             if (this.contains(element)) {

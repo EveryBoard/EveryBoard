@@ -8,7 +8,7 @@ import { HiveMove } from './HiveMove';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 
-export class HiveDummyMinimax extends Minimax<HiveMove, HiveState> {
+export class HiveMinimax extends Minimax<HiveMove, HiveState> {
 
     public getListMoves(node: HiveNode): HiveMove[] {
         return this.getListDrops(node.gameState)
@@ -19,7 +19,7 @@ export class HiveDummyMinimax extends Minimax<HiveMove, HiveState> {
         const drops: HiveMove[] = [];
         for (const coord of HiveRules.get().getPossibleDropLocations(state)) {
             for (const remaining of state.remainingPieces.getAllRemaining(state.getCurrentPlayer())) {
-                drops.push(HiveMove.drop(remaining, coord.x, coord.y).get());
+                drops.push(HiveMove.drop(remaining, coord));
             }
         }
         return drops;

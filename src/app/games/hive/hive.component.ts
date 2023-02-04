@@ -14,8 +14,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { HiveDummyMinimax } from './HiveDummyMinimax';
 import { HiveFailure } from './HiveFailure';
+import { HiveMinimax } from './HiveMinimax';
 import { HiveMove, HiveMoveCoordToCoord, HiveMoveDrop, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceBehaviourSpider } from './HivePieceBehaviour';
@@ -61,7 +61,7 @@ export class HiveComponent
         super(messageDisplayer);
         this.rules = HiveRules.get();
         this.availableMinimaxes = [
-            new HiveDummyMinimax(this.rules, 'HiveDummyMinimax'),
+            new HiveMinimax(this.rules, 'HiveMinimax'),
         ];
         this.encoder = HiveMove.encoder;
         this.tutorial = new HiveTutorial().tutorial;
@@ -186,7 +186,7 @@ export class HiveComponent
 
     public getRemainingPieceHighlightTransform(piece: HivePiece): string {
         const transform: Coord = this.getRemainingPieceTransformAsCoord(piece);
-        const size: number = this.getState().remainingPieces.getRemaining(piece);
+        const size: number = this.getState().remainingPieces.getQuantity(piece);
         return `translate(${transform.x} ${transform.y - (this.PIECE_HEIGHT * size)})`;
     }
 

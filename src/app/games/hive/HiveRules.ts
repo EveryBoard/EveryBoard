@@ -43,12 +43,8 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
 
     private applyLegalDrop(drop: HiveMoveDrop, state: HiveState): HiveState {
         // Put the piece where it is dropped, possibly on top of other pieces
-        const newState: HiveState = state.getCopy();
         const pieceStack: HivePieceStack = state.getAt(drop.coord);
-        newState.setAt(drop.coord, pieceStack.add(drop.piece));
-        // Also remove the dropped piece from the remaining ones
-        newState.remainingPieces.remove(drop.piece);
-        return newState.increaseTurnAndRecomputeBounds();
+        return state.setAtRemoveAndIncreaseTurn(drop.coord, pieceStack.add(drop.piece), drop.piece);
     }
 
     private applyLegalMoveCoordToCoord(move: HiveMoveCoordToCoord, state: HiveState): HiveState {
@@ -56,9 +52,9 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const newState: HiveState = state.getCopy();
         const sourcePieceStack: HivePieceStack = state.getAt(move.coord);
         const destinationPieceStack: HivePieceStack = state.getAt(move.end);
-        newState.setAt(move.coord, sourcePieceStack.removeTopPiece());
-        newState.setAt(move.end, destinationPieceStack.add(sourcePieceStack.topPiece()));
-        return newState.increaseTurnAndRecomputeBounds();
+//        newState.setAt(move.coord, sourcePieceStack.removeTopPiece());
+//        newState.setAt(move.end, destinationPieceStack.add(sourcePieceStack.topPiece()));
+        return state.moveAndIncreaseTurn(move.coord, move.end);
     }
 
     public isLegal(move: HiveMove, state: HiveState): MGPFallible<void> {
@@ -89,9 +85,9 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
 
-        const moveValidity: MGPFallible<void> = HivePieceBehaviour.from(movedPiece).moveValidity(move, state);
-        if (moveValidity.isFailure()) {
-            return moveValidity;
+        const moveLegality: MGPFallible<void> = HivePieceBehaviour.from(movedPiece).moveLegality(move, state);
+        if (moveLegality.isFailure()) {
+            return moveLegality;
         }
 
         const stateWithoutMovedPiece: HiveState = state.getCopy();
