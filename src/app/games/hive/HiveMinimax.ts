@@ -18,7 +18,7 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
     public getListDrops(state: HiveState): HiveMove[] {
         const drops: HiveMove[] = [];
         for (const coord of HiveRules.get().getPossibleDropLocations(state)) {
-            for (const remaining of state.remainingPieces.getAllRemaining(state.getCurrentPlayer())) {
+            for (const remaining of state.remainingPieces.getPlayerPieces(state.getCurrentPlayer())) {
                 drops.push(HiveMove.drop(remaining, coord));
             }
         }

@@ -22,7 +22,8 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
 
     public constructor(public pieces: ReversibleMap<Coord, T>,
                        turn: number,
-                       offset?: Vector) {
+                       offset?: Vector)
+    {
         super(turn);
         const scale: Scale<T> = this.computeScale();
         this.pieces = scale.pieces;
@@ -87,8 +88,10 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
     }
 
     public getOccupiedNeighbors(coord: Coord): MGPSet<Coord> {
-        return (new MGPSet(HexagonalUtils.neighbors(coord)))
-            .filter((neighbor: Coord) => this.pieces.get(neighbor).isPresent());
+        const neighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.neighbors(coord));
+        return neighbors.filter((neighbor: Coord) => {
+            return this.pieces.get(neighbor).isPresent();
+        });
     }
 
     public getGroups(): MGPSet<MGPSet<Coord>> {

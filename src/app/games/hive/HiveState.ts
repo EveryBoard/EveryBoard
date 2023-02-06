@@ -43,7 +43,7 @@ export class HiveRemainingPieces implements ComparableObject {
         return this.getQuantity(piece) > 0;
     }
 
-    public getAnyRemainingPiece(player: Player): MGPOptional<HivePiece> {
+    public getAny(player: Player): MGPOptional<HivePiece> {
         for (const piece of this.pieces.listKeys()) {
             if (piece.owner === player && this.hasRemaining(piece)) {
                 return MGPOptional.of(piece);
@@ -60,17 +60,17 @@ export class HiveRemainingPieces implements ComparableObject {
 
     public toListOfStacks(): HivePieceStack[] {
         const remaining: HivePieceStack[] = [];
-        this.pieces.forEach((item: {key: HivePiece, value: number}) => {
+        this.pieces.forEach((piece: {key: HivePiece, value: number}) => {
             const pieces: HivePiece[] = [];
-            for (let i: number = 0; i < item.value; i++) {
-                pieces.push(item.key);
+            for (let i: number = 0; i < piece.value; i++) {
+                pieces.push(piece.key);
             }
             remaining.push(new HivePieceStack(pieces));
         });
         return remaining;
     }
 
-    public getAllRemaining(player: Player): HivePiece[] {
+    public getPlayerPieces(player: Player): HivePiece[] {
         const remaining: HivePiece[] = [];
         this.pieces.forEach((item: {key: HivePiece, value: number}) => {
             if (item.key.owner === player && item.value > 0) remaining.push(item.key);
@@ -161,22 +161,21 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         return pieces.isEmpty();
     }
 
-    public override setAt(coord: Coord, pieces: HivePieceStack): void {
+    public setAt(coord: Coord, stack: HivePieceStack): void {
+        const queenBees = this.queenBees.getCopy();
         for (const player of Player.PLAYERS) {
             // If there was a queen bee here, we remove it from the cache
-            if (this.queenBees.get(player).equalsValue(coord)) {
-                this.queenBees.delete(player);
+            if (queenBees.get(player).equalsValue(coord)) {
+                queenBees.delete(player);
             }
         }
-        for (const piece of pieces.pieces) {
+        for (const piece of stack.pieces) {
             // Add any queen added here to the cache
             if (piece.kind === 'QueenBee') {
-                this.queenBees.put(piece.owner, coord);
+                queenBees.put(piece.owner, coord);
             }
         }
-
         super.setAt(coord, pieces);
-        console.log('result: ' + this.pieces.getKeySet());
     }
 
     public queenBeeLocation(player: Player): MGPOptional<Coord> {

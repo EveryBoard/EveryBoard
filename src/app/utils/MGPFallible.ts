@@ -21,6 +21,8 @@ export abstract class MGPFallible<T> {
 
     public abstract getReasonOr(value: string): string
 
+    public abstract and(other: MGPFallible<T>): MGPFallible<T>
+
     public abstract toOptional(): MGPOptional<T>
 
     public equals(other: MGPFallible<T>): boolean {
@@ -56,6 +58,9 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public getReasonOr(value: string): string {
         return value;
     }
+    public and(other: MGPFallible<T>): MGPFallible<T> {
+        return other;
+    }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
     }
@@ -85,6 +90,9 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     }
     public getReasonOr(_value: string): string {
         return this.getReason();
+    }
+    public and(_other: MGPFallible<T>): MGPFallible<T> {
+        return this;
     }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.empty();

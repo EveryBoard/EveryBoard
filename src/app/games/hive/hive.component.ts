@@ -18,7 +18,7 @@ import { HiveFailure } from './HiveFailure';
 import { HiveMinimax } from './HiveMinimax';
 import { HiveMove, HiveMoveCoordToCoord, HiveMoveDrop, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
-import { HivePieceBehaviourSpider } from './HivePieceBehaviour';
+import { HivePieceBehaviorSpider } from './HivePieceBehavior';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
@@ -329,7 +329,7 @@ export class HiveComponent
             return this.chooseMove(move, this.getState());
         }
         const validity: MGPFallible<void> =
-            HivePieceBehaviourSpider.get().prefixValidity(this.selectedSpiderCoords, this.getState());
+            HivePieceBehaviorSpider.get().prefixLegality(this.selectedSpiderCoords, this.getState());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }

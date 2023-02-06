@@ -57,6 +57,10 @@ export class HivePieceStack implements ComparableObject {
         return this.pieces.length === 0;
     }
 
+    public isOccupied(): boolean {
+        return this.isEmpty() === false;
+    }
+
     public add(piece: HivePiece): HivePieceStack {
         return new HivePieceStack([piece, ...this.pieces]);
     }

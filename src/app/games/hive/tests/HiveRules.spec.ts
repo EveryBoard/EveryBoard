@@ -32,7 +32,7 @@ fdescribe('HiveRules', () => {
     beforeEach(() => {
         rules = HiveRules.get();
         minimaxes = [
-            new HiveMinimax(rules, 'HiveDummyMinimax'),
+            new HiveMinimax(rules, 'HiveMinimax'),
         ];
     });
 

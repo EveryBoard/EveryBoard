@@ -10,26 +10,30 @@ import { HiveMoveCoordToCoord, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
 
-export abstract class HivePieceBehaviour {
+export abstract class HivePieceBehavior {
 
-    private static INSTANCES: MGPOptional<Record<HivePieceKind, HivePieceBehaviour>> = MGPOptional.empty();
+    private static INSTANCES: MGPOptional<Record<HivePieceKind, HivePieceBehavior>> = MGPOptional.empty();
 
-    public static from(piece: HivePiece): HivePieceBehaviour {
-        if (HivePieceBehaviour.INSTANCES.isAbsent()) {
-            HivePieceBehaviour.INSTANCES = MGPOptional.of({
-                'QueenBee': HivePieceBehaviourQueenBee.get(),
-                'Beetle': HivePieceBehaviourBeetle.get(),
-                'Grasshopper': HivePieceBehaviourGrasshopper.get(),
-                'Spider': HivePieceBehaviourSpider.get(),
-                'SoldierAnt': HivePieceBehaviourSoldierAnt.get(),
+    public static from(piece: HivePiece): HivePieceBehavior {
+        if (HivePieceBehavior.INSTANCES.isAbsent()) {
+            HivePieceBehavior.INSTANCES = MGPOptional.of({
+                'QueenBee': HivePieceBehaviorQueenBee.get(),
+                'Beetle': HivePieceBehaviorBeetle.get(),
+                'Grasshopper': HivePieceBehaviorGrasshopper.get(),
+                'Spider': HivePieceBehaviorSpider.get(),
+                'SoldierAnt': HivePieceBehaviorSoldierAnt.get(),
             });
         }
-        return HivePieceBehaviour.INSTANCES.get()[piece.kind];
+        return HivePieceBehavior.INSTANCES.get()[piece.kind];
     }
 
-    protected destinationIsEmpty(move: HiveMoveCoordToCoord, state: HiveState): boolean {
-        return state.getAt(move.end).isEmpty();
+    protected checkEmptyDestination(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
+        if (state.getAt(move.end).isOccupied()) {
+            return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
+        }
+        return MGPFallible.success(undefined);
     }
+
 
     protected canSlide(state: HiveState, start: Coord, end: Coord): boolean {
         // For the piece to slide from start to end,
@@ -51,29 +55,25 @@ export abstract class HivePieceBehaviour {
 
 }
 
-export class HivePieceBehaviourQueenBee extends HivePieceBehaviour {
+export class HivePieceBehaviorQueenBee extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviourQueenBee> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HivePieceBehaviorQueenBee> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviourQueenBee {
+    public static get(): HivePieceBehaviorQueenBee {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new this());
+            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorQueenBee());
         }
         return this.INSTANCE.get();
     }
-
 
     public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         if (HexagonalUtils.areNeighbors(move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
-        if (this.destinationIsEmpty(move, state) === false) {
-            return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
-        }
         if (this.canSlide(state, move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
         }
-        return MGPFallible.success(undefined);
+        return this.checkEmptyDestination(move, state);
     }
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
@@ -87,17 +87,16 @@ export class HivePieceBehaviourQueenBee extends HivePieceBehaviour {
     }
 }
 
-export class HivePieceBehaviourBeetle extends HivePieceBehaviour {
+export class HivePieceBehaviorBeetle extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviourBeetle> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HivePieceBehaviorBeetle> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviourBeetle {
+    public static get(): HivePieceBehaviorBeetle {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new this());
+            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorBeetle());
         }
         return this.INSTANCE.get();
     }
-
 
     public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         if (HexagonalUtils.areNeighbors(move.coord, move.end) === false) {
@@ -115,26 +114,22 @@ export class HivePieceBehaviourBeetle extends HivePieceBehaviour {
     }
 }
 
-export class HivePieceBehaviourGrasshopper extends HivePieceBehaviour {
+export class HivePieceBehaviorGrasshopper extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviourGrasshopper> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HivePieceBehaviorGrasshopper> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviourGrasshopper {
+    public static get(): HivePieceBehaviorGrasshopper {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new this());
+            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorGrasshopper());
         }
         return this.INSTANCE.get();
     }
-
 
     public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
 
         const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(move.coord, move.end);
         if (direction.isFailure()) {
             return MGPFallible.failure(HiveFailure.GRASSHOPPER_MUST_MOVE_IN_STRAIGHT_LINE());
-        }
-        if (this.destinationIsEmpty(move, state) === false) {
-            return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
         }
         const jumpedCoords: Coord[] = move.coord.getCoordsToward(move.end);
         if (jumpedCoords.length === 0) {
@@ -145,16 +140,16 @@ export class HivePieceBehaviourGrasshopper extends HivePieceBehaviour {
                 return MGPFallible.failure(HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES());
             }
         }
-        return MGPFallible.success(undefined);
+        return this.checkEmptyDestination(move, state);
     }
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
         const moves: HiveMoveCoordToCoord[] = [];
-        for (const neighbor of HexagonalUtils.neighbors(coord)) {
-            if (state.getAt(neighbor).isEmpty() === false) {
+        for (const direction of HexaDirection.factory.all) {
+            const neighbor: Coord = coord.getNext(direction);
+            if (state.getAt(neighbor).isOccupied()) {
                 // We can jump in that direction
-                const direction: HexaDirection = HexaDirection.factory.fromMove(coord, neighbor).get();
                 let end: Coord = neighbor;
-                while (state.getAt(end).isEmpty() === false) {
+                while (state.getAt(end).isOccupied()) {
                     end = end.getNext(direction);
                 }
                 moves.push(HiveMoveCoordToCoord.from(coord, end).get());
@@ -164,21 +159,21 @@ export class HivePieceBehaviourGrasshopper extends HivePieceBehaviour {
     }
 }
 
-export class HivePieceBehaviourSpider extends HivePieceBehaviour {
+export class HivePieceBehaviorSpider extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviourSpider> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HivePieceBehaviorSpider> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviourSpider {
+    public static get(): HivePieceBehaviorSpider {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new this());
+            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorSpider());
         }
         return this.INSTANCE.get();
     }
 
-    public prefixValidity(coords: Coord[], state: HiveState): MGPFallible<void> {
+    public prefixLegality(coords: Coord[], state: HiveState): MGPFallible<void> {
         const visited: MGPSet<Coord> = new MGPSet();
         for (let i: number = 1; i < coords.length; i++) {
-            if (state.getAt(coords[i]).isEmpty() === false) {
+            if (state.getAt(coords[i]).isOccupied()) {
                 return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_ON_EMPTY_SPACES());
             }
             if (HexagonalUtils.areNeighbors(coords[i-1], coords[i]) === false) {
@@ -199,17 +194,17 @@ export class HivePieceBehaviourSpider extends HivePieceBehaviour {
     }
 
     public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
-        if (this.destinationIsEmpty(move, state) === false) {
-            return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
-        }
-
         Utils.assert(move instanceof HiveMoveSpider, 'move should be a spider move');
         const spiderMove: HiveMoveSpider = move as HiveMoveSpider;
-        return this.prefixValidity(spiderMove.coords, state);
+        return this.prefixLegality(spiderMove.coords, state)
+            .and(this.checkEmptyDestination(move, state));
     }
 
-    private haveCommonNeighbor(state: HiveState, coord1: Coord, coord2: Coord): boolean {
-        return state.getOccupiedNeighbors(coord1).findAnyCommonElement(state.getOccupiedNeighbors(coord2)).isPresent();
+    private haveCommonNeighbor(state: HiveState, first: Coord, second: Coord): boolean {
+        const occupiedNeighbors: MGPSet<Coord> = state.getOccupiedNeighbors(first);
+        const commonNeighbor: MGPOptional<Coord> =
+            occupiedNeighbors.findAnyCommonElement(state.getOccupiedNeighbors(second));
+        return commonNeighbor.isPresent();
     }
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
@@ -236,13 +231,13 @@ export class HivePieceBehaviourSpider extends HivePieceBehaviour {
     }
 }
 
-export class HivePieceBehaviourSoldierAnt extends HivePieceBehaviour {
+export class HivePieceBehaviorSoldierAnt extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviourSoldierAnt> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HivePieceBehaviorSoldierAnt> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviourSoldierAnt {
+    public static get(): HivePieceBehaviorSoldierAnt {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new this());
+            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorSoldierAnt());
         }
         return this.INSTANCE.get();
     }
@@ -273,13 +268,10 @@ export class HivePieceBehaviourSoldierAnt extends HivePieceBehaviour {
     }
 
     public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
-        if (this.destinationIsEmpty(move, state) === false) {
-            return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
-        }
         if (this.pathExists(state, move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
         }
-        return MGPFallible.success(undefined);
+        return this.checkEmptyDestination(move, state);
     }
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
