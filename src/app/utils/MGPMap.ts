@@ -125,6 +125,9 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         const thisKeySet: MGPSet<K> = this.getKeySet();
         const otherKeySet: MGPSet<K> = other.getKeySet();
         if (thisKeySet.equals(otherKeySet) === false) {
+            console.log('different keyset')
+            console.log(thisKeySet.toString())
+            console.log(otherKeySet.toString())
             return false;
         }
         for (const key of thisKeySet) {
@@ -132,6 +135,9 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
             const otherValue: MGPOptional<V> = other.get(key);
             assert(otherValue.isPresent(), 'value is absent in a map even though its key is present!');
             if (comparableEquals(thisValue, otherValue.get()) === false) {
+                console.log('different value')
+                console.log('value 1: ' + JSON.stringify(thisValue));
+                console.log('value 2: ' + JSON.stringify(otherValue));
                 return false;
             }
         }

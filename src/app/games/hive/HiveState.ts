@@ -94,8 +94,10 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         const pieces: ReversibleMap<Coord, HivePieceStack> = new ReversibleMap<Coord, HivePieceStack>();
         const remainingPieces: HiveRemainingPieces = HiveRemainingPieces.getInitial();
         const queenBees: MGPMap<Player, Coord> = new MGPMap();
-        for (let y: number = 0; y < board.length; y++) {
-            for (let x: number = 0; x < board[0].length; x++) {
+        const height: number = board.length;
+        for (let y: number = 0; y < height; y++) {
+            const width: number = board[0].length;
+            for (let x: number = 0; x < width; x++) {
                 if (board[y][x].length > 0) {
                     pieces.set(new Coord(x, y), new HivePieceStack(board[y][x]));
                     const queenBee: MGPOptional<HivePiece> =
@@ -126,10 +128,11 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     }
 
     public equals(other: HiveState): boolean {
+        console.log(this.pieces.equals(other.pieces));
         return this.pieces.equals(other.pieces) &&
-            this.remainingPieces.equals(other.remainingPieces) &&
-            this.queenBees.equals(other.queenBees) &&
-            this.turn === other.turn;
+               this.remainingPieces.equals(other.remainingPieces) &&
+               this.queenBees.equals(other.queenBees) &&
+               this.turn === other.turn;
     }
 
     public getCopy(): HiveState {
@@ -173,6 +176,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         }
 
         super.setAt(coord, pieces);
+        console.log('result: ' + this.pieces.getKeySet());
     }
 
     public queenBeeLocation(player: Player): MGPOptional<Coord> {

@@ -35,6 +35,9 @@
                 "node_modules/core-js/proposals/reflect-metadata"
             ],
             "core-js/es6/*": ["node_modules/core-js/es"]
-        }
+        },
+        "plugins": [{
+            "name": "typescript-eslint-language-service"
+        }]
     }
 }

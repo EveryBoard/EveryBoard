@@ -50,14 +50,14 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
         }
         let newPieces: ReversibleMap<Coord, T> = new ReversibleMap<Coord, T>();
         const offset: Vector = new Vector(- minWidth, - minHeight);
-        if (minWidth !== 0 || minHeight !== 0) {
+        if (minWidth === 0 && minHeight === 0) {
+            newPieces = this.pieces;
+        } else {
             for (const coord of this.pieces.listKeys()) {
                 const oldValue: T = this.pieces.delete(coord);
                 const newCoord: Coord = coord.getNext(offset);
                 newPieces.set(newCoord, oldValue);
             }
-        } else {
-            newPieces = this.pieces;
         }
         return {
             width: maxWidth + 1 - minWidth,
@@ -74,10 +74,13 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
     }
 
     public setAt(coord: Coord, piece: T): void {
+        console.log('Free.setAt ' + coord.toString())
         this.pieces = this.pieces.getCopy();
         if (this.isEmpty(piece)) {
+            console.log('Free.setAt: removing')
             this.pieces.delete(coord);
         } else {
+            console.log('Free.setAt: putting')
             this.pieces.put(coord, piece);
         }
         this.pieces.makeImmutable();

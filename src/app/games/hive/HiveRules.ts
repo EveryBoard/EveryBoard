@@ -56,9 +56,11 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const newState: HiveState = state.getCopy();
         const sourcePieceStack: HivePieceStack = state.getAt(move.coord);
         const destinationPieceStack: HivePieceStack = state.getAt(move.end);
+        console.log('HiveRules: removing top piece from ' + move.coord.toString())
         newState.setAt(move.coord, sourcePieceStack.removeTopPiece());
+        console.log('HiveRules: putting it at ' + move.end.toString())
         newState.setAt(move.end, destinationPieceStack.add(sourcePieceStack.topPiece()));
-        return state.increaseTurnAndRecomputeBounds();
+        return newState.increaseTurnAndRecomputeBounds();
     }
 
     public isLegal(move: HiveMove, state: HiveState): MGPFallible<void> {
