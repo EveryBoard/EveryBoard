@@ -88,7 +88,7 @@ describe('HiveComponent', () => {
 
                 // When clicking on a valid landing
                 // Then the move should succeed
-                const move: HiveMove = HiveMove.drop(Q, 0, 0).get();
+                const move: HiveMove = HiveMove.drop(Q, new Coord(0, 0));
                 await testUtils.expectMoveSuccess('#space_0_0', move);
             }));
             it('should fail dropping if the move is illegal', fakeAsync(async() => {
@@ -100,7 +100,7 @@ describe('HiveComponent', () => {
 
                 // When performing an illegal drop move
                 await testUtils.expectClickSuccess('#remainingPiece_Beetle_PLAYER_ZERO');
-                const move: HiveMove = HiveMove.drop(B, 2, 0).get();
+                const move: HiveMove = HiveMove.drop(B, new Coord(2, 0));
 
                 // Then it should fail
                 const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
@@ -113,7 +113,7 @@ describe('HiveComponent', () => {
 
                 // When performing a drop move
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
-                const move: HiveMove = HiveMove.drop(Q, 0, 0).get();
+                const move: HiveMove = HiveMove.drop(Q, new Coord(0, 0));
                 await testUtils.expectMoveSuccess('#space_0_0', move);
 
                 // Then the dropped piece should not be in the remaining pieces anymore
@@ -126,7 +126,7 @@ describe('HiveComponent', () => {
 
                 // When performing a drop move
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
-                const move: HiveMove = HiveMove.drop(Q, 0, 0).get();
+                const move: HiveMove = HiveMove.drop(Q, new Coord(0, 0));
                 await testUtils.expectMoveSuccess('#space_0_0', move);
 
                 // Then the last move should be shown

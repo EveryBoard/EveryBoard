@@ -82,12 +82,12 @@ describe('MGPSet', () => {
         it('should remove element from the set and return true', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
             expect(set.remove(2)).toBeTrue();
-            expect(set.equals(new MGPSet([1])));
+            expect(set.equals(new MGPSet([1]))).toBeTrue();
         });
         it('should preserve set and return false if element is not contained', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
-            expect(set.remove(3)).toBeTrue();
-            expect(set.equals(new MGPSet([1, 2])));
+            expect(set.remove(3)).toBeFalse();
+            expect(set.equals(new MGPSet([1, 2]))).toBeTrue();
         });
     });
 });

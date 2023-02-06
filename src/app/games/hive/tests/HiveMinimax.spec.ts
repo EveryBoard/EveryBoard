@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
-import { HiveDummyMinimax } from '../HiveDummyMinimax';
+import { HiveMinimax } from '../HiveMinimax';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
@@ -8,11 +8,11 @@ import { HiveState } from '../HiveState';
 describe('HiveDummyMinimax', () => {
 
     let rules: HiveRules;
-    let minimax: HiveDummyMinimax;
+    let minimax: HiveMinimax;
 
     beforeEach(() => {
         rules = HiveRules.get();
-        minimax = new HiveDummyMinimax(rules, 'HiveDummyMinimax');
+        minimax = new HiveMinimax(rules, 'HiveDummyMinimax');
     });
     it('should propose 5 moves at first turn', () => {
         // Given the initial state

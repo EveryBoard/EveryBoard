@@ -20,7 +20,7 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
 
     public readonly offset: Vector;
 
-    public constructor(protected pieces: ReversibleMap<Coord, T>,
+    public constructor(public pieces: ReversibleMap<Coord, T>,
                        turn: number,
                        offset?: Vector) {
         super(turn);

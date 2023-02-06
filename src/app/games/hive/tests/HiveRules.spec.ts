@@ -7,7 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { HiveDummyMinimax } from '../HiveDummyMinimax';
+import { HiveMinimax } from '../HiveMinimax';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
@@ -32,7 +32,7 @@ describe('HiveRules', () => {
     beforeEach(() => {
         rules = HiveRules.get();
         minimaxes = [
-            new HiveDummyMinimax(rules, 'HiveDummyMinimax'),
+            new HiveMinimax(rules, 'HiveDummyMinimax'),
         ];
     });
 
@@ -42,7 +42,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.getInitialState();
 
             // When dropping the first piece
-            const move: HiveMove = HiveMove.drop(B, 0, 0).get();
+            const move: HiveMove = HiveMove.drop(B, new Coord(0, 0));
 
             // Then the move should succeed
             const expectedBoard: Table<HivePiece[]> = [
@@ -60,7 +60,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 1);
 
             // When dropping a piece next to the first piece
-            const move: HiveMove = HiveMove.drop(b, 1, 0).get();
+            const move: HiveMove = HiveMove.drop(b, new Coord(1, 0));
 
             // Then the move should succeed
             const expectedBoard: Table<HivePiece[]> = [
@@ -78,7 +78,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 1);
 
             // When dropping a piece not next to the first piece
-            const move: HiveMove = HiveMove.drop(b, 3, 0).get();
+            const move: HiveMove = HiveMove.drop(b, new Coord(3, 0));
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_CONNECTED_TO_HIVE();
@@ -93,7 +93,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 2);
 
             // When dropping a piece next to our piece
-            const move: HiveMove = HiveMove.drop(A, 2, 0).get();
+            const move: HiveMove = HiveMove.drop(A, new Coord(2, 0));
 
             // Then the move should succeed
             const expectedBoard: Table<HivePiece[]> = [
@@ -111,7 +111,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 2);
 
             // When dropping a piece next to the opponent's piece
-            const move: HiveMove = HiveMove.drop(A, 2, 0).get();
+            const move: HiveMove = HiveMove.drop(A, new Coord(2, 0));
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
@@ -125,7 +125,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 2);
 
             // When dropping a piece next to the stack
-            const move: HiveMove = HiveMove.drop(A, 2, 0).get();
+            const move: HiveMove = HiveMove.drop(A, new Coord(2, 0));
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
@@ -139,7 +139,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 6);
 
             // When dropping the queen bee
-            const move: HiveMove = HiveMove.drop(Q, 0, 1).get();
+            const move: HiveMove = HiveMove.drop(Q, new Coord(0, 1));
 
             // Then the move should succeed
             const expectedBoard: Table<HivePiece[]> = [
@@ -157,7 +157,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 6);
 
             // When dropping another piece than the queen bee
-            const move: HiveMove = HiveMove.drop(A, 0, 1).get();
+            const move: HiveMove = HiveMove.drop(A, new Coord(0, 1));
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
@@ -171,7 +171,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 7);
 
             // When dropping another piece than the queen bee
-            const move: HiveMove = HiveMove.drop(a, 0, 7).get();
+            const move: HiveMove = HiveMove.drop(a, new Coord(0, 7));
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
@@ -185,7 +185,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
 
             // When dropping the beetle on another piece
-            const move: HiveMove = HiveMove.drop(B, 0, 0).get();
+            const move: HiveMove = HiveMove.drop(B, new Coord(0, 0));
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_DROP_ON_EMPTY_SPACE();
@@ -199,7 +199,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
 
             // When trying to drop yet another beetle
-            const move: HiveMove = HiveMove.drop(B, 4, 0).get();
+            const move: HiveMove = HiveMove.drop(B, new Coord(4, 0));
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DROP_PIECE_YOU_DONT_HAVE();
@@ -213,7 +213,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 1);
 
             // When trying to drop a piece of the opponent
-            const move: HiveMove = HiveMove.drop(B, 0, 1).get();
+            const move: HiveMove = HiveMove.drop(B, new Coord(0, 1));
 
             // Then the move should fail
             const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
@@ -846,7 +846,7 @@ describe('HiveRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 1);
 
         // When extending the board in the negatives
-        const move: HiveMove = HiveMove.drop(q, -1, 0).get();
+        const move: HiveMove = HiveMove.drop(q, new Coord(-1, 0));
 
         // Then the move should succeed and the board should be correctly adapted
         const expectedBoard: Table<HivePiece[]> = [
