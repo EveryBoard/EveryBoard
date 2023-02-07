@@ -174,7 +174,7 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
         const visited: MGPSet<Coord> = new MGPSet();
         for (let i: number = 1; i < coords.length; i++) {
             if (state.getAt(coords[i]).isOccupied()) {
-                return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_ON_EMPTY_SPACES());
+                return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
             }
             if (HexagonalUtils.areNeighbors(coords[i-1], coords[i]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_OF_3_NEIGHBORS());

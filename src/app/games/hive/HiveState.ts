@@ -128,7 +128,6 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     }
 
     public equals(other: HiveState): boolean {
-        console.log(this.pieces.equals(other.pieces));
         return this.pieces.equals(other.pieces) &&
                this.remainingPieces.equals(other.remainingPieces) &&
                this.queenBees.equals(other.queenBees) &&
@@ -162,20 +161,19 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     }
 
     public setAt(coord: Coord, stack: HivePieceStack): void {
-        const queenBees = this.queenBees.getCopy();
         for (const player of Player.PLAYERS) {
             // If there was a queen bee here, we remove it from the cache
-            if (queenBees.get(player).equalsValue(coord)) {
-                queenBees.delete(player);
+            if (this.queenBees.get(player).equalsValue(coord)) {
+                this.queenBees.delete(player);
             }
         }
         for (const piece of stack.pieces) {
             // Add any queen added here to the cache
             if (piece.kind === 'QueenBee') {
-                queenBees.put(piece.owner, coord);
+                this.queenBees.put(piece.owner, coord);
             }
         }
-        super.setAt(coord, pieces);
+        super.setAt(coord, stack);
     }
 
     public queenBeeLocation(player: Player): MGPOptional<Coord> {

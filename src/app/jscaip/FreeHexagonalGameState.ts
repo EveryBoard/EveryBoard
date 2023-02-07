@@ -75,13 +75,10 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
     }
 
     public setAt(coord: Coord, piece: T): void {
-        console.log('Free.setAt ' + coord.toString())
         this.pieces = this.pieces.getCopy();
         if (this.isEmpty(piece)) {
-            console.log('Free.setAt: removing')
             this.pieces.delete(coord);
         } else {
-            console.log('Free.setAt: putting')
             this.pieces.put(coord, piece);
         }
         this.pieces.makeImmutable();

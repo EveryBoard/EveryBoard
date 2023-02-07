@@ -42,14 +42,14 @@
 
     <g *ngFor="let coord of selected">
         <polygon *ngIf="highlightGround(coord) === false"
-                 id="moved_{{ coord.x }}_{{ coord.y }}"
+                 id="selected_{{ coord.x }}_{{ coord.y }}"
                  [attr.transform]="getHighlightTransform(coord)"
                  [attr.points]="getHexaCoordsAt(coord)"
                  class="base no-fill mid-stroke selected-stroke" />
     </g>
     <g *ngFor="let coord of lastMove">
         <polygon *ngIf="highlightGround(coord) === false"
-                 id="selected_{{ coord.x }}_{{ coord.y }}"
+                 id="moved_{{ coord.x }}_{{ coord.y }}"
                  [attr.transform]="getHighlightTransform(coord)"
                  [attr.points]="getHexaCoordsAt(coord)"
                  class="base no-fill mid-stroke last-move-stroke" />
