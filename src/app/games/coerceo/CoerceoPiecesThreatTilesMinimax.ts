@@ -13,7 +13,7 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 

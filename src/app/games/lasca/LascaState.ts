@@ -34,13 +34,12 @@ export class LascaPiece {
         return this === other;
     }
 }
-export class LascaSpace {
+export class LascaStack {
 
-    public static EMPTY: LascaSpace = new LascaSpace([]);
+    public static EMPTY: LascaStack = new LascaStack([]);
 
     public constructor(public readonly pieces: ReadonlyArray<LascaPiece>) {
     }
-
     public isEmpty(): boolean {
         return this.pieces.length === 0;
     }
@@ -53,15 +52,15 @@ export class LascaSpace {
     public getCommander(): LascaPiece {
         return this.pieces[0];
     }
-    public getPiecesUnderCommander(): LascaSpace {
-        return new LascaSpace(this.pieces.slice(1));
+    public getPiecesUnderCommander(): LascaStack {
+        return new LascaStack(this.pieces.slice(1));
     }
-    public capturePiece(piece: LascaPiece): LascaSpace {
-        return new LascaSpace(this.pieces.concat(piece));
+    public capturePiece(piece: LascaPiece): LascaStack {
+        return new LascaStack(this.pieces.concat(piece));
     }
-    public addStackBelow(stack: LascaSpace): LascaSpace {
+    public addStackBelow(stack: LascaStack): LascaStack {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let resultingStack: LascaSpace = this;
+        let resultingStack: LascaStack = this;
         for (const piece of stack.pieces) {
             resultingStack = resultingStack.capturePiece(piece);
         }
@@ -70,14 +69,14 @@ export class LascaSpace {
     public getStackSize(): number {
         return this.pieces.length;
     }
-    public promoteCommander(): LascaSpace {
+    public promoteCommander(): LascaStack {
         let commander: LascaPiece = this.getCommander();
         if (commander.isOfficer) {
             return this;
         } else {
             commander = LascaPiece.getPlayerOfficer(commander.player);
-            const remainingStack: LascaSpace = this.getPiecesUnderCommander();
-            const commandingStack: LascaSpace = new LascaSpace([commander]);
+            const remainingStack: LascaStack = this.getPiecesUnderCommander();
+            const commandingStack: LascaStack = new LascaStack([commander]);
             return commandingStack.addStackBelow(remainingStack);
         }
     }
@@ -98,15 +97,15 @@ export class LascaSpace {
     }
 }
 
-export class LascaState extends GameStateWithTable<LascaSpace> {
+export class LascaState extends GameStateWithTable<LascaStack> {
 
     public static readonly SIZE: number = 7;
 
     public static getInitialState(): LascaState {
-        const O: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
-        const X: LascaSpace = new LascaSpace([LascaPiece.ONE]);
-        const _: LascaSpace = LascaSpace.EMPTY;
-        const board: Table<LascaSpace> = [
+        const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
+        const X: LascaStack = new LascaStack([LascaPiece.ONE]);
+        const _: LascaStack = LascaStack.EMPTY;
+        const board: Table<LascaStack> = [
             [X, _, X, _, X, _, X],
             [_, X, _, X, _, X, _],
             [X, _, X, _, X, _, X],
@@ -117,8 +116,14 @@ export class LascaState extends GameStateWithTable<LascaSpace> {
         ];
         return new LascaState(board, 0);
     }
-    public static from(board: Table<LascaSpace>, turn: number): LascaState {
+    public static from(board: Table<LascaStack>, turn: number): LascaState {
         return new LascaState(board, turn);
+    }
+    public static isNotOnBoard(coord: Coord): boolean {
+        return coord.isNotInRange(LascaState.SIZE, LascaState.SIZE);
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(LascaState.SIZE, LascaState.SIZE);
     }
     public getStacksOf(player: Player): Coord[] {
         const stackCoords: Coord[] = [];
@@ -131,13 +136,13 @@ export class LascaState extends GameStateWithTable<LascaSpace> {
         }
         return stackCoords;
     }
-    public set(coord: Coord, value: LascaSpace): LascaState {
-        const newBoard: LascaSpace[][] = this.getCopiedBoard();
+    public set(coord: Coord, value: LascaStack): LascaState {
+        const newBoard: LascaStack[][] = this.getCopiedBoard();
         newBoard[coord.y][coord.x] = value;
         return new LascaState(newBoard, this.turn);
     }
     public remove(coord: Coord): LascaState {
-        return this.set(coord, LascaSpace.EMPTY);
+        return this.set(coord, LascaStack.EMPTY);
     }
     public incrementTurn(): LascaState {
         return new LascaState(this.getCopiedBoard(), this.turn + 1);

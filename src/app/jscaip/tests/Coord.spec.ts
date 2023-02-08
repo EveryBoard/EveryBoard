@@ -19,6 +19,8 @@ describe('Coord', () => {
         const upLeft: Coord = new Coord(1, 1);
         const middle: Coord = new Coord(3, 3);
         const downRight: Coord = new Coord(9, 9);
+        // TODOTODO: à noter que je suis en train de débugger cette fonction utilisée nulle part :D
+        // Qu'est ce qu'on fait de ce genre de fonction inutilisées, 100% en mode "pas utilisé: on kill" ouuu ?
         expect(middle.isBetween(upLeft, downRight)).toBeTrue();
     });
     it('should override equals correctly', () => {
@@ -28,16 +30,6 @@ describe('Coord', () => {
         expect(coord.equals(coord)).toBeTrue();
         expect(coord.equals(horizontalNeighbors)).toBeFalse();
         expect(coord.equals(verticalNeighbors)).toBeFalse();
-    });
-    it('should vectorise correctly', () => {
-        const c: Coord = new Coord(3, -11);
-        expect(c.toVector()).toEqual(c);
-
-        const c0: Coord = new Coord(4, -8);
-        expect(c0.toVector()).toEqual(new Coord(1, -2));
-
-        const c1: Coord = new Coord(-3, -9);
-        expect(c1.toVector()).toEqual(new Coord(-1, -3));
     });
     it('should give correct coords between this and other coord', () => {
         const coord: Coord = new Coord(0, 0);

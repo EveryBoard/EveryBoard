@@ -1,9 +1,10 @@
-import { Direction, Vector } from 'src/app/jscaip/Direction';
+import { Direction } from 'src/app/jscaip/Direction';
 import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder, NumberEncoder } from '../utils/Encoder';
+import { Vector } from './Vector';
 
 export class CoordFailure {
     public static readonly OUT_OF_RANGE: (coord: Coord) => string = (coord: Coord) => `The coordinate ${ coord.toString() } is not on the board`;
@@ -70,9 +71,6 @@ export class Coord implements ComparableObject {
         const newY: number = this.y + dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
         return new Coord(newX, newY);
     }
-    public getOpposite(): Coord {
-        return new Coord(-this.x, -this.y);
-    }
     public isInRange(sizeX: number, sizeY: number): boolean {
         if (this.x < 0) {
             return false;
@@ -132,14 +130,22 @@ export class Coord implements ComparableObject {
         if (dx*dy === 0) return true;
         return false;
     }
-    public getVectorToward(c: Coord): Coord {
+    public getVectorToward(c: Coord): Vector {
         const dx: number = c.x - this.x;
         const dy: number = c.y - this.y;
-        return new Coord(dx, dy);
+        return new Vector(dx, dy);
     }
-    public getMinimalVectorToward(c: Coord): Coord {
-        const undividedVector: Coord = this.getVectorToward(c);
-        return undividedVector.toVector();
+    public toMVector(): Vector {
+        return new Vector(this.x, this.y);
+    }
+    public toMinimalVector(): Vector {
+        const vector: Vector = this.toMVector();
+        return vector.toMinimalVector();
+    }
+    public getMinimalVectorToward(c: Coord): Vector {
+        const undividedVector: Vector = this.getVectorToward(c);
+        const dividedVector: Vector = undividedVector.toMinimalVector()
+        return dividedVector;
     }
     public getCoordsToward(c: Coord): Coord[] {
         if (c.equals(this)) return [];
@@ -153,27 +159,10 @@ export class Coord implements ComparableObject {
         }
         return coords;
     }
-    public toVector(): Coord {
-        const absX: number = Math.abs(this.x);
-        const absY: number = Math.abs(this.y);
-        const minAbs: number = Math.max(absX, absY);
-        let vx: number = this.x;
-        let vy: number = this.y;
-        let divider: number = 2;
-        while (divider <= minAbs) {
-            if (vx % divider === 0 && vy % divider === 0) {
-                vx /= divider;
-                vy /= divider;
-            } else {
-                divider++;
-            }
-        }
-        return new Coord(vx, vy);
-    }
     public isBetween(a: Coord, b: Coord): boolean {
-        const aToThis: Coord = a.getMinimalVectorToward(this);
-        const bToThis: Coord = b.getMinimalVectorToward(this);
-        return aToThis.equals(bToThis.getOpposite());
+        const aToThis: Vector = a.getMinimalVectorToward(this);
+        const thisToB: Vector = this.getMinimalVectorToward(b);
+        return aToThis.equals(thisToB);
     }
     public getUntil(end: Coord): Coord[] {
         const coords: Coord[] = [];

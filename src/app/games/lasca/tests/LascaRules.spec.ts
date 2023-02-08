@@ -8,8 +8,8 @@ import { LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
 import { LascaControlMinimax } from '../LascaControlMinimax';
 import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
-import { LascaRulesFailure } from '../LascaRulesFailure';
-import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
+import { LascaFailure } from '../LascaFailure';
+import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 
 describe('LascaRules', () => {
 
@@ -18,14 +18,14 @@ describe('LascaRules', () => {
     const zeroOfficer: LascaPiece = LascaPiece.ZERO_OFFICER;
     const oneOfficer: LascaPiece = LascaPiece.ONE_OFFICER;
 
-    const __u: LascaSpace = new LascaSpace([zero]);
-    const __O: LascaSpace = new LascaSpace([zeroOfficer]);
-    const __v: LascaSpace = new LascaSpace([one]);
-    const _vu: LascaSpace = new LascaSpace([one, zero]);
-    const _uv: LascaSpace = new LascaSpace([zero, one]);
-    const _Ov: LascaSpace = new LascaSpace([zeroOfficer, one]);
-    const __X: LascaSpace = new LascaSpace([oneOfficer]);
-    const ___: LascaSpace = LascaSpace.EMPTY;
+    const __u: LascaStack = new LascaStack([zero]);
+    const __O: LascaStack = new LascaStack([zeroOfficer]);
+    const __v: LascaStack = new LascaStack([one]);
+    const _vu: LascaStack = new LascaStack([one, zero]);
+    const _uv: LascaStack = new LascaStack([zero, one]);
+    const _Ov: LascaStack = new LascaStack([zeroOfficer, one]);
+    const __X: LascaStack = new LascaStack([oneOfficer]);
+    const ___: LascaStack = LascaStack.EMPTY;
 
     let rules: LascaRules;
     let minimaxes: Minimax<LascaMove, LascaState>[];
@@ -33,8 +33,8 @@ describe('LascaRules', () => {
     beforeEach(() => {
         rules = new LascaRules(LascaState);
         minimaxes = [
-            new LascaControlMinimax(rules, 'Lasca Control Minimax'),
-            new LascaControlAndDominationMinimax(rules, 'Lasca Control and Domination Minimax'),
+            new LascaControlMinimax('Lasca Control Minimax'),
+            new LascaControlAndDominationMinimax(),
         ];
     });
     describe('Move', () => {
@@ -76,7 +76,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 5), new Coord(2, 6)).get();
 
             // Then it should fail
-            const reason: string = LascaRulesFailure.CANNOT_GO_BACKWARD();
+            const reason: string = LascaFailure.CANNOT_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid landing on an occupied square', () => {
@@ -127,7 +127,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)]).get();
 
             // Then it should fail
-            const reason: string = LascaRulesFailure.CANNOT_CAPTURE_EMPTY_SPACE();
+            const reason: string = LascaFailure.CANNOT_CAPTURE_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid skipping capture', () => {
@@ -146,7 +146,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(2, 2), new Coord(3, 3)).get();
 
             // Then it should fail
-            const reason: string = LascaRulesFailure.CANNOT_SKIP_CAPTURE();
+            const reason: string = LascaFailure.CANNOT_SKIP_CAPTURE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid partial-capture', () => {
@@ -165,7 +165,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
 
             // Then it should fail
-            const reason: string = LascaRulesFailure.MUST_FINISH_CAPTURING();
+            const reason: string = LascaFailure.MUST_FINISH_CAPTURING();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid self-capturing', () => {
@@ -203,7 +203,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
 
             // Then it should fail
-            const reason: string = LascaRulesFailure.CANNOT_GO_BACKWARD();
+            const reason: string = LascaFailure.CANNOT_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should allow backward capture with officer', () => {
@@ -276,7 +276,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]).get();
 
             // Then it should succeed
-            const Xoo: LascaSpace = new LascaSpace([LascaPiece.ONE_OFFICER, LascaPiece.ZERO, LascaPiece.ZERO]);
+            const Xoo: LascaStack = new LascaStack([LascaPiece.ONE_OFFICER, LascaPiece.ZERO, LascaPiece.ZERO]);
             const expectedState: LascaState = LascaState.from([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -361,7 +361,7 @@ describe('LascaRules', () => {
                 new Coord(6, 4)]).get();
 
             // Then it should succeed
-            const vuu: LascaSpace = new LascaSpace([LascaPiece.ONE, LascaPiece.ZERO, LascaPiece.ZERO]);
+            const vuu: LascaStack = new LascaStack([LascaPiece.ONE, LascaPiece.ZERO, LascaPiece.ZERO]);
             const expectedState: LascaState = LascaState.from([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],

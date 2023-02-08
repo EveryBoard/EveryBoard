@@ -1,22 +1,16 @@
 import { JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Localized } from '../utils/LocaleUtils';
 import { Encoder, NumberEncoder } from '../utils/Encoder';
-
-export class Vector implements ComparableObject {
-    public equals(other: Vector): boolean {
-        return this.x === other.x && this.y === other.y;
-    }
-    public constructor(public readonly x: number,
-                       public readonly y: number) {}
-}
+import { Vector } from './Vector';
 
 export abstract class BaseDirection extends Vector {
+
     public readonly x: 0|1|-1;
     public readonly y: 0|1|-1;
+
     public isDown(): boolean {
         return this.y === 1;
     }

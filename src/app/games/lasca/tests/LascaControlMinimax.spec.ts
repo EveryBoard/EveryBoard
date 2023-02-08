@@ -5,19 +5,18 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LascaControlMinimax } from '../LascaControlMinimax';
 import { LascaMove } from '../LascaMove';
-import { LascaNode, LascaRules } from '../LascaRules';
-import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
+import { LascaNode } from '../LascaRules';
+import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 
 describe('LascaControlMinimax', () => {
 
-    const u: LascaSpace = new LascaSpace([LascaPiece.ZERO]);
-    const v: LascaSpace = new LascaSpace([LascaPiece.ONE]);
-    const _: LascaSpace = LascaSpace.EMPTY;
+    const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
+    const v: LascaStack = new LascaStack([LascaPiece.ONE]);
+    const _: LascaStack = LascaStack.EMPTY;
     let minimax: LascaControlMinimax;
 
     beforeEach(() => {
-        const ruler: LascaRules = LascaRules.get();
-        minimax = new LascaControlMinimax(ruler, 'Lasca Control Minimax');
+        minimax = new LascaControlMinimax('Lasca Control Minimax');
     });
     it('should return full list of captures when capture must be done', () => {
         // Given a state where current player should capture

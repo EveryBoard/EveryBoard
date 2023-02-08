@@ -6,6 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Vector } from 'src/app/jscaip/Vector';
 
 export class MartianChessMoveFailure {
 
@@ -56,9 +57,9 @@ export class MartianChessMove extends MoveCoordToCoord {
         return this.calledTheClock === o.calledTheClock;
     }
     public isValidForPawn(): boolean {
-        const dx: number = Math.abs(this.coord.x - this.end.x);
-        const dy: number = Math.abs(this.coord.y - this.end.y);
-        return (dx === 1) && (dy === 1);
+        const vector: Vector = this.coord.getVectorToward(this.end);
+        console.log('vector of pawn', vector)
+        return vector.isDiagonalOfLength(1);
     }
     public isValidForDrone(): boolean {
         const distance: number = this.coord.getDistance(this.end);

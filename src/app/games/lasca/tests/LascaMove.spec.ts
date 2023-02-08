@@ -2,7 +2,8 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
-import { LascaMove, LascaMoveFailure } from '../LascaMove';
+import { LascaFailure } from '../LascaFailure';
+import { LascaMove } from '../LascaMove';
 
 describe('LascaMove', () => {
 
@@ -12,7 +13,7 @@ describe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(0, 2));
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
         });
         it('should forbid to start out of the board', () => {
             // When trying to create a move that goes outside of the board
@@ -33,7 +34,7 @@ describe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(2, 2));
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
         });
         it('should return a failed fallible for unexisting index getCoord', () => {
             // Given a move with two coords
@@ -59,7 +60,7 @@ describe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture([new Coord(0, 0), new Coord(0, 2)]);
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()));
         });
         it('should forbid to get out of the board', () => {
             // When trying to create a capture that goes outside of the board
@@ -73,7 +74,7 @@ describe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture([new Coord(0, 0), new Coord(3, 3)]);
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()));
+            expect(move).toEqual(MGPFallible.failure(LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()));
         });
         it('should forbid to pass over the same coord several times', () => {
             // When trying to create a capture that passes twice over the same Coord
@@ -81,7 +82,7 @@ describe('LascaMove', () => {
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture(coords);
 
             // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(LascaMoveFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD()));
+            expect(move).toEqual(MGPFallible.failure(LascaFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD()));
         });
         it('should allow simple capture', () => {
             // When trying to create a simple move

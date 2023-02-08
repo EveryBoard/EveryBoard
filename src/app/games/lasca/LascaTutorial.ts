@@ -1,14 +1,14 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LascaMove } from './LascaMove';
-import { LascaPiece, LascaSpace, LascaState } from './LascaState';
+import { LascaPiece, LascaStack, LascaState } from './LascaState';
 
 const zero: LascaPiece = LascaPiece.ZERO;
 const one: LascaPiece = LascaPiece.ONE;
-const _u: LascaSpace = new LascaSpace([zero]);
-const _v: LascaSpace = new LascaSpace([one]);
-const uv: LascaSpace = new LascaSpace([zero, one]);
-const __: LascaSpace = LascaSpace.EMPTY;
+const _u: LascaStack = new LascaStack([zero]);
+const _v: LascaStack = new LascaStack([one]);
+const uv: LascaStack = new LascaStack([zero, one]);
+const __: LascaStack = LascaStack.EMPTY;
 
 export class LascaTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
@@ -19,7 +19,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal of Lasca is, like for draughts, to render the opponent out of possible move, either by capturing all his pieces, either by blocking them.`,
+            $localize`The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.`,
             LascaState.getInitialState(),
         ),
         TutorialStep.anyMove(
@@ -59,6 +59,19 @@ export class LascaTutorial extends Tutorial {
             LascaMove.fromCapture([new Coord(2, 6), new Coord(0, 4), new Coord(2, 2)]).get(),
             $localize`Congratulations!`,
         ),
+        TutorialStep.informational(
+            $localize`Minority capture is allowed`,
+            $localize`If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.`,
+            LascaState.from([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, _v, __],
+                [__, __, __, __, __, __, __],
+                [__, _v, __, _v, __, __, __],
+                [__, __, _u, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+            ], 2),
+        ),
         TutorialStep.fromMove(
             $localize`Promotion`,
             $localize`When a pile reach the last line, it's commander become officer, and gain the ability to go backward, which is illegal for a non-officer piece! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
@@ -75,21 +88,8 @@ export class LascaTutorial extends Tutorial {
                 LascaMove.fromStep(new Coord(3, 1), new Coord(2, 0)).get(),
                 LascaMove.fromStep(new Coord(3, 1), new Coord(4, 0)).get(),
             ],
-            'Congratulations!',
-            'This is not it',
-        ),
-        TutorialStep.informational(
-            $localize`Minority capture is allowed`,
-            $localize`If you have several capture choices, one choice capturing one piece, the other choice capturing two pieces, you are allowed to choose either.`,
-            LascaState.from([
-                [__, __, __, __, __, __, __],
-                [__, __, __, __, __, _v, __],
-                [__, __, __, __, __, __, __],
-                [__, _v, __, _v, __, __, __],
-                [__, __, _u, __, __, __, __],
-                [__, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __],
-            ], 2),
+            $localize`Congratulations!`,
+            $localize`This is not it`,
         ),
     ];
 }

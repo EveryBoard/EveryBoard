@@ -4,19 +4,20 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { LascaComponent, LascaComponentFailure } from '../lasca.component';
-import { LascaMove, LascaMoveFailure } from '../LascaMove';
-import { LascaPiece, LascaSpace, LascaState } from '../LascaState';
+import { LascaComponent } from '../lasca.component';
+import { LascaFailure } from '../LascaFailure';
+import { LascaMove } from '../LascaMove';
+import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 
 describe('LascaComponent', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;
 
-    const _u: LascaSpace = new LascaSpace([zero]);
-    const _v: LascaSpace = new LascaSpace([one]);
-    const uv: LascaSpace = new LascaSpace([zero, one]);
-    const __: LascaSpace = LascaSpace.EMPTY;
+    const _u: LascaStack = new LascaStack([zero]);
+    const _v: LascaStack = new LascaStack([one]);
+    const uv: LascaStack = new LascaStack([zero, one]);
+    const __: LascaStack = LascaStack.EMPTY;
 
     let testUtils: ComponentTestUtils<LascaComponent>;
 
@@ -29,7 +30,7 @@ describe('LascaComponent', () => {
     describe('first click', () => {
         it('should highlight possible step-landing after selecting piece', fakeAsync(async() => {
             // Given any board where step are possible (initial board)
-            // When clicking selecting piece
+            // When selecting a piece
             await testUtils.expectClickSuccess('#coord_4_4');
 
             // Then its landing coord should be landable
@@ -84,7 +85,7 @@ describe('LascaComponent', () => {
             // Given any board
             // When clicking a piece that could not move
             // Then it should fail
-            await testUtils.expectClickFailure('#coord_5_5', LascaComponentFailure.THIS_PIECE_CANNOT_MOVE());
+            await testUtils.expectClickFailure('#coord_5_5', LascaFailure.THIS_PIECE_CANNOT_MOVE());
         }));
         it('should show clicked stack as selected', fakeAsync(async() => {
             // Given any board
@@ -111,7 +112,7 @@ describe('LascaComponent', () => {
 
             // When clicking on an empty square in (+2; +1) of selected piece
             // Then it should fail
-            const reason: string = LascaMoveFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+            const reason: string = LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
             await testUtils.expectClickFailure('#coord_6_5', reason);
         }));
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {

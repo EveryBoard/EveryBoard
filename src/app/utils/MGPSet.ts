@@ -51,7 +51,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     }
     public addAll(otherSet: MGPSet<T>): void {
         if (this.isMutable === false) {
-            throw new Error('Cannot add to immutable MGPSet');
+            throw new Error('Cannot addAll to immutable MGPSet');
         }
         for (const element of otherSet) {
             this.add(element);
@@ -65,7 +65,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return false;
     }
-    public mapAndNotToList<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
+    public map<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
         const mappedList: V[] = [];
         for (const element of this.values) {
             mappedList.push(mapper(element));
@@ -87,13 +87,6 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return MGPOptional.of(this.values[0]);
         } else {
             return MGPOptional.empty();
-        }
-    }
-    public getByIndex(index: number): T {
-        if (index < 0) {
-            return this.values[this.size() + index];
-        } else {
-            return this.values[index];
         }
     }
     public isEmpty(): boolean {

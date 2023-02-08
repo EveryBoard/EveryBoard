@@ -202,8 +202,8 @@
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
         <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
       </trans-unit>
-      <trans-unit id="658738805737752450" datatype="html">
-        <source>Similar to checkers, capture opponent pieces, free your own, and immobilize your opponent to win the game!</source>
+      <trans-unit id="8831529968086851272" datatype="html">
+        <source>Similar to checkers, capture opponent&apos;s pieces, free your own, and immobilize your opponent to win the game!</source>
         <target>Cousin du jeu de Dame, capturez les pièces adverses, libérez les vôtres, et immobilisez l'adversaire pour gagner la partie !</target>
       </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
@@ -1040,7 +1040,7 @@
       </trans-unit>
       <trans-unit id="1035614445063065926" datatype="html">
         <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from a higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
-        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
+        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa destination en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
       </trans-unit>
       <trans-unit id="2553091915151695430" datatype="html">
         <source>This move is a drop, please do a transfer!</source>
@@ -2298,20 +2298,20 @@
         <source>A capture should be a double diagonal step. Look at the green indicators to help you!</source>
         <target>Les captures doivent être des sauts de deux pas en diagonale ! Regardez les indications en vert pour vous aider !</target>
       </trans-unit>
-      <trans-unit id="6753567388037209218" datatype="html">
+      <trans-unit id="924257200871471773" datatype="html">
         <source>You must move in a single diagonal step!</source>
         <target>Les déplacements doivent être des simples pas en diagonale !</target>
       </trans-unit>
-      <trans-unit id="494699409056885328" datatype="html">
-        <source>You cannot jump over the same space several times!</source>
+      <trans-unit id="8938938109993892899" datatype="html">
+        <source>You cannot jump over the same square several times!</source>
         <target>Vous ne pouvez pas sauter au dessus d'une même case plusieurs fois !</target>
       </trans-unit>
       <trans-unit id="3581037377692107358" datatype="html">
         <source>You cannot go backward with normal pieces!</source>
         <target>Vous ne pouvez pas aller en arrière avec une pièce normale !</target>
       </trans-unit>
-      <trans-unit id="5146778338724180791" datatype="html">
-        <source>You cannot capture an empty space, nor jump over it!</source>
+      <trans-unit id="2164034395199252113" datatype="html">
+        <source>You cannot capture an empty square, nor jump over it!</source>
         <target>Vous ne pouvez pas capturer une case vide, ni sauter par dessus !</target>
       </trans-unit>
       <trans-unit id="1347067654692503433" datatype="html">
@@ -2330,8 +2330,8 @@
         <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
         <target>Lasca est un jeu basé sur le jeu de dames, crée en 1911 par Emanuel Lasker, champion du monde d'échecs. Lasca se joue sur un plateau de 7x7 cases, chaque joueur a 11 pièces.</target>
       </trans-unit>
-      <trans-unit id="8228991594058357867" datatype="html">
-        <source>The goal of Lasca is, like for draughts, to render the opponent out of possible move, either by capturing all his pieces, either by blocking them.</source>
+      <trans-unit id="4475600219932113977" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.</source>
         <target>Le but de Lasca est, comme aux dames, de rendre l'adversaire incapable de jouer, soit en capturant toutes ses pièces, soit en les bloquant.</target>
       </trans-unit>
       <trans-unit id="1534367694207535197" datatype="html">
@@ -2340,19 +2340,19 @@
       </trans-unit>
       <trans-unit id="5101419651122121441" datatype="html">
         <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
-        <target>Un simple pas est un déplacement d'une case en diagonal, en avant, vers la gauche ou la droite. Pour faire un déplacement cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
+        <target>Un simple pas est un déplacement d'une case en diagonale, en avant, vers la gauche ou la droite. Pour faire un déplacement cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
       </trans-unit>
       <trans-unit id="7763413917819120355" datatype="html">
         <source>You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
-        <target>Vous devez capturer quand vous le pouvez, c'est le cas ici, cliquez sur la pièce qui doit capturer, et ensuite sur sa case d'atterrissage&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
+        <target>Vous devez capturer quand vous le pouvez, c'est le cas ici, cliquez sur la pièce qui doit capturer, et ensuite sur sa destination&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
         <target>Félicitations, constatez que la pièce capturée n'as pas été enlevée du plateau, mais placée en dessous de la pièce qui l'as capturé.</target>
       </trans-unit>
-      <trans-unit id="944933553092470959" datatype="html">
-        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing space. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
-        <target>Si, après le début de la capture, la pièce que vous venez de bouger peut encore capturer une autre pièce, elle doit le faire tant qu'elle peut. Pour ce faire, vous devez juste cliquer sur la case d'atterrissage suivante. Notez que quand vous capturez avec un officier, vous ne pouvez pas sauter deux fois au dessus de la même pile.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, une double capture est possible, faites-la.</target>
+      <trans-unit id="8288645478824152244" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+        <target>Si, après le début de la capture, la pièce que vous venez de bouger peut encore capturer une autre pièce, elle doit le faire tant qu'elle peut. Pour ce faire, vous devez juste cliquer sur sa destination suivante. Notez que quand vous capturez avec un officier, vous ne pouvez pas sauter deux fois au dessus de la même pile.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, une double capture est possible, faites-la.</target>
       </trans-unit>
       <trans-unit id="2693455583384082674" datatype="html">
         <source>Promotion</source>
@@ -2360,15 +2360,19 @@
       </trans-unit>
       <trans-unit id="5594547343498813189" datatype="html">
         <source>When a pile reach the last line, it&apos;s commander become officer, and gain the ability to go backward, which is illegal for a non-officer piece! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-        <target>Quand une pile atteins la dernière ligne, son commandeur deviens officier, et gagne l'abilité de se déplacer en marche arrière, ce qui est illégal pour les non-officier! Une de vos pièces pourrait être promue ce tour-ci.&lt;br/&gt;&lt;br/&gt;You&apos;Vous jouez Foncé. Faite-le.</target>
+        <target>Quand une pile atteint la dernière ligne, son commandeur devient officier, et gagne la capacité de se déplacer en marche arrière, ce qui est illégal pour les non-officier ! Une de vos pièces pourrait être promue ce tour-ci.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faite-le.</target>
+      </trans-unit>
+      <trans-unit id="816939300111928343" datatype="html">
+        <source>This is not it</source>
+        <target>Ce n'est pas ça</target>
       </trans-unit>
       <trans-unit id="6522624192206928831" datatype="html">
         <source>Minority capture is allowed</source>
-        <target>La capture minoritaire est authorisée !</target>
+        <target>La capture minoritaire est autorisée !</target>
       </trans-unit>
-      <trans-unit id="8855040566175030591" datatype="html">
-        <source>If you have several capture choices, one choice capturing one piece, the other choice capturing two pieces, you are allowed to choose either.</source>
-        <target>Si vous avez plusieurs choix de captures, une capturant une seule pièce, l'autre deux, vous êtes autorisé à choisir l'une des deux.</target>
+      <trans-unit id="4604841825883708598" datatype="html">
+        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>
+        <target>Si vous avez plusieurs choix de captures, vous êtes autorisé à choisir n'importe lequel. Par exemple un des choix ne capture qu'une pièce, et l'autre en capture deux, vous pouvez choisir celui que vous préférez.</target>
       </trans-unit>
       <trans-unit id="6689969573280113485" datatype="html">
         <source>This piece cannot move!</source>

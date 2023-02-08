@@ -4,7 +4,6 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
@@ -14,16 +13,10 @@ class LascaNode extends MGPNode<LascaRules, LascaMove, LascaState> {}
 
 export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
 
-    private static singleton: MGPOptional<LascaControlMinimax> = MGPOptional.empty();
-
-    public static get(): LascaControlMinimax {
-        if (LascaControlMinimax.singleton.isAbsent()) {
-            const minimax: LascaControlMinimax = new LascaControlMinimax(LascaRules.get(), 'Lasca Control Minimax');
-            LascaControlMinimax.singleton = MGPOptional.of(minimax);
-        }
-        return LascaControlMinimax.singleton.get();
+    constructor(name: string) {
+        super(LascaRules.get(), name);
     }
-    public getListMoves(node: LascaNode): LascaMove[] {
+    public static getListMoves(node: LascaNode): LascaMove[] {
         const possiblesCaptures: LascaMove[] = LascaRules.get().getCaptures(node.gameState);
         if (possiblesCaptures.length > 0) {
             return possiblesCaptures;
@@ -31,10 +24,13 @@ export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
             return LascaRules.get().getSteps(node.gameState);
         }
     }
+    public getListMoves(node: LascaNode): LascaMove[] {
+        return LascaControlMinimax.getListMoves(node);
+    }
     public getBoardValue(node: LascaNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const state: LascaState = node.gameState;
         const pieceUnderZeroControl: number = this.getNumberOfMobileCoords(state, Player.ZERO);

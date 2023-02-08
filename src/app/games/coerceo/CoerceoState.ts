@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { Table } from 'src/app/utils/ArrayUtils';

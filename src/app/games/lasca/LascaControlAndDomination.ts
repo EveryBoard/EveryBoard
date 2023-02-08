@@ -5,22 +5,25 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { LascaControlMinimax } from './LascaControlMinimax';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
-import { LascaSpace, LascaState } from './LascaState';
+import { LascaStack, LascaState } from './LascaState';
 
 class LascaNode extends MGPNode<LascaRules, LascaMove, LascaState> {}
 
 export class LascaControlAndDominationMinimax extends LascaControlMinimax {
 
+    constructor() {
+        super('Lasca Control And Domination Minimax');
+    }
     public getBoardValue(node: LascaNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const controlValue: number = super.getBoardValue(node).value * 12;
         let dominatingPiecesCount: number = 0;
         for (let y: number = 0; y < LascaState.SIZE; y++) {
             for (let x: number = 0; x < LascaState.SIZE; x++) {
-                const square: LascaSpace = node.gameState.getPieceAtXY(x, y);
+                const square: LascaStack = node.gameState.getPieceAtXY(x, y);
                 if (square.getStackSize() > 0) {
                     const stackSize: number = square.getStackSize();
                     let pieceIndex: number = 0;

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction, Vector } from 'src/app/jscaip/Direction';
+import { Direction } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -512,10 +513,10 @@ export class LodestoneComponent
         const right: number = this.getPressurePlateShift(state.pressurePlates.right);
         const top: number = this.getPressurePlateShift(state.pressurePlates.top);
         const bottom: number = this.getPressurePlateShift(state.pressurePlates.bottom);
-        this.viewInfo.pressurePlateShift.top = new Coord(0.5 * (left-right), 0);
-        this.viewInfo.pressurePlateShift.bottom = new Coord(0.5 * (left-right), 0);
-        this.viewInfo.pressurePlateShift.left = new Coord(0, 0.5 * (top-bottom));
-        this.viewInfo.pressurePlateShift.right = new Coord(0, 0.5 * (top-bottom));
+        this.viewInfo.pressurePlateShift.top = new Vector(0.5 * (left - right), 0);
+        this.viewInfo.pressurePlateShift.bottom = new Vector(0.5 * (left - right), 0);
+        this.viewInfo.pressurePlateShift.left = new Vector(0, 0.5 * (top - bottom));
+        this.viewInfo.pressurePlateShift.right = new Vector(0, 0.5 * (top - bottom));
     }
     private getPressurePlateShift(plate: MGPOptional<LodestonePressurePlate>): number {
         if (plate.isAbsent()) {
