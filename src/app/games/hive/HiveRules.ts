@@ -37,28 +37,27 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return this.applyLegalMoveCoordToCoord(move, state);
         } else {
             // Move is pass
-            return state.increaseTurnAndRecomputeBounds();
+            return state.increaseTurn();
         }
     }
 
     private applyLegalDrop(drop: HiveMoveDrop, state: HiveState): HiveState {
         // Put the piece where it is dropped, possibly on top of other pieces
-        const newState: HiveState = state.getCopy();
         const pieceStack: HivePieceStack = state.getAt(drop.coord);
-        newState.setAt(drop.coord, pieceStack.add(drop.piece));
-        // Also remove the dropped piece from the remaining ones
-        newState.remainingPieces.remove(drop.piece);
-        return newState.increaseTurnAndRecomputeBounds();
+        return state.setAt(drop.coord, pieceStack.add(drop.piece))
+                    .removeRemainingPiece(drop.piece)
+                    .increaseTurn();
     }
 
     private applyLegalMoveCoordToCoord(move: HiveMoveCoordToCoord, state: HiveState): HiveState {
         // Take the top piece of the source and move it on top of the destination
-        const newState: HiveState = state.getCopy();
         const sourcePieceStack: HivePieceStack = state.getAt(move.coord);
         const destinationPieceStack: HivePieceStack = state.getAt(move.end);
-        newState.setAt(move.coord, sourcePieceStack.removeTopPiece());
-        newState.setAt(move.end, destinationPieceStack.add(sourcePieceStack.topPiece()));
-        return newState.increaseTurnAndRecomputeBounds();
+        const stateWithoutPiece: HiveState = state.setAt(move.coord, sourcePieceStack.removeTopPiece());
+        // A bit tricky, we need to move the end by the offset of the state after removing the piece
+        const newEnd: Coord = move.end.getNext(stateWithoutPiece.offset);
+        return stateWithoutPiece.setAt(newEnd, destinationPieceStack.add(sourcePieceStack.topPiece()))
+                                .increaseTurn();
     }
 
     public isLegal(move: HiveMove, state: HiveState): MGPFallible<void> {
@@ -94,14 +93,14 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return moveLegality;
         }
 
-        const stateWithoutMovedPiece: HiveState = state.getCopy();
-        stateWithoutMovedPiece.setAt(move.coord, stack.removeTopPiece());
+        const stateWithoutMovedPiece: HiveState = state.setAt(move.coord, stack.removeTopPiece());
         if (stateWithoutMovedPiece.isDisconnected()) {
             // Cannot disconnect the hive, even in the middle of a move
             return MGPFallible.failure(HiveFailure.CANNOT_DISCONNECT_HIVE());
         }
 
-        if (stateWithoutMovedPiece.numberOfNeighbors(move.end) === 0) {
+        const newEnd: Coord = move.end.getNext(stateWithoutMovedPiece.offset);
+        if (stateWithoutMovedPiece.numberOfNeighbors(newEnd) === 0) {
             // Cannot disconnect the hive after the move, i.e., the destination should have one occupied neighbor
             return MGPFallible.failure(HiveFailure.CANNOT_DISCONNECT_HIVE());
         }
