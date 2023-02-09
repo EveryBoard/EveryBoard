@@ -85,7 +85,7 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
     }
 
     public getOccupiedNeighbors(coord: Coord): MGPSet<Coord> {
-        const neighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.neighbors(coord));
+        const neighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(coord));
         return neighbors.filter((neighbor: Coord) => {
             return this.pieces.get(neighbor).isPresent();
         });

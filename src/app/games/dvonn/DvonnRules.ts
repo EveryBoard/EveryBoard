@@ -49,13 +49,13 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     private static pieceHasTarget(state: DvonnState, coord: Coord): boolean {
         // A piece has a target if it can move to an occupied space at a distance equal to its length
         const stackSize: number = state.getPieceAt(coord).getSize();
-        const possibleTargets: Coord[] = HexagonalUtils.neighbors(coord, stackSize);
+        const possibleTargets: Coord[] = HexagonalUtils.getNeighbors(coord, stackSize);
         return possibleTargets.find((c: Coord): boolean =>
             state.isOnBoard(c) && !state.getPieceAt(c).isEmpty()) !== undefined;
     }
     public static pieceTargets(state: DvonnState, coord: Coord): Coord[] {
         const stackSize: number = state.getPieceAt(coord).getSize();
-        const possibleTargets: Coord[] = HexagonalUtils.neighbors(coord, stackSize);
+        const possibleTargets: Coord[] = HexagonalUtils.getNeighbors(coord, stackSize);
         return possibleTargets.filter((c: Coord): boolean =>
             state.isOnBoard(c) && state.getPieceAt(c).isEmpty() === false);
     }
@@ -101,7 +101,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]) {
         // For each neighbor, mark it as connected (if it contains something),
         // and recurse from there (only if it was not already marked)
-        HexagonalUtils.neighbors(coord, 1).forEach((c: Coord) => {
+        HexagonalUtils.getNeighbors(coord, 1).forEach((c: Coord) => {
             if (state.isOnBoard(c) && !markBoard[c.y][c.x] && !state.getPieceAt(c).isEmpty()) {
                 // This piece has not been marked as connected, but it is connected, and not empty
                 markBoard[c.y][c.x] = true; // mark it as connected

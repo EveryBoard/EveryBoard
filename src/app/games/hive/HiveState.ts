@@ -137,7 +137,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     }
 
     public increaseTurn(): HiveState {
-        return new HiveState(this.pieces, this.remainingPieces, this.queenBees, this.turn+1);
+        return new HiveState(this.pieces, this.remainingPieces, this.queenBees, this.turn + 1);
     }
 
     public getAt(coord: Coord): HivePieceStack {
@@ -148,8 +148,8 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         }
     }
 
-    public isEmpty(pieces: HivePieceStack): boolean {
-        return pieces.isEmpty();
+    public isEmpty(stack: HivePieceStack): boolean {
+        return stack.isEmpty();
     }
 
     public removeRemainingPiece(piece: HivePiece): HiveState {
@@ -177,6 +177,10 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         return this.queenBees.get(player);
     }
 
+    public hasQueenBeeOnBoard(player: Player): boolean {
+        return this.queenBeeLocation(player).isPresent();
+    }
+
     public numberOfNeighbors(coord: Coord): number {
         let neighbors: number = 0;
         for (const direction of HexaDirection.factory.all) {
@@ -198,12 +202,11 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
 
     public emptyNeighbors(coord: Coord): Coord[] {
         const result: Coord[] = [];
-        for (const neighbor of HexagonalUtils.neighbors(coord)) {
+        for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             if (this.getAt(neighbor).isEmpty()) {
                 result.push(neighbor);
             }
         }
         return result;
     }
-
 }

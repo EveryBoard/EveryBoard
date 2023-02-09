@@ -17,7 +17,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
                        public readonly empty: P)
     {
         super(board, turn);
-        assert(this.excludedSpaces.length < (this.height/2)+1, 'Invalid excluded spaces specification for HexagonalGameState.');
+        assert(this.excludedSpaces.length < (this.height / 2) + 1, 'Invalid excluded spaces specification for HexagonalGameState.');
     }
     public abstract setAtUnsafe(coord: Coord, v: P): this
     public setAt(coord: Coord, v: P): this {
@@ -97,7 +97,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
                 if (line.offset < this.width) {
                     return this.findEntranceFrom(line, new Coord(line.offset, 0));
                 } else {
-                    return this.findEntranceFrom(line, new Coord(this.width-1, line.offset-this.width+1));
+                    return this.findEntranceFrom(line, new Coord(this.width - 1, line.offset - this.width + 1));
                 }
         }
     }

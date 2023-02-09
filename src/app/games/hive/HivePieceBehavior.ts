@@ -38,8 +38,8 @@ export abstract class HivePieceBehavior {
     protected canSlide(state: HiveState, start: Coord, end: Coord): boolean {
         // For the piece to slide from start to end,
         // one of the two common neighbors of start and end coord should be empty
-        const startNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.neighbors(start));
-        const endNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.neighbors(end));
+        const startNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(start));
+        const endNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(end));
         const commonNeighbors: MGPSet<Coord> = startNeighbors.intersection(endNeighbors);
         for (const neighbor of commonNeighbors) {
             if (state.getAt(neighbor).isEmpty()) {
@@ -78,7 +78,7 @@ export class HivePieceBehaviorQueenBee extends HivePieceBehavior {
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
         const moves: HiveMoveCoordToCoord[] = [];
-        for (const neighbor of HexagonalUtils.neighbors(coord)) {
+        for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             if (state.getAt(neighbor).isEmpty()) {
                 moves.push(HiveMoveCoordToCoord.from(coord, neighbor).get());
             }
@@ -107,7 +107,7 @@ export class HivePieceBehaviorBeetle extends HivePieceBehavior {
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
         const moves: HiveMoveCoordToCoord[] = [];
-        for (const neighbor of HexagonalUtils.neighbors(coord)) {
+        for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             moves.push(HiveMoveCoordToCoord.from(coord, neighbor).get());
         }
         return moves;
@@ -214,16 +214,21 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
         for (let i: number = 0; i < 3; i++) {
             moves = moves.flatMap((move: Coord[]) => {
                 const lastCoord: Coord = move[move.length - 1];
-                return new MGPSet(HexagonalUtils.neighbors(lastCoord))
-                    .filter((coord: Coord): boolean =>
+                const neighborsFilter: (coord: Coord) => boolean = (coord: Coord): boolean => {
+                    if (stateWithoutSpider.getAt(coord).isOccupied()) {
                         // We can only go through empty spaces
-                        stateWithoutSpider.getAt(coord).isEmpty() &&
+                        return false;
+                    }
+                    if (move.find((coord2: Coord) => coord.equals(coord2)) !== undefined) {
                         // We cannot backtrack
-                        move.find((coord2: Coord) => coord.equals(coord2)) === undefined &&
-                        // Must have a common neighbor with the previous coord
-                        this.haveCommonNeighbor(stateWithoutSpider, coord, lastCoord))
-                    .toList()
-                    .map((coord: Coord): Coord[] => [...move, coord]);
+                        return false;
+                    }
+                    // Must have a common neighbor with the previous coord
+                    return this.haveCommonNeighbor(stateWithoutSpider, coord, lastCoord);
+                };
+                const possibleNeighbors: MGPSet<Coord> =
+                    new MGPSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
+                return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
             });
         }
         return moves.map((move: Coord[]) => HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]).get());
@@ -254,7 +259,7 @@ export class HivePieceBehaviorSoldierAnt extends HivePieceBehavior {
             if (coord.equals(end)) {
                 return true;
             }
-            for (const neighbor of HexagonalUtils.neighbors(coord)) {
+            for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
                 const isEmpty: boolean = state.getAt(neighbor).isEmpty();
                 const hasOccupiedNeighbors: boolean = state.getOccupiedNeighbors(neighbor).size() > 0;
                 const canSlide: boolean = this.canSlide(state, coord, neighbor);

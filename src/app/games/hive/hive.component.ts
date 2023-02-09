@@ -33,8 +33,7 @@ interface PieceWithCoord {
     templateUrl: './hive.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class HiveComponent
-    extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
+export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 
     public readonly ORIGIN: Coord = new Coord(0, 0);
 
@@ -58,7 +57,7 @@ export class HiveComponent
     public inspectedStackTransform: string;
 
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+        super(messageDisplayer)
         this.rules = HiveRules.get();
         this.availableMinimaxes = [
             new HiveMinimax(this.rules, 'HiveMinimax'),
@@ -225,7 +224,15 @@ export class HiveComponent
         return MGPValidation.SUCCESS;
     }
 
-    public async selectSpace(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
+    public selectStack(coord: Coord): Promise<MGPValidation> {
+        return this.selectSpace(coord, 'piece');
+    }
+
+    public selectNeighbor(coord: Coord): Promise<MGPValidation> {
+        return this.selectSpace(coord, 'space');
+    }
+
+    private async selectSpace(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());

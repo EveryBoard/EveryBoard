@@ -3,7 +3,7 @@ import { HexaDirection } from './HexaDirection';
 
 export class HexagonalUtils {
 
-    public static neighbors(coord: Coord, distance: number = 1): Coord[] {
+    public static getNeighbors(coord: Coord, distance: number = 1): Coord[] {
         const result: Coord[] = [];
         for (const direction of HexaDirection.factory.all) {
             result.push(coord.getNext(direction, distance));

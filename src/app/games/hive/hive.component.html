@@ -6,7 +6,7 @@
              id="space_{{ neighbor.x }}_{{ neighbor.y }}"
              [attr.points]="getHexaCoordsAt(neighbor)"
              class="base mid-stroke"
-             (click)="selectSpace(neighbor, 'space')"/>
+             (click)="selectNeighbor(neighbor)"/>
 
     <polygon *ngFor="let indicator of indicators"
              id="indicator_{{ indicator.x }}_{{ indicator.y }}"
@@ -38,7 +38,7 @@
        [hexaLayout]="hexaLayout"
        [sideView]="false"
        [indicator]="isIndicator(piece.coord)"
-       (click)="selectSpace(piece.coord, 'piece')"/>
+       (click)="selectStack(piece.coord)"/>
 
     <g *ngFor="let coord of selected">
         <polygon *ngIf="highlightGround(coord) === false"

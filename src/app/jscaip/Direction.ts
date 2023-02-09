@@ -13,7 +13,7 @@ export class Vector implements ComparableObject {
     public constructor(public readonly x: number,
                        public readonly y: number) {}
     public toString(): string {
-        return this.x + ',' + this.y;
+        return this.x + ', ' + this.y;
     }
 }
 

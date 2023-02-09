@@ -59,7 +59,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         return pieces;
     }
     public numberOfNeighbors(coord: Coord): number {
-        const neighbors: Coord[] = HexagonalUtils.neighbors(coord, 1);
+        const neighbors: Coord[] = HexagonalUtils.getNeighbors(coord, 1);
         const occupiedNeighbors: Coord[] = neighbors.filter((c: Coord): boolean =>
             this.isOnBoard(c) && this.getPieceAt(c).isEmpty() === false);
         return occupiedNeighbors.length;

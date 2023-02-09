@@ -22,7 +22,7 @@ describe('HiveDummyMinimax', () => {
         // When computing the list of moves
         const moves: HiveMove[] = minimax.getListMoves(node);
 
-        // Thne there should be 5 moves
+        // Then there should be 5 moves
         expect(moves.length).toBe(5);
     });
     it('should propose 6x5 moves at second turn', () => {

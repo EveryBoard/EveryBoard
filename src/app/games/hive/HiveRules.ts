@@ -109,7 +109,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     }
 
     public mustPlaceQueenBee(state: HiveState): boolean {
-        return state.turn >= 6 && state.queenBeeLocation(state.getCurrentPlayer()).isAbsent();
+        return state.turn >= 6 && state.hasQueenBeeOnBoard(state.getCurrentPlayer()) === false;
     }
 
     public isLegalDrop(move: HiveMoveDrop, state: HiveState): MGPFallible<void> {
@@ -126,14 +126,16 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         // The queen bee must be placed at the latest at the fourth turn of a player
-        if (move.piece.kind === 'QueenBee' === false && this.mustPlaceQueenBee(state)) {
+        console.log(move.piece.kind)
+        console.log(this.mustPlaceQueenBee(state))
+        if (move.piece.kind !== 'QueenBee' && this.mustPlaceQueenBee(state)) {
             return MGPFallible.failure(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 
         // Pieces must be connected to the hive, except at the first turn of player zero,
         // but must not be dropped next to a piece of the opponent, except at the first turn of player one
         let hasNeighbor: boolean = false;
-        for (const neighbor of HexagonalUtils.neighbors(move.coord)) {
+        for (const neighbor of HexagonalUtils.getNeighbors(move.coord)) {
             const neighborStack: HivePieceStack = state.getAt(neighbor);
             if (neighborStack.isEmpty() === false) {
                 hasNeighbor = true;
@@ -161,7 +163,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return new MGPSet([new Coord(0, 0)]);
         }
         if (state.turn === 1) {
-            return new MGPSet(HexagonalUtils.neighbors(new Coord(0, 0)));
+            return new MGPSet(HexagonalUtils.getNeighbors(new Coord(0, 0)));
         }
 
         const remainingPieceOpt: MGPOptional<HivePiece> = state.remainingPieces.getAny(player);

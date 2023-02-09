@@ -174,7 +174,7 @@ fdescribe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 7);
 
             // When dropping another piece than the queen bee
-            const move: HiveMove = HiveMove.drop(a, new Coord(0, 7));
+            const move: HiveMove = HiveMove.drop(a, new Coord(7, 0));
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();

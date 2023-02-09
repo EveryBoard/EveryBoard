@@ -651,7 +651,7 @@ describe('PartDAO', () => {
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the player one accepts the rematch
-            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index + 1, {
                 request: Request.rematchAccepted('Quarto', 'newPartId'),
             });
 
@@ -672,7 +672,7 @@ describe('PartDAO', () => {
             await signOut();
             await reconnectUser(OPPONENT_EMAIL);
 
-            await updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1,
+            await updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index + 1,
                                      { request: Request.rematchProposed(Player.ONE) });
 
             await signOut();
@@ -704,7 +704,7 @@ describe('PartDAO', () => {
             });
 
             // Player zero proposes a rematch
-            await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+1,
+            await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index + 1,
                                      { request: Request.rematchProposed(Player.ZERO) });
 
             await signOut();
@@ -733,7 +733,7 @@ describe('PartDAO', () => {
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the other user accepts the draw
-            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index + 1, {
                 request: null,
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });
@@ -753,7 +753,7 @@ describe('PartDAO', () => {
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the other user tries to change the result to draw
-            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index + 1, {
                 request: null,
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });

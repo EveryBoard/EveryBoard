@@ -22,7 +22,7 @@ describe('GipfComponent', () => {
     const A: FourStatePiece = FourStatePiece.ZERO;
     const B: FourStatePiece = FourStatePiece.ONE;
     const P0Turn: number = 6;
-    const P1Turn: number = P0Turn+1;
+    const P1Turn: number = P0Turn + 1;
 
     function expectToHaveArrow(start: Coord, end: Coord): void {
         expect(testUtils.getComponent().arrows.some((arrow: Arrow) => {

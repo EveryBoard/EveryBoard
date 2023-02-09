@@ -22,7 +22,7 @@ describe('GipfRules:', () => {
     const A: FourStatePiece = FourStatePiece.ZERO;
     const B: FourStatePiece = FourStatePiece.ONE;
     const P0Turn: number = 6;
-    const P1Turn: number = P0Turn+1;
+    const P1Turn: number = P0Turn + 1;
 
     let rules: GipfRules;
 
@@ -82,7 +82,7 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, N],
                 [_, _, _, _, _, N, N],
                 [B, _, _, A, N, N, N],
-            ], state.turn+1, [11, 12], state.capturedPieces);
+            ], state.turn + 1, [11, 12], state.capturedPieces);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
@@ -189,7 +189,7 @@ describe('GipfRules:', () => {
                     [_, _, _, _, N, N, N],
                 ];
                 const expectedState: GipfState = new GipfState(expectedBoard,
-                                                               P1Turn+1,
+                                                               P1Turn + 1,
                                                                [5, 4 + capturedSelf],
                                                                [0, capturedOpponent]);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
