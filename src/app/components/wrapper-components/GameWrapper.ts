@@ -173,7 +173,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const turn: number = this.gameComponent.getTurn();
         const indexPlayer: number = turn % 2;
         const player: P = this.getPlayer();
-        display(GameWrapper.VERBOSE, { isPlayerTurn: {
+        display(GameWrapper.VERBOSE || true, { isPlayerTurn: {
             turn,
             players: this.players,
             player,
@@ -183,8 +183,10 @@ export abstract class GameWrapper<P extends Comparable> {
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer].isPresent()) {
+            console.log('men it is not your turn')
             return this.players[indexPlayer].equalsValue(player);
         } else {
+            console.log('yes it is your turn')
             return true;
         }
     }

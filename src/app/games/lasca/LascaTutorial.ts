@@ -8,6 +8,7 @@ const one: LascaPiece = LascaPiece.ONE;
 const _u: LascaStack = new LascaStack([zero]);
 const _v: LascaStack = new LascaStack([one]);
 const uv: LascaStack = new LascaStack([zero, one]);
+const Uv: LascaStack = new LascaStack([LascaPiece.ZERO_OFFICER, one]);
 const __: LascaStack = LascaStack.EMPTY;
 
 export class LascaTutorial extends Tutorial {
@@ -31,7 +32,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Capture`,
-            $localize`You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.<br/><br/>You're playing Dark, go ahead.`,
+            $localize`A capture happends when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.<br/><br/>You're playing Dark, go ahead.`,
             LascaState.from([
                 [_v, __, __, __, _v, __, _v],
                 [__, __, __, _v, __, _v, __],
@@ -74,7 +75,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Promotion`,
-            $localize`When a pile reach the last line, it's commander become officer, and gain the ability to go backward, which is illegal for a non-officer piece! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            $localize`When a stack reach the last line, its commander become officer, and gain the ability to go backward, which is illegal for a non-officer piece! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
             LascaState.from([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
@@ -89,7 +90,26 @@ export class LascaTutorial extends Tutorial {
                 LascaMove.fromStep(new Coord(3, 1), new Coord(4, 0)).get(),
             ],
             $localize`Congratulations!`,
-            $localize`This is not it`,
+            $localize`You did not choose the correct stack, and got no promotion.`,
+        ),
+        TutorialStep.fromMove(
+            $localize`Officer move`,
+            $localize`You have an officer, it can move backward (and obviously, can still move forward) and capture backward as well.<br/><br/>You're playing Dark, move your officier!`,
+            LascaState.from([
+                [__, __, __, __, Uv, __, _v],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, _v, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, _u, __, _u, __, _u],
+            ], 2),
+            [
+                LascaMove.fromStep(new Coord(4, 0), new Coord(3, 1)).get(),
+                LascaMove.fromStep(new Coord(4, 0), new Coord(5, 1)).get(),
+            ],
+            $localize`Congratulations!`,
+            $localize`You did not move your officer.`,
         ),
     ];
 }

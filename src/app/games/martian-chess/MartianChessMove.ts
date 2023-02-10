@@ -58,7 +58,6 @@ export class MartianChessMove extends MoveCoordToCoord {
     }
     public isValidForPawn(): boolean {
         const vector: Vector = this.coord.getVectorToward(this.end);
-        console.log('vector of pawn', vector)
         return vector.isDiagonalOfLength(1);
     }
     public isValidForDrone(): boolean {

@@ -121,6 +121,7 @@ export const routes: Route[] = [
 ];
 
 export class FirebaseProviders {
+
     public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
         return Firebase.provideFirebaseApp(() => {
             return Firebase.initializeApp(environment.firebaseConfig);

@@ -3,6 +3,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
 
 export class GameComponentUtils {
+
     public static getArrowTransform(boardWidth: number, coord: Coord, direction: Orthogonal): string {
         // The triangle will be wrapped inside a square
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)

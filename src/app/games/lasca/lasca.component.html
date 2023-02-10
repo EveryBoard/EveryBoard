@@ -5,13 +5,13 @@
 
     <defs>
         <g id="piece">
-            <path d="M 0 15 v 15 a 40 15, 0, 0, 0, 80 0 v -15 a 40 15, 0, 0, 0, -80 0 Z"/>
+            <path d="M 0 25 v 15 a 40 25, 0, 0, 0, 80 0 v -15 a 40 25, 0, 0, 0, -80 0 Z"/>
             <!--   LEFT: 0
               --     UP: 0
               --  WIDTH: 80
-              -- HEIGHT: 45
+              -- HEIGHT: 65 (50 for the elipse + 15 for the height)
             -->
-            <ellipse cx="40" cy="15" rx="40" ry="15"/>
+            <ellipse cx="40" cy="25" rx="40" ry="25"/>
         </g>
     </defs>
 
@@ -35,7 +35,7 @@
                     <circle id="square_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
                             *ngIf="pieceInfo.isOfficer"
                             [attr.cx]="SPACE_SIZE * 0.4"
-                            [attr.cy]="SPACE_SIZE *  0.375"
+                            [attr.cy]="SPACE_SIZE *  0.575"
                             [attr.r]="SPACE_SIZE * 0.045"
                             [ngClass]="pieceInfo.classes"/>
                 </g>

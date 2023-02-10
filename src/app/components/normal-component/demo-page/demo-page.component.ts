@@ -14,6 +14,7 @@ import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-ca
     templateUrl: './demo-page.component.html',
 })
 export class DemoPageComponent {
+
     public numberOfColumns: FormControl = new FormControl(5);
     public squared: FormControl = new FormControl(true);
 
@@ -32,12 +33,10 @@ export class DemoPageComponent {
         this.columns = [];
         // Create a game card for each demo node of each game
         for (const game of allGames) {
-            console.log(game.name)
             const demoNodes: { node: AbstractNode, click: MGPOptional<string> }[] = [];
             const rules: AbstractRules = game.rules;
             const steps: TutorialStep[] = game.tutorial.tutorial;
             for (const step of steps) {
-                console.log(step.title)
                 if (step.hasSolution()) {
                     const solution: Move | string = step.getSolution();
                     if (typeof solution === 'string') {

@@ -369,26 +369,16 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         const parallelogramCenter: Coord = this.getParallelogramCenter();
         const cx: number = parallelogramCenter.x;
         const cy: number = parallelogramCenter.y;
-        // We want to center the base of the lower elipse of the piece, here is it center
+        // We want to center the full piece, which is width=80, height=45, so here are it's center
         // See the define to confirm theses
-        const lowerEllipseCX: number = 40;
-        const lowerEllipseCY: number = 30;
-        // We the need "lowerEllipseCX + offsetX" to equal "cx" and
-        // "lowerEllipseCY + offsetY" to equal "cy", so :
-        const offsetX: number = cx - lowerEllipseCX;
-        const offsetY: number = cy - lowerEllipseCY;
+        const pieceCx: number = 40;
+        const pieceCy: number = (50 + 15) / 2;
+        // We the need "pieceCx + offsetX" to equal "cx"
+        // and "pieceCy + offsetY" to equal "cy", so :
+        const offsetX: number = cx - pieceCx;
+        const offsetY: number = cy - pieceCy;
         // Each piece on the Z axis will be higher, here is how much (see the define to confirm)
         const pieceHeight: number = this.SPACE_SIZE * 0.15;
-        console.log({cx, cy, lowerEllipseCX, lowerEllipseCY, offsetX, offsetY})
         return 'translate(' + offsetX + ' ' + (offsetY - (z * pieceHeight)) + ')';
-        ////////////////////////////////////////////////////////////
-        // Width of the piece is 80, hence its center.x is in 40
-        // const cx: number = 40;
-        // Height of the piece is 45, but it's "base" is lower, hence its center.y is in not 22.5 but 30
-        // const cy: number = 30;
-        // const PIECE_WIDTH: number = this.WIDTH_RATIO * this.SPACE_SIZE;
-        // const xTranslate: number = (PIECE_WIDTH / 2) - cx;
-        // return 'translate(' + translateX + ' ' + (translateY - (z * pieceHeight)) + ')';
-        // return 'translate(' + xTranslate + ' ' + (0 - (z * pieceHeight)) + ')';
     }
 }

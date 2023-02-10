@@ -78,7 +78,6 @@ export class PentagoState extends GameStateWithTable<PlayerOrNone> {
                     newBoard[newCoord.y][newCoord.x] = oldValue;
                 }
             } else {
-                console.log({ blockCenter, blockVector })
                 for (const translation of PentagoState.ROTATION_MAP) {
                     const oldCoord: Coord = translation[1].getNext(blockVector);
                     const newCoord: Coord = translation[0].getNext(blockVector);
