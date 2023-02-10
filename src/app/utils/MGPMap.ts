@@ -125,9 +125,6 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         const thisKeySet: MGPSet<K> = this.getKeySet();
         const otherKeySet: MGPSet<K> = other.getKeySet();
         if (thisKeySet.equals(otherKeySet) === false) {
-            console.log('diff keyset')
-            console.log(thisKeySet.toString())
-            console.log(otherKeySet.toString())
             return false;
         }
         for (const key of thisKeySet) {

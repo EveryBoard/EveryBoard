@@ -45,8 +45,8 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         // Put the piece where it is dropped, possibly on top of other pieces
         const pieceStack: HivePieceStack = state.getAt(drop.coord);
         return state.setAt(drop.coord, pieceStack.add(drop.piece))
-                    .removeRemainingPiece(drop.piece)
-                    .increaseTurn();
+            .removeRemainingPiece(drop.piece)
+            .increaseTurn();
     }
 
     private applyLegalMoveCoordToCoord(move: HiveMoveCoordToCoord, state: HiveState): HiveState {
@@ -57,7 +57,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         // A bit tricky, we need to move the end by the offset of the state after removing the piece
         const newEnd: Coord = move.end.getNext(stateWithoutPiece.offset);
         return stateWithoutPiece.setAt(newEnd, destinationPieceStack.add(sourcePieceStack.topPiece()))
-                                .increaseTurn();
+            .increaseTurn();
     }
 
     public isLegal(move: HiveMove, state: HiveState): MGPFallible<void> {
@@ -84,7 +84,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         const movedPiece: HivePiece = stack.topPiece();
-        if (movedPiece.owner == state.getCurrentOpponent()) {
+        if (movedPiece.owner === state.getCurrentOpponent()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
 
@@ -126,8 +126,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         // The queen bee must be placed at the latest at the fourth turn of a player
-        console.log(move.piece.kind)
-        console.log(this.mustPlaceQueenBee(state))
         if (move.piece.kind !== 'QueenBee' && this.mustPlaceQueenBee(state)) {
             return MGPFallible.failure(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }

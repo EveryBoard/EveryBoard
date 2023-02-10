@@ -9,8 +9,8 @@ import { LinesOfActionState } from './LinesOfActionState';
 export class LinesOfActionMove extends MoveCoordToCoord {
     public static encoder: MoveEncoder<LinesOfActionMove> =
         MoveCoordToCoord.getEncoder<LinesOfActionMove>((start: Coord, end: Coord): LinesOfActionMove => {
-                                                           return LinesOfActionMove.of(start, end).get();
-                                                       });
+            return LinesOfActionMove.of(start, end).get();
+        });
 
     public static of(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
         const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);

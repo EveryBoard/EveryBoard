@@ -57,7 +57,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public inspectedStackTransform: string;
 
     constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer)
+        super(messageDisplayer);
         this.rules = HiveRules.get();
         this.availableMinimaxes = [
             new HiveMinimax(this.rules, 'HiveMinimax'),

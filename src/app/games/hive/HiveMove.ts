@@ -40,7 +40,7 @@ export class HiveMoveDrop extends MoveCoord {
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
     public static encoder: Encoder<HiveMoveCoordToCoord> = MoveCoordToCoord.getEncoder((start: Coord, end: Coord) => {
-       return new HiveMoveCoordToCoord(start, end);
+        return new HiveMoveCoordToCoord(start, end);
     });
 
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {

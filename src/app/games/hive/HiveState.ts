@@ -80,7 +80,7 @@ export class HiveRemainingPieces implements ComparableObject {
 
 export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements ComparableObject {
 
-    public readonly queenBees: MGPMap<Player, Coord>
+    public readonly queenBees: MGPMap<Player, Coord>;
 
     public static getInitialState(): HiveState {
         const board: Table<HivePiece[]> = [];
@@ -117,7 +117,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
                        turn: number)
     {
         super(pieces, turn);
-        this.queenBees = queenBees.getCopy()
+        this.queenBees = queenBees.getCopy();
         for (const player of queenBees.listKeys()) {
             // If the offset computed by the parent's constructor is not (0, 0),
             // We will need to adapt the position of the queen bees.
@@ -157,7 +157,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     }
 
     public setAt(coord: Coord, stack: HivePieceStack): HiveState {
-        const queenBees: MGPMap<Player, Coord> = this.queenBees.getCopy()
+        const queenBees: MGPMap<Player, Coord> = this.queenBees.getCopy();
         for (const player of Player.PLAYERS) {
             // If there was a queen bee here, we remove it from the cache
             if (queenBees.get(player).equalsValue(coord)) {

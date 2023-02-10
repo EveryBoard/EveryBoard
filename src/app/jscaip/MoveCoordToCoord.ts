@@ -3,7 +3,7 @@ import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { MGPFallible } from '../utils/MGPFallible';
 import { RulesFailure } from './RulesFailure';
-import { NumberEncoder, MoveEncoder, Encoder } from '../utils/Encoder';
+import { NumberEncoder, MoveEncoder } from '../utils/Encoder';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
 

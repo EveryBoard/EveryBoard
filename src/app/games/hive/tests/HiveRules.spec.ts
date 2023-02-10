@@ -318,7 +318,7 @@ describe('HiveRules', () => {
             // When trying to move the ant on top of another piece
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 0)).get();
 
-                // Then the move should fail
+            // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -337,7 +337,7 @@ describe('HiveRules', () => {
                 new Coord(1, 0),
             ]).get();
 
-                // Then the move should fail
+            // Then the move should fail
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });

@@ -44,8 +44,8 @@ describe('MoveCoordToCoord', () => {
         it('should correctly encode and decode moves', () => {
             EncoderTestUtils.expectToBeCorrect(
                 ConcreteMoveCoordToCoord.getEncoder((start: Coord, end: Coord): ConcreteMoveCoordToCoord => {
-                                                           return new ConcreteMoveCoordToCoord(start, end);
-                                                       }),
+                    return new ConcreteMoveCoordToCoord(start, end);
+                }),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });
@@ -53,11 +53,10 @@ describe('MoveCoordToCoord', () => {
         it('should correctly encode and decode moves', () => {
             NumberEncoderTestUtils.expectToBeCorrect(
                 ConcreteMoveCoordToCoord.getNumberEncoder(10, 10,
-                                                             (start: Coord, end: Coord):
-                                                             ConcreteMoveCoordToCoord =>
-                                                             {
-                                                                 return new ConcreteMoveCoordToCoord(start, end);
-                                                             }),
+                                                          (start: Coord, end: Coord):
+                                                          ConcreteMoveCoordToCoord => {
+                                                              return new ConcreteMoveCoordToCoord(start, end);
+                                                          }),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });

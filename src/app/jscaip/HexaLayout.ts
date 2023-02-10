@@ -27,7 +27,7 @@ export class HexaLayout {
         return corners;
     }
     public getHexaPointsAt(coord: Coord): string {
-        let points: string[] = this.getHexaPointsListAt(coord).map((c: Coord) => c.toSVGPoint());
+        const points: string[] = this.getHexaPointsListAt(coord).map((c: Coord) => c.toSVGPoint());
         return points.join(' ');
     }
     /**
