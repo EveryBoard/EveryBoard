@@ -177,7 +177,7 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
                 return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
             }
             if (HexagonalUtils.areNeighbors(coords[i-1], coords[i]) === false) {
-                return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_OF_3_NEIGHBORS());
+                return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES());
             }
             if (this.haveCommonNeighbor(state, coords[i], coords[i-1]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT());

@@ -1586,11 +1586,8 @@
       <trans-unit id="5523450052915914627" datatype="html">
         <source>The grasshopper must jump over other pieces, without any empty spaces.</source>
       </trans-unit>
-      <trans-unit id="7811294681051596427" datatype="html">
-        <source>The spider must move of exactly three neighboring spaces.</source>
-      </trans-unit>
-      <trans-unit id="2447043516249844277" datatype="html">
-        <source>The spider can move only on empty spaces.</source>
+      <trans-unit id="8771557289052450532" datatype="html">
+        <source>The spider must move on neighboring spaces.</source>
       </trans-unit>
       <trans-unit id="7737073267247289204" datatype="html">
         <source>The spider can only move around pieces that it is in direct contact with.</source>
@@ -1610,11 +1607,11 @@
       <trans-unit id="4146942272384883649" datatype="html">
         <source>This piece must be able to slide to its destination.</source>
       </trans-unit>
-      <trans-unit id="8006974520991847636" datatype="html">
-        <source>You must place your queen bee before at your fourth turn at the latest.</source>
+      <trans-unit id="4339124628235355617" datatype="html">
+        <source>You must place your queen bee at this turn!</source>
       </trans-unit>
-      <trans-unit id="7785757243596643617" datatype="html">
-        <source>You cannot drop a piece next to one of your opponent&apos;s piece.</source>
+      <trans-unit id="7948763683129821975" datatype="html">
+        <source>You cannot drop a piece next to one of your opponent&apos;s stack.</source>
       </trans-unit>
       <trans-unit id="8046013978585107003" datatype="html">
         <source>You must always drop your piece on an empty space.</source>
@@ -1628,8 +1625,8 @@
       <trans-unit id="4039332567259986532" datatype="html">
         <source>Object of the game</source>
       </trans-unit>
-      <trans-unit id="6613198611424130334" datatype="html">
-        <source>The object of the game at Hive is to surround the opponent&apos;s queen. Once the queen is surrounded by 6 pieces, no matter the owner of these pieces, the game ends. The player with a queen that is not surrounded wins. In case both queens are fully surrounded at the same turn, it is a draw. Here, Dark wins.</source>
+      <trans-unit id="6900505086205524561" datatype="html">
+        <source>The object of the game at Hive is to surround the opponent&apos;s queen. Once the queen is surrounded by 6 pieces, no matter the owner of these pieces, the game ends. The player with a queen that is not surrounded wins. In case both queens are fully surrounded at the same turn, it is a draw. Here, Dark won.</source>
       </trans-unit>
       <trans-unit id="1124156761679970164" datatype="html">
         <source>Placing the first and second piece</source>
@@ -1640,8 +1637,8 @@
       <trans-unit id="4766965064757095472" datatype="html">
         <source>Placing pieces after the second turn</source>
       </trans-unit>
-      <trans-unit id="1974554366777095288" datatype="html">
-        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a piece of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark here, drop a piece on the board.</source>
+      <trans-unit id="3609480010492121588" datatype="html">
+        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark here, drop a piece on the board.</source>
       </trans-unit>
       <trans-unit id="2751556568646013753" datatype="html">
         <source>Moving pieces: the queen bee</source>
@@ -1649,38 +1646,38 @@
       <trans-unit id="1812241943392911048" datatype="html">
         <source>Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:&lt;ol&gt;&lt;li&gt;the hive must always remain fully connected, and&lt;/li&gt;&lt;li&gt;pieces that are moved by sliding should be able to physically slide to their destination.&lt;/li&gt;&lt;/ol&gt; The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.&lt;br/&gt;&lt;br/&gt;You are playing Dark, move your queen bee.</source>
       </trans-unit>
-      <trans-unit id="1314278604306059790" datatype="html">
-        <source>Failed, try again!</source>
-      </trans-unit>
       <trans-unit id="8573010608388393091" datatype="html">
         <source>Moving the beetle</source>
       </trans-unit>
-      <trans-unit id="2285299623815453608" datatype="html">
-        <source>The beetle moves like the queen bee, but it is allowed to climb on top of other pieces! Therefore, it need not adhere to the sliding restriction. Note that you are not allowed to drop the beetle on top of another piece in the drop phase, this can only be achieved when moving a beetle already on the board. A piece with a beetle on top is not allowed to move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, block your opponent&apos;s queen by moving on top of it!</source>
+      <trans-unit id="6645197773482117918" datatype="html">
+        <source>The beetle moves like the queen bee, but it is allowed to climb on top of other pieces! Therefore, it need not adhere to the sliding restriction. Note that you are not allowed to drop the beetle on top of another piece in the drop phase, this can only be achieved when moving a beetle already on the board. A piece with a beetle on top is not allowed to move. A stack is considered to be of the player who has the beetle of the top.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, block your opponent&apos;s queen by moving on top of it!</source>
       </trans-unit>
       <trans-unit id="6641485598833513426" datatype="html">
         <source>Inspecting stacks</source>
       </trans-unit>
-      <trans-unit id="2732119892027112554" datatype="html">
-        <source>When pieces are stacked together, you are allowed to inspect the stack to see which pieces are under the beetle. To do so, you can simply click on any stack, including your opponent&apos;s, to see their composition.&lt;br/&gt;&lt;br/&gt;Your opponent has a beetle on top of one of your piece, click on it to inspect it.</source>
+      <trans-unit id="8679169125111911637" datatype="html">
+        <source>When pieces are stacked together, you are allowed to inspect the stack to see which pieces are under the beetle. This works with opponent-controlled stacks too. To do so, you can simply click on any stack to see their composition.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and your opponent has a beetle on top of one of your piece, click on it.</source>
       </trans-unit>
       <trans-unit id="6207423912703337741" datatype="html">
         <source>Moving the grasshopper</source>
       </trans-unit>
-      <trans-unit id="5053619000484438171" datatype="html">
-        <source>The grasshopper jumps over one or more pieces in a straight line, and stops at the first empty space encountered. It cannot jump over empty spaces, and can only move through jumps. Because it jumps, it does not adhere to the sliding restriction.&lt;br/&gt;&lt;br/&gt;Jump over three pieces with your grasshopper!</source>
+      <trans-unit id="6824181934070796921" datatype="html">
+        <source>The grasshopper jumps over one or more pieces in a straight line, and stops at the first empty space encountered. It cannot jump over empty spaces, and can only move through jumps. Because it jumps, it does not adhere to the sliding restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Jump over three pieces with your grasshopper!</source>
       </trans-unit>
       <trans-unit id="5124714891438504376" datatype="html">
         <source>Moving the soldier ant</source>
       </trans-unit>
-      <trans-unit id="2644663260990844906" datatype="html">
-        <source>The soldier ant is a powerful piece: it can move anywhere in the hive as long as it respects the sliding and the one hive restrictions!&lt;br/&gt;&lt;br/&gt;Your queen bee is stuck, move your soldier ant to free up your queen!</source>
+      <trans-unit id="2899217750291886948" datatype="html">
+        <source>The soldier ant is a powerful piece: it can move anywhere in the hive as long as it respects the sliding and the one hive restrictions!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Your queen bee is stuck, move your soldier ant to free up your queen!</source>
+      </trans-unit>
+      <trans-unit id="7623079085925548808" datatype="html">
+        <source>You have not freed your queen, try again!</source>
       </trans-unit>
       <trans-unit id="3777509045596617031" datatype="html">
         <source>Moving the spider</source>
       </trans-unit>
-      <trans-unit id="8715261720341988788" datatype="html">
-        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;Again, your queen bee is stuck but you can free it by moving your spider, do it!</source>
+      <trans-unit id="7345241358894299630" datatype="html">
+        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;Again, as Dark, your queen bee is stuck but you can free it by moving your spider, do it!</source>
       </trans-unit>
       <trans-unit id="3146815812493244221" datatype="html">
         <source>Restrictions</source>

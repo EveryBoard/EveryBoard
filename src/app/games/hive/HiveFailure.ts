@@ -12,7 +12,7 @@ export class HiveFailure {
 
     public static readonly GRASSHOPPER_MUST_JUMP_OVER_PIECES: Localized = () => $localize`The grasshopper must jump over other pieces, without any empty spaces.`;
 
-    public static readonly SPIDER_MUST_MOVE_OF_3_NEIGHBORS: Localized = () => $localize`The spider must move of exactly three neighboring spaces.`;
+    public static readonly SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES: Localized = () => $localize`The spider must move on neighboring spaces.`;
 
     public static readonly SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT: Localized = () => $localize`The spider can only move around pieces that it is in direct contact with.`;
 
@@ -28,7 +28,7 @@ export class HiveFailure {
 
     public static readonly MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN: Localized = () => $localize`You must place your queen bee at this turn!`;
 
-    public static readonly CANNOT_DROP_NEXT_TO_OPPONENT: Localized = () => $localize`You cannot drop a piece next to one of your opponent's piece.`;
+    public static readonly CANNOT_DROP_NEXT_TO_OPPONENT: Localized = () => $localize`You cannot drop a piece next to one of your opponent's stack.`;
 
     public static readonly MUST_DROP_ON_EMPTY_SPACE: Localized = () => $localize`You must always drop your piece on an empty space.`;
 

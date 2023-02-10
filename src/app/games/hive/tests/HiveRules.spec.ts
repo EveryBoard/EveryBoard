@@ -14,7 +14,7 @@ import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
-fdescribe('HiveRules', () => {
+describe('HiveRules', () => {
     let rules: HiveRules;
     let minimaxes: Minimax<HiveMove, HiveState>[];
 
@@ -152,7 +152,7 @@ fdescribe('HiveRules', () => {
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 7);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should force dropping the queen bee by the fourth turn of a player (Player.ZERO)', () => {
+        it('should force dropping the queen bee at turn 6 for Player.ZERO', () => {
             // Given a state in the fourth turn of player zero, without queen bee
             const board: Table<HivePiece[]> = [
                 [[B], [G], [S], [b], [g], [s]],
@@ -166,7 +166,7 @@ fdescribe('HiveRules', () => {
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('should force dropping the queen bee by the fourth turn of a player (Player.ONE)', () => {
+        it('should force dropping the queen bee at turn 7 for Player.ONE', () => {
             // Given a state in the fourth turn of player one, without queen bee
             const board: Table<HivePiece[]> = [
                 [[Q], [B], [G], [S], [b], [g], [s]],
@@ -443,10 +443,10 @@ fdescribe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should support up to the 4 beetles on top of another', () => {
-            // Given a state with 3 beetles on top of each other
+        it('should support up to the 4 beetles on top of another, with another piece underneath', () => {
+            // Given a state with 3 beetles on top of each other, on top of another piece
             const board: Table<HivePiece[]> = [
-                [[B, B, b], [b, q]],
+                [[B, B, b, s], [b, q]],
             ];
             const state: HiveState = HiveState.fromRepresentation(board, 3);
 
@@ -455,7 +455,7 @@ fdescribe('HiveRules', () => {
 
             // Then the move should succeed
             const expectedBoard: Table<HivePiece[]> = [
-                [[b, B, B, b], [q]],
+                [[b, B, B, b, s], [q]],
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 4);
 
@@ -618,7 +618,7 @@ fdescribe('HiveRules', () => {
             ]).get();
 
             // Then the move should fail
-            const reason: string = HiveFailure.SPIDER_MUST_MOVE_OF_3_NEIGHBORS();
+            const reason: string = HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid the spider to move through another piece', () => {

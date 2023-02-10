@@ -302,7 +302,7 @@ describe('HiveComponent', () => {
 
                     // When selecting an invalid landing intermediary space
                     // Then it should fail
-                    const reason: string = HiveFailure.SPIDER_MUST_MOVE_OF_3_NEIGHBORS();
+                    const reason: string = HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES();
                     await testUtils.expectClickFailure('#space_1_0', reason);
                 }));
             });

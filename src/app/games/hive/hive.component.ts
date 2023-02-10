@@ -23,7 +23,7 @@ import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
 
-interface PieceWithCoord {
+interface StackAndCoord {
     stack: HivePieceStack;
     coord: Coord;
 }
@@ -38,7 +38,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public readonly ORIGIN: Coord = new Coord(0, 0);
 
     public remainingPieces: HivePieceStack[] = [];
-    public pieces: PieceWithCoord[] = [];
+    public pieces: StackAndCoord[] = [];
     public neighbors: Coord[] = [];
     public indicators: Coord[] = [];
     public lastMove: Coord[] = [];
@@ -79,9 +79,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             const stack: HivePieceStack = this.getState().getAt(coord);
             this.pieces.push({ coord, stack });
         }
-        this.pieces.sort((piece1: PieceWithCoord, piece2: PieceWithCoord): number => {
-            if (piece1.coord.y === piece2.coord.y) return piece1.coord.x - piece2.coord.x;
-            else return piece1.coord.y - piece2.coord.y;
+        this.pieces.sort((a: StackAndCoord, b: StackAndCoord): number => {
+            if (a.coord.y === b.coord.y) return a.coord.x - b.coord.x;
+            else return a.coord.y - b.coord.y;
         });
         this.neighbors = this.getAllNeighbors();
         this.computeViewBox();
@@ -98,9 +98,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return await this.chooseMove(HiveMove.PASS, this.getState());
     }
 
-
     private computeViewBox(): void {
-        const coords: Coord[] = this.pieces.map((piece: PieceWithCoord) => piece.coord).concat(this.neighbors);
+        const coords: Coord[] = this.pieces.map((stack: StackAndCoord) => stack.coord).concat(this.neighbors);
         coords.push(new Coord(0, 0)); // Need at least one coord for Hive
         this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
         const minimalViewBox: ViewBox = new ViewBox(
