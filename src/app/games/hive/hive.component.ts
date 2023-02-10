@@ -52,7 +52,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     public selected: Coord[] = [];
 
-    private boardViewBox: ViewBox;
+    private boardViewBox: ViewBox; // TODO: privatize
     public viewBox: string;
     public inspectedStackTransform: string;
 
@@ -100,7 +100,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private computeViewBox(): void {
         const coords: Coord[] = this.pieces.map((stack: StackAndCoord) => stack.coord).concat(this.neighbors);
-        coords.push(new Coord(0, 0)); // Need at least one coord for Hive
+        coords.push(new Coord(0, 0)); // Need at least one coord for the first space
         this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
         const minimalViewBox: ViewBox = new ViewBox(
             this.getRemainingPieceTransformAsCoord(new HivePiece(Player.ZERO, 'QueenBee')).x,

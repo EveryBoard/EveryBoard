@@ -66,7 +66,7 @@ export class ViewBox {
         const left: number = Math.min(this.left, viewBox.left);
         const right: number = Math.max(this.right(), viewBox.right());
         const up: number = Math.min(this.up, viewBox.up);
-        const bottom: number = Math.min(this.bottom(), viewBox.bottom());
+        const bottom: number = Math.max(this.bottom(), viewBox.bottom());
         return ViewBox.fromLimits(left, right, up, bottom);
     }
 
