@@ -131,7 +131,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             this.showLastCapture();
             this.showSteppedOnCoord();
         }
-        this.showPossibleMoves();
+        // this.showPossibleMoves();
     }
     private showLastCapture(): void {
         if (this.lastMove.get().isStep === false) {
@@ -175,7 +175,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             x = (LascaState.SIZE - 1) - x;
             y = (LascaState.SIZE - 1) - y;
         }
-        const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y);
+        const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y, true);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
