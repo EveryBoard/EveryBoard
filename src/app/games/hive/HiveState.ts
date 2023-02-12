@@ -119,8 +119,6 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
                        offset?: Vector)
     {
         super(pieces, turn, offset);
-        console.log('new state')
-        console.log(this.offset)
         this.queenBees = queenBees.getCopy();
         for (const player of queenBees.listKeys()) {
             // If the offset computed by the parent's constructor is not (0, 0),

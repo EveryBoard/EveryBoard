@@ -11,8 +11,12 @@ import { HiveState } from './HiveState';
 export class HiveMinimax extends Minimax<HiveMove, HiveState> {
 
     public getListMoves(node: HiveNode): HiveMove[] {
-        return this.getListDrops(node.gameState)
+        const moves: HiveMove[] = this.getListDrops(node.gameState)
             .concat(HiveRules.get().getPossibleMovesOnBoard(node.gameState).toList());
+        if (moves.length === 0) {
+            return [HiveMove.PASS];
+        }
+        return moves;
     }
 
     public getListDrops(state: HiveState): HiveMove[] {

@@ -107,10 +107,20 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             0,
             this.SPACE_SIZE * 4 * 5,
             0);
+
         const spaceForRemainingPieces: number = this.SPACE_SIZE*5;
+        let spaceForZero: number = 0;
+        if (this.getState().remainingPieces.getAny(Player.ZERO).isPresent()) {
+            spaceForZero = spaceForRemainingPieces;
+        }
+        let spaceForOne: number = 0;
+        if (this.getState().remainingPieces.getAny(Player.ONE).isPresent()) {
+            spaceForOne = spaceForRemainingPieces;
+        }
+
         const boardAndRemainingViewBox: ViewBox = this.boardViewBox
             .containingAtLeast(minimalViewBox)
-            .expand(0, 0, spaceForRemainingPieces, spaceForRemainingPieces);
+            .expand(0, 0, spaceForZero, spaceForOne);
         if (this.inspectedStack.isPresent()) {
             const inspectedStackPosition: Coord =
                 new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
