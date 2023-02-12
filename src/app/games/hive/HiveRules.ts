@@ -44,9 +44,8 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     private applyLegalDrop(drop: HiveMoveDrop, state: HiveState): HiveState {
         // Put the piece where it is dropped, possibly on top of other pieces
         const pieceStack: HivePieceStack = state.getAt(drop.coord);
-        return state.setAt(drop.coord, pieceStack.add(drop.piece))
-            .removeRemainingPiece(drop.piece)
-            .increaseTurn();
+        const newStateWithOffset: HiveState = state.setAt(drop.coord, pieceStack.add(drop.piece));
+        return newStateWithOffset.removeRemainingPiece(drop.piece).increaseTurn(newStateWithOffset.offset);
     }
 
     private applyLegalMoveCoordToCoord(move: HiveMoveCoordToCoord, state: HiveState): HiveState {

@@ -52,7 +52,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     public selected: Coord[] = [];
 
-    private boardViewBox: ViewBox; // TODO: privatize
+    private boardViewBox: ViewBox;
     public viewBox: string;
     public inspectedStackTransform: string;
 
@@ -111,13 +111,15 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const boardAndRemainingViewBox: ViewBox = this.boardViewBox
             .containingAtLeast(minimalViewBox)
             .expand(0, 0, spaceForRemainingPieces, spaceForRemainingPieces);
-        const inspectedStackPosition: Coord =
-            new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
-                      boardAndRemainingViewBox.center().y);
-        this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${inspectedStackPosition.y})`;
-
-        const spaceForInspectedStack: number = this.SPACE_SIZE*5;
         if (this.inspectedStack.isPresent()) {
+            const inspectedStackPosition: Coord =
+                new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
+                          boardAndRemainingViewBox.center().y);
+            this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${inspectedStackPosition.y})`;
+
+            const spaceForInspectedStack: number = this.SPACE_SIZE*5;
+            console.log({spaceForInspectedStack})
+            console.log('expanding')
             this.viewBox = boardAndRemainingViewBox.expand(0, spaceForInspectedStack, 0, 0).toSVGString();
         } else {
             this.viewBox = boardAndRemainingViewBox.toSVGString();
@@ -146,6 +148,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (this.rules.node.move.isPresent()) {
             this.showLastMove();
         }
+        this.computeViewBox();
     }
 
     private showLastMove(): void {
@@ -156,7 +159,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.lastMove = [move.coord, move.end];
         }
         // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
+        console.log('showing last move')
         const offset: Vector = this.getState().offset;
+        console.log(offset)
         this.lastMove = this.lastMove.map((coord: Coord) => coord.getNext(offset));
     }
 
@@ -277,10 +282,15 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (piece.owner !== state.getCurrentPlayer()) {
             if (stack.size() === 1) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            } else if (this.inspectedStack.isPresent()) {
+                this.inspectedStack = MGPOptional.empty();
+                this.cancelMoveAttempt();
+                this.computeViewBox();
             } else {
                 // We will only inspect the opponent stack, not do a move
                 this.selected.push(coord);
                 this.inspectedStack = MGPOptional.of(stack);
+                this.computeViewBox();
                 return MGPValidation.SUCCESS;
             }
         }

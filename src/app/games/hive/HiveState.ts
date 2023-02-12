@@ -1,4 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { Vector } from 'src/app/jscaip/Direction';
 import { FreeHexagonalGameState } from 'src/app/jscaip/FreeHexagonalGameState';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
@@ -114,9 +115,12 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     public constructor(pieces: ReversibleMap<Coord, HivePieceStack>,
                        public readonly remainingPieces: HiveRemainingPieces,
                        queenBees: MGPMap<Player, Coord>,
-                       turn: number)
+                       turn: number,
+                       offset?: Vector)
     {
-        super(pieces, turn);
+        super(pieces, turn, offset);
+        console.log('new state')
+        console.log(this.offset)
         this.queenBees = queenBees.getCopy();
         for (const player of queenBees.listKeys()) {
             // If the offset computed by the parent's constructor is not (0, 0),
@@ -136,8 +140,8 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
                this.turn === other.turn;
     }
 
-    public increaseTurn(): HiveState {
-        return new HiveState(this.pieces, this.remainingPieces, this.queenBees, this.turn + 1);
+    public increaseTurn(offset?: Vector): HiveState {
+        return new HiveState(this.pieces, this.remainingPieces, this.queenBees, this.turn + 1, offset);
     }
 
     public getAt(coord: Coord): HivePieceStack {

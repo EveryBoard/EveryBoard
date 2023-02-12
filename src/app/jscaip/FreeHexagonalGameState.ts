@@ -18,11 +18,9 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
 
     public readonly height: number;
 
-    public readonly offset: Vector;
+    public offset: Vector;
 
-    public constructor(public pieces: ReversibleMap<Coord, T>,
-                       turn: number,
-                       offset?: Vector)
+    public constructor(public pieces: ReversibleMap<Coord, T>, turn: number, offset?: Vector)
     {
         super(turn);
         const scale: Scale<T> = this.computeScale();
