@@ -208,7 +208,9 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
     }
 
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
-        const stateWithoutSpider: HiveState = state.setAt(coord, HivePieceStack.EMPTY);
+        const stateWithoutSpider: HiveState = state.update()
+            .setAt(coord, HivePieceStack.EMPTY)
+            .increaseTurnAndFinalizeUpdate();
 
         let moves: Coord[][] = [[coord]];
         for (let i: number = 0; i < 3; i++) {

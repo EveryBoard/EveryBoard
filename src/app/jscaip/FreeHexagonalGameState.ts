@@ -72,16 +72,6 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
         return this.pieces.containsKey(coord);
     }
 
-    public setPieceAt(coord: Coord, piece: T): ReversibleMap<Coord, T> {
-        const pieces: ReversibleMap<Coord, T> = this.pieces.getCopy();
-        if (this.isEmpty(piece)) {
-            pieces.delete(coord);
-        } else {
-            pieces.put(coord, piece);
-        }
-        return pieces;
-    }
-
     public getOccupiedNeighbors(coord: Coord): MGPSet<Coord> {
         const neighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(coord));
         return neighbors.filter((neighbor: Coord) => {

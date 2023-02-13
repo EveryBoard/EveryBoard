@@ -6,6 +6,7 @@ import { Vector } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
+import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -42,6 +43,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public neighbors: Coord[] = [];
     public indicators: Coord[] = [];
     public lastMove: Coord[] = [];
+    public victory: Coord[] = [];
 
     public inspectedStack: MGPOptional<HivePieceStack> = MGPOptional.empty();
     public selectedRemaining: MGPOptional<HivePiece> = MGPOptional.empty();
@@ -84,10 +86,28 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             else return a.coord.y - b.coord.y;
         });
         this.neighbors = this.getAllNeighbors();
+        this.inspectedStack = MGPOptional.empty(); // TODOTODO: shouldn't cancelMoveAttempt be called before updateBoard?
         this.computeViewBox();
         this.remainingPieces = this.getState().remainingPieces.toListOfStacks();
         this.canPass = HiveRules.get().shouldPass(this.getState());
         this.hideLastMove();
+        const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.rules.node);
+        switch (gameStatus) {
+            case GameStatus.ONGOING:
+                this.victory = [];
+                break;
+            case GameStatus.DRAW:
+                this.victory = [
+                    this.getState().queenBeeLocation(Player.ZERO).get(),
+                    this.getState().queenBeeLocation(Player.ONE).get(),
+                ];
+                break;
+            default:
+                // Zero or one won
+                const winner: Player = gameStatus.winner as Player;
+                const loser: Player = winner.getOpponent();
+                this.victory = [this.getState().queenBeeLocation(loser).get()];
+        }
         if (this.rules.node.move.isPresent()) {
             this.showLastMove();
         }
@@ -128,8 +148,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${inspectedStackPosition.y})`;
 
             const spaceForInspectedStack: number = this.SPACE_SIZE*5;
-            console.log({spaceForInspectedStack})
-            console.log('expanding')
             this.viewBox = boardAndRemainingViewBox.expand(0, spaceForInspectedStack, 0, 0).toSVGString();
         } else {
             this.viewBox = boardAndRemainingViewBox.toSVGString();
@@ -169,9 +187,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.lastMove = [move.coord, move.end];
         }
         // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
-        console.log('showing last move')
         const offset: Vector = this.getState().offset;
-        console.log(offset)
         this.lastMove = this.lastMove.map((coord: Coord) => coord.getNext(offset));
     }
 

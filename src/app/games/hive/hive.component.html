@@ -54,6 +54,14 @@
                  [attr.points]="getHexaCoordsAt(coord)"
                  class="base no-fill mid-stroke last-move-stroke" />
     </g>
+    <g *ngFor="let coord of victory">
+        <polygon *ngIf="highlightGround(coord) === false"
+                 id="victory_{{ coord.x }}_{{ coord.y }}"
+                 [attr.transform]="getHighlightTransform(coord)"
+                 [attr.points]="getHexaCoordsAt(coord)"
+                 class="base no-fill mid-stroke victory-stroke" />
+    </g>
+
 
     <g *ngFor="let stack of remainingPieces">
         <g *ngIf="stack.isEmpty() === false"

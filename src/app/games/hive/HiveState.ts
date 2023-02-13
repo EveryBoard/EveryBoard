@@ -79,9 +79,54 @@ export class HiveRemainingPieces implements ComparableObject {
     }
 }
 
-export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements ComparableObject {
 
-    public readonly queenBees: MGPMap<Player, Coord>;
+/* Like HiveState, but does not recompute the offset between changes.
+ * Can only be used while making temporary changes to the state.
+ * Has to be converted to a regular HiveState after all changes have been made.
+ */
+class HiveStateUpdate {
+    public static of(state: HiveState): HiveStateUpdate {
+        return new HiveStateUpdate(state.pieces, state.remainingPieces, state.queenBees, state.turn);
+    }
+
+    private constructor(public readonly pieces: ReversibleMap<Coord, HivePieceStack>,
+                        public readonly remainingPieces: HiveRemainingPieces,
+                        public readonly queenBees: MGPMap<Player, Coord>,
+                        public readonly turn: number) {}
+
+    public setAt(coord: Coord, stack: HivePieceStack): HiveStateUpdate {
+        const queenBees: MGPMap<Player, Coord> = this.queenBees.getCopy();
+        for (const player of Player.PLAYERS) {
+            // If there was a queen bee here, we remove it from the cache
+            if (queenBees.get(player).equalsValue(coord)) {
+                queenBees.delete(player);
+            }
+        }
+        for (const piece of stack.pieces) {
+            // Add any queen added here to the cache
+            if (piece.kind === 'QueenBee') {
+                queenBees.put(piece.owner, coord);
+            }
+        }
+        const pieces: ReversibleMap<Coord, HivePieceStack> = this.pieces.getCopy();
+        if (stack.isEmpty()) {
+            pieces.delete(coord);
+        } else {
+            pieces.put(coord, stack);
+        }
+        return new HiveStateUpdate(pieces, this.remainingPieces, queenBees, this.turn);
+    }
+
+    public removeRemainingPiece(piece: HivePiece): HiveStateUpdate {
+        return new HiveStateUpdate(this.pieces, this.remainingPieces.remove(piece), this.queenBees, this.turn);
+    }
+
+    public increaseTurnAndFinalizeUpdate(): HiveState {
+        return new HiveState(this.pieces, this.remainingPieces, this.queenBees, this.turn + 1);
+    }
+}
+
+export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements ComparableObject {
 
     public static getInitialState(): HiveState {
         const board: Table<HivePiece[]> = [];
@@ -114,7 +159,7 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
 
     public constructor(pieces: ReversibleMap<Coord, HivePieceStack>,
                        public readonly remainingPieces: HiveRemainingPieces,
-                       queenBees: MGPMap<Player, Coord>,
+                       public readonly queenBees: MGPMap<Player, Coord>,
                        turn: number,
                        offset?: Vector)
     {
@@ -131,15 +176,15 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         this.queenBees.makeImmutable();
     }
 
+    public update(): HiveStateUpdate {
+        return HiveStateUpdate.of(this);
+    }
+
     public equals(other: HiveState): boolean {
         return this.pieces.equals(other.pieces) &&
                this.remainingPieces.equals(other.remainingPieces) &&
                this.queenBees.equals(other.queenBees) &&
                this.turn === other.turn;
-    }
-
-    public increaseTurn(offset?: Vector): HiveState {
-        return new HiveState(this.pieces, this.remainingPieces, this.queenBees, this.turn + 1, offset);
     }
 
     public getAt(coord: Coord): HivePieceStack {
@@ -152,27 +197,6 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
 
     public isEmpty(stack: HivePieceStack): boolean {
         return stack.isEmpty();
-    }
-
-    public removeRemainingPiece(piece: HivePiece): HiveState {
-        return new HiveState(this.pieces, this.remainingPieces.remove(piece), this.queenBees, this.turn);
-    }
-
-    public setAt(coord: Coord, stack: HivePieceStack): HiveState {
-        const queenBees: MGPMap<Player, Coord> = this.queenBees.getCopy();
-        for (const player of Player.PLAYERS) {
-            // If there was a queen bee here, we remove it from the cache
-            if (queenBees.get(player).equalsValue(coord)) {
-                queenBees.delete(player);
-            }
-        }
-        for (const piece of stack.pieces) {
-            // Add any queen added here to the cache
-            if (piece.kind === 'QueenBee') {
-                queenBees.put(piece.owner, coord);
-            }
-        }
-        return new HiveState(super.setPieceAt(coord, stack), this.remainingPieces, queenBees, this.turn);
     }
 
     public queenBeeLocation(player: Player): MGPOptional<Coord> {
