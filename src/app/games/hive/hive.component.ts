@@ -40,7 +40,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     public remainingPieces: HivePieceStack[] = [];
     public pieces: StackAndCoord[] = [];
-    public neighbors: Coord[] = [];
+    public spaces: Coord[] = [];
     public indicators: Coord[] = [];
     public lastMove: Coord[] = [];
     public victory: Coord[] = [];
@@ -85,7 +85,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             if (a.coord.y === b.coord.y) return a.coord.x - b.coord.x;
             else return a.coord.y - b.coord.y;
         });
-        this.neighbors = this.getAllNeighbors();
+        this.spaces = this.getAllNeighbors();
         this.inspectedStack = MGPOptional.empty(); // TODOTODO: shouldn't cancelMoveAttempt be called before updateBoard?
         this.computeViewBox();
         this.remainingPieces = this.getState().remainingPieces.toListOfStacks();
@@ -119,7 +119,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private computeViewBox(): void {
-        const coords: Coord[] = this.pieces.map((stack: StackAndCoord) => stack.coord).concat(this.neighbors);
+        const coords: Coord[] = this.pieces.map((stack: StackAndCoord) => stack.coord).concat(this.spaces);
         coords.push(new Coord(0, 0)); // Need at least one coord for the first space
         this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
         const minimalViewBox: ViewBox = new ViewBox(
@@ -189,6 +189,13 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
         const offset: Vector = this.getState().offset;
         this.lastMove = this.lastMove.map((coord: Coord) => coord.getNext(offset));
+    }
+
+    public getSpaceClasses(space: Coord): string[] {
+        if (this.lastMove.some((c: Coord) => c.equals(space))) {
+            return ['moved-fill'];
+        }
+        return [];
     }
 
     public hideLastMove(): void {

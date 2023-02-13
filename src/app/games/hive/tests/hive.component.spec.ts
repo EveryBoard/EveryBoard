@@ -322,7 +322,7 @@ describe('HiveComponent', () => {
                 // Then the last move should be shown
                 testUtils.expectElementToExist('#moved_0_1');
                 testUtils.expectElementToExist('#moved_1_1');
-                testUtils.expectElementToHaveClass('#space_0_0', 'last-move');
+                testUtils.expectElementToHaveClass('#space_0_1', 'moved-fill');
             }));
         });
     });
