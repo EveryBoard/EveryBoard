@@ -335,7 +335,7 @@ describe('HiveRules', () => {
                 new Coord(0, 1),
                 new Coord(1, 1),
                 new Coord(1, 0),
-            ]).get();
+            ]);
 
             // Then the move should fail
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
@@ -590,7 +590,7 @@ describe('HiveRules', () => {
                 new Coord(2, -1),
                 new Coord(3, -1),
                 new Coord(3, 0),
-            ]).get();
+            ]);
 
             // Then the move should succeed
             const expectedBoard: Table<HivePiece[]> = [
@@ -615,7 +615,7 @@ describe('HiveRules', () => {
                 new Coord(3, -1),
                 new Coord(2, -1),
                 new Coord(3, 0),
-            ]).get();
+            ]);
 
             // Then the move should fail
             const reason: string = HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES();
@@ -635,7 +635,7 @@ describe('HiveRules', () => {
                 new Coord(2, -1),
                 new Coord(2, 0),
                 new Coord(3, 0),
-            ]).get();
+            ]);
 
             // Then the move should fail
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
@@ -655,7 +655,7 @@ describe('HiveRules', () => {
                 new Coord(2, -1),
                 new Coord(3, -1),
                 new Coord(2, -1),
-            ]).get();
+            ]);
 
             // Then the move should fail
             const reason: string = HiveFailure.SPIDER_CANNOT_BACKTRACK();
@@ -676,7 +676,7 @@ describe('HiveRules', () => {
                 new Coord(2, 0),
                 new Coord(2, 1),
                 new Coord(1, 1),
-            ]).get();
+            ]);
 
             // Then the move should fail
             const reason: string = HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT();
@@ -835,7 +835,7 @@ describe('HiveRules', () => {
                 new Coord(1, 1),
                 new Coord(2, 0),
                 new Coord(3, 0),
-            ]).get();
+            ]);
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();

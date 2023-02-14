@@ -66,8 +66,6 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
         };
     }
 
-    public abstract isEmpty(content: T): boolean
-
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }

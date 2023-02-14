@@ -233,7 +233,7 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
                 return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
             });
         }
-        return moves.map((move: Coord[]) => HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]).get());
+        return moves.map((move: Coord[]) => HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]));
     }
 }
 

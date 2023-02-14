@@ -213,7 +213,7 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickSuccess('#piece_0_0');
 
                 // When clicking on the selected piece again
-                // The nit should cancel the move without error
+                // Then it should cancel the move without error
                 await testUtils.expectClickFailure('#piece_0_0');
             }));
         });
@@ -268,7 +268,7 @@ describe('HiveComponent', () => {
                         new Coord(1, 2),
                         new Coord(2, 1),
                         new Coord(2, 0),
-                    ]).get();
+                    ]);
                     await testUtils.expectMoveSuccess('#space_2_0', move);
                 }));
                 it('should show valid intermediary spaces and the selected path', fakeAsync(async() => {
@@ -340,6 +340,18 @@ describe('HiveComponent', () => {
             // Then the stack should be displayed next to the board
             testUtils.expectElementToExist('#inspectedStack');
         }));
+        it('should hide the stack when clicking a second time on it', fakeAsync(async() => {
+            // Given a state with a stack of pieces displayed
+            const state: HiveState = HiveState.fromRepresentation([
+                [[B, b, Q], [q]],
+            ], 2);
+            testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#piece_0_0');
+
+            // When clicking on the stack a second time
+            // Then it should cancel the move
+            await testUtils.expectClickFailure('#piece_0_0');
+        }));
         it('should allow clicking on a stack with a beetle to inspect it, even if controlled by the opponent', fakeAsync(async() => {
             // Given a state with a stack of pieces with a beetle of the player on top
             const state: HiveState = HiveState.fromRepresentation([
@@ -388,5 +400,53 @@ describe('HiveComponent', () => {
         // Then the player can pass
         const move: HiveMove = HiveMove.PASS;
         await testUtils.expectPassSuccess(move);
+    }));
+    it('should display victorious coord', fakeAsync(async() => {
+        // Given a victorious state
+        const state: HiveState = HiveState.fromRepresentation([
+            [[], [b], [b]],
+            [[B], [q], [Q]],
+            [[s], [A], []],
+        ], 4);
+
+        // When it is displayed
+        testUtils.setupState(state);
+
+        // Then the victory should be shown
+        testUtils.expectElementToHaveClass('#victory_1_1', 'victory-stroke');
+    }));
+    it('should display draw coords', fakeAsync(async() => {
+        // Given a draw state
+
+        const state: HiveState = HiveState.fromRepresentation([
+            [[], [b], [b], [a]],
+            [[B], [q], [Q], [B]],
+            [[s], [A], [S], []],
+        ], 4);
+
+        // When it is displayed
+        testUtils.setupState(state);
+
+        // Then the draw should be shown (as multiple victory strokes)
+        testUtils.expectElementToHaveClass('#victory_1_1', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory_2_1', 'victory-stroke');
+    }));
+    it('should show the last move cancelling a move', fakeAsync(async() => {
+        // Given a state with a last move displayed
+        const previousState: HiveState = HiveState.fromRepresentation([
+            [[Q]],
+        ], 1);
+        const previousMove: HiveMove = HiveMove.drop(q, new Coord(1, 0));
+        const state: HiveState = HiveState.fromRepresentation([
+            [[Q], [q]],
+        ], 2);
+        testUtils.setupState(state, previousState, previousMove);
+
+        // When starting and then cancelling a move
+        await testUtils.expectClickSuccess('#piece_0_0');
+        await testUtils.expectClickFailure('#piece_0_0');
+
+        // Then the last move should still be displayed
+        testUtils.expectElementToExist('#moved_1_0');
     }));
 });

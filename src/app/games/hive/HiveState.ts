@@ -195,10 +195,6 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
         }
     }
 
-    public isEmpty(stack: HivePieceStack): boolean {
-        return stack.isEmpty();
-    }
-
     public queenBeeLocation(player: Player): MGPOptional<Coord> {
         return this.queenBees.get(player);
     }

@@ -1,5 +1,8 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
@@ -9,7 +12,15 @@ describe('HiveMove', () => {
     const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 0)).get();
     const spiderMove: HiveMove = HiveMove.spiderMove([
         new Coord(0, 0), new Coord(1, 0), new Coord(2, 0), new Coord(3, 0),
-    ]).get();
+    ]);
+    it('should fail to create static moves', () => {
+        // When creating a static move
+        const move: MGPFallible<HiveMove> = HiveMove.move(new Coord(0, 0), new Coord(0, 0));
+        // Then it should fail
+        expect(move.isSuccess()).toBeFalse();
+        const reason: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
+        expect(move.getReason()).toBe(reason);
+    });
     it('should redefine toString', () => {
         expect(drop.toString()).toEqual('HiveDrop(QueenBee_PLAYER_ZERO, (0, 0))');
         expect(move.toString()).toEqual('HiveMoveCoordToCoord((0, 0) -> (1, 0))');

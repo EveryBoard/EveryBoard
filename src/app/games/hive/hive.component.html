@@ -4,7 +4,7 @@
      preserveAspectRatio="xMidYMid meet">
     <polygon *ngFor="let space of spaces"
              id="space_{{ space.x }}_{{ space.y }}"
-             [attr.points]="getHexaCoordsAt(spaces)"
+             [attr.points]="getHexaCoordsAt(space)"
              class="base mid-stroke"
              [ngClass]="getSpaceClasses(space)"
              (click)="selectNeighbor(space)"/>

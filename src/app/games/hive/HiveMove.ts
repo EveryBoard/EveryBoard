@@ -34,7 +34,6 @@ export class HiveMoveDrop extends MoveCoord {
         }
         return false;
     }
-
 }
 
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
@@ -78,8 +77,8 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
         (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
     );
 
-    public static fromCoords(coords: [Coord, Coord, Coord, Coord]): MGPFallible<HiveMoveSpider> {
-        return MGPFallible.success(new HiveMoveSpider(coords));
+    public static fromCoords(coords: [Coord, Coord, Coord, Coord]): HiveMoveSpider {
+        return new HiveMoveSpider(coords);
     }
 
     private constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
@@ -125,7 +124,7 @@ export namespace HiveMove {
         return HiveMoveCoordToCoord.from(start, end);
     }
 
-    export function spiderMove(coords: [Coord, Coord, Coord, Coord]): MGPFallible<HiveMove> {
+    export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
         return HiveMoveSpider.fromCoords(coords);
     }
 

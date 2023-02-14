@@ -118,7 +118,7 @@ export class HiveTutorial extends Tutorial {
                 [[], [Q], [b]],
                 [[a], [s], []],
             ], 6),
-            HiveMove.spiderMove([new Coord(1, 0), new Coord(2, -1), new Coord(3, -1), new Coord(3, 0)]).get(),
+            HiveMove.spiderMove([new Coord(1, 0), new Coord(2, -1), new Coord(3, -1), new Coord(3, 0)]),
             $localize`Congratulations!`),
         TutorialStep.informational(
             $localize`Restrictions`,

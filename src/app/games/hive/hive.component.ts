@@ -10,6 +10,7 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -251,6 +252,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
 
         if (this.selectedRemaining.equalsValue(piece)) {
+            console.log('cancelling')
             this.cancelMoveAttempt();
         } else {
             this.cancelMoveAttempt();
@@ -284,6 +286,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (this.selectedStart.isPresent()) {
             const topPiece: HivePiece = state.getAt(this.selectedStart.get()).topPiece();
             if (this.selectedStart.equalsValue(coord)) {
+                // Deselect the piece rather than trying a static move
                 return this.cancelMove();
             } else {
                 return this.selectTarget(coord, topPiece);
@@ -301,11 +304,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             return this.selectNextSpiderSpace(coord);
         } else {
             const move: MGPFallible<HiveMove> = HiveMove.move(this.selectedStart.get(), coord);
-            if (move.isFailure()) {
-                return this.cancelMove(move.getReason());
-            } else {
-                return this.chooseMove(move.get(), this.getState());
-            }
+            // static moves are prevented in selectSpace
+            assert(move.isSuccess(), 'Hive: the only forbidden moves are static moves');
+            return this.chooseMove(move.get(), this.getState());
         }
     }
 
@@ -315,10 +316,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (piece.owner !== state.getCurrentPlayer()) {
             if (stack.size() === 1) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
-            } else if (this.inspectedStack.isPresent()) {
-                this.inspectedStack = MGPOptional.empty();
-                this.cancelMoveAttempt();
-                this.computeViewBox();
             } else {
                 // We will only inspect the opponent stack, not do a move
                 this.selected.push(coord);
@@ -337,6 +334,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         if (stack.size() > 1) {
             this.inspectedStack = MGPOptional.of(stack);
+            this.computeViewBox();
         }
         this.indicators = this.getNextPossibleCoords(coord);
         return MGPValidation.SUCCESS;
@@ -374,7 +372,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.selectedSpiderCoords.push(coord);
         this.selected.push(coord);
         if (this.selectedSpiderCoords.length === 4) {
-            const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]).get();
+            const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
             return this.chooseMove(move, this.getState());
         }
         const validity: MGPFallible<void> =
