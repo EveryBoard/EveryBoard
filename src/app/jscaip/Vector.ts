@@ -19,17 +19,16 @@ export class Vector implements ComparableObject {
         const absX: number = Math.abs(this.x);
         const absY: number = Math.abs(this.y);
         const maxAbs: number = Math.max(absX, absY);
-        let vx: number = this.x;
-        let vy: number = this.y;
+        let greatestCommonDivider: number = 1;
         let divider: number = 2;
         while (divider <= maxAbs) {
-            if (vx % divider === 0 && vy % divider === 0) {
-                vx /= divider;
-                vy /= divider;
+            if (this.x % divider === 0 && this.y % divider === 0) {
+                greatestCommonDivider = divider;
             } else {
                 divider++;
             }
         }
-        return new Vector(vx, vy);
+        return new Vector(this.x / greatestCommonDivider,
+                          this.y / greatestCommonDivider);
     }
 }

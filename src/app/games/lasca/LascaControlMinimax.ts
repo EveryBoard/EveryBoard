@@ -35,11 +35,11 @@ export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
         const state: LascaState = node.gameState;
         const pieceUnderZeroControl: number = this.getNumberOfMobileCoords(state, Player.ZERO);
         const pieceUnderOneControl: number = this.getNumberOfMobileCoords(state, Player.ONE);
-        return new BoardValue(pieceUnderOneControl - pieceUnderZeroControl);
+        return BoardValue.from(pieceUnderZeroControl, pieceUnderOneControl);
     }
     public getNumberOfMobileCoords(state: LascaState, player: Player): number {
         const potentialMoves: LascaMove[] = this.getCapturesAndSteps(state, player);
-        const firstCoords: Coord[] = potentialMoves.map((move: LascaMove) => move.getCoord(0).get());
+        const firstCoords: Coord[] = potentialMoves.map((move: LascaMove) => move.getStartingCoord());
         const uniqueFirstCoords: MGPSet<Coord> = new MGPSet(firstCoords);
         return uniqueFirstCoords.size();
     }

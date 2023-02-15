@@ -20,8 +20,7 @@ export class YinshMinimax
         if (gameStatus.isEndGame) {
             return BoardValue.fromWinner(gameStatus.winner);
         } else {
-            return new BoardValue(node.gameState.sideRings[0] * Player.ZERO.getScoreModifier() +
-                node.gameState.sideRings[1] * Player.ONE.getScoreModifier());
+            return BoardValue.from(node.gameState.sideRings[0], node.gameState.sideRings[1]);
         }
     }
     public getListMoves(node: YinshNode): YinshMove[] {

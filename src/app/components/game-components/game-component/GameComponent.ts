@@ -59,7 +59,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
                         state: S,
                         scores?: readonly [number, number]) => Promise<MGPValidation>;
 
-    public canUserPlay: (element: string, isClick?: boolean) => MGPValidation;
+    public canUserPlay: (element: string) => MGPValidation;
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 

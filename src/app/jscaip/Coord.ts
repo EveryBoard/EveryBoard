@@ -144,8 +144,7 @@ export class Coord implements ComparableObject {
     }
     public getMinimalVectorToward(c: Coord): Vector {
         const undividedVector: Vector = this.getVectorToward(c);
-        const dividedVector: Vector = undividedVector.toMinimalVector()
-        return dividedVector;
+        return undividedVector.toMinimalVector();
     }
     public getCoordsToward(c: Coord): Coord[] {
         if (c.equals(this)) return [];
@@ -158,11 +157,6 @@ export class Coord implements ComparableObject {
             coord = coord.getNext(dir, 1);
         }
         return coords;
-    }
-    public isBetween(a: Coord, b: Coord): boolean {
-        const aToThis: Vector = a.getMinimalVectorToward(this);
-        const thisToB: Vector = this.getMinimalVectorToward(b);
-        return aToThis.equals(thisToB);
     }
     public getUntil(end: Coord): Coord[] {
         const coords: Coord[] = [];

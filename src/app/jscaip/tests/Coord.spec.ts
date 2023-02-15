@@ -15,14 +15,6 @@ describe('Coord', () => {
         const bigCoord: Coord = new Coord(2, 2);
         expect(smallCoord.compareTo(bigCoord)).toBe(-1);
     });
-    it('should know whether A is between B and C', () => {
-        const upLeft: Coord = new Coord(1, 1);
-        const middle: Coord = new Coord(3, 3);
-        const downRight: Coord = new Coord(9, 9);
-        // TODOTODO: à noter que je suis en train de débugger cette fonction utilisée nulle part :D
-        // Qu'est ce qu'on fait de ce genre de fonction inutilisées, 100% en mode "pas utilisé: on kill" ouuu ?
-        expect(middle.isBetween(upLeft, downRight)).toBeTrue();
-    });
     it('should override equals correctly', () => {
         const coord: Coord = new Coord(0, 0);
         const horizontalNeighbors: Coord = new Coord(1, 0);

@@ -10,6 +10,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { JSONObject, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { LascaFailure } from './LascaFailure';
 import { LascaState } from './LascaState';
+import { MGPOrderedSet } from 'src/app/utils/MGPOrderedSet';
 
 export class LascaMove extends Move {
 
@@ -76,11 +77,11 @@ export class LascaMove extends Move {
             return new LascaMove(coords, casted.isStep as boolean);
         }
     };
-    public readonly coords: MGPSet<Coord>;
+    public readonly coords: MGPOrderedSet<Coord>;
 
     private constructor(coords: Coord[], public readonly isStep: boolean) {
         super();
-        this.coords = new MGPSet(coords);
+        this.coords = new MGPOrderedSet(coords);
     }
     public toString(): string {
         const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
@@ -103,14 +104,8 @@ export class LascaMove extends Move {
     public isPrefix(other: LascaMove): boolean {
         return this.getRelation(other) === 'PREFIX';
     }
-    public getCoord(index: number): MGPFallible<Coord> {
-        if (index < 0 || index >= this.coords.size()) {
-            return MGPFallible.failure('invalid index');
-        }
-        return MGPFallible.success(this.coords.toList()[index]);
-    }
     public getStartingCoord(): Coord {
-        return this.getCoord(0).get();
+        return this.coords.get(0);
     }
     public getEndingCoord(): Coord {
         const list: Coord[] = this.coords.toList();
@@ -124,8 +119,10 @@ export class LascaMove extends Move {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
         const startOfSecondMove: Coord = move.coords.toList()[0];
         assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
-        const firstPart: Coord[] = ArrayUtils.copyImmutableArray(this.coords.toList());
-        const secondPart: Coord[] = ArrayUtils.copyImmutableArray(move.coords.toList()).slice(1);
+        const thisCoordList: Coord[] = this.coords.toList();
+        const firstPart: Coord[] = ArrayUtils.copyImmutableArray(thisCoordList);
+        const otherCoordList: Coord[] = move.coords.toList();
+        const secondPart: Coord[] = ArrayUtils.copyImmutableArray(otherCoordList).slice(1);
         return LascaMove.fromCapture(firstPart.concat(secondPart)).get();
     }
 }

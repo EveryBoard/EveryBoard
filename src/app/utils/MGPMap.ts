@@ -34,7 +34,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
             callback(this.getByIndex(i));
         }
     }
-    public getByIndex(index: number): {key: K, value: V} {
+    public getByIndex(index: number): {key: K, value: V} { // TODOTODO: ça, c'est acceptable ?
         return this.map[index];
     }
     public putAll(m: MGPMap<K, V>): void {
@@ -140,6 +140,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
 }
 
 export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
+
     public reverse(): ReversibleMap<V, MGPSet<K>> {
         const reversedMap: ReversibleMap<V, MGPSet<K>> = new ReversibleMap<V, MGPSet<K>>();
         for (const key of this.listKeys()) {

@@ -132,7 +132,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         if (movedStack.isCommandedBy(opponent)) {
             return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
-        const secondCoord: Coord = move.getCoord(1).get();
+        const secondCoord: Coord = move.coords.get(1);
         if (movedStack.getCommander().isOfficer === false) {
             const moveDirection: number = moveStart.getDirectionToward(secondCoord).get().y;
             if (moveDirection === opponent.getScoreModifier()) {

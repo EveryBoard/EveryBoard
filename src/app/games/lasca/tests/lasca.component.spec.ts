@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LascaComponent } from '../lasca.component';
@@ -253,6 +253,19 @@ describe('LascaComponent', () => {
 
             // Then it should fail
             await testUtils.expectMoveFailure('#coord_0_4', RulesFailure.CANNOT_SELF_CAPTURE(), move);
+        }));
+    });
+    describe('experience as second player (reversed board)', () => {
+        it('should show lastMove reversed', fakeAsync(async() => {
+            // Given a board on which it's player.one's turn
+            await testUtils.expectClickSuccess('#coord_4_4');
+            const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
+            await testUtils.expectMoveSuccess('#coord_3_3', move);
+            testUtils.wrapper.setRole(PlayerOrNone.ONE);
+
+            // When clicking on one of your piece
+            // Then the board should be reversed
+            await testUtils.expectClickSuccessWithAsymetricNaming('#coord_4_4', '#coord_2_2');
         }));
     });
     describe('multiple capture', () => {

@@ -96,3 +96,4 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return this.values.values();
     }
 }
+

@@ -98,8 +98,8 @@ export abstract class GameWrapper<P extends Comparable> {
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.canUserPlay =
             // So that when the game component click
-            (elementName: string, isClick: boolean = false): MGPValidation => {
-                return this.onUserClick(elementName, isClick);
+            (elementName: string): MGPValidation => {
+                return this.onUserClick(elementName);
             };
         // the game wrapper can act accordly
         this.gameComponent.isPlayerTurn = (): boolean => {
@@ -147,13 +147,13 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public onUserClick(_elementName: string, isClick: boolean = false): MGPValidation {
+    public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
         }
-        if (this.isPlayerTurn(isClick)) {
+        if (this.isPlayerTurn()) {
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
@@ -162,7 +162,7 @@ export abstract class GameWrapper<P extends Comparable> {
     public onCancelMove(_reason?: string): void {
         // Not needed by default
     }
-    public isPlayerTurn(isClick: boolean = false): boolean {
+    public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
             return false;
         }
@@ -173,7 +173,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const turn: number = this.gameComponent.getTurn();
         const indexPlayer: number = turn % 2;
         const player: P = this.getPlayer();
-        display(GameWrapper.VERBOSE || isClick, { isPlayerTurn: { // TODO: delete isClick
+        display(GameWrapper.VERBOSE, { isPlayerTurn: {
             turn,
             players: this.players,
             player,
@@ -183,18 +183,8 @@ export abstract class GameWrapper<P extends Comparable> {
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer].isPresent()) {
-            if (isClick) {
-                if (this.players[indexPlayer].equalsValue(player)) {
-                    console.log('you are indeed the player')
-                } else {
-                    console.log('you are actually not the player')
-                }
-            }
             return this.players[indexPlayer].equalsValue(player);
         } else {
-            if (isClick) {
-                console.log('local game, so yeah, go click dude');
-            }
             return true;
         }
     }

@@ -75,7 +75,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Promotion`,
-            $localize`When a stack reach the last line, its commander become officer, and gain the ability to go backward, which is illegal for a non-officer piece! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            $localize`When a stack reach the last line, its commander become officer, and gain the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
             LascaState.from([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],

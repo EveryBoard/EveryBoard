@@ -67,13 +67,6 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         this.canPass = false;
         this.updateBoard();
     }
-    public backgroundColor(x: number, y: number): string {
-        if ((x + y) % 2 === 0) {
-            return 'lightgrey';
-        } else {
-            return 'black';
-        }
-    }
     public updateBoard(): void {
         this.lastMove = this.rules.node.move;
         const state: LascaState = this.getState();
@@ -130,8 +123,8 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         if (this.lastMove.isPresent()) {
             this.showLastCapture();
             this.showSteppedOnCoord();
+            this.showPossibleMoves();
         }
-        // this.showPossibleMoves();
     }
     private showLastCapture(): void {
         if (this.lastMove.get().isStep === false) {
@@ -175,7 +168,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             x = (LascaState.SIZE - 1) - x;
             y = (LascaState.SIZE - 1) - y;
         }
-        const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y, true);
+        const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -285,9 +278,9 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             }
         } else {
             const nextLegalLandings: Coord[] = possibleCaptures
-                .map((capture: LascaMove) => capture.getCoord(1))
-                .filter((capture: MGPFallible<Coord>) => capture.isSuccess())
-                .map((capture: MGPFallible<Coord>) => capture.get());
+                .map((capture: LascaMove) => capture.coords.get(1));
+                // .filter((capture: MGPFallible<Coord>) => capture.isSuccess())
+                // .map((capture: MGPFallible<Coord>) => capture.get());
             for (const nextLegalLanding of nextLegalLandings) {
                 this.adaptedBoard[nextLegalLanding.y][nextLegalLanding.x].squareClasses.push('capturable-fill');
             }
@@ -351,7 +344,7 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         const y: number = (maxY - minY) / 2;
         return new Coord(x, y);
     }
-    public getBoardThicknessDecorationDiagonalPoints(): string {
+    public getRightEdge(): string {
         const WIDTH: number = this.SPACE_SIZE * 7 * this.WIDTH_RATIO;
         const OFFSET: number = this.SPACE_SIZE * 7 * this.SLOPE_RATIO;
         const x0: number = OFFSET + WIDTH;
