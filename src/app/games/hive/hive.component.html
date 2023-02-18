@@ -60,13 +60,14 @@
              class="base no-fill mid-stroke selected-stroke" />
     <g *ngIf="inspectedStack.isPresent()">
       <g *ngFor="let piece of inspectedStack.get().pieces.slice().reverse(); index as z"
-          [attr.transform]="inspectedStackTransform"
-          app-hive-piece
-          [piece]="piece"
-          [pieceHeight]="PIECE_HEIGHT"
-          [x]="0"
-          [y]="0"
-          [hexaLayout]="hexaLayout"
-          [level]="z*6"/>
+         id="inspectedStack_{{ z }}"
+         [attr.transform]="inspectedStackTransform"
+         app-hive-piece
+         [piece]="piece"
+         [pieceHeight]="PIECE_HEIGHT"
+         [x]="0"
+         [y]="0"
+         [hexaLayout]="hexaLayout"
+         [level]="z*6"/>
     </g>
 </svg>

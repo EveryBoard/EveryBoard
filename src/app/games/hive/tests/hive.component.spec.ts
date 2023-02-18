@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
@@ -64,7 +63,7 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
                 // Then it should show valid landings
-                testUtils.expectElementToExist('#indicator_0_0');
+                testUtils.expectElementToHaveClass('#stroke_0_0', 'clickable-stroke');
             }));
             it('should forbid selecting another piece than the queen bee if the queen bee must be placed at this turn', fakeAsync(async() => {
                 // Given a state without queen bee at the 4th turn of the current player
@@ -130,7 +129,7 @@ describe('HiveComponent', () => {
                 await testUtils.expectMoveSuccess('#space_0_0', move);
 
                 // Then the last move should be shown
-                testUtils.expectElementToExist('#moved_0_0');
+                testUtils.expectElementToHaveClass('#stroke_0_0', 'last-move-stroke');
             }));
         });
         it('should deselect the piece at second click on it', fakeAsync(async() => {
@@ -159,7 +158,7 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickSuccess('#piece_0_0');
 
                 // Then it should be selected
-                testUtils.expectElementToExist('#selected_0_0');
+                testUtils.expectElementToHaveClass('#stroke_0_0', 'selected-stroke');
             }));
             it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
                 // Given a state with pieces on the board
@@ -184,13 +183,13 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickSuccess('#piece_0_0');
 
                 // Then it should show valid landings for that piece
-                testUtils.expectElementToExist('#indicator_1_-1');
-                testUtils.expectElementToExist('#indicator_0_1');
+                testUtils.expectElementToHaveClass('#stroke_1_-1', 'clickable-stroke');
+                testUtils.expectElementToHaveClass('#stroke_0_1', 'clickable-stroke');
 
-                testUtils.expectElementNotToExist('#indicator_0_-1');
-                testUtils.expectElementNotToExist('#indicator_-1_0');
-                testUtils.expectElementNotToExist('#indicator_-1_1');
-                testUtils.expectElementNotToExist('#indicator_1_0');
+                testUtils.expectElementNotToExist('#stroke_0_-1');
+                testUtils.expectElementNotToExist('#stroke_-1_0');
+                testUtils.expectElementNotToExist('#stroke_-1_1');
+                testUtils.expectElementNotToExist('#stroke_1_0');
             }));
             it('should not allow selecting piece if the queen bee must be dropped at this turn', fakeAsync(async() => {
                 // Given a state without queen bee at the 4th turn of the current player
@@ -285,9 +284,9 @@ describe('HiveComponent', () => {
                     await testUtils.expectClickSuccess('#space_1_2');
 
                     // Then it should show valid landings and selected path
-                    testUtils.expectElementToExist('#indicator_2_1');
-                    testUtils.expectElementToExist('#selected_0_2');
-                    testUtils.expectElementToExist('#selected_1_2');
+                    testUtils.expectElementToHaveClass('#stroke_2_1', 'clickable-stroke');
+                    testUtils.expectElementToHaveClass('#stroke_0_2', 'selected-stroke');
+                    testUtils.expectElementToHaveClass('#stroke_1_2', 'selected-stroke');
                 }));
                 it('should fail as soon as an invalid space is selected', fakeAsync(async() => {
                     // Given a state with a spider on the board and some path already selected
@@ -320,8 +319,8 @@ describe('HiveComponent', () => {
                 await testUtils.expectMoveSuccess('#space_1_1', move);
 
                 // Then the last move should be shown
-                testUtils.expectElementToExist('#moved_0_1');
-                testUtils.expectElementToExist('#moved_1_1');
+                testUtils.expectElementToHaveClass('#stroke_0_1', 'last-move-stroke');
+                testUtils.expectElementToHaveClass('#stroke_1_1', 'last-move-stroke');
                 testUtils.expectElementToHaveClass('#space_0_1', 'moved-fill');
             }));
         });
@@ -338,7 +337,7 @@ describe('HiveComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // Then the stack should be displayed next to the board
-            testUtils.expectElementToExist('#inspectedStack');
+            testUtils.expectElementToExist('#inspectedStack_0');
         }));
         it('should hide the stack when clicking a second time on it', fakeAsync(async() => {
             // Given a state with a stack of pieces displayed
@@ -363,7 +362,7 @@ describe('HiveComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // Then the stack should be displayed next to the board
-            testUtils.expectElementToExist('#inspectedStack');
+            testUtils.expectElementToExist('#inspectedStack_0');
         }));
         it('should forbid clicking on a single beetle of the opponent', fakeAsync(async() => {
             // Given a state with a beetle of the opponent
@@ -413,7 +412,7 @@ describe('HiveComponent', () => {
         testUtils.setupState(state);
 
         // Then the victory should be shown
-        testUtils.expectElementToHaveClass('#victory_1_1', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#stroke_1_1', 'victory-stroke');
     }));
     it('should display draw coords', fakeAsync(async() => {
         // Given a draw state
@@ -428,10 +427,10 @@ describe('HiveComponent', () => {
         testUtils.setupState(state);
 
         // Then the draw should be shown (as multiple victory strokes)
-        testUtils.expectElementToHaveClass('#victory_1_1', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#victory_2_1', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#stroke_1_1', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#stroke_2_1', 'victory-stroke');
     }));
-    it('should show the last move cancelling a move', fakeAsync(async() => {
+    it('should show the last move when cancelling a move', fakeAsync(async() => {
         // Given a state with a last move displayed
         const previousState: HiveState = HiveState.fromRepresentation([
             [[Q]],
@@ -447,6 +446,6 @@ describe('HiveComponent', () => {
         await testUtils.expectClickFailure('#piece_0_0');
 
         // Then the last move should still be displayed
-        testUtils.expectElementToExist('#moved_1_0');
+        testUtils.expectElementToHaveClass('#stroke_1_0', 'last-move-stroke');
     }));
 });

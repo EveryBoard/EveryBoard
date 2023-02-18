@@ -169,7 +169,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     public updateBoard(): void {
-        console.log('update board')
         this.pieces = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
@@ -302,9 +301,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private showLastMove(): void {
-        console.log('show last move')
         for (const coord of this.getLastMoveCoords()) {
             this.highlight(coord, 'last-move-stroke');
+            this.ground.highlightStroke(coord, 'last-move-stroke');
             this.ground.highlightFill(coord, 'moved-fill');
         }
     }
@@ -396,9 +395,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.rules.node.move.isPresent()) {
-            this.clearHighlights();
-        }
         const state: HiveState = this.getState();
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
@@ -422,7 +418,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private async selectTarget(coord: Coord, topPiece: HivePiece): Promise<MGPValidation> {
-        this.clearHighlights();
         if (topPiece.kind === 'Spider') {
             return this.selectNextSpiderSpace(coord);
         } else {
@@ -434,12 +429,18 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
+        this.cancelMoveAttempt(); // To clear inspected stack if needed
         this.clearHighlights();
         const state: HiveState = this.getState();
         const piece: HivePiece = stack.topPiece();
         if (piece.owner !== state.getCurrentPlayer()) {
+            // If the stack clicked is not owned by the player,
+            // the player can still select it in order to inspect it
             if (stack.size() === 1) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            } else if (this.inspectedStack.isPresent()) {
+                this.cancelMoveAttempt();
+                return MGPValidation.SUCCESS;
             } else {
                 // We will only inspect the opponent stack, not do a move
                 this.highlight(coord, 'selected-stroke');
@@ -468,7 +469,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private highlightNextPossibleCoords(coord: Coord): void {
         for (const indicator of this.getNextPossibleCoords(coord)) {
-            console.log({indicator})
             this.highlight(indicator, 'clickable-stroke');
             this.ground.highlightStroke(indicator, 'clickable-stroke');
         }
@@ -496,7 +496,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private async selectNextSpiderSpace(coord: Coord): Promise<MGPValidation> {
         this.selectedSpiderCoords.push(coord);
-        this.highlight(coord, 'selected-stroke');
         if (this.selectedSpiderCoords.length === 4) {
             const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
             return this.chooseMove(move, this.getState());
@@ -505,6 +504,11 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             HivePieceBehaviorSpider.get().prefixLegality(this.selectedSpiderCoords, this.getState());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
+        }
+        this.clearHighlights();
+        this.highlight(this.selectedStart.get(), 'selected-stroke');
+        for (const coord of this.selectedSpiderCoords) {
+            this.ground.highlightStroke(coord, 'selected-stroke');
         }
         this.highlightNextPossibleCoords(this.selectedStart.get());
         return MGPValidation.SUCCESS;

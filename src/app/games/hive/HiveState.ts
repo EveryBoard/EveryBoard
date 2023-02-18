@@ -215,7 +215,6 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
     }
 
     public isDisconnected(): boolean {
-        console.log('there are that many groups: ' + this.getGroups().size())
         return this.getGroups().size() > 1;
     }
 
