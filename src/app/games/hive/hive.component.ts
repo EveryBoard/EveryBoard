@@ -181,8 +181,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             }
         }
         this.ground = this.getGround();
-        this.inspectedStack = MGPOptional.empty(); // TODOTODO: shouldn't cancelMoveAttempt be called before updateBoard?
-        this.inspectedStackCoord = MGPOptional.empty();
         this.computeViewBox();
         this.remainingPieces = this.getState().remainingPieces.toListOfStacks();
         this.canPass = HiveRules.get().shouldPass(this.getState());
@@ -472,11 +470,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.highlight(indicator, 'clickable-stroke');
             this.ground.highlightStroke(indicator, 'clickable-stroke');
         }
-    }
-
-    public getHighlightTransform(coord: Coord): string {
-        const height: number = this.getState().getAt(coord).size() * this.PIECE_HEIGHT;
-        return `translate(0 -${height})`;
     }
 
     private getNextPossibleCoords(coord: Coord): Coord[] {
