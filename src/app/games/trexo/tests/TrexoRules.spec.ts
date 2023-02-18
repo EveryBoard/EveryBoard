@@ -4,9 +4,10 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMinimax } from '../TrexoMinimax';
 import { TrexoMove } from '../TrexoMove';
-import { TrexoNode, TrexoRules, TrexoRulesFailure } from '../TrexoRules';
+import { TrexoNode, TrexoRules } from '../TrexoRules';
 import { TrexoSpace, TrexoState } from '../TrexoState';
 
 const _____: TrexoSpace = TrexoSpace.EMPTY;
@@ -73,7 +74,7 @@ describe('TrexoRules', () => {
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(4, 3)).get();
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, TrexoRulesFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, TrexoFailure.CANNOT_DROP_ONLY_ONE_PIECE());
     });
     it('should accept to drop piece on two other piece', () => {
         // Given a board with two pieces that are neighbor on it
@@ -127,7 +128,7 @@ describe('TrexoRules', () => {
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get();
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, TrexoRulesFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
+        RulesUtils.expectMoveFailure(rules, state, move, TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
     });
     it('should declare as winner player who has a line of 5', () => {
         // Given a board where a player has a line of 4

@@ -2,7 +2,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { TrexoSpace, TrexoState, TrexoStateFailure } from '../TrexoState';
+import { TrexoFailure } from '../TrexoFailure';
+import { TrexoSpace, TrexoState } from '../TrexoState';
 
 describe('TrexoState', () => {
     it('should refuse creating a board that is not a Nx10', () => {
@@ -13,7 +14,7 @@ describe('TrexoState', () => {
         const state: MGPFallible<TrexoState> = TrexoState.from(board, 0);
 
         // Then it should fail
-        expect(state.getReason()).toBe(TrexoStateFailure.INVALID_DIMENSIONS());
+        expect(state.getReason()).toBe(TrexoFailure.INVALID_DIMENSIONS());
     });
     it('should refuse creating a board that is not a 10xN', () => {
         // Given a 10x11 board
@@ -23,7 +24,7 @@ describe('TrexoState', () => {
         const state: MGPFallible<TrexoState> = TrexoState.from(board, 0);
 
         // Then it should fail
-        expect(state.getReason()).toBe(TrexoStateFailure.INVALID_DIMENSIONS());
+        expect(state.getReason()).toBe(TrexoFailure.INVALID_DIMENSIONS());
     });
     it('should drop piece at the lower level possible', () => {
         // Given an empty board

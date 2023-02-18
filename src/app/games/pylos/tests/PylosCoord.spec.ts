@@ -3,7 +3,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PylosCoord } from '../PylosCoord';
 
-describe('CoordXYZ:', () => {
+describe('PylosCoord:', () => {
 
     it('should encode optional and decode should be symetrical', () => {
         const initialValues: MGPOptional<PylosCoord>[] = [

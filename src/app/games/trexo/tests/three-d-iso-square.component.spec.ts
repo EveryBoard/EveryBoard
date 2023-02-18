@@ -4,18 +4,18 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { ThreeDIsoSquareComponent } from '../three-d-iso-square.component';
+import { TrexoHalfPieceComponent } from '../three-d-iso-square.component';
 import { TrexoComponent } from '../trexo.component';
 import { TrexoMove } from '../TrexoMove';
 
 describe('ThreeDIsoSquareComponent', () => {
 
-    let testUtils: SimpleComponentTestUtils<ThreeDIsoSquareComponent>;
+    let testUtils: SimpleComponentTestUtils<TrexoHalfPieceComponent>;
 
-    let component: ThreeDIsoSquareComponent;
+    let component: TrexoHalfPieceComponent;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(ThreeDIsoSquareComponent);
+        testUtils = await SimpleComponentTestUtils.create(TrexoHalfPieceComponent);
         component = testUtils.getComponent();
         component.coord = new CoordXYZ(1, 1, 0);
         component.mode = TrexoComponent.modeMap['3D'];

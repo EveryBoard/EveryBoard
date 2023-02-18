@@ -167,7 +167,7 @@ class GameDescription {
 
     public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
-    public static readonly TREXO: Localized = () => $localize`Align 5 pieces of your color in a row, classic, except that the pieces can be put on top of others pieces!`;
+    public static readonly TREXO: Localized = () => $localize`Align 5 pieces of your color in a row, except that the pieces can be put on top of others pieces!`;
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 

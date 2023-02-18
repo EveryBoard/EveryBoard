@@ -71,7 +71,7 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
-import { ThreeDIsoSquareComponent } from './games/trexo/three-d-iso-square.component';
+import { TrexoHalfPieceComponent } from './games/trexo/three-d-iso-square.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
@@ -203,7 +203,7 @@ export class FirebaseProviders {
         SiamComponent,
         SixComponent,
         TablutComponent,
-        TrexoComponent, ThreeDIsoSquareComponent,
+        TrexoComponent, TrexoHalfPieceComponent,
         YinshComponent,
 
         HumanDurationPipe,

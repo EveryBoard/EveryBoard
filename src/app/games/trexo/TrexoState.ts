@@ -2,12 +2,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-
-export class TrexoStateFailure {
-    public static readonly INVALID_DIMENSIONS: Localized = () => $localize`TODOTODO: INVALID_DIMENSIONS`;
-}
+import { TrexoFailure } from './TrexoFailure';
 
 export class TrexoSpace {
 
@@ -45,11 +41,11 @@ export class TrexoState extends GameStateWithTable<TrexoSpace> {
     }
     public static from(board: TrexoSpace[][], turn: number): MGPFallible<TrexoState> {
         if (board.length !== TrexoState.SIZE) {
-            return MGPFallible.failure(TrexoStateFailure.INVALID_DIMENSIONS());
+            return MGPFallible.failure(TrexoFailure.INVALID_DIMENSIONS());
         }
         for (const lines of board) {
             if (lines.length !== TrexoState.SIZE) {
-                return MGPFallible.failure(TrexoStateFailure.INVALID_DIMENSIONS());
+                return MGPFallible.failure(TrexoFailure.INVALID_DIMENSIONS());
             }
         }
         return MGPFallible.success(new TrexoState(board, turn));

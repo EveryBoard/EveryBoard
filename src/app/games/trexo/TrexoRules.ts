@@ -4,22 +4,26 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoSpace, TrexoState } from './TrexoState';
-
-export class TrexoRulesFailure {
-    public static readonly CANNOT_DROP_ON_ONLY_ONE_PIECE: Localized = () => $localize`TODOTODO: CANNOT_DROP_ON_ONLY_ONE_PIECE`;
-    public static readonly CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS: Localized = () => $localize`TODOTODO: CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS`;
-}
 
 export class TrexoNode extends MGPNode<Rules<TrexoMove, TrexoState>, TrexoMove, TrexoState> {}
 
 export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
     private static instance: MGPOptional<TrexoRules> = MGPOptional.empty();
+
+    private static getOwner(piece: TrexoSpace): PlayerOrNone {
+        return piece.owner;
+    }
+    private static isInRange(coord: Coord): boolean {
+        return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
+    }
+    private static readonly TREXO_5_IN_A_ROW: NInARowHelper<TrexoSpace> =
+        new NInARowHelper(TrexoRules.isInRange, TrexoRules.getOwner, 5);
 
     public static get(): TrexoRules {
         if (TrexoRules.instance.isAbsent()) {
@@ -38,10 +42,10 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     }
     public isLegal(move: TrexoMove, state: TrexoState): MGPFallible<void> {
         if (this.isUnevenGround(move, state)) {
-            return MGPFallible.failure(TrexoRulesFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
+            return MGPFallible.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
         }
         if (this.landsOnOnlyOnePiece(move, state)) {
-            return MGPFallible.failure(TrexoRulesFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
+            return MGPFallible.failure(TrexoFailure.CANNOT_DROP_ONLY_ONE_PIECE());
         }
         return MGPFallible.success(undefined);
     }
@@ -59,14 +63,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return zeroSpace.landingTurn === oneSpace.landingTurn;
     }
     public static getSquareScore(state: TrexoState, coord: Coord): number {
-        // TODOTODO: assert correct casting
-        const getOwner: (piece: TrexoSpace) => PlayerOrNone = (piece: TrexoSpace) => {
-            return piece.owner;
-        };
-        const isInRange: (coord: Coord) => boolean = (coord: Coord) => {
-            return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
-        };
-        return NInARowHelper.getSquareScore(state, coord, getOwner, 5, isInRange);
+        return TrexoRules.TREXO_5_IN_A_ROW.getSquareScore(state, coord);
     }
     public static getVictoriousCoords(state: TrexoState): Coord[] {
         const victoryOfLastPlayer: Coord[] = [];

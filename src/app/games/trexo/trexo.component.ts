@@ -9,22 +9,19 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TrexoTutorial } from './TrexoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
+import { TrexoFailure } from './TrexoFailure';
 
-export class TrexoComponentFailure {
-
-    public static readonly NO_WAY_TO_DROP_IT_HERE: Localized = () => $localize`There is no way to put a piece there!`;
-}
 interface PieceOnBoard {
 
     isDroppedPiece: boolean;
 
+    isPossibleClick: boolean;
+
     move: MGPOptional<TrexoMove>;
 }
-
 type ModeType = '2D' | '3D';
 
 export interface ModeConfig {
@@ -45,6 +42,12 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
 
     public static VERBOSE: boolean = false;
     public static SPACE_SIZE: number;
+    public static STROKE_WIDTH: number;
+    public static INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
+        isDroppedPiece: false,
+        isPossibleClick: false,
+        move: MGPOptional.empty(),
+    };
     public static modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
             OFFSET_RATIO: 0,
@@ -83,6 +86,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         this.encoder = TrexoMove.encoder;
         this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.SPACE_SIZE = this.SPACE_SIZE;
+        TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
         this.updateBoard();
     }
@@ -101,7 +105,6 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         if (this.chosenMode === '2D') {
             return ((boardWidth + 1) * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         } else {
-            // Mais je saiiiiis (stratégie de l'échec, Luc)
             return (boardWidth * spaceWidth3D) + this.STROKE_WIDTH;
         }
     }
@@ -141,12 +144,8 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         this.UP = this.getUp();
     }
     private getMoveHistory(): PieceOnBoard[][][] {
-        const initialValue: PieceOnBoard = {
-            isDroppedPiece: false,
-            move: MGPOptional.empty(),
-        };
         const moveByCoord: PieceOnBoard[][][] =
-            ArrayUtils.createTriTable(1, TrexoState.SIZE, TrexoState.SIZE, initialValue);
+            ArrayUtils.create3DTable(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let node: TrexoNode = this.rules.node;
         while (node.move.isPresent()) {
             const move: TrexoMove = node.move.get();
@@ -158,19 +157,19 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     }
     private addMoveToArray(node: TrexoNode, move: TrexoMove, moveByCoord: PieceOnBoard[][][]) {
         const height: number = node.gameState.getPieceAt(move.zero).height - 1;
-        const initialValue: PieceOnBoard = {
-            isDroppedPiece: false,
-            move: MGPOptional.empty(),
-        };
         while (moveByCoord.length <= height) {
-            moveByCoord.push(ArrayUtils.createTable(TrexoState.SIZE, TrexoState.SIZE, initialValue));
+            moveByCoord.push(ArrayUtils.createTable(TrexoState.SIZE,
+                                                    TrexoState.SIZE,
+                                                    TrexoComponent.INITIAL_PIECE_ON_BOARD));
         }
         moveByCoord[height][move.zero.y][move.zero.x] = {
             move: MGPOptional.of(move),
+            isPossibleClick: false,
             isDroppedPiece: false,
         };
         moveByCoord[height][move.one.y][move.one.x] = {
             move: MGPOptional.of(move),
+            isPossibleClick: false,
             isDroppedPiece: false,
         };
     }
@@ -202,28 +201,37 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         const z: number = this.getState().getPieceAt(this.droppedPiece.get()).height;
         const y: number = this.droppedPiece.get().y;
         const x: number = this.droppedPiece.get().x;
-        this.pieceOnBoard[z][y][x] = { isDroppedPiece: false, move: MGPOptional.empty() };
+        this.pieceOnBoard[z][y][x] = TrexoComponent.INITIAL_PIECE_ON_BOARD;
     }
     private selectPiece(clicked: Coord): MGPValidation {
         if (this.possibleMoves.some((move: TrexoMove) => move.coord.equals(clicked))) {
-            this.droppedPiece = MGPOptional.of(clicked);
-            this.possibleNextClicks = this.getPossibleNextClicks(clicked);
             const pieceHeight: number = this.getState().getPieceAt(clicked).height;
             if (pieceHeight >= this.pieceOnBoard.length) {
-                const initialValue: PieceOnBoard = {
-                    isDroppedPiece: false,
-                    move: MGPOptional.empty(),
-                };
-                this.pieceOnBoard.push(ArrayUtils.createTable(TrexoState.SIZE, TrexoState.SIZE, initialValue));
+                this.pieceOnBoard.push(ArrayUtils.createTable(TrexoState.SIZE,
+                                                              TrexoState.SIZE,
+                                                              TrexoComponent.INITIAL_PIECE_ON_BOARD));
             }
-            this.pieceOnBoard[pieceHeight][clicked.y][clicked.x] = {
-                isDroppedPiece: true,
-                move: MGPOptional.empty(),
-            };
+            this.showDroppedPieceAndIndicators(clicked, pieceHeight);
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(TrexoComponentFailure.NO_WAY_TO_DROP_IT_HERE());
+            return this.cancelMove(TrexoFailure.NO_WAY_TO_DROP_IT_HERE());
         }
+    }
+    private showDroppedPieceAndIndicators(dropped: Coord, pieceHeight: number): void {
+        this.droppedPiece = MGPOptional.of(dropped);
+        this.possibleNextClicks = this.getPossibleNextClicks(dropped);
+        for (const possibleNextClick of this.possibleNextClicks) {
+            this.pieceOnBoard[pieceHeight][possibleNextClick.y][possibleNextClick.x] = {
+                isDroppedPiece: false,
+                isPossibleClick: true,
+                move: MGPOptional.empty(),
+            };
+        }
+        this.pieceOnBoard[pieceHeight][dropped.y][dropped.x] = {
+            isDroppedPiece: true,
+            isPossibleClick: false,
+            move: MGPOptional.empty(),
+        };
     }
     private getPossibleNextClicks(coord: Coord): Coord[] {
         const potentiallyStartedMove: TrexoMove[] = this.possibleMoves.filter((move: TrexoMove) => {
@@ -239,7 +247,8 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     public getPieceClasses(x: number, y: number): string[] {
         const piece: Coord = new Coord(x, y);
         const pieceOwner: PlayerOrNone = this.getState().getPieceAt(piece).owner;
-        const classes: string[] = [this.getPlayerClass(pieceOwner)];
+        let classes: string[] = [this.getPlayerClass(pieceOwner)];
+        classes = classes.concat(this.getSpaceClasses(x, y));
         for (const victoryCoord of this.victoryCoords) {
             if (victoryCoord.equals(piece)) {
                 classes.push('victory-stroke');
@@ -254,9 +263,13 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         }
         return classes;
     }
-    public getPieceTranslate(x: number, y: number): string {
-        const z: number = this.getState().getPieceAtXY(x, y).height;
-        return this.getTranslate(x, y, z);
+    public getSpaceClasses(x: number, y: number): string[] {
+        for (const boardLayer of this.pieceOnBoard) {
+            if (boardLayer[y][x].isPossibleClick) {
+                return ['darker'];
+            }
+        }
+        return [];
     }
     /**
      * @param x the x coord on the state of the piece to draw

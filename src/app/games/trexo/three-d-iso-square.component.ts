@@ -10,7 +10,7 @@ import { TrexoMove } from './TrexoMove';
     templateUrl: './three-d-iso-square.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ThreeDIsoSquareComponent {
+export class TrexoHalfPieceComponent {
 
     @Input() coord: CoordXYZ;
     @Input() move: TrexoMove | null;

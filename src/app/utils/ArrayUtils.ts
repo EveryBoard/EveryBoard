@@ -19,7 +19,7 @@ export class ArrayUtils {
         }
         return result;
     }
-    public static createTriTable<T>(depth: number, width: number, height: number, initValue: T): T[][][] {
+    public static create3DTable<T>(depth: number, width: number, height: number, initValue: T): T[][][] {
         const triTable: Array<Array<Array<T>>> = [];
         for (let z: number = 0; z < depth; z++) {
             triTable.push(ArrayUtils.createTable(width, height, initValue));

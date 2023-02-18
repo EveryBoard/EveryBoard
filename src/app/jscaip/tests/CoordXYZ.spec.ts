@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { CoordXYZ } from '../CoordXYZ';
 
-describe('CoordXYZ:', () => {
+describe('CoordXYZ:', () => { // TODOTODO check that it is self tested
 
     it('should override equals correctly', () => {
         const coord: CoordXYZ = new CoordXYZ(0, 0, 0);
@@ -21,5 +21,4 @@ describe('CoordXYZ:', () => {
         const upperCoord: CoordXYZ = new CoordXYZ(0, 0, 1);
         expect(coord.isUpperThan(upperCoord)).toBeFalse();
     });
-
 });

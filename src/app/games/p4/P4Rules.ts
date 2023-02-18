@@ -18,6 +18,15 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
     public static VERBOSE: boolean = false;
 
+    public static getOwner(piece: PlayerOrNone): PlayerOrNone {
+        return piece;
+    }
+    public static isInRange(coord: Coord): boolean {
+        return coord.isInRange(7, 6);
+    }
+    public static P4_4_IN_A_ROW: NInARowHelper<PlayerOrNone> =
+        new NInARowHelper(P4Rules.isInRange, P4Rules.getOwner, 4);
+
     public static getVictoriousCoords(state: P4State): Coord[] {
         const coords: Coord[] = [];
         for (let x: number = 0; x < 7; x++) {
@@ -64,9 +73,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         display(P4Rules.VERBOSE, 'getSquareScore(board, ' + coord.x + ', ' + coord.y + ') called');
         const board: Table<PlayerOrNone> = state.board;
         display(P4Rules.VERBOSE, board);
-        const identity: (piece: PlayerOrNone) => PlayerOrNone = (piece: PlayerOrNone) => piece;
-        const isInRange: (coord: Coord) => boolean = (coord: Coord) => coord.isInRange(7, 6);
-        return NInARowHelper.getSquareScore(state, coord, identity, 4, isInRange);
+        return P4Rules.P4_4_IN_A_ROW.getSquareScore(state, coord);
     }
     public static getListMoves(node: P4Node): P4Move[] {
         display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });

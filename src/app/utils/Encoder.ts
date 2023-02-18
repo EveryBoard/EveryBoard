@@ -49,8 +49,6 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
             }
         };
     }
-
-
     public encode(t: T): JSONValue {
         return this.encodeMove(t);
     }

@@ -5,19 +5,20 @@ import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';
 import { Player, PlayerOrNone } from './Player';
 
-export class NInARowHelper {
+export class NInARowHelper<T> {
 
     public static readonly VERBOSE: boolean = false;
 
-    public static getSquareScore<T>(state: GameStateWithTable<T>,
-                                    coord: Coord,
-                                    getOwner: (piece: T) => PlayerOrNone,
-                                    N: number,
-                                    isInRange: (coord: Coord) => boolean,
+    constructor(public isInRange: (coord: Coord) => boolean,
+                public getOwner: (piece: T) => PlayerOrNone,
+                public N: number)
+    {}
+    public getSquareScore(state: GameStateWithTable<T>,
+                          coord: Coord,
     ): number
     {
         const piece: T = state.getPieceAt(coord);
-        const ally: Player = getOwner(piece) as Player;
+        const ally: Player = this.getOwner(piece) as Player;
         assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
         const opponent: Player = ally.getOpponent();
 
@@ -25,28 +26,22 @@ export class NInARowHelper {
         const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
 
         for (const dir of Direction.DIRECTIONS) {
-            const tmpData: [number, number] = NInARowHelper.getNumberOfFreeSpacesAndAllies(
+            const tmpData: [number, number] = this.getNumberOfFreeSpacesAndAllies(
                 state,
                 coord,
                 dir,
                 opponent,
                 ally,
-                N,
-                isInRange,
-                getOwner,
             );
             freeSpaceByDirs.set(dir, tmpData[0]);
             alliesByDirs.set(dir, tmpData[1]);
         }
-
-        const score: number = NInARowHelper.getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs,
-                                                                                     freeSpaceByDirs,
-                                                                                     N);
+        const score: number = this.getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs,
+                                                                            freeSpaceByDirs);
         return score * ally.getScoreModifier();
     }
-    public static getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Direction, number>,
-                                                           freeSpaceByDirs: MGPMap<Direction, number>,
-                                                           N: number,
+    public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Direction, number>,
+                                                    freeSpaceByDirs: MGPMap<Direction, number>,
     ): number
     {
         let score: number = 0;
@@ -55,29 +50,23 @@ export class NInARowHelper {
             const directionAllies: number = alliesByDirs.get(dir).get();
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();
             const lineAllies: number = directionAllies + oppositeDirectionAllies;
-            if (lineAllies + 1 >= N) {
+            if (lineAllies + 1 >= this.N) {
                 return Number.MAX_SAFE_INTEGER;
             }
             const directionFreeSpaces: number = freeSpaceByDirs.get(dir).get();
             const oppositeDirectionFreeSpaces: number = freeSpaceByDirs.get(dir.getOpposite()).get();
             const lineFreeSpaces: number = directionFreeSpaces + oppositeDirectionFreeSpaces;
-            if (lineFreeSpaces === 3) { // TODOTODO: why the 3 ? N-1 non ?
-                score += 2;
-            } else if (lineFreeSpaces > 3) {
-                score += lineFreeSpaces - 2; // TODOTODO: why would 4 freeSpace be worth as much as 3 ?
+            if (lineFreeSpaces + 1 >= this.N) {
+                score += 2 + lineFreeSpaces - this.N;
             }
         }
         return score;
     }
-    public static getNumberOfFreeSpacesAndAllies<T>(
-        state: GameStateWithTable<T>,
-        i: Coord,
-        dir: Direction,
-        opponent: Player,
-        ally: Player,
-        N: number,
-        isInRange: (coord: Coord) => boolean,
-        getOwner: (piece: T) => PlayerOrNone)
+    public getNumberOfFreeSpacesAndAllies(state: GameStateWithTable<T>,
+                                          i: Coord,
+                                          dir: Direction,
+                                          opponent: Player,
+                                          ally: Player)
     : [number, number]
     {
         /*
@@ -85,28 +74,28 @@ export class NInARowHelper {
         * we go through the board from i in the direction dir(dX, dY)
         * and until a maximal distance of N cases
         */
-
         let freeSpaces: number = 0; // the number of aligned free square
         let allies: number = 0; // the number of alligned allies
         let allAlliesAreSideBySide: boolean = true;
         let coord: Coord = new Coord(i.x + dir.x, i.y + dir.y);
-        while (isInRange(coord) && freeSpaces !== N) {
+        let testedCoords: number = 1;
+        while (this.isInRange(coord) && testedCoords < this.N) {
             // while we're on the board
             const currentSpace: T = state.getPieceAt(coord);
-            if (getOwner(currentSpace) === opponent) {
+            if (this.getOwner(currentSpace) === opponent) {
                 return [freeSpaces, allies];
             }
-            if (getOwner(currentSpace) === ally && allAlliesAreSideBySide) {
+            if (this.getOwner(currentSpace) === ally && allAlliesAreSideBySide) {
                 allies++;
             } else {
                 allAlliesAreSideBySide = false; // we stop counting the allies on this line
             }
             // as soon as there is a hole
             if (currentSpace !== opponent && currentSpace !== ally) {
-                // TODOTODO: this condition was not there before, check that it makes sense (but the body was there)
                 freeSpaces++;
             }
             coord = coord.getNext(dir);
+            testedCoords++;
         }
         return [freeSpaces, allies];
     }

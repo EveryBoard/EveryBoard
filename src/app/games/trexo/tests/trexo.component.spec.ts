@@ -3,10 +3,11 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { TrexoComponent, TrexoComponentFailure } from '../trexo.component';
+import { TrexoComponent } from '../trexo.component';
+import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 
-describe('TrexoComponent', () => {
+fdescribe('TrexoComponent', () => {
 
     let testUtils: ComponentTestUtils<TrexoComponent>;
 
@@ -40,18 +41,18 @@ describe('TrexoComponent', () => {
 
             // When trying to choose it as first coord
             // Then it should fail
-            const reason: string = TrexoComponentFailure.NO_WAY_TO_DROP_IT_HERE();
+            const reason: string = TrexoFailure.NO_WAY_TO_DROP_IT_HERE();
             await testUtils.expectClickFailure('#space_0_0', reason);
         }));
         it('should show possible next click amongst the possible neigbhors', fakeAsync(async() => {
             // Given any board
-            // When clicking on a possible first coord
+            // When clicking on a possible first coord (whose neighboor are empty spaces)
             await testUtils.expectClickSuccess('#space_5_5');
             // Then the possible next click should be highlighted
-            testUtils.expectElementToExist('#indicator_4_5');
-            testUtils.expectElementToExist('#indicator_6_5');
-            testUtils.expectElementToExist('#indicator_5_4');
-            testUtils.expectElementToExist('#indicator_5_6');
+            testUtils.expectElementToHaveClass('#space_4_5', 'darker');
+            testUtils.expectElementToHaveClass('#space_6_5', 'darker');
+            testUtils.expectElementToHaveClass('#space_5_4', 'darker');
+            testUtils.expectElementToHaveClass('#space_5_6', 'darker');
         }));
         it('should allow clicking on second level', fakeAsync(async() => {
             // Given any board where two neighboring tiles are on the same level
@@ -67,6 +68,33 @@ describe('TrexoComponent', () => {
 
             // Then the droppedPiece should appear on it
             testUtils.expectElementToExist('#dropped_piece_0_0_1');
+        }));
+        it('should display darker landable pieces when possible landing are not the floor', fakeAsync(async() => {
+            // Given any board where two neighboring tiles are on the same level
+            await testUtils.expectClickSuccess('#space_0_0');
+            let move: TrexoMove = TrexoMove.from(new Coord(0, 1), new Coord(0, 0)).get();
+            await testUtils.expectMoveSuccess('#space_0_1', move);
+            await testUtils.expectClickSuccess('#space_1_0');
+            move = TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get();
+            await testUtils.expectMoveSuccess('#space_1_1', move);
+
+            // When selecting a piece on that level
+            await testUtils.expectClickSuccess('#space_0_0');
+
+            // Then the neighbooring piece should be darker
+            testUtils.expectElementToHaveClass('#tile_1_0_0', 'darker');
+        }));
+    });
+    describe(`second click`, () => {
+        it(`should allow legal move`, fakeAsync(async() => {
+            // Given any board on which a first click has been made
+            await testUtils.expectClickSuccess('#space_5_5');
+
+            // When clicking on a valid neighbor coord
+            // Then the move should be a success, and the first click should be the piece of Player.ONE
+            // Because the opponent piece is dropped first
+            const move: TrexoMove = TrexoMove.from(new Coord(6, 5), new Coord(5, 5)).get();
+            await testUtils.expectMoveSuccess('#space_6_5', move);
         }));
         it('should allow dropping on second level', fakeAsync(async() => {
             // Given any board where two neighboring tiles are on the same level
@@ -84,18 +112,6 @@ describe('TrexoComponent', () => {
 
             // Then the move should be a success
             await testUtils.expectMoveSuccess('#space_1_0', move);
-        }));
-    });
-    describe(`second click`, () => {
-        it(`should allow legal move`, fakeAsync(async() => {
-            // Given any board on which a first click has been made
-            await testUtils.expectClickSuccess('#space_5_5');
-
-            // When clicking on a valid neighbor coord
-            // Then the move should be a success, and the first click should be the piece of Player.ONE
-            // Because the opponent piece is dropped first
-            const move: TrexoMove = TrexoMove.from(new Coord(6, 5), new Coord(5, 5)).get();
-            await testUtils.expectMoveSuccess('#space_6_5', move);
         }));
         it(`should change the first dropped coord when clicking too far`, fakeAsync(async() => {
             // Given any board on which a first click has been made

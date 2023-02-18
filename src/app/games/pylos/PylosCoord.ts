@@ -5,21 +5,13 @@ import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
 
 export class PylosCoord extends CoordXYZ {
 
-    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
-        // TODOTODO: mettre en commun avec classe mère
-        let result: number;
-        if (optionalCoord.isPresent()) {
-            result = PylosCoord.encode(optionalCoord.get()) + 1; // From 1 to 64
-        } else {
-            result = 0;
-        } // result from 0 to 64
-        return result;
-    }
+    public static MAX_COORD: CoordXYZ = new CoordXYZ(3, 3, 3); // CoordXYZ because (3, 3, 3) is not be legal for Pylos
+
     public static encode(coord: PylosCoord): number {
-        const z: number = coord.z;
-        const y: number = coord.y * 4;
-        const x: number = coord.x * 16;
-        return x + y + z; // from 0 to 63
+        return CoordXYZ.encode(coord, PylosCoord.MAX_COORD);
+    }
+    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
+        return CoordXYZ.encodeOptional(optionalCoord, PylosCoord.MAX_COORD);
     }
     public static decodeToOptional(encodedOptional: number): MGPOptional<PylosCoord> {
         if (encodedOptional === 0) {
@@ -29,17 +21,18 @@ export class PylosCoord extends CoordXYZ {
     }
     public static decode(coord: number): PylosCoord {
         const z: number = coord % 4;
-        coord -= z; coord /= 4;
+        coord -= z;
+        coord /= 4;
 
         const y: number = coord % 4;
-        coord -= y; coord /= 4;
+        coord -= y;
+        coord /= 4;
 
         const x: number = coord;
 
         return new PylosCoord(x, y, z);
     }
     constructor(x: number, y: number, public readonly z: number) {
-        // TODOTODO: create PylosCoord as a child of CoordXYZ
         super(x, y, z);
         if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
         if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);

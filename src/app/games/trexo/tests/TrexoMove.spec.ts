@@ -2,8 +2,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMinimax } from '../TrexoMinimax';
-import { TrexoMove, TrexoMoveFailure } from '../TrexoMove';
+import { TrexoMove } from '../TrexoMove';
 import { TrexoRules } from '../TrexoRules';
 import { TrexoState } from '../TrexoState';
 
@@ -18,7 +19,7 @@ describe('TrexoMove', () => {
         const move: MGPFallible<TrexoMove> = TrexoMove.from(zero, one);
 
         // Then it should fail
-        expect(move.getReason()).toBe('TODOTODO OUT OF RANGE FROM Lasca');
+        expect(move.getReason()).toBe('(-1, 0) is out of the board!');
     });
     it('should refuse to create out of board move (player.one piece)', () => {
         // When coord of piece one is out of range
@@ -29,7 +30,7 @@ describe('TrexoMove', () => {
         const move: MGPFallible<TrexoMove> = TrexoMove.from(zero, one);
 
         // Then it should fail
-        expect(move.getReason()).toBe('TODOTODO OUT OF RANGE FROM Lasca');
+        expect(move.getReason()).toBe('(' + TrexoState.SIZE + ', 9) is out of the board!');
     });
     it('should refuse to create move with two coord not neighbors', () => {
         // When two non neighboring coord
@@ -40,7 +41,7 @@ describe('TrexoMove', () => {
         const move: MGPFallible<TrexoMove> = TrexoMove.from(zero, one);
 
         // Then it should fail
-        expect(move.getReason()).toBe(TrexoMoveFailure.NON_NEIGHBOR_COORDS());
+        expect(move.getReason()).toBe(TrexoFailure.NON_NEIGHBOR_COORDS());
     });
     it('should succeed creating legal move', () => {
         // Given two in-board neighbors coords
