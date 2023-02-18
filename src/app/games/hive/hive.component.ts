@@ -26,15 +26,104 @@ import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
 
+interface Cell<T> {
+    x: number,
+    y: number,
+    content: T,
+}
+class Table2DWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
+    // This cannot be represented by an array as it may have negative indices
+    // which cannot be iterated over
+    protected content: MGPMap<number, MGPMap<number, T>> = new MGPMap();
+
+    public get(coord: Coord): MGPOptional<T> {
+        const line: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
+        if (line.isAbsent()) return MGPOptional.empty();
+        return line.get().get(coord.x);
+    }
+    public set(coord: Coord, value: T): void {
+        const lineOpt: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
+        let line: MGPMap<number, T>;
+        if (lineOpt.isPresent()) {
+            line = lineOpt.get();
+        } else {
+            line = new MGPMap<number, T>();
+            this.content.set(coord.y, line);
+        }
+        line.set(coord.x, value);
+    }
+    [Symbol.iterator](): IterableIterator<Cell<T>> {
+        const elements: Cell<T>[] = [];
+        const smallerFirst: (a: number, b: number) => number = (a: number, b: number) => a-b;
+        const ys: number[] = this.content.getKeySet().toList();
+        ys.sort(smallerFirst);
+        for (const y of ys) {
+            const line: MGPMap<number, T> = this.content.get(y).get();
+            const xs: number[] = line.getKeySet().toList();
+            xs.sort(smallerFirst);
+            for (const x of xs) {
+                const content: T = line.get(x).get();
+                elements.push({ x, y, content });
+            }
+        }
+        return elements.values();
+    }
+}
+
+interface GroundInfo {
+    spaceClasses: string[];
+    strokeClasses: string[];
+}
+
+class Ground extends Table2DWithPossibleNegativeIndices<GroundInfo> {
+    private highlighted: Coord[] = [];
+
+    public initialize(coord: Coord): void {
+        this.set(coord, { spaceClasses: [], strokeClasses: [] });
+    }
+    public highlightFill(coord: Coord, fill: string): void {
+        this.highlighted.push(coord);
+        this.get(coord).map((g: GroundInfo) => g.spaceClasses.push(fill));
+    }
+    public highlightStroke(coord: Coord, stroke: string): void {
+        this.highlighted.push(coord);
+        this.get(coord).map((g: GroundInfo) => g.strokeClasses.push(stroke));
+    }
+    public clearHighlights(): void {
+        for (const coord of this.highlighted) {
+            this.get(coord).map((g: GroundInfo) => {
+                g.strokeClasses = [];
+                g.spaceClasses = [];
+            });
+        }
+        this.highlighted = [];
+    }
+}
+
 // What to display at a given (x, y, z)
 interface SpaceLevelInfo {
     piece: HivePiece;
     strokeClasses: string[];
 }
 
-interface GroundInfo {
-    spaceClasses: string[];
-    strokeClasses: string[];
+class SpaceLevel extends Table2DWithPossibleNegativeIndices<SpaceLevelInfo> {
+    private highlighted: Coord[] = [];
+
+    public initialize(coord: Coord, piece: HivePiece): void {
+        this.set(coord, { piece, strokeClasses: [] });
+    }
+    public highlight(coord: Coord, stroke: string): void {
+        this.highlighted.push(coord);
+        this.get(coord).map((s: SpaceLevelInfo) => s.strokeClasses.push(stroke));
+    }
+    public clearHighlights(): void {
+        for (const coord of this.highlighted) {
+            this.get(coord).map((s: SpaceLevelInfo) => {
+                s.strokeClasses = [];
+            });
+        }
+        this.highlighted = [];
+    }
 }
 
 @Component({
@@ -47,10 +136,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public readonly ORIGIN: Coord = new Coord(0, 0);
 
     public remainingPieces: HivePieceStack[] = [];
-    public pieces: SpaceLevelInfo[][][] = [];
-    // The ground can't be represented by an array as it may have negative indices
-    // which cannot be iterated over
-    public ground: MGPMap<number, MGPMap<number, GroundInfo>> = new MGPMap();
+    public pieces: SpaceLevel[] = [];
+    public ground: Ground = new Ground();
 
     public inspectedStack: MGPOptional<HivePieceStack> = MGPOptional.empty();
     public inspectedStackCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -82,19 +169,16 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     public updateBoard(): void {
+        console.log('update board')
         this.pieces = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
             const x: number = coord.x;
             const y: number = coord.y;
-            for (let z = 0; z < stack.size(); z++) {
-                if (this.pieces[z] === undefined) this.pieces[z] = [];
-                if (this.pieces[z][y] === undefined) this.pieces[z][y] = [];
+            for (let z: number = 0; z < stack.size(); z++) {
+                if (z in this.pieces === false) this.pieces[z] = new SpaceLevel();
                 const piece: HivePiece = stack.pieces[stack.size() - 1 - z];
-                this.pieces[z][y][x] = {
-                    piece,
-                    strokeClasses: [],
-                };
+                this.pieces[z].initialize(new Coord(x, y), piece);
             }
         }
         this.ground = this.getGround();
@@ -124,42 +208,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private highlight(coord: Coord, stroke: string): void {
         const stackSize: number = this.getState().getAt(coord).size();
-        this.pieces[stackSize-1][coord.y][coord.x].strokeClasses.push(stroke);
-    }
-
-    private highlightIfPresent(coord: Coord, stroke: string): void {
-        const stackSize: number = this.getState().getAt(coord).size();
-        if (this.pieces[stackSize-1] === undefined) return;
-        if (this.pieces[stackSize-1][coord.y] === undefined) return;
-        if (this.pieces[stackSize-1][coord.y][coord.x] === undefined) return;
-        this.highlight(coord, stroke);
-    }
-
-    private removeHighlight(coord: Coord): void {
-        const stackSize: number = this.getState().getAt(coord).size();
-        if (this.pieces[stackSize-1] === undefined) return;
-        if (this.pieces[stackSize-1][coord.y] === undefined) return;
-        if (this.pieces[stackSize-1][coord.y][coord.x] === undefined) return;
-        this.pieces[stackSize-1][coord.y][coord.x].strokeClasses = [];
-        if (this.ground.get(coord.y).isAbsent() || this.ground.get(coord.y).get().get(coord.x).isAbsent()) {
-            return;
-        }
-        this.ground.get(coord.y).get().get(coord.x).get().spaceClasses = [];
-        this.ground.get(coord.y).get().get(coord.x).get().strokeClasses = [];
-    }
-
-    private highlightGroundIfShown(coord: Coord, fill: string): void {
-        if (this.ground.get(coord.y).isAbsent() || this.ground.get(coord.y).get().get(coord.x).isAbsent()) {
-            return;
-        }
-        this.ground.get(coord.y).get().get(coord.x).get().spaceClasses.push(fill);
-    }
-
-    private highlightGroundStrokeIfShown(coord: Coord, stroke: string): void {
-        if (this.ground.get(coord.y).isAbsent() || this.ground.get(coord.y).get().get(coord.x).isAbsent()) {
-            return;
-        }
-        this.ground.get(coord.y).get().get(coord.x).get().strokeClasses.push(stroke);
+        if (stackSize-1 in this.pieces === false) return;
+        this.pieces[stackSize-1].highlight(coord, stroke);
     }
 
     public async pass(): Promise<MGPValidation> {
@@ -194,7 +244,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             const inspectedStackPosition: Coord =
                 new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
                           boardAndRemainingViewBox.center().y);
-            const stackSize = this.inspectedStack.get().size();
+            const stackSize: number = this.inspectedStack.get().size();
             // y to get it centered vertically
             const y: number = inspectedStackPosition.y + (stackSize-1)*3*this.PIECE_HEIGHT;
             this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${y})`;
@@ -210,11 +260,10 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return this.getState().pieces.getKeySet();
     }
 
-    private getGround(): MGPMap<number, MGPMap<number, GroundInfo>> {
-        const ground: MGPMap<number, MGPMap<number, GroundInfo>> = new MGPMap();
+    private getGround(): Ground {
+        const ground: Ground = new Ground();
         for (const neighbor of this.getAllNeighbors()) {
-            if (ground.get(neighbor.y).isAbsent()) ground.set(neighbor.y, new MGPMap());
-            ground.get(neighbor.y).get().set(neighbor.x, { spaceClasses: [], strokeClasses: [] });
+            ground.initialize(neighbor);
         }
         return ground;
     }
@@ -231,17 +280,19 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return neighbors;
     }
 
-    public cancelMoveAttempt(): void {
-        // TODO: remove ALL highlights (also next possible coords)
-        this.selectedRemaining = MGPOptional.empty();
-        if (this.selectedStart.isPresent()) {
-            this.removeHighlight(this.selectedStart.get());
-            this.selectedStart = MGPOptional.empty();
+    private clearHighlights(): void {
+        for (const level of this.pieces) {
+            level.clearHighlights();
         }
-        this.selectedSpiderCoords.forEach((c: Coord) => this.removeHighlight(c));
+        this.ground.clearHighlights();
+    }
+
+    public cancelMoveAttempt(): void {
+        this.clearHighlights();
+        this.selectedStart = MGPOptional.empty();
+        this.selectedRemaining = MGPOptional.empty();
         this.selectedSpiderCoords = [];
         if (this.inspectedStack.isPresent()) {
-            this.removeHighlight(this.inspectedStackCoord.get());
             this.inspectedStack = MGPOptional.empty();
         }
         if (this.rules.node.move.isPresent()) {
@@ -251,17 +302,10 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private showLastMove(): void {
+        console.log('show last move')
         for (const coord of this.getLastMoveCoords()) {
-            this.highlightIfPresent(coord, 'last-move-stroke');
-            this.highlightGroundIfShown(coord, 'moved-fill');
-        }
-    }
-
-    private hideLastMove(): void {
-        console.log('hiding last move')
-        for (const coord of this.getLastMoveCoords()) {
-            console.log(coord)
-            this.removeHighlight(coord);
+            this.highlight(coord, 'last-move-stroke');
+            this.ground.highlightFill(coord, 'moved-fill');
         }
     }
 
@@ -275,7 +319,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
         const offset: Vector = this.getState().offset;
-       return lastMove.map((coord: Coord) => coord.getNext(offset));
+        return lastMove.map((coord: Coord) => coord.getNext(offset));
     }
 
     public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {
@@ -330,12 +374,10 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.cancelMoveAttempt();
         } else {
             this.cancelMoveAttempt();
-            if (this.rules.node.move.isPresent()) {
-                this.hideLastMove();
-            }
             this.selectedRemaining = MGPOptional.of(piece);
+            this.clearHighlights();
             for (const coord of HiveRules.get().getPossibleDropLocations(this.getState()).toList()) {
-                this.highlightGroundStrokeIfShown(coord, 'clickable-stroke');
+                this.ground.highlightStroke(coord, 'clickable-stroke');
             }
         }
         return MGPValidation.SUCCESS;
@@ -355,7 +397,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.rules.node.move.isPresent()) {
-            this.hideLastMove();
+            this.clearHighlights();
         }
         const state: HiveState = this.getState();
         const stack: HivePieceStack = state.getAt(coord);
@@ -380,6 +422,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private async selectTarget(coord: Coord, topPiece: HivePiece): Promise<MGPValidation> {
+        this.clearHighlights();
         if (topPiece.kind === 'Spider') {
             return this.selectNextSpiderSpace(coord);
         } else {
@@ -391,6 +434,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
+        this.clearHighlights();
         const state: HiveState = this.getState();
         const piece: HivePiece = stack.topPiece();
         if (piece.owner !== state.getCurrentPlayer()) {
@@ -424,8 +468,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private highlightNextPossibleCoords(coord: Coord): void {
         for (const indicator of this.getNextPossibleCoords(coord)) {
-            this.highlightIfPresent(indicator, 'clickable-stroke');
-            this.highlightGroundStrokeIfShown(indicator, 'clickable-stroke');
+            console.log({indicator})
+            this.highlight(indicator, 'clickable-stroke');
+            this.ground.highlightStroke(indicator, 'clickable-stroke');
         }
     }
 
@@ -451,7 +496,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private async selectNextSpiderSpace(coord: Coord): Promise<MGPValidation> {
         this.selectedSpiderCoords.push(coord);
-        this.highlight(coord, 'selected-stroke')
+        this.highlight(coord, 'selected-stroke');
         if (this.selectedSpiderCoords.length === 4) {
             const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
             return this.chooseMove(move, this.getState());
