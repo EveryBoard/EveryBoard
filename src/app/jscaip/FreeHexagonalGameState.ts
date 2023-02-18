@@ -87,12 +87,14 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
                 const toVisit: MGPSet<Coord> = new MGPSet([item.key]);
                 while (toVisit.isEmpty() === false) {
                     const coord: Coord = toVisit.getAnyElement().get();
+                    console.log('visiting: ' + coord.toString())
                     toVisit.remove(coord);
                     visited.add(coord);
                     group.add(coord);
-                    toVisit.union(this.getOccupiedNeighbors(coord).filter((neighbor: Coord) =>
+                    toVisit.addAll(this.getOccupiedNeighbors(coord).filter((neighbor: Coord) =>
                         visited.contains(neighbor) === false));
                 }
+                console.log(group.toString())
                 groups.add(group);
             }
         });

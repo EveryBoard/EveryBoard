@@ -56,10 +56,15 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return false;
     }
-    public union(otherSet: MGPSet<T>): void {
+    public addAll(otherSet: MGPSet<T>): void {
         for (const element of otherSet) {
             this.add(element);
         }
+    }
+    public union(otherSet: MGPSet<T>): MGPSet<T> {
+        const result: MGPSet<T> = new MGPSet(this.toList());
+        result.addAll(otherSet);
+        return result;
     }
     public contains(element: T): boolean {
         for (const value of this.values) {
@@ -99,7 +104,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public flatMap<U extends Comparable>(f: (element: T) => MGPSet<U>): MGPSet<U> {
         const result: MGPSet<U> = new MGPSet();
         for (const element of this) {
-            result.union(f(element));
+            result.addAll(f(element));
         }
         return result;
     }

@@ -204,7 +204,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     public getPossibleMovesOnBoard(state: HiveState): MGPSet<HiveMoveCoordToCoord> {
         const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
         for (const coord of state.occupiedSpaces()) {
-            moves.union(this.getPossibleMovesFrom(state, coord));
+            moves.addAll(this.getPossibleMovesFrom(state, coord));
         }
         return moves;
     }

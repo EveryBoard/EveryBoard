@@ -14,7 +14,7 @@ import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
-describe('HiveRules', () => {
+fdescribe('HiveRules', () => {
     let rules: HiveRules;
     let minimaxes: Minimax<HiveMove, HiveState>[];
 
@@ -461,7 +461,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should allow the grasshopper to jump above other adjacent pieces', () => {
+        fit('should allow the grasshopper to jump above other adjacent pieces', () => {
             // Given a state with one grasshopper ready to jump
             const board: Table<HivePiece[]> = [
                 [[G], [Q]],

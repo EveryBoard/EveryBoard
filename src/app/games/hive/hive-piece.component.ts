@@ -11,33 +11,34 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
 
-    @Input() stack: HivePieceStack;
-    @Input() pieceHeight: number;
-    @Input() coord: Coord;
+    @Input() piece: HivePiece;
+    @Input() x: number;
+    @Input() y: number;
     @Input() hexaLayout: HexaLayout;
-    @Input() sideView: boolean;
-    @Input() indicator: boolean;
+    @Input() level: number;
+    @Input() pieceHeight: number;
 
-    public pieceClass: string[] = [];
     public hexaPoints: string = '';
+    public pieceClass: string = '';
     public isoPointsLight: string = '';
     public isoPointsDark: string = '';
     public isoPointsStroke: string = '';
+    public levelTransform: string = '';
     public hexaCenter: Coord = new Coord(0, 0);
-    public sideViewFactor: number = 1;
 
     public ngAfterContentChecked() {
         // This needs to be done after every content check,
         // otherwise modifcations to selected will not be properly propagated
-        this.pieceClass = this.stack.pieces.map((piece: HivePiece) => this.getPlayerClass(piece.owner));
-        this.hexaPoints = this.hexaLayout.getHexaPointsAt(this.coord);
-        this.hexaCenter = this.hexaLayout.getCenterAt(this.coord);
-        const isoPoints: [Coord[], Coord[], Coord[]] = this.hexaLayout.getIsoPoints(this.coord, this.pieceHeight);
+        const coord: Coord = new Coord(this.x, this.y);
+        this.pieceClass = this.getPlayerClass(this.piece.owner);
+        this.hexaPoints = this.hexaLayout.getHexaPointsAt(coord);
+        this.hexaCenter = this.hexaLayout.getCenterAt(coord);
+        const isoPoints: [Coord[], Coord[], Coord[]] = this.hexaLayout.getIsoPoints(coord, this.pieceHeight);
         const isoPointsSVG: string[] = isoPoints.map((coords: Coord[]) =>
             coords.map((coord: Coord) => coord.toSVGCoord()).join(' '));
         this.isoPointsLight = isoPointsSVG[0];
         this.isoPointsDark = isoPointsSVG[1];
         this.isoPointsStroke = isoPointsSVG[2];
-        this.sideViewFactor = this.sideView ? 6 : 1;
+        this.levelTransform = `translate(0 -${(this.level+1) * this.pieceHeight})`;
     }
 }
