@@ -9,11 +9,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table2DWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
@@ -25,50 +24,6 @@ import { HivePieceBehaviorSpider } from './HivePieceBehavior';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
-
-interface Cell<T> {
-    x: number,
-    y: number,
-    content: T,
-}
-class Table2DWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
-    // This cannot be represented by an array as it may have negative indices
-    // which cannot be iterated over
-    protected content: MGPMap<number, MGPMap<number, T>> = new MGPMap();
-
-    public get(coord: Coord): MGPOptional<T> {
-        const line: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
-        if (line.isAbsent()) return MGPOptional.empty();
-        return line.get().get(coord.x);
-    }
-    public set(coord: Coord, value: T): void {
-        const lineOpt: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
-        let line: MGPMap<number, T>;
-        if (lineOpt.isPresent()) {
-            line = lineOpt.get();
-        } else {
-            line = new MGPMap<number, T>();
-            this.content.set(coord.y, line);
-        }
-        line.set(coord.x, value);
-    }
-    [Symbol.iterator](): IterableIterator<Cell<T>> {
-        const elements: Cell<T>[] = [];
-        const smallerFirst: (a: number, b: number) => number = (a: number, b: number) => a-b;
-        const ys: number[] = this.content.getKeySet().toList();
-        ys.sort(smallerFirst);
-        for (const y of ys) {
-            const line: MGPMap<number, T> = this.content.get(y).get();
-            const xs: number[] = line.getKeySet().toList();
-            xs.sort(smallerFirst);
-            for (const x of xs) {
-                const content: T = line.get(x).get();
-                elements.push({ x, y, content });
-            }
-        }
-        return elements.values();
-    }
-}
 
 interface GroundInfo {
     spaceClasses: string[];
@@ -427,8 +382,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
-        this.cancelMoveAttempt(); // To clear inspected stack if needed
-        this.clearHighlights();
         const state: HiveState = this.getState();
         const piece: HivePiece = stack.topPiece();
         if (piece.owner !== state.getCurrentPlayer()) {
@@ -438,6 +391,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             } else if (this.inspectedStack.isPresent()) {
                 this.cancelMoveAttempt();
+                this.clearHighlights();
                 return MGPValidation.SUCCESS;
             } else {
                 // We will only inspect the opponent stack, not do a move
@@ -448,6 +402,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 return MGPValidation.SUCCESS;
             }
         }
+        this.cancelMoveAttempt(); // To clear inspected stack if needed
+        this.clearHighlights();
         if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(state)) {
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }

@@ -375,6 +375,20 @@ describe('HiveComponent', () => {
             // Then it should fail as there is no stack beneath it
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }));
+        it('should hide the stack of the opponent when clicking a second time on it', fakeAsync(async() => {
+            // Given a state with a stack of pieces displayed
+            const state: HiveState = HiveState.fromRepresentation([
+                [[b, b, Q], [q]],
+            ], 2);
+            testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#piece_0_0');
+            testUtils.expectElementToExist('#inspectedStack_0');
+
+            // When clicking on the stack a second time
+            // Then it should hide the stack
+            await testUtils.expectClickSuccess('#piece_0_0');
+            testUtils.expectElementNotToExist('#inspectedStack_0');
+        }));
     });
     it('should cancel move when clicking on an empty space', fakeAsync(async() => {
         // Given any state without a move in progress

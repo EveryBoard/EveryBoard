@@ -1,4 +1,7 @@
+import { Coord } from '../jscaip/Coord';
 import { Comparable, comparableEquals } from './Comparable';
+import { MGPMap } from './MGPMap';
+import { MGPOptional } from './MGPOptional';
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
@@ -81,5 +84,50 @@ export class ArrayUtils {
     public static isPrefix<T extends Comparable>(prefix: ReadonlyArray<T>, lst: ReadonlyArray<T>): boolean {
         if (prefix.length > lst.length) return false;
         return ArrayUtils.compareArray(prefix, lst.slice(0, prefix.length));
+    }
+}
+
+interface Cell<T> {
+    x: number,
+    y: number,
+    content: T,
+}
+
+export class Table2DWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
+    // This cannot be represented by an array as it may have negative indices
+    // which cannot be iterated over
+    protected content: MGPMap<number, MGPMap<number, T>> = new MGPMap();
+
+    public get(coord: Coord): MGPOptional<T> {
+        const line: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
+        if (line.isAbsent()) return MGPOptional.empty();
+        return line.get().get(coord.x);
+    }
+    public set(coord: Coord, value: T): void {
+        const lineOpt: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
+        let line: MGPMap<number, T>;
+        if (lineOpt.isPresent()) {
+            line = lineOpt.get();
+        } else {
+            line = new MGPMap<number, T>();
+            this.content.set(coord.y, line);
+        }
+        line.set(coord.x, value);
+    }
+    [Symbol.iterator](): IterableIterator<Cell<T>> {
+        const elements: Cell<T>[] = [];
+        const smallerFirst: (a: number, b: number) => number = (a: number, b: number) => a-b;
+        const ys: number[] = this.content.getKeySet().toList();
+        ys.sort(smallerFirst);
+        for (const y of ys) {
+            const line: MGPMap<number, T> = this.content.get(y).get();
+            const xs: number[] = line.getKeySet().toList();
+            xs.sort(smallerFirst);
+            for (const x of xs) {
+                const content: T = line.get(x).get();
+                elements.push({ x, y, content });
+            }
+        }
+        return elements.values();
     }
 }
