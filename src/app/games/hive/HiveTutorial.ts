@@ -46,7 +46,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Placing pieces after the second turn`,
-            $localize`After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: <ol><li>your piece must be connected to the hive, and</li><li>the space on which you drop your piece must not touch a stack of the opponent.</li></ol><br/><br/>You're playing Dark here, drop a piece on the board.`,
+            $localize`After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: <ol><li>your piece must be connected to the hive, and</li><li>the space on which you drop your piece must not touch a stack of the opponent.</li></ol><br/><br/>You're playing Dark, drop a piece on the board.`,
             HiveState.fromRepresentation([
                 [[b], [G]],
             ], 2),
@@ -112,13 +112,15 @@ export class HiveTutorial extends Tutorial {
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Moving the spider`,
-            $localize`Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive. To do a spider move, select a spider and click on the three spaces that compose the move.<br/><br/>Again, as Dark, your queen bee is stuck but you can free it by moving your spider, do it!`,
+            $localize`Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive: here, Dark's spider cannot go on the left as its first move for example. To do a spider move, select a spider and click on the three spaces that compose the move.<br/><br/>You're playing Dark, move your spider!`,
             HiveState.fromRepresentation([
-                [[], [S], [q]],
-                [[], [Q], [b]],
-                [[a], [s], []],
+                [[], [S], [s], [b]],
+                [[], [], [], [B]],
+                [[b], [], [], [a]],
+                [[A], [], [G], []],
+                [[Q], [g], [], []],
             ], 6),
-            HiveMove.spiderMove([new Coord(1, 0), new Coord(2, -1), new Coord(3, -1), new Coord(3, 0)]),
+            HiveMove.spiderMove([new Coord(1, 0), new Coord(1, 1), new Coord(2, 1), new Coord(2, 2)]),
             $localize`Congratulations!`),
         TutorialStep.informational(
             $localize`Restrictions`,

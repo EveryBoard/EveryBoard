@@ -1637,8 +1637,8 @@
       <trans-unit id="4766965064757095472" datatype="html">
         <source>Placing pieces after the second turn</source>
       </trans-unit>
-      <trans-unit id="3609480010492121588" datatype="html">
-        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark here, drop a piece on the board.</source>
+      <trans-unit id="7211778570517391304" datatype="html">
+        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
       </trans-unit>
       <trans-unit id="2751556568646013753" datatype="html">
         <source>Moving pieces: the queen bee</source>
@@ -1676,8 +1676,8 @@
       <trans-unit id="3777509045596617031" datatype="html">
         <source>Moving the spider</source>
       </trans-unit>
-      <trans-unit id="3445346041930250207" datatype="html">
-        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;Again, as Dark, your queen bee is stuck but you can free it by moving your spider, do it!</source>
+      <trans-unit id="1211369340024090138" datatype="html">
+        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive: here, Dark&apos;s spider cannot go on the left as its first move for example. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your spider!</source>
       </trans-unit>
       <trans-unit id="3146815812493244221" datatype="html">
         <source>Restrictions</source>

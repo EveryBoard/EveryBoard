@@ -196,8 +196,11 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
     public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         Utils.assert(move instanceof HiveMoveSpider, 'move should be a spider move');
         const spiderMove: HiveMoveSpider = move as HiveMoveSpider;
-        return this.prefixLegality(spiderMove.coords, state)
-            .and(this.checkEmptyDestination(move, state));
+        const prefixLegality: MGPFallible<void> = this.prefixLegality(spiderMove.coords, state);
+        if (prefixLegality.isFailure()) {
+            return prefixLegality;
+        }
+        return this.checkEmptyDestination(move, state);
     }
 
     private haveCommonNeighbor(state: HiveState, first: Coord, second: Coord): boolean {
