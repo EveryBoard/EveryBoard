@@ -103,7 +103,7 @@ export class HiveTutorial extends Tutorial {
                 [[a], [s], []],
             ], 6),
             HiveMove.move(new Coord(1, 0), new Coord(3, 0)).get(),
-            (move: Move, previousState: GameState, resultingState: GameState): MGPValidation => {
+            (move: Move, _previousState: GameState, _resultingState: GameState): MGPValidation => {
                 if (move.equals(HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get())) {
                     return MGPValidation.failure($localize`You have not freed your queen, try again!`);
                 }
@@ -112,7 +112,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Moving the spider`,
-            $localize`Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. To do a spider move, select a spider and click on the three spaces that compose the move.<br/><br/>Again, as Dark, your queen bee is stuck but you can free it by moving your spider, do it!`,
+            $localize`Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive. To do a spider move, select a spider and click on the three spaces that compose the move.<br/><br/>Again, as Dark, your queen bee is stuck but you can free it by moving your spider, do it!`,
             HiveState.fromRepresentation([
                 [[], [S], [q]],
                 [[], [Q], [b]],
@@ -122,7 +122,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Congratulations!`),
         TutorialStep.informational(
             $localize`Restrictions`,
-            $localize`Let us clarify the two restrictions during moves.<ol><li>At all times, all pieces of the hive should always be connected in a way that there is a single hive. This should also be the case that during a move, when you slide your piece.</li><li>Except grasshoppers and beetles, all moves should be done by sliding the piece without disturbing the rest of the hive.</li></ol>Observe here how the queen bee is stuck, as it is not possible to slide it without moving one of the other pieces. Moreover, moving it would split the hive in two.`,
+            $localize`Let us clarify the two restrictions during moves.<ol><li>All pieces of the hive should always be connected in a way that there is a single hive. It can be the case that your piece disconnects from the hive when you slide it, but after the move there should be only one hive.</li><li>Except grasshoppers and beetles, all moves should be done by sliding the piece without disturbing the rest of the hive.</li></ol>Observe here how the queen bee is stuck, as it is not possible to slide it without moving one of the other pieces. Moreover, moving it would split the hive in two.`,
             HiveState.fromRepresentation([
                 [[], [S], []],
                 [[], [Q], [b]],
