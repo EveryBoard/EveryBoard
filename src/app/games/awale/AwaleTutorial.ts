@@ -20,7 +20,7 @@ export class AwaleTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Big sowing`,
             $localize`When there are enough seeds to make a full turn, something else happens.<br/><br/>
-        You are playing Dark.
+        You're playing Dark.
         Sow the house that contains 12 seeds.`,
             new AwaleState([
                 [0, 0, 0, 0, 0, 0],

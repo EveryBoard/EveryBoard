@@ -1075,9 +1075,9 @@
         <source>Big sowing</source>
         <target>Gros égrénage</target>
       </trans-unit>
-      <trans-unit id="2462439804869743998" datatype="html">
+      <trans-unit id="436684043682883572" datatype="html">
         <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
-        You are playing Dark.
+        You&apos;re playing Dark.
         Sow the house that contains 12 seeds.</source>
         <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé.
@@ -2507,8 +2507,8 @@
         <source>Restarting the clock</source>
         <target>Redémarrer le compte à rebour</target>
       </trans-unit>
-      <trans-unit id="1506256477130467669" datatype="html">
-        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture to restart the countdown.</source>
+      <trans-unit id="3901600798817118089" datatype="html">
+        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture to restart the countdown.</source>
         <target>Si le compte à rebour a été lancé, chaque capture remet le compteur à 7.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture pour redémarrer le compte à rebour.</target>
       </trans-unit>
       <trans-unit id="7392280182595989107" datatype="html">
@@ -2519,8 +2519,8 @@
         <source>End game (by clock)</source>
         <target>Fin au temps</target>
       </trans-unit>
-      <trans-unit id="8197598020273984721" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
+      <trans-unit id="5334745019478145111" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the last move.</source>
         <target>7 Tours après le lancement du compte à rebour, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le dernier mouvement.</target>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">

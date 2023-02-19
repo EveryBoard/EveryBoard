@@ -816,9 +816,9 @@
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
       </trans-unit>
-      <trans-unit id="2462439804869743998" datatype="html">
+      <trans-unit id="436684043682883572" datatype="html">
         <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
-        You are playing Dark.
+        You&apos;re playing Dark.
         Sow the house that contains 12 seeds.</source>
       </trans-unit>
       <trans-unit id="498712253814253582" datatype="html">
@@ -1884,8 +1884,8 @@
       <trans-unit id="976279093722548167" datatype="html">
         <source>Restarting the clock</source>
       </trans-unit>
-      <trans-unit id="1506256477130467669" datatype="html">
-        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture to restart the countdown.</source>
+      <trans-unit id="3901600798817118089" datatype="html">
+        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture to restart the countdown.</source>
       </trans-unit>
       <trans-unit id="7392280182595989107" datatype="html">
         <source>This is not a capture, the game is now over, please retry!</source>
@@ -1893,8 +1893,8 @@
       <trans-unit id="4805475752093007535" datatype="html">
         <source>End game (by clock)</source>
       </trans-unit>
-      <trans-unit id="8197598020273984721" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
+      <trans-unit id="5334745019478145111" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the last move.</source>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">
         <source>End by emptyness</source>
