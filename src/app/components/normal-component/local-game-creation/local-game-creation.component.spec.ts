@@ -14,7 +14,7 @@ describe('LocalGameCreationComponent', () => {
     it('should create and redirect to chosen game', fakeAsync(async() => {
         testUtils.getComponent().pickGame('whateverGame');
         spyOn(testUtils.getComponent().router, 'navigate');
-        await testUtils.clickElement('#playLocally');
+        await testUtils.clickElement('#launchGame');
         expect(testUtils.getComponent().router.navigate).toHaveBeenCalledOnceWith(['local/whateverGame']);
     }));
 });
