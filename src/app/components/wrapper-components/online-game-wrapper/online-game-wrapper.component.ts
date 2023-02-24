@@ -30,6 +30,7 @@ import { Timestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { PartService } from 'src/app/services/PartService';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 export class OnlineGameWrapperMessages {
 
@@ -60,7 +61,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -226,12 +227,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // This is useful when we join a part in the middle.
         await this.onCurrentPartUpdate((await this.gameService.getPart(this.currentPartId)).get());
 
-        // TODO: don't start count down for Observer.
         this.partSubscription =
             this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
                 assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
                 await this.onCurrentPartUpdate(part.get());
             });
+        // TODO: store the subscription and unsubscribe (and test it)
         this.partService.subscribeToEvents(this.currentPartId, (event: PartEvent) => {
             assert(event.eventType === 'Move', 'Only move events should happen currently');
             const moveEvent: PartEventMove = event as PartEventMove;
@@ -256,17 +257,17 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         } else {
             this.onCurrentUpdateOngoing = true;
         }
-        const updatesTypes: UpdateType[] = this.getUpdateTypes(part);
+        const updateTypes: UpdateType[] = this.getUpdateTypes(part);
         const turn: number = update.turn;
-        if (updatesTypes.includes(UpdateType.REQUEST)) {
+        if (updateTypes.includes(UpdateType.REQUEST)) {
             display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(part.data.request).code + ') (' + turn + ')');
         } else {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updatesTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
         }
         const oldPart: PartDocument | null = this.currentPart;
         this.currentPart = part;
 
-        for (const updateType of updatesTypes) {
+        for (const updateType of updateTypes) {
             await this.applyUpdate(updateType, part, oldPart);
         }
         this.onCurrentUpdateOngoing = false;
@@ -384,11 +385,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async onMove(player: Player, move: JSONValue): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OGWC.onMove');
-        console.log('turn: ' + this.gameComponent.getTurn());
         this.switchPlayerOnMove(player);
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
-        console.log('we are at turn ' + currentPartTurn);
         const chosenMove: Move = this.gameComponent.encoder.decode(move);
         const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
@@ -396,10 +395,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             'because "' + legality.getReasonOr('') + '"';
         assert(legality.isSuccess(), message);
         rules.choose(chosenMove);
-        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.gameComponent.updateBoard();
     }
-    private switchPlayerOnMove(playerThatMoved: Player): void {
+    // Public for testing purposes (TODO: shouldn't be, the test is wrong then)
+    public switchPlayerOnMove(playerThatMoved: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
         const nextPlayer: Player = playerThatMoved.getOpponent();
         this.currentPlayer = this.players[nextPlayer.value].get();
@@ -656,8 +655,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scores + ')');
-        this.gameComponent.rules.choose(move);
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
+        const legality: MGPFallible<unknown> =
+            this.gameComponent.rules.isLegal(move, this.gameComponent.rules.node.gameState);
+        const stateAfterMove: GameState =
+            this.gameComponent.rules.applyLegalMove(move, this.gameComponent.rules.node.gameState, legality.get());
+        const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
+            new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.rules.node), MGPOptional.of(move));
+
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
                 return this.notifyDraw(scores);

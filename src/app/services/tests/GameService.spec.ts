@@ -405,7 +405,7 @@ describe('GameService', () => {
             expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
         }));
     });
-    describe('updateDBBoard', () => {
+    describe('updatePart', () => {
         const part: Part = {
             lastUpdate: {
                 index: 4,
@@ -427,10 +427,9 @@ describe('GameService', () => {
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
             const scores: [number, number] = [5, 0];
-            await gameService.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], scores);
+            await gameService.updatePart('partId', Player.ONE, [0, 0], scores);
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
-                listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
                 lastUpdateTime: serverTimestamp(),
@@ -441,14 +440,13 @@ describe('GameService', () => {
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
             // When updating the board to notify of a draw
-            await gameService.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], undefined, true);
+            await gameService.updatePart('partId', Player.ONE, [0, 0], undefined, true);
             // Then the result is set to draw in the update
             const expectedUpdate: Partial<Part> = {
                 lastUpdate: {
                     index: 5,
                     player: Player.ONE.value,
                 },
-                listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
                 lastUpdateTime: serverTimestamp(),
