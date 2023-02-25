@@ -429,7 +429,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.currentPart?.data.turn).toEqual(2);
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    xdescribe('Late Arrival', () => { // REVIEW: TODO: this does not work yet
+    describe('Late Arrival', () => {
         it('Should allow user to arrive late on the game (on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
             await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED]);
@@ -735,7 +735,6 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             await doMove(FIRST_MOVE, true);
             tick(1000); // When time arrive too quickly after the move_without_time started
-            // (TODO FOR REVIEW: le commentaire ci-dessus est plus concis ?)
             testUtils.fixture.detectChanges();
 
             // Then the game should be a draw

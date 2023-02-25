@@ -29,11 +29,6 @@ export class PartService {
             move,
         });
     }
-    public removeMove(partId: string, moveId: string): Promise<void> {
-        // This function is temporary until all events are stored as events,
-        // and the collection of events becomes immutable
-        return this.eventsCollection(partId).delete(moveId);
-    }
     public async getAllMoves<M>(partId: string, decoder: (move: JSONValue) => M): Promise<M[]> {
         const moveEvents: FirestoreDocument<PartEvent>[] =
             await this.eventsCollection(partId).findWhere([['type', '==', 'Move']], 'time');

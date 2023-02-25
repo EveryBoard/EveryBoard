@@ -7,7 +7,7 @@ import { ChatService } from './ChatService';
 import { Request } from '../domain/Request';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
@@ -251,11 +251,12 @@ export class GameService {
         const request: Request = Request.takeBackAccepted(role);
         const lastMove: FirestoreDocument<PartEventMove> = await this.partService.getLastMoveDoc(partId);
         let turn: number = part.data.turn;
-        await this.partService.removeMove(partId, lastMove.id);
+        assert(false, 'TakeBacks not supported yet')
+        // await this.partService.removeMove(partId, lastMove.id);
         turn--;
         if (lastMove.data.player === role.value) {
-            // We need to delete a second move to let the requester take back thei rmove
-            await this.partService.removeMove(partId, (await this.partService.getLastMoveDoc(partId)).id);
+            // We need to delete a second move to let the requester take back their move
+            // await this.partService.removeMove(partId, (await this.partService.getLastMoveDoc(partId)).id);
             turn--;
         }
         const update: Partial<Part> = {
