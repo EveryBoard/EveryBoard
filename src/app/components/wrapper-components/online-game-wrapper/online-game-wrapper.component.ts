@@ -61,7 +61,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -97,6 +97,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private userSubscription!: Subscription; // Initialized in ngOnInit
     private opponentSubscription: Subscription = new Subscription();
     private partSubscription: Subscription = new Subscription();
+    private eventsSubscription: Subscription = new Subscription();
     private observedPartSubscription: Subscription = new Subscription();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
@@ -233,10 +234,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.onCurrentPartUpdate(part.get());
             });
         // TODO: store the subscription and unsubscribe (and test it)
-        this.partService.subscribeToEvents(this.currentPartId, (event: PartEvent) => {
+        this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, (event: PartEvent) => {
             assert(event.eventType === 'Move', 'Only move events should happen currently');
             const moveEvent: PartEventMove = event as PartEventMove;
-            return this.onMove(Player.of(moveEvent.player), moveEvent.move);
+            return this.onReceivedMove(Player.of(moveEvent.player), moveEvent.move);
         });
     }
     private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
@@ -383,7 +384,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private didUserPlay(player: Player): boolean {
         return this.hasUserPlayed[player.value];
     }
-    private async onMove(player: Player, move: JSONValue): Promise<void> {
+    private async onReceivedMove(player: Player, move: JSONValue): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OGWC.onMove');
         this.switchPlayerOnMove(player);
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
@@ -394,7 +395,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
         assert(legality.isSuccess(), message);
-        rules.choose(chosenMove);
+        const success: boolean = rules.choose(chosenMove);
+        assert(success, 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.updateBoard();
     }
     // Public for testing purposes (TODO: shouldn't be, the test is wrong then)
@@ -450,23 +452,22 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     {
         this.endGame = true;
 
-        // TODO: should the part be updated here? Or instead should we wait for the update from firestore?
-        const wonPart: PartDocument = Utils.getNonNullable(this.currentPart).setWinnerAndLoser(victoriousPlayer, loser);
-        this.currentPart = wonPart;
+
+        // TODO FOR REVIEW: I'm disabling this, we should receive the timeout update from the DB after setting it through notifyTimeout
+//        const wonPart: PartDocument = Utils.getNonNullable(this.currentPart).setWinnerAndLoser(victoriousPlayer, loser);
+//        this.currentPart = wonPart;
 
         await this.gameService.notifyTimeout(this.currentPartId, user, lastIndex, victoriousPlayer, loser);
     }
-    public notifyVictory(scores?: [number, number]): Promise<void> {
+    public notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const playerZero: MinimalUser = this.players[0].get();
         const playerOne: MinimalUser = this.players[1].get();
-        if (gameStatus === GameStatus.ONE_WON) {
+        if (winner === Player.ONE) {
             this.currentPart = currentPart.setWinnerAndLoser(playerOne, playerZero);
         } else {
-            assert(gameStatus === GameStatus.ZERO_WON, 'impossible to get a victory without winner!');
             this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne);
         }
         this.endGame = true;
@@ -639,41 +640,46 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return opponent;
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onLegalUserMove');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onLegalUserMove(' + scores + ')');
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
         } else {
+            // We will update the part with new scores and game status (if needed)
+            // We have to compute the game status before adding the move to avoid
+            // risking receiving the move before computing the game status (thereby adding twice the same move)
+            const legality: MGPFallible<unknown> =
+                this.gameComponent.rules.isLegal(move, this.gameComponent.rules.node.gameState);
+            assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
+            const stateAfterMove: GameState =
+                this.gameComponent.rules.applyLegalMove(move, this.gameComponent.rules.node.gameState, legality.get());
+            const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
+                new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.rules.node), MGPOptional.of(move));
+            const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
+
+            // To adhere to security rules, we must add the move before updating the part
             const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
             await this.gameService.addMove(this.currentPartId, this.role as Player, encodedMove);
-            return this.updatePart(move, this.msToSubstract, scores);
+            return this.updatePartWithStatusAndScores(gameStatus, this.msToSubstract, scores);
         }
     }
-    public async updatePart(move: Move,
-                            msToSubstract: [number, number],
-                            scores?: [number, number])
+    public async updatePartWithStatusAndScores(gameStatus: GameStatus, msToSubtract: [number, number], scores?: [number, number])
     : Promise<void>
     {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
-                                                    ', ' + scores + ')');
-        const legality: MGPFallible<unknown> =
-            this.gameComponent.rules.isLegal(move, this.gameComponent.rules.node.gameState);
-        const stateAfterMove: GameState =
-            this.gameComponent.rules.applyLegalMove(move, this.gameComponent.rules.node.gameState, legality.get());
-        const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
-            new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.rules.node), MGPOptional.of(move));
-
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updatePart(' + msToSubtract + ', ' + scores + ')');
+        // const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
                 return this.notifyDraw(scores);
             } else {
-                return this.notifyVictory(scores);
+                assert(gameStatus.winner.isPlayer(), 'Non-draw end games should have a winner');
+                const winner: Player = gameStatus.winner as Player;
+                return this.notifyVictory(winner, scores);
             }
         } else {
             const player: Player = this.role as Player;
             return this.gameService.updatePart(this.currentPartId,
                                                player,
-                                               msToSubstract,
+                                               msToSubtract,
                                                scores);
         }
     }
@@ -890,6 +896,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.gameStarted === true) {
             this.opponentSubscription.unsubscribe();
             this.partSubscription.unsubscribe();
+            this.eventsSubscription.unsubscribe();
         }
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
     }
