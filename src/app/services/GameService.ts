@@ -8,7 +8,6 @@ import { Request } from '../domain/Request';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValue, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { serverTimestamp } from 'firebase/firestore';
@@ -67,8 +66,7 @@ export class GameService {
         }
     }
     private createUnstartedPart(typeGame: string): Promise<string> {
-        display(GameService.VERBOSE,
-                'GameService.createPart(' + typeGame + ')');
+        display(GameService.VERBOSE, 'GameService.createPart(' + typeGame + ')');
 
         const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
 
@@ -105,8 +103,7 @@ export class GameService {
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
         return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
-    public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig
-    {
+    public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig {
         let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
         if (whoStarts === FirstPlayer.RANDOM) {
             if (Math.random() < 0.5) {
@@ -179,31 +176,30 @@ export class GameService {
         };
         return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
-    public sendRequest(partId: string, user: Player, lastIndex: number, request: Request): Promise<void> {
-        return this.updateAndBumpIndex(partId, user, lastIndex, { request });
+    public async proposeDraw(partId: string, player: Player): Promise<void> {
+        await this.partService.addRequest(partId, player, 'Draw');
     }
-    public proposeDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
-        return this.sendRequest(partId, player, lastIndex, Request.drawProposed(player));
-    }
-    public acceptDraw(partId: string, lastIndex: number, as: Player): Promise<void> {
-        const mgpResult: MGPResult = as === Player.ZERO ? MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
+    public async acceptDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
+        await this.partService.addReply(partId, player, 'Accept', 'Draw');
+        const mgpResult: MGPResult = player === Player.ZERO ?
+            MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
         const update: Partial<Part> = {
             result: mgpResult.value,
             request: null,
         };
-        return this.updateAndBumpIndex(partId, as, lastIndex, update);
+        return this.updateAndBumpIndex(partId, player, lastIndex, update);
     }
-    public refuseDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
-        return this.sendRequest(partId, player, lastIndex, Request.drawRefused(player));
+    public async refuseDraw(partId: string, player: Player): Promise<void> {
+        await this.partService.addReply(partId, player, 'Reject', 'Draw');
     }
-    public proposeRematch(partId: string, lastIndex: number, player: Player): Promise<void> {
-        return this.sendRequest(partId, player, lastIndex, Request.rematchProposed(player));
+    public async proposeRematch(partId: string, player: Player): Promise<void> {
+        await this.partService.addRequest(partId, player, 'Rematch');
     }
-    public async acceptRematch(partDocument: PartDocument, lastIndex: number, user: Player): Promise<void> {
-        display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', partDocument });
+    public async acceptRematch(partDocument: PartDocument, player: Player): Promise<void> {
+        display(GameService.VERBOSE, { called: 'GameService.acceptRematch', partDocument });
         const part: Part = Utils.getNonNullable(partDocument.data);
 
-        const iConfigRoom: ConfigRoom = await this.configRoomService.readConfigRoomById(partDocument.id);
+        const configRoom: ConfigRoom = await this.configRoomService.readConfigRoomById(partDocument.id);
         let firstPlayer: FirstPlayer; // firstPlayer will be switched across rematches
         // creator is the one who accepts the rematch
         const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
@@ -216,7 +212,7 @@ export class GameService {
             firstPlayer = FirstPlayer.CREATOR;
         }
         const newConfigRoom: ConfigRoom = {
-            ...iConfigRoom, // unchanged attributes
+            ...configRoom, // unchanged attributes
             firstPlayer: firstPlayer.value,
             creator,
             chosenOpponent,
@@ -226,7 +222,7 @@ export class GameService {
         const newPart: Part = {
             lastUpdate: {
                 index: 0,
-                player: user.value,
+                player: player.value,
             },
             typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,
@@ -237,41 +233,36 @@ export class GameService {
         const rematchId: string = await this.partDAO.create(newPart);
         await this.configRoomService.createConfigRoom(rematchId, newConfigRoom);
         await this.createChat(rematchId);
-        return this.sendRequest(partDocument.id, user, lastIndex, Request.rematchAccepted(part.typeGame, rematchId));
+        await this.partService.addReply(partDocument.id, player, 'Accept', 'Rematch', rematchId);
     }
-    public askTakeBack(partId: string, lastIndex: number, player: Player): Promise<void> {
-        return this.sendRequest(partId, player, lastIndex, Request.takeBackAsked(player));
+    public async askTakeBack(partId: string, player: Player): Promise<void> {
+        await this.partService.addRequest(partId, player, 'TakeBack');
     }
-    public async acceptTakeBack(partId: string, part: PartDocument, role: Player, msToSubstract: [number, number])
+    public async acceptTakeBack(partId: string,
+                                part: PartDocument,
+                                player: Player,
+                                msToSubstract: [number, number])
     : Promise<void>
     {
-        const requester: Player = Request.getPlayer(Utils.getNonNullable(part.data.request));
-        assert(requester !== role, 'Illegal to accept your own request');
-
-        const request: Request = Request.takeBackAccepted(role);
         const lastMove: FirestoreDocument<PartEventMove> = await this.partService.getLastMoveDoc(partId);
         let turn: number = part.data.turn;
-        assert(false, 'TakeBacks not supported yet')
-        // await this.partService.removeMove(partId, lastMove.id);
         turn--;
-        if (lastMove.data.player === role.value) {
-            // We need to delete a second move to let the requester take back their move
-            // await this.partService.removeMove(partId, (await this.partService.getLastMoveDoc(partId)).id);
+        if (lastMove.data.player === player.value) {
+            // We need to take back a second time to let the requester take back their move
             turn--;
         }
         const update: Partial<Part> = {
-            request,
             turn,
             lastUpdateTime: serverTimestamp(),
             remainingMsForZero: Utils.getNonNullable(part.data.remainingMsForZero) - msToSubstract[0],
             remainingMsForOne: Utils.getNonNullable(part.data.remainingMsForOne) - msToSubstract[1],
         };
         const lastIndex: number = part.data.lastUpdate.index;
-        return await this.updateAndBumpIndex(partId, role, lastIndex, update);
+        await this.partService.addReply(partId, player, 'Accept', 'TakeBack' );
+        return await this.updateAndBumpIndex(partId, player, lastIndex, update);
     }
-    public refuseTakeBack(id: string, lastIndex: number, role: Player): Promise<void> {
-        const request: Request = Request.takeBackRefused(role);
-        return this.updateAndBumpIndex(id, role, lastIndex, { request });
+    public async refuseTakeBack(partId: string, player: Player): Promise<void> {
+        await this.partService.addReply(partId, player, 'Reject', 'TakeBack');
     }
     public async addGlobalTime(id: string, lastIndex: number, part: Part, role: Player): Promise<void> {
         let update: Partial<Part> = {
