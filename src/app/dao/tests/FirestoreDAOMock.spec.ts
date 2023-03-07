@@ -219,7 +219,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return true;
     }
-    public async findWhere(conditions: FirestoreCondition[]): Promise<FirestoreDocument<T>[]> {
+    public async findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]> {
         const matchingDocs: FirestoreDocument<T>[] = [];
         this.getStaticDB().forEach((item: {key: string, value: DocumentSubject<T>}) => {
             const id: string = item.value.subject.value.get().id;
@@ -228,7 +228,14 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                 matchingDocs.push({ id, data });
             }
         });
-        return matchingDocs;
+        if (order != null) {
+            matchingDocs.sort((a: FirestoreDocument<T>, b: FirestoreDocument<T>) => a[order] - b[order]);
+        }
+        if (limit != null)  {
+            return matchingDocs.slice(0, limit);
+        } else {
+            return matchingDocs;
+        }
     }
     public subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T> {
         if (this.subDAOs.containsKey(name)) {

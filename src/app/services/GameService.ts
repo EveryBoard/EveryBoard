@@ -4,7 +4,6 @@ import { MGPResult, Part, PartDocument, PartEventMove } from '../domain/Part';
 import { FirstPlayer, ConfigRoom, PartStatus } from '../domain/ConfigRoom';
 import { ConfigRoomService } from './ConfigRoomService';
 import { ChatService } from './ChatService';
-import { Request } from '../domain/Request';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValue, Utils } from 'src/app/utils/utils';
@@ -181,11 +180,10 @@ export class GameService {
     }
     public async acceptDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Accept', 'Draw');
-        const mgpResult: MGPResult = player === Player.ZERO ?
+        const result: MGPResult = player === Player.ZERO ?
             MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
         const update: Partial<Part> = {
-            result: mgpResult.value,
-            request: null,
+            result: result.value,
         };
         return this.updateAndBumpIndex(partId, player, lastIndex, update);
     }
@@ -244,6 +242,7 @@ export class GameService {
                                 msToSubstract: [number, number])
     : Promise<void>
     {
+        console.log('accepting takeback')
         const lastMove: FirestoreDocument<PartEventMove> = await this.partService.getLastMoveDoc(partId);
         let turn: number = part.data.turn;
         turn--;
@@ -264,26 +263,22 @@ export class GameService {
     public async refuseTakeBack(partId: string, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Reject', 'TakeBack');
     }
-    public async addGlobalTime(id: string, lastIndex: number, part: Part, role: Player): Promise<void> {
-        let update: Partial<Part> = {
-            request: Request.addGlobalTime(role.getOpponent()),
-        };
-        if (role === Player.ZERO) {
+    public async addGlobalTime(partId: string, lastIndex: number, part: Part, player: Player): Promise<void> {
+        await this.partService.addAction(partId, player, 'AddGlobalTime')
+        let update: Partial<Part>;
+        if (player === Player.ZERO) {
             update = {
-                ...update,
                 remainingMsForOne: Utils.getNonNullable(part.remainingMsForOne) + 5 * 60 * 1000,
             };
         } else {
             update = {
-                ...update,
                 remainingMsForZero: Utils.getNonNullable(part.remainingMsForZero) + 5 * 60 * 1000,
             };
         }
-        return await this.updateAndBumpIndex(id, role, lastIndex, update);
+        return await this.updateAndBumpIndex(partId, player, lastIndex, update);
     }
-    public async addTurnTime(role: Player, lastIndex: number, id: string): Promise<void> {
-        const update: Partial<Part> = { request: Request.addTurnTime(role.getOpponent()) };
-        return await this.updateAndBumpIndex(id, role, lastIndex, update);
+    public async addTurnTime(partId: string, player: Player): Promise<void> {
+        await this.partService.addAction(partId, player, 'AddTurnTime');
     }
     public async updatePart(partId: string,
                             player: Player,

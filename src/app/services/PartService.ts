@@ -3,7 +3,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { PartDAO } from '../dao/PartDAO';
-import { PartEvent, PartEventMove, Reply, RequestType } from '../domain/Part';
+import { Action, PartEvent, PartEventMove, Reply, RequestType } from '../domain/Part';
 import { Player } from '../jscaip/Player';
 import { MGPOptional } from '../utils/MGPOptional';
 import { JSONValue, Utils } from '../utils/utils';
@@ -72,6 +72,15 @@ export class PartService {
             reply,
             requestType,
             data,
+        });
+    }
+    public addAction(partId: string, player: Player, action: Action): Promise<string> {
+        Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
+        return this.addEvent(partId, {
+            eventType: 'Action',
+            time: serverTimestamp(),
+            player: player.value as 0|1,
+            action,
         });
     }
     public subscribeToEvents(partId: string, callback: (event: PartEvent) => void) {

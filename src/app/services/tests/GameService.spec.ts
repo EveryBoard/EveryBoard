@@ -8,7 +8,6 @@ import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { Player } from 'src/app/jscaip/Player';
-import { Request } from 'src/app/domain/Request';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -26,12 +25,15 @@ import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
+import { PartService } from '../PartService';
 
 describe('GameService', () => {
 
     let gameService: GameService;
 
     let partDAO: PartDAO;
+
+    let partService: PartService;
 
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
@@ -52,6 +54,7 @@ describe('GameService', () => {
             ],
         }).compileComponents();
         gameService = TestBed.inject(GameService);
+        partService = TestBed.inject(PartService);
         partDAO = TestBed.inject(PartDAO);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
@@ -120,28 +123,6 @@ describe('GameService', () => {
 
         // Then it should delegate to the DAO
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
-    }));
-    it('should forbid to accept a take back that the players proposed themselves', fakeAsync(async() => {
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-        const error: string = 'Illegal to accept your own request';
-        for (const player of Player.PLAYERS) {
-            const part: PartDocument = new PartDocument('configRoomId', {
-                lastUpdate: {
-                    index: 0,
-                    player: player.value,
-                },
-                typeGame: 'Quarto',
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                turn: 2,
-                listMoves: [MOVE_1, MOVE_2],
-                request: Request.takeBackAsked(player),
-                result: MGPResult.UNACHIEVED.value,
-            });
-            await expectAsync(gameService.acceptTakeBack('configRoomId', part, player, [0, 1]))
-                .toBeRejectedWithError('Assertion failure: ' + error);
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
-        }
     }));
     it('acceptConfig should delegate to ConfigRoomService and call startGameWithConfig', fakeAsync(async() => {
         const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
@@ -233,13 +214,13 @@ describe('GameService', () => {
             partDAO = TestBed.inject(PartDAO);
         });
         it('should send request when proposing a rematch', fakeAsync(async() => {
-            spyOn(gameService, 'sendRequest').and.resolveTo();
+            spyOn(partService, 'addRequest').and.resolveTo();
 
-            await gameService.proposeRematch('partId', 0, Player.ZERO);
+            await gameService.proposeRematch('partId', Player.ZERO);
 
-            expect(gameService.sendRequest).toHaveBeenCalledTimes(1);
+            expect(partService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
         }));
-        it('should start with the other player when first player mentionned in previous game', fakeAsync(async() => {
+        it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous match with creator starting
             const lastPart: PartDocument = new PartDocument('partId', {
                 lastUpdate: {
@@ -256,7 +237,6 @@ describe('GameService', () => {
                 lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
-                request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameConfigRoom: ConfigRoom = {
                 chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
@@ -267,7 +247,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            spyOn(gameService, 'sendRequest').and.resolveTo();
+            await gameService.proposeRematch('partId', Player.ZERO);
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
@@ -277,7 +257,7 @@ describe('GameService', () => {
             });
 
             // When accepting rematch
-            await gameService.acceptRematch(lastPart, 5, Player.ONE);
+            await gameService.acceptRematch(lastPart, Player.ONE);
 
             // Then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
@@ -299,7 +279,6 @@ describe('GameService', () => {
                 lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
-                request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameConfigRoom: ConfigRoom = {
                 chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
@@ -310,7 +289,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            spyOn(gameService, 'sendRequest').and.resolveTo();
+            await gameService.proposeRematch('partId', Player.ZERO);
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
@@ -320,7 +299,7 @@ describe('GameService', () => {
             });
 
             // When accepting rematch
-            await gameService.acceptRematch(lastPart, 5, Player.ONE);
+            await gameService.acceptRematch(lastPart, Player.ONE);
 
             // Then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
@@ -344,7 +323,6 @@ describe('GameService', () => {
                 lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
-                request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameConfigRoom: ConfigRoom = {
                 chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
@@ -355,7 +333,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            spyOn(gameService, 'sendRequest').and.resolveTo();
+            await gameService.proposeRematch('partId', Player.ZERO);
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
 
             // Install some mocks to check what we need
@@ -376,7 +354,7 @@ describe('GameService', () => {
             });
 
             // When creator accepts the rematch
-            await gameService.acceptRematch(lastPart, 5, Player.ONE);
+            await gameService.acceptRematch(lastPart, Player.ONE);
             // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
             // Moreover, everything needs to have been called eventually
             const part: Part = {

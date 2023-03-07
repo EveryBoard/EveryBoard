@@ -56,7 +56,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -231,6 +231,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.onCurrentPartUpdate(part.get());
             });
         this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, (event: PartEvent) => {
+            console.log({type: event.eventType, player: event.player})
             switch (event.eventType) {
                 case 'Move':
                     const moveEvent: PartEventMove = event as PartEventMove;
@@ -412,15 +413,20 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // Nothing to do when a request is rejected
             return;
         }
+        console.log(reply.requestType)
         switch (reply.requestType) {
             case 'TakeBack':
-                this.takeBackTo(Utils.getNonNullable(this.currentPart).data.turn);
+                const accepter: Player = Player.of(reply.player);
+                this.takeBackToPreviousPlayerTurn(accepter.getOpponent())
                 break;
-            default:
-                Utils.expectToBe(reply.requestType, 'Rematch')
+            case 'Rematch':
                 await this.router.navigate(['/nextGameLoading']);
                 const game: string = this.extractGameNameFromURL();
                 await this.router.navigate(['/play', game, reply.data]);
+                break;
+            default:
+                Utils.expectToBe(reply.requestType, 'Draw')
+                // Nothing to do as the part will be updated with the draw
                 break;
         }
     }
@@ -532,7 +538,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private takeBackHasJustBeenRefusedByOpponent(): boolean {
         if (this.lastRequestOrReply.isAbsent()) return false;
         const requestOrReply: PartEventRequest | PartEventReply = this.lastRequestOrReply.get();
-        return requestOrReply.eventType === 'Request' &&
+        return requestOrReply.eventType === 'Reply' &&
                requestOrReply.requestType === 'TakeBack' &&
                requestOrReply.player === (this.role as Player).getOpponent().value &&
                requestOrReply.reply === 'Reject';
@@ -554,7 +560,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return PlayerOrNone.NONE;
         }
     }
-    public async canProposeDraw(): Promise<boolean> {
+    public canProposeDraw(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
         if (this.endGame) {
             return false;
@@ -590,17 +596,19 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return PlayerOrNone.NONE;
         }
     }
-    public takeBackTo(turn: number): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackTo');
+    private takeBackToPreviousPlayerTurn(player: Player): void {
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackToPreviousPlayerTurn');
+        // Take back once, in any case
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
-        if (this.gameComponent.getTurn() === turn) {
-            throw new Error('TODO'); // this.switchPlayerChronosOnMove();
-        } else {
+        if (this.gameComponent.getCurrentPlayer() !== player) {
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
-            const player: Player = Player.fromTurn(turn);
             this.resetChronoFor(player);
+        } else {
+            // REVIEW: chronos stuff todo
         }
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
+        console.log(this.currentPlayer.name)
         this.gameComponent.updateBoard();
     }
     public async setPlayersDatas(updatedICurrentPart: PartDocument): Promise<void> {
@@ -868,7 +876,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public addTurnTime(): Promise<void> {
         const giver: Player = this.role as Player;
-        return this.gameService.addTurnTime(giver, this.getLastIndex(), this.currentPartId);
+        return this.gameService.addTurnTime(this.currentPartId, giver);
     }
     public addTurnTimeTo(player: Player, addedMs: number): void {
         const currentPlayer: Player = Player.fromTurn(Utils.getNonNullable(this.currentPart).getTurn());

@@ -47,10 +47,10 @@ export interface PartEventMove extends PartEvent {
     readonly move: JSONValue
 }
 
-export type ActionType = 'AddTurnTime' | 'AddGlobalTime'
+export type Action = 'AddTurnTime' | 'AddGlobalTime'
 export interface PartEventAction extends PartEvent {
     readonly eventType: 'Action'
-    readonly actionType: ActionType
+    readonly action: Action
 }
 
 export type RequestType = 'Draw' | 'Rematch' | 'TakeBack'
