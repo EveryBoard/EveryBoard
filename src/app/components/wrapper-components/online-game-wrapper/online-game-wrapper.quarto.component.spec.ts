@@ -641,7 +641,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then nothing special should have happened, including no redirection
             // Though compo.observedPart should have been locally changed
             expect(router.navigate).not.toHaveBeenCalled();
-            expect(wrapper.getObservedPart()).toEqual(MGPOptional.empty());
+            expect(wrapper['observedPart']).toEqual(MGPOptional.empty());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
