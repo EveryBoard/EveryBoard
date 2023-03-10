@@ -217,7 +217,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(wrapper.setRole).toHaveBeenCalledOnceWith(Player.ZERO);
         }));
         it('should call setRole according to the current player (player one)', fakeAsync(async() => {
-            // Given a tutorial a step from player one
+            // Given a tutorial a step for player one
             const statePlayerOne: QuartoState = new QuartoState([
                 [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                 [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],

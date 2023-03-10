@@ -9,7 +9,7 @@
             </div>
             <div *ngIf="currentReason.isPresent()" class="message is-danger" role="alert">
                 <div class="message-header" i18n>Failure</div>
-                <div class="message-body"><p id="currentReason" [innerHTML]="currentReason.get()"></p></div>
+                <div class="message-body" id="currentReason" [innerHTML]="currentReason.get()"></div>
             </div>
             <div class="block">
                 <button id="retryButton"
