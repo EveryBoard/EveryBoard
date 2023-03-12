@@ -37,7 +37,7 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
         }
         const scoreZero: number = this.queenBeeNeighbors(node.gameState, Player.ZERO);
         const scoreOne: number = this.queenBeeNeighbors(node.gameState, Player.ONE);
-        return new BoardValue(scoreZero * Player.ZERO.getScoreModifier() + scoreOne * Player.ONE.getScoreModifier());
+        return BoardValue.from(scoreZero, scoreOne);
     }
 
     private queenBeeNeighbors(state: HiveState, player: Player): number {

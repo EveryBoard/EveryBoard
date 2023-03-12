@@ -13,7 +13,6 @@ export class HivePiece implements ComparableObject {
         public encode(piece: HivePiece): JSONValue {
             return { owner: piece.owner.value, kind: piece.kind };
         }
-
         public decode(encoded: JSONValue): HivePiece {
             // eslint-disable dot-notation
             assert(Utils.getNonNullable(encoded)['kind'] !== null, 'invalid encoded HivePiece');
@@ -24,25 +23,22 @@ export class HivePiece implements ComparableObject {
             // eslint-enable dot-notation
         }
     };
-
     public constructor(public readonly owner: Player, public readonly kind: HivePieceKind) {
     }
-
     public toString(): string {
         return `${this.kind}_${this.owner.toString()}`;
     }
-
     public equals(other: HivePiece): boolean {
         return this.owner === other.owner && this.kind === other.kind;
     }
 }
 
 export class HivePieceStack implements ComparableObject {
+
     public static EMPTY: HivePieceStack = new HivePieceStack([]);
 
     public constructor(public readonly pieces: HivePiece[]) {
     }
-
     public equals(other: HivePieceStack): boolean {
         if (this.size() !== other.size()) return false;
         for (let i: number = 0; i < this.pieces.length; i++) {
@@ -52,30 +48,24 @@ export class HivePieceStack implements ComparableObject {
         }
         return true;
     }
-
     public isEmpty(): boolean {
         return this.pieces.length === 0;
     }
-
-    public isOccupied(): boolean {
+    public isNotEmpty(): boolean {
         return this.isEmpty() === false;
     }
-
     public add(piece: HivePiece): HivePieceStack {
         return new HivePieceStack([piece, ...this.pieces]);
     }
-
     public topPiece(): HivePiece {
-        Utils.assert(this.isEmpty() === false, 'HivePieceStack: cannot get top piece of an empty stack');
+        Utils.assert(this.isNotEmpty(), 'HivePieceStack: cannot get top piece of an empty stack');
         return this.pieces[0];
     }
-
     public removeTopPiece(): HivePieceStack {
         const pieces: HivePiece[] = [...this.pieces];
         pieces.shift();
         return new HivePieceStack(pieces);
     }
-
     public size(): number {
         return this.pieces.length;
     }

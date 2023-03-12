@@ -305,7 +305,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             case 'Grasshopper': return -0.5;
             case 'Spider': return 0.5;
             default:
-                Utils.expectToBe(piece.kind, 'SoldierAnt', 'piece must be a soldier ant');
+                Utils.expectToBe(piece.kind, 'SoldierAnt');
                 return 1.5;
         }
     }
@@ -315,7 +315,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (piece.owner !== this.getCurrentPlayer()) {
+        if (piece.owner === this.getCurrentPlayer().getOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(this.getState())) {
@@ -384,7 +384,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
         const state: HiveState = this.getState();
         const piece: HivePiece = stack.topPiece();
-        if (piece.owner !== state.getCurrentPlayer()) {
+        if (piece.owner === state.getCurrentPlayer().getOpponent()) {
             // If the stack clicked is not owned by the player,
             // the player can still select it in order to inspect it
             if (stack.size() === 1) {

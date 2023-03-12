@@ -85,6 +85,17 @@ export class ArrayUtils {
         if (prefix.length > lst.length) return false;
         return ArrayUtils.compareArray(prefix, lst.slice(0, prefix.length));
     }
+    /**
+     * range(n) returns the list [0, 1, 2, ..., n-1]
+     * Enables doing *ngFor="let x in ArrayUtils.range(5)" in an Angular template
+     */
+    public static range(n: number): number[] {
+        const range: number[] = [];
+        for (let i: number = 0; i < n; i++) {
+            range.push(i);
+        }
+        return range;
+    }
 }
 
 interface Cell<T> {

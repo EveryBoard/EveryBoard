@@ -137,7 +137,7 @@ class GameDescription {
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
 
-    public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use your insects' abilities to block the opponent's queen in order to win!`;
+    public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent's queen in order to win!`;
 
     public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
 

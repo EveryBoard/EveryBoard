@@ -14,7 +14,7 @@ export class HiveFailure {
 
     public static readonly SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES: Localized = () => $localize`The spider must move on neighboring spaces.`;
 
-    public static readonly SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT: Localized = () => $localize`The spider can only move around pieces that it is in direct contact with.`;
+    public static readonly SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT: Localized = () => $localize`The spider can only move around pieces that are in direct contact with it.`;
 
     public static readonly SPIDER_CANNOT_BACKTRACK: Localized = () => $localize`The spider cannot go twice through the same space in the same move.`;
 

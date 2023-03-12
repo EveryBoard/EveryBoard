@@ -11,6 +11,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -18,16 +19,8 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
  * by sub components which themselves are not GameComponent subclasses
  */
 export abstract class BaseGameComponent {
-    /**
-     * Enables doing *ngFor="let x in range(5)" in an Angular template
-     */
-    public range(n: number): number[] {
-        const range: number[] = [];
-        for (let i: number = 0; i < n; i++) {
-            range.push(i);
-        }
-        return range;
-    }
+    // Make ArrayUtils available in game components
+    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
 
     /**
      * Gets the CSS class for a player color

@@ -118,7 +118,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const player: Player = state.getCurrentPlayer();
 
         // This should be a piece of the player
-        if (move.piece.owner !== state.getCurrentPlayer()) {
+        if (move.piece.owner === player.getOpponent()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
 
@@ -137,7 +137,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         let hasNeighbor: boolean = false;
         for (const neighbor of HexagonalUtils.getNeighbors(move.coord)) {
             const neighborStack: HivePieceStack = state.getAt(neighbor);
-            if (neighborStack.isEmpty() === false) {
+            if (neighborStack.isNotEmpty()) {
                 hasNeighbor = true;
                 if (state.turn !== 1 && neighborStack.topPiece().owner === player.getOpponent()) {
                     return MGPFallible.failure(HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT());
@@ -149,7 +149,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
 
         // Pieces must be dropped on an empty space (even the beetle)
-        if (state.getAt(move.coord).isEmpty() === false) {
+        if (state.getAt(move.coord).isNotEmpty()) {
             return MGPFallible.failure(HiveFailure.MUST_DROP_ON_EMPTY_SPACE());
         }
 
@@ -210,8 +210,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     }
 
     public shouldPass(state: HiveState): boolean {
-        return this.getPossibleDropLocations(state).size() === 0 &&
-            this.getPossibleMovesOnBoard(state).size() === 0;
+        return this.getPossibleDropLocations(state).size() === 0 && this.getPossibleMovesOnBoard(state).size() === 0;
     }
 
     public getGameStatus(node: HiveNode): GameStatus {
