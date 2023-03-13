@@ -15,19 +15,15 @@ export class HiveMoveDrop extends MoveCoord {
         (move: HiveMoveDrop): [HivePiece, Coord] => [move.piece, move.coord],
         (fields: [HivePiece, Coord]): HiveMoveDrop => new HiveMoveDrop(fields[0], fields[1].x, fields[1].y),
     );
-
     public static from(piece: HivePiece, coord: Coord): HiveMoveDrop {
         return new HiveMoveDrop(piece, coord.x, coord.y);
     }
-
     private constructor(public readonly piece: HivePiece, x: number, y: number) {
         super(x, y);
     }
-
     public toString(): string {
         return `HiveDrop(${this.piece.toString()}, ${this.coord.toString()})`;
     }
-
     public equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveDrop) {
             return this.piece.equals(other.piece) && this.coord.equals(other.coord);
@@ -41,22 +37,18 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
     public static encoder: Encoder<HiveMoveCoordToCoord> = MoveCoordToCoord.getEncoder((start: Coord, end: Coord) => {
         return new HiveMoveCoordToCoord(start, end);
     });
-
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
         if (start.equals(end)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         }
         return MGPFallible.success(new HiveMoveCoordToCoord(start, end));
     }
-
     protected constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-
     public toString(): string {
         return `HiveMoveCoordToCoord(${this.coord.toString()} -> ${this.end.toString()})`;
     }
-
     public equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveSpider) {
             // Spider moves are coord to coord but the intermediate coords matter, so we can't compare them here
@@ -76,20 +68,16 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
         (move: HiveMoveSpider): [Coord, Coord, Coord, Coord] => move.coords,
         (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
     );
-
     public static fromCoords(coords: [Coord, Coord, Coord, Coord]): HiveMoveSpider {
         return new HiveMoveSpider(coords);
     }
-
     private constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
         super(coords[0], coords[3]);
     }
-
     public toString(): string {
         const coords: string = this.coords.map((coord: Coord) => coord.toString()).join(', ');
         return `HiveMoveSpider(${coords})`;
     }
-
     public equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveSpider) {
             return this.coord.equals(other.coord) && this.end.equals(other.end);
@@ -103,7 +91,6 @@ export class HiveMovePass extends Move {
     public toString(): string {
         return 'HiveMovePass';
     }
-
     public equals(other: this): boolean {
         return other instanceof HiveMovePass;
     }
@@ -119,15 +106,12 @@ export namespace HiveMove {
     export function drop(piece: HivePiece, coord: Coord): HiveMove {
         return HiveMoveDrop.from(piece, coord);
     }
-
     export function move(start: Coord, end: Coord): MGPFallible<HiveMove> {
         return HiveMoveCoordToCoord.from(start, end);
     }
-
     export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
         return HiveMoveSpider.fromCoords(coords);
     }
-
     export const encoder: MoveEncoder<HiveMove> = new class extends MoveEncoder<HiveMove> {
         public encodeMove(value: HiveMove): JSONValueWithoutArray {
             if (value instanceof HiveMoveDrop) {

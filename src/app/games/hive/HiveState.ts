@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { FreeHexagonalGameState } from 'src/app/jscaip/FreeHexagonalGameState';
+import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { Player } from 'src/app/jscaip/Player';
@@ -10,6 +10,7 @@ import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { HivePiece, HivePieceStack } from './HivePiece';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class HiveRemainingPieces implements ComparableObject {
 
@@ -114,7 +115,7 @@ class HiveStateUpdate {
     }
 }
 
-export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements ComparableObject {
+export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements ComparableObject {
 
     public static getInitialState(): HiveState {
         const board: Table<HivePiece[]> = [];
@@ -205,5 +206,11 @@ export class HiveState extends FreeHexagonalGameState<HivePieceStack> implements
             }
         }
         return result;
+    }
+    public haveCommonNeighbor(first: Coord, second: Coord): boolean {
+        const occupiedNeighborsOfFirst: MGPSet<Coord> = this.getOccupiedNeighbors(first);
+        const occupiedNeighborsOfSecond: MGPSet<Coord> = this.getOccupiedNeighbors(second);
+        const commonNeighbor: MGPOptional<Coord> = occupiedNeighborsOfFirst.findAnyCommonElement(occupiedNeighborsOfSecond);
+        return commonNeighbor.isPresent();
     }
 }

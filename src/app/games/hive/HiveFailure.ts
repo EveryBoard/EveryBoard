@@ -20,7 +20,7 @@ export class HiveFailure {
 
     public static readonly QUEEN_BEE_MUST_BE_ON_BOARD_BEFORE_MOVE: Localized = () => $localize`The queen bee must be placed on the board before moving a piece.`;
 
-    public static readonly THIS_PIECE_CANNOT_CLIMB: Localized = () => $localize`This piece is not allowed to climb over other pieces.`;
+    public static readonly THIS_PIECE_CANNOT_CLIMB: Localized = () => $localize`Only the beetle is allowed to climb over other pieces.`;
 
     public static readonly CANNOT_DISCONNECT_HIVE: Localized = () => $localize`You are not allowed to split the hive.`;
 

@@ -96,6 +96,12 @@ export class ArrayUtils {
         }
         return range;
     }
+    /**
+     * A method that can be used to sort an array with the smallest number first with xs.sort(ArrayUtils.smallerFirst);
+     */
+    public static smallerFirst(a: number, b: number): number {
+        return a-b;
+    }
 }
 
 interface Cell<T> {
@@ -127,13 +133,12 @@ export class Table2DWithPossibleNegativeIndices<T extends NonNullable<unknown>> 
     }
     [Symbol.iterator](): IterableIterator<Cell<T>> {
         const elements: Cell<T>[] = [];
-        const smallerFirst: (a: number, b: number) => number = (a: number, b: number) => a-b;
         const ys: number[] = this.content.getKeySet().toList();
-        ys.sort(smallerFirst);
+        ys.sort(ArrayUtils.smallerFirst);
         for (const y of ys) {
             const line: MGPMap<number, T> = this.content.get(y).get();
             const xs: number[] = line.getKeySet().toList();
-            xs.sort(smallerFirst);
+            xs.sort(ArrayUtils.smallerFirst);
             for (const x of xs) {
                 const content: T = line.get(x).get();
                 elements.push({ x, y, content });

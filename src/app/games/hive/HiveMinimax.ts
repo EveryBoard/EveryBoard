@@ -11,14 +11,17 @@ import { HiveState } from './HiveState';
 export class HiveMinimax extends Minimax<HiveMove, HiveState> {
 
     public getListMoves(node: HiveNode): HiveMove[] {
-        const moves: HiveMove[] = this.getListDrops(node.gameState)
-            .concat(HiveRules.get().getPossibleMovesOnBoard(node.gameState).toList());
+        const dropMoves: HiveMove[] = this.getListDrops(node.gameState);
+        const movesOnBoard: HiveMove[] = this.getListOfOnBoardMoves(node.gameState);
+        const moves: HiveMove[] = dropMoves.concat(movesOnBoard);
         if (moves.length === 0) {
             return [HiveMove.PASS];
         }
         return moves;
     }
-
+    private getListOfOnBoardMoves(state: HiveState): HiveMove[] {
+        return HiveRules.get().getPossibleMovesOnBoard(state).toList();
+    }
     public getListDrops(state: HiveState): HiveMove[] {
         const drops: HiveMove[] = [];
         for (const coord of HiveRules.get().getPossibleDropLocations(state)) {
@@ -28,7 +31,6 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
         }
         return drops;
     }
-
     public getBoardValue(node: HiveNode): BoardValue {
         // The board value is based on the number of neighbors to the queen
         const status: GameStatus = HiveRules.get().getGameStatus(node);
@@ -39,7 +41,6 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
         const scoreOne: number = this.queenBeeNeighbors(node.gameState, Player.ONE);
         return BoardValue.from(scoreZero, scoreOne);
     }
-
     private queenBeeNeighbors(state: HiveState, player: Player): number {
         const queenBee: MGPOptional<Coord> = state.queenBeeLocation(player);
         if (queenBee.isPresent()) {

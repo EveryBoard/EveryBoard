@@ -15,7 +15,7 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
     @Input() x: number;
     @Input() y: number;
     @Input() hexaLayout: HexaLayout;
-    @Input() level: number;
+    @Input() layer: number;
     @Input() pieceHeight: number;
 
     public hexaPoints: string = '';
@@ -23,22 +23,22 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
     public isoPointsLight: string = '';
     public isoPointsDark: string = '';
     public isoPointsStroke: string = '';
-    public levelTransform: string = '';
+    public layerTransform: string = '';
     public hexaCenter: Coord = new Coord(0, 0);
 
     public ngAfterContentChecked() {
         // This needs to be done after every content check,
-        // otherwise modifcations to selected will not be properly propagated
+        // otherwise modifications to selected will not be properly propagated
         const coord: Coord = new Coord(this.x, this.y);
         this.pieceClass = this.getPlayerClass(this.piece.owner);
         this.hexaPoints = this.hexaLayout.getHexaPointsAt(coord);
         this.hexaCenter = this.hexaLayout.getCenterAt(coord);
         const isoPoints: [Coord[], Coord[], Coord[]] = this.hexaLayout.getIsoPoints(coord, this.pieceHeight);
         const isoPointsSVG: string[] = isoPoints.map((coords: Coord[]) =>
-            coords.map((coord: Coord) => coord.toSVGCoord()).join(' '));
+            coords.map((coord: Coord) => coord.toSVGPoint()).join(' '));
         this.isoPointsLight = isoPointsSVG[0];
         this.isoPointsDark = isoPointsSVG[1];
         this.isoPointsStroke = isoPointsSVG[2];
-        this.levelTransform = `translate(0 -${(this.level+1) * this.pieceHeight})`;
+        this.layerTransform = `translate(0 -${(this.layer+1) * this.pieceHeight})`;
     }
 }

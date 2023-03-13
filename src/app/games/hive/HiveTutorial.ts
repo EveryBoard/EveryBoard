@@ -40,7 +40,7 @@ export class HiveTutorial extends Tutorial {
             ], 7)),
         TutorialStep.anyMove(
             $localize`Placing the first and second piece`,
-            $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
+            $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by Light, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
             HiveState.getInitialState(),
             HiveMove.drop(B, new Coord(0, 0)),
             $localize`Congratulations!`),
@@ -54,7 +54,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Congratulations!`),
         TutorialStep.fromMove(
             $localize`Moving pieces: the queen bee`,
-            $localize`Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:<ol><li>the hive must always remain fully connected, and</li><li>pieces that are moved by sliding should be able to physically slide to their destination.</li></ol> The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.<br/><br/>You are playing Dark, move your queen bee.`,
+            $localize`Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:<ol><li>the hive must always remain fully connected, and</li><li>pieces should be able to physically slide to their destination (except for the beetle and grasshopper as we will see later).</li></ol>The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.<br/><br/>You are playing Dark, move your queen bee.`,
             HiveState.fromRepresentation([
                 [[], [S], [g], [q], [b]],
                 [[b], [Q], [B], [], []],
@@ -102,7 +102,7 @@ export class HiveTutorial extends Tutorial {
                 [[], [Q], [b]],
                 [[a], [s], []],
             ], 6),
-            HiveMove.move(new Coord(1, 0), new Coord(3, 0)).get(),
+            HiveMove.move(new Coord(1, 0), new Coord(3, 1)).get(),
             (move: Move, _previousState: GameState, _resultingState: GameState): MGPValidation => {
                 if (move.equals(HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get())) {
                     return MGPValidation.failure($localize`You have not freed your queen, try again!`);
@@ -112,7 +112,7 @@ export class HiveTutorial extends Tutorial {
             $localize`Congratulations!`),
         TutorialStep.anyMove(
             $localize`Moving the spider`,
-            $localize`Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive: here, Dark's spider cannot go on the left as its first move for example. To do a spider move, select a spider and click on the three spaces that compose the move.<br/><br/>You're playing Dark, move your spider!`,
+            $localize`Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that are in direct contact with it. This means that the spider is not allowed to temporarily split the hive. For example, here, Dark's spider cannot go on the left as its first move. To do a spider move, select a spider and click on the three spaces that compose the move.<br/><br/>You're playing Dark, move your spider!`,
             HiveState.fromRepresentation([
                 [[], [S], [s], [b]],
                 [[], [], [], [B]],

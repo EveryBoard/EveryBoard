@@ -1,4 +1,4 @@
-<svg:g [attr.transform]="levelTransform">
+<svg:g [attr.transform]="layerTransform">
     <svg:polygon [attr.points]="isoPointsLight"
                  [ngClass]="pieceClass"
                  class="base no-stroke lighter"/>

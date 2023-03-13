@@ -198,8 +198,8 @@
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
         <target>Le plus vieux jeu de stratégie encore joué. Un jeu de contrôle de territoire</target>
       </trans-unit>
-      <trans-unit id="5275095432470206038" datatype="html">
-        <source>You are in charge of a hive full of insects. Use your insects&apos; abilities to block the opponent&apos;s queen in order to win!</source>
+      <trans-unit id="4865500405661191388" datatype="html">
+        <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
         <target>Vous contrôlez une colonie d'insectes. Utilisez les capacités de vos insectes pour bloquer la reine de votre adversaire afin de gagner !</target>
       </trans-unit>
       <trans-unit id="3910056094130316471" datatype="html">
@@ -1548,7 +1548,7 @@
         You&apos;re playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!</source>
         <target>Les pièces avec un éclair sont appelées « sources ».
         Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, essayez de déconnecter une pile de 4 pièces de votre adversaire. Il y a deux façons de le faire, l'une étant mieux que l'autre : essayer de trouver celle-là !</target>
+        Vous jouez Foncé, essayez de déconnecter une pile de 4 pièces de votre adversaire. Il y a deux façons de le faire, l'une étant mieux que l'autre : essayez de trouver celle-là !</target>
       </trans-unit>
       <trans-unit id="2017860068625343028" datatype="html">
         <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
@@ -2210,8 +2210,8 @@
         <source>The spider must move on neighboring spaces.</source>
         <target>L'araignée doit se déplacer sur des cases voisines.</target>
       </trans-unit>
-      <trans-unit id="7737073267247289204" datatype="html">
-        <source>The spider can only move around pieces that it is in direct contact with.</source>
+      <trans-unit id="3098163088355072426" datatype="html">
+        <source>The spider can only move around pieces that are in direct contact with it.</source>
         <target>L'araignée doit se déplacer autour des pièces avec lesquelles elle est en contact direct.</target>
       </trans-unit>
       <trans-unit id="7928136093693713176" datatype="html">
@@ -2222,8 +2222,8 @@
         <source>The queen bee must be placed on the board before moving a piece.</source>
         <target>La reine doit être déposée sur le plateau afin de pouvoir déplacer une pièce.</target>
       </trans-unit>
-      <trans-unit id="8406343979535050951" datatype="html">
-        <source>This piece is not allowed to climb over other pieces.</source>
+      <trans-unit id="5380773634484088090" datatype="html">
+        <source>Only the beetle is allowed to climb over other pieces.</source>
         <target>Cette pièce n'est pas autorisée à grimper sur d'autres pièces.</target>
       </trans-unit>
       <trans-unit id="8284939639567724336" datatype="html">
@@ -2260,15 +2260,15 @@
       </trans-unit>
       <trans-unit id="6900505086205524561" datatype="html">
         <source>The object of the game at Hive is to surround the opponent&apos;s queen. Once the queen is surrounded by 6 pieces, no matter the owner of these pieces, the game ends. The player with a queen that is not surrounded wins. In case both queens are fully surrounded at the same turn, it is a draw. Here, Dark won.</source>
-        <target>Le but du jeu est d'entourer complètement la reine adverse. Une fois que la reine est entourée par 6 pièces, peu importe le propriétaire de ces pièces, le jeu s'arrête. Le joueur avec une reine qui n'est pas entourée gagne. Si les deux reines sont complètement entourées au même tour, il y a match nul. Ici, Foncé a gagné.</target>
+        <target>Le but du jeu est d'entourer complètement la reine adverse. Une fois que qu'une reine est entourée par 6 pièces, peu importe le propriétaire de ces pièces, le jeu s'arrête. Le joueur avec une reine qui n'est pas entourée gagne. Si les deux reines sont complètement entourées au même tour, il y a match nul. Ici, Foncé a gagné.</target>
       </trans-unit>
       <trans-unit id="1124156761679970164" datatype="html">
         <source>Placing the first and second piece</source>
         <target>Placer la première et seconde pièce</target>
       </trans-unit>
-      <trans-unit id="1644752193583490619" datatype="html">
-        <source>There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and starting the game, put any piece on the board.</source>
-        <target>Il y a deux types d'actions: déposer une pièce et déplacer une pièce. Initialement, le plateau est vide et il nous faudra donc déposer une pièce sur le plateau. Pour la première pièce, il n'y a pas de restriction de placement : vous pouvez choisir n'importe quelle pièce et la mettre sur le plateau. La deuxième pièce, introduite par le joueur Clair, devra être placée sur une case voisine de la première pièce. Pour déposer une pièce, sélectionner la pièce de votre choix parmis vos pièces restantes (en dessous du plateau), et cliquez ensuite sur la case où vous voulez la déposer.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé et commencez la partie, placez une pièce sur le plateau.</target>
+      <trans-unit id="2065654476590106098" datatype="html">
+        <source>There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by Light, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and starting the game, put any piece on the board.</source>
+        <target>Il y a deux types d'actions: déposer une pièce et déplacer une pièce. Initialement, le plateau est vide et il nous faudra donc déposer une pièce sur le plateau. Pour la première pièce, il n'y a pas de restriction de placement : vous pouvez choisir n'importe quelle pièce et la mettre sur le plateau. La deuxième pièce, introduite par Clair, devra être placée sur une case voisine de la première pièce. Pour déposer une pièce, sélectionner la pièce de votre choix parmis vos pièces restantes (en dessous du plateau), et cliquez ensuite sur la case où vous voulez la déposer.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé et commencez la partie, placez une pièce sur le plateau.</target>
       </trans-unit>
       <trans-unit id="4766965064757095472" datatype="html">
         <source>Placing pieces after the second turn</source>
@@ -2282,9 +2282,9 @@
         <source>Moving pieces: the queen bee</source>
         <target>Déplacer les pièces : la reine</target>
       </trans-unit>
-      <trans-unit id="1812241943392911048" datatype="html">
-        <source>Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:&lt;ol&gt;&lt;li&gt;the hive must always remain fully connected, and&lt;/li&gt;&lt;li&gt;pieces that are moved by sliding should be able to physically slide to their destination.&lt;/li&gt;&lt;/ol&gt; The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.&lt;br/&gt;&lt;br/&gt;You are playing Dark, move your queen bee.</source>
-        <target>Une fois que votre reine est placée sur le plateau, vous pouvez déplacer vos pièces. Vous devez placer votre reine au plus tard à votre quatrième tour. Chaque insecte se déplace d'une façon différente, et les déplacements doivent respecter deux conditions :&lt;ol&gt;&lt;li&gt;la ruche doit toujours former un bloc contigu ;&lt;/li&gt;&lt;li&gt;les pièces qui sont déplacées par glissades doivent être capables de glisser jusqu'à leur destination.&lt;/li&gt;&lt;/ol&gt;La reine peut se déplacer vers n'importe quelle case voisine libre. Pour déplacer une pièce, cliquez dessus et cliquez ensuite sur sa destination. Les destinations possibles sont mises en évidence.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre reine.</target>
+      <trans-unit id="1929474568921893905" datatype="html">
+        <source>Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:&lt;ol&gt;&lt;li&gt;the hive must always remain fully connected, and&lt;/li&gt;&lt;li&gt;pieces should be able to physically slide to their destination (except for the beetle and grasshopper as we will see later).&lt;/li&gt;&lt;/ol&gt;The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.&lt;br/&gt;&lt;br/&gt;You are playing Dark, move your queen bee.</source>
+        <target>Une fois que votre reine est placée sur le plateau, vous pouvez déplacer vos pièces. Vous devez placer votre reine au plus tard à votre quatrième tour. Chaque insecte se déplace d'une façon différente, et les déplacements doivent respecter deux conditions :&lt;ol&gt;&lt;li&gt;la ruche doit toujours former un bloc contigu ;&lt;/li&gt;&lt;li&gt;les pièces doivent être capables de glisser jusqu'à leur destination (à l'exception du scarabée et de la sauterelle, comme nous le verrons plus tard).&lt;/li&gt;&lt;/ol&gt;La reine peut se déplacer vers n'importe quelle case voisine libre. Pour déplacer une pièce, cliquez dessus et cliquez ensuite sur sa destination. Les destinations possibles sont mises en évidence.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre reine.</target>
       </trans-unit>
       <trans-unit id="8573010608388393091" datatype="html">
         <source>Moving the beetle</source>
@@ -2308,7 +2308,7 @@
       </trans-unit>
       <trans-unit id="6824181934070796921" datatype="html">
         <source>The grasshopper jumps over one or more pieces in a straight line, and stops at the first empty space encountered. It cannot jump over empty spaces, and can only move through jumps. Because it jumps, it does not adhere to the sliding restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Jump over three pieces with your grasshopper!</source>
-        <target>La sauterelle saute au dessus d'une ou plusieurs pièce en ligne droite, et s'arrête à la première case vide. Elle ne peut pas sauter au dessus de cases vides, et peut uniquement se déplacer en sautant. Car elle saute, elle ne doit pas adhérer à la restriction de glissade.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Sautez au-dessus de trois pièces avec votre sauterelle !</target>
+        <target>La sauterelle saute au dessus d'une ou plusieurs pièce en ligne droite, et s'arrête à la première case vide. Elle ne peut pas sauter au dessus de cases vides, et peut uniquement se déplacer en sautant. Car elle saute, elle ne doit pas adhérer à la restriction des glissades.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Sautez au-dessus de trois pièces avec votre sauterelle !</target>
       </trans-unit>
       <trans-unit id="5124714891438504376" datatype="html">
         <source>Moving the soldier ant</source>
@@ -2316,18 +2316,18 @@
       </trans-unit>
       <trans-unit id="2899217750291886948" datatype="html">
         <source>The soldier ant is a powerful piece: it can move anywhere in the hive as long as it respects the sliding and the one hive restrictions!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Your queen bee is stuck, move your soldier ant to free up your queen!</source>
-        <target>La fourmi légionnaire est une pièce puissante : elle peut se déplacer n'importe où dans la ruche tant qu'elle respecte la règle de glissade et la règle de la ruche unique !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Votre reine est bloquée, déplacez votre fourmi afin de la libérer !</target>
+        <target>La fourmi légionnaire est une pièce puissante : elle peut se déplacer n'importe où dans la ruche tant qu'elle respecte la règle des glissades et la règle de la ruche unique !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Votre reine est bloquée, déplacez votre fourmi afin de la libérer !</target>
       </trans-unit>
       <trans-unit id="7623079085925548808" datatype="html">
         <source>You have not freed your queen, try again!</source>
-        <target>Vous n'avez pas libéré votre reine, essayer à nouveau !</target>
+        <target>Vous n'avez pas libéré votre reine, essayez à nouveau !</target>
       </trans-unit>
       <trans-unit id="3777509045596617031" datatype="html">
         <source>Moving the spider</source>
         <target>Déplacer l'araignée</target>
       </trans-unit>
-      <trans-unit id="1211369340024090138" datatype="html">
-        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive: here, Dark&apos;s spider cannot go on the left as its first move for example. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your spider!</source>
+      <trans-unit id="2739227784886826925" datatype="html">
+        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that are in direct contact with it. This means that the spider is not allowed to temporarily split the hive. For example, here, Dark&apos;s spider cannot go on the left as its first move. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your spider!</source>
         <target>Finalement, l'araignée peut se déplacer d'exactement 3 cases. Elle n'est pas autorisée à passer deux fois par la même case au lors d'un tour. L'araignée se déplace le long des autres pièces : elle ne peut donc que se déplacer autour des pièces avec lesquelles elle est en contact direct : ici, l'arainée de Foncé ne peut pas aller vers la gauche comme premier déplacement par exemple. Cela signifie que l'arainée ne peut pas temporairement séparer la rucher. Pour déplacer une araignée, sélectionnez-en une et cliquer sur les trois cases qui composent son mouvement.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez vote araignée.</target>
       </trans-unit>
       <trans-unit id="3146815812493244221" datatype="html">
@@ -3435,7 +3435,7 @@
               Vous pouvez aussi cliquer une seconde fois sur votre pièce pour changer son orientation sans la déplacer.&lt;/li&gt;
             &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Essayer de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
+        Essayez de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
         <source>Congratulations, you made a side-slip!</source>

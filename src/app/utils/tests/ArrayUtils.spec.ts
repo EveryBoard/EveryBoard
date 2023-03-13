@@ -36,12 +36,13 @@ describe('Table2DWithPossibleNegativeIndices', () => {
     it('should return the accessed element after it has been set', () => {
         // Given a table with a set element
         const table: Table2DWithPossibleNegativeIndices<number> = new Table2DWithPossibleNegativeIndices();
-        table.set(new Coord(1, 2), 42);
+        const somePiece: number = 42; // dummy value to represent something stored in the table
+        table.set(new Coord(1, 2), somePiece);
         // When getting the element
         const element: MGPOptional<number> = table.get(new Coord(1, 2));
         // Then the element exists and is the same
         expect(element.isPresent()).toBeTrue();
-        expect(element.get()).toBe(42);
+        expect(element.get()).toBe(somePiece);
     });
     it('should iterate over elements in order', () => {
         // Given a table with multiple elements

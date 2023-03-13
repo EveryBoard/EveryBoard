@@ -1,4 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { Encoder } from 'src/app/utils/Encoder';
@@ -41,12 +42,7 @@ export class HivePieceStack implements ComparableObject {
     }
     public equals(other: HivePieceStack): boolean {
         if (this.size() !== other.size()) return false;
-        for (let i: number = 0; i < this.pieces.length; i++) {
-            if (this.pieces[i].equals(other.pieces[i]) === false) {
-                return false;
-            }
-        }
-        return true;
+        return ArrayUtils.compareArray(this.pieces, other.pieces);
     }
     public isEmpty(): boolean {
         return this.pieces.length === 0;

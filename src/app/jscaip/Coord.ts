@@ -195,10 +195,7 @@ export class Coord extends Vector {
     public toString(): string {
         return '(' + this.x + ', ' + this.y + ')';
     }
-    public toSVGCoord(): string {
-        return this.x + ',' + this.y;
-    }
     public toSVGPoint(): string {
-        return this.x + ' ' + this.y;
+        return this.x + ',' + this.y;
     }
 }

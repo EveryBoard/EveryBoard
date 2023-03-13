@@ -42,7 +42,7 @@ describe('HivePieceBehavior', () => {
         expect(moves.length).toBe(6);
     });
     it('should compute all possible moves for the grasshopper', () => {
-        // Given a state
+        // Given a state with 3 moves for the grasshopper
         const board: Table<HivePiece[]> = [
             [[Q], [q], [G], [], [A]],
             [[], [B], [B], [A], [A]],

@@ -12,9 +12,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { FreeHexagonalGameState } from 'src/app/jscaip/FreeHexagonalGameState';
+import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 
-export class SixState extends FreeHexagonalGameState<Player> {
+export class SixState extends OpenHexagonalGameState<Player> {
 
     public readonly width: number;
 

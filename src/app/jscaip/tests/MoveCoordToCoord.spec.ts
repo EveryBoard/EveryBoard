@@ -14,6 +14,9 @@ class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
     }
 }
 describe('MoveCoordToCoord', () => {
+    function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
+        return new ConcreteMoveCoordToCoord(start, end);
+    };
 
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
@@ -43,20 +46,14 @@ describe('MoveCoordToCoord', () => {
     describe('encoder', () => {
         it('should correctly encode and decode moves', () => {
             EncoderTestUtils.expectToBeCorrect(
-                ConcreteMoveCoordToCoord.getEncoder((start: Coord, end: Coord): ConcreteMoveCoordToCoord => {
-                    return new ConcreteMoveCoordToCoord(start, end);
-                }),
+                ConcreteMoveCoordToCoord.getEncoder(myMoveConstructor),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });
     describe('numberEncoder', () => {
         it('should correctly encode and decode moves', () => {
             NumberEncoderTestUtils.expectToBeCorrect(
-                ConcreteMoveCoordToCoord.getNumberEncoder(10, 10,
-                                                          (start: Coord, end: Coord):
-                                                          ConcreteMoveCoordToCoord => {
-                                                              return new ConcreteMoveCoordToCoord(start, end);
-                                                          }),
+                ConcreteMoveCoordToCoord.getNumberEncoder(10, 10, myMoveConstructor),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });

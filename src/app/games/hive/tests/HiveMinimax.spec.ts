@@ -5,7 +5,7 @@ import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
-describe('HiveDummyMinimax', () => {
+describe('HiveMinimax', () => {
 
     let rules: HiveRules;
     let minimax: HiveMinimax;

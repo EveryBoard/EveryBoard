@@ -176,8 +176,8 @@
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
       </trans-unit>
-      <trans-unit id="5275095432470206038" datatype="html">
-        <source>You are in charge of a hive full of insects. Use your insects&apos; abilities to block the opponent&apos;s queen in order to win!</source>
+      <trans-unit id="4865500405661191388" datatype="html">
+        <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
@@ -1589,8 +1589,8 @@
       <trans-unit id="8771557289052450532" datatype="html">
         <source>The spider must move on neighboring spaces.</source>
       </trans-unit>
-      <trans-unit id="7737073267247289204" datatype="html">
-        <source>The spider can only move around pieces that it is in direct contact with.</source>
+      <trans-unit id="3098163088355072426" datatype="html">
+        <source>The spider can only move around pieces that are in direct contact with it.</source>
       </trans-unit>
       <trans-unit id="7928136093693713176" datatype="html">
         <source>The spider cannot go twice through the same space in the same move.</source>
@@ -1598,8 +1598,8 @@
       <trans-unit id="2053370063642446913" datatype="html">
         <source>The queen bee must be placed on the board before moving a piece.</source>
       </trans-unit>
-      <trans-unit id="8406343979535050951" datatype="html">
-        <source>This piece is not allowed to climb over other pieces.</source>
+      <trans-unit id="5380773634484088090" datatype="html">
+        <source>Only the beetle is allowed to climb over other pieces.</source>
       </trans-unit>
       <trans-unit id="8284939639567724336" datatype="html">
         <source>You are not allowed to split the hive.</source>
@@ -1631,8 +1631,8 @@
       <trans-unit id="1124156761679970164" datatype="html">
         <source>Placing the first and second piece</source>
       </trans-unit>
-      <trans-unit id="1644752193583490619" datatype="html">
-        <source>There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by the Light player, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and starting the game, put any piece on the board.</source>
+      <trans-unit id="2065654476590106098" datatype="html">
+        <source>There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by Light, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and starting the game, put any piece on the board.</source>
       </trans-unit>
       <trans-unit id="4766965064757095472" datatype="html">
         <source>Placing pieces after the second turn</source>
@@ -1643,8 +1643,8 @@
       <trans-unit id="2751556568646013753" datatype="html">
         <source>Moving pieces: the queen bee</source>
       </trans-unit>
-      <trans-unit id="1812241943392911048" datatype="html">
-        <source>Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:&lt;ol&gt;&lt;li&gt;the hive must always remain fully connected, and&lt;/li&gt;&lt;li&gt;pieces that are moved by sliding should be able to physically slide to their destination.&lt;/li&gt;&lt;/ol&gt; The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.&lt;br/&gt;&lt;br/&gt;You are playing Dark, move your queen bee.</source>
+      <trans-unit id="1929474568921893905" datatype="html">
+        <source>Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:&lt;ol&gt;&lt;li&gt;the hive must always remain fully connected, and&lt;/li&gt;&lt;li&gt;pieces should be able to physically slide to their destination (except for the beetle and grasshopper as we will see later).&lt;/li&gt;&lt;/ol&gt;The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.&lt;br/&gt;&lt;br/&gt;You are playing Dark, move your queen bee.</source>
       </trans-unit>
       <trans-unit id="8573010608388393091" datatype="html">
         <source>Moving the beetle</source>
@@ -1676,8 +1676,8 @@
       <trans-unit id="3777509045596617031" datatype="html">
         <source>Moving the spider</source>
       </trans-unit>
-      <trans-unit id="1211369340024090138" datatype="html">
-        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that it is in direct contact with. This means that the spider is not allowed to temporarily split the hive: here, Dark&apos;s spider cannot go on the left as its first move for example. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your spider!</source>
+      <trans-unit id="2739227784886826925" datatype="html">
+        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that are in direct contact with it. This means that the spider is not allowed to temporarily split the hive. For example, here, Dark&apos;s spider cannot go on the left as its first move. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your spider!</source>
       </trans-unit>
       <trans-unit id="3146815812493244221" datatype="html">
         <source>Restrictions</source>

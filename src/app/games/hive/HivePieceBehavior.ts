@@ -32,7 +32,7 @@ export abstract class HivePieceBehavior {
         }
         return MGPFallible.success(undefined);
     }
-    protected canSlide(state: HiveState, start: Coord, end: Coord): boolean {
+    protected canSlideBetweenNeighbors(state: HiveState, start: Coord, end: Coord): boolean {
         // For the piece to slide from start to end,
         // one of the two common neighbors of start and end coord should be empty
         const startNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(start));
@@ -48,7 +48,6 @@ export abstract class HivePieceBehavior {
     public abstract moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void>;
 
     public abstract getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[];
-
 }
 
 export class HivePieceBehaviorQueenBee extends HivePieceBehavior {
@@ -65,7 +64,7 @@ export class HivePieceBehaviorQueenBee extends HivePieceBehavior {
         if (HexagonalUtils.areNeighbors(move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
-        if (this.canSlide(state, move.coord, move.end) === false) {
+        if (this.canSlideBetweenNeighbors(state, move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
         }
         return this.checkEmptyDestination(move, state);
@@ -169,10 +168,10 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
             if (HexagonalUtils.areNeighbors(coords[i-1], coords[i]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES());
             }
-            if (this.haveCommonNeighbor(state, coords[i], coords[i-1]) === false) {
+            if (state.haveCommonNeighbor(coords[i], coords[i-1]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT());
             }
-            if (this.canSlide(state, coords[i-1], coords[i]) === false) {
+            if (this.canSlideBetweenNeighbors(state, coords[i-1], coords[i]) === false) {
                 return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
             }
             if (visited.contains(coords[i])) {
@@ -191,12 +190,6 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
         }
         return this.checkEmptyDestination(move, state);
     }
-    private haveCommonNeighbor(state: HiveState, first: Coord, second: Coord): boolean {
-        const occupiedNeighborsOfFirst: MGPSet<Coord> = state.getOccupiedNeighbors(first);
-        const occupiedNeighborsOfSecond: MGPSet<Coord> = state.getOccupiedNeighbors(second);
-        const commonNeighbor: MGPOptional<Coord> = occupiedNeighborsOfFirst.findAnyCommonElement(occupiedNeighborsOfSecond);
-        return commonNeighbor.isPresent();
-    }
     public getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
         const stateWithoutMovedSpider: HiveState = state.update()
             .setAt(coord, HivePieceStack.EMPTY)
@@ -204,26 +197,27 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
 
         let moves: Coord[][] = [[coord]];
         for (let i: number = 0; i < 3; i++) {
-            moves = moves.flatMap((move: Coord[]) => {
-                const lastCoord: Coord = move[move.length - 1];
-                const neighborsFilter: (coord: Coord) => boolean = (coord: Coord): boolean => {
-                    if (stateWithoutMovedSpider.getAt(coord).isNotEmpty()) {
-                        // We can only go through empty spaces
-                        return false;
-                    }
-                    if (move.find((coord2: Coord) => coord.equals(coord2)) !== undefined) {
-                        // We cannot backtrack
-                        return false;
-                    }
-                    // Must have a common neighbor with the previous coord
-                    return this.haveCommonNeighbor(stateWithoutMovedSpider, coord, lastCoord);
-                };
-                const possibleNeighbors: MGPSet<Coord> =
-                    new MGPSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
-                return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
-            });
+            moves = moves.flatMap((move: Coord[]) => this.nextMoveStep(stateWithoutMovedSpider, move));
         }
         return moves.map((move: Coord[]) => HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]));
+    }
+    private nextMoveStep(state: HiveState, move: Coord[]): Coord[][] {
+        const lastCoord: Coord = move[move.length - 1];
+        function neighborsFilter(coord: Coord): boolean {
+            if (state.getAt(coord).isNotEmpty()) {
+                // We can only go through empty spaces
+                return false;
+            }
+            if (move.find((c: Coord) => coord.equals(c)) !== undefined) {
+                // We cannot backtrack
+                return false;
+            }
+            // Must have a common neighbor with the previous coord
+            return state.haveCommonNeighbor(coord, lastCoord);
+        };
+        const possibleNeighbors: MGPSet<Coord> =
+            new MGPSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
+        return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
     }
 }
 
@@ -253,7 +247,7 @@ export class HivePieceBehaviorSoldierAnt extends HivePieceBehavior {
             for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
                 const isEmpty: boolean = state.getAt(neighbor).isEmpty();
                 const hasOccupiedNeighbors: boolean = state.getOccupiedNeighbors(neighbor).size() > 0;
-                const canSlide: boolean = this.canSlide(state, coord, neighbor);
+                const canSlide: boolean = this.canSlideBetweenNeighbors(state, coord, neighbor);
                 if (isEmpty && hasOccupiedNeighbors && canSlide) {
                     worklist.push(neighbor);
                 }

@@ -17,8 +17,8 @@
                  [ngClass]="groundInfo.content.strokeClasses"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
     </g>
-    <g *ngFor="let level of pieces; index as z">
-        <g *ngFor="let pieceInfo of level">
+    <g *ngFor="let layer of pieces; index as z">
+        <g *ngFor="let pieceInfo of layer">
             <g id="piece_{{ pieceInfo.x }}_{{ pieceInfo.y }}"
                app-hive-piece
                [piece]="pieceInfo.content.piece"
@@ -26,13 +26,14 @@
                [y]="pieceInfo.y"
                [pieceHeight]="PIECE_HEIGHT"
                [hexaLayout]="hexaLayout"
-               [level]="z"
+               [layer]="z"
                (click)="selectStack(pieceInfo.x, pieceInfo.y)"/>
         </g>
-        <g *ngFor="let pieceInfo of level">
+        <!-- Need to be done after all pieces hae been drawn, so that highlights are on top of the pieces of the same level. -->
+        <g *ngFor="let pieceInfo of layer">
             <polygon *ngIf="pieceInfo.content.strokeClasses.length > 0"
                      id="stroke_{{ pieceInfo.x }}_{{ pieceInfo.y }}"
-                     [attr.transform]="'translate(0 -' + (z+1) * PIECE_HEIGHT + ')'"
+                     [attr.transform]="'translate(0 - ' + (z+1) * PIECE_HEIGHT + ')'"
                      [attr.points]="getHexaPointsAtXY(pieceInfo.x, pieceInfo.y)"
                      class="base no-fill small-stroke"
                      [ngClass]="pieceInfo.content.strokeClasses"
@@ -48,7 +49,7 @@
                [pieceHeight]="PIECE_HEIGHT"
                [x]="0"
                [y]="0"
-               [level]="z"
+               [layer]="z"
                [hexaLayout]="hexaLayout"
                (click)="selectRemaining(piece)"/>
         </g>
@@ -68,6 +69,6 @@
          [x]="0"
          [y]="0"
          [hexaLayout]="hexaLayout"
-         [level]="z*6"/>
+         [layer]="z*6"/>
     </g>
 </svg>

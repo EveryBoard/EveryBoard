@@ -12,7 +12,7 @@ type Scale<T extends NonNullable<Comparable>> = {
     pieces: ReversibleMap<Coord, T>,
     offset: Vector,
 }
-export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> extends GameState {
+export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> extends GameState {
 
     public readonly width: number;
 
@@ -65,18 +65,15 @@ export abstract class FreeHexagonalGameState<T extends NonNullable<Comparable>> 
             offset,
         };
     }
-
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }
-
     public getOccupiedNeighbors(coord: Coord): MGPSet<Coord> {
         const neighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(coord));
         return neighbors.filter((neighbor: Coord) => {
             return this.pieces.get(neighbor).isPresent();
         });
     }
-
     public getGroups(): MGPSet<MGPSet<Coord>> {
         const visited: MGPSet<Coord> = new MGPSet();
         const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
