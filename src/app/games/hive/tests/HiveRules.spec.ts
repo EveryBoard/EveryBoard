@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveMinimax } from '../HiveMinimax';
 import { HiveFailure } from '../HiveFailure';
-import { HiveMove } from '../HiveMove';
+import { HiveMove, HiveMoveCoordToCoord, HiveMoveSpider } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
@@ -904,6 +904,25 @@ describe('HiveRules', () => {
 
         // Then there should be none
         expect(dropLocations.size()).toBe(0);
+    });
+    fit('should compute the expected spider moves for a specific board', () => {
+        // Given a specific state with 3 possible spider moves
+        const board: Table<HivePiece[]> = [
+            [[], [S], [s], [b]],
+            [[], [], [], [B]],
+            [[b], [], [], [a]],
+            [[A], [], [G], []],
+            [[Q], [g], [], []],
+        ];
+        const state: HiveState = HiveState.fromRepresentation(board, 6);
+
+        // When computing the possible moves for the spider
+        const moves: MGPSet<HiveMoveCoordToCoord> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
+        // Then we should have exactly 4 moves
+        const moveEnds: MGPSet<Coord> = moves.map((m) => (m as HiveMoveSpider).end);
+        expect(moveEnds.size()).toBe(4);
+        // TODO: to fix it, we need to compute the sliding restriction in the piece rules, not in the global rules
+        expect(moves.size()).toBe(4);
     });
 
     describe('victories', () => {

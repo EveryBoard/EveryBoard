@@ -195,11 +195,15 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
             .setAt(coord, HivePieceStack.EMPTY)
             .increaseTurnAndFinalizeUpdate();
 
-        let moves: Coord[][] = [[coord]];
+        let movesSoFar: Coord[][] = [[coord]];
         for (let i: number = 0; i < 3; i++) {
-            moves = moves.flatMap((move: Coord[]) => this.nextMoveStep(stateWithoutMovedSpider, move));
+            movesSoFar = movesSoFar.flatMap((move: Coord[]) => this.nextMoveStep(stateWithoutMovedSpider, move));
         }
-        return moves.map((move: Coord[]) => HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]));
+        function makeMove(move: Coord[]): HiveMoveSpider {
+            return HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]);
+        }
+        const uniqueMoves: MGPSet<HiveMoveCoordToCoord> = new MGPSet(movesSoFar.map(makeMove));
+        return uniqueMoves.toList();
     }
     private nextMoveStep(state: HiveState, move: Coord[]): Coord[][] {
         const lastCoord: Coord = move[move.length - 1];

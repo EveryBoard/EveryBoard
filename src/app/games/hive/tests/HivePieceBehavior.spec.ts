@@ -3,7 +3,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { HiveMove } from '../HiveMove';
+import { HiveMove, HiveMoveSpider } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HivePieceBehavior } from '../HivePieceBehavior';
 import { HiveState } from '../HiveState';
@@ -14,11 +14,14 @@ const G: HivePiece = new HivePiece(Player.ZERO, 'Grasshopper');
 const S: HivePiece = new HivePiece(Player.ZERO, 'Spider');
 const A: HivePiece = new HivePiece(Player.ZERO, 'SoldierAnt');
 const q: HivePiece = new HivePiece(Player.ONE, 'QueenBee');
-
+const b: HivePiece = new HivePiece(Player.ONE, 'Beetle');
+const g: HivePiece = new HivePiece(Player.ONE, 'Grasshopper');
+const s: HivePiece = new HivePiece(Player.ONE, 'Spider');
+const a: HivePiece = new HivePiece(Player.ONE, 'SoldierAnt');
 
 describe('HivePieceBehavior', () => {
     it('should compute all possible moves for the queen bee', () => {
-        // Given a state
+        // Given a state with 5 queen bee moves
         const board: Table<HivePiece[]> = [
             [[Q], [q]],
         ];
@@ -30,7 +33,7 @@ describe('HivePieceBehavior', () => {
         expect(moves.length).toBe(5);
     });
     it('should compute all possible moves for the beetle', () => {
-        // Given a state
+        // Given a state with 6 possible beetle moves
         const board: Table<HivePiece[]> = [
             [[Q], [q], [B]],
         ];
@@ -55,7 +58,7 @@ describe('HivePieceBehavior', () => {
         expect(moves.length).toBe(3);
     });
     it('should compute all possible moves for the spider', () => {
-        // Given a state
+        // Given a state with 2 possible spider moves
         const board: Table<HivePiece[]> = [
             [[Q], [S], [], [A]],
             [[A], [], [], [G]],
@@ -69,7 +72,7 @@ describe('HivePieceBehavior', () => {
         expect(moves.length).toBe(2);
     });
     it('should compute all possible moves for the soldier ant', () => {
-        // Given a state
+        // Given a state with 7 ant moves
         const board: Table<HivePiece[]> = [
             [[A], [q], [Q]],
         ];
