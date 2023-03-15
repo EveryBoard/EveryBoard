@@ -9,12 +9,22 @@
                  [ngClass]="groundInfo.content.spaceClasses"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
     </g>
+    <!-- Need to show the highlights after the pieces, and the selected highlight after the other highlights.
+         Otherwise the view doesn't look good with overlapping highlights. -->
     <g *ngFor="let groundInfo of ground">
         <polygon *ngIf="groundInfo.content.strokeClasses.length > 0"
                  id="stroke_{{ groundInfo.x }}_{{ groundInfo.y }}"
                  [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
                  class="base no-fill small-stroke"
                  [ngClass]="groundInfo.content.strokeClasses"
+                 (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+    </g>
+    <g *ngFor="let groundInfo of ground">
+        <polygon *ngIf="groundInfo.content.selected"
+                 id="stroke_{{ groundInfo.x }}_{{ groundInfo.y }}"
+                 [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
+                 class="base no-fill small-stroke"
+                 ngClass="selected-stroke"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
     </g>
     <g *ngFor="let layer of layers; index as z">

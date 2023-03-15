@@ -28,13 +28,14 @@ import { HiveTutorial } from './HiveTutorial';
 interface GroundInfo {
     spaceClasses: string[];
     strokeClasses: string[];
+    selected: boolean;
 }
 
 class Ground extends Table2DWithPossibleNegativeIndices<GroundInfo> {
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord): void {
-        this.set(coord, { spaceClasses: [], strokeClasses: [] });
+        this.set(coord, { spaceClasses: [], strokeClasses: [], selected: false });
     }
     public highlightFill(coord: Coord, fill: string): void {
         this.highlighted.push(coord);
@@ -44,11 +45,16 @@ class Ground extends Table2DWithPossibleNegativeIndices<GroundInfo> {
         this.highlighted.push(coord);
         this.get(coord).map((g: GroundInfo) => g.strokeClasses.push(stroke));
     }
+    public select(coord: Coord): void {
+        this.highlighted.push(coord);
+        this.get(coord).map((g: GroundInfo) => g.selected = true);
+    }
     public clearHighlights(): void {
         for (const coord of this.highlighted) {
             this.get(coord).map((g: GroundInfo) => {
                 g.strokeClasses = [];
                 g.spaceClasses = [];
+                g.selected = false;
             });
         }
         this.highlighted = [];
@@ -434,7 +440,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.clearHighlights();
         this.highlight(this.selectedStart.get(), 'selected-stroke');
         for (const coord of this.selectedSpiderCoords) {
-            this.ground.highlightStroke(coord, 'selected-stroke');
+            this.ground.select(coord);
         }
         this.highlightNextPossibleCoords(this.selectedStart.get());
         return MGPValidation.SUCCESS;
