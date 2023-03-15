@@ -81,9 +81,9 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         if (movedPiece.owner === state.getCurrentOpponent()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        const moveLegality: MGPFallible<void> = HivePieceBehavior.from(movedPiece).moveLegality(move, state);
-        if (moveLegality.isFailure()) {
-            return moveLegality;
+        const moveValidity: MGPFallible<void> = HivePieceBehavior.from(movedPiece).moveValidity(move, state);
+        if (moveValidity.isFailure()) {
+            return moveValidity;
         }
         const stateWithoutMovedPiece: HiveState = state.update()
             .setAt(move.coord, stack.removeTopPiece())
