@@ -161,17 +161,20 @@ export class HiveSpiderBehavior extends HivePieceBehavior {
     }
     public prefixLegality(coords: Coord[], state: HiveState): MGPFallible<void> {
         const visited: MGPSet<Coord> = new MGPSet();
+        const stateWithoutMovedSpider: HiveState = state.update()
+            .setAt(coords[0], HivePieceStack.EMPTY)
+            .increaseTurnAndFinalizeUpdate();
         for (let i: number = 1; i < coords.length; i++) {
-            if (state.getAt(coords[i]).isNotEmpty()) {
+            if (stateWithoutMovedSpider.getAt(coords[i]).isNotEmpty()) {
                 return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
             }
             if (HexagonalUtils.areNeighbors(coords[i-1], coords[i]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES());
             }
-            if (state.haveCommonNeighbor(coords[i], coords[i-1]) === false) {
+            if (stateWithoutMovedSpider.haveCommonNeighbor(coords[i], coords[i-1]) === false) {
                 return MGPFallible.failure(HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT());
             }
-            if (this.canSlideBetweenNeighbors(state, coords[i-1], coords[i]) === false) {
+            if (this.canSlideBetweenNeighbors(stateWithoutMovedSpider, coords[i-1], coords[i]) === false) {
                 return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
             }
             if (visited.contains(coords[i])) {
