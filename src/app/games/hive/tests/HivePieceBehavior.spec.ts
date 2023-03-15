@@ -3,7 +3,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { HiveMove, HiveMoveSpider } from '../HiveMove';
+import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HivePieceBehavior } from '../HivePieceBehavior';
 import { HiveState } from '../HiveState';
@@ -14,10 +14,6 @@ const G: HivePiece = new HivePiece(Player.ZERO, 'Grasshopper');
 const S: HivePiece = new HivePiece(Player.ZERO, 'Spider');
 const A: HivePiece = new HivePiece(Player.ZERO, 'SoldierAnt');
 const q: HivePiece = new HivePiece(Player.ONE, 'QueenBee');
-const b: HivePiece = new HivePiece(Player.ONE, 'Beetle');
-const g: HivePiece = new HivePiece(Player.ONE, 'Grasshopper');
-const s: HivePiece = new HivePiece(Player.ONE, 'Spider');
-const a: HivePiece = new HivePiece(Player.ONE, 'SoldierAnt');
 
 describe('HivePieceBehavior', () => {
     it('should compute all possible moves for the queen bee', () => {

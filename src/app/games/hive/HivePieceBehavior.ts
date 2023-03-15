@@ -45,7 +45,7 @@ export abstract class HivePieceBehavior {
         }
         return false;
     }
-    public abstract moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void>;
+    public abstract moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void>;
 
     public abstract getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[];
 }
@@ -60,7 +60,7 @@ export class HiveQueenBeeBehavior extends HivePieceBehavior {
         }
         return this.INSTANCE.get();
     }
-    public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
+    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         if (HexagonalUtils.areNeighbors(move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
@@ -90,7 +90,7 @@ export class HiveBeetleBehavior extends HivePieceBehavior {
         }
         return this.INSTANCE.get();
     }
-    public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
+    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         if (HexagonalUtils.areNeighbors(move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.BEETLE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
@@ -115,7 +115,7 @@ export class HiveGrasshopperBehavior extends HivePieceBehavior {
         }
         return this.INSTANCE.get();
     }
-    public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
+    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
 
         const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(move.coord, move.end);
         if (direction.isFailure()) {
@@ -184,7 +184,7 @@ export class HiveSpiderBehavior extends HivePieceBehavior {
         }
         return MGPFallible.success(undefined);
     }
-    public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
+    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         Utils.assert(move instanceof HiveMoveSpider, 'move should be a spider move');
         const spiderMove: HiveMoveSpider = move as HiveMoveSpider;
         const prefixLegality: MGPFallible<void> = this.prefixLegality(spiderMove.coords, state);
@@ -221,7 +221,7 @@ export class HiveSpiderBehavior extends HivePieceBehavior {
             }
             // Must have a common neighbor with the previous coord
             return state.haveCommonNeighbor(coord, lastCoord);
-        };
+        }
         const possibleNeighbors: MGPSet<Coord> =
             new MGPSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
         return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
@@ -262,7 +262,7 @@ export class HiveSoldierAntBehavior extends HivePieceBehavior {
         }
         return false;
     }
-    public moveLegality(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
+    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
         if (this.pathExists(state, move.coord, move.end) === false) {
             return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
         }

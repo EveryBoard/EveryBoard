@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveMinimax } from '../HiveMinimax';
 import { HiveFailure } from '../HiveFailure';
-import { HiveMove, HiveMoveCoordToCoord, HiveMoveSpider } from '../HiveMove';
+import { HiveMove, HiveMoveCoordToCoord } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
@@ -919,9 +919,6 @@ describe('HiveRules', () => {
         // When computing the possible moves for the spider
         const moves: MGPSet<HiveMoveCoordToCoord> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
         // Then we should have exactly 4 moves
-        const moveEnds: MGPSet<Coord> = moves.map((m) => (m as HiveMoveSpider).end);
-        expect(moveEnds.size()).toBe(4);
-        // TODO: to fix it, we need to compute the sliding restriction in the piece rules, not in the global rules
         expect(moves.size()).toBe(4);
     });
 

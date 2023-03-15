@@ -210,7 +210,8 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     public haveCommonNeighbor(first: Coord, second: Coord): boolean {
         const occupiedNeighborsOfFirst: MGPSet<Coord> = this.getOccupiedNeighbors(first);
         const occupiedNeighborsOfSecond: MGPSet<Coord> = this.getOccupiedNeighbors(second);
-        const commonNeighbor: MGPOptional<Coord> = occupiedNeighborsOfFirst.findAnyCommonElement(occupiedNeighborsOfSecond);
+        const commonNeighbor: MGPOptional<Coord> =
+            occupiedNeighborsOfFirst.findAnyCommonElement(occupiedNeighborsOfSecond);
         return commonNeighbor.isPresent();
     }
 }

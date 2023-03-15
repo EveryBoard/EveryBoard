@@ -42,7 +42,7 @@ export class DvonnPieceStack {
         return this.size === 0;
     }
     public isNotEmpty(): boolean {
-        return this.isEmpty() == false;
+        return this.isEmpty() === false;
     }
     public getSize(): number {
         return this.size;

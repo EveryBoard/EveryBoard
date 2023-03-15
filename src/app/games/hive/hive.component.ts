@@ -238,7 +238,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.ground.clearHighlights();
     }
     public cancelMoveAttempt(): void {
-        console.log('cancel move attempt')
         this.clearHighlights();
         this.selectedStart = MGPOptional.empty();
         this.selectedRemaining = MGPOptional.empty();

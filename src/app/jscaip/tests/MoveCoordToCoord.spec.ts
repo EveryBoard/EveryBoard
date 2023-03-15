@@ -16,7 +16,7 @@ class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
 describe('MoveCoordToCoord', () => {
     function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
         return new ConcreteMoveCoordToCoord(start, end);
-    };
+    }
 
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
