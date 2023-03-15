@@ -17,7 +17,7 @@
                  [ngClass]="groundInfo.content.strokeClasses"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
     </g>
-    <g *ngFor="let layer of pieces; index as z">
+    <g *ngFor="let layer of layers; index as z">
         <g *ngFor="let pieceInfo of layer">
             <g id="piece_{{ pieceInfo.x }}_{{ pieceInfo.y }}"
                app-hive-piece
@@ -33,14 +33,14 @@
         <g *ngFor="let pieceInfo of layer">
             <polygon *ngIf="pieceInfo.content.strokeClasses.length > 0"
                      id="stroke_{{ pieceInfo.x }}_{{ pieceInfo.y }}"
-                     [attr.transform]="'translate(0 - ' + (z+1) * PIECE_HEIGHT + ')'"
+                     [attr.transform]="'translate(0 ' + -(z+1) * PIECE_HEIGHT + ')'"
                      [attr.points]="getHexaPointsAtXY(pieceInfo.x, pieceInfo.y)"
                      class="base no-fill small-stroke"
                      [ngClass]="pieceInfo.content.strokeClasses"
                      (click)="selectStack(pieceInfo.x, pieceInfo.y)"/>
         </g>
     </g>
-    <g *ngFor="let stack of remainingPieces">
+    <g *ngFor="let stack of remainingStacks">
         <g *ngFor="let piece of stack.pieces; index as z">
             <g id="remainingPiece_{{ piece.toString() }}"
                app-hive-piece

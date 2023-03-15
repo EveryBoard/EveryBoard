@@ -20,8 +20,7 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> 
 
     public offset: Vector;
 
-    public constructor(public pieces: ReversibleMap<Coord, T>, turn: number, offset?: Vector)
-    {
+    public constructor(public pieces: ReversibleMap<Coord, T>, turn: number, offset?: Vector) {
         super(turn);
         const scale: Scale<T> = this.computeScale();
         this.pieces = scale.pieces;
@@ -77,11 +76,11 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> 
     public getGroups(): MGPSet<MGPSet<Coord>> {
         const visited: MGPSet<Coord> = new MGPSet();
         const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
-        this.pieces.forEach((item: {key: Coord, value: T}) => {
-            if (visited.contains(item.key) === false) {
+        this.pieces.forEach((itemToVisit: {key: Coord, value: T}) => {
+            if (visited.contains(itemToVisit.key) === false) {
                 // We will visit all reachable occupied neighbors of this coord
                 const group: MGPSet<Coord> = new MGPSet();
-                const toVisit: MGPSet<Coord> = new MGPSet([item.key]);
+                const toVisit: MGPSet<Coord> = new MGPSet([itemToVisit.key]);
                 while (toVisit.isNotEmpty()) {
                     const coord: Coord = toVisit.getAnyElement().get();
                     toVisit.remove(coord);

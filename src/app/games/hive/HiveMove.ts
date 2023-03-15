@@ -116,28 +116,28 @@ export namespace HiveMove {
         public encodeMove(value: HiveMove): JSONValueWithoutArray {
             if (value instanceof HiveMoveDrop) {
                 return {
-                    type: 'Drop',
+                    moveType: 'Drop',
                     encoded: HiveMoveDrop.encoder.encode(value),
                 };
             } else if (value instanceof HiveMoveSpider) {
                 return {
-                    type: 'Spider',
+                    moveType: 'Spider',
                     encoded: HiveMoveSpider.encoder.encode(value),
                 };
             } else if (value instanceof HiveMoveCoordToCoord) {
                 return {
-                    type: 'CoordToCoord',
+                    moveType: 'CoordToCoord',
                     encoded: HiveMoveCoordToCoord.encoder.encode(value),
                 };
             } else {
                 return {
-                    type: 'Pass',
+                    moveType: 'Pass',
                 };
             }
         }
         public decodeMove(encoded: JSONValueWithoutArray): HiveMove {
             // eslint-disable-next-line dot-notation
-            const moveType: string = Utils.getNonNullable(encoded)['type'];
+            const moveType: string = Utils.getNonNullable(encoded)['moveType'];
             // eslint-disable-next-line dot-notation
             const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
             if (moveType === 'Drop') {

@@ -17,11 +17,11 @@ export abstract class HivePieceBehavior {
     public static from(piece: HivePiece): HivePieceBehavior {
         if (HivePieceBehavior.INSTANCES.isAbsent()) {
             HivePieceBehavior.INSTANCES = MGPOptional.of({
-                'QueenBee': HivePieceBehaviorQueenBee.get(),
-                'Beetle': HivePieceBehaviorBeetle.get(),
-                'Grasshopper': HivePieceBehaviorGrasshopper.get(),
-                'Spider': HivePieceBehaviorSpider.get(),
-                'SoldierAnt': HivePieceBehaviorSoldierAnt.get(),
+                'QueenBee': HiveQueenBeeBehavior.get(),
+                'Beetle': HiveBeetleBehavior.get(),
+                'Grasshopper': HiveGrasshopperBehavior.get(),
+                'Spider': HiveSpiderBehavior.get(),
+                'SoldierAnt': HiveSoldierAntBehavior.get(),
             });
         }
         return HivePieceBehavior.INSTANCES.get()[piece.kind];
@@ -50,13 +50,13 @@ export abstract class HivePieceBehavior {
     public abstract getPossibleMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[];
 }
 
-export class HivePieceBehaviorQueenBee extends HivePieceBehavior {
+export class HiveQueenBeeBehavior extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviorQueenBee> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HiveQueenBeeBehavior> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviorQueenBee {
+    public static get(): HiveQueenBeeBehavior {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorQueenBee());
+            this.INSTANCE = MGPOptional.of(new HiveQueenBeeBehavior());
         }
         return this.INSTANCE.get();
     }
@@ -80,13 +80,13 @@ export class HivePieceBehaviorQueenBee extends HivePieceBehavior {
     }
 }
 
-export class HivePieceBehaviorBeetle extends HivePieceBehavior {
+export class HiveBeetleBehavior extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviorBeetle> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HiveBeetleBehavior> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviorBeetle {
+    public static get(): HiveBeetleBehavior {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorBeetle());
+            this.INSTANCE = MGPOptional.of(new HiveBeetleBehavior());
         }
         return this.INSTANCE.get();
     }
@@ -105,13 +105,13 @@ export class HivePieceBehaviorBeetle extends HivePieceBehavior {
     }
 }
 
-export class HivePieceBehaviorGrasshopper extends HivePieceBehavior {
+export class HiveGrasshopperBehavior extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviorGrasshopper> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HiveGrasshopperBehavior> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviorGrasshopper {
+    public static get(): HiveGrasshopperBehavior {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorGrasshopper());
+            this.INSTANCE = MGPOptional.of(new HiveGrasshopperBehavior());
         }
         return this.INSTANCE.get();
     }
@@ -149,13 +149,13 @@ export class HivePieceBehaviorGrasshopper extends HivePieceBehavior {
     }
 }
 
-export class HivePieceBehaviorSpider extends HivePieceBehavior {
+export class HiveSpiderBehavior extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviorSpider> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HiveSpiderBehavior> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviorSpider {
+    public static get(): HiveSpiderBehavior {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorSpider());
+            this.INSTANCE = MGPOptional.of(new HiveSpiderBehavior());
         }
         return this.INSTANCE.get();
     }
@@ -225,13 +225,13 @@ export class HivePieceBehaviorSpider extends HivePieceBehavior {
     }
 }
 
-export class HivePieceBehaviorSoldierAnt extends HivePieceBehavior {
+export class HiveSoldierAntBehavior extends HivePieceBehavior {
 
-    private static INSTANCE: MGPOptional<HivePieceBehaviorSoldierAnt> = MGPOptional.empty();
+    private static INSTANCE: MGPOptional<HiveSoldierAntBehavior> = MGPOptional.empty();
 
-    public static get(): HivePieceBehaviorSoldierAnt {
+    public static get(): HiveSoldierAntBehavior {
         if (this.INSTANCE.isAbsent()) {
-            this.INSTANCE = MGPOptional.of(new HivePieceBehaviorSoldierAnt());
+            this.INSTANCE = MGPOptional.of(new HiveSoldierAntBehavior());
         }
         return this.INSTANCE.get();
     }

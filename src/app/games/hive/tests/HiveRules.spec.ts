@@ -443,7 +443,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should support up to the 4 beetles on top of another, with another piece underneath', () => {
+        it('should support having the 4 beetles on top of a piece', () => {
             // Given a state with 3 beetles on top of each other, on top of another piece
             const board: Table<HivePiece[]> = [
                 [[B, B, b, s], [b, q]],
