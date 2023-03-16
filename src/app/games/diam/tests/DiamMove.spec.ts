@@ -44,12 +44,9 @@ describe('DiamMove', () => {
             expect(move.toString()).toEqual('DiamMoveShift((0, 0), clockwise)');
         });
     });
-    describe('encoder', () => {
-        it('should correctly encode and decode all moves', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'counterclockwise'));
-        });
-
+    it('should have a bijective encoder', () => {
+        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
+        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
+        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'counterclockwise'));
     });
 });

@@ -65,7 +65,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
         this.board = this.getState().board;
     }
-    private showHighlight() {
+    private showHighlight(): void {
         this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
     }
     public cancelMoveAttempt(): void {

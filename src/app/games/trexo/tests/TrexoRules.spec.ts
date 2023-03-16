@@ -34,7 +34,7 @@ describe('TrexoRules', () => {
         ];
     });
     it('should accept to drop piece on the floor', () => {
-        // Given any board where to space on the floor are free
+        // Given any board where two spaces on the floor are free
         const state: TrexoState = TrexoState.getInitialState();
 
         // When dropping the piece
@@ -74,7 +74,7 @@ describe('TrexoRules', () => {
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(4, 3)).get();
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, TrexoFailure.CANNOT_DROP_ONLY_ONE_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
     });
     it('should accept to drop piece on two other piece', () => {
         // Given a board with two pieces that are neighbor on it
@@ -91,10 +91,10 @@ describe('TrexoRules', () => {
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
         ], 2).get();
 
-        // When dropping the new piece part-way on the first piece part-way on the second
+        // When dropping the new piece partially on the first piece partially on the second
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get();
 
-        // Then it should be a success
+        // Then it should succeed
         const expectedState: TrexoState = TrexoState.from([
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -145,7 +145,7 @@ describe('TrexoRules', () => {
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
         ], 4).get();
 
-        // When the drop align 5 piece of yours
+        // When the dropping to align 5 piece of yours
         const move: TrexoMove = TrexoMove.from(new Coord(7, 2), new Coord(7, 3)).get();
 
         // Then you should be declared winner
@@ -167,7 +167,7 @@ describe('TrexoRules', () => {
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
-    it('shoud declare looser the player who align 5 piece of the opponent', () => {
+    it('shoud declare loser the player who align 5 piece of the opponent', () => {
         // Given a board where a player's opponent has a line of 4
         const state: TrexoState = TrexoState.from([
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -182,10 +182,10 @@ describe('TrexoRules', () => {
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
         ], 3).get();
 
-        // When the drop align a fifth piece of the opponent
+        // When the drop aligns a fifth piece of the opponent
         const move: TrexoMove = TrexoMove.from(new Coord(7, 2), new Coord(7, 3)).get();
 
-        // Then you should be declared looser
+        // Then you should be declared loser
         const expectedState: TrexoState = TrexoState.from([
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -202,8 +202,8 @@ describe('TrexoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    it('should declare looser the player who align 5 piece of both players', () => {
-        // Given a board where two player have 4 pieces aligned
+    it('should declare loser the player who align 5 piece of both players', () => {
+        // Given a board where two players have 4 pieces aligned
         const state: TrexoState = TrexoState.from([
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -217,10 +217,10 @@ describe('TrexoRules', () => {
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
         ], 4).get();
 
-        // When the drop align a fifth piece of the opponent and yours
+        // When the drop aligns a fifth piece of the opponent and yours
         const move: TrexoMove = TrexoMove.from(new Coord(7, 2), new Coord(7, 3)).get();
 
-        // Then you should be declared looser
+        // Then you should be declared loser
         const expectedState: TrexoState = TrexoState.from([
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],

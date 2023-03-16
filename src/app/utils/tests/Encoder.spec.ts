@@ -5,7 +5,7 @@ import { JSONValue } from 'src/app/utils/utils';
 import { Encoder, NumberEncoder } from '../Encoder';
 
 export class EncoderTestUtils {
-    public static expectToBeCorrect<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
+    public static expectToBeBijective<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
         const encoded: JSONValue = encoder.encode(value);
         const decoded: T = encoder.decode(encoded);
         expect(decoded.equals(value)).toBeTrue();
@@ -13,7 +13,7 @@ export class EncoderTestUtils {
 }
 
 export class NumberEncoderTestUtils {
-    public static expectToBeCorrect<T>(encoder: NumberEncoder<T>, value: T): void {
+    public static expectToBeBijective<T>(encoder: NumberEncoder<T>, value: T): void {
         const encoded: number = encoder.encodeNumber(value);
         expect(encoded).toBeLessThanOrEqual(encoder.maxValue());
         const decoded: T = encoder.decodeNumber(encoded);
@@ -65,13 +65,17 @@ describe('NumberEncoder', () => {
                 return this.field1 === t.field1 && this.field2 === t.field2 && this.field3 === t.field3;
             }
         }
-        const encoder: NumberEncoder<T> = NumberEncoder.tuple<T, [boolean, number, PlayerOrNone]>(
-            [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
-            (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
-            (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]));
-        it('should successfully encode and decode', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(true, 3, Player.ONE));
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(false, 2, Player.ONE));
+        const encoders: [NumberEncoder<boolean>, NumberEncoder<number>, NumberEncoder<PlayerOrNone>] =
+            [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder];
+        const encode: (t: T) => [boolean, number, Player] =
+            (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3];
+        const decode: (fields: [boolean, number, Player]) => T =
+            (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]);
+        const encoder: NumberEncoder<T> =
+            NumberEncoder.tuple<T, [boolean, number, PlayerOrNone]>(encoders, encode, decode);
+        it('should have a bijective encoder', () => {
+            NumberEncoderTestUtils.expectToBeBijective(encoder, new T(true, 3, Player.ONE));
+            NumberEncoderTestUtils.expectToBeBijective(encoder, new T(false, 2, Player.ONE));
         });
     });
     describe('disjunction', () => {
@@ -83,12 +87,12 @@ describe('NumberEncoder', () => {
                                       (value : number | boolean): value is number => {
                                           return typeof(value) === 'number';
                                       });
-        it('should successfully encode and decode', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, 0 as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, 1 as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, 3 as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, true as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, false as number | boolean);
+        it('should have a bijective encoder', () => {
+            NumberEncoderTestUtils.expectToBeBijective(encoder, 0 as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, 1 as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, 3 as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, true as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, false as number | boolean);
         });
     });
 });

@@ -33,12 +33,12 @@ export class GipfComponent
     public captured: Coord[] = [];
     public moved: Coord[] = [];
 
-    public HEXAGON_WIDTH: number = this.SPACE_SIZE;
-    public SHARED_HEXAGON_X: number = Math.cos(30) * this.HEXAGON_WIDTH * 0.5;
-    public BOARD_WIDTH: number = this.HEXAGON_WIDTH +
-                                 (6 * (this.HEXAGON_WIDTH - this.SHARED_HEXAGON_X)) +
-                                 (3 * this.STROKE_WIDTH / 2);
-    public BOARD_HEIGHT: number = (7 * this.HEXAGON_WIDTH) + (4.5 * this.STROKE_WIDTH);
+    public hexagonWidth: number = this.SPACE_SIZE;
+    public sharedHexagonX: number = Math.cos(30) * this.hexagonWidth * 0.5;
+    public boardWidth: number = this.hexagonWidth +
+                                (6 * (this.hexagonWidth - this.sharedHexagonX)) +
+                                (3 * this.STROKE_WIDTH / 2);
+    public boardHeight: number = (7 * this.hexagonWidth) + (4.5 * this.STROKE_WIDTH);
     private static readonly PHASE_INITIAL_CAPTURE: number = 0;
     private static readonly PHASE_PLACEMENT_COORD: number = 1;
     private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
@@ -67,8 +67,8 @@ export class GipfComponent
         this.SPACE_SIZE = 40;
         this.constructedState = this.getState();
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
-                                         new Coord((this.HEXAGON_WIDTH / 2) + (3 * this.STROKE_WIDTH/ 4),
-                                                   - this.HEXAGON_WIDTH),
+                                         new Coord((this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4),
+                                                   - this.hexagonWidth),
                                          FlatHexaOrientation.INSTANCE);
     }
     public updateBoard(): void {
@@ -292,7 +292,7 @@ export class GipfComponent
         if (player === Player.ONE) {
             return absoluteY;
         } else {
-            return this.BOARD_HEIGHT - absoluteY;
+            return this.boardHeight - absoluteY;
         }
     }
     public getRemainingPieceCx(player: Player, p: number): number {
@@ -300,7 +300,7 @@ export class GipfComponent
         if (player === Player.ONE) {
             return absoluteX;
         } else {
-            return this.BOARD_WIDTH - (15 + absoluteX);
+            return this.boardWidth - (15 + absoluteX);
         }
     }
 }

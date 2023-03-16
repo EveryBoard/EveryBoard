@@ -103,14 +103,12 @@ describe('ConspirateursMove', () => {
             expect(ConspirateursMoveJump.of([new Coord(1, 1), new Coord(-1, 1)]).isFailure()).toBeTrue();
         });
     });
-    describe('encoder', () => {
-        it('should correctly encode and decode all moves', () => {
-            EncoderTestUtils.expectToBeCorrect(ConspirateursMoveEncoder,
-                                               ConspirateursMoveDrop.of(new Coord(7, 7)).get());
-            EncoderTestUtils.expectToBeCorrect(ConspirateursMoveEncoder,
-                                               ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(7, 8)).get());
-            EncoderTestUtils.expectToBeCorrect(ConspirateursMoveEncoder,
-                                               ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9)]).get());
-        });
+    it('should have a bijective encoder', () => {
+        EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
+                                             ConspirateursMoveDrop.of(new Coord(7, 7)).get());
+        EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
+                                             ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(7, 8)).get());
+        EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
+                                             ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9)]).get());
     });
 });

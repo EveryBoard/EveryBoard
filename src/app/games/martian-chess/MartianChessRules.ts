@@ -86,7 +86,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         const moveResult: MartianChessMoveResult = { finalPiece: landingPiece, score: captured };
         return MGPFallible.success(moveResult);
     }
-    private assertNonDoubleClockCall(move: MartianChessMove, state: MartianChessState) {
+    private assertNonDoubleClockCall(move: MartianChessMove, state: MartianChessState): void {
         const clockHadAlreadyBeenCalled: boolean = state.countDown.isPresent();
         const clockCalledThisTurn: boolean = move.calledTheClock;
         const doubleClockCall: boolean = clockHadAlreadyBeenCalled && clockCalledThisTurn;

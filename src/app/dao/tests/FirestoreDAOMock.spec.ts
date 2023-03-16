@@ -25,7 +25,9 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     }
 
     public callbacks: [FirestoreCondition[], FirestoreCollectionObserver<T>][] = [];
+
     private readonly subDAOs: MGPMap<string, IFirestoreDAO<FirestoreJSONObject>> = new MGPMap();
+
     constructor(public readonly collectionName: string,
                 public VERBOSE: boolean)
     {
@@ -190,7 +192,8 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         return this.subscribeToMatchers(conditions, callback);
     }
     private subscribeToMatchers(conditions: FirestoreCondition[],
-                                callback: FirestoreCollectionObserver<T>): Subscription
+                                callback: FirestoreCollectionObserver<T>)
+    : Subscription
     {
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
         this.callbacks.push([conditions, callback]);

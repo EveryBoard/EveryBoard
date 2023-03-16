@@ -1,7 +1,6 @@
 import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 
 export type Click = string
@@ -54,9 +53,9 @@ export abstract class TutorialStep {
     {
         return new TutorialStepInformational(title, instruction, state);
     }
-    public previousMove: MGPOptional<Move> = MGPOptional.empty();
+    public previousMove: Move[] = [];
 
-    public previousState: MGPOptional<GameState> = MGPOptional.empty();
+    public previousState: GameState[] = [];
 
     protected constructor(public title: string,
                           public instruction: string,
@@ -81,11 +80,20 @@ export abstract class TutorialStep {
         return false;
     }
     public withPreviousMove(previousMove: Move): this {
-        this.previousMove = MGPOptional.of(previousMove);
+        this.previousMove = [previousMove];
         return this;
     }
     public withPreviousState(previousState: GameState): this {
-        this.previousState = MGPOptional.of(previousState);
+        this.previousState = [previousState];
+        return this;
+    }
+    public withPreviousMoveAndState(movesAndStates: {move: Move, state: GameState}[]): this {
+        this.previousState = [];
+        this.previousMove = [];
+        for (const moveAndState of movesAndStates) {
+            this.previousMove.push(moveAndState.move);
+            this.previousState.push(moveAndState.state);
+        }
         return this;
     }
 }
@@ -94,13 +102,15 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
     public constructor(title: string,
                        instruction: string,
                        state: GameState,
-                       private readonly successMessage: string) {
+                       private readonly successMessage: string)
+    {
         super(title, instruction, state);
     }
     public hasSolution(): this is TutorialStepWithSolution {
         return true;
     }
-    public abstract getSolution(): Move | Click
+    public abstract getSolution(): Move | Click;
+
     public getSuccessMessage(): string {
         return this.successMessage;
     }
@@ -112,7 +122,8 @@ export class TutorialStepMove extends TutorialStepWithSolution {
                        state: GameState,
                        public readonly acceptedMoves: ReadonlyArray<Move>,
                        successMessage: string,
-                       private readonly failureMessage: string) {
+                       private readonly failureMessage: string)
+    {
         super(title, instruction, state, successMessage);
         assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
     }
@@ -149,7 +160,8 @@ export class TutorialStepClick extends TutorialStepWithSolution {
                        state: GameState,
                        public readonly acceptedClicks: ReadonlyArray<string>,
                        successMessage: string,
-                       private readonly failureMessage: string) {
+                       private readonly failureMessage: string)
+    {
         super(title, instruction, state, successMessage);
     }
     public isClick(): this is TutorialStepClick {
@@ -169,7 +181,8 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
                        state: GameState,
                        private readonly solutionMove: Move,
                        public readonly predicate: TutorialPredicate,
-                       successMessage: string) {
+                       successMessage: string)
+    {
         super(title, instruction, state, successMessage);
     }
     public getSolution(): Move | Click {

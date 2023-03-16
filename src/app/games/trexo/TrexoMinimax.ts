@@ -14,7 +14,6 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
         return TrexoRules.get().getLegalMoves(node.gameState);
     }
     public getBoardValue(node: TrexoNode): BoardValue {
-        // Dummy version: return new BoardValue(TrexoRules.get().getGameStatus(node).toBoardValue());
         let score: number = 0;
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();

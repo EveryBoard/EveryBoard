@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoState } from './TrexoState';
@@ -8,13 +8,9 @@ import { TrexoState } from './TrexoState';
 /**
  * It's not really a move coord to coord but rather a "drop two coords" (that are neighbor)
  */
-export class TrexoMove extends MoveCoordToCoord {
+export class TrexoMove extends MoveWithTwoCoords {
 
-    public static encoder: NumberEncoder<TrexoMove> =
-        MoveCoordToCoord.getEncoder<TrexoMove>(TrexoState.SIZE, TrexoState.SIZE,
-                                               (zero: Coord, one: Coord): TrexoMove => {
-                                                   return TrexoMove.from(zero, one).get();
-                                               });
+    public static encoder: MoveEncoder<TrexoMove> = MoveWithTwoCoords.getEncoder(TrexoMove.from);
 
     public static from(zero: Coord, one: Coord): MGPFallible<TrexoMove> {
         if (zero.isNotInRange(TrexoState.SIZE, TrexoState.SIZE)) {
@@ -27,16 +23,16 @@ export class TrexoMove extends MoveCoordToCoord {
         if (distance === 1) {
             return MGPFallible.success(new TrexoMove(zero, one));
         } else {
-            return MGPFallible.failure(TrexoFailure.NON_NEIGHBOR_COORDS());
+            return MGPFallible.failure(TrexoFailure.NON_NEIGHBORING_SPACES());
         }
     }
-    private constructor(public readonly zero: Coord, public readonly one: Coord) {
-        super(zero, one);
+    private constructor(first: Coord, second: Coord) {
+        super(first, second);
     }
     public toString(): string {
-        return this.coord.toString() + ' && ' + this.end.toString();
+        return this.first.toString() + ' && ' + this.second.toString();
     }
     public equals(o: TrexoMove): boolean {
-        return this.coord.equals(o.coord) && this.end.equals(o.end);
+        return this.first.equals(o.first) && this.second.equals(o.second);
     }
 }

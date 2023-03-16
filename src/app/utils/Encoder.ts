@@ -2,63 +2,63 @@ import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 
 export abstract class Encoder<T> {
-    public abstract encode(t: T): JSONValue;
+    public abstract encode(move: T): JSONValue;
 
-    public abstract decode(encoded: JSONValue): T;
+    public abstract decode(encodedMove: JSONValue): T;
 }
 
 export abstract class MoveEncoder<T> extends Encoder<T> {
 
-    public static disjunction3<T1, T2, T3>(encoder1: MoveEncoder<T1>,
-                                           encoder2: MoveEncoder<T2>,
-                                           encoder3: MoveEncoder<T3>,
-                                           isT1: (v: T1 | T2 | T3) => v is T1,
-                                           isT2: (v: T1 | T2 | T3) => v is T2)
-    : MoveEncoder<T1 | T2 | T3> {
-        return new class extends MoveEncoder<T1 | T2 | T3> {
-            public encodeMove(value: T1 | T2 | T3): JSONValueWithoutArray {
-                if (isT1(value)) {
+    public static disjunction3<T, U, V>(encoderT: MoveEncoder<T>,
+                                        encoderU: MoveEncoder<U>,
+                                        encoderV: MoveEncoder<V>,
+                                        isT: (v: T | U | V) => v is T,
+                                        isU: (v: T | U | V) => v is U)
+    : MoveEncoder<T | U | V> {
+        return new class extends MoveEncoder<T | U | V> {
+            public encodeMove(value: T | U | V): JSONValueWithoutArray {
+                if (isT(value)) {
                     return {
-                        type: 'T1',
-                        encoded: encoder1.encode(value),
+                        type: 'T',
+                        encoded: encoderT.encode(value),
                     };
-                } else if (isT2(value)) {
+                } else if (isU(value)) {
                     return {
-                        type: 'T2',
-                        encoded: encoder2.encode(value),
+                        type: 'U',
+                        encoded: encoderU.encode(value),
                     };
                 } else {
                     return {
-                        type: 'T3',
-                        encoded: encoder3.encode(value),
+                        type: 'V',
+                        encoded: encoderV.encode(value),
                     };
                 }
             }
-            public decodeMove(encoded: JSONValueWithoutArray): T1 | T2 | T3 {
+            public decodeMove(encoded: JSONValueWithoutArray): T | U | V {
                 // eslint-disable-next-line dot-notation
                 const type_: string = Utils.getNonNullable(encoded)['type'];
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
-                if (type_ === 'T1') {
-                    return encoder1.decode(content);
-                } else if (type_ === 'T2') {
-                    return encoder2.decode(content);
+                if (type_ === 'T') {
+                    return encoderT.decode(content);
+                } else if (type_ === 'U') {
+                    return encoderU.decode(content);
                 } else {
-                    return encoder3.decode(content);
+                    return encoderV.decode(content);
                 }
             }
         };
     }
-    public encode(t: T): JSONValue {
-        return this.encodeMove(t);
+    public encode(move: T): JSONValue {
+        return this.encodeMove(move);
     }
-    public abstract encodeMove(t: T): JSONValueWithoutArray;
+    public abstract encodeMove(move: T): JSONValueWithoutArray;
 
-    public decode(n: JSONValue): T {
-        assert(Array.isArray(n) === false, 'MoveEncoder.decode called with an array');
-        return this.decodeMove(n as JSONValueWithoutArray);
+    public decode(encodedMove: JSONValue): T {
+        assert(Array.isArray(encodedMove) === false, 'MoveEncoder.decode called with an array');
+        return this.decodeMove(encodedMove as JSONValueWithoutArray);
     }
-    public abstract decodeMove(encoded: JSONValueWithoutArray): T;
+    public abstract decodeMove(encodedMove: JSONValueWithoutArray): T;
 }
 
 // Used internally. If T = [A, B, C], then
@@ -138,29 +138,29 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
         };
     }
     /**
-     * This creates a "sum" encoder, i.e., it encodes values of either type T1 and T2
+     * This creates a "sum" encoder, i.e., it encodes values of either type T and U
      */
-    public static disjunction<T1, T2>(encoder1: NumberEncoder<T1>,
-                                      encoder2: NumberEncoder<T2>,
-                                      isT1: (v: T1 | T2) => v is T1)
-    : NumberEncoder<T1 | T2> {
-        return new class extends NumberEncoder<T1 | T2> {
+    public static disjunction<T, U>(encoderT: NumberEncoder<T>,
+                                    encoderU: NumberEncoder<U>,
+                                    isT: (v: T | U) => v is T)
+    : NumberEncoder<T | U> {
+        return new class extends NumberEncoder<T | U> {
             public maxValue(): number {
-                return Math.max(encoder1.maxValue() * 2,
-                                (encoder2.maxValue() * 2) + 1);
+                return Math.max(encoderT.maxValue() * 2,
+                                (encoderU.maxValue() * 2) + 1);
             }
-            public encodeNumber(value: T1 | T2): number {
-                if (isT1(value)) {
-                    return encoder1.encodeNumber(value) * 2;
+            public encodeNumber(value: T | U): number {
+                if (isT(value)) {
+                    return encoderT.encodeNumber(value) * 2;
                 } else {
-                    return (encoder2.encodeNumber(value) * 2) + 1;
+                    return (encoderU.encodeNumber(value) * 2) + 1;
                 }
             }
-            public decodeNumber(encoded: number): T1 | T2 {
+            public decodeNumber(encoded: number): T | U {
                 if (encoded % 2 === 0) {
-                    return encoder1.decodeNumber(encoded / 2);
+                    return encoderT.decodeNumber(encoded / 2);
                 } else {
-                    return encoder2.decodeNumber((encoded - 1) / 2);
+                    return encoderU.decodeNumber((encoded - 1) / 2);
                 }
             }
         };

@@ -36,8 +36,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     }
     public applyLegalMove(move: TrexoMove, state: TrexoState): TrexoState {
         return state
-            .drop(move.zero, Player.ZERO)
-            .drop(move.one, Player.ONE)
+            .drop(move.first, Player.ZERO)
+            .drop(move.second, Player.ONE)
             .incrementTurn();
     }
     public isLegal(move: TrexoMove, state: TrexoState): MGPFallible<void> {
@@ -45,18 +45,18 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             return MGPFallible.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
         }
         if (this.landsOnOnlyOnePiece(move, state)) {
-            return MGPFallible.failure(TrexoFailure.CANNOT_DROP_ONLY_ONE_PIECE());
+            return MGPFallible.failure(TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
         }
         return MGPFallible.success(undefined);
     }
     public isUnevenGround(move: TrexoMove, state: TrexoState): boolean {
-        const zero: TrexoSpace = state.getPieceAt(move.zero);
-        const one: TrexoSpace = state.getPieceAt(move.one);
+        const zero: TrexoSpace = state.getPieceAt(move.first);
+        const one: TrexoSpace = state.getPieceAt(move.second);
         return zero.height !== one.height;
     }
     public landsOnOnlyOnePiece(move: TrexoMove, state: TrexoState): boolean {
-        const zeroSpace: TrexoSpace = state.getPieceAt(move.zero);
-        const oneSpace: TrexoSpace = state.getPieceAt(move.one);
+        const zeroSpace: TrexoSpace = state.getPieceAt(move.first);
+        const oneSpace: TrexoSpace = state.getPieceAt(move.second);
         if (zeroSpace.landingTurn === -1 && oneSpace.landingTurn === -1) {
             return false;
         }
@@ -141,7 +141,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         const secondPiece: TrexoSpace = state.getPieceAt(second);
         let piecesHideEntirelyOnePiece: boolean;
         if (firstPiece.landingTurn === -1) {
-            piecesHideEntirelyOnePiece = false; // worst case scenario they both cover "turn -1"
+            piecesHideEntirelyOnePiece = false;
         } else {
             piecesHideEntirelyOnePiece = (firstPiece.landingTurn === secondPiece.landingTurn);
         }

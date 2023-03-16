@@ -359,8 +359,8 @@ describe('SiamRules:', () => {
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('should assign victory to player 0 if its pieces push the mountain out of the board', () => {
-        // Given a board with two player 0 pieces ready to push a mountai
+    it('should assign victory to Player.ZERO if its pieces push the mountain out of the board', () => {
+        // Given a board with two Player.ZERO pieces ready to push a mountain
         const board: Table<SiamPiece> = [
             [_, _, M, _, _],
             [_, _, U, _, _],

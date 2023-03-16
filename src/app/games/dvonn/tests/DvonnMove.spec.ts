@@ -9,12 +9,12 @@ describe('DvonnMove', () => {
         expect((DvonnMove.of(new Coord(3, 2), new Coord(3, 3))).toString()).toEqual('DvonnMove((3, 2)->(3, 3))');
         expect(DvonnMove.PASS.toString()).toEqual('DvonnMove.PASS');
     });
-    it('should correctly encode and decode coord to coord moves', () => {
+    it('should encode and decode coord to coord moves bijectively', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(3, 2), new Coord(3, 3));
-        NumberEncoderTestUtils.expectToBeCorrect(DvonnMove.encoder, move);
+        NumberEncoderTestUtils.expectToBeBijective(DvonnMove.encoder, move);
     });
-    it('should correctly encode and decode PASS', () => {
-        NumberEncoderTestUtils.expectToBeCorrect(DvonnMove.encoder, DvonnMove.PASS);
+    it('should encode and decode PASS bijectively', () => {
+        NumberEncoderTestUtils.expectToBeBijective(DvonnMove.encoder, DvonnMove.PASS);
     });
     it('should force move to start and end inside the board', () => {
         expect(() => DvonnMove.of(new Coord(-1, 2), new Coord(0, 2))).toThrowError();

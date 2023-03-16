@@ -157,7 +157,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 testUtils.expectElementNotToHaveClass('#piece_' + firstCoord, 'selected-stroke');
             }));
         });
-        it('encoder should be correct', () => {
+        it('should have a bijective encoder', () => {
             const rules: R = testUtils.getComponent().rules;
             MGPNode.ruler = rules;
             const encoder: MoveEncoder<M> = testUtils.getComponent().encoder;
@@ -169,7 +169,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                     return entries.moveProvider(move.coord, move.end);
                 });
             for (const move of firstTurnMoves) {
-                NumberEncoderTestUtils.expectToBeCorrect(encoder as NumberEncoder<M>, move);
+                NumberEncoderTestUtils.expectToBeBijective(encoder as NumberEncoder<M>, move);
             }
         });
     });

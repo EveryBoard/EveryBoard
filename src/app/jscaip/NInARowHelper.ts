@@ -14,13 +14,12 @@ export class NInARowHelper<T> {
                 public N: number)
     {}
     public getSquareScore(state: GameStateWithTable<T>,
-                          coord: Coord,
-    ): number
+                          coord: Coord)
+    : number
     {
         const piece: T = state.getPieceAt(coord);
         const ally: Player = this.getOwner(piece) as Player;
         assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
-        const opponent: Player = ally.getOpponent();
 
         const freeSpaceByDirs: MGPMap<Direction, number> = new MGPMap();
         const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
@@ -30,7 +29,6 @@ export class NInARowHelper<T> {
                 state,
                 coord,
                 dir,
-                opponent,
                 ally,
             );
             freeSpaceByDirs.set(dir, tmpData[0]);
@@ -41,8 +39,8 @@ export class NInARowHelper<T> {
         return score * ally.getScoreModifier();
     }
     public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Direction, number>,
-                                                    freeSpaceByDirs: MGPMap<Direction, number>,
-    ): number
+                                                    freeSpaceByDirs: MGPMap<Direction, number>)
+    : number
     {
         let score: number = 0;
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
@@ -65,7 +63,6 @@ export class NInARowHelper<T> {
     public getNumberOfFreeSpacesAndAllies(state: GameStateWithTable<T>,
                                           i: Coord,
                                           dir: Direction,
-                                          opponent: Player,
                                           ally: Player)
     : [number, number]
     {
@@ -79,6 +76,7 @@ export class NInARowHelper<T> {
         let allAlliesAreSideBySide: boolean = true;
         let coord: Coord = new Coord(i.x + dir.x, i.y + dir.y);
         let testedCoords: number = 1;
+        const opponent: Player = ally.getOpponent();
         while (this.isInRange(coord) && testedCoords < this.N) {
             // while we're on the board
             const currentSpace: T = state.getPieceAt(coord);

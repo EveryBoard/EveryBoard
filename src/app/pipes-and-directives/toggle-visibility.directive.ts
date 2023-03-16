@@ -5,6 +5,7 @@ import { Directive, ElementRef } from '@angular/core';
 })
 
 export class ToggleVisibilityDirective {
+
     private shown: boolean = false;
     private readonly input: HTMLElement;
 
@@ -15,7 +16,7 @@ export class ToggleVisibilityDirective {
         });
     }
 
-    private toggle() {
+    private toggle(): void {
         this.shown = !this.shown;
         if (this.shown) {
             this.input.setAttribute('type', 'text');

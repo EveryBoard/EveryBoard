@@ -18,6 +18,7 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Comparable } from 'src/app/utils/Comparable';
+import { QuartoNode } from 'src/app/games/quarto/QuartoRules';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -47,7 +48,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         wrapper = testUtils.wrapper as TutorialGameWrapperComponent;
     }));
     describe('Common behavior', () => {
-        // ///////////////////////// BEFORE ///////////////////////////////////////
+        // ///////////////////////// Before ///////////////////////////////////////
         it('should create', () => {
             expect(testUtils.wrapper).toBeTruthy();
             expect(testUtils.getComponent()).toBeTruthy();
@@ -160,12 +161,58 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When starting tutorial
             wrapper.startTutorial(tutorial);
 
-            // expect to see setted previous move
+            // Then there should be a previous move
             const componentPreviousMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
             const componentPreviousState: QuartoState =
                 wrapper.gameComponent.rules.node.mother.get().gameState as QuartoState;
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
             expect(componentPreviousState).toEqual(tutorialPreviousState);
+        }));
+        it('should show several previous moves', fakeAsync(async() => {
+            // Given a step created with a list of previousMovesAndStates
+            // order from older to recenter
+            const firstState: QuartoState = QuartoState.getInitialState();
+            const firstMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+            const secondState: QuartoState = new QuartoState([
+                [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ], 1, QuartoPiece.BBBB);
+            const secondMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
+            const state: QuartoState = new QuartoState([
+                [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.BBBB],
+            ], 2, QuartoPiece.BABA);
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'instruction',
+                    state,
+                    ['#click_0_0'],
+                    'Congratulations!',
+                    'Perdu.',
+                ).withPreviousMoveAndState([
+                    { move: firstMove, state: firstState },
+                    { move: secondMove, state: secondState },
+                ]),
+            ];
+            // When starting tutorial
+            wrapper.startTutorial(tutorial);
+            // Then there should be as much mother node as previousMovesAndState
+            let motherNode: QuartoNode = wrapper.gameComponent.rules.node as QuartoNode;
+            const componentSecondMove: QuartoMove = motherNode.move.get();
+            const componentSecondState: QuartoState = motherNode.mother.get().gameState;
+            expect(componentSecondMove).toEqual(secondMove);
+            expect(componentSecondState).toEqual(secondState);
+            // And the previous one as well
+            motherNode = motherNode.mother.get();
+            const componentFirstMove: QuartoMove = motherNode.move.get();
+            const componentFirstState: QuartoState = motherNode.mother.get().gameState;
+            expect(componentFirstMove).toEqual(firstMove);
+            expect(componentFirstState).toEqual(firstState);
         }));
         it('should show title of the steps, the selected one in bold', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps
@@ -197,7 +244,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             currentTitle = testUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
         }));
-        // ///////////////////////// ATTEMPTING ///////////////////////////////////
+        // ///////////////////////// Attempting ///////////////////////////////////
         it('should go to specific step when clicking on it', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps
             const tutorial: TutorialStep[] = [

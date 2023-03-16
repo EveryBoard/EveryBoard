@@ -1,6 +1,7 @@
 import { comparableEquals } from './Comparable';
 
 export class MGPOptional<T> {
+
     public static of<T>(value: T): MGPOptional<T> {
         return new MGPOptional(value);
     }

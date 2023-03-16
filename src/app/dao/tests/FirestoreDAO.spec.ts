@@ -18,12 +18,13 @@ interface Foo extends FirestoreJSONObject {
     providedIn: 'root',
 })
 class FooDAO extends FirestoreDAO<Foo> {
+
     constructor(firestore: Firestore.Firestore) {
         super('foo', firestore);
     }
 }
 
-xdescribe('FirestoreDAO', () => {
+describe('FirestoreDAO', () => {
 
     let fooDAO: FooDAO;
 

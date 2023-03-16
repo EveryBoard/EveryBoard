@@ -36,7 +36,8 @@ export class ErrorLoggerService {
     }
     public constructor(private readonly errorDAO: ErrorDAO,
                        private readonly router: Router,
-                       private readonly messageDisplayer: MessageDisplayer) {
+                       private readonly messageDisplayer: MessageDisplayer)
+    {
         ErrorLoggerService.setSingletonInstance(this);
     }
     public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {

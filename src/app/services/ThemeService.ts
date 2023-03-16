@@ -9,11 +9,13 @@ type Theme = 'dark' | 'light';
     providedIn: 'root',
 })
 export class ThemeService {
+
     private theme: Theme;
     private readonly availableThemes: Theme[] = ['dark', 'light'];
 
     constructor(@Inject(DOCUMENT) private readonly document: Document,
-                private readonly userSettingsService: UserSettingsService) {
+                private readonly userSettingsService: UserSettingsService)
+    {
         const storedTheme: MGPOptional<Theme> = this.getStoredTheme();
         if (storedTheme.isPresent()) {
             this.loadTheme(storedTheme.get());

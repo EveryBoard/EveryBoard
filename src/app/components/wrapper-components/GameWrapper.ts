@@ -123,7 +123,8 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
-                                  scores?: [number, number]): Promise<MGPValidation>
+                                  scores?: [number, number])
+    : Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,

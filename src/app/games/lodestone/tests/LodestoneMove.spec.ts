@@ -30,8 +30,8 @@ describe('LodestoneMove', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal');
         expect(move.toString()).toEqual('LodestoneMove((0, 0), push, diagonal, { top: 0, bottom: 0, left: 0, right: 0 })');
     });
-    it('should correctly encode and decode', () => {
+    it('should have a bijective encoder', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 });
-        EncoderTestUtils.expectToBeCorrect(LodestoneMove.encoder, move);
+        EncoderTestUtils.expectToBeBijective(LodestoneMove.encoder, move);
     });
 });

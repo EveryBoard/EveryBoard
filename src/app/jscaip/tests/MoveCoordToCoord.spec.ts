@@ -41,14 +41,12 @@ describe('MoveCoordToCoord', () => {
             expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(2, 2)).length()).toBe(2);
         });
     });
-    describe('encoder', () => {
-        it('should correctly encode and decode moves', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(
-                NonAbstractMoveCoordToCoord.getEncoder(10, 10,
-                                                       (start: Coord, end: Coord): NonAbstractMoveCoordToCoord => {
-                                                           return new NonAbstractMoveCoordToCoord(start, end);
-                                                       }),
-                new NonAbstractMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
-        });
+    it('should have a bijective encoder', () => {
+        NumberEncoderTestUtils.expectToBeBijective(
+            NonAbstractMoveCoordToCoord.getEncoder(10, 10,
+                                                   (start: Coord, end: Coord): NonAbstractMoveCoordToCoord => {
+                                                       return new NonAbstractMoveCoordToCoord(start, end);
+                                                   }),
+            new NonAbstractMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
     });
 });

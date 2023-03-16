@@ -1,38 +1,22 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { CoordXYZ } from 'src/app/jscaip/CoordXYZ';
+import { Coord3D } from 'src/app/jscaip/Coord3D';
+import { Encoder } from 'src/app/utils/Encoder';
+import { getOptionalEncoder } from 'src/app/utils/MGPOptionalEncoder';
 
-export class PylosCoord extends CoordXYZ {
+export class PylosCoord extends Coord3D {
 
-    public static MAX_COORD: CoordXYZ = new CoordXYZ(3, 3, 3); // CoordXYZ because (3, 3, 3) is not be legal for Pylos
+    public static encoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
 
-    public static encode(coord: PylosCoord): number {
-        return CoordXYZ.encode(coord, PylosCoord.MAX_COORD);
-    }
-    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
-        return CoordXYZ.encodeOptional(optionalCoord, PylosCoord.MAX_COORD);
-    }
-    public static decodeToOptional(encodedOptional: number): MGPOptional<PylosCoord> {
-        if (encodedOptional === 0) {
-            return MGPOptional.empty();
-        }
-        return MGPOptional.of(PylosCoord.decode(encodedOptional - 1));
-    }
-    public static decode(coord: number): PylosCoord {
-        const z: number = coord % 4;
-        coord -= z;
-        coord /= 4;
+    public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = getOptionalEncoder(PylosCoord.encoder);
 
-        const y: number = coord % 4;
-        coord -= y;
-        coord /= 4;
+    public static MAX_COORD: Coord3D = new Coord3D(3, 3, 3); // Coord3D because (3, 3, 3) is not be legal for Pylos
 
-        const x: number = coord;
-
+    public static from(x: number, y: number, z: number): PylosCoord {
         return new PylosCoord(x, y, z);
     }
-    constructor(x: number, y: number, public readonly z: number) {
+    public constructor(x: number, y: number, public readonly z: number) {
         super(x, y, z);
         if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
         if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);
@@ -44,7 +28,7 @@ export class PylosCoord extends CoordXYZ {
         return 'PylosCoord' + this.toShortString();
     }
     public getLowerPieces(): PylosCoord[] {
-        if (this.z === 0) throw new Error(`CoordXYZ: floor pieces don't have lower pieces.`);
+        if (this.z === 0) throw new Error(`PylosCoord: floor pieces don't have lower pieces.`);
         const lowerZ: number = this.z - 1;
         const upLeft: PylosCoord = new PylosCoord(this.x, this.y, lowerZ);
         const upRight: PylosCoord = new PylosCoord(this.x + 1, this.y, lowerZ);

@@ -6,7 +6,9 @@ import { Direction } from './Direction';
 export class BoardDatas {
 
     private constructor(readonly groupIndexes: NumberTable,
-                        readonly groups: ReadonlyArray<GroupInfos>) { }
+                        readonly groups: ReadonlyArray<GroupInfos>)
+    {
+    }
 
     public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDatasFactory<T>): BoardDatas {
         const groupIndexes: number[][] = ArrayUtils.createTable<number>(board[0].length, board.length, -1);

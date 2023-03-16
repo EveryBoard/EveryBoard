@@ -98,7 +98,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             .filter((c: Coord): boolean =>
                 state.getPieceAt(c).containsSource());
     }
-    private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]) {
+    private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]): void {
         // For each neighbor, mark it as connected (if it contains something),
         // and recurse from there (only if it was not already marked)
         HexagonalGameState.neighbors(coord, 1).forEach((c: Coord) => {

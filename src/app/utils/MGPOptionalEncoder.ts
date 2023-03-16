@@ -6,7 +6,7 @@ import { JSONValue } from './utils';
  * Encodes a MGPOptional<T> using an encoder of T.
  * It will use the same encoding as T, and use null to encode an empty optional.
  */
-export function MGPOptionalEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
+export function getOptionalEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
     return new class extends Encoder<MGPOptional<T>> {
         public encode(opt: MGPOptional<T>): JSONValue {
             if (opt.isPresent()) {

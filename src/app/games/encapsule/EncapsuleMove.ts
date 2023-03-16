@@ -68,7 +68,8 @@ export class EncapsuleMove extends Move {
     };
     private constructor(public readonly startingCoord: MGPOptional<Coord>,
                         public readonly landingCoord: Coord,
-                        public readonly piece: MGPOptional<EncapsulePiece>) {
+                        public readonly piece: MGPOptional<EncapsulePiece>)
+    {
         super();
     }
     public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {

@@ -50,6 +50,7 @@ import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartServ
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
+
     private route: {[key: string]: string} = {};
     public snapshot: { paramMap: { get: (str: string) => string } };
     public constructor(compo?: string, id?: string) {

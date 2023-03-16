@@ -10,10 +10,8 @@ describe('LinesOfActionMove', () => {
 
     const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(5, 3), new Coord(3, 5)).get();
 
-    describe('encoder', () => {
-        it('should correctly encode and decode', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(LinesOfActionMove.encoder, move);
-        });
+    it('should have a bijective encoder', () => {
+        NumberEncoderTestUtils.expectToBeBijective(LinesOfActionMove.encoder, move);
     });
     it('should not create a move outside of the board', () => {
         expect(LinesOfActionMove.of(new Coord(-1, 5), new Coord(3, 5))).toEqual(MGPFallible.failure('start coord is not in range'));

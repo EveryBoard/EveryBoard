@@ -344,7 +344,7 @@ export class YinshComponent
             return this.selectCapture(captures[0]);
         }
     }
-    private selectCapture(capture: YinshCapture) {
+    private selectCapture(capture: YinshCapture): MGPValidation {
         this.currentCapture = MGPOptional.of(capture);
         this.constructedState = new YinshState(
             this.rules.applyCaptureWithoutTakingRing(this.constructedState, capture),

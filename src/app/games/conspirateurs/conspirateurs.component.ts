@@ -58,6 +58,7 @@ export class ConspirateursComponent
         sidePieces: [20, 20],
     };
     private selected: MGPOptional<Coord> = MGPOptional.empty();
+
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {

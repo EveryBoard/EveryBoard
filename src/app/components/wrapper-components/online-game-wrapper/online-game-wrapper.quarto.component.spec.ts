@@ -2230,7 +2230,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
-            // Given a part that the two player agreed to draw
+            // Given a part that the two players agreed to draw
             await prepareTestUtilsFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
             await receiveRequest(Request.drawProposed(Player.ONE), 1);

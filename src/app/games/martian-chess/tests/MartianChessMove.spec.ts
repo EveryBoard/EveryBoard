@@ -47,12 +47,12 @@ describe('MartianChessMove', () => {
         expect(move.equals(moveWithDifferntEnd)).toBeFalse();
         expect(move.equals(moveWithClockCall)).toBeFalse();
     });
-    it('should encode and decode correctly', () => {
+    it('should have a bijective encoder', () => {
         const rules: MartianChessRules = new MartianChessRules(MartianChessState);
         const minimax: MartianChessDummyMinimax = new MartianChessDummyMinimax(rules, 'dummy');
         const firstTurnMoves: MartianChessMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            EncoderTestUtils.expectToBeCorrect(MartianChessMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(MartianChessMove.encoder, move);
         }
     });
 });
