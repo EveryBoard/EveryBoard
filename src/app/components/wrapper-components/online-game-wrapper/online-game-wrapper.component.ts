@@ -28,6 +28,8 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { PartService } from 'src/app/services/PartService';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { FirestoreTime } from 'src/app/domain/Time';
+import { Timestamp } from 'firebase/firestore';
 
 export class OnlineGameWrapperMessages {
 
@@ -460,7 +462,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.chronoOneGlobal.changeDuration(currentDuration + addedMs);
         }
     }
-    // Public for testing purposes (TODO: shouldn't be, the test is wrong then)
     // How to do it:
     // We have: the clocks, and the computed remaining time
     // The clocks progress (down), but the time is fixed as it will be used for computing stuff
@@ -472,10 +473,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     //   1. set takenGlobalTime[0] to drift
     //   2. set globalClock[0] to totalPartTime - takenGlobalTime[0]
     //   3. set turnClock[0] to turnTime - takenGlobalTime[0]
+    private takenGlobalTime: [number, number] = [0, 0];
+    private globalClock: [CountDownComponent, CountDownComponent] = [0, 0];
+    private turnClock: [CountDownComponent, CountDownComponent] = [0, 0];
+    public startClocks(beginningTime: Timestamp): void {
+        const localTime: Timestamp = Timestamp.now();
+        // Drift is the time it took for the message to be sent from the server to us
+        const drift: number = localTime - beginningTime;
+        this.takenGlobalTime[0] = drift;
+        this.globalClock[0].setDuration(this.configRoom.totalPartDuration - drift);
+        this.turnClock[0].setDuration(this.configRoom.maximalMoveDuration - drift);
+    }
     // move: we know how long the previous player (i) has taken to play:
     //   they took thisMoveTime - previousMoveTime if there is a last move
     //             thisMoveTime - beginning if there is none
-    //   1. store this in takenMoveTime
+    //   1. store this in local takenMoveTime
     //   2. set takenGlobalTime[i] to takenGlobalTime[i] + takenMoveTime
     //   3. set globalClock[i] to totalPartTime - takenGlobalTime[i]
     //   4. set turnClock[i] to totalTurnTime - takenMoveTime
@@ -483,16 +495,17 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     //   drift = localTime - thisMoveTime
     //   a. set globalClock[i+1] to globalClock[i+1] - drift
     //   b. set turnClock[i+1] to turnTime - drift and start it
-    private switchPlayerChronosOnMove(playerThatMoved: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
-        const nextPlayer: Player = playerThatMoved.getOpponent();
-        this.currentPlayer = this.players[nextPlayer.value].get();
-        this.pauseCountDownsFor(playerThatMoved);
-        if (this.didUserPlay(nextPlayer)) {
-            this.resumeCountDownFor(nextPlayer);
-        } else {
-            this.startCountDownFor(nextPlayer);
-        }
+    private updateClocks(player: Player, move: Move): void {
+        const takenMoveTime: number = TODO;
+        const previousPlayer: Player = player.getOpponent();
+        this.takenGlobalTime[previousPlayer.value] += takenMoveTime;
+        this.globalClock[previousPlayer.value].setDuration(this.configRoom.totalPartDuration -
+            this.takenGlobalTime[previousPlayer.value]);
+        this.turnClock[previousPlayer.value].setDuration(this.configRoom.maximalTurnDuration - takenMoveTime);
+        const localTime: Timestamp = Timestamp.now();
+        const drift: number = localTime - move.timestamp;
+        this.globalClock[player.value].setDuration("TODO: can't rely on its previous value, ideally");
+        this.turnClock[player.value].setDuration(this.configRoom.maximalTurnDuration - drift);
     }
     public resetChronoFor(player: Player): void {
         this.pauseCountDownsFor(player);
