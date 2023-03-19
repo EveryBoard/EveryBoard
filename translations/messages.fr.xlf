@@ -2292,7 +2292,7 @@
       </trans-unit>
       <trans-unit id="6645197773482117918" datatype="html">
         <source>The beetle moves like the queen bee, but it is allowed to climb on top of other pieces! Therefore, it need not adhere to the sliding restriction. Note that you are not allowed to drop the beetle on top of another piece in the drop phase, this can only be achieved when moving a beetle already on the board. A piece with a beetle on top is not allowed to move. A stack is considered to be of the player who has the beetle of the top.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, block your opponent&apos;s queen by moving on top of it!</source>
-        <target>Le scarabée se déplace comme la reine, mais est autorisé à grimper sur les autres pièces ! Il n'a donc pas besoin d'adhérer à la restriction des glissades. Notez que vous ne pouvez pas introduire le scarabée en le déposant sur une autre pièce, cela ne peut être effectué qu'en déplaçant un scarabée déjà sur le plateau. Une pièce avec un scarabée au dessus n'est pas autorisée à se déplacer. Une pile est considérée comme appartenant au joueur ayant le scarabée sur son dessus.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, bloquez votre reine adverse en grimpant dessus !</target>
+        <target>Le scarabée se déplace comme la reine, mais est autorisé à grimper sur les autres pièces ! Il n'a donc pas besoin d'adhérer à la restriction des glissades. Notez que vous ne pouvez pas introduire le scarabée en le déposant sur une autre pièce, cela ne peut être effectué qu'en déplaçant un scarabée déjà sur le plateau. Une pièce avec un scarabée au dessus n'est pas autorisée à se déplacer. Une pile est considérée comme appartenant au joueur ayant le scarabée sur son dessus.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, bloquez la reine adverse en grimpant dessus !</target>
       </trans-unit>
       <trans-unit id="6641485598833513426" datatype="html">
         <source>Inspecting stacks</source>
@@ -2308,7 +2308,7 @@
       </trans-unit>
       <trans-unit id="6824181934070796921" datatype="html">
         <source>The grasshopper jumps over one or more pieces in a straight line, and stops at the first empty space encountered. It cannot jump over empty spaces, and can only move through jumps. Because it jumps, it does not adhere to the sliding restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Jump over three pieces with your grasshopper!</source>
-        <target>La sauterelle saute au dessus d'une ou plusieurs pièce en ligne droite, et s'arrête à la première case vide. Elle ne peut pas sauter au dessus de cases vides, et peut uniquement se déplacer en sautant. Car elle saute, elle ne doit pas adhérer à la restriction des glissades.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Sautez au-dessus de trois pièces avec votre sauterelle !</target>
+        <target>La sauterelle saute au dessus d'une ou plusieurs pièces en ligne droite, et s'arrête à la première case vide. Elle ne peut pas sauter au dessus de cases vides, et peut uniquement se déplacer en sautant. Car elle saute, elle ne doit pas adhérer à la restriction des glissades.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Sautez au-dessus de trois pièces avec votre sauterelle !</target>
       </trans-unit>
       <trans-unit id="5124714891438504376" datatype="html">
         <source>Moving the soldier ant</source>

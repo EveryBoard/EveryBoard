@@ -4,7 +4,8 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { HiveMove } from './HiveMove';
+import { MGPSet } from 'src/app/utils/MGPSet';
+import { HiveMove, HiveMoveCoordToCoord } from './HiveMove';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 
@@ -37,14 +38,16 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
         if (status !== GameStatus.ONGOING) {
             return new BoardValue(status.toBoardValue());
         }
-        const scoreZero: number = this.queenBeeNeighbors(node.gameState, Player.ZERO);
-        const scoreOne: number = this.queenBeeNeighbors(node.gameState, Player.ONE);
+        const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
+        const scoreOne: number = this.queenBeeMobility(node.gameState, Player.ONE);
         return BoardValue.from(scoreZero, scoreOne);
     }
-    private queenBeeNeighbors(state: HiveState, player: Player): number {
+    private queenBeeMobility(state: HiveState, player: Player): number {
         const queenBee: MGPOptional<Coord> = state.queenBeeLocation(player);
         if (queenBee.isPresent()) {
-            return state.numberOfNeighbors(queenBee.get());
+            const possibleMoves: MGPSet<HiveMoveCoordToCoord> =
+                HiveRules.get().getPossibleMovesFrom(state, queenBee.get());
+            return possibleMoves.size();
         } else {
             return 0;
         }

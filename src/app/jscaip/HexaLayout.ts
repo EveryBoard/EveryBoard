@@ -36,11 +36,16 @@ export class HexaLayout {
      * The second polygon is the one on the bottom and bottom right.
      * The third polygon is the polygon formed by the union of the first two
      * Each polygon is shown below for a flat orientation.
-     *    __
-     *   /  \
-     * _|   |_
-     * \1\_/2/
-     *  \|2_/
+     *    ___
+     *   /   \
+     *  /     \
+     * |       |
+     * |       |
+     * |\     /|
+     * |1\___/ |
+     * \ |  2 /
+     *  \|___/
+     *
      * So far, only used in a pointy orientation, may need to be adapted for a flat orientation.
      */
     public getIsoPoints(coord: Coord, height: number): [Coord[], Coord[], Coord[]] {

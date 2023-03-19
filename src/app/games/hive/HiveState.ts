@@ -186,7 +186,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         let neighbors: number = 0;
         for (const direction of HexaDirection.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
-            if (this.getAt(neighbor).isNotEmpty()) {
+            if (this.getAt(neighbor).hasPieces()) {
                 neighbors += 1;
             }
         }

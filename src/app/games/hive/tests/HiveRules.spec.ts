@@ -906,7 +906,7 @@ describe('HiveRules', () => {
         expect(dropLocations.size()).toBe(0);
     });
     it('should compute the expected spider moves for a specific board', () => {
-        // Given a specific state with 3 possible spider moves
+        // Given a specific state with 4 possible spider moves
         const board: Table<HivePiece[]> = [
             [[], [S], [s], [b]],
             [[], [], [], [B]],

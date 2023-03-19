@@ -47,14 +47,14 @@ export class HivePieceStack implements ComparableObject {
     public isEmpty(): boolean {
         return this.pieces.length === 0;
     }
-    public isNotEmpty(): boolean {
+    public hasPieces(): boolean {
         return this.isEmpty() === false;
     }
     public add(piece: HivePiece): HivePieceStack {
         return new HivePieceStack([piece, ...this.pieces]);
     }
     public topPiece(): HivePiece {
-        Utils.assert(this.isNotEmpty(), 'HivePieceStack: cannot get top piece of an empty stack');
+        Utils.assert(this.hasPieces(), 'HivePieceStack: cannot get top piece of an empty stack');
         return this.pieces[0];
     }
     public removeTopPiece(): HivePieceStack {
