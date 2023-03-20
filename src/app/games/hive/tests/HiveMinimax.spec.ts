@@ -12,6 +12,7 @@ describe('HiveMinimax', () => {
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');
+    const S: HivePiece = new HivePiece(Player.ZERO, 'Spider');
     const q: HivePiece = new HivePiece(Player.ONE, 'QueenBee');
     const b: HivePiece = new HivePiece(Player.ONE, 'Beetle');
 
@@ -55,5 +56,19 @@ describe('HiveMinimax', () => {
 
         // Then there should be exactly one move: passing
         expect(moves).toEqual([HiveMove.PASS]);
+    });
+    it('should only drop queen when it must be dropped', () => {
+        // Given a state where the player must drop their queen bee at this turn
+        const state: HiveState = HiveState.fromRepresentation([
+            [[B], [B], [S], [b]],
+            [[], [q], [b], []],
+        ], 6);
+        const node: HiveNode = new HiveNode(state);
+
+        // When computing
+        const moves: HiveMove[] = minimax.getListMoves(node);
+
+        // Then there should be 5 moves (one per position where the queen bee can be dropped)
+        expect(moves.length).toBe(5);
     });
 });

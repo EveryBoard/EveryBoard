@@ -6,6 +6,7 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveMove, HiveMoveCoordToCoord } from './HiveMove';
+import { HivePiece } from './HivePiece';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 
@@ -25,9 +26,15 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
     }
     public getListDrops(state: HiveState): HiveMove[] {
         const drops: HiveMove[] = [];
+        const player: Player = state.getCurrentPlayer();
+        const queenBee: HivePiece = new HivePiece(player, 'QueenBee');
         for (const coord of HiveRules.get().getPossibleDropLocations(state)) {
-            for (const remaining of state.remainingPieces.getPlayerPieces(state.getCurrentPlayer())) {
-                drops.push(HiveMove.drop(remaining, coord));
+            if (HiveRules.get().mustPlaceQueenBee(state)) {
+                drops.push(HiveMove.drop(queenBee, coord));
+            } else {
+                for (const remaining of state.remainingPieces.getPlayerPieces(state.getCurrentPlayer())) {
+                    drops.push(HiveMove.drop(remaining, coord));
+                }
             }
         }
         return drops;
