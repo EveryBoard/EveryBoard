@@ -576,6 +576,20 @@ describe('HiveRules', () => {
             const reason: string = HiveFailure.GRASSHOPPER_MUST_MOVE_IN_STRAIGHT_LINE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+        it('should forbid moving the spider by a regular move instead of a spider move', () => {
+            // Given a board with a spider
+            const board: Table<HivePiece[]> = [
+                [[Q], [S], [q]],
+                [[A], [a], []],
+            ];
+            const state: HiveState = HiveState.fromRepresentation(board, 4);
+
+            // When moving the spider with a regular move
+            const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(2, -1)).get();
+
+            // Then the move should fail
+            RulesUtils.expectMoveFailure(rules, state, move, HiveFailure.SPIDER_MUST_MOVE_WITH_SPIDER_MOVE);
+        });
         it('should allow the spider to move by 3 spaces', () => {
             // Given a board with a spider
             const board: Table<HivePiece[]> = [

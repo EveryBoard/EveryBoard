@@ -34,4 +34,6 @@ export class HiveFailure {
 
     public static readonly MUST_BE_CONNECTED_TO_HIVE: Localized = () => $localize`The piece you are dropping must be connected to the hive.`;
 
+    public static readonly SPIDER_MUST_MOVE_WITH_SPIDER_MOVE: string = 'A spider can only be moved with a HiveMoveSpider';
+
 }

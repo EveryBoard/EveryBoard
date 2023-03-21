@@ -8,9 +8,9 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveFailure } from './HiveFailure';
-import { HiveMoveDrop, HiveMove, HiveMoveCoordToCoord } from './HiveMove';
+import { HiveMoveDrop, HiveMove, HiveMoveCoordToCoord, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
-import { HivePieceBehavior } from './HivePieceBehavior';
+import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
 
 export class HiveNode extends MGPNode<HiveRules, HiveMove, HiveState> {}
@@ -28,7 +28,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     private constructor() {
         super(HiveState);
     }
-    public applyLegalMove(move: HiveMove, state: HiveState, info: void): HiveState {
+    public applyLegalMove(move: HiveMove, state: HiveState, _info: void): HiveState {
         if (move instanceof HiveMoveDrop) {
             return this.applyLegalDrop(move, state);
         } else if (move instanceof HiveMoveCoordToCoord) {
@@ -81,7 +81,11 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         if (movedPiece.owner === state.getCurrentOpponent()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        const moveValidity: MGPFallible<void> = HivePieceBehavior.from(movedPiece).moveValidity(move, state);
+
+        if (movedPiece.kind === 'Spider' && move instanceof HiveMoveSpider === false) {
+            return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_WITH_SPIDER_MOVE);
+        }
+        const moveValidity: MGPFallible<void> = HivePieceRules.from(movedPiece).moveValidity(move, state);
         if (moveValidity.isFailure()) {
             return moveValidity;
         }
@@ -180,7 +184,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         if (topPiece.owner === player) {
-            for (const move of HivePieceBehavior.from(topPiece).getPotentialMoves(coord, state)) {
+            for (const move of HivePieceRules.from(topPiece).getPotentialMoves(coord, state)) {
                 if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
                     moves.add(move);
                 }

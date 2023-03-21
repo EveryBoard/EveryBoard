@@ -20,7 +20,7 @@ import { HiveFailure } from './HiveFailure';
 import { HiveMinimax } from './HiveMinimax';
 import { HiveMove, HiveMoveCoordToCoord, HiveMoveDrop, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
-import { HiveSpiderBehavior } from './HivePieceBehavior';
+import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
@@ -432,7 +432,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             return this.chooseMove(move, this.getState());
         }
         const validity: MGPFallible<void> =
-            HiveSpiderBehavior.get().prefixLegality(this.selectedSpiderCoords, this.getState());
+            HiveSpiderRules.get().prefixLegality(this.selectedSpiderCoords, this.getState());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
