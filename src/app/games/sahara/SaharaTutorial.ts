@@ -36,12 +36,12 @@ export class SaharaTutorial extends Tutorial {
             $localize`Simple step`,
             $localize`To immobilize your opponent, you have to move your pyramids.
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
-        You're the first player, playing with the dark pyramids.
+        To perform a move:
         <ol>
             <li>Click on one of your pyramids.</li>
             <li>Click on one of its two or three neighboring spaces in order to move your pyramid there.</li>
         </ol><br/>
-        Do any simple step.`,
+        You're playing Dark, do any simple step.`,
             SaharaState.getInitialState(),
             SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
             (move: SaharaMove, _previous: SaharaState, _result: SaharaState) => {
@@ -61,7 +61,8 @@ export class SaharaTutorial extends Tutorial {
             <li>Click on the pyramid to move.</li>
             <li>Click on one of the 6 destinations that you can reach in two steps:
                  the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
-        </ol>`,
+        </ol><br/>
+        You're playing Dark, do a double step.`,
             SaharaState.getInitialState(),
             SaharaMove.from(new Coord(7, 0), new Coord(5, 0)).get(),
             (move: SaharaMove, _previous: SaharaState, _result: SaharaState) => {

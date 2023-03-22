@@ -20,7 +20,7 @@ export class DiamTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Goal of the game`,
-            $localize`At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You're playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.<br/><br/>Do it!`,
+            $localize`At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You're playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.<br/><br/>You're playing Light, win the game!`,
             DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
