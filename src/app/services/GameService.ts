@@ -125,8 +125,6 @@ export class GameService {
             playerOne,
             turn: 0,
             beginning: serverTimestamp(),
-            remainingMsForZero: configRoom.totalPartDuration * 1000,
-            remainingMsForOne: configRoom.totalPartDuration * 1000,
         };
     }
     public deletePart(partId: string): Promise<void> {
@@ -236,13 +234,7 @@ export class GameService {
     public async askTakeBack(partId: string, player: Player): Promise<void> {
         await this.partService.addRequest(partId, player, 'TakeBack');
     }
-    public async acceptTakeBack(partId: string,
-                                part: PartDocument,
-                                player: Player,
-                                msToSubstract: [number, number])
-    : Promise<void>
-    {
-        console.log('accepting takeback')
+    public async acceptTakeBack(partId: string, part: PartDocument, player: Player): Promise<void> {
         const lastMove: FirestoreDocument<PartEventMove> = await this.partService.getLastMoveDoc(partId);
         let turn: number = part.data.turn;
         turn--;
@@ -253,8 +245,6 @@ export class GameService {
         const update: Partial<Part> = {
             turn,
             lastUpdateTime: serverTimestamp(),
-            remainingMsForZero: Utils.getNonNullable(part.data.remainingMsForZero) - msToSubstract[0],
-            remainingMsForOne: Utils.getNonNullable(part.data.remainingMsForOne) - msToSubstract[1],
         };
         const lastIndex: number = part.data.lastUpdate.index;
         await this.partService.addReply(partId, player, 'Accept', 'TakeBack' );
@@ -263,34 +253,21 @@ export class GameService {
     public async refuseTakeBack(partId: string, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Reject', 'TakeBack');
     }
-    public async addGlobalTime(partId: string, lastIndex: number, part: Part, player: Player): Promise<void> {
+    public async addGlobalTime(partId: string, player: Player): Promise<void> {
         await this.partService.addAction(partId, player, 'AddGlobalTime')
-        let update: Partial<Part>;
-        if (player === Player.ZERO) {
-            update = {
-                remainingMsForOne: Utils.getNonNullable(part.remainingMsForOne) + 5 * 60 * 1000,
-            };
-        } else {
-            update = {
-                remainingMsForZero: Utils.getNonNullable(part.remainingMsForZero) + 5 * 60 * 1000,
-            };
-        }
-        return await this.updateAndBumpIndex(partId, player, lastIndex, update);
     }
     public async addTurnTime(partId: string, player: Player): Promise<void> {
         await this.partService.addAction(partId, player, 'AddTurnTime');
     }
     public async updatePart(partId: string,
                             player: Player,
-                            msToSubstract: [number, number],
                             scores?: [number, number],
                             notifyDraw?: boolean,
                             winner?: MinimalUser,
                             loser?: MinimalUser)
     : Promise<void>
     {
-        display(GameService.VERBOSE, { gameService_updateDBBoard: {
-            partId, scores, msToSubstract, notifyDraw, winner, loser } });
+        display(GameService.VERBOSE, { gameService_updateDBBoard: { partId, scores, notifyDraw, winner, loser } });
 
         const part: Part = (await this.partDAO.read(partId)).get();
         const lastIndex: number = part.lastUpdate.index;
@@ -301,7 +278,6 @@ export class GameService {
             lastUpdateTime: serverTimestamp(),
         };
         update = this.updateScore(update, scores);
-        update = this.substractMs(update, part, msToSubstract);
         if (winner != null) {
             update = {
                 ...update,
@@ -326,21 +302,6 @@ export class GameService {
                 ...update,
                 scorePlayerZero: scores[0],
                 scorePlayerOne: scores[1],
-            };
-        }
-        return update;
-    }
-    private substractMs(update: Partial<Part>, part: Partial<Part>, msToSubstract: [number, number]): Partial<Part> {
-        if (msToSubstract[0] > 0) {
-            return {
-                ...update,
-                remainingMsForZero: Utils.getNonNullable(part.remainingMsForZero) - msToSubstract[0],
-            };
-        }
-        if (msToSubstract[1] > 0) {
-            return {
-                ...update,
-                remainingMsForOne: Utils.getNonNullable(part.remainingMsForOne) - msToSubstract[1],
             };
         }
         return update;

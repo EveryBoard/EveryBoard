@@ -14,7 +14,7 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -28,8 +28,8 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { PartService } from 'src/app/services/PartService';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { FirestoreTime } from 'src/app/domain/Time';
 import { Timestamp } from 'firebase/firestore';
+import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 
 export class OnlineGameWrapperMessages {
 
@@ -70,8 +70,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     @ViewChild('chronoOneGlobal') public chronoOneGlobal: CountDownComponent;
     @ViewChild('chronoZeroTurn') public chronoZeroTurn: CountDownComponent;
     @ViewChild('chronoOneTurn') public chronoOneTurn: CountDownComponent;
-    private globalClocks!: CountDownComponent[]; // Initialized in ngOnInit
-    private turnClocks!: CountDownComponent[]; // Initialized in ngOnInit
 
     // link between GameWrapping's template and remote opponent
     public currentPart: PartDocument | null = null;
@@ -90,9 +88,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public configRoom: ConfigRoom;
     public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
-    private hasUserPlayed: [boolean, boolean] = [false, false];
-    private msToSubstract: [number, number] = [0, 0];
-
     private routerEventsSubscription!: Subscription; // Initialized in ngOnInit
     private userSubscription!: Subscription; // Initialized in ngOnInit
     private opponentSubscription: Subscription = new Subscription();
@@ -106,6 +101,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public readonly turnTimeMessage: string = $localize`30 seconds`;
 
     private onCurrentUpdateOngoing: boolean = false;
+
+    private timeManager!: OGWCTimeManager; // Initialized in ngOnInit
 
     constructor(actRoute: ActivatedRoute,
                 connectedUserService: ConnectedUserService,
@@ -175,8 +172,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             (async(part: MGPOptional<FocusedPart>) => {
                 await this.onObservedPartUpdate(part);
             }));
-        this.globalClocks = [this.chronoZeroGlobal, this.chronoOneGlobal];
-        this.turnClocks = [this.chronoZeroTurn, this.chronoOneTurn];
+
+        this.timeManager = new OGWCTimeManager([this.chronoZeroGlobal, this.chronoOneGlobal],
+                                               [this.chronoZeroTurn, this.chronoOneTurn]);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
     /**
@@ -237,7 +235,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             switch (event.eventType) {
                 case 'Move':
                     const moveEvent: PartEventMove = event as PartEventMove;
-                    return this.onReceivedMove(moveEvent.move);
+                    return this.onReceivedMove(moveEvent);
                 case 'Request':
                     const requestEvent: PartEventRequest = event as PartEventRequest;
                     return this.onReceivedRequest(requestEvent);
@@ -270,8 +268,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.onCurrentUpdateOngoing = true;
         }
         const updateTypes: UpdateType[] = this.getUpdateTypes(part);
-        const turn: number = update.turn;
-        display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
+        display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateTypes.map((u: UpdateType) => u.value) + '(' + update.turn + ')');
         const oldPart: PartDocument | null = this.currentPart;
         this.currentPart = part;
 
@@ -326,22 +323,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private async onGameStart(part: PartDocument): Promise<void> {
-        this.initializeChronos();
+        this.timeManager.startClocks(Utils.getNonNullable(part.data.beginning) as Timestamp, this.configRoom);
         await this.initializePlayersDatas(part);
         const turn: number = this.gameComponent.getTurn();
         assert(turn === 0, 'turn is always 0')
-        if (turn === 0) {
-            this.startCountDownFor(Player.ZERO);
-        } else {
-            // TODO FOR REVIEW: WHY -1 ?!
-            this.startCountDownFor(Player.fromTurn(turn - 1));
-        }
     }
     private async onGameEnd() {
         // currently working for normal victory, resign, and timeouts!
         await this.observedPartService.removeObservedPart();
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        const player: Player = Player.fromTurn(currentPart.data.turn);
         this.endGame = true;
         const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.HARD_DRAW];
         const finalUpdateIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.data.result);
@@ -359,24 +349,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const log: string = 'endGame is true and winner is ' + currentPart.getWinner().getOrElse({ id: 'fake', name: 'no one' }).name;
             display(OnlineGameWrapperComponent.VERBOSE, log);
         }
-        this.stopCountdownsFor(player);
+        this.timeManager.stopEverything();
     }
-    public initializeChronos(): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.initializeChronos()');
-        for (const player of Player.PLAYERS) {
-            this.globalClocks[player.value].setDuration(this.configRoom.totalPartDuration * 1000);
-            this.turnClocks[player.value].setDuration(this.configRoom.maximalMoveDuration * 1000);
-        }
-    }
-    private didUserPlay(player: Player): boolean {
-        return this.hasUserPlayed[player.value];
-    }
-    private async onReceivedMove(move: JSONValue): Promise<void> {
+    private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OGWC.onMove');
-        this.updateClocks(move);
+        this.timeManager.updateClocksOnMove(moveEvent.time as Timestamp, Player.of(moveEvent.player));
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
-        const chosenMove: Move = this.gameComponent.encoder.decode(move);
+        const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
         const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
@@ -431,90 +411,20 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 // Add 30 seconds to the player
                 const addedTurnTime: number = 30 * 1000;
                 const playerWithExtraTurnTime: Player = Player.of(action.player).getOpponent();
-                this.addTurnTimeTo(playerWithExtraTurnTime, addedTurnTime);
+                this.timeManager.addTurnTimeTo(playerWithExtraTurnTime, addedTurnTime);
                 break;
             default:
                 Utils.expectToBe(action.actionType, 'AddGlobalTime')
                 const addedGlobalTime: number = 5 * 60 * 1000;
                 const playerWithExtraGlobalTime: Player = Player.of(action.player).getOpponent();
-                this.addGlobalTimeTo(playerWithExtraGlobalTime, addedGlobalTime);
+                this.timeManager.addGlobalTimeTo(playerWithExtraGlobalTime, addedGlobalTime);
                 break;
         }
-    }
-    private addTurnTimeTo(player: Player, addedMs: number): void {
-        const currentPlayer: Player = Player.fromTurn(Utils.getNonNullable(this.currentPart).getTurn());
-        this.pauseCountDownsFor(currentPlayer, false);
-        if (player === Player.ZERO) {
-            const currentDuration: number = this.chronoZeroTurn.remainingMs;
-            this.chronoZeroTurn.changeDuration(currentDuration + addedMs);
-        } else {
-            const currentDuration: number = this.chronoOneTurn.remainingMs;
-            this.chronoOneTurn.changeDuration(currentDuration + addedMs);
-        }
-        this.resumeCountDownFor(currentPlayer, false);
-    }
-    private addGlobalTimeTo(player: Player, addedMs: number): void {
-        if (player === Player.ZERO) {
-            const currentDuration: number = this.chronoZeroGlobal.remainingMs;
-            this.chronoZeroGlobal.changeDuration(currentDuration + addedMs);
-        } else {
-            const currentDuration: number = this.chronoOneGlobal.remainingMs;
-            this.chronoOneGlobal.changeDuration(currentDuration + addedMs);
-        }
-    }
-    // How to do it:
-    // We have: the clocks, and the computed remaining time
-    // The clocks progress (down), but the time is fixed as it will be used for computing stuff
-    // so we have remainingTime[0] and 1
-    // and globalClock[0] and turnClock[0] and 1
-    // We can assume we receive moves in order
-    // start game: when we receive it, set timer at (localTime - beginning) + totalPartTime, and start the countdown
-    //   drift = (localTime - beginning)
-    //   1. set takenGlobalTime[0] to drift
-    //   2. set globalClock[0] to totalPartTime - takenGlobalTime[0]
-    //   3. set turnClock[0] to turnTime - takenGlobalTime[0]
-    private takenGlobalTime: [number, number] = [0, 0];
-    private globalClock: [CountDownComponent, CountDownComponent] = [0, 0];
-    private turnClock: [CountDownComponent, CountDownComponent] = [0, 0];
-    public startClocks(beginningTime: Timestamp): void {
-        const localTime: Timestamp = Timestamp.now();
-        // Drift is the time it took for the message to be sent from the server to us
-        const drift: number = localTime - beginningTime;
-        this.takenGlobalTime[0] = drift;
-        this.globalClock[0].setDuration(this.configRoom.totalPartDuration - drift);
-        this.turnClock[0].setDuration(this.configRoom.maximalMoveDuration - drift);
-    }
-    // move: we know how long the previous player (i) has taken to play:
-    //   they took thisMoveTime - previousMoveTime if there is a last move
-    //             thisMoveTime - beginning if there is none
-    //   1. store this in local takenMoveTime
-    //   2. set takenGlobalTime[i] to takenGlobalTime[i] + takenMoveTime
-    //   3. set globalClock[i] to totalPartTime - takenGlobalTime[i]
-    //   4. set turnClock[i] to totalTurnTime - takenMoveTime
-    //   Then:
-    //   drift = localTime - thisMoveTime
-    //   a. set globalClock[i+1] to globalClock[i+1] - drift
-    //   b. set turnClock[i+1] to turnTime - drift and start it
-    private updateClocks(player: Player, move: Move): void {
-        const takenMoveTime: number = TODO;
-        const previousPlayer: Player = player.getOpponent();
-        this.takenGlobalTime[previousPlayer.value] += takenMoveTime;
-        this.globalClock[previousPlayer.value].setDuration(this.configRoom.totalPartDuration -
-            this.takenGlobalTime[previousPlayer.value]);
-        this.turnClock[previousPlayer.value].setDuration(this.configRoom.maximalTurnDuration - takenMoveTime);
-        const localTime: Timestamp = Timestamp.now();
-        const drift: number = localTime - move.timestamp;
-        this.globalClock[player.value].setDuration("TODO: can't rely on its previous value, ideally");
-        this.turnClock[player.value].setDuration(this.configRoom.maximalTurnDuration - drift);
-    }
-    public resetChronoFor(player: Player): void {
-        this.pauseCountDownsFor(player);
-        this.resumeCountDownFor(player);
     }
     public notifyDraw(scores?: [number, number]): Promise<void> {
         this.endGame = true;
         const player: Player = this.role as Player;
-        return this.gameService.updatePart(this.currentPartId, player, [0, 0], scores, true);
+        return this.gameService.updatePart(this.currentPartId, player, scores, true);
     }
     public async notifyTimeoutVictory(victoriousPlayer: MinimalUser,
                                       user: Player,
@@ -541,7 +451,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
         return this.gameService.updatePart(this.currentPartId,
                                            player,
-                                           [0, 0],
                                            scores,
                                            false,
                                            this.currentPart.getWinner().get(),
@@ -593,10 +502,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.gameComponent.getCurrentPlayer() !== player) {
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
-            this.resetChronoFor(player);
-        } else {
-            // REVIEW: chronos stuff todo
         }
+        this.timeManager.updateClocksAfterTakeBack();
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         console.log(this.currentPlayer.name)
         this.gameComponent.updateBoard();
@@ -692,15 +599,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // To adhere to security rules, we must add the move before updating the part
             const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
             await this.gameService.addMove(this.currentPartId, this.role as Player, encodedMove);
-            return this.updatePartWithStatusAndScores(gameStatus, this.msToSubstract, scores);
+            return this.updatePartWithStatusAndScores(gameStatus, scores);
         }
     }
-    public async updatePartWithStatusAndScores(gameStatus: GameStatus,
-                                               msToSubtract: [number, number],
-                                               scores?: [number, number])
+    public async updatePartWithStatusAndScores(gameStatus: GameStatus, scores?: [number, number])
     : Promise<void>
     {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updatePart(' + msToSubtract + ', ' + scores + ')');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updatePart(' + scores + ')');
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
                 return this.notifyDraw(scores);
@@ -711,10 +616,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         } else {
             const player: Player = this.role as Player;
-            return this.gameService.updatePart(this.currentPartId,
-                                               player,
-                                               msToSubtract,
-                                               scores);
+            return this.gameService.updatePart(this.currentPartId, player, scores);
         }
     }
     public async resign(): Promise<void> {
@@ -732,7 +634,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         const lastIndex: number = this.getLastIndex();
         const currentPlayer: Player = this.role as Player;
-        this.stopCountdownsFor(player);
+        this.timeManager.stopClocksFor(player);
         if (this.isPlaying() === false) {
             return;
         }
@@ -781,14 +683,154 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const player: Player = this.role as Player;
         await this.gameService.acceptTakeBack(this.currentPartId,
                                               Utils.getNonNullable(this.currentPart),
-                                              player,
-                                              this.msToSubstract);
-        this.msToSubstract = [0, 0];
+                                              player);
     }
     public refuseTakeBack(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call refuseTakeBack');
         return this.gameService.refuseTakeBack(this.currentPartId, this.role as Player);
     }
+    public getPlayerNameClass(player: Player): string {
+        if (this.opponentIsOffline()) {
+            return 'has-text-grey-light';
+        } else {
+            if (player === Player.ZERO) {
+                return 'has-text-white';
+            } else {
+                return 'has-text-black';
+            }
+        }
+    }
+    public opponentIsOffline(): boolean {
+        return false;
+    }
+    public canResign(): boolean {
+        assert(this.isPlaying(), 'Non playing should not call canResign');
+        if (this.endGame === true) {
+            return false;
+        }
+        return this.opponent != null;
+    }
+    public canProposeRematch(): boolean {
+        return this.endGame && this.isPlaying() && this.rematchProposed === false;
+    }
+    public canAcceptRematch(): boolean {
+        return this.endGame && this.isPlaying() && this.rematchProposed && this.opponentProposedRematch;
+    }
+    public addGlobalTime(): Promise<void> {
+        const giver: Player = this.role as Player;
+        return this.gameService.addGlobalTime(this.currentPartId, giver);
+    }
+    public addTurnTime(): Promise<void> {
+        const giver: Player = this.role as Player;
+        return this.gameService.addTurnTime(this.currentPartId, giver);
+    }
+    public async ngOnDestroy(): Promise<void> {
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');
+        this.routerEventsSubscription.unsubscribe();
+        this.userSubscription.unsubscribe();
+        this.observedPartSubscription.unsubscribe();
+        if (this.isPlaying() === false && this.userLinkedToThisPart) {
+            await this.observedPartService.removeObservedPart();
+        }
+        if (this.gameStarted === true) {
+            this.opponentSubscription.unsubscribe();
+            this.partSubscription.unsubscribe();
+            this.eventsSubscription.unsubscribe();
+        }
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
+    }
+}
+
+class OGWCTimeManager {
+
+    /*
+     * The configRoom, which is set when starting the clocks.
+     * We need it to know the maximal game and move durations.
+     */
+    private configRoom: MGPOptional<ConfigRoom> = MGPOptional.empty();
+    // The global time taken by each player since the beginning of the part
+    private takenGlobalTime: [number, number] = [0, 0];
+    // The time at which the game has begun, as we need it for measuring the time of the first move
+    private beginningTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
+    // The time at which the last move was made. We need it for measuring the time of the current move
+    private lastMoveTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
+
+    public constructor(private readonly globalClocks: [CountDownComponent, CountDownComponent],
+                       private readonly turnClocks: [CountDownComponent, CountDownComponent]) {}
+    // How to do it:
+    // We have: the clocks, and the computed remaining time
+    // The clocks progress (down), but the time is fixed as it will be used for computing stuff
+    // so we have remainingTime[0] and 1
+    // and globalClock[0] and turnClock[0] and 1
+    // We can assume we receive moves in order
+    // start game: when we receive it, set timer at (localTime - beginning) + totalPartTime, and start the countdown
+    //   drift = (localTime - beginning)
+    //   1. set takenGlobalTime[0] to drift
+    //   2. set globalClock[0] to totalPartTime - takenGlobalTime[0]
+    //   3. set turnClock[0] to turnTime - takenGlobalTime[0]
+    public startClocks(beginningTimestamp: Timestamp, configRoom: ConfigRoom): void {
+        this.configRoom = MGPOptional.of(configRoom);
+        const localTime: Timestamp = Timestamp.now();
+        this.beginningTimestamp = MGPOptional.of(beginningTimestamp);
+        // Drift is the time it took for the message to be sent from the server to us
+        const drift: number = getMillisecondsDifference(localTime, beginningTimestamp);
+        this.takenGlobalTime[0] = drift;
+        this.globalClocks[0].setDuration(configRoom.totalPartDuration - drift);
+        this.turnClocks[0].setDuration(configRoom.maximalMoveDuration - drift);
+
+
+        this.globalClocks[0].start();
+        this.turnClocks[0].start();
+    }
+    // move: we know how long the previous player (i) has taken to play:
+    //   they took thisMoveTime - previousMoveTime if there is a last move
+    //             thisMoveTime - beginning if there is none
+    //   1. store this in local takenMoveTime
+    //   2. set takenGlobalTime[i] to takenGlobalTime[i] + takenMoveTime
+    //   3. set globalClock[i] to totalPartTime - takenGlobalTime[i]
+    //   4. set turnClock[i] to totalTurnTime - takenMoveTime
+    //   Then:
+    //   drift = localTime - thisMoveTime
+    //   a. set globalClock[i+1] to globalClock[i+1] - drift
+    //   b. set turnClock[i+1] to turnTime - drift and start it
+    public updateClocksOnMove(moveTimestamp: Timestamp, player: Player): void {
+        let takenMoveTime: number;
+        if (this.lastMoveTimestamp.isPresent()) {
+            takenMoveTime = getMillisecondsDifference(moveTimestamp, this.lastMoveTimestamp.get());
+        } else {
+            takenMoveTime = getMillisecondsDifference(moveTimestamp, this.beginningTimestamp.get());
+        }
+        this.lastMoveTimestamp = MGPOptional.of(moveTimestamp);
+        this.takenGlobalTime[player.value] += takenMoveTime;
+        this.globalClocks[player.value].setDuration(
+            this.configRoom.get().totalPartDuration - this.takenGlobalTime[player.value]);
+        this.turnClocks[player.value].setDuration(this.configRoom.get().maximalMoveDuration - takenMoveTime);
+        const localTime: Timestamp = Timestamp.now();
+        const nextPlayer: Player = player.getOpponent();
+        const drift: number = getMillisecondsDifference(localTime, moveTimestamp);
+        this.turnClocks[nextPlayer.value].setDuration(this.configRoom.get().maximalMoveDuration - drift);
+    }
+    // Stops all clocks that are running
+    public stopEverything(): void {
+        const clocks: CountDownComponent[] = this.turnClocks.concat(this.globalClocks);
+        for (const clock of clocks) {
+            if (clock.isStarted()) {
+                clock.stop();
+            }
+        }
+    }
+    // Adds addedMs to the turn clock of player
+    public addTurnTimeTo(player: Player, addedMs: number): void {
+        // this.pauseCountDownsFor(currentPlayer, false); // TODO FOR REVIEW: do we really need this? what's the point?
+        this.turnClocks[player.value].add(addedMs);
+        // this.resumeCountDownFor(currentPlayer, false);
+    }
+    // Adds addedMs to the global clock of player
+    public addGlobalTimeTo(player: Player, addedMs: number): void {
+        this.globalClocks[player.value].add(addedMs);
+    }
+    // TODO from here
+  /*
     public startCountDownFor(player: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE,
                 'OnlineGameWrapperComponent.startCountDownFor(' + player.toString() +
@@ -865,58 +907,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         }
     }
-    public getPlayerNameClass(player: Player): string {
-        if (this.opponentIsOffline()) {
-            return 'has-text-grey-light';
-        } else {
-            if (player === Player.ZERO) {
-                return 'has-text-white';
-            } else {
-                return 'has-text-black';
-            }
-        }
+    public resetChronoFor(player: Player): void {
+        this.pauseCountDownsFor(player);
+        this.resumeCountDownFor(player);
     }
-    public opponentIsOffline(): boolean {
-        return false;
-    }
-    public canResign(): boolean {
-        assert(this.isPlaying(), 'Non playing should not call canResign');
-        if (this.endGame === true) {
-            return false;
-        }
-        return this.opponent != null;
-    }
-    public canProposeRematch(): boolean {
-        return this.endGame && this.isPlaying() && this.rematchProposed === false;
-    }
-    public canAcceptRematch(): boolean {
-        return this.endGame && this.isPlaying() && this.rematchProposed && this.opponentProposedRematch;
-    }
-    public addGlobalTime(): Promise<void> {
-        const giver: Player = this.role as Player;
-        const lastIndex: number = this.getLastIndex();
-        return this.gameService.addGlobalTime(this.currentPartId,
-                                              lastIndex,
-                                              Utils.getNonNullable(this.currentPart).data,
-                                              giver);
-    }
-    public addTurnTime(): Promise<void> {
-        const giver: Player = this.role as Player;
-        return this.gameService.addTurnTime(this.currentPartId, giver);
-    }
-    public async ngOnDestroy(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');
-        this.routerEventsSubscription.unsubscribe();
-        this.userSubscription.unsubscribe();
-        this.observedPartSubscription.unsubscribe();
-        if (this.isPlaying() === false && this.userLinkedToThisPart) {
-            await this.observedPartService.removeObservedPart();
-        }
-        if (this.gameStarted === true) {
-            this.opponentSubscription.unsubscribe();
-            this.partSubscription.unsubscribe();
-            this.eventsSubscription.unsubscribe();
-        }
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
-    }
+    */
 }

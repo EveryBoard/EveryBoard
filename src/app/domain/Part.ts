@@ -23,8 +23,6 @@ export interface Part extends FirestoreJSONObject {
      */
     readonly beginning?: FirestoreTime,
     readonly lastUpdateTime?: FirestoreTime,
-    readonly remainingMsForZero?: number;
-    readonly remainingMsForOne?: number;
     readonly winner?: MinimalUser,
     readonly loser?: MinimalUser,
     readonly scorePlayerZero?: number,
