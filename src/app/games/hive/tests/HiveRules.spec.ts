@@ -13,6 +13,9 @@ import { HiveMove, HiveMoveCoordToCoord } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('HiveRules', () => {
     let rules: HiveRules;
@@ -577,6 +580,7 @@ describe('HiveRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving the spider by a regular move instead of a spider move', () => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board with a spider
             const board: Table<HivePiece[]> = [
                 [[Q], [S], [q]],
@@ -587,8 +591,9 @@ describe('HiveRules', () => {
             // When moving the spider with a regular move
             const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(2, -1)).get();
 
-            // Then the move should fail
-            RulesUtils.expectMoveFailure(rules, state, move, HiveFailure.SPIDER_MUST_MOVE_WITH_SPIDER_MOVE);
+            // Then it should fail and an error should be logged
+            expect(() => rules.isLegal(move, state)).toThrow();
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'HiveSpiderRules: move should be a spider move');
         });
         it('should allow the spider to move by 3 spaces', () => {
             // Given a board with a spider

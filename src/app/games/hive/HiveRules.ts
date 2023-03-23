@@ -4,6 +4,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -82,9 +83,6 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
 
-        if (movedPiece.kind === 'Spider' && move instanceof HiveMoveSpider === false) {
-            return MGPFallible.failure(HiveFailure.SPIDER_MUST_MOVE_WITH_SPIDER_MOVE);
-        }
         const moveValidity: MGPFallible<void> = HivePieceRules.from(movedPiece).moveValidity(move, state);
         if (moveValidity.isFailure()) {
             return moveValidity;

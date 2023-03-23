@@ -186,7 +186,7 @@ export class HiveSpiderRules extends HivePieceRules {
         return MGPFallible.success(undefined);
     }
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
-        Utils.assert(move instanceof HiveMoveSpider, 'move should be a spider move');
+        Utils.assert(move instanceof HiveMoveSpider, 'HiveSpiderRules: move should be a spider move');
         const spiderMove: HiveMoveSpider = move as HiveMoveSpider;
         const prefixLegality: MGPFallible<void> = this.prefixLegality(spiderMove.coords, state);
         if (prefixLegality.isFailure()) {

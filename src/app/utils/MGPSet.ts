@@ -94,7 +94,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public isEmpty(): boolean {
         return this.values.length === 0;
     }
-    public isNotEmpty(): boolean {
+    public hasElements(): boolean {
         return this.isEmpty() === false;
     }
     public map<U extends Comparable>(f: (element: T) => U): MGPSet<U> {

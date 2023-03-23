@@ -81,7 +81,7 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> 
                 // We will visit all reachable occupied neighbors of this coord
                 const group: MGPSet<Coord> = new MGPSet();
                 const toVisit: MGPSet<Coord> = new MGPSet([itemToVisit.key]);
-                while (toVisit.isNotEmpty()) {
+                while (toVisit.hasElements()) {
                     const coord: Coord = toVisit.getAnyElement().get();
                     toVisit.remove(coord);
                     visited.add(coord);
