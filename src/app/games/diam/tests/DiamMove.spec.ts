@@ -35,9 +35,11 @@ describe('DiamMove', () => {
             const move1: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');
             const move2: DiamMoveShift = new DiamMoveShift(new Coord(0, 1), 'clockwise');
             const move3: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'counterclockwise');
+            const drop: DiamMoveDrop = new DiamMoveDrop(1, DiamPiece.ZERO_FIRST);
             expect(move1.equals(move1)).toBeTrue();
             expect(move1.equals(move2)).toBeFalse();
             expect(move1.equals(move3)).toBeFalse();
+            expect(move1.equals(drop)).toBeFalse();
         });
         it('should redefine toString', () => {
             const move: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');

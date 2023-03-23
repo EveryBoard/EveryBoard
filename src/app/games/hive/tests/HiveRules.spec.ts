@@ -15,7 +15,6 @@ import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('HiveRules', () => {
     let rules: HiveRules;

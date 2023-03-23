@@ -65,7 +65,7 @@ export class EpaminondasTutorial extends Tutorial {
         <ol>
             <li>Click on a piece.</li>
             <li>Click on a empty neighboring square.</li>
-        </ol>`,
+        </ol><br/>You're playing Dark, move a piece.`,
             EpaminondasState.getInitialState(),
             new EpaminondasMove(0, 10, 1, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
@@ -85,7 +85,7 @@ export class EpaminondasTutorial extends Tutorial {
             <li>Click on the last piece of the phalanx.</li>
             <li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li>
         </ol><br/>
-        Move a phalanx!`,
+        You're playing Dark, Move a phalanx!`,
             EpaminondasState.getInitialState(),
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
@@ -108,7 +108,7 @@ export class EpaminondasTutorial extends Tutorial {
             <li>It must be strictly shorter than your phalanx.</li>
             <li>The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li>
         </ol><br/>
-        Capture a phalanx.`,
+        You're playing Dark, capture a phalanx.`,
             new EpaminondasState([
                 [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
                 [_, _, _, _, _, _, X, _, _, _, _, _, _, _],
