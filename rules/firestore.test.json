@@ -263,25 +263,8 @@ service cloud.firestore {
                 update.turn == 0 &&
                 safeLastUpdate(part, update) &&
                 userIsChosenOpponentInConfigRoom(configRoom) &&
-                validPlayerSelection(configRoom, update) &&
-                // The time is set using the values from the config room
-                update.remainingMsForZero == configRoom.totalPartDuration * 1000 &&
-                update.remainingMsForOne == configRoom.totalPartDuration * 1000;
+                validPlayerSelection(configRoom, update);
         }
-//        function safeTimeDecrease(player, remainingMsFieldName, part, update) {
-//            let timeDecreased = update[remainingMsFieldName] < part[remainingMsFieldName];
-//            let isNotOwnTime = request.auth.uid != player.id;
-//            return timeDecreased && isNotOwnTime;
-//        }
-//        function safeTimeIncrease(player, remainingMsFieldName, part, update) {
-//            let timeIncreased = update[remainingMsFieldName] > part[remainingMsFieldName];
-//            let isNotOwnTime = request.auth.uid != player.id;
-//            return timeIncreased && isNotOwnTime;
-//        }
-//        function safeTimeUpdate(player, remainingMsFieldName, part, update) {
-//            return safeTimeIncrease(player, remainingMsFieldName, part, update) ||
-//                safeTimeDecrease(player, remainingMsFieldName, part, update)
-//        }
         function validPlayerSelection(configRoom, partUpdate) {
             let playerZeroIsCreator = playerEquals(partUpdate.playerZero, configRoom.creator);
             let playerZeroIsChosenOpponent = playerEquals(partUpdate.playerZero, configRoom.chosenOpponent);

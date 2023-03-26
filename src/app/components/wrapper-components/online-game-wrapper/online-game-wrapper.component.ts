@@ -56,7 +56,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -252,12 +252,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
-            before: this.currentPart,
+            before: this.currentPart?.data,
             then: update,
             before_part_turn: part.data.turn,
             before_state_turn: this.gameComponent.rules.node.gameState.turn,
         } });
         if (this.onCurrentUpdateOngoing) {
+            // TODO FOR REVIEW: why do we need this ugliness again?
             attempt -= 1;
             assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
             window.setTimeout(async() => {
@@ -352,7 +353,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.timeManager.stopEverything();
     }
     private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OGWC.onMove');
         this.timeManager.updateClocksOnMove(moveEvent.time as Timestamp, Player.of(moveEvent.player));
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
@@ -634,7 +634,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         const lastIndex: number = this.getLastIndex();
         const currentPlayer: Player = this.role as Player;
-        this.timeManager.stopClocksFor(player);
+        this.timeManager.stopEverything();
         if (this.isPlaying() === false) {
             return;
         }
@@ -754,9 +754,14 @@ class OGWCTimeManager {
     private beginningTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
     // The time at which the last move was made. We need it for measuring the time of the current move
     private lastMoveTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
+    // All clocks managed by this time manager
+    private allClocks: CountDownComponent[];
 
     public constructor(private readonly globalClocks: [CountDownComponent, CountDownComponent],
-                       private readonly turnClocks: [CountDownComponent, CountDownComponent]) {}
+                       private readonly turnClocks: [CountDownComponent, CountDownComponent])
+    {
+         this.allClocks = this.turnClocks.concat(this.globalClocks);
+    }
     // How to do it:
     // We have: the clocks, and the computed remaining time
     // The clocks progress (down), but the time is fixed as it will be used for computing stuff
@@ -812,8 +817,7 @@ class OGWCTimeManager {
     }
     // Stops all clocks that are running
     public stopEverything(): void {
-        const clocks: CountDownComponent[] = this.turnClocks.concat(this.globalClocks);
-        for (const clock of clocks) {
+        for (const clock of this.allClocks) {
             if (clock.isStarted()) {
                 clock.stop();
             }
@@ -829,87 +833,22 @@ class OGWCTimeManager {
     public addGlobalTimeTo(player: Player, addedMs: number): void {
         this.globalClocks[player.value].add(addedMs);
     }
-    // TODO from here
-  /*
-    public startCountDownFor(player: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'OnlineGameWrapperComponent.startCountDownFor(' + player.toString() +
-                ') (turn ' + Utils.getNonNullable(this.currentPart).data.turn + ')');
-        this.hasUserPlayed[player.value] = true;
-        if (player === Player.ZERO) {
-            this.chronoZeroGlobal.start();
-            this.chronoZeroTurn.start();
-        } else {
-            this.chronoOneGlobal.start();
-            this.chronoOneTurn.start();
-        }
+    // Upon take back, timings are preserved, but clocks may need to be switched
+    public updateClocksAfterTakeBack(): void {
+        // TODO: maybe not needed, just switchTo(player) is enough
     }
-    public resumeCountDownFor(player: Player, resetTurn: boolean = true): void {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'OnlineGameWrapperComponent.resumeCountDownFor(' + player.toString() +
-                ') (turn ' + Utils.getNonNullable(this.currentPart).data.turn + ')');
-
-        let turnChrono: CountDownComponent;
-        if (player === Player.ZERO) {
-            this.chronoZeroGlobal.changeDuration(Utils.getNonNullable(this.currentPart?.data.remainingMsForZero));
-            this.chronoZeroGlobal.resume();
-            turnChrono = this.chronoZeroTurn;
-        } else {
-            this.chronoOneGlobal.changeDuration(Utils.getNonNullable(this.currentPart?.data.remainingMsForOne));
-            this.chronoOneGlobal.resume();
-            turnChrono = this.chronoOneTurn;
-        }
-
-        if (resetTurn) {
-            turnChrono.setDuration(this.configRoom.maximalMoveDuration * 1000);
-            turnChrono.start();
-        } else {
-            turnChrono.resume();
-        }
+    // Switches to player's turn, pausing all clocks and then continuing the player's clock only
+    public switchTurnTo(player: Player): void {
+        // We pause all clocks to account for take backs where we are switching to the same player
+        this.pauseAllClocks();
+        this.turnClocks[player.value].resume();
+        this.globalClocks[player.value].resume();
     }
-    public pauseCountDownsFor(player: Player, stopTurn: boolean = true): void {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'OnlineGameWrapperComponent.pauseCountDownFor(' + player.value +
-                ') (turn ' + this.currentPart?.data.turn + ')');
-        let turnChrono: CountDownComponent;
-        if (player === Player.ZERO) {
-            this.chronoZeroGlobal.pause();
-            turnChrono = this.chronoZeroTurn;
-        } else {
-            this.chronoOneGlobal.pause();
-            turnChrono = this.chronoOneTurn;
-        }
-
-        if (stopTurn) {
-            turnChrono.stop();
-        } else {
-            turnChrono.pause();
-        }
-    }
-    private stopCountdownsFor(player: Player) {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'cdc::stopCountDownsFor(' + player.toString() +
-                ') (turn ' + this.currentPart?.data.turn + ')');
-
-        if (player === Player.ZERO) {
-            if (this.chronoZeroGlobal.isStarted()) {
-                this.chronoZeroGlobal.stop();
-            }
-            if (this.chronoZeroTurn.isStarted()) {
-                this.chronoZeroTurn.stop();
-            }
-        } else {
-            if (this.chronoOneGlobal.isStarted()) {
-                this.chronoOneGlobal.stop();
-            }
-            if (this.chronoOneTurn.isStarted()) {
-                this.chronoOneTurn.stop();
+    private pauseAllClocks(): void {
+        for (const clock of this.allClocks) {
+            if (clock.isIdle() === false) {
+                clock.pause();
             }
         }
     }
-    public resetChronoFor(player: Player): void {
-        this.pauseCountDownsFor(player);
-        this.resumeCountDownFor(player);
-    }
-    */
 }
