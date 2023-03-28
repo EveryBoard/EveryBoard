@@ -102,7 +102,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private onCurrentUpdateOngoing: boolean = false;
 
-    private timeManager!: OGWCTimeManager; // Initialized in ngOnInit
+    private timeManager!: OGWCTimeManager; // Initialized manually after view has been initialized
 
     constructor(actRoute: ActivatedRoute,
                 connectedUserService: ConnectedUserService,
@@ -173,8 +173,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.onObservedPartUpdate(part);
             }));
 
-        this.timeManager = new OGWCTimeManager([this.chronoZeroGlobal, this.chronoOneGlobal],
-                                               [this.chronoZeroTurn, this.chronoOneTurn]);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
     /**
@@ -214,6 +212,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         window.setTimeout(async() => {
             // the small waiting is there to make sure that the chronos are charged by view
             const createdSuccessfully: boolean = await this.afterViewInit();
+            this.timeManager = new OGWCTimeManager([this.chronoZeroGlobal, this.chronoOneGlobal],
+                                                   [this.chronoZeroTurn, this.chronoOneTurn]);
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             await this.startPart();
         }, 2);
@@ -353,6 +353,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.timeManager.stopEverything();
     }
     private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
+        console.log(moveEvent)
         this.timeManager.updateClocksOnMove(moveEvent.time as Timestamp, Player.of(moveEvent.player));
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
@@ -743,6 +744,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
 class OGWCTimeManager {
 
+    public static VERBOSE: boolean = true;
     /*
      * The configRoom, which is set when starting the clocks.
      * We need it to know the maximal game and move durations.
@@ -755,12 +757,12 @@ class OGWCTimeManager {
     // The time at which the last move was made. We need it for measuring the time of the current move
     private lastMoveTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
     // All clocks managed by this time manager
-    private allClocks: CountDownComponent[];
+    private readonly allClocks: CountDownComponent[];
 
     public constructor(private readonly globalClocks: [CountDownComponent, CountDownComponent],
                        private readonly turnClocks: [CountDownComponent, CountDownComponent])
     {
-         this.allClocks = this.turnClocks.concat(this.globalClocks);
+        this.allClocks = this.turnClocks.concat(this.globalClocks);
     }
     // How to do it:
     // We have: the clocks, and the computed remaining time
@@ -774,18 +776,37 @@ class OGWCTimeManager {
     //   2. set globalClock[0] to totalPartTime - takenGlobalTime[0]
     //   3. set turnClock[0] to turnTime - takenGlobalTime[0]
     public startClocks(beginningTimestamp: Timestamp, configRoom: ConfigRoom): void {
+        display(OGWCTimeManager.VERBOSE, `TimeManager.startClocks(${beginningTimestamp})`);
         this.configRoom = MGPOptional.of(configRoom);
         const localTime: Timestamp = Timestamp.now();
         this.beginningTimestamp = MGPOptional.of(beginningTimestamp);
         // Drift is the time it took for the message to be sent from the server to us
         const drift: number = getMillisecondsDifference(localTime, beginningTimestamp);
+        console.log(localTime)
+        console.log(beginningTimestamp)
+        console.log('drift is ' + drift);
+        console.log('totalPartDuration: ' + configRoom.totalPartDuration);
+        console.log('maximalMoveDuration: ' + configRoom.maximalMoveDuration);
         this.takenGlobalTime[0] = drift;
-        this.globalClocks[0].setDuration(configRoom.totalPartDuration - drift);
-        this.turnClocks[0].setDuration(configRoom.maximalMoveDuration - drift);
+        this.globalClocks[0].setDuration(this.getPartDurationInMs() - drift);
+        this.globalClocks[1].setDuration(this.getPartDurationInMs());
+        this.turnClocks[0].setDuration(this.getMoveDurationInMs() - drift);
+        this.turnClocks[1].setDuration(this.getMoveDurationInMs());
 
-
+        // Player 0 is starting
         this.globalClocks[0].start();
         this.turnClocks[0].start();
+        // Player 1 needs to have paused clocks
+        this.globalClocks[1].start();
+        this.globalClocks[1].pause();
+        this.turnClocks[1].start();
+        this.turnClocks[1].pause();
+    }
+    private getPartDurationInMs(): number {
+        return this.configRoom.get().totalPartDuration * 1000;
+    }
+    private getMoveDurationInMs(): number {
+        return this.configRoom.get().maximalMoveDuration * 1000;
     }
     // move: we know how long the previous player (i) has taken to play:
     //   they took thisMoveTime - previousMoveTime if there is a last move
@@ -799,6 +820,7 @@ class OGWCTimeManager {
     //   a. set globalClock[i+1] to globalClock[i+1] - drift
     //   b. set turnClock[i+1] to turnTime - drift and start it
     public updateClocksOnMove(moveTimestamp: Timestamp, player: Player): void {
+        display(OGWCTimeManager.VERBOSE, `TimeManager.updateClocksOnMove(${moveTimestamp}, ${player})`);
         let takenMoveTime: number;
         if (this.lastMoveTimestamp.isPresent()) {
             takenMoveTime = getMillisecondsDifference(moveTimestamp, this.lastMoveTimestamp.get());
@@ -807,16 +829,21 @@ class OGWCTimeManager {
         }
         this.lastMoveTimestamp = MGPOptional.of(moveTimestamp);
         this.takenGlobalTime[player.value] += takenMoveTime;
-        this.globalClocks[player.value].setDuration(
-            this.configRoom.get().totalPartDuration - this.takenGlobalTime[player.value]);
-        this.turnClocks[player.value].setDuration(this.configRoom.get().maximalMoveDuration - takenMoveTime);
+        this.globalClocks[player.value].pause();
+        this.globalClocks[player.value].changeDuration(this.getPartDurationInMs() - this.takenGlobalTime[player.value]);
+        this.turnClocks[player.value].pause();
+        this.turnClocks[player.value].changeDuration(this.getMoveDurationInMs() - takenMoveTime);
+
         const localTime: Timestamp = Timestamp.now();
         const nextPlayer: Player = player.getOpponent();
         const drift: number = getMillisecondsDifference(localTime, moveTimestamp);
-        this.turnClocks[nextPlayer.value].setDuration(this.configRoom.get().maximalMoveDuration - drift);
+        this.turnClocks[nextPlayer.value].changeDuration(this.getMoveDurationInMs() - drift);
+        this.turnClocks[nextPlayer.value].resume();
+        this.globalClocks[nextPlayer.value].resume();
     }
     // Stops all clocks that are running
     public stopEverything(): void {
+        display(OGWCTimeManager.VERBOSE, `TimeManager.stopEverything`);
         for (const clock of this.allClocks) {
             if (clock.isStarted()) {
                 clock.stop();
@@ -839,12 +866,14 @@ class OGWCTimeManager {
     }
     // Switches to player's turn, pausing all clocks and then continuing the player's clock only
     public switchTurnTo(player: Player): void {
+        display(OGWCTimeManager.VERBOSE, `TimeManager.switchTurnTo(${player})`);
         // We pause all clocks to account for take backs where we are switching to the same player
         this.pauseAllClocks();
         this.turnClocks[player.value].resume();
         this.globalClocks[player.value].resume();
     }
     private pauseAllClocks(): void {
+        display(OGWCTimeManager.VERBOSE, `TimeManager.pauseAllClocks`);
         for (const clock of this.allClocks) {
             if (clock.isIdle() === false) {
                 clock.pause();
