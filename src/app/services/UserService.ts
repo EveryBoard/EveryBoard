@@ -21,7 +21,7 @@ import { serverTimestamp } from 'firebase/firestore';
 })
 export class UserService {
 
-    constructor(private readonly userDAO: UserDAO) {
+    public constructor(private readonly userDAO: UserDAO) {
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
         const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);

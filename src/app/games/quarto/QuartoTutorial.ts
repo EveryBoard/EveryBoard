@@ -66,7 +66,7 @@ export class QuartoTutorial extends Tutorial {
             ], 7, QuartoPiece.AABA),
             [new QuartoMove(3, 3, QuartoPiece.AABB)],
             $localize`Well done!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

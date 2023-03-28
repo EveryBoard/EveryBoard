@@ -30,7 +30,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     private captureds: Coord[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([2, 2]);
         this.rules = new ReversiRules(ReversiState);

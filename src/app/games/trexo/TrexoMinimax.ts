@@ -22,7 +22,7 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
             // for every column, starting from the bottom of each column
             for (let y: number = 0; y < TrexoState.SIZE; y++) {
                 // while we haven't reached the top or an empty space
-                const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).owner;
+                const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).getOwner();
                 if (pieceOwner.isPlayer()) {
                     const tmpScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
                     if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {

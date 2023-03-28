@@ -120,7 +120,7 @@ export class KamisadoTutorial extends Tutorial {
          Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
     ];
 }

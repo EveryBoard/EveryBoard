@@ -54,7 +54,7 @@ export class GipfComponent
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);

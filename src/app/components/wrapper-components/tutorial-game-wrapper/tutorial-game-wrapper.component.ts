@@ -97,24 +97,19 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        this.createCurrentStepNode(currentStep);
-        this.gameComponent.updateBoard();
-        this.cdr.detectChanges();
-    }
-    private createCurrentStepNode(currentStep: TutorialStep): void {
-        let motherOpt: MGPOptional<MGPNode<Rules<Move, GameState>, Move, GameState>> = MGPOptional.empty();
-        let previousMove: MGPOptional<Move> = MGPOptional.empty();
-        for (let i: number = 0; i < currentStep.previousState.length; i++) {
-            const state: GameState = currentStep.previousState[i];
-            previousMove = MGPOptional.ofNullable(currentStep.previousMove[i - 1]);
+        let motherOpt: MGPOptional<MGPNode<Rules<Move, GameState>, Move, GameState>>;
+        if (currentStep.previousState.isPresent()) {
             const mother: MGPNode<Rules<Move, GameState>, Move, GameState> =
-                new MGPNode(state, motherOpt, previousMove);
+                new MGPNode(currentStep.previousState.get());
             motherOpt = MGPOptional.of(mother);
+        } else {
+            motherOpt = MGPOptional.empty();
         }
-        previousMove = MGPOptional.ofNullable(currentStep.previousMove[currentStep.previousMove.length - 1]);
         this.gameComponent.rules.node = new MGPNode(currentStep.state,
                                                     motherOpt,
-                                                    previousMove);
+                                                    currentStep.previousMove);
+        this.gameComponent.updateBoard();
+        this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, { tutorialGameWrapper_onLegalUserMove: { move } });

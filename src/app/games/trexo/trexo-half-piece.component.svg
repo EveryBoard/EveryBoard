@@ -31,7 +31,7 @@
               id="line_0_to_2"
               [ngClass]="pieceClasses"
               class="base strokeless"
-              [attr.points]="getLefterDiagonalLine()"
+              [attr.points]="getLeftDiagonalLine()"
 />
 <svg:g *ngIf="isLeftHalf() === false || move === undefined">
     <svg:polyline [attr.points]="getMiddleDiagonalLine()"
@@ -49,7 +49,7 @@
               id="line_2_to_5"
               [ngClass]="pieceClasses"
               class="base strokeless"
-              [attr.points]="getLefterVerticalLine()"
+              [attr.points]="getLeftVerticalLine()"
 />
 <svg:polyline *ngIf="isBottomHalf() || isRightHalf() || move === undefined"
               id="line_3_to_6"

@@ -96,7 +96,7 @@ export class TablutTutorial extends Tutorial {
             ], 72),
             [TablutMove.of(new Coord(3, 3), new Coord(3, 1))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

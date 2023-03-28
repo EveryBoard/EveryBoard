@@ -39,8 +39,7 @@ export class SixState extends GameState implements ComparableObject {
         return new SixState(pieces, turn, offset);
     }
     public static deplacePiece(state: SixState, move: SixMove): ReversibleMap<Coord, Player> {
-        const pieces: ReversibleMap<Coord, Player> = state.pieces.getCopy()
-;
+        const pieces: ReversibleMap<Coord, Player> = state.pieces.getCopy();
         pieces.delete(move.start.get());
         pieces.set(move.landing, state.getCurrentPlayer());
         return pieces;
@@ -67,7 +66,7 @@ export class SixState extends GameState implements ComparableObject {
     : ReversibleMap<Coord, string>
     {
         if (pieces.get(piece).isPresent() &&
-           coordsGroup.get(piece).isAbsent())
+            coordsGroup.get(piece).isAbsent())
         {
             coordsGroup.set(piece, group);
             for (const dir of HexaDirection.factory.all) {

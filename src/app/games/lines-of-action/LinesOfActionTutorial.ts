@@ -110,7 +110,7 @@ export class LinesOfActionTutorial {
                 if (previous.getPieceAt(move.end) === PlayerOrNone.ONE) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Failed!`);
+                    return MGPValidation.failure($localize`Failed. Try again.`);
                 }
             },
             $localize`Congratulations!`,
@@ -132,7 +132,7 @@ export class LinesOfActionTutorial {
             ], 0),
             [LinesOfActionMove.of(new Coord(0, 2), new Coord(4, 2)).get()],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

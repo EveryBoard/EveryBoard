@@ -748,8 +748,8 @@
       <trans-unit id="4948237861189298097" datatype="html">
         <source>Congratulations! You know everything you need to start a game!</source>
       </trans-unit>
-      <trans-unit id="8139485336036692612" datatype="html">
-        <source>Failed!</source>
+      <trans-unit id="8017917529851412468" datatype="html">
+        <source>Failed. Try again.</source>
       </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
@@ -850,9 +850,6 @@
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
-      </trans-unit>
-      <trans-unit id="8017917529851412468" datatype="html">
-        <source>Failed. Try again.</source>
       </trans-unit>
       <trans-unit id="437214181691581058" datatype="html">
         <source>Interrupted capture</source>
@@ -2528,14 +2525,11 @@
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
-      <trans-unit id="4187931356423243791" datatype="html">
-        <source>Thoses two spaces are not neighbors!</source>
+      <trans-unit id="1739222080553143193" datatype="html">
+        <source>Those two spaces are not neighbors!</source>
       </trans-unit>
       <trans-unit id="4853714910007564389" datatype="html">
         <source>There is no way to put a piece there!</source>
-      </trans-unit>
-      <trans-unit id="1828788521008234606" datatype="html">
-        <source><x id="PH" equiv-text="c.toString()"/> is out of the board!</source>
       </trans-unit>
       <trans-unit id="7841599074494103882" datatype="html">
         <source>You cannot drop on only one piece!</source>
@@ -2543,32 +2537,26 @@
       <trans-unit id="7046446972233642847" datatype="html">
         <source>You cannot drop piece on uneven grounds!</source>
       </trans-unit>
-      <trans-unit id="6539150584891198780" datatype="html">
-        <source>Invalid board dimensions</source>
-      </trans-unit>
-      <trans-unit id="589096881108145452" datatype="html">
-        <source>At Trexo, the goal of the game is to align 5 piece of your color in an horizontal, vertical or diagonal line. But player must put a tile on the board, and that tile is constituted of two pieces, one from each players!</source>
+      <trans-unit id="8777341718687257426" datatype="html">
+        <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
       </trans-unit>
       <trans-unit id="6011148802067949079" datatype="html">
         <source>Dropping a tile</source>
       </trans-unit>
-      <trans-unit id="2528959479977936430" datatype="html">
-        <source>When you drop at tile, it need to be on even ground, and it cannot be right on top of another tile. In others words, it need to be either on the floor, either on two tiles at the same height. To do that, just click on the place where you want to put the opponent piece, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+      <trans-unit id="9144162616649352203" datatype="html">
+        <source>When you drop at tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
       </trans-unit>
-      <trans-unit id="7365388116589052927" datatype="html">
-        <source>Put a piece over other pieces</source>
+      <trans-unit id="6262113904872794006" datatype="html">
+        <source>Dropping a piece over other pieces</source>
       </trans-unit>
-      <trans-unit id="2628455965135129054" datatype="html">
-        <source>When two different pieces on the same level touch each other, you can put a piece on them. You must respect two rules for that:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same level.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="5849352329538631605" datatype="html">
+        <source>You can put a tile on other tiles. For that you must respect two rules:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same level.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
       <trans-unit id="3088092342855643416" datatype="html">
         <source>Incorrect, you put that piece on the floor level, please put it on top of two pieces.</source>
       </trans-unit>
-      <trans-unit id="3381979850438728459" datatype="html">
-        <source>To win at Trexo, you need to align 5 of your pieces, only the piece on top count. Since you have to put the piece of your opponents first, if you create a victory for them and for you in the same turn, they&apos;ll be considered the winners (if you create only a victory for them too, obviously).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win.</source>
-      </trans-unit>
-      <trans-unit id="308127676622795254" datatype="html">
-        <source>Failed. try again.</source>
+      <trans-unit id="6106348607957297864" datatype="html">
+        <source>To win at Trexo, you need to align 5 of your pieces, only the piece on top counts. Since you have to put the piece of your opponent first, if you create a victory for them and for you in the same turn, they&apos;ll be considered the winners (if you create only a victory for them too, obviously).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win.</source>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>

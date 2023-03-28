@@ -16,7 +16,7 @@ import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver'
  */
 export class ActivePartsService {
 
-    constructor(private readonly partDAO: PartDAO) {
+    public constructor(private readonly partDAO: PartDAO) {
     }
     public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
         let activeParts: PartDocument[] = [];

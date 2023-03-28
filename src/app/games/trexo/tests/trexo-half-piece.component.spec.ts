@@ -36,13 +36,13 @@ describe('TrexoHalfSquareComponent', () => {
         expect(component).toBeTruthy();
     }));
 
-    it(`should display rhombus as closed when missing move`, () => {
+    it(`should display parallelogram as closed when missing move`, () => {
         // Given a component on which no move is given
 
         // When displaying it
         testUtils.detectChanges();
 
-        /* Then all thoses lines should be displayed:
+        /* Then all those lines should be displayed:
          *     0------1
          *    /      /|
          *   2------3 |
@@ -61,14 +61,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.expectElementToExist('#line_1_to_4');
     });
 
-    it(`should display rhombus as open to the right when it is the lefter part of the tile`, () => {
+    it(`should display parallelogram as open to the right when it is the left part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the left part of the tile
         component.move = TrexoMove.from(new Coord(1, 1), new Coord(2, 1)).get();
 
         // When displaying it
         testUtils.detectChanges();
 
-        /* Then all thoses lines should be displayed:
+        /* Then all those lines should be displayed:
          *     0------1
          *    /
          *   2------3
@@ -87,14 +87,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.expectElementNotToExist('#line_3_to_6');
     });
 
-    it(`should display rhombus as open to the left when it is the righter part of the tile`, () => {
+    it(`should display parallelogram as open to the left when it is the righter part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the right part of the tile
         component.move = TrexoMove.from(new Coord(1, 1), new Coord(0, 1)).get();
 
         // When displaying it
         testUtils.detectChanges();
 
-        /* Then all thoses lines should be displayed:
+        /* Then all those lines should be displayed:
          *     0------1
          *           /|
          *   2------3 |
@@ -113,14 +113,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.expectElementNotToExist('#line_2_to_5');
     });
 
-    it(`should display rhombus as open to the bottom when it is the upper part of the tile`, () => {
+    it(`should display parallelogram as open to the bottom when it is the upper part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the top part of the tile
         component.move = TrexoMove.from(new Coord(1, 1), new Coord(1, 2)).get();
 
         // When displaying it
         testUtils.detectChanges();
 
-        /* Then all thoses lines should be displayed:
+        /* Then all those lines should be displayed:
          *     0------1
          *    /      /|
          *   2      3 |
@@ -139,14 +139,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.expectElementNotToExist('#line_5_to_6');
     });
 
-    it(`should display rhombus as open to the top when it is the lower part of the tile`, () => {
+    it(`should display parallelogram as open to the top when it is the lower part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the bottom part of the tile
         component.move = TrexoMove.from(new Coord(1, 1), new Coord(1, 0)).get();
 
         // When displaying it
         testUtils.detectChanges();
 
-        /* Then all thoses lines should be displayed:
+        /* Then all those lines should be displayed:
          *     0      1
          *    /      /
          *   2------3
@@ -172,7 +172,7 @@ describe('TrexoHalfSquareComponent', () => {
         // When displaying it
         testUtils.detectChanges();
 
-        /* Then all thoses lines should be displayed:
+        /* Then all those lines should be displayed:
          *     0      1
          *    /      /
          *   2------3

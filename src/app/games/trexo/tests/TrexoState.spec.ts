@@ -1,30 +1,32 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { TrexoFailure } from '../TrexoFailure';
-import { TrexoSpace, TrexoState } from '../TrexoState';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
 describe('TrexoState', () => {
     it('should refuse creating a board of which width is not 10', () => {
+        const error: string = 'Invalid board dimensions';
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 11x10 board
-        const board: TrexoSpace[][] = ArrayUtils.createTable(11, 10, TrexoSpace.EMPTY);
+        const board: TrexoPieceStack[][] = ArrayUtils.createTable(11, 10, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
-        const state: MGPFallible<TrexoState> = TrexoState.from(board, 0);
-
         // Then it should fail
-        expect(state.getReason()).toBe(TrexoFailure.INVALID_DIMENSIONS());
+        expect(() => TrexoState.from(board, 0)).toThrowError('Assertion failure: ' + error);
+        expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
     });
     it('should refuse creating a board of which height is not 10', () => {
+        const error: string = 'Invalid board dimensions';
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 10x11 board
-        const board: TrexoSpace[][] = ArrayUtils.createTable(10, 11, TrexoSpace.EMPTY);
+        const board: TrexoPieceStack[][] = ArrayUtils.createTable(10, 11, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
-        const state: MGPFallible<TrexoState> = TrexoState.from(board, 0);
-
         // Then it should fail
-        expect(state.getReason()).toBe(TrexoFailure.INVALID_DIMENSIONS());
+        expect(() => TrexoState.from(board, 0)).toThrowError('Assertion failure: ' + error);
+        expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
     });
     it('should drop piece at the lowest level possible', () => {
         // Given an empty board
@@ -37,6 +39,7 @@ describe('TrexoState', () => {
         const nextState: TrexoState = state.drop(coord, owner);
 
         // Then it should be dropped at the lowest level
-        expect(nextState.getPieceAt(coord)).toEqual(new TrexoSpace(owner, 1, dropTurn));
+        const piece: TrexoPiece = new TrexoPiece(owner, 1, dropTurn);
+        expect(nextState.getPieceAt(coord)).toEqual(TrexoPieceStack.from([piece]));
     });
 });

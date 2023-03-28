@@ -105,7 +105,7 @@ export class HnefataflTutorial extends Tutorial {
             ], 72),
             [HnefataflMove.of(new Coord(3, 3), new Coord(3, 1))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

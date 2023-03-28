@@ -25,8 +25,8 @@ export class Coord implements ComparableObject {
             (fields: [number, number]): Coord => new Coord(fields[0], fields[1]),
         );
     }
-    constructor(public readonly x: number,
-                public readonly y: number)
+    public constructor(public readonly x: number,
+                       public readonly y: number)
     {
     }
     public getNext(dir: Vector, distance?: number): Coord {

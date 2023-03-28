@@ -5,6 +5,7 @@ export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 export type NumberTable = Table<number>;
 
 export class ArrayUtils {
+
     public static mapBiArray<T, U>(biArray: Table<T>, mapper: (t: T) => U): U[][] {
         const result: U[][] = [];
         let y: number = 0;

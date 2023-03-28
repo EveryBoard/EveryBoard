@@ -39,7 +39,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         const moves: PylosMove[] = [];
         for (const startingCoord of stateInfo.freeToMove) {
             for (const landingCoord of stateInfo.landable) {
-                if (landingCoord.isUpperThan(startingCoord) &&
+                if (landingCoord.isHigherThan(startingCoord) &&
                     landingCoord.getLowerPieces().some((c: PylosCoord) => startingCoord.equals(c)) === false) {
                     const newMove: PylosMove = PylosMove.fromClimb(startingCoord, landingCoord, []);
                     moves.push(newMove);

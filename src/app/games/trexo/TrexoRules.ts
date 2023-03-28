@@ -8,7 +8,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
-import { TrexoSpace, TrexoState } from './TrexoState';
+import { TrexoPieceStack, TrexoState } from './TrexoState';
 
 export class TrexoNode extends MGPNode<Rules<TrexoMove, TrexoState>, TrexoMove, TrexoState> {}
 
@@ -16,13 +16,13 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
     private static instance: MGPOptional<TrexoRules> = MGPOptional.empty();
 
-    private static getOwner(piece: TrexoSpace): PlayerOrNone {
-        return piece.owner;
+    private static getOwner(piece: TrexoPieceStack): PlayerOrNone {
+        return piece.getOwner();
     }
     private static isInRange(coord: Coord): boolean {
         return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
     }
-    private static readonly TREXO_5_IN_A_ROW: NInARowHelper<TrexoSpace> =
+    public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
         new NInARowHelper(TrexoRules.isInRange, TrexoRules.getOwner, 5);
 
     public static get(): TrexoRules {
@@ -50,20 +50,20 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return MGPFallible.success(undefined);
     }
     public isUnevenGround(move: TrexoMove, state: TrexoState): boolean {
-        const zero: TrexoSpace = state.getPieceAt(move.first);
-        const one: TrexoSpace = state.getPieceAt(move.second);
-        return zero.height !== one.height;
+        const zero: TrexoPieceStack = state.getPieceAt(move.first);
+        const one: TrexoPieceStack = state.getPieceAt(move.second);
+        return zero.getHeight() !== one.getHeight();
     }
     public landsOnOnlyOnePiece(move: TrexoMove, state: TrexoState): boolean {
-        const zeroSpace: TrexoSpace = state.getPieceAt(move.first);
-        const oneSpace: TrexoSpace = state.getPieceAt(move.second);
-        if (zeroSpace.landingTurn === -1 && oneSpace.landingTurn === -1) {
+        const zeroSpace: TrexoPieceStack = state.getPieceAt(move.first);
+        const oneSpace: TrexoPieceStack = state.getPieceAt(move.second);
+        if (zeroSpace.getUpperTileId() === -1 && oneSpace.getUpperTileId() === -1) {
             return false;
         }
-        return zeroSpace.landingTurn === oneSpace.landingTurn;
+        return zeroSpace.getUpperTileId() === oneSpace.getUpperTileId();
     }
     public static getSquareScore(state: TrexoState, coord: Coord): number {
-        return TrexoRules.TREXO_5_IN_A_ROW.getSquareScore(state, coord);
+        return TrexoRules.TREXO_HELPER.getSquareScore(state, coord);
     }
     public static getVictoriousCoords(state: TrexoState): Coord[] {
         const victoryOfLastPlayer: Coord[] = [];
@@ -74,7 +74,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             for (let y: number = 0; y < TrexoState.SIZE; y++) {
                 // while we haven't reached the top or an empty space
                 const coord: Coord = new Coord(x, y);
-                const pieceOwner: PlayerOrNone = state.getPieceAt(coord).owner;
+                const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
                 if (pieceOwner.isPlayer()) {
                     const tmpScore: number = TrexoRules.getSquareScore(state, coord);
                     if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
@@ -101,7 +101,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             // for every column, starting from the bottom of each column
             for (let y: number = 0; y < TrexoState.SIZE; y++) {
                 // while we haven't reached the top or an empty space
-                const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).owner;
+                const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).getOwner();
                 if (pieceOwner.isPlayer()) {
                     const tmpScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
                     if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
@@ -137,15 +137,15 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return moves;
     }
     public getPossiblesMoves(state: TrexoState, first: Coord, second: Coord): TrexoMove[] {
-        const firstPiece: TrexoSpace = state.getPieceAt(first);
-        const secondPiece: TrexoSpace = state.getPieceAt(second);
+        const firstPiece: TrexoPieceStack = state.getPieceAt(first);
+        const secondPiece: TrexoPieceStack = state.getPieceAt(second);
         let piecesHideEntirelyOnePiece: boolean;
-        if (firstPiece.landingTurn === -1) {
+        if (firstPiece.getUpperTileId() === -1) {
             piecesHideEntirelyOnePiece = false;
         } else {
-            piecesHideEntirelyOnePiece = (firstPiece.landingTurn === secondPiece.landingTurn);
+            piecesHideEntirelyOnePiece = (firstPiece.getUpperTileId() === secondPiece.getUpperTileId());
         }
-        const pieceIsAllDeTravers: boolean = firstPiece.height !== secondPiece.height;
+        const pieceIsAllDeTravers: boolean = firstPiece.getHeight() !== secondPiece.getHeight();
         if (piecesHideEntirelyOnePiece || pieceIsAllDeTravers) {
             return [];
         } else {

@@ -28,8 +28,8 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
 
     private readonly subDAOs: MGPMap<string, IFirestoreDAO<FirestoreJSONObject>> = new MGPMap();
 
-    constructor(public readonly collectionName: string,
-                public VERBOSE: boolean)
+    public constructor(public readonly collectionName: string,
+                       public VERBOSE: boolean)
     {
         this.reset();
     }
@@ -248,7 +248,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                 public resetStaticDB(): void {
                     CustomMock.db = new MGPMap();
                 }
-                constructor() {
+                public constructor() {
                     super(`${superName}/${id}/${name}`, verbosity);
                 }
             }

@@ -8,7 +8,7 @@ export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
 
     protected abstract toFields(value: T): [[number], number];
 
-    constructor(values?: readonly T[]) {
+    public constructor(values?: readonly T[]) {
         super();
         this.map = [];
         this.values = [];

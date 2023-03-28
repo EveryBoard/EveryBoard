@@ -7,12 +7,11 @@ import { Player, PlayerOrNone } from './Player';
 
 export class NInARowHelper<T> {
 
-    public static readonly VERBOSE: boolean = false;
-
-    constructor(public isInRange: (coord: Coord) => boolean,
-                public getOwner: (piece: T) => PlayerOrNone,
-                public N: number)
-    {}
+    public constructor(public isInRange: (coord: Coord) => boolean,
+                       public getOwner: (piece: T) => PlayerOrNone,
+                       public N: number)
+    {
+    }
     public getSquareScore(state: GameStateWithTable<T>,
                           coord: Coord)
     : number

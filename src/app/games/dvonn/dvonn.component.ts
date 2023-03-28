@@ -29,7 +29,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnecteds: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new DvonnRules(DvonnState);
         this.availableMinimaxes = [

@@ -22,7 +22,7 @@ export class TrexoHalfPieceComponent {
     public static STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH / 2;
     /**
      * In all that page, when a Coord is named, it'll be according to that graph
-     * Note that STROKE_OFFSET has to be excluded of thoses calculation to get the outside shape coords
+     * Note that STROKE_OFFSET has to be excluded of those calculations to get the outside shape coords
      *       0-------1
      *      /       /|
      *     /   U   / |
@@ -36,7 +36,7 @@ export class TrexoHalfPieceComponent {
      *   5-------6
      */
     public get3DIsoSquarePoints(): string {
-        const points: Coord[] = this.getRhombusPoints();
+        const points: Coord[] = this.getParallelogramPoints();
         const coords: Coord[] = [
             points[0],
             points[1],
@@ -48,24 +48,24 @@ export class TrexoHalfPieceComponent {
         ];
         return this.mapCoordToPoints(coords);
     }
-    private getRhombusPoints(): [Coord, Coord, Coord, Coord, Coord, Coord, Coord] {
-        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * this.mode.HORIZONTAL_WIDTH_RATIO;
-        const RHOMBUS_HEIGHT: number = TrexoComponent.SPACE_SIZE;
-        const RHOMBUS_OFFSET: number = this.mode.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
-        const PIECE_HEIGHT: number = TrexoComponent.SPACE_SIZE * this.mode.PIECE_HEIGHT_RATIO;
-        const x1: number = RHOMBUS_WIDTH;
+    private getParallelogramPoints(): [Coord, Coord, Coord, Coord, Coord, Coord, Coord] {
+        const parallelogramWidth: number = TrexoComponent.SPACE_SIZE * this.mode.horizontal_width_ratio;
+        const parallelogramHeight: number = TrexoComponent.SPACE_SIZE;
+        const parallelogramOffset: number = this.mode.offset_ratio * TrexoComponent.SPACE_SIZE;
+        const pieceHeight: number = TrexoComponent.SPACE_SIZE * this.mode.piece_height_ratio;
+        const x1: number = parallelogramWidth;
         const y1: number = 0;
-        const x3: number = RHOMBUS_WIDTH - RHOMBUS_OFFSET;
-        const y3: number = RHOMBUS_HEIGHT;
-        const x2: number = - RHOMBUS_OFFSET;
-        const y2: number = RHOMBUS_HEIGHT;
+        const x3: number = parallelogramWidth - parallelogramOffset;
+        const y3: number = parallelogramHeight;
+        const x2: number = - parallelogramOffset;
+        const y2: number = parallelogramHeight;
         const p0: Coord = new Coord(0, 0);
         const p1: Coord = new Coord(x1, y1);
         const p2: Coord = new Coord(x2, y2);
         const p3: Coord = new Coord(x3, y3);
-        const p4: Coord = new Coord(x1, y1 + PIECE_HEIGHT);
-        const p5: Coord = new Coord(x2, y2 + PIECE_HEIGHT);
-        const p6: Coord = new Coord(x3, y3 + PIECE_HEIGHT);
+        const p4: Coord = new Coord(x1, y1 + pieceHeight);
+        const p5: Coord = new Coord(x2, y2 + pieceHeight);
+        const p6: Coord = new Coord(x3, y3 + pieceHeight);
         return [p0, p1, p2, p3, p4, p5, p6];
     }
     public mapCoordToPoints(coords: Coord[]): string {
@@ -74,10 +74,10 @@ export class TrexoHalfPieceComponent {
         }).join(' ');
     }
     private getUpperHorizontalLineCoords(): Coord[] { // Stroke from 0 to 1 (inside U)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const upLeft: Coord = rhombusPoints[0];
-        const upRight: Coord = rhombusPoints[1];
-        const STROKE_OFFSET: number = -1 * this.mode.OFFSET_RATIO * TrexoComponent.STROKE_WIDTH;
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const upLeft: Coord = parallelogramPoints[0];
+        const upRight: Coord = parallelogramPoints[1];
+        const STROKE_OFFSET: number = -1 * this.mode.offset_ratio * TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, TrexoComponent.STROKE_WIDTH);
         const downLeft: Coord = upLeft.getNext(STROKE_VECTOR);
         const downRight: Coord = upRight.getNext(STROKE_VECTOR);
@@ -88,10 +88,10 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     private getMiddleHorizontalCoords(): Coord[] { // Stroke from 2 to 3 (inside U)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const downLeft: Coord = rhombusPoints[2];
-        const downRight: Coord = rhombusPoints[3];
-        const STROKE_OFFSET: number = -1 * this.mode.OFFSET_RATIO * TrexoComponent.STROKE_WIDTH;
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const downLeft: Coord = parallelogramPoints[2];
+        const downRight: Coord = parallelogramPoints[3];
+        const STROKE_OFFSET: number = -1 * this.mode.offset_ratio * TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, TrexoComponent.STROKE_WIDTH);
         const upLeft: Coord = downLeft.getNext(STROKE_VECTOR, -1);
         const upRight: Coord = downRight.getNext(STROKE_VECTOR, -1);
@@ -102,19 +102,19 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     public getLowerHorizontalLine(): string { // Stroke from 5 to 6 (inside F)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const downLeft: Coord = rhombusPoints[5];
-        const downRight: Coord = rhombusPoints[6];
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const downLeft: Coord = parallelogramPoints[5];
+        const downRight: Coord = parallelogramPoints[6];
         const STROKE_VECTOR: Vector = new Vector(0, TrexoComponent.STROKE_WIDTH);
         const upLeft: Coord = downLeft.getNext(STROKE_VECTOR, -1);
         const upRight: Coord = downRight.getNext(STROKE_VECTOR, -1);
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
-    public getLefterDiagonalLine(): string { // Stroke from 0 to 2 (inside U)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const upLeft: Coord = rhombusPoints[0];
-        const downLeft: Coord = rhombusPoints[2];
+    public getLeftDiagonalLine(): string { // Stroke from 0 to 2 (inside U)
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const upLeft: Coord = parallelogramPoints[0];
+        const downLeft: Coord = parallelogramPoints[2];
         const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upRight: Coord = upLeft.getNext(STROKE_VECTOR, 1);
@@ -123,9 +123,9 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     public getMiddleDiagonalLine(): string { // Stroke from 1 to 3 (inside U)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const upRight: Coord = rhombusPoints[1];
-        const downRight: Coord = rhombusPoints[3];
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const upRight: Coord = parallelogramPoints[1];
+        const downRight: Coord = parallelogramPoints[3];
         const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
@@ -134,9 +134,9 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     public getRighterDiagonalLine(): string { // Stroke from 4 to 6 (inside R)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const upRight: Coord = rhombusPoints[4];
-        const downRight: Coord = rhombusPoints[6];
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const upRight: Coord = parallelogramPoints[4];
+        const downRight: Coord = parallelogramPoints[6];
         const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(0, STROKE_OFFSET);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
@@ -144,10 +144,10 @@ export class TrexoHalfPieceComponent {
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
-    public getLefterVerticalLine(): string { // Stroke from 2 to 5 (inside F)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const upLeft: Coord = rhombusPoints[2];
-        const downLeft: Coord = rhombusPoints[5];
+    public getLeftVerticalLine(): string { // Stroke from 2 to 5 (inside F)
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const upLeft: Coord = parallelogramPoints[2];
+        const downLeft: Coord = parallelogramPoints[5];
         const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upRight: Coord = upLeft.getNext(STROKE_VECTOR, 1);
@@ -156,9 +156,9 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     public getMiddleVerticalLine(): string { // Stroke from 3 to 6 (inside F)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const upRight: Coord = rhombusPoints[3];
-        const downRight: Coord = rhombusPoints[6];
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const upRight: Coord = parallelogramPoints[3];
+        const downRight: Coord = parallelogramPoints[6];
         const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
@@ -167,11 +167,11 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     public getRighterVerticalLine(): string { // Stroke from 1 to 4 (inside R)
-        const rhombusPoints: Coord[] = this.getRhombusPoints();
-        const upRight: Coord = rhombusPoints[1];
-        const downRight: Coord = rhombusPoints[4];
+        const parallelogramPoints: Coord[] = this.getParallelogramPoints();
+        const upRight: Coord = parallelogramPoints[1];
+        const downRight: Coord = parallelogramPoints[4];
         const STROKE_OFFSET_X: number = TrexoComponent.STROKE_WIDTH;
-        const STROKE_OFFSET_Y: number = TrexoComponent.STROKE_WIDTH / this.mode.OFFSET_RATIO;
+        const STROKE_OFFSET_Y: number = TrexoComponent.STROKE_WIDTH / this.mode.offset_ratio;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET_X, - STROKE_OFFSET_Y);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
         const downLeft: Coord = downRight.getNext(STROKE_VECTOR, -1);

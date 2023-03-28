@@ -56,7 +56,7 @@ export class ActivatedRouteStub {
     public constructor(compo?: string, id?: string) {
         this.snapshot = {
             paramMap: {
-                get: (str: string) => {
+                get: (str: string): string => {
                     // Returns null in case the route does not exist.
                     // This is the same behaviour than ActivatedRoute
                     return this.route[str];

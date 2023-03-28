@@ -72,10 +72,11 @@ export class AuthUser {
      * - the username of the user, which may be null if the user hasn't chosen a username yet
      * - a boolean indicating whether the user is verified
      */
-    constructor(public id: string,
-                public email: MGPOptional<string>,
-                public username: MGPOptional<string>,
-                public verified: boolean) {
+    public constructor(public id: string,
+                       public email: MGPOptional<string>,
+                       public username: MGPOptional<string>,
+                       public verified: boolean)
+    {
     }
     public isConnected(): boolean {
         // Only a user that is connected has its email set
@@ -114,9 +115,9 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userObs: Observable<AuthUser>;
     private userSubscription: Subscription = new Subscription();
 
-    constructor(private readonly userDAO: UserDAO,
-                private readonly userService: UserService,
-                private readonly auth: FireAuth.Auth)
+    public constructor(private readonly userDAO: UserDAO,
+                       private readonly userService: UserService,
+                       private readonly auth: FireAuth.Auth)
     {
         display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
 

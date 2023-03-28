@@ -84,6 +84,10 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
 import { TutorialStepFailure } from './TutorialStepFailure';
 import { Comparable } from 'src/app/utils/Comparable';
+import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
+import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
+import { TrexoState } from 'src/app/games/trexo/TrexoState';
+import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -111,6 +115,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
+            const trexoTutorial: TutorialStep[] = new TrexoTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, GameState, unknown>, TutorialStep, Move, MGPValidation][] = [
                 [
@@ -177,7 +182,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     new LinesOfActionRules(LinesOfActionState),
                     linesOfActionTutorial[4],
                     LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get(),
-                    MGPValidation.failure(`Failed!`),
+                    MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[5],
@@ -278,6 +283,11 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     sixTutorial[6],
                     SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
                     MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`),
+                ], [
+                    TrexoRules.get(),
+                    trexoTutorial[3],
+                    TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get(),
+                    MGPValidation.failure(`Failed. Try again.`)
                 ], [
                     new YinshRules(YinshState),
                     yinshTutorial[3],

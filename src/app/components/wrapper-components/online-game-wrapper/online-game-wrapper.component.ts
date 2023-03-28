@@ -109,14 +109,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private onCurrentUpdateOngoing: boolean = false;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
-                connectedUserService: ConnectedUserService,
-                router: Router,
-                messageDisplayer: MessageDisplayer,
-                private readonly observedPartService: ObservedPartService,
-                private readonly userService: UserService,
-                private readonly gameService: GameService)
+    public constructor(componentFactoryResolver: ComponentFactoryResolver,
+                       actRoute: ActivatedRoute,
+                       connectedUserService: ConnectedUserService,
+                       router: Router,
+                       messageDisplayer: MessageDisplayer,
+                       private readonly observedPartService: ObservedPartService,
+                       private readonly userService: UserService,
+                       private readonly gameService: GameService)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
@@ -838,7 +838,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             turnChrono.pause();
         }
     }
-    private stopCountdownsFor(player: Player) {
+    private stopCountdownsFor(player: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE,
                 'cdc::stopCountDownsFor(' + player.toString() +
                 ') (turn ' + this.currentPart?.data.turn + ')');

@@ -5,7 +5,7 @@
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let space of line; index as x">
             <polygon id="space_{{ x }}_{{ y }}"
-                     [attr.points]="getRhombusPoints()"
+                     [attr.points]="getParallelogramPoints()"
                      [attr.transform]="getTranslate(x, y, 0)"
                      (click)="onClick(x, y)"
                      class="base"
@@ -17,7 +17,7 @@
             <g *ngFor="let piece of moveYZ; index as x">
                 <g *ngIf="piece.move.isPresent()"
                    mgp-trexo-half-piece
-                   id="3d_iso_square_{{ x }}_{{ y }}_{{ z }}"
+                   id="half_tile_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
                    [attr.transform]="getTranslate(x, y, z + 1)"
                    [mode]="mode"

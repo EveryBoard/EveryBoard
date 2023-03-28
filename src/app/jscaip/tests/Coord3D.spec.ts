@@ -5,19 +5,47 @@ import { Coord3D } from '../Coord3D';
 
 describe('Coord3D:', () => {
 
-    it('should encode optional and decode should be symetrical', () => {
-        const initialValues: MGPOptional<Coord3D>[] = [
-            MGPOptional.empty(),
-            MGPOptional.of(new Coord3D(0, 0, 0)),
-        ];
-        const encodedValues: JSONValue[] = initialValues.map(Coord3D.optionalEncoder.encode);
-        const decodedValues: MGPOptional<Coord3D>[] = encodedValues.map(Coord3D.optionalEncoder.decode);
-        const expectedValues: JSONValue[] = [
-            null,
-            { x: 0, y: 0, z: 0 },
-        ];
-        expect(encodedValues).toEqual(expectedValues);
-        expect(decodedValues).toEqual(initialValues);
+    describe('encoder', () => {
+        it('should encode empty optional to null', () => {
+            // Given a empty optional
+            const optionalCoord: MGPOptional<Coord3D> = MGPOptional.empty();
+
+            // When encoding it
+            const encoded: JSONValue = Coord3D.optionalEncoder.encode(optionalCoord);
+
+            // Then result should be null
+            expect(encoded).toEqual(null);
+        });
+        it('should decode null as empty optional', () => {
+            // Given the null value
+            const encoded: JSONValue = null;
+
+            // When decoding it
+            const decoded: MGPOptional<Coord3D> = Coord3D.optionalEncoder.decode(encoded);
+
+            // Then the value should be empty option
+            expect(decoded).toEqual(MGPOptional.empty());
+        });
+        it('should JSONify for encoding', () => {
+            // Given a optional pylos coord
+            const optionalCoord: MGPOptional<Coord3D> = MGPOptional.of(new Coord3D(1, 2, 3));
+
+            // When encoding it
+            const encoded: JSONValue = Coord3D.optionalEncoder.encode(optionalCoord);
+
+            // Then result should be null
+            expect(encoded).toEqual({ x: 1, y: 2, z: 3 });
+        });
+        it('should decode json smartly', () => {
+            // Given the encoded json value
+            const encoded: JSONValue = { x: 1, y: 2, z: 3 };
+
+            // When decoding it
+            const decoded: MGPOptional<Coord3D> = Coord3D.optionalEncoder.decode(encoded);
+
+            // Then the value should be empty option
+            expect(decoded).toEqual(MGPOptional.of(new Coord3D(1, 2, 3)));
+        });
     });
 
     it('should override equals correctly', () => {
@@ -41,6 +69,6 @@ describe('Coord3D:', () => {
     it('should compare Z correctly', () => {
         const coord: Coord3D = new Coord3D(0, 0, 0);
         const upperCoord: Coord3D = new Coord3D(0, 0, 1);
-        expect(coord.isUpperThan(upperCoord)).toBeFalse();
+        expect(coord.isHigherThan(upperCoord)).toBeFalse();
     });
 });

@@ -22,9 +22,10 @@ export class DvonnPieceStack {
         return new DvonnPieceStack(stack1.owner, stack1.size + stack2.size, stack1.source || stack2.source);
     }
 
-    constructor(public readonly owner: PlayerOrNone,
-                public readonly size: number,
-                public readonly source: boolean) {
+    public constructor(public readonly owner: PlayerOrNone,
+                       public readonly size: number,
+                       public readonly source: boolean)
+    {
     }
     public getValue(): number {
         return DvonnPieceStack.encoder.encodeNumber(this);

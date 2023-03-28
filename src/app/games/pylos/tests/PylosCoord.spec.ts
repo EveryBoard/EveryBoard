@@ -6,16 +6,47 @@ import { JSONValue } from 'src/app/utils/utils';
 
 describe('PylosCoord:', () => {
 
-    it('should encode optional and decode should be symetrical', () => {
-        const initialValues: MGPOptional<PylosCoord>[] = [
-            MGPOptional.empty(),
-            MGPOptional.of(new PylosCoord(0, 0, 0)),
-        ];
-        const encodedValues: JSONValue[] = initialValues.map(PylosCoord.optionalEncoder.encode);
-        const decodedValues: MGPOptional<PylosCoord>[] = encodedValues.map(PylosCoord.optionalEncoder.decode);
-        const expectedValues: JSONValue[] = [null, { x: 0, y: 0, z: 0 }];
-        expect(encodedValues).toEqual(expectedValues);
-        expect(decodedValues).toEqual(initialValues);
+    describe('encoder', () => {
+        it('should encode empty optional to null', () => {
+            // Given a empty optional
+            const optionalCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
+
+            // When encoding it
+            const encoded: JSONValue = PylosCoord.optionalEncoder.encode(optionalCoord);
+
+            // Then result should be null
+            expect(encoded).toEqual(null);
+        });
+        it('should decode null as empty optional', () => {
+            // Given the null value
+            const encoded: JSONValue = null;
+
+            // When decoding it
+            const decoded: MGPOptional<PylosCoord> = PylosCoord.optionalEncoder.decode(encoded);
+
+            // Then the value should be empty option
+            expect(decoded).toEqual(MGPOptional.empty());
+        });
+        it('should JSONify for encoding', () => {
+            // Given a optional pylos coord
+            const optionalCoord: MGPOptional<PylosCoord> = MGPOptional.of(new PylosCoord(2, 1, 0));
+
+            // When encoding it
+            const encoded: JSONValue = PylosCoord.optionalEncoder.encode(optionalCoord);
+
+            // Then result should be null
+            expect(encoded).toEqual({ x: 2, y: 1, z: 0 });
+        });
+        it('should decode json smartly', () => {
+            // Given the encoded json value
+            const encoded: JSONValue = { x: 2, y: 1, z: 0 };
+
+            // When decoding it
+            const decoded: MGPOptional<PylosCoord> = PylosCoord.optionalEncoder.decode(encoded);
+
+            // Then the value should be empty option
+            expect(decoded).toEqual(MGPOptional.of(new PylosCoord(2, 1, 0)));
+        });
     });
 
     it('should forbid invalid coord creation', () => {
@@ -41,7 +72,7 @@ describe('PylosCoord:', () => {
     it('should compare Z correctly', () => {
         const coord: PylosCoord = new PylosCoord(0, 0, 0);
         const upperCoord: PylosCoord = new PylosCoord(0, 0, 1);
-        expect(coord.isUpperThan(upperCoord)).toBeFalse();
+        expect(coord.isHigherThan(upperCoord)).toBeFalse();
     });
 
     it('should give list of lower pieces, except for floor coord', () => {

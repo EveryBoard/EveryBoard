@@ -69,7 +69,7 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT).get()],
             $localize`Congratulations, you made a side-slip!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Moving a piece out of the board`,
@@ -106,7 +106,7 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get()],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Pushing (2/2)`,
@@ -124,7 +124,7 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(1, 3, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get()],
             $localize`Congratulations! Note that this move made you lose the game, you will see why in the next step.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Victory`,

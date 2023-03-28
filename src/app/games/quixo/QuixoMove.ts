@@ -33,7 +33,7 @@ export class QuixoMove extends MoveCoord {
         }
         return MGPValidation.SUCCESS;
     }
-    constructor(x: number, y: number, public readonly direction: Orthogonal) {
+    public constructor(x: number, y: number, public readonly direction: Orthogonal) {
         super(x, y);
         const coordValidity: MGPValidation = QuixoMove.isValidCoord(this.coord);
         if (coordValidity.isFailure()) throw new Error(coordValidity.getReason());

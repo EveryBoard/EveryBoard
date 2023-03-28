@@ -24,7 +24,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(7, 6);
     }
-    public static P4_4_IN_A_ROW: NInARowHelper<PlayerOrNone> =
+    public static P4_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(P4Rules.isInRange, P4Rules.getOwner, 4);
 
     public static getVictoriousCoords(state: P4State): Coord[] {
@@ -73,7 +73,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         display(P4Rules.VERBOSE, 'getSquareScore(board, ' + coord.x + ', ' + coord.y + ') called');
         const board: Table<PlayerOrNone> = state.board;
         display(P4Rules.VERBOSE, board);
-        return P4Rules.P4_4_IN_A_ROW.getSquareScore(state, coord);
+        return P4Rules.P4_HELPER.getSquareScore(state, coord);
     }
     public static getListMoves(node: P4Node): P4Move[] {
         display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });

@@ -48,11 +48,11 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public Player: typeof Player = Player;
 
-    constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
-                protected readonly actRoute: ActivatedRoute,
-                protected readonly connectedUserService: ConnectedUserService,
-                protected readonly router: Router,
-                protected readonly messageDisplayer: MessageDisplayer)
+    public constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
+                       protected readonly actRoute: ActivatedRoute,
+                       protected readonly connectedUserService: ConnectedUserService,
+                       protected readonly router: Router,
+                       protected readonly messageDisplayer: MessageDisplayer)
     {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.boardRef != null));
     }

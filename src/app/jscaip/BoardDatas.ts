@@ -76,7 +76,7 @@ export abstract class GroupDatasFactory<T> {
 export abstract class GroupDatas<T> {
     public static VERBOSE: boolean = false;
 
-    constructor(public readonly color: T) {}
+    public constructor(public readonly color: T) {}
 
     public abstract getCoords(): Coord[];
 

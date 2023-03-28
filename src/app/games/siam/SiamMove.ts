@@ -3,7 +3,7 @@ import { Orthogonal, OrthogonalNumberEncoder } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptionalNumberEncoder } from 'src/app/utils/MGPOptionalEncoder';
+import { MGPOptionalNumberEncoder } from 'src/app/utils/MGPOptional';
 
 export class SiamMove extends MoveCoord {
     public static encoder: NumberEncoder<SiamMove> = NumberEncoder.tuple(

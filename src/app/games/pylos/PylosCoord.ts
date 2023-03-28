@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { Encoder } from 'src/app/utils/Encoder';
-import { getOptionalEncoder } from 'src/app/utils/MGPOptionalEncoder';
+import { getOptionalEncoder } from 'src/app/utils/MGPOptional';
 
 export class PylosCoord extends Coord3D {
 
@@ -11,12 +11,10 @@ export class PylosCoord extends Coord3D {
 
     public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = getOptionalEncoder(PylosCoord.encoder);
 
-    public static MAX_COORD: Coord3D = new Coord3D(3, 3, 3); // Coord3D because (3, 3, 3) is not be legal for Pylos
-
     public static from(x: number, y: number, z: number): PylosCoord {
         return new PylosCoord(x, y, z);
     }
-    public constructor(x: number, y: number, public readonly z: number) {
+    public constructor(x: number, y: number, z: number) {
         super(x, y, z);
         if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
         if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);

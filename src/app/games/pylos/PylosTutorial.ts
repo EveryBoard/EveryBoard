@@ -67,7 +67,7 @@ export class PylosTutorial extends Tutorial {
             <li>Of course, you cannot move the opponent's pieces.</li>
             <li>You can only climb when the landing square is higher than the starting square.</li>
         </ol>`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Square (1/2)`,
@@ -102,7 +102,7 @@ export class PylosTutorial extends Tutorial {
                 PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
             ],
             $localize`Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromPredicate(
             $localize`Square (2/2)`,

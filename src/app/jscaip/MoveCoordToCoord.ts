@@ -44,7 +44,7 @@ export abstract class MoveCoordToCoord extends MoveCoord {
 
     public readonly end: Coord;
 
-    constructor(start: Coord, end: Coord) {
+    public constructor(start: Coord, end: Coord) {
         super(start.x, start.y);
         if (start.equals(end)) throw new Error(RulesFailure.MOVE_CANNOT_BE_STATIC());
         this.end = end;

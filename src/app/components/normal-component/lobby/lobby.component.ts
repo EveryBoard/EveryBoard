@@ -32,11 +32,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
 
-    constructor(public readonly router: Router,
-                public readonly messageDisplayer: MessageDisplayer,
-                private readonly activePartsService: ActivePartsService,
-                private readonly activeUsersService: ActiveUsersService,
-                private readonly observedPartService: ObservedPartService) {
+    public constructor(public readonly router: Router,
+                       public readonly messageDisplayer: MessageDisplayer,
+                       private readonly activePartsService: ActivePartsService,
+                       private readonly activeUsersService: ActiveUsersService,
+                       private readonly observedPartService: ObservedPartService)
+    {
     }
     public ngOnInit(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');

@@ -7,7 +7,7 @@ export class AwaleState extends GameStateWithTable<number> {
         const board: number[][] = ArrayUtils.createTable(6, 2, 4);
         return new AwaleState(board, 0, [0, 0]);
     }
-    constructor(b: Table<number>, turn: number, public readonly captured: readonly [number, number]) {
+    public constructor(b: Table<number>, turn: number, public readonly captured: readonly [number, number]) {
         super(b, turn);
     }
     public getCapturedCopy(): [number, number] {

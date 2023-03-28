@@ -40,7 +40,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: [string, number, boolean][];
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new PentagoRules(PentagoState);
         this.availableMinimaxes = [

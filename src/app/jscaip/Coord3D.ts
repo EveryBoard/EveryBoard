@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { assert } from '../utils/assert';
 import { Encoder } from '../utils/Encoder';
 import { MGPOptional } from '../utils/MGPOptional';
-import { getOptionalEncoder } from '../utils/MGPOptionalEncoder';
+import { getOptionalEncoder } from '../utils/MGPOptional';
 import { JSONObject, JSONValue, JSONValueWithoutArray } from '../utils/utils';
 
 export class Coord3D extends Coord {
@@ -50,7 +50,7 @@ export class Coord3D extends Coord {
         if (o.y !== this.y) return false;
         return o.z === this.z;
     }
-    public isUpperThan(p: Coord3D): boolean {
+    public isHigherThan(p: Coord3D): boolean {
         return this.z > p.z;
     }
 }

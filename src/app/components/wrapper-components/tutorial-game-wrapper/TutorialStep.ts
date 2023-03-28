@@ -2,9 +2,11 @@ import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from 'src/app/jscaip/GameState';
 import { assert } from 'src/app/utils/assert';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export type Click = string
-export type TutorialPredicate = (move: Move, previousState: GameState, resultingState: GameState) => MGPValidation
+export type Click = string;
+
+export type TutorialPredicate = (move: Move, previousState: GameState, resultingState: GameState) => MGPValidation;
 
 export abstract class TutorialStep {
     public static fromMove(title: string,
@@ -53,9 +55,9 @@ export abstract class TutorialStep {
     {
         return new TutorialStepInformational(title, instruction, state);
     }
-    public previousMove: Move[] = [];
+    public previousMove: MGPOptional<Move> = MGPOptional.empty();
 
-    public previousState: GameState[] = [];
+    public previousState: MGPOptional<GameState> = MGPOptional.empty();
 
     protected constructor(public title: string,
                           public instruction: string,
@@ -80,20 +82,11 @@ export abstract class TutorialStep {
         return false;
     }
     public withPreviousMove(previousMove: Move): this {
-        this.previousMove = [previousMove];
+        this.previousMove = MGPOptional.of(previousMove);
         return this;
     }
     public withPreviousState(previousState: GameState): this {
-        this.previousState = [previousState];
-        return this;
-    }
-    public withPreviousMoveAndState(movesAndStates: {move: Move, state: GameState}[]): this {
-        this.previousState = [];
-        this.previousMove = [];
-        for (const moveAndState of movesAndStates) {
-            this.previousMove.push(moveAndState.move);
-            this.previousState.push(moveAndState.state);
-        }
+        this.previousState = MGPOptional.of(previousState);
         return this;
     }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TrexoSpace, TrexoState } from './TrexoState';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoNode, TrexoRules } from './TrexoRules';
 import { TrexoMinimax } from './TrexoMinimax';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -13,6 +13,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
+import { Direction } from 'src/app/jscaip/Direction';
 
 interface PieceOnBoard {
 
@@ -26,11 +27,11 @@ type ModeType = '2D' | '3D';
 
 export interface ModeConfig {
 
-    OFFSET_RATIO: number;
+    offset_ratio: number;
 
-    HORIZONTAL_WIDTH_RATIO: number;
+    horizontal_width_ratio: number;
 
-    PIECE_HEIGHT_RATIO: number;
+    piece_height_ratio: number;
 }
 
 @Component({
@@ -38,7 +39,7 @@ export interface ModeConfig {
     templateUrl: './trexo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoSpace> {
+export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
 
     public static VERBOSE: boolean = false;
     public static SPACE_SIZE: number;
@@ -50,14 +51,14 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     };
     public static modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
-            OFFSET_RATIO: 0,
-            HORIZONTAL_WIDTH_RATIO: 1,
-            PIECE_HEIGHT_RATIO: 0,
+            offset_ratio: 0,
+            horizontal_width_ratio: 1,
+            piece_height_ratio: 0,
         },
         '3D': {
-            OFFSET_RATIO: 0.4,
-            HORIZONTAL_WIDTH_RATIO: 1.2,
-            PIECE_HEIGHT_RATIO: 0.2,
+            offset_ratio: 0.4,
+            horizontal_width_ratio: 1.2,
+            piece_height_ratio: 0.2,
         },
     };
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
@@ -92,15 +93,15 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     }
     public switchToMode(mode: ModeType): void {
         this.chosenMode = mode;
-        this.width = this.getWidth();
-        this.up = this.getUp();
-        this.height = this.getHeight();
+        this.width = this.getViewBoxWidth();
+        this.up = this.getViewBoxUp();
+        this.height = this.getViewBoxHeight();
         this.mode = TrexoComponent.modeMap[mode];
     }
-    private getWidth(): number {
+    private getViewBoxWidth(): number {
         const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
         const boardWidth: number = TrexoState.SIZE;
-        const widification: number = mode3D.HORIZONTAL_WIDTH_RATIO + mode3D.OFFSET_RATIO;
+        const widification: number = mode3D.horizontal_width_ratio + mode3D.offset_ratio;
         const spaceWidth3D: number = this.SPACE_SIZE * widification;
         if (this.chosenMode === '2D') {
             return ((boardWidth + 1) * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
@@ -108,7 +109,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
             return (boardWidth * spaceWidth3D) + this.STROKE_WIDTH;
         }
     }
-    private getHeight(): number {
+    private getViewBoxHeight(): number {
         const stroke: number = this.STROKE_WIDTH;
         const boardHeight: number = TrexoState.SIZE * this.SPACE_SIZE;
         if (this.chosenMode === '2D') {
@@ -118,7 +119,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
             return stroke + boardHeight + pieceBonus;
         }
     }
-    private getUp(): number {
+    private getViewBoxUp(): number {
         if (this.chosenMode === '2D') {
             return 0;
         } else {
@@ -130,7 +131,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     private getHigherStackHeight(): number {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
         const maxZ: number = this.pieceOnBoard.length + 1;
-        const pieceBonus: number = maxZ * mode.PIECE_HEIGHT_RATIO * this.SPACE_SIZE;
+        const pieceBonus: number = maxZ * mode.piece_height_ratio * this.SPACE_SIZE;
         return pieceBonus;
     }
     public updateBoard(): void {
@@ -140,37 +141,65 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         this.possibleMoves = this.rules.getLegalMoves(state);
         this.victoryCoords = TrexoRules.getVictoriousCoords(state);
         this.pieceOnBoard = this.get3DBoard();
-        this.height = this.getHeight();
-        this.up = this.getUp();
+        this.height = this.getViewBoxHeight();
+        this.up = this.getViewBoxUp();
     }
     private get3DBoard(): PieceOnBoard[][][] {
         const moveByCoord: PieceOnBoard[][][] =
             ArrayUtils.create3DTable(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
-        let node: TrexoNode = this.rules.node;
-        while (node.move.isPresent()) {
-            const move: TrexoMove = node.move.get();
-            // So one piece is only owned by one coord
-            this.addMoveToArray(node, move, moveByCoord);
-            node = node.mother.get();
+        let maxZ: number = 1;
+        for (let z: number = 0; z <= maxZ; z++) {
+            for (let y: number = 0; y < TrexoState.SIZE; y++) {
+                for (let x: number = 0; x < TrexoState.SIZE; x++) {
+                    const stack: TrexoPieceStack = this.getState().getPieceAtXY(x, y);
+                    const stackHeight: number = stack.getHeight();
+                    maxZ = Math.max(maxZ, stackHeight);
+                    if (z < stackHeight) {
+                        const move: TrexoMove = this.extractMoveFromState(x, y, z);
+                        this.addMoveToArray(z, move, moveByCoord);
+                    }
+                }
+            }
         }
         return moveByCoord;
     }
-    private addMoveToArray(node: TrexoNode, move: TrexoMove, moveByCoord: PieceOnBoard[][][]): void {
-        const height: number = node.gameState.getPieceAt(move.first).height - 1;
+    private extractMoveFromState(x: number, y: number, z: number): TrexoMove {
+        const piece: TrexoPiece = this.getState().getPieceAtXYZ(x, y, z);
+        const pieceCoord: Coord = new Coord(x, y);
+        let otherCoord: Coord = new Coord(-2, -2); // Will get erased
+        for (const dir of Direction.ORTHOGONALS) {
+            const neighborCoord: Coord = pieceCoord.getNext(dir);
+            if (neighborCoord.isInRange(TrexoState.SIZE, TrexoState.SIZE)) {
+                const neighborStack: TrexoPieceStack = this.getState().getPieceAt(neighborCoord);
+                if (neighborStack.getHeight() > z) {
+                    const neighborPiece: TrexoPiece = neighborStack.getPieceAt(z);
+                    if (neighborPiece.tileId === piece.tileId) {
+                        otherCoord = neighborCoord;
+                    }
+                }
+            }
+        }
+        if (piece.owner === Player.ZERO) {
+            return TrexoMove.from(pieceCoord, otherCoord).get();
+        } else {
+            return TrexoMove.from(otherCoord, pieceCoord).get();
+        }
+    }
+    private addMoveToArray(height: number, move: TrexoMove, moveByCoord: PieceOnBoard[][][]): void {
         while (moveByCoord.length <= height) {
             moveByCoord.push(ArrayUtils.createTable(TrexoState.SIZE,
                                                     TrexoState.SIZE,
                                                     TrexoComponent.INITIAL_PIECE_ON_BOARD));
         }
         moveByCoord[height][move.first.y][move.first.x] = {
-            move: MGPOptional.of(move),
-            isPossibleClick: false,
             isDroppedPiece: false,
+            isPossibleClick: false,
+            move: MGPOptional.of(move),
         };
         moveByCoord[height][move.second.y][move.second.x] = {
-            move: MGPOptional.of(move),
-            isPossibleClick: false,
             isDroppedPiece: false,
+            isPossibleClick: false,
+            move: MGPOptional.of(move),
         };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -198,7 +227,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         return this.selectPiece(clicked);
     }
     private deselectPiece(): void {
-        const z: number = this.getState().getPieceAt(this.droppedPiece.get()).height;
+        const z: number = this.getState().getPieceAt(this.droppedPiece.get()).getHeight();
         const y: number = this.droppedPiece.get().y;
         const x: number = this.droppedPiece.get().x;
         this.pieceOnBoard[z][y][x] = TrexoComponent.INITIAL_PIECE_ON_BOARD;
@@ -208,7 +237,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     }
     private selectPiece(clicked: Coord): MGPValidation {
         if (this.possibleMoves.some((move: TrexoMove) => move.first.equals(clicked))) {
-            const pieceHeight: number = this.getState().getPieceAt(clicked).height;
+            const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
             if (pieceHeight >= this.pieceOnBoard.length) {
                 this.pieceOnBoard.push(ArrayUtils.createTable(TrexoState.SIZE,
                                                               TrexoState.SIZE,
@@ -249,7 +278,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     }
     public getPieceClasses(x: number, y: number): string[] {
         const piece: Coord = new Coord(x, y);
-        const pieceOwner: PlayerOrNone = this.getState().getPieceAt(piece).owner;
+        const pieceOwner: PlayerOrNone = this.getState().getPieceAt(piece).getOwner();
         let classes: string[] = [this.getPlayerClass(pieceOwner)];
         classes = classes.concat(this.getSpaceClasses(x, y));
         for (const victoryCoord of this.victoryCoords) {
@@ -277,45 +306,47 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     /**
      * @param x the x coord on the state of the piece to draw
      * @param y the y coord on the state of the piece to draw
+     * @param z the z coord on the state of the piece to draw
+     * @param mode the mode in which the component is to be drawn
      * @returns the coord(x, y) of the upper left parallelogram to draw on the SVG;
      */
     private static getCoordTranslate(x: number, y: number, z: number, mode: ModeConfig): Coord {
-        const SPACE_WIDTH: number = this.SPACE_SIZE * mode.HORIZONTAL_WIDTH_RATIO;
+        const SPACE_WIDTH: number = this.SPACE_SIZE * mode.horizontal_width_ratio;
         const SPACE_HEIGHT: number = this.SPACE_SIZE;
-        const SPACE_OFFSET: number = mode.OFFSET_RATIO * this.SPACE_SIZE;
+        const SPACE_OFFSET: number = mode.offset_ratio * this.SPACE_SIZE;
         const numberOfOffset: number = TrexoState.SIZE - y;
         const xBase: number = (x * SPACE_WIDTH) + (numberOfOffset * SPACE_OFFSET);
-        const yBase: number = (y * SPACE_HEIGHT) - (mode.PIECE_HEIGHT_RATIO * this.SPACE_SIZE * z);
+        const yBase: number = (y * SPACE_HEIGHT) - (mode.piece_height_ratio * this.SPACE_SIZE * z);
         return new Coord(xBase, yBase);
     }
-    public getTranslate(x: number, y: number, z: number): string { // TODOTODO: mettre en commun code avec Lasca
+    public getTranslate(x: number, y: number, z: number): string {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
         const coordTransform: Coord = TrexoComponent.getCoordTranslate(x, y, z, mode);
         const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
         return translate;
     }
-    public getRhombusPoints(): string {
-        const coords: Coord[] = this.getRhombusCoords();
+    public getParallelogramPoints(): string {
+        const coords: Coord[] = this.getParallelogramCoords();
         return coords.map((coord: Coord) => {
             return coord.x + ' ' + coord.y;
         }).join(' ');
     }
     /**
-     * @param width the abstract width of the rhombus
-     * @param height the abstract height of the rhombus
-     * @returns a list of concrete coord for the rhombus, with (0, 0) as lefter and upper coord
+     * @param width the abstract width of the parallelogram
+     * @param height the abstract height of the parallelogram
+     * @returns a list of concrete coord for the parallelogram, with (0, 0) as left and upper coord
      */
-    private getRhombusCoords(): Coord[] { // TODOTODO: mettre en commun code avec Lasca
+    private getParallelogramCoords(): Coord[] {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
-        const RHOMBUS_WIDTH: number = TrexoComponent.SPACE_SIZE * mode.HORIZONTAL_WIDTH_RATIO;
-        const RHOMBUS_HEIGHT: number = TrexoComponent.SPACE_SIZE;
-        const RHOMBUS_OFFSET: number = mode.OFFSET_RATIO * TrexoComponent.SPACE_SIZE;
-        const x1: number = RHOMBUS_WIDTH;
+        const parallelogramWidth: number = TrexoComponent.SPACE_SIZE * mode.horizontal_width_ratio;
+        const parallelogramHeight: number = TrexoComponent.SPACE_SIZE;
+        const parallelogramOffset: number = mode.offset_ratio * TrexoComponent.SPACE_SIZE;
+        const x1: number = parallelogramWidth;
         const y1: number = 0;
-        const x2: number = RHOMBUS_WIDTH - RHOMBUS_OFFSET;
-        const y2: number = RHOMBUS_HEIGHT;
-        const x3: number = - RHOMBUS_OFFSET;
-        const y3: number = RHOMBUS_HEIGHT;
+        const x2: number = parallelogramWidth - parallelogramOffset;
+        const y2: number = parallelogramHeight;
+        const x3: number = - parallelogramOffset;
+        const y3: number = parallelogramHeight;
         return [
             new Coord(0, 0),
             new Coord(x1, y1),
@@ -328,10 +359,10 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     }
     public get3DSwitcherTransform(): string {
         const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
-        const widness: number = mode3D.HORIZONTAL_WIDTH_RATIO + mode3D.OFFSET_RATIO;
+        const widness: number = mode3D.horizontal_width_ratio + mode3D.offset_ratio;
         const scale: string = ' scale(' + (1 / widness) + ')';
         const verticalUnWideness: number = (1 - (1 / widness)) / 2;
-        const xTranslate: number = (10 + mode3D.OFFSET_RATIO) * this.SPACE_SIZE;
+        const xTranslate: number = (10 + mode3D.offset_ratio) * this.SPACE_SIZE;
         const yTranslate: number = (9 + verticalUnWideness) * this.SPACE_SIZE;
         const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
         return translate + scale;

@@ -40,7 +40,7 @@ export class SixTutorial extends Tutorial {
             ], 0),
             [SixMove.fromDrop(new Coord(3, 2))],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Victory (circle)`,
@@ -54,7 +54,7 @@ export class SixTutorial extends Tutorial {
             ], 0),
             [SixMove.fromDrop(new Coord(5, 2))],
             $localize`Congratulations! Note that if a piece is inside the circle, it does not change anything.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Victory (triangle)`,
@@ -68,7 +68,7 @@ export class SixTutorial extends Tutorial {
             ], 0),
             [SixMove.fromDrop(new Coord(3, 3))],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromPredicate(
             $localize`Second phase`,

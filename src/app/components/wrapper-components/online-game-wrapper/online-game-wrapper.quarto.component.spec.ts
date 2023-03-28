@@ -573,7 +573,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.expectElementNotToExist('#passButton');
 
         wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent.pass = async() => {
+        wrapper.gameComponent.pass = async(): Promise<MGPValidation> => {
             return MGPValidation.SUCCESS;
         };
         testUtils.detectChanges();
@@ -1189,7 +1189,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
     });
     describe('Agreed Draw', () => {
-        async function setup() {
+        async function setup(): Promise<void> {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         }
         it('should send draw request when player asks to', fakeAsync(async() => {
@@ -1432,7 +1432,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('AddTime feature', () => {
         describe('creator', () => {
-            async function prepareStartedGameForCreator() {
+            async function prepareStartedGameForCreator(): Promise<void> {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             }
             it('should allow to add local time to opponent', fakeAsync(async() => {

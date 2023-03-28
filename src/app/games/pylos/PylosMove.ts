@@ -5,7 +5,6 @@ import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { PylosFailure } from './PylosFailure';
 import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 
 export class PylosMoveFailure {
     public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`You must capture one or two pieces, not more.`;
@@ -16,15 +15,11 @@ export class PylosMove extends Move {
     public static encoder: MoveEncoder<PylosMove> = new class extends MoveEncoder<PylosMove> {
 
         public encodeMove(move: PylosMove): JSONValueWithoutArray {
-            const optFirstCapture: MGPOptional<PylosCoord> = move.firstCapture;
-            const landingCoord: PylosCoord = move.landingCoord;
-            const optSecondCapture: MGPOptional<PylosCoord> = move.secondCapture;
-            const optStartingCoord: MGPOptional<PylosCoord> = move.startingCoord;
             return {
-                firstCapture: PylosCoord.optionalEncoder.encode(optFirstCapture),
-                landingCoord: PylosCoord.encoder.encode(landingCoord),
-                secondCapture: PylosCoord.optionalEncoder.encode(optSecondCapture),
-                startingCoord: PylosCoord.optionalEncoder.encode(optStartingCoord),
+                firstCapture: PylosCoord.optionalEncoder.encode(move.firstCapture),
+                landingCoord: PylosCoord.encoder.encode(move.landingCoord),
+                secondCapture: PylosCoord.optionalEncoder.encode(move.secondCapture),
+                startingCoord: PylosCoord.optionalEncoder.encode(move.startingCoord),
             };
         }
         public decodeMove(encodedMove: JSONValue): PylosMove {
@@ -53,7 +48,7 @@ export class PylosMove extends Move {
                                                  landingCoord,
                                                  capturesOptionals.firstCapture,
                                                  capturesOptionals.secondCapture);
-        if (landingCoord.isUpperThan(startingCoord) === false) {
+        if (landingCoord.isHigherThan(startingCoord) === false) {
             throw new Error(PylosFailure.MUST_MOVE_UPWARD());
         }
         return newMove;
@@ -70,7 +65,7 @@ export class PylosMove extends Move {
                     throw new Error('PylosMove: should not capture twice same piece.');
                 }
                 secondCapture = MGPOptional.of(captures[1]);
-                if (captures[1].isUpperThan(captures[0])) {
+                if (captures[1].isHigherThan(captures[0])) {
                     firstCapture = MGPOptional.of(captures[1]);
                     secondCapture = MGPOptional.of(captures[0]);
                 }

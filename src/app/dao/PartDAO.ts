@@ -11,7 +11,7 @@ export class PartDAO extends FirestoreDAO<Part> {
 
     public static VERBOSE: boolean = false;
 
-    constructor(firestore: Firestore) {
+    public constructor(firestore: Firestore) {
         super('parts', firestore);
         display(PartDAO.VERBOSE, 'PartDAO.constructor');
     }
