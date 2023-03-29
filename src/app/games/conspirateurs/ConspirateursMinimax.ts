@@ -77,7 +77,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
             const jump: ConspirateursMoveJump = ConspirateursMoveJump.of([start, firstTarget]).get();
             if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
                 moves.add(jump);
-                moves.union(this.getListJumpStartingFrom(state, jump));
+                moves.addAll(this.getListJumpStartingFrom(state, jump));
             }
         }
         return moves.toList();
@@ -88,7 +88,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         const nextJumps: ConspirateursMoveJump[] = ConspirateursRules.get().nextJumps(jump, state);
         const jumps: MGPSet<ConspirateursMoveJump> = new MGPSet(nextJumps);
         for (const nextJump of nextJumps) {
-            jumps.union(this.getListJumpStartingFrom(state, nextJump));
+            jumps.addAll(this.getListJumpStartingFrom(state, nextJump));
         }
         return jumps;
     }

@@ -1,20 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils, NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
-import { Move } from '../Move';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 
-class NonAbstractMoveCoordToCoord extends MoveCoordToCoord {
+class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
     public toString(): string {
         return 'lel';
     }
-    public equals(_: Move): boolean {
-        return false;
+    public equals(other: ConcreteMoveCoordToCoord): boolean {
+        return this.coord.equals(other.coord) && this.end.equals(other.end);
     }
 }
 describe('MoveCoordToCoord', () => {
+    function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
+        return new ConcreteMoveCoordToCoord(start, end);
+    }
 
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
@@ -30,25 +32,30 @@ describe('MoveCoordToCoord', () => {
                 [new Coord(1, 1), Direction.DOWN_RIGHT],
             ];
             for (const [destination, direction] of allDestsAndDirs) {
-                expect(new NonAbstractMoveCoordToCoord(source, destination).getDirection())
+                expect(new ConcreteMoveCoordToCoord(source, destination).getDirection())
                     .toEqual(MGPFallible.success(direction));
             }
         });
     });
     describe('length', () => {
         it('should return the length of the move', () => {
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(0, 5)).length()).toBe(5);
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(2, 2)).length()).toBe(2);
+            expect(new ConcreteMoveCoordToCoord(new Coord(0, 0), new Coord(0, 5)).length()).toBe(5);
+            expect(new ConcreteMoveCoordToCoord(new Coord(0, 0), new Coord(2, 2)).length()).toBe(2);
         });
     });
     describe('encoder', () => {
         it('should correctly encode and decode moves', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(
-                NonAbstractMoveCoordToCoord.getEncoder(10, 10,
-                                                       (start: Coord, end: Coord): NonAbstractMoveCoordToCoord => {
-                                                           return new NonAbstractMoveCoordToCoord(start, end);
-                                                       }),
-                new NonAbstractMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
+            EncoderTestUtils.expectToBeCorrect(
+                ConcreteMoveCoordToCoord.getEncoder(myMoveConstructor),
+                new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });
+    describe('numberEncoder', () => {
+        it('should correctly encode and decode moves', () => {
+            NumberEncoderTestUtils.expectToBeCorrect(
+                ConcreteMoveCoordToCoord.getNumberEncoder(10, 10, myMoveConstructor),
+                new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
+        });
+    });
+
 });

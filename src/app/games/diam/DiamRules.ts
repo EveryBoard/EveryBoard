@@ -41,7 +41,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         const newRemainingPieces: [number, number, number, number] =
             ArrayUtils.copyImmutableArray(state.remainingPieces) as [number, number, number, number];
         newRemainingPieces[DiamState.pieceIndex(drop.piece)] -= 1;
-        return new DiamState(newBoard, newRemainingPieces, state.turn+1);
+        return new DiamState(newBoard, newRemainingPieces, state.turn + 1);
     }
     private applyLegalShift(shift: DiamMoveShift, state: DiamState): DiamState {
         const newBoard: DiamPiece[][] = ArrayUtils.copyBiArray(state.board);
@@ -54,7 +54,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
             targetY++;
             sourceY++;
         }
-        return new DiamState(newBoard, state.remainingPieces, state.turn+1);
+        return new DiamState(newBoard, state.remainingPieces, state.turn + 1);
     }
     public isLegal(move: DiamMove, state: DiamState): MGPFallible<void> {
         if (move.isDrop()) {

@@ -63,7 +63,7 @@ export class LodestoneTutorial extends Tutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            `Congratulations!`,
+            $localize`Congratulations!`,
         ),
         TutorialStep.fromPredicate(
             $localize`Crumbling a first pressure plate`,
@@ -90,7 +90,7 @@ export class LodestoneTutorial extends Tutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            `Congratulations!`,
+            $localize`Congratulations!`,
         ),
         TutorialStep.fromPredicate(
             $localize`Crumbling a second pressure plate`,
@@ -117,7 +117,7 @@ export class LodestoneTutorial extends Tutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            `Congratulations!`,
+            $localize`Congratulations!`,
         ),
         TutorialStep.informational(
             $localize`Minimal board`,

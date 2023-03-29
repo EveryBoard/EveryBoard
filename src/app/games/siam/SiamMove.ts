@@ -14,7 +14,7 @@ export class SiamMove extends MoveCoord {
             new OrthogonalNumberEncoder(), // orientation
         ],
         (move: SiamMove): [number, number, MGPOptional<Orthogonal>, Orthogonal] => {
-            return [move.x+1, move.y+1, move.direction, move.landingOrientation];
+            return [move.x + 1, move.y + 1, move.direction, move.landingOrientation];
         },
         (fields: [number, number, MGPOptional<Orthogonal>, Orthogonal]): SiamMove => {
             return SiamMove.of(fields[0]-1, fields[1]-1, fields[2], fields[3]).get();
