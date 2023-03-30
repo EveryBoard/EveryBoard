@@ -156,7 +156,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Restarting the clock`,
-            $localize`If the clock has been called, whenever a capture is done the countdown restarts.<br/><br/>You are playing Dark, do a capture to restart the countdown.`,
+            $localize`If the clock has been called, whenever a capture is done the countdown restarts.<br/><br/>You're playing Dark, do a capture to restart the countdown.`,
             new MartianChessState([
                 [_, _, _, _],
                 [_, A, _, _],
@@ -173,7 +173,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`End game (by clock)`,
-            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You are playing Dark, do the last move.`,
+            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You're playing Dark, do the last move.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],

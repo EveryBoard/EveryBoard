@@ -112,7 +112,7 @@ export class YinshComponent
             }
             this.viewInfo.spaceInfo[coord.y][coord.x] = {
                 coord,
-                coordinates: this.getHexaCoordsAt(coord),
+                coordinates: this.getHexaPointsAt(coord),
                 center: this.getCenterAt(coord),
                 spaceClasses: [],
                 markerClasses: [],

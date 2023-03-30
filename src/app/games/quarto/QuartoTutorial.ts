@@ -30,7 +30,8 @@ export class QuartoTutorial extends Tutorial {
           <li>their pattern (empty or dotted),</li>
           <li>their shape (round or square).</li>
         </ul>
-        Here, we have a board with a victory by an alignment of dark pieces.`,
+        Here, we have a board with a victory by an alignment of dark pieces.
+        Note that the pieces are not owned by any player.`,
             new QuartoState([
                 [BBBA, BBAA, ABAA, AABA],
                 [EMPTY, EMPTY, EMPTY, EMPTY],
@@ -66,7 +67,7 @@ export class QuartoTutorial extends Tutorial {
             ], 7, QuartoPiece.AABA),
             [new QuartoMove(3, 3, QuartoPiece.AABB)],
             $localize`Well done!`,
-            $localize`Failed. Try again.`,
+            $localize`Failed! Your opponent can either align:<ul><li>the squares horizontally on the third line or vertically on the third column,</li><li>small pieces horizontally on the first line or vertically on the second or third column,</li><li>empty pieces horizontally on the first line or vertically on the first column,</li><li>clear pieces diagonally.</li></ul>`,
         ),
     ];
 }

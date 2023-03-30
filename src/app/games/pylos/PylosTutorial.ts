@@ -41,7 +41,7 @@ export class PylosTutorial extends Tutorial {
             <li>Click on one of your free pieces, which should be lower than the landing square.</li>
             <li>Click on an empty landing square, higher than your selected piece.</li>
         </ol><br/>
-        Go ahead, climb!`,
+        You're playing Dark, go ahead and climb!`,
             new PylosState([
                 [
                     [O, X, _, _],
@@ -75,9 +75,8 @@ export class PylosTutorial extends Tutorial {
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
-        A chosen piece can be the piece you just placed.
-        You're playing Dark.<br/><br/>
-        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.`,
+        A chosen piece can be the piece you just placed.<br/><br/>
+        You're playing Dark. Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.`,
             new PylosState([
                 [
                     [O, O, _, _],

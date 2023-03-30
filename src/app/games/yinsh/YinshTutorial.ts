@@ -49,8 +49,8 @@ export class YinshTutorial extends Tutorial {
             $localize`Initial board and placement phase`,
             $localize`The initial board is empty.
         At the beginning of the game, each player puts one of its ring on the board at their turn.
-        This phase stops when all rings have been placed on the board.
-        Put one of your ring on the board by clicking the space where you want to place it.`,
+        This phase stops when all rings have been placed on the board.<br/><br/>
+        You're playing Dark, put one of your ring on the board by clicking the space where you want to place it.`,
             new YinshState(YinshState.getInitialState().board, [5, 5], 0),
             new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
             $localize`Congratulations!`),
@@ -114,7 +114,7 @@ export class YinshTutorial extends Tutorial {
             $localize`During a turn, you could have to choose between multiple captures,
         or you could even capture multiple times!
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.<br/><br/>
-        Here, you can capture two rings, do it!`,
+        Here, playing Dark, you can capture two rings, do it!`,
             new YinshState([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, A, _, _, B, B, A, _],

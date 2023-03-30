@@ -34,15 +34,15 @@ export class EncapsuleTutorial extends Tutorial {
             ])),
         TutorialStep.anyMove(
             $localize`Putting a piece`,
-            $localize`This is the initial board. You're playing Dark.<br/><br/>
-        Pick one of your piece on the side of the board and put it on the board.`,
+            $localize`This is the initial board.<br/><br/>
+        You're playing Dark. Pick one of your piece on the side of the board and put it on the board.`,
             EncapsuleState.getInitialState(),
             EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
             $localize`Congratulations!`),
         TutorialStep.fromMove(
             $localize`Moving`,
             $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>
-        Click on your dark piece and then on any empty square of the board.`,
+        You're playing Dark, click on your piece already on the board and then on any empty square of the board.`,
             new EncapsuleState([
                 [s, B, _],
                 [_, _, _],
@@ -67,8 +67,8 @@ export class EncapsuleTutorial extends Tutorial {
         you cannot win with a piece that is "hidden" by a bigger piece.
         Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
         Finally, you cannot encapsulate a piece with a smaller piece.
-        You're playing Dark and you can win now in various ways.<br/><br/>
-        Try to win by making a move, and not by putting a new piece on the board.`,
+        Here, Dark can win now in various ways.<br/><br/>
+        You're playing Dark, try to win by making a move, and not by putting a new piece on the board.`,
             new EncapsuleState([
                 [Sm, _, S],
                 [sm, B, B],

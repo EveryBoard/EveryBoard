@@ -22,8 +22,7 @@ describe('SixComponent', () => {
         testUtils = await ComponentTestUtils.forGame<SixComponent>('Six');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click (drop/selection)', () => {
         it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
@@ -230,7 +229,7 @@ describe('SixComponent', () => {
         await testUtils.expectClickSuccess('#piece_0_0');
         const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(-1, 1));
         await testUtils.expectMoveSuccess('#neighbor_-1_1', move);
-        testUtils.expectElementToExist('#victoryCoord_0_0');
-        testUtils.expectElementToExist('#victoryCoord_5_0');
+        testUtils.expectElementToHaveClass('#victoryCoord_0_0', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victoryCoord_5_0', 'victory-stroke');
     }));
 });

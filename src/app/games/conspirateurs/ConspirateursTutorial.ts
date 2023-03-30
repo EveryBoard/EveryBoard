@@ -19,7 +19,7 @@ export class ConspirateursTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Initial phase`,
-            $localize`In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.<br/><br/>Drop one of your piece in the central zone.`,
+            $localize`In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.<br/><br/>You're playing Dark, drop one of your piece in the central zone.`,
             ConspirateursState.getInitialState(),
             ConspirateursMoveDrop.of(new Coord(7, 7)).get(),
             $localize`Congratulations!`,

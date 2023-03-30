@@ -19,7 +19,7 @@
        (click)="onClick(space)"
        id="click_{{ space.x }}_{{ space.y }}">
 
-        <polygon [attr.points]="getHexaCoordsAt(space)"
+        <polygon [attr.points]="getHexaPointsAt(space)"
                  id="space_{{ space.x }}_{{ space.y }}"
                  [ngClass]="getSpaceClass(space)"
                  class="base"
@@ -36,7 +36,7 @@
        pointer-events="fill"
        class="capturable-stroke">
         <polygon *ngFor="let space of capture.capturedSpaces"
-                 [attr.points]="getHexaCoordsAt(space)"
+                 [attr.points]="getHexaPointsAt(space)"
                  (click)="onClick(space)"
                  class="no-fill"
                  stroke-linecap="round"/>

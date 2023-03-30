@@ -100,8 +100,7 @@ export class DvonnTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`End of the game`,
-            $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>
-        Make your last move.`,
+            $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>You're playing Dark, make your last move.`,
             new DvonnState([
                 [NN, NN, SO, __, __, __, __, __, __, __, __],
                 [NN, __, O1, __, __, __, __, __, __, __, __],

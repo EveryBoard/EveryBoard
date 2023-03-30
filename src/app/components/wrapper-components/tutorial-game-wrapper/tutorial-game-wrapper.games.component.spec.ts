@@ -42,6 +42,10 @@ import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 
+import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
+import { HiveRules } from 'src/app/games/hive/HiveRules';
+import { HiveMove } from 'src/app/games/hive/HiveMove';
+
 import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
 import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
 import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
@@ -77,6 +81,11 @@ import { SixRules } from 'src/app/games/six/SixRules';
 import { SixState } from 'src/app/games/six/SixState';
 import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
 
+import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
+import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
+import { TrexoState } from 'src/app/games/trexo/TrexoState';
+import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
+
 import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
@@ -84,10 +93,6 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
 import { TutorialStepFailure } from './TutorialStepFailure';
 import { Comparable } from 'src/app/utils/Comparable';
-import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
-import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
-import { TrexoState } from 'src/app/games/trexo/TrexoState';
-import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -108,6 +113,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
+            const hiveTutorial: TutorialStep[] = new HiveTutorial().tutorial;
             const linesOfActionTutorial: TutorialStep[] = new LinesOfActionTutorial().tutorial;
             const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
             const martianChessTutorial: TutorialStep[] = new MartianChessTutorial().tutorial;
@@ -178,6 +184,11 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
+                ], [
+                    HiveRules.get(),
+                    hiveTutorial[8],
+                    HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get(),
+                    MGPValidation.failure($localize`You have not freed your queen, try again!`),
                 ], [
                     new LinesOfActionRules(LinesOfActionState),
                     linesOfActionTutorial[4],

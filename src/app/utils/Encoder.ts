@@ -7,7 +7,34 @@ export abstract class Encoder<T> {
     public abstract decode(encodedMove: JSONValue): T;
 }
 
+// Used internally. If T = [A, B, C], then
+// EncoderArray<T> = [Encoder<A>, Encoder<B>, Encoder<C>]
+type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
+
 export abstract class MoveEncoder<T> extends Encoder<T> {
+    public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
+                                                  encode: (t: T) => Fields,
+                                                  decode: (fields: Fields) => T): MoveEncoder<T> {
+        return new class extends MoveEncoder<T> {
+            public encodeMove(value: T): JSONValueWithoutArray {
+                const fields: Fields = encode(value);
+                const encoded: JSONValueWithoutArray = {};
+                Object.keys(fields).forEach((key: string): void => {
+                    encoded[key] = encoders[key].encode(fields[key]);
+                });
+                return encoded;
+            }
+            public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): T {
+                const fields: Record<string, unknown> = {};
+                Object.keys(encoders).reverse().forEach((key: string): void => {
+                    assert(encoded[key] != null, 'Invalid encoded value');
+                    const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
+                    fields[key] = encoders[key].decode(field);
+                });
+                return decode(Object.values(fields) as Fields);
+            }
+        };
+    }
 
     public static disjunction3<T, U, V>(encoderT: MoveEncoder<T>,
                                         encoderU: MoveEncoder<U>,
@@ -49,9 +76,11 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
             }
         };
     }
+
     public encode(move: T): JSONValue {
         return this.encodeMove(move);
     }
+
     public abstract encodeMove(move: T): JSONValueWithoutArray;
 
     public decode(encodedMove: JSONValue): T {
@@ -133,7 +162,7 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
                     encoded = (encoded - fieldN) / encoders[key].shift();
                     fields[key] = encoders[key].decode(fieldN);
                 });
-                return decode(fields as Fields);
+                return decode(Object.values(fields) as Fields);
             }
         };
     }

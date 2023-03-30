@@ -4,12 +4,12 @@
      preserveAspectRatio="xMidYMid meet"
 >
     <g [attr.transform]="'rotate(' + this.role.value * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
-        <circle *ngFor="let x of range(remainingOne)"
+        <circle *ngFor="let x of ArrayUtils.range(remainingOne)"
                 [attr.cx]="getRemainingPieceCx(x)"
                 [attr.cy]="PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"
                 class="base mid-stroke player1-fill"/>
-        <circle *ngFor="let x of range(remainingZero)"
+        <circle *ngFor="let x of ArrayUtils.range(remainingZero)"
                 [attr.cx]="BOARD_WIDTH - getRemainingPieceCx(x)"
                 [attr.cy]="BOARD_HEIGHT - PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"
@@ -44,7 +44,7 @@
                   [ngClass]="getSquareClasses(x)"
                   class="base mid-stroke"
             />
-            <ng-container *ngFor="let i of range(square.count(PlayerOrNone.NONE))">
+            <ng-container *ngFor="let i of ArrayUtils.range(square.count(PlayerOrNone.NONE))">
                 <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(PlayerOrNone.NONE) }}"
                         (click)="onSquareClick(x)"
                         [attr.cx]="getCircleCenter(x, i, square).x"

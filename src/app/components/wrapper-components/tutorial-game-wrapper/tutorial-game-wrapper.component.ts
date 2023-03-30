@@ -109,6 +109,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                                                     motherOpt,
                                                     currentStep.previousMove);
         this.gameComponent.updateBoard();
+        this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {

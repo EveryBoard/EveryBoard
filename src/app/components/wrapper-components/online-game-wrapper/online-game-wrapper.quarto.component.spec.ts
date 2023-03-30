@@ -285,7 +285,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         for (let i: number = offset; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
-            receivedMoves.push(QuartoMove.encoder.encodeNumber(move), QuartoMove.encoder.encodeNumber(moves[i+1]));
+            receivedMoves.push(QuartoMove.encoder.encodeNumber(move), QuartoMove.encoder.encodeNumber(moves[i + 1]));
             if (i > 1) {
                 if (i % 2 === 0) {
                     remainingMsForOne -= 1;

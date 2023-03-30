@@ -52,6 +52,7 @@ import { EncapsuleComponent } from './games/encapsule/encapsule.component';
 import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
+import { HiveComponent } from './games/hive/hive.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
@@ -97,6 +98,7 @@ import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { HivePieceComponent } from './games/hive/hive-piece.component';
 
 registerLocaleData(localeFr);
 
@@ -188,6 +190,7 @@ export class FirebaseProviders {
         EpaminondasComponent,
         GipfComponent,
         GoComponent,
+        HiveComponent, HivePieceComponent,
         HnefataflComponent,
         KamisadoComponent,
         LinesOfActionComponent,

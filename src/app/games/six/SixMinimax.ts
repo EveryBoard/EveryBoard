@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';
@@ -78,9 +78,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             for (const landing of landings) {
                 const move: SixMove = SixMove.fromMovement(start, landing);
                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
-                    const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(state, move);
-                    const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-                        SixState.getGroups(piecesAfterDeplacement, move.start.get());
+                    const stateAfterMove: SixState = state.movePiece(move);
+                    const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
                     if (SixRules.isSplit(groupsAfterMove)) {
                         for (const group of groupsAfterMove) {
                             const subGroup: Coord = group.getAnyElement().get();
@@ -97,7 +96,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     private getSafelyMovablePieceOrFirstOne(node: SixNode): MGPSet<Coord> {
         const state: SixState = node.gameState;
-        const allPieces: MGPMap<Player, MGPSet<Coord>> = state.pieces.reverse();
+        const allPieces: MGPMap<Player, MGPSet<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerPieces: MGPSet<Coord> = allPieces.get(currentPlayer).get();
         const firstPiece: Coord = playerPieces.getAnyElement().get();
@@ -143,7 +142,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         // multiply list with legalLandings
         // check for each if a cut is needed
         const CURRENT_PLAYER: Player = state.getCurrentPlayer();
-        const start: MGPSet<Coord> = state.pieces.reverse().get(CURRENT_PLAYER).get();
+        const start: MGPSet<Coord> = state.getPieces().reverse().get(CURRENT_PLAYER).get();
         return this.getDeplacementFrom(state, start, legalLandings);
     }
     public getBoardValue(node: SixNode): SixBoardValue {
