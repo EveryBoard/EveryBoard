@@ -90,4 +90,22 @@ describe('MGPSet', () => {
             expect(set.equals(new MGPSet([1, 2]))).toBeTrue();
         });
     });
+    describe('map', () => {
+        it('should iterate over the elements of the set', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            function add1(x: number): number {
+                return x+1;
+            }
+            expect(set.map(add1).equals(new MGPSet([2, 3]))).toBeTrue();
+        });
+    });
+    describe('flatMap', () => {
+        it('should iterate over the elements of the set, and then flatten it again', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            function makeTwo(x: number): MGPSet<number> {
+                return new MGPSet([x, x+1]);
+            }
+            expect(set.flatMap(makeTwo).equals(new MGPSet([1, 2, 3]))).toBeTrue();
+        });
+    });
 });
