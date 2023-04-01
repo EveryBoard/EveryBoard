@@ -46,7 +46,7 @@ export class ConspirateursTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
-            ConspirateursMoveSimple.of(new Coord(4, 6), new Coord(3, 5)).get(),
+            ConspirateursMoveSimple.from(new Coord(4, 6), new Coord(3, 5)).get(),
             (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
                 if (move.isSimple()) {
                     return MGPValidation.SUCCESS;

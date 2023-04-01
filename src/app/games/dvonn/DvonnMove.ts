@@ -6,15 +6,15 @@ import { DvonnState } from './DvonnState';
 export class DvonnMove extends MoveCoordToCoord {
 
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
-    public static encoder: NumberEncoder<DvonnMove> = new class extends NumberEncoder<DvonnMove> {
+    public static encoder: NumberEncoder<DvonnMove> = new class extends NumberEncoder<DvonnMove> { // TODOTODO: kill him and check all MCTC and MWTC !
         public maxValue(): number {
             return 10 * 4096 + 4 * 256 + 10 * 16 + 4;
         }
         public encodeNumber(move: DvonnMove): number {
-            const x1: number = move.coord.x;
-            const y1: number = move.coord.y;
-            const x2: number = move.end.x;
-            const y2: number = move.end.y;
+            const x1: number = move.getStart().x;
+            const y1: number = move.getStart().y;
+            const x2: number = move.getEnd().x;
+            const y2: number = move.getEnd().y;
             return (x1 * 4096) + (y1 * 256) + (x2 * 16) + y2;
         }
         public decodeNumber(encodedMove: number): DvonnMove {
@@ -62,20 +62,20 @@ export class DvonnMove extends MoveCoordToCoord {
         if (this === DvonnMove.PASS) {
             return 'DvonnMove.PASS';
         }
-        return 'DvonnMove(' + this.coord + '->' + this.end + ')';
+        return 'DvonnMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
     public length(): number {
-        if (this.coord.y === this.end.y) {
-            return Math.abs(this.coord.x - this.end.x);
-        } else if (this.coord.x === this.end.x) {
-            return Math.abs(this.coord.y - this.end.y);
+        if (this.getStart().y === this.getEnd().y) {
+            return Math.abs(this.getStart().x - this.getEnd().x);
+        } else if (this.getStart().x === this.getEnd().x) {
+            return Math.abs(this.getStart().y - this.getEnd().y);
         } else {
-            return Math.abs(this.coord.y - this.end.y);
+            return Math.abs(this.getStart().y - this.getEnd().y);
         }
     }
     public equals(o: DvonnMove): boolean {
         if (o === this) return true;
-        if (!o.coord.equals(this.coord)) return false;
-        return o.end.equals(this.end);
+        if (!o.getStart().equals(this.getStart())) return false;
+        return o.getEnd().equals(this.getEnd());
     }
 }

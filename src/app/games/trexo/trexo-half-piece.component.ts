@@ -183,10 +183,10 @@ export class TrexoHalfPieceComponent {
         // It is this coord that we return
         assert(this.move != null, 'Move should be set before calling getOtherCoord');
         const move: TrexoMove = this.move as TrexoMove;
-        if (move.first.equals(this.coord)) {
-            return move.second;
+        if (move.getZero().equals(this.coord)) {
+            return move.getOne();
         } else {
-            return move.first;
+            return move.getZero();
         }
     }
     public isLeftHalf(): boolean {

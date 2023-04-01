@@ -44,7 +44,7 @@ describe('HiveMove', () => {
     it('should encode and decode all types of moves correctly', () => {
         const moves: HiveMove[] = [drop, move, spiderMove, HiveMove.PASS];
         for (const move of moves) {
-            EncoderTestUtils.expectToBeCorrect(HiveMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(HiveMove.encoder, move);
         }
     });
     it('should encode and decode all pieces correctly', () => {
@@ -56,7 +56,7 @@ describe('HiveMove', () => {
             HiveMove.drop(new HivePiece(Player.ZERO, 'SoldierAnt'), new Coord(0, 0)),
         ];
         for (const move of drops) {
-            EncoderTestUtils.expectToBeCorrect(HiveMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(HiveMove.encoder, move);
         }
     });
 });

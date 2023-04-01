@@ -21,11 +21,11 @@ export abstract class TaflMove extends MoveCoordToCoord {
     }
     public equals(o: TaflMove): boolean {
         if (o === this) return true;
-        if (o.coord.equals(this.coord) === false) return false;
-        return o.end.equals(this.end);
+        if (o.getStart().equals(this.getStart()) === false) return false;
+        return o.getEnd().equals(this.getEnd());
     }
     public toString(): string {
-        return 'TaflMove(' + this.coord + '->' + this.end + ')';
+        return 'TaflMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
     public abstract getMaximalDistance(): number;
 }

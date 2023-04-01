@@ -59,7 +59,7 @@ export class TrexoTutorial extends Tutorial {
             previousState, // This state became a pre-victorious state in the loop
             TrexoMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
             (lastMove: TrexoMove, _: TrexoState, resultingState: TrexoState) => {
-                if (TrexoRules.TREXO_HELPER.getSquareScore(resultingState, lastMove.second) > 5) {
+                if (TrexoRules.TREXO_HELPER.getSquareScore(resultingState, lastMove.getOne()) > 5) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`Failed. Try again.`);

@@ -36,8 +36,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     }
     public applyLegalMove(move: TrexoMove, state: TrexoState): TrexoState {
         return state
-            .drop(move.first, Player.ZERO)
-            .drop(move.second, Player.ONE)
+            .drop(move.getZero(), Player.ZERO)
+            .drop(move.getOne(), Player.ONE)
             .incrementTurn();
     }
     public isLegal(move: TrexoMove, state: TrexoState): MGPFallible<void> {
@@ -50,13 +50,13 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return MGPFallible.success(undefined);
     }
     public isUnevenGround(move: TrexoMove, state: TrexoState): boolean {
-        const zero: TrexoPieceStack = state.getPieceAt(move.first);
-        const one: TrexoPieceStack = state.getPieceAt(move.second);
+        const zero: TrexoPieceStack = state.getPieceAt(move.getZero());
+        const one: TrexoPieceStack = state.getPieceAt(move.getOne());
         return zero.getHeight() !== one.getHeight();
     }
     public landsOnOnlyOnePiece(move: TrexoMove, state: TrexoState): boolean {
-        const zeroSpace: TrexoPieceStack = state.getPieceAt(move.first);
-        const oneSpace: TrexoPieceStack = state.getPieceAt(move.second);
+        const zeroSpace: TrexoPieceStack = state.getPieceAt(move.getZero());
+        const oneSpace: TrexoPieceStack = state.getPieceAt(move.getOne());
         if (zeroSpace.getUpperTileId() === -1 && oneSpace.getUpperTileId() === -1) {
             return false;
         }

@@ -57,7 +57,7 @@ describe('LinesOfActionComponent', () => {
     describe('Second click', () => {
         it('should allow a simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');
-            const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
+            const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
         }));
         it('should forbid moving in an invalid direction', fakeAsync(async() => {
@@ -66,7 +66,7 @@ describe('LinesOfActionComponent', () => {
         }));
         it('should show last move spaces', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');
-            const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
+            const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
             const component: LinesOfActionComponent = testUtils.getComponent();
@@ -88,7 +88,7 @@ describe('LinesOfActionComponent', () => {
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_2_0');
-            const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
+            const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
             const component: LinesOfActionComponent = testUtils.getComponent();

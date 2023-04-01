@@ -103,11 +103,11 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             it('should show captured piece and left spaces', fakeAsync(async() => {
                 // Given a board where a capture is ready to be made
                 testUtils.setupState(entries.stateReadyForCapture);
-                const firstCoord: Coord = entries.capture.coord;
+                const firstCoord: Coord = entries.capture.getStart();
                 await testUtils.expectClickSuccess('#click_' + firstCoord.x + '_' + firstCoord.y);
 
                 // When finalizing the capture
-                const secondCoord: Coord = entries.capture.end;
+                const secondCoord: Coord = entries.capture.getEnd();
                 await testUtils.expectMoveSuccess('#click_' + secondCoord.x + '_' + secondCoord.y, entries.capture);
 
                 // Then captured and move highlight should be shown
@@ -143,7 +143,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             it('should cancelMove when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 testUtils.setupState(entries.stateReadyForJumpOver);
-                const firstCoord: string = entries.jumpOver.coord.x + '_' + entries.jumpOver.coord.y;
+                const firstCoord: string = entries.jumpOver.getStart().x + '_' + entries.jumpOver.getStart().y;
                 await testUtils.expectClickSuccess('#click_' + firstCoord);
 
                 // When trying an illegal move
@@ -151,7 +151,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
 
                 // Then the move should have failed
                 const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
-                const secondCoord: string = entries.jumpOver.end.x + '_' + entries.jumpOver.end.y;
+                const secondCoord: string = entries.jumpOver.getEnd().x + '_' + entries.jumpOver.getEnd().y;
                 await testUtils.expectMoveFailure('#click_' + secondCoord, reason, move);
                 // And the piece should be unselected
                 testUtils.expectElementNotToHaveClass('#piece_' + firstCoord, 'selected-stroke');
@@ -166,7 +166,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             const firstTurnMoves: M[] = minimax
                 .getListMoves(rules.node)
                 .map((move: TaflMove) => {
-                    return entries.moveProvider(move.coord, move.end);
+                    return entries.moveProvider(move.getStart(), move.getEnd());
                 });
             for (const move of firstTurnMoves) {
                 EncoderTestUtils.expectToBeBijective(encoder, move);

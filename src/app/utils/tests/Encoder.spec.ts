@@ -104,15 +104,15 @@ describe('MoveEncoder', () => {
     describe('tuple', () => {
         class MyMove extends MoveCoordToCoord {
             public toString(): string {
-                return `${this.coord.toString()} -> ${this.end.toString()}`;
+                return `${this.getStart().toString()} -> ${this.getEnd().toString()}`;
             }
             public equals(other: this): boolean {
-                return this.coord.equals(other.coord) && this.end.equals(other.end);
+                return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
             }
         }
         const myMoveEncoder: MoveEncoder<MyMove> = MoveEncoder.tuple<MyMove, [Coord, Coord]>(
             [Coord.encoder, Coord.encoder],
-            (move: MyMove): [Coord, Coord] => [move.coord, move.end],
+            (move: MyMove): [Coord, Coord] => [move.getStart(), move.getEnd()],
             (fields: [Coord, Coord]): MyMove => new MyMove(fields[0], fields[1]));
 
         class MyComplexMove extends Move {
@@ -140,8 +140,8 @@ describe('MoveEncoder', () => {
                 (fields: [Coord, Coord, Coord]): MyComplexMove => new MyComplexMove(fields));
 
         it('should successfully encode and decode', () => {
-            EncoderTestUtils.expectToBeCorrect(myMoveEncoder, new MyMove(new Coord(0, 0), new Coord(2, 3)));
-            EncoderTestUtils.expectToBeCorrect(myComplexMoveEncoder, new MyComplexMove(
+            EncoderTestUtils.expectToBeBijective(myMoveEncoder, new MyMove(new Coord(0, 0), new Coord(2, 3)));
+            EncoderTestUtils.expectToBeBijective(myComplexMoveEncoder, new MyComplexMove(
                 [new Coord(0, 0), new Coord(2, 3), new Coord(3, 4)]));
         });
     });

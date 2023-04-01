@@ -83,7 +83,6 @@ import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial
 
 import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
 import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
-import { TrexoState } from 'src/app/games/trexo/TrexoState';
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 
 import { YinshRules } from 'src/app/games/yinsh/YinshRules';
@@ -147,7 +146,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     ConspirateursRules.get(),
                     conspirateursTutorial[3],
-                    ConspirateursMoveSimple.of(new Coord(4, 6), new Coord(4, 5)).get(),
+                    ConspirateursMoveSimple.from(new Coord(4, 6), new Coord(4, 5)).get(),
                     MGPValidation.failure(`You have not performed a jump. Try again!`),
                 ], [
                     new DvonnRules(DvonnState),
@@ -192,7 +191,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new LinesOfActionRules(LinesOfActionState),
                     linesOfActionTutorial[4],
-                    LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get(),
+                    LinesOfActionMove.from(new Coord(1, 0), new Coord(3, 2)).get(),
                     MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     LodestoneRules.get(),
@@ -298,7 +297,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     TrexoRules.get(),
                     trexoTutorial[3],
                     TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get(),
-                    MGPValidation.failure(`Failed. Try again.`)
+                    MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     new YinshRules(YinshState),
                     yinshTutorial[3],

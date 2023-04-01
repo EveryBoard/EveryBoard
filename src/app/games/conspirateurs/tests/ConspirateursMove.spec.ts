@@ -10,7 +10,7 @@ describe('ConspirateursMove', () => {
         return ConspirateursMoveDrop.of(target).get();
     }
     function simpleMove(start: Coord, end: Coord): ConspirateursMoveSimple {
-        return ConspirateursMoveSimple.of(start, end).get();
+        return ConspirateursMoveSimple.from(start, end).get();
     }
     function jump(coords: Coord[]): ConspirateursMoveJump {
         return ConspirateursMoveJump.of(coords).get();
@@ -58,12 +58,12 @@ describe('ConspirateursMove', () => {
             expect(move.isJump()).toBeFalse();
         });
         it('should forbid creating a simple move out of the board', () => {
-            expect(ConspirateursMoveSimple.of(new Coord(-1, 0), new Coord(0, 0)).isFailure()).toBeTrue();
-            expect(ConspirateursMoveSimple.of(new Coord(0, 0), new Coord(-1, 0)).isFailure()).toBeTrue();
+            expect(ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0)).isFailure()).toBeTrue();
+            expect(ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(-1, 0)).isFailure()).toBeTrue();
         });
         it('should forbid creating a move that has a distance of more than one', () => {
             const failure: MGPFallible<ConspirateursMoveSimple> =
-                ConspirateursMoveSimple.of(new Coord(0, 0), new Coord(2, 0));
+                ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(2, 0));
             expect(failure.isFailure()).toBeTrue();
             expect(failure.getReason()).toBe(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
         });
@@ -107,7 +107,7 @@ describe('ConspirateursMove', () => {
         EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
                                              ConspirateursMoveDrop.of(new Coord(7, 7)).get());
         EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
-                                             ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(7, 8)).get());
+                                             ConspirateursMoveSimple.from(new Coord(7, 7), new Coord(7, 8)).get());
         EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
                                              ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9)]).get());
     });

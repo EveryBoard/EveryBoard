@@ -27,9 +27,15 @@ export class TrexoMove extends MoveWithTwoCoords {
         super(first, second);
     }
     public toString(): string {
-        return this.first.toString() + ' && ' + this.second.toString();
+        return this.getFirst().toString() + ' && ' + this.getSecond().toString();
     }
     public equals(o: TrexoMove): boolean {
-        return this.first.equals(o.first) && this.second.equals(o.second);
+        return this.getFirst().equals(o.getFirst()) && this.getSecond().equals(o.getSecond());
+    }
+    public getZero(): Coord {
+        return this.getFirst();
+    }
+    public getOne(): Coord {
+        return this.getSecond();
     }
 }

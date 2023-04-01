@@ -5,14 +5,13 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
+import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class LinesOfActionMove extends MoveCoordToCoord {
     public static encoder: MoveEncoder<LinesOfActionMove> =
-        MoveCoordToCoord.getEncoder<LinesOfActionMove>((start: Coord, end: Coord): LinesOfActionMove => {
-            return LinesOfActionMove.of(start, end).get();
-        });
+        MoveWithTwoCoords.getEncoder<LinesOfActionMove>(LinesOfActionMove.from);
 
-    public static of(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
+    public static from(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
         const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
         if (directionOptional.isFailure()) {
             return MGPFallible.failure(directionOptional.getReason());
@@ -31,11 +30,11 @@ export class LinesOfActionMove extends MoveCoordToCoord {
     }
     public equals(o: LinesOfActionMove): boolean {
         if (o === this) return true;
-        if (!o.coord.equals(this.coord)) return false;
-        return o.end.equals(this.end);
+        if (!o.getStart().equals(this.getStart())) return false;
+        return o.getEnd().equals(this.getEnd());
     }
     public toString(): string {
-        return 'LinesOfActionMove(' + this.coord + '->' + this.end + ')';
+        return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
     public encode(): JSONValue {
         return LinesOfActionMove.encoder.encode(this);

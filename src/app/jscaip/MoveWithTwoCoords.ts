@@ -30,7 +30,13 @@ export abstract class MoveWithTwoCoords extends Move {
             }
         };
     }
-    protected constructor(public readonly first: Coord, public readonly second: Coord) {
+    protected constructor(private readonly first: Coord, private readonly second: Coord) {
         super();
+    }
+    public getFirst(): Coord {
+        return this.first;
+    }
+    public getSecond(): Coord {
+        return this.second;
     }
 }

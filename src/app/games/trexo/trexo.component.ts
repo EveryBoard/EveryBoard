@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
-import { TrexoNode, TrexoRules } from './TrexoRules';
+import { TrexoRules } from './TrexoRules';
 import { TrexoMinimax } from './TrexoMinimax';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
@@ -191,12 +191,12 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
                                                     TrexoState.SIZE,
                                                     TrexoComponent.INITIAL_PIECE_ON_BOARD));
         }
-        moveByCoord[height][move.first.y][move.first.x] = {
+        moveByCoord[height][move.getZero().y][move.getZero().x] = {
             isDroppedPiece: false,
             isPossibleClick: false,
             move: MGPOptional.of(move),
         };
-        moveByCoord[height][move.second.y][move.second.x] = {
+        moveByCoord[height][move.getOne().y][move.getOne().x] = {
             isDroppedPiece: false,
             isPossibleClick: false,
             move: MGPOptional.of(move),
@@ -236,7 +236,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         }
     }
     private selectPiece(clicked: Coord): MGPValidation {
-        if (this.possibleMoves.some((move: TrexoMove) => move.first.equals(clicked))) {
+        if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
             if (pieceHeight >= this.pieceOnBoard.length) {
                 this.pieceOnBoard.push(ArrayUtils.createTable(TrexoState.SIZE,
@@ -267,9 +267,9 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
     }
     private getPossibleNextClicks(coord: Coord): Coord[] {
         const potentiallyStartedMove: TrexoMove[] = this.possibleMoves.filter((move: TrexoMove) => {
-            return move.first.equals(coord);
+            return move.getZero().equals(coord);
         });
-        return potentiallyStartedMove.map((move: TrexoMove) => move.second);
+        return potentiallyStartedMove.map((move: TrexoMove) => move.getOne());
     }
     public cancelMoveAttempt(): void {
         this.droppedPiece = MGPOptional.empty();
@@ -289,7 +289,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         }
         if (this.rules.node.move.isPresent()) {
             const lastMove: TrexoMove = this.rules.node.move.get();
-            if (lastMove.first.equals(piece) || lastMove.second.equals(piece)) {
+            if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
                 classes.push('last-move-stroke');
             }
         }

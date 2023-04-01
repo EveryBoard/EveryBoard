@@ -46,14 +46,14 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
     public equals(o: KamisadoMove): boolean {
         if (o === this) return true;
         if (o.isPieceMove()) {
-            if (o.coord.equals(this.coord) === false) return false;
-            return o.end.equals(this.end);
+            if (o.getStart().equals(this.getStart()) === false) return false;
+            return o.getEnd().equals(this.getEnd());
         } else {
             return false;
         }
     }
     public toString(): string {
-        return 'KamisadoMove(' + this.coord + '->' + this.end + ')';
+        return 'KamisadoMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
 }
 
@@ -71,10 +71,10 @@ export namespace KamisadoMove {
         }
         public encodeNumber(move: KamisadoMove): number {
             if (move.isPieceMove()) {
-                const x1: number = move.coord.x;
-                const y1: number = move.coord.y;
-                const x2: number = move.end.x;
-                const y2: number = move.end.y;
+                const x1: number = move.getStart().x;
+                const y1: number = move.getStart().y;
+                const x2: number = move.getEnd().x;
+                const y2: number = move.getEnd().y;
                 return (x1 * 4096) + (y1 * 256) + (x2 * 16) + y2;
             } else {
                 // 0 can never be an encoded piece move, as it would be a static move
