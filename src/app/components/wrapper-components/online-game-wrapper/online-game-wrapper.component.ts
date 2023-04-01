@@ -225,29 +225,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // This is useful when we join a part in the middle.
         await this.onCurrentPartUpdate((await this.gameService.getPart(this.currentPartId)).get());
 
+        // We subscribe to the part only at this point.
+        // Once we receive the notification that the part started, we will subscribe to the events
         this.partSubscription =
             this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
                 assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
                 await this.onCurrentPartUpdate(part.get());
             });
-        this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, (event: PartEvent) => {
-            console.log({type: event.eventType, player: event.player})
-            switch (event.eventType) {
-                case 'Move':
-                    const moveEvent: PartEventMove = event as PartEventMove;
-                    return this.onReceivedMove(moveEvent);
-                case 'Request':
-                    const requestEvent: PartEventRequest = event as PartEventRequest;
-                    return this.onReceivedRequest(requestEvent);
-                case 'Reply':
-                    const replyEvent: PartEventReply = event as PartEventReply;
-                    return this.onReceivedReply(replyEvent);
-                default:
-                    Utils.expectToBe('Action', 'Event should be an action');
-                    const actionEvent: PartEventAction = event as PartEventAction;
-                    return this.onReceivedAction(actionEvent);
-            }
-        });
     }
     private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
@@ -328,9 +312,31 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.initializePlayersDatas(part);
         const turn: number = this.gameComponent.getTurn();
         assert(turn === 0, 'turn is always 0')
+
+        console.log('onGameStart')
+        // The game has started, we can subscribe to the events to receive moves etc.
+        // We don't want to do it sooner, as the clocks need to be started before receiving any move
+        this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, (event: PartEvent) => {
+            console.log({type: event.eventType, player: event.player})
+            switch (event.eventType) {
+                case 'Move':
+                    const moveEvent: PartEventMove = event as PartEventMove;
+                    return this.onReceivedMove(moveEvent);
+                case 'Request':
+                    const requestEvent: PartEventRequest = event as PartEventRequest;
+                    return this.onReceivedRequest(requestEvent);
+                case 'Reply':
+                    const replyEvent: PartEventReply = event as PartEventReply;
+                    return this.onReceivedReply(replyEvent);
+                default:
+                    Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
+                    const actionEvent: PartEventAction = event as PartEventAction;
+                    return this.onReceivedAction(actionEvent);
+            }
+        });
     }
     private async onGameEnd() {
-        // currently working for normal victory, resign, and timeouts!
+        console.log('onGameEnd')
         await this.observedPartService.removeObservedPart();
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         this.endGame = true;
@@ -354,7 +360,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
         console.log(moveEvent)
-        this.timeManager.updateClocksOnMove(moveEvent.time as Timestamp, Player.of(moveEvent.player));
+        if (this.endGame === false) {
+            // If we receive moves on a finished game
+            this.timeManager.updateClocksOnMove(moveEvent.time as Timestamp, Player.of(moveEvent.player));
+        }
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
@@ -407,7 +416,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private onReceivedAction(action: PartEventAction): void {
-        switch (action.actionType) {
+        switch (action.action) {
             case 'AddTurnTime':
                 // Add 30 seconds to the player
                 const addedTurnTime: number = 30 * 1000;
@@ -415,7 +424,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 this.timeManager.addTurnTimeTo(playerWithExtraTurnTime, addedTurnTime);
                 break;
             default:
-                Utils.expectToBe(action.actionType, 'AddGlobalTime')
+                console.log(action)
+                Utils.expectToBe(action.action, 'AddGlobalTime')
                 const addedGlobalTime: number = 5 * 60 * 1000;
                 const playerWithExtraGlobalTime: Player = Player.of(action.player).getOpponent();
                 this.timeManager.addGlobalTimeTo(playerWithExtraGlobalTime, addedGlobalTime);
@@ -781,7 +791,7 @@ class OGWCTimeManager {
         const localTime: Timestamp = Timestamp.now();
         this.beginningTimestamp = MGPOptional.of(beginningTimestamp);
         // Drift is the time it took for the message to be sent from the server to us
-        const drift: number = getMillisecondsDifference(localTime, beginningTimestamp);
+        const drift: number = 0; // TODO getMillisecondsDifference(beginningTimestamp, localTime);
         console.log(localTime)
         console.log(beginningTimestamp)
         console.log('drift is ' + drift);
@@ -830,22 +840,30 @@ class OGWCTimeManager {
         this.lastMoveTimestamp = MGPOptional.of(moveTimestamp);
         this.takenGlobalTime[player.value] += takenMoveTime;
         this.globalClocks[player.value].pause();
-        this.globalClocks[player.value].changeDuration(this.getPartDurationInMs() - this.takenGlobalTime[player.value]);
         this.turnClocks[player.value].pause();
-        this.turnClocks[player.value].changeDuration(this.getMoveDurationInMs() - takenMoveTime);
 
+        // TODO: it happened that beginningTimestamp was not set before this function is called, maybe we should subscribe to the moves only after the part start has been received
+        // -> Should be fixed
+        // TODO: when resigning, stopping chronos throws (should not pause already paused)
+        // TODO: when joining a game that already started (or already finished), chronos receive a bit of extra time every time
         const localTime: Timestamp = Timestamp.now();
         const nextPlayer: Player = player.getOpponent();
         const drift: number = getMillisecondsDifference(localTime, moveTimestamp);
         this.turnClocks[nextPlayer.value].changeDuration(this.getMoveDurationInMs() - drift);
         this.turnClocks[nextPlayer.value].resume();
+        // We recompute the global time because we can't trust our own clocks, but we can trust the server's
+        const adaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[player.value] - drift;
+        this.globalClocks[nextPlayer.value].changeDuration(adaptedGlobalTime);
         this.globalClocks[nextPlayer.value].resume();
     }
     // Stops all clocks that are running
     public stopEverything(): void {
         display(OGWCTimeManager.VERBOSE, `TimeManager.stopEverything`);
         for (const clock of this.allClocks) {
-            if (clock.isStarted()) {
+            // We want to stop the clock, but stop is just pause + change some variables
+            // And stop throws if the clock is paused! So we just stop it if it's not paused already
+            // We don't care what state the clocks are after calling this function, since the part is finished
+            if (clock.isIdle() === false) {
                 clock.stop();
             }
         }
