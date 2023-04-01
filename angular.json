@@ -73,7 +73,13 @@
                             "vendorChunk": false,
                             "buildOptimizer": true
                         },
-                        "production-netlify": {
+                        "debug": {
+                            "optimization": false,
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "extractLicenses": true,
+                            "vendorChunk": true,
+                            "buildOptimizer": false,
                             "baseHref": "/",
                             "budgets": [
                                 {
@@ -81,13 +87,6 @@
                                     "maximumWarning": "6kb"
                                 }
                             ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
                         },
                         "fr": {
                             "localize": ["fr"]
@@ -136,6 +135,9 @@
                         },
                         "production": {
                             "browserTarget": "everyboard:build"
+                        },
+                        "debug": {
+                            "browserTarget": "everyboard:build:debug"
                         }
                     }
                 },

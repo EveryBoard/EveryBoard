@@ -23,6 +23,7 @@ export class DiamMoveDrop extends Move {
         return this.target;
     }
     public equals(other: DiamMoveDrop): boolean {
+        if (other instanceof DiamMoveDrop === false) return false;
         if (this.target !== other.target) return false;
         if (this.piece !== other.piece) return false;
         return true;
@@ -58,10 +59,14 @@ export class DiamMoveShift extends Move {
             return (this.start.x + 7) % 8;
         }
     }
-    public equals(other: DiamMoveShift): boolean {
-        if (this.start.equals(other.start) === false) return false;
-        if (this.moveDirection !== other.moveDirection) return false;
-        return true;
+    public equals(other: DiamMove): boolean {
+        if (other instanceof DiamMoveShift) {
+            if (this.start.equals(other.start) === false) return false;
+            if (this.moveDirection !== other.moveDirection) return false;
+            return true;
+        } else {
+            return false;
+        }
     }
     public toString(): string {
         return `DiamMoveShift(${this.start}, ${this.moveDirection})`;

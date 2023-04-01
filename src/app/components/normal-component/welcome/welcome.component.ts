@@ -35,7 +35,7 @@ export class WelcomeComponent {
                 this.games.push([]);
             }
             this.games[column].push(allGames[i]);
-            column = (column+1) % this.numberOfColumns;
+            column = (column + 1) % this.numberOfColumns;
         }
     }
     public async createGame(game?: string): Promise<boolean> {

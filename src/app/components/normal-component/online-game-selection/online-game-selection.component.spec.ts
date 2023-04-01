@@ -22,7 +22,7 @@ describe('OnlineGameSelectionComponent', () => {
         spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on 'play'
-        await testUtils.clickElement('#playOnline');
+        await testUtils.clickElement('#launchGame');
         tick();
 
         // Then the user is redirected to the game
@@ -40,7 +40,7 @@ describe('OnlineGameSelectionComponent', () => {
         spyOn(component.observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
 
         // When clicking on 'play'
-        await testUtils.clickElement('#playOnline');
+        await testUtils.clickElement('#launchGame');
         tick();
 
         // Then refusal should be toasted and router not called

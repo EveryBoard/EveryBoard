@@ -5,8 +5,8 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MoveEncoder, NumberEncoder } from 'src/app/utils/Encoder';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { MoveEncoder } from 'src/app/utils/Encoder';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';
@@ -169,7 +169,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                     return entries.moveProvider(move.coord, move.end);
                 });
             for (const move of firstTurnMoves) {
-                NumberEncoderTestUtils.expectToBeCorrect(encoder as NumberEncoder<M>, move);
+                EncoderTestUtils.expectToBeCorrect(encoder, move);
             }
         });
     });

@@ -174,7 +174,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
         board[y][x] = state.getCurrentPlayer();
 
-        const resultingState: P4State = new P4State(board, turn+1);
+        const resultingState: P4State = new P4State(board, turn + 1);
         return resultingState;
     }
     public isLegal(move: P4Move, state: P4State): MGPFallible<void> {

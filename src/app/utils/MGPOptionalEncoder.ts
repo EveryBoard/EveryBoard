@@ -27,7 +27,7 @@ export function MGPOptionalEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional
 
 /**
  * Encodes a MGPOptional<T> into a number using a number encoder of T.
- * It will use the same encoding as T, and use maxValue+1 to encode an empty optional.
+ * It will use the same encoding as T, and use maxValue + 1 to encode an empty optional.
  */
 export function MGPOptionalNumberEncoder<T>(encoderT: NumberEncoder<T>): NumberEncoder<MGPOptional<T>> {
     return new class extends NumberEncoder<MGPOptional<T>> {
@@ -38,7 +38,7 @@ export function MGPOptionalNumberEncoder<T>(encoderT: NumberEncoder<T>): NumberE
             if (opt.isPresent()) {
                 return encoderT.encodeNumber(opt.get());
             } else {
-                return encoderT.maxValue()+1;
+                return encoderT.maxValue() + 1;
             }
         }
         public decodeNumber(encoded: number): MGPOptional<T> {

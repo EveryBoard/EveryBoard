@@ -37,7 +37,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             updatedBoard[start.y][start.x] = PlayerOrNone.NONE;
             updatedBoard[end.y][end.x] = state.getCurrentPlayer();
         }
-        return new ConspirateursState(updatedBoard, state.turn+1);
+        return new ConspirateursState(updatedBoard, state.turn + 1);
     }
     public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPFallible<void> {
         if (move.isDrop()) {

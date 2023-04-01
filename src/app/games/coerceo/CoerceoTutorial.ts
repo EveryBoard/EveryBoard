@@ -29,8 +29,8 @@ export class CoerceoTutorial extends Tutorial {
           <li>Click on one of your pieces.</li>
           <li>Click on one of the triangular space highlighted in yellow.</li>
         </ol>
-        You can pass through the opponent's pieces.
-        You're playing first, hence you're playing Dark.<br/><br/>
+        You can pass through the opponent's pieces.<br/><br/>
+        You're playing first, hence you're playing Dark.
         Perform any move.`,
             CoerceoState.getInitialState(),
             CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),
@@ -68,7 +68,7 @@ export class CoerceoTutorial extends Tutorial {
         Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.<br/><br/>
-        Perform a move that lets you gain two tiles.`,
+        You're playing Dark, perform a move that lets you gain two tiles.`,
             new CoerceoState([
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
@@ -95,7 +95,7 @@ export class CoerceoTutorial extends Tutorial {
         As soon as you have two, you can click on an opponent's piece to capture it immediately instead of moving one of your pieces.
         This will cost you two tiles.
         If any tiles are removed during that turn, nobody will get them.<br/><br/>
-        Gain some time and capture the last piece!`,
+        You're playing Light, gain some time and capture the last piece to win directly!`,
             new CoerceoState([
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -118,7 +118,7 @@ export class CoerceoTutorial extends Tutorial {
             $localize`Special capture`,
             $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it will however stay on the board.<br/><br/>
-        A move that demonstrate both of these things can be done on this board by Light. Try it!`,
+        A move that demonstrates both of these things can be done on this board by Light. Try it!`,
             new CoerceoState([
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
