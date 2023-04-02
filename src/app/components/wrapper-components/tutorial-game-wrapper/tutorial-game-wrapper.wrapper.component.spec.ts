@@ -18,6 +18,7 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Comparable } from 'src/app/utils/Comparable';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -196,6 +197,48 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expectedTitle = 'title 1';
             currentTitle = testUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
+        }));
+        it('should call setRole according to the current player (player zero)', fakeAsync(async() => {
+            // Given a tutorial a step for player zero
+            const statePlayerZero: QuartoState = QuartoState.getInitialState();
+            const tutorial: TutorialStep[] = [
+                TutorialStep.informational(
+                    'title 0',
+                    'instruction 0',
+                    statePlayerZero,
+                ),
+            ];
+            spyOn(wrapper, 'setRole').and.callThrough();
+
+            // When rendering the page
+            wrapper.startTutorial(tutorial);
+
+            // Then it should call setRole with playerZero
+            expect(wrapper.setRole).toHaveBeenCalledOnceWith(Player.ZERO);
+        }));
+        it('should call setRole according to the current player (player one)', fakeAsync(async() => {
+            // Given a tutorial a step for player one
+            const statePlayerOne: QuartoState = new QuartoState([
+                [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ], 1, QuartoPiece.BBBB);
+
+            const tutorial: TutorialStep[] = [
+                TutorialStep.informational(
+                    'title 0',
+                    'instruction 0',
+                    statePlayerOne,
+                ),
+            ];
+            spyOn(wrapper, 'setRole').and.callThrough();
+
+            // When rendering the page
+            wrapper.startTutorial(tutorial);
+
+            // Then it should call setRole with playerOne
+            expect(wrapper.setRole).toHaveBeenCalledOnceWith(Player.ONE);
         }));
         // ///////////////////////// ATTEMPTING ///////////////////////////////////
         it('should go to specific step when clicking on it', fakeAsync(async() => {

@@ -1,13 +1,13 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TaflMove } from '../TaflMove';
 
 export class HnefataflMove extends TaflMove {
 
-    public static encoder: NumberEncoder<HnefataflMove> =
-        MoveCoordToCoord.getEncoder<HnefataflMove>(11, 11, HnefataflMove.of);
+    public static encoder: MoveEncoder<HnefataflMove> =
+        MoveCoordToCoord.getEncoder<HnefataflMove>(HnefataflMove.of);
 
     public static of(start: Coord, end: Coord): HnefataflMove {
         return new HnefataflMove(start, end);

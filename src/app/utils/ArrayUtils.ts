@@ -1,4 +1,7 @@
+import { Coord } from '../jscaip/Coord';
 import { Comparable, comparableEquals } from './Comparable';
+import { MGPMap } from './MGPMap';
+import { MGPOptional } from './MGPOptional';
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
@@ -77,5 +80,70 @@ export class ArrayUtils {
             if (ArrayUtils.compareArray(t1[i], t2[i]) === false) return false;
         }
         return true;
+    }
+    public static isPrefix<T extends Comparable>(prefix: ReadonlyArray<T>, list: ReadonlyArray<T>): boolean {
+        if (prefix.length > list.length) return false;
+        return ArrayUtils.compareArray(prefix, list.slice(0, prefix.length));
+    }
+    /**
+     * range(n) returns the list [0, 1, 2, ..., n-1]
+     * Enables doing *ngFor="let x in ArrayUtils.range(5)" in an Angular template
+     */
+    public static range(n: number): number[] {
+        const range: number[] = [];
+        for (let i: number = 0; i < n; i++) {
+            range.push(i);
+        }
+        return range;
+    }
+    /**
+     * A method that can be used to sort an array with the smallest number first with xs.sort(ArrayUtils.smallerFirst);
+     */
+    public static smallerFirst(a: number, b: number): number {
+        return a-b;
+    }
+}
+
+interface Cell<T> {
+    x: number,
+    y: number,
+    content: T,
+}
+
+export class Table2DWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
+    // This cannot be represented by an array as it may have negative indices
+    // which cannot be iterated over
+    protected content: MGPMap<number, MGPMap<number, T>> = new MGPMap();
+
+    public get(coord: Coord): MGPOptional<T> {
+        const line: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
+        if (line.isAbsent()) return MGPOptional.empty();
+        return line.get().get(coord.x);
+    }
+    public set(coord: Coord, value: T): void {
+        const lineOpt: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
+        let line: MGPMap<number, T>;
+        if (lineOpt.isPresent()) {
+            line = lineOpt.get();
+        } else {
+            line = new MGPMap<number, T>();
+            this.content.set(coord.y, line);
+        }
+        line.set(coord.x, value);
+    }
+    [Symbol.iterator](): IterableIterator<Cell<T>> {
+        const elements: Cell<T>[] = [];
+        const ys: number[] = this.content.getKeySet().toList();
+        ys.sort(ArrayUtils.smallerFirst);
+        for (const y of ys) {
+            const line: MGPMap<number, T> = this.content.get(y).get();
+            const xs: number[] = line.getKeySet().toList();
+            xs.sort(ArrayUtils.smallerFirst);
+            for (const x of xs) {
+                const content: T = line.get(x).get();
+                elements.push({ x, y, content });
+            }
+        }
+        return elements.values();
     }
 }

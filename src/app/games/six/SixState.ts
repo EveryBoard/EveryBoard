@@ -8,14 +8,13 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
-import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ComparableObject } from 'src/app/utils/Comparable';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 
-export class SixState extends GameState implements ComparableObject {
+export class SixState extends OpenHexagonalGameState<Player> {
 
     public readonly width: number;
 
@@ -38,92 +37,12 @@ export class SixState extends GameState implements ComparableObject {
         }
         return new SixState(pieces, turn, offset);
     }
-    public static deplacePiece(state: SixState, move: SixMove): ReversibleMap<Coord, Player> {
-        const pieces: ReversibleMap<Coord, Player> = state.pieces.getCopy()
+    public movePiece(move: SixMove): SixState {
+        const pieces: ReversibleMap<Coord, Player> = this.pieces.getCopy()
 ;
         pieces.delete(move.start.get());
-        pieces.set(move.landing, state.getCurrentPlayer());
-        return pieces;
-    }
-    public static getGroups(pieces: ReversibleMap<Coord, Player>, lastRemovedPiece: Coord): MGPSet<MGPSet<Coord>> {
-        let coordsGroup: ReversibleMap<Coord, string> = new ReversibleMap<Coord, string>();
-        let nbGroup: number = 0;
-        for (const dir of HexaDirection.factory.all) {
-            const groupEntry: Coord = lastRemovedPiece.getNext(dir, 1);
-            coordsGroup = SixState.putCoordInGroup(pieces, groupEntry, coordsGroup, '' + nbGroup);
-            nbGroup++;
-        }
-        const reversed: ReversibleMap<string, MGPSet<Coord>> = coordsGroup.reverse();
-        const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
-        for (let i: number = 0; i < reversed.size(); i++) {
-            groups.add(reversed.getByIndex(i).value);
-        }
-        return groups;
-    }
-    private static putCoordInGroup(pieces: ReversibleMap<Coord, Player>,
-                                   piece: Coord,
-                                   coordsGroup: ReversibleMap<Coord, string>,
-                                   group: string)
-    : ReversibleMap<Coord, string>
-    {
-        if (pieces.get(piece).isPresent() &&
-           coordsGroup.get(piece).isAbsent())
-        {
-            coordsGroup.set(piece, group);
-            for (const dir of HexaDirection.factory.all) {
-                const nextCoord: Coord = piece.getNext(dir, 1);
-                coordsGroup = SixState.putCoordInGroup(pieces, nextCoord, coordsGroup, group);
-            }
-        }
-        return coordsGroup;
-    }
-    public constructor(public readonly pieces: ReversibleMap<Coord, Player>,
-                       turn: number,
-                       offset?: Vector)
-    {
-        super(turn);
-        const scale: { width: number,
-                       height: number,
-                       pieces: ReversibleMap<Coord, Player>,
-                       offset: Vector } = this.getCalculatedScale();
-        this.pieces = scale.pieces;
-        this.width = scale.width;
-        this.height = scale.height;
-        this.offset = offset ?? scale.offset;
-        this.pieces.makeImmutable();
-    }
-    public getCalculatedScale(): { width: number,
-                                   height: number,
-                                   pieces: ReversibleMap<Coord, Player>,
-                                   offset: Vector }
-    {
-        let minWidth: number = Number.MAX_SAFE_INTEGER;
-        let maxWidth: number = Number.MIN_SAFE_INTEGER;
-        let minHeight: number = Number.MAX_SAFE_INTEGER;
-        let maxHeight: number = Number.MIN_SAFE_INTEGER;
-        for (const coord of this.pieces.listKeys()) {
-            minWidth = Math.min(coord.x, minWidth);
-            maxWidth = Math.max(coord.x, maxWidth);
-            minHeight = Math.min(coord.y, minHeight);
-            maxHeight = Math.max(coord.y, maxHeight);
-        }
-        let newPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
-        const offset: Vector = new Vector(- minWidth, - minHeight);
-        if (minWidth !== 0 || minHeight !== 0) {
-            for (const coord of this.pieces.listKeys()) {
-                const oldValue: Player = this.pieces.delete(coord);
-                const newCoord: Coord = coord.getNext(offset);
-                newPieces.set(newCoord, oldValue);
-            }
-        } else {
-            newPieces = this.pieces;
-        }
-        return {
-            width: maxWidth + 1 - minWidth,
-            height: maxHeight + 1 - minHeight,
-            pieces: newPieces,
-            offset,
-        };
+        pieces.set(move.landing, this.getCurrentPlayer());
+        return new SixState(pieces, this.turn);
     }
     public toRepresentation(): NumberTable {
         const board: number[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE.value);
@@ -154,9 +73,6 @@ export class SixState extends GameState implements ComparableObject {
         }
         return false;
     }
-    public isOnBoard(coord: Coord): boolean {
-        return this.pieces.containsKey(coord);
-    }
     public getPieceAt(coord: Coord): PlayerOrNone {
         if (this.isOnBoard(coord)) {
             return this.pieces.get(coord).get();
@@ -170,17 +86,18 @@ export class SixState extends GameState implements ComparableObject {
         return new SixState(pieces, this.turn + 1);
     }
     public applyLegalDeplacement(move: SixMove, kept: MGPSet<Coord>): SixState {
-        const afterDeplacementPieces: ReversibleMap<Coord, Player> = SixState.deplacePiece(this, move);
-        let newPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
+        const stateAfterMove: SixState = this.movePiece(move);
+
         if (kept.size() > 0) {
-            newPieces = new ReversibleMap<Coord, Player>();
+            const newPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             for (const coord of kept) {
-                newPieces.set(coord, afterDeplacementPieces.get(coord).get());
+                newPieces.set(coord, stateAfterMove.getPieceAt(coord) as Player);
             }
+            return new SixState(newPieces, this.turn + 1);
         } else {
-            newPieces = afterDeplacementPieces.getCopy();
+            return new SixState(stateAfterMove.pieces, this.turn + 1, stateAfterMove.offset);
         }
-        return new SixState(newPieces, this.turn + 1);
+
     }
     public countPieces(): [number, number] {
         const pieces: ReversibleMap<Player, MGPSet<Coord>> = this.pieces.reverse();

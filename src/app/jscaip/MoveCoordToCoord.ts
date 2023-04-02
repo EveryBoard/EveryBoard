@@ -3,12 +3,22 @@ import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { MGPFallible } from '../utils/MGPFallible';
 import { RulesFailure } from './RulesFailure';
-import { NumberEncoder } from '../utils/Encoder';
+import { NumberEncoder, MoveEncoder } from '../utils/Encoder';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
 
-    public static getEncoder<T extends MoveCoordToCoord>(width: number, height: number,
-                                                         construct: (start: Coord, end: Coord) => T): NumberEncoder<T> {
+    public static getEncoder<T extends MoveCoordToCoord>(construct: (start: Coord, end: Coord) => T): MoveEncoder<T> {
+        return MoveEncoder.tuple(
+            [Coord. encoder, Coord.encoder],
+            (move: T): [Coord, Coord] => [move.coord, move.end],
+            (fields: [Coord, Coord]): T => construct(fields[0], fields[1]),
+        );
+    }
+    public static getNumberEncoder<T extends MoveCoordToCoord>(width: number,
+                                                               height: number,
+                                                               construct: (start: Coord, end: Coord) => T)
+    : NumberEncoder<T>
+    {
         return new class extends NumberEncoder<T> {
             private readonly shiftAX: number = height;
             private readonly shiftDY: number = this.shiftAX * width;

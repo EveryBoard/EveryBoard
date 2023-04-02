@@ -33,7 +33,7 @@ export class PentagoTutorial {
             $localize`At their turn, players put a piece on the board and possibly rotate one quadrant.
         As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
         To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>
-        Do it.`,
+        You're playing dark, do a simple move.`,
             new PentagoState([
                 [_, _, _, _, _, _],
                 [_, O, _, _, X, _],
@@ -55,7 +55,7 @@ export class PentagoTutorial {
         TutorialStep.fromPredicate(
             $localize`Move with rotation`,
             $localize`After putting a piece, arrows will appear on non-neutral quadrants.<br/><br/>
-        Click on one of them and see the rotation!`,
+        You're playing Dark, place a piece on a quadrant and do a rotation!`,
             new PentagoState([
                 [_, _, _, _, _, _],
                 [_, O, _, _, X, _],

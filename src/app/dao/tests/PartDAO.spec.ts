@@ -752,7 +752,7 @@ describe('PartDAO', () => {
             await reconnectUser(OPPONENT_EMAIL);
 
             // When the other user tries to change the result to draw
-            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
+            const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index + 1, {
                 request: null,
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });

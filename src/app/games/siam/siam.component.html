@@ -65,7 +65,7 @@
     <g *ngFor="let player of Player.PLAYERS"
        id="remainingPieces_{{ player.value }}"
        (click)="selectPieceForInsertion(player)" >
-        <use *ngFor="let x of range(playerPieces(player))"
+        <use *ngFor="let x of ArrayUtils.range(playerPieces(player))"
              id="remainingPieces_{{ player.value }}_{{ x }}"
              class="base mid-stroke"
              [ngClass]="getRemainingPieceClasses(player, x)"

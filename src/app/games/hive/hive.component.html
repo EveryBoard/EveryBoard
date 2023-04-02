@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="viewBox"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let groundInfo of ground">
+        <polygon id="space_{{ groundInfo.x }}_{{ groundInfo.y }}"
+                 [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
+                 class="base mid-stroke"
+                 [ngClass]="groundInfo.content.spaceClasses"
+                 (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+    </g>
+    <!-- Need to show the highlights after the pieces, and the selected highlight after the other highlights.
+         Otherwise the view doesn't look good with overlapping highlights. -->
+    <g *ngFor="let groundInfo of ground">
+        <polygon *ngIf="groundInfo.content.strokeClasses.length > 0"
+                 id="stroke_{{ groundInfo.x }}_{{ groundInfo.y }}"
+                 [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
+                 class="base no-fill small-stroke"
+                 [ngClass]="groundInfo.content.strokeClasses"
+                 (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+    </g>
+    <g *ngFor="let groundInfo of ground">
+        <polygon *ngIf="groundInfo.content.selected"
+                 id="stroke_{{ groundInfo.x }}_{{ groundInfo.y }}"
+                 [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
+                 class="base no-fill small-stroke"
+                 ngClass="selected-stroke"
+                 (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+    </g>
+    <g *ngFor="let layer of layers; index as z">
+        <g *ngFor="let pieceInfo of layer">
+            <g id="piece_{{ pieceInfo.x }}_{{ pieceInfo.y }}"
+               app-hive-piece
+               [piece]="pieceInfo.content.piece"
+               [x]="pieceInfo.x"
+               [y]="pieceInfo.y"
+               [pieceHeight]="PIECE_HEIGHT"
+               [hexaLayout]="hexaLayout"
+               [layer]="z"
+               (click)="selectStack(pieceInfo.x, pieceInfo.y)"/>
+        </g>
+        <!-- Need to be done after all pieces hae been drawn, so that highlights are on top of the pieces of the same level. -->
+        <g *ngFor="let pieceInfo of layer">
+            <polygon *ngIf="pieceInfo.content.strokeClasses.length > 0"
+                     id="stroke_{{ pieceInfo.x }}_{{ pieceInfo.y }}"
+                     [attr.transform]="'translate(0 ' + -(z+1) * PIECE_HEIGHT + ')'"
+                     [attr.points]="getHexaPointsAtXY(pieceInfo.x, pieceInfo.y)"
+                     class="base no-fill small-stroke"
+                     [ngClass]="pieceInfo.content.strokeClasses"
+                     (click)="selectStack(pieceInfo.x, pieceInfo.y)"/>
+        </g>
+    </g>
+    <g *ngFor="let stack of remainingStacks">
+        <g *ngFor="let piece of stack.pieces; index as z">
+            <g id="remainingPiece_{{ piece.toString() }}"
+               app-hive-piece
+               [attr.transform]="getRemainingPieceTransform(piece)"
+               [piece]="piece"
+               [pieceHeight]="PIECE_HEIGHT"
+               [x]="0"
+               [y]="0"
+               [layer]="z"
+               [hexaLayout]="hexaLayout"
+               (click)="selectRemaining(piece)"/>
+        </g>
+    </g>
+    <polygon *ngIf="selectedRemaining.isPresent()"
+             id="remaining_highlight"
+             [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
+             [attr.points]="getHexaPointsAt(ORIGIN)"
+             class="base no-fill small-stroke selected-stroke" />
+    <g *ngIf="inspectedStack.isPresent()">
+      <g *ngFor="let piece of inspectedStack.get().pieces.slice().reverse(); index as z"
+         id="inspectedStack_{{ z }}"
+         [attr.transform]="inspectedStackTransform"
+         app-hive-piece
+         [piece]="piece"
+         [pieceHeight]="PIECE_HEIGHT"
+         [x]="0"
+         [y]="0"
+         [hexaLayout]="hexaLayout"
+         [layer]="z*6"/>
+    </g>
+</svg>

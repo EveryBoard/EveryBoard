@@ -78,4 +78,34 @@ describe('MGPSet', () => {
             expect(set.isEmpty()).toBeFalse();
         });
     });
+    describe('remove', () => {
+        it('should remove element from the set and return true', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            expect(set.remove(2)).toBeTrue();
+            expect(set.equals(new MGPSet([1]))).toBeTrue();
+        });
+        it('should preserve set and return false if element is not contained', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            expect(set.remove(3)).toBeFalse();
+            expect(set.equals(new MGPSet([1, 2]))).toBeTrue();
+        });
+    });
+    describe('map', () => {
+        it('should iterate over the elements of the set', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            function increment(x: number): number {
+                return x+1;
+            }
+            expect(set.map(increment).equals(new MGPSet([2, 3]))).toBeTrue();
+        });
+    });
+    describe('flatMap', () => {
+        it('should iterate over the elements of the set, and then flatten it again', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            function makeTwo(x: number): MGPSet<number> {
+                return new MGPSet([x, x+1]);
+            }
+            expect(set.flatMap(makeTwo).equals(new MGPSet([1, 2, 3]))).toBeTrue();
+        });
+    });
 });
