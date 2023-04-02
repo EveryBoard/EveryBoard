@@ -93,10 +93,10 @@ describe('MGPSet', () => {
     describe('map', () => {
         it('should iterate over the elements of the set', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
-            function add1(x: number): number {
+            function increment(x: number): number {
                 return x+1;
             }
-            expect(set.map(add1).equals(new MGPSet([2, 3]))).toBeTrue();
+            expect(set.map(increment).equals(new MGPSet([2, 3]))).toBeTrue();
         });
     });
     describe('flatMap', () => {
