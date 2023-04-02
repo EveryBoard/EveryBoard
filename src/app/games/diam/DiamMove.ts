@@ -22,11 +22,13 @@ export class DiamMoveDrop extends Move {
     public getTarget(): number {
         return this.target;
     }
-    public equals(other: DiamMoveDrop): boolean {
-        if (other instanceof DiamMoveDrop === false) return false;
-        if (this.target !== other.target) return false;
-        if (this.piece !== other.piece) return false;
-        return true;
+    public equals(other: DiamMove): boolean {
+        if (other instanceof DiamMoveDrop) {
+            if (this.target !== other.target) return false;
+            if (this.piece !== other.piece) return false;
+            return true;
+        }
+        return false;
     }
     public toString(): string {
         return `DiamMoveDrop(${this.target}, ${this.piece})`;
