@@ -29,7 +29,7 @@ import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { PartService } from 'src/app/services/PartService';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Timestamp } from 'firebase/firestore';
-import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
+import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
 
 export class OnlineGameWrapperMessages {
 
@@ -791,16 +791,18 @@ class OGWCTimeManager {
         const localTime: Timestamp = Timestamp.now();
         this.beginningTimestamp = MGPOptional.of(beginningTimestamp);
         // Drift is the time it took for the message to be sent from the server to us
-        const drift: number = 0; // TODO getMillisecondsDifference(beginningTimestamp, localTime);
+        const drift: number = getMillisecondsElapsed(beginningTimestamp, localTime);
         console.log(localTime)
         console.log(beginningTimestamp)
         console.log('drift is ' + drift);
         console.log('totalPartDuration: ' + configRoom.totalPartDuration);
         console.log('maximalMoveDuration: ' + configRoom.maximalMoveDuration);
         this.takenGlobalTime[0] = drift;
-        this.globalClocks[0].setDuration(this.getPartDurationInMs() - drift);
+        const startingPlayerGlobalTime: number = Math.max(this.getPartDurationInMs() - drift, 0);
+        this.globalClocks[0].setDuration(startingPlayerGlobalTime);
         this.globalClocks[1].setDuration(this.getPartDurationInMs());
-        this.turnClocks[0].setDuration(this.getMoveDurationInMs() - drift);
+        const startingPlayerLocalTime: number = Math.max(this.getMoveDurationInMs() - drift, 0);
+        this.turnClocks[0].setDuration(startingPlayerLocalTime);
         this.turnClocks[1].setDuration(this.getMoveDurationInMs());
 
         // Player 0 is starting
@@ -833,26 +835,28 @@ class OGWCTimeManager {
         display(OGWCTimeManager.VERBOSE, `TimeManager.updateClocksOnMove(${moveTimestamp}, ${player})`);
         let takenMoveTime: number;
         if (this.lastMoveTimestamp.isPresent()) {
-            takenMoveTime = getMillisecondsDifference(moveTimestamp, this.lastMoveTimestamp.get());
+            takenMoveTime = getMillisecondsElapsed(moveTimestamp, this.lastMoveTimestamp.get());
         } else {
-            takenMoveTime = getMillisecondsDifference(moveTimestamp, this.beginningTimestamp.get());
+            takenMoveTime = getMillisecondsElapsed(moveTimestamp, this.beginningTimestamp.get());
         }
         this.lastMoveTimestamp = MGPOptional.of(moveTimestamp);
         this.takenGlobalTime[player.value] += takenMoveTime;
         this.globalClocks[player.value].pause();
         this.turnClocks[player.value].pause();
 
-        // TODO: it happened that beginningTimestamp was not set before this function is called, maybe we should subscribe to the moves only after the part start has been received
-        // -> Should be fixed
-        // TODO: when resigning, stopping chronos throws (should not pause already paused)
-        // TODO: when joining a game that already started (or already finished), chronos receive a bit of extra time every time
+        // TODO: joining a game that has already started with extra time fails
+        // TODO: maybe don't do anything to chronos (besides addTime) unless we have the current move
+        // -> not only current move but also latest action!
+        // -> currently refining
         const localTime: Timestamp = Timestamp.now();
         const nextPlayer: Player = player.getOpponent();
-        const drift: number = getMillisecondsDifference(localTime, moveTimestamp);
-        this.turnClocks[nextPlayer.value].changeDuration(this.getMoveDurationInMs() - drift);
+        const drift: number = getMillisecondsElapsed(moveTimestamp, localTime);
+        const updatedTurnTime: number = Math.max(this.getMoveDurationInMs() - drift, 0);
+        this.turnClocks[nextPlayer.value].changeDuration(updatedTurnTime);
         this.turnClocks[nextPlayer.value].resume();
         // We recompute the global time because we can't trust our own clocks, but we can trust the server's
-        const adaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[player.value] - drift;
+        const adaptedGlobalTime: number =
+            Math.max(this.getPartDurationInMs() - this.takenGlobalTime[player.value] - drift, 0);
         this.globalClocks[nextPlayer.value].changeDuration(adaptedGlobalTime);
         this.globalClocks[nextPlayer.value].resume();
     }
