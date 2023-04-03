@@ -11,15 +11,23 @@ import { TrexoMove } from './TrexoMove';
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class TrexoHalfPieceComponent {
+export default class TrexoHalfPieceComponent {
 
     @Input() coord: Coord3D;
-    @Input() move: TrexoMove | null; // When move is null, it is the first click (only one dropped piece)
+    @Input() move: TrexoMove | undefined; // When move is null, it is the first click (only one dropped piece)
     @Input() pieceClasses: string[];
     @Input() mode: ModeConfig;
     @Input() mustDisplayHeight: boolean;
 
     public static STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH / 2;
+
+    public mustForceStrokeDisplay(): boolean {
+        console.log(this.pieceClasses, 'is it in there ?')
+        return this.move === undefined ||
+               this.pieceClasses.some((pieceClass: string) => pieceClass === 'victory-stroke') ||
+               this.pieceClasses.some((pieceClass: string) => pieceClass === 'last-move-stroke');
+    }
+
     /**
      * In all that page, when a Coord is named, it'll be according to that graph
      * Note that STROKE_OFFSET has to be excluded of those calculations to get the outside shape coords
@@ -49,10 +57,10 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     private getParallelogramPoints(): [Coord, Coord, Coord, Coord, Coord, Coord, Coord] {
-        const parallelogramWidth: number = TrexoComponent.SPACE_SIZE * this.mode.horizontal_width_ratio;
+        const parallelogramWidth: number = TrexoComponent.SPACE_SIZE * this.mode.horizontalWidthRatio;
         const parallelogramHeight: number = TrexoComponent.SPACE_SIZE;
-        const parallelogramOffset: number = this.mode.offset_ratio * TrexoComponent.SPACE_SIZE;
-        const pieceHeight: number = TrexoComponent.SPACE_SIZE * this.mode.piece_height_ratio;
+        const parallelogramOffset: number = this.mode.offsetRatio * TrexoComponent.SPACE_SIZE;
+        const pieceHeight: number = TrexoComponent.SPACE_SIZE * this.mode.pieceHeightRatio;
         const x1: number = parallelogramWidth;
         const y1: number = 0;
         const x3: number = parallelogramWidth - parallelogramOffset;
@@ -77,7 +85,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upLeft: Coord = parallelogramPoints[0];
         const upRight: Coord = parallelogramPoints[1];
-        const STROKE_OFFSET: number = -1 * this.mode.offset_ratio * TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET: number = -1 * this.mode.offsetRatio * TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, TrexoComponent.STROKE_WIDTH);
         const downLeft: Coord = upLeft.getNext(STROKE_VECTOR);
         const downRight: Coord = upRight.getNext(STROKE_VECTOR);
@@ -91,7 +99,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const downLeft: Coord = parallelogramPoints[2];
         const downRight: Coord = parallelogramPoints[3];
-        const STROKE_OFFSET: number = -1 * this.mode.offset_ratio * TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET: number = -1 * this.mode.offsetRatio * TrexoComponent.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, TrexoComponent.STROKE_WIDTH);
         const upLeft: Coord = downLeft.getNext(STROKE_VECTOR, -1);
         const upRight: Coord = downRight.getNext(STROKE_VECTOR, -1);
@@ -171,7 +179,7 @@ export class TrexoHalfPieceComponent {
         const upRight: Coord = parallelogramPoints[1];
         const downRight: Coord = parallelogramPoints[4];
         const STROKE_OFFSET_X: number = TrexoComponent.STROKE_WIDTH;
-        const STROKE_OFFSET_Y: number = TrexoComponent.STROKE_WIDTH / this.mode.offset_ratio;
+        const STROKE_OFFSET_Y: number = TrexoComponent.STROKE_WIDTH / this.mode.offsetRatio;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET_X, - STROKE_OFFSET_Y);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
         const downLeft: Coord = downRight.getNext(STROKE_VECTOR, -1);

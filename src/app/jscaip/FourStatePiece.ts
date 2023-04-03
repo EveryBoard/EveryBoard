@@ -36,8 +36,8 @@ export class FourStatePiece implements ComparableObject {
     }
     private constructor(public readonly value: number) {
     }
-    public equals(o: ComparableObject): boolean {
-        return this === o;
+    public equals(other: ComparableObject): boolean {
+        return this === other;
     }
     public is(player: Player): boolean {
         return this.value === player.value;

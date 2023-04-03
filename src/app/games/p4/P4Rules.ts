@@ -49,15 +49,15 @@ export class P4Rules extends Rules<P4Move, P4State> {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
-                const tmpScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
-                if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
+                const squareScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
+                if (MGPNode.getScoreStatus(squareScore) !== SCORE.DEFAULT) {
                     // if we find a pre-victory
-                    display(P4Rules.VERBOSE, { preVictoryOrVictory: { state, tmpScore, coord: { x, y } } });
-                    return new BoardValue(tmpScore); // we return it
+                    display(P4Rules.VERBOSE, { preVictoryOrVictory: { state, squareScore, coord: { x, y } } });
+                    return new BoardValue(squareScore); // we return it
                     // TODO check that PRE_VICTORY does not overwrite VICTORY in this case
                     // It seems possible to have a pre victory on one column, and a victory on the next
                 }
-                score += tmpScore;
+                score += squareScore;
             }
         }
         return new BoardValue(score);
@@ -71,8 +71,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public static getSquareScore(state: P4State, coord: Coord): number {
         display(P4Rules.VERBOSE, 'getSquareScore(board, ' + coord.x + ', ' + coord.y + ') called');
-        const board: Table<PlayerOrNone> = state.board;
-        display(P4Rules.VERBOSE, board);
+        display(P4Rules.VERBOSE, state.board);
         return P4Rules.P4_HELPER.getSquareScore(state, coord);
     }
     public static getListMoves(node: P4Node): P4Move[] {
@@ -123,8 +122,8 @@ export class P4Rules extends Rules<P4Move, P4State> {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y >= 0 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
-                const tmpScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
-                if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                const squareScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
+                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                     return GameStatus.getVictory(state.getCurrentOpponent());
                 }
             }

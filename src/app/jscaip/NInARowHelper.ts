@@ -12,10 +12,7 @@ export class NInARowHelper<T> {
                        public N: number)
     {
     }
-    public getSquareScore(state: GameStateWithTable<T>,
-                          coord: Coord)
-    : number
-    {
+    public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {
         const piece: T = state.getPieceAt(coord);
         const ally: Player = this.getOwner(piece) as Player;
         assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
@@ -24,17 +21,11 @@ export class NInARowHelper<T> {
         const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
 
         for (const dir of Direction.DIRECTIONS) {
-            const tmpData: [number, number] = this.getNumberOfFreeSpacesAndAllies(
-                state,
-                coord,
-                dir,
-                ally,
-            );
-            freeSpaceByDirs.set(dir, tmpData[0]);
-            alliesByDirs.set(dir, tmpData[1]);
+            const freeSpaceAndAllies: [number, number] = this.getNumberOfFreeSpacesAndAllies(state, coord, dir, ally);
+            freeSpaceByDirs.set(dir, freeSpaceAndAllies[0]);
+            alliesByDirs.set(dir, freeSpaceAndAllies[1]);
         }
-        const score: number = this.getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs,
-                                                                            freeSpaceByDirs);
+        const score: number = this.getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs, freeSpaceByDirs);
         return score * ally.getScoreModifier();
     }
     public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Direction, number>,
@@ -65,11 +56,11 @@ export class NInARowHelper<T> {
                                           ally: Player)
     : [number, number]
     {
-        /*
-        * for a square i(iX, iY) containing an ally
-        * we go through the board from i in the direction dir(dX, dY)
-        * and until a maximal distance of N cases
-        */
+        /**
+         * for a square at the coord i, containing an ally
+         * we go through the board from this coord in the direction dir(dX, dY)
+         * and until a maximal distance of N cases
+         */
         let freeSpaces: number = 0; // the number of aligned free square
         let allies: number = 0; // the number of alligned allies
         let allAlliesAreSideBySide: boolean = true;

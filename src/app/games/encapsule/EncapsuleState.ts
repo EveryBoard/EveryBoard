@@ -18,8 +18,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
         const emptySpace: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         const emptyNumber: number = emptySpace.encode();
         const startingNumberBoard: number[][] = ArrayUtils.createTable(3, 3, emptyNumber);
-        const startingBoard: EncapsuleSpace[][] =
-            ArrayUtils.mapBiArray(startingNumberBoard, EncapsuleSpace.decode);
+        const startingBoard: EncapsuleSpace[][] = ArrayUtils.mapBiArray(startingNumberBoard, EncapsuleSpace.decode);
         const initialPieces: EncapsulePiece[] = [
             EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
             EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,

@@ -50,10 +50,10 @@ export class MartianChessMove extends MoveCoordToCoord {
                                       this.getEnd().x + ', ' + this.getEnd().y + ')' +
                                       ending + ')';
     }
-    public equals(o: MartianChessMove): boolean {
-        if (this.getStart().equals(o.getStart()) === false) return false;
-        if (this.getEnd().equals(o.getEnd()) === false) return false;
-        return this.calledTheClock === o.calledTheClock;
+    public equals(other: MartianChessMove): boolean {
+        if (this.getStart().equals(other.getStart()) === false) return false;
+        if (this.getEnd().equals(other.getEnd()) === false) return false;
+        return this.calledTheClock === other.calledTheClock;
     }
     public isValidForPawn(): boolean {
         const dx: number = Math.abs(this.getStart().x - this.getEnd().x);

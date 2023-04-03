@@ -9,21 +9,25 @@ import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
+const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
+const O1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 0)]);
+const O1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 1)]);
+const O2__T2: TrexoPieceStack = TrexoPieceStack.from([
+    new TrexoPiece(Player.ZERO, 1, 0),
+    new TrexoPiece(Player.ZERO, 2, 2),
+]);
+const O1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 3)]);
+const X1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 0)]);
+const X1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 1)]);
+const X2__T2: TrexoPieceStack = TrexoPieceStack.from([
+    new TrexoPiece(Player.ONE, 1, 0),
+    new TrexoPiece(Player.ONE, 2, 2),
+]);
+const X1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 3)]);
+
 describe('TrexoComponent', () => {
 
     let testUtils: ComponentTestUtils<TrexoComponent>;
-
-    async function doMove(zero: Coord, one: Coord): Promise<void> {
-        let opponent: Coord = zero;
-        let player: Coord = one;
-        if (testUtils.getComponent().getTurn() % 2 === 0) {
-            opponent = one;
-            player = zero;
-        }
-        await testUtils.expectClickSuccess('#space_' + opponent.x + '_' + opponent.y);
-        const move: TrexoMove = TrexoMove.from(zero, one).get();
-        await testUtils.expectMoveSuccess('#space_' + player.x + '_' + player.y, move);
-    }
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<TrexoComponent>('Trexo');
@@ -42,7 +46,6 @@ describe('TrexoComponent', () => {
 
                 it('should create a third level', fakeAsync(async() => {
                     // Given a board with two level
-                    const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
                     const NOMAJ0: TrexoPieceStack = TrexoPieceStack.from([
                         new TrexoPiece(Player.ZERO, 1, 0),
                         new TrexoPiece(Player.ZERO, 2, 2),
@@ -94,12 +97,24 @@ describe('TrexoComponent', () => {
                     }));
                     it(`should fail when clicking on an isolated piece`, fakeAsync(async() => {
                         // Given a board on which 1 space is higher than all its neighbooring space (except its "twin")
-                        await doMove(new Coord(0, 0), new Coord(0, 1));
+                        const state: TrexoState = TrexoState.from([
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, O1__T0, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, X1__T0, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                        ], 1).get();
+                        testUtils.setupState(state);
 
                         // When trying to choose it as first coord
                         // Then it should fail
                         const reason: string = TrexoFailure.NO_WAY_TO_DROP_IT_HERE();
-                        await testUtils.expectClickFailure('#space_0_0', reason);
+                        await testUtils.expectClickFailure('#space_4_4', reason);
                     }));
                     it('should show possible next click amongst the possible neigbhors', fakeAsync(async() => {
                         // Given any board
@@ -158,20 +173,27 @@ describe('TrexoComponent', () => {
                     }));
                     it('should allow dropping on second level', fakeAsync(async() => {
                         // Given any board where two neighboring tiles are on the same level
-                        await testUtils.expectClickSuccess('#space_0_0');
-                        let move: TrexoMove = TrexoMove.from(new Coord(0, 1), new Coord(0, 0)).get();
-                        await testUtils.expectMoveSuccess('#space_0_1', move);
-                        await testUtils.expectClickSuccess('#space_1_0');
-                        move = TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get();
-                        await testUtils.expectMoveSuccess('#space_1_1', move);
+                        const state: TrexoState = TrexoState.from([
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, X1__T0, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, O1__T0, O1__T1, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, X1__T1, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                        ], 2).get();
+                        testUtils.setupState(state);
                         // And a first click has been done on that level
-                        await testUtils.expectClickSuccess('#space_0_0');
+                        await testUtils.expectClickSuccess('#space_4_4');
 
                         // When clicking a second time
-                        move = TrexoMove.from(new Coord(1, 0), new Coord(0, 0)).get();
+                        const move: TrexoMove = TrexoMove.from(new Coord(5, 4), new Coord(4, 4)).get();
 
                         // Then the move should be a success
-                        await testUtils.expectMoveSuccess('#space_1_0', move);
+                        await testUtils.expectMoveSuccess('#space_5_4', move);
                     }));
                     it(`should change the first dropped coord when clicking too far`, fakeAsync(async() => {
                         // Given any board on which a first click has been made
@@ -218,10 +240,19 @@ describe('TrexoComponent', () => {
                     }));
                     it('should highlight victory', fakeAsync(async() => {
                         // Given any board on which a 4 moves have already been done, aligning piece of Player.ZERO
-                        await doMove(new Coord(3, 3), new Coord(3, 2));
-                        await doMove(new Coord(4, 3), new Coord(4, 4));
-                        await doMove(new Coord(5, 3), new Coord(5, 2));
-                        await doMove(new Coord(6, 3), new Coord(6, 4));
+                        const state: TrexoState = TrexoState.from([
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, X1__T0, ______, X2__T2, ______, ______, ______, ______],
+                            [______, ______, ______, O1__T0, O1__T1, O2__T2, O1__T3, ______, ______, ______],
+                            [______, ______, ______, ______, X1__T1, ______, X1__T3, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                            [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                        ], 4).get();
+                        testUtils.setupState(state);
                         await testUtils.expectClickSuccess('#space_7_2');
 
                         // When doing the victorious move
@@ -271,6 +302,36 @@ describe('TrexoComponent', () => {
             // Then number indicating the height should be present on pieces
             const height: DebugElement = testUtils.findElement('#height_5_5_0');
             expect(height.nativeElement.innerHTML).toBe('0');
+        }));
+        it('should not transfer upper piece style to lower piece', fakeAsync(async() => {
+            // Given one 3D display with one Stack in two color
+            const MIXXED: TrexoPieceStack = TrexoPieceStack.from([
+                new TrexoPiece(Player.ZERO, 1, 0),
+                new TrexoPiece(Player.ONE, 2, 2),
+            ]);
+            const MONOCO: TrexoPieceStack = TrexoPieceStack.from([
+                new TrexoPiece(Player.ZERO, 1, 1),
+                new TrexoPiece(Player.ONE, 2, 2),
+            ]);
+            const state: TrexoState = TrexoState.from([
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, X1__T0, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, MIXXED, MONOCO, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, X1__T1, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+            ], 2).get();
+
+            // When displaying it
+            testUtils.setupState(state);
+
+            // Then lower piece should still be of Player.ZERO and higher be of Player.ONE
+            testUtils.expectElementToHaveClass('#tile_4_4_0', 'player0-fill');
+            testUtils.expectElementToHaveClass('#tile_4_4_1', 'player1-fill');
         }));
     });
 });

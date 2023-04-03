@@ -28,10 +28,10 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         super(start, end);
         this.direction = Direction.factory.fromMove(start, end).get();
     }
-    public equals(o: LinesOfActionMove): boolean {
-        if (o === this) return true;
-        if (!o.getStart().equals(this.getStart())) return false;
-        return o.getEnd().equals(this.getEnd());
+    public equals(other: LinesOfActionMove): boolean {
+        if (other === this) return true;
+        if (!other.getStart().equals(this.getStart())) return false;
+        return other.getEnd().equals(this.getEnd());
     }
     public toString(): string {
         return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';

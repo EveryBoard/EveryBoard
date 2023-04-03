@@ -3,27 +3,30 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TrexoMove } from './TrexoMove';
 import { TrexoRules } from './TrexoRules';
-import { TrexoState } from './TrexoState';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
+import { Player } from 'src/app/jscaip/Player';
 
-const initialState: TrexoState = TrexoState.getInitialState();
-const moves: TrexoMove[] = [
-    TrexoMove.from(new Coord(4, 4), new Coord(4, 3)).get(),
-    TrexoMove.from(new Coord(6, 4), new Coord(5, 4)).get(),
-    TrexoMove.from(new Coord(5, 5), new Coord(5, 6)).get(),
-    TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get(),
-    TrexoMove.from(new Coord(7, 3), new Coord(8, 3)).get(),
-    TrexoMove.from(new Coord(3, 1), new Coord(3, 2)).get(),
-    TrexoMove.from(new Coord(7, 5), new Coord(6, 5)).get(),
-];
-let previousState: TrexoState = initialState;
-for (const move of moves) {
-    const state: TrexoState = TrexoRules.get().applyLegalMove(move, previousState);
-    previousState = state;
-}
-const firstMove: TrexoMove = TrexoMove.from(new Coord(5, 5), new Coord(5, 4)).get();
-const stateAtTurnOne: TrexoState = TrexoRules.get().applyLegalMove(firstMove, initialState);
-const secondMove: TrexoMove = TrexoMove.from(new Coord(5, 7), new Coord(5, 6)).get();
-const stateAtTurnTwo: TrexoState = TrexoRules.get().applyLegalMove(secondMove, stateAtTurnOne);
+const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
+const ONE__0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 0)]);
+const ZERO_0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 0)]);
+const ONE__1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 1)]);
+const ZERO_1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 1)]);
+const ZERO_2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 2)]);
+const ONE__2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 2)]);
+const ZERO_3: TrexoPieceStack = TrexoPieceStack.from([
+    new TrexoPiece(Player.ZERO, 1, 0),
+    new TrexoPiece(Player.ZERO, 2, 3),
+]);
+const ONE__3: TrexoPieceStack = TrexoPieceStack.from([
+    new TrexoPiece(Player.ONE, 1, 1),
+    new TrexoPiece(Player.ONE, 2, 3),
+]);
+const ZERO_4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 4)]);
+const ONE__4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 4)]);
+const ZERO_5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 5)]);
+const ONE__5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 5)]);
+const ONE__6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 6)]);
+const ZERO_6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 6)]);
 
 export class TrexoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
@@ -43,23 +46,44 @@ export class TrexoTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Dropping a piece over other pieces`,
             $localize`You can put a tile on other tiles. For that you must respect two rules:<br/><ul><li>The two pieces must be at the same level.</li><li>You cannot drop your piece on only one other piece.</li></ul><br/>You're playing Dark, do such a move!`,
-            stateAtTurnTwo,
+            new TrexoState([
+                [______, ______, ______, ONE__0, ZERO_0, ZERO_1, ONE__1, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______]
+            ], 7),
             [
-                TrexoMove.from(new Coord(5, 5), new Coord(5, 6)).get(),
-                TrexoMove.from(new Coord(5, 6), new Coord(5, 5)).get(),
+                TrexoMove.from(new Coord(4, 0), new Coord(5, 0)).get(),
+                TrexoMove.from(new Coord(5, 0), new Coord(4, 0)).get(),
             ],
             $localize`Congratulations!`,
             $localize`Incorrect, you put that piece on the floor level, please put it on top of two pieces.`,
-        )
-            .withPreviousMove(secondMove)
-            .withPreviousState(stateAtTurnOne),
+        ),
         TutorialStep.fromPredicate(
             $localize`Victory`,
-            $localize`To win at Trexo, you need to align 5 of your pieces, only the piece on top counts. Since you have to put the piece of your opponent first, if you create a victory for them and for you in the same turn, they'll be considered the winners (if you create only a victory for them too, obviously).<br/><br/>You're playing Dark, win.`,
-            previousState, // This state became a pre-victorious state in the loop
+            $localize`To win at Trexo, you need to align 5 of your pieces. Important, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they'll be considered the winners. If you create only a victory for them too, obviously.<br/><br/>You're playing Light, win.`,
+            new TrexoState([
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ZERO_5, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ONE__5, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ONE__0, ______, ______, ZERO_4, ONE__4, ______],
+                [______, ______, ______, ______, ZERO_3, ONE__3, ZERO_1, ______, ______, ______],
+                [______, ______, ______, ______, ______, ZERO_2, ONE__6, ZERO_6, ______, ______],
+                [______, ______, ______, ______, ______, ONE__2, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______]
+            ], 7),
             TrexoMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
             (lastMove: TrexoMove, _: TrexoState, resultingState: TrexoState) => {
-                if (TrexoRules.TREXO_HELPER.getSquareScore(resultingState, lastMove.getOne()) > 5) {
+                const moveScore: number = TrexoRules.TREXO_HELPER.getSquareScore(resultingState, lastMove.getOne());
+                if (moveScore === Number.MAX_SAFE_INTEGER) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`Failed. Try again.`);

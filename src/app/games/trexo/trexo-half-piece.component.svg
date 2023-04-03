@@ -9,13 +9,13 @@
           class="text-big text-center"
           [innerHTML]="coord.z">
 </svg:text>
-<svg:polyline *ngIf="isBottomHalf() === false || move === undefined"
+<svg:polyline *ngIf="isBottomHalf() === false || mustForceStrokeDisplay()"
               id="line_0_to_1"
               [ngClass]="pieceClasses"
               class="base strokeless"
               [attr.points]="getUpperHorizontalLine()"
 />
-<svg:g *ngIf="isTopHalf() === false || move === undefined">
+<svg:g *ngIf="isTopHalf() === false || mustForceStrokeDisplay()">
     <svg:polyline [attr.points]="getMiddleHorizontalLine()"
                   id="line_2_to_3"
                   [ngClass]="pieceClasses"
@@ -27,13 +27,13 @@
                   class="base strokeless"
     />
 </svg:g>
-<svg:polyline *ngIf="isRightHalf() === false || move === undefined"
+<svg:polyline *ngIf="isRightHalf() === false || mustForceStrokeDisplay()"
               id="line_0_to_2"
               [ngClass]="pieceClasses"
               class="base strokeless"
               [attr.points]="getLeftDiagonalLine()"
 />
-<svg:g *ngIf="isLeftHalf() === false || move === undefined">
+<svg:g *ngIf="isLeftHalf() === false || mustForceStrokeDisplay()">
     <svg:polyline [attr.points]="getMiddleDiagonalLine()"
                   id="line_1_to_3"
                   class="base strokeless"
@@ -45,19 +45,19 @@
                   class="base strokeless"
     />
 </svg:g>
-<svg:polyline *ngIf="isBottomHalf() || isLeftHalf() || move === undefined"
+<svg:polyline *ngIf="isBottomHalf() || isLeftHalf() || mustForceStrokeDisplay()"
               id="line_2_to_5"
               [ngClass]="pieceClasses"
               class="base strokeless"
               [attr.points]="getLeftVerticalLine()"
 />
-<svg:polyline *ngIf="isBottomHalf() || isRightHalf() || move === undefined"
+<svg:polyline *ngIf="isBottomHalf() || isRightHalf() || mustForceStrokeDisplay()"
               id="line_3_to_6"
               [ngClass]="pieceClasses"
               class="base strokeless"
               [attr.points]="getMiddleVerticalLine()"
 />
-<svg:polyline *ngIf="isTopHalf() || isRightHalf() || move === undefined"
+<svg:polyline *ngIf="isTopHalf() || isRightHalf() || mustForceStrokeDisplay()"
               id="line_1_to_4"
               [ngClass]="pieceClasses"
               class="base strokeless"

@@ -76,8 +76,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
                 const coord: Coord = new Coord(x, y);
                 const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
                 if (pieceOwner.isPlayer()) {
-                    const tmpScore: number = TrexoRules.getSquareScore(state, coord);
-                    if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                    const squareScore: number = TrexoRules.getSquareScore(state, coord);
+                    if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                         if (pieceOwner === lastPlayer) {
                             victoryOfLastPlayer.push(coord);
                         } else {
@@ -103,8 +103,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
                 // while we haven't reached the top or an empty space
                 const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).getOwner();
                 if (pieceOwner.isPlayer()) {
-                    const tmpScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
-                    if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                    const squareScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
+                    if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                         if (pieceOwner === lastPlayer) {
                             lastPlayerAligned5 = true;
                         } else {
@@ -137,16 +137,16 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return moves;
     }
     public getPossiblesMoves(state: TrexoState, first: Coord, second: Coord): TrexoMove[] {
-        const firstPiece: TrexoPieceStack = state.getPieceAt(first);
-        const secondPiece: TrexoPieceStack = state.getPieceAt(second);
-        let piecesHideEntirelyOnePiece: boolean;
-        if (firstPiece.getUpperTileId() === -1) {
-            piecesHideEntirelyOnePiece = false;
+        const firstStack: TrexoPieceStack = state.getPieceAt(first);
+        const secondStack: TrexoPieceStack = state.getPieceAt(second);
+        let tileHideEntirelyOneTile: boolean;
+        if (firstStack.getUpperTileId() === -1) {
+            tileHideEntirelyOneTile = false;
         } else {
-            piecesHideEntirelyOnePiece = (firstPiece.getUpperTileId() === secondPiece.getUpperTileId());
+            tileHideEntirelyOneTile = (firstStack.getUpperTileId() === secondStack.getUpperTileId());
         }
-        const pieceIsAllDeTravers: boolean = firstPiece.getHeight() !== secondPiece.getHeight();
-        if (piecesHideEntirelyOnePiece || pieceIsAllDeTravers) {
+        const stacksAreOnUnevenGround: boolean = firstStack.getHeight() !== secondStack.getHeight();
+        if (tileHideEntirelyOneTile || stacksAreOnUnevenGround) {
             return [];
         } else {
             return [

@@ -117,7 +117,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
             ErrorLoggerService.logErrorAndFail('SixState', 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
         }
     }
-    public equals(o: SixState): boolean {
-        return this.turn === o.turn && this.pieces.equals(o.pieces);
+    public equals(other: SixState): boolean {
+        return this.turn === other.turn && this.pieces.equals(other.pieces);
     }
 }

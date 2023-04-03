@@ -80,10 +80,10 @@ export class SaharaMove extends MoveCoordToCoord {
         const dy: number = Math.abs(this.getStart().y - this.getEnd().y);
         return dx + dy === 1;
     }
-    public equals(o: SaharaMove): boolean {
-        if (o === this) return true;
-        if (!o.getStart().equals(this.getStart())) return false;
-        return o.getEnd().equals(this.getEnd());
+    public equals(other: SaharaMove): boolean {
+        if (other === this) return true;
+        if (!other.getStart().equals(this.getStart())) return false;
+        return other.getEnd().equals(this.getEnd());
     }
     public toString(): string {
         return 'SaharaMove(' + this.getStart() + '->' + this.getEnd() + ')';

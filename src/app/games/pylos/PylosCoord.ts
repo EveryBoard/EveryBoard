@@ -3,13 +3,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { Encoder } from 'src/app/utils/Encoder';
-import { getOptionalEncoder } from 'src/app/utils/MGPOptional';
 
 export class PylosCoord extends Coord3D {
 
     public static encoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
 
-    public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = getOptionalEncoder(PylosCoord.encoder);
+    public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.encoder);
 
     public static from(x: number, y: number, z: number): PylosCoord {
         return new PylosCoord(x, y, z);

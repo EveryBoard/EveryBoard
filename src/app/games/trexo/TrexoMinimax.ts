@@ -10,10 +10,7 @@ import { TrexoState } from './TrexoState';
 
 export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
 
-    public getListMoves(node: TrexoNode): TrexoMove[] {
-        return TrexoRules.get().getLegalMoves(node.gameState);
-    }
-    public getBoardValue(node: TrexoNode): BoardValue {
+    public static getBoardValue(node: TrexoNode): BoardValue {
         let score: number = 0;
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();
@@ -24,15 +21,15 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
                 // while we haven't reached the top or an empty space
                 const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).getOwner();
                 if (pieceOwner.isPlayer()) {
-                    const tmpScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
-                    if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                    const squareScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
+                    if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                         if (pieceOwner === lastPlayer) {
                             lastPlayerAligned5 = true;
                         } else {
                             return new BoardValue(lastPlayer.getDefeatValue());
                         }
                     } else {
-                        score += tmpScore;
+                        score += squareScore;
                     }
                 }
             }
@@ -42,5 +39,10 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
         }
         return new BoardValue(score);
     }
-
+    public getListMoves(node: TrexoNode): TrexoMove[] {
+        return TrexoRules.get().getLegalMoves(node.gameState);
+    }
+    public getBoardValue(node: TrexoNode): BoardValue {
+        return TrexoMinimax.getBoardValue(node);
+    }
 }

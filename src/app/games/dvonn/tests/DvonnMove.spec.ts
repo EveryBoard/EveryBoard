@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { DvonnMove } from '../DvonnMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('DvonnMove', () => {
 
@@ -11,10 +11,10 @@ describe('DvonnMove', () => {
     });
     it('should encode and decode coord to coord moves bijectively', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(3, 2), new Coord(3, 3));
-        NumberEncoderTestUtils.expectToBeBijective(DvonnMove.encoder, move);
+        EncoderTestUtils.expectToBeBijective(DvonnMove.encoder, move);
     });
     it('should encode and decode PASS bijectively', () => {
-        NumberEncoderTestUtils.expectToBeBijective(DvonnMove.encoder, DvonnMove.PASS);
+        EncoderTestUtils.expectToBeBijective(DvonnMove.encoder, DvonnMove.PASS);
     });
     it('should force move to start and end inside the board', () => {
         expect(() => DvonnMove.of(new Coord(-1, 2), new Coord(0, 2))).toThrowError();
@@ -51,7 +51,7 @@ describe('DvonnMove', () => {
         expect(move.equals(neighbor)).toBeFalse();
         expect(move.equals(stranger)).toBeFalse();
     });
-    it('should construct (-1,-1)->(-2,-2) as PASS', () => {
+    it('should construct (-1, -1) -> (-2, -2) as PASS', () => {
         expect(DvonnMove.of(new Coord(-1, -1), new Coord(-2, -2))).toBe(DvonnMove.PASS);
     });
 });

@@ -104,8 +104,8 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return false;
         }
         const supportedPieces: PylosCoord[] = capture.getHigherCoords()
-            .filter((p: PylosCoord) => state.getPieceAt(p).isPlayer() &&
-                                       p.equals(move.firstCapture.get()) === false);
+            .filter((coord: PylosCoord) => state.getPieceAt(coord).isPlayer() &&
+                                           coord.equals(move.firstCapture.get()) === false);
         return supportedPieces.length === 0;
     }
     public static getGameStatus(node: PylosNode): GameStatus {
@@ -151,7 +151,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             const supportedPieces: PylosCoord[] = startingCoord.getHigherCoords()
-                .filter((p: PylosCoord) => initialState.getPieceAt(p).isPlayer());
+                .filter((coord: PylosCoord) => initialState.getPieceAt(coord).isPlayer());
             if (supportedPieces.length === 0) {
                 const stateWithLeftStartingCoord: PylosState = initialState.removePieceAt(move.startingCoord.get());
                 return MGPFallible.success(stateWithLeftStartingCoord);

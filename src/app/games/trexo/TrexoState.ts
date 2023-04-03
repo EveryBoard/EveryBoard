@@ -20,6 +20,9 @@ export class TrexoPiece {
                        public readonly tileId: number)
     {
     }
+    public toString(): string {
+        return `new TrexoPiece(${ this.owner.toString() }, ${ this.height }, ${ this.tileId })`;
+    }
 }
 
 export class TrexoPieceStack {
@@ -30,8 +33,8 @@ export class TrexoPieceStack {
         let previousTurn: number = -1;
         for (let z: number = 0; z < pieces.length; z++) {
             const piece: TrexoPiece = pieces[z];
-            assert(piece.height === z + 1, 'TrexoPieceStack, piece height should be incremental');
-            assert(previousTurn < piece.tileId, 'TrexoPieceStack, dropped turn should be ascending');
+            assert(piece.height === z + 1, 'TrexoPieceStack: piece height should be incremental');
+            assert(previousTurn < piece.tileId, 'TrexoPieceStack: dropped turn should be ascending');
             previousTurn = piece.tileId;
         }
         return new TrexoPieceStack(pieces);
@@ -50,7 +53,7 @@ export class TrexoPieceStack {
     public getOwner(): PlayerOrNone {
         const numberOfPiece: number = this.pieces.length;
         if (numberOfPiece === 0) {
-            return PlayerOrNone.NONE
+            return PlayerOrNone.NONE;
         } else {
             const lastPiece: TrexoPiece = this.pieces[numberOfPiece - 1];
             return lastPiece.owner;
@@ -71,6 +74,11 @@ export class TrexoPieceStack {
     public getPieceAt(z: number): TrexoPiece {
         assert(z < this.pieces.length, 'no element ' + z + 'in piece!');
         return this.pieces[z];
+    }
+    public toString(): string {
+        return '[' + this.pieces.map((piece: TrexoPiece) => {
+            return '(' + piece.toString() + ')';
+        }).join(' ') + ']';
     }
 }
 
@@ -103,10 +111,10 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
     }
     public toString(): string {
         return this.board.map((list: TrexoPieceStack[]) => {
-            return list.map((space: TrexoPieceStack) => {
-                return '(' + space.toString() + ')';
-            }).join(' ');
-        }).join('\n');
+            return '[' + list.map((space: TrexoPieceStack) => {
+                return 'TrexoPieceStack.from(' + space.toString() + ')';
+            }).join(', ') + ']';
+        }).join('\n,');
     }
     public getPieceAtXYZ(x: number, y: number, z: number): TrexoPiece {
         const stack: TrexoPieceStack = this.getPieceAtXY(x, y);

@@ -2663,7 +2663,7 @@
         <source>You cannot drop on only one piece!</source>
       </trans-unit>
       <trans-unit id="7046446972233642847" datatype="html">
-        <source>You cannot drop piece on uneven grounds!</source>
+        <source>You cannot drop a piece on uneven grounds!</source>
       </trans-unit>
       <trans-unit id="8777341718687257426" datatype="html">
         <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
@@ -2684,7 +2684,7 @@
         <source>Incorrect, you put that piece on the floor level, please put it on top of two pieces.</source>
       </trans-unit>
       <trans-unit id="6106348607957297864" datatype="html">
-        <source>To win at Trexo, you need to align 5 of your pieces, only the piece on top counts. Since you have to put the piece of your opponent first, if you create a victory for them and for you in the same turn, they&apos;ll be considered the winners (if you create only a victory for them too, obviously).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win.</source>
+        <source>To win at Trexo, you need to align 5 of your pieces. Important, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>

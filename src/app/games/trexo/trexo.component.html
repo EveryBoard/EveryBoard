@@ -21,17 +21,17 @@
                    (click)="onClick(x, y)"
                    [attr.transform]="getTranslate(x, y, z + 1)"
                    [mode]="mode"
-                   [coord]="getCoord3D(x, y, z)"
+                   [coord]="Coord3D.of(x, y, z)"
                    [mustDisplayHeight]="chosenMode === '2D'"
                    [move]="piece.move.get()"
-                   [pieceClasses]="getPieceClasses(x, y)"/>
+                   [pieceClasses]="getPieceClasses(x, y, z)"/>
                 <g *ngIf="piece.isDroppedPiece"
                    mgp-trexo-half-piece
                    [mode]="mode"
                    id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
                    [attr.transform]="getTranslate(x, y, z + 1)"
-                   [coord]="getCoord3D(x, y, z)"
+                   [coord]="Coord3D.of(x, y, z)"
                    [pieceClasses]="[currentOpponentClass]"/>
             </g>
         </g>
@@ -43,7 +43,7 @@
            (click)="switchToMode('3D')"
            [mode]="TrexoComponent.modeMap['3D']"
            [attr.transform]="get3DSwitcherTransform()"
-           [coord]="getCoord3D(10.5, 8.5, 0)"
+           [coord]="Coord3D.of(10.5, 8.5, 0)"
            [pieceClasses]="['player0-fill']"/>
         <ng-template #switchTo2D>
             <g mgp-trexo-half-piece
@@ -51,8 +51,8 @@
                (click)="switchToMode('2D')"
                [mode]="TrexoComponent.modeMap['2D']"
                [attr.transform]="getTranslate(12, 9, 0)"
-               [coord]="getCoord3D(12, 9, 0)"
-               [pieceClasses]="['player0-fill']"/>
+               [coord]="Coord3D.of(12, 9, 0)"
+               [pieceClasses]="[currentPlayerClass]"/>
         </ng-template>
     </g>
 </svg>

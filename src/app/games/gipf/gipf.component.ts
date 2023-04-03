@@ -25,24 +25,28 @@ import { Utils } from 'src/app/utils/utils';
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class GipfComponent
-    extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, FourStatePiece, GipfLegalityInformation> {
+export class GipfComponent extends HexagonalGameComponent<GipfRules,
+                                                          GipfMove,
+                                                          GipfState,
+                                                          FourStatePiece,
+                                                          GipfLegalityInformation>
+{
+    private static readonly PHASE_INITIAL_CAPTURE: number = 0;
+    private static readonly PHASE_PLACEMENT_COORD: number = 1;
+    private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
+    private static readonly PHASE_FINAL_CAPTURE: number = 3;
 
     public inserted: MGPOptional<Arrow> = MGPOptional.empty();
     public arrows: Arrow[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
 
-    public hexagonWidth: number = this.SPACE_SIZE;
-    public sharedHexagonX: number = Math.cos(30) * this.hexagonWidth * 0.5;
-    public boardWidth: number = this.hexagonWidth +
-                                (6 * (this.hexagonWidth - this.sharedHexagonX)) +
-                                (3 * this.STROKE_WIDTH / 2);
-    public boardHeight: number = (7 * this.hexagonWidth) + (4.5 * this.STROKE_WIDTH);
-    private static readonly PHASE_INITIAL_CAPTURE: number = 0;
-    private static readonly PHASE_PLACEMENT_COORD: number = 1;
-    private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
-    private static readonly PHASE_FINAL_CAPTURE: number = 3;
+    public readonly hexagonWidth: number = this.SPACE_SIZE;
+    public readonly sharedHexagonX: number = Math.cos(30) * this.hexagonWidth * 0.5;
+    public readonly boardWidth: number = this.hexagonWidth +
+                                         (6 * (this.hexagonWidth - this.sharedHexagonX)) +
+                                         (3 * this.STROKE_WIDTH / 2);
+    public readonly boardHeight: number = (7 * this.hexagonWidth) + (4.5 * this.STROKE_WIDTH);
     private movePhase: number = GipfComponent.PHASE_PLACEMENT_COORD;
 
     // This state contains the board that is actually displayed

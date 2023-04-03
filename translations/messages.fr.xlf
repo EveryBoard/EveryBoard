@@ -3773,12 +3773,12 @@
         <target>Vous ne pouvez pas déposer de pièce sur seulement une autre pièce !</target>
       </trans-unit>
       <trans-unit id="7046446972233642847" datatype="html">
-        <source>You cannot drop piece on uneven grounds!</source>
-        <target>Vous ne pouvez pas déposer de pièce non-horizontalement !</target>
+        <source>You cannot drop a piece on uneven grounds!</source>
+        <target>Vous ne pouvez pas déposer de pièce sur deux piles de hauteur différentes !</target>
       </trans-unit>
       <trans-unit id="8777341718687257426" datatype="html">
         <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
-        <target>Au Trexo, le but du jeu est d'aligner 5 pièces de votre couleur dans une ligne horizontale, verticale, ou diagonale. Mais les joueurs doivent déposer sur le plateau des tuiles constituées de deux pièces, une pour chaque joueur !</target>
+        <target>Au Trexo, le but du jeu est d'aligner 5 pièces de votre couleur dans une ligne horizontale, verticale, ou diagonale. Mais les joueurs déposent des tuiles constituées de deux pièces, une pour chaque joueur !</target>
       </trans-unit>
       <trans-unit id="6011148802067949079" datatype="html">
         <source>Dropping a tile</source>
@@ -3786,7 +3786,7 @@
       </trans-unit>
       <trans-unit id="9144162616649352203" datatype="html">
         <source>When you drop at tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
-        <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit ou vous voulez déposez la pièce de l'adversaire, puis sur la case voisine ou vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
+        <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit où vous voulez déposer la pièce de l'adversaire, puis sur la case voisine où vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
       </trans-unit>
       <trans-unit id="6262113904872794006" datatype="html">
         <source>Dropping a piece over other pieces</source>
@@ -3794,15 +3794,15 @@
       </trans-unit>
       <trans-unit id="5849352329538631605" datatype="html">
         <source>You can put a tile on other tiles. For that you must respect two rules:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same level.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-        <target>Quand deux pièces différentes sont au même niveau et sont voisines, vous pouvez placer une pièce sur elele. Vous devez respecter deux règles pour celà:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Les deux pièces doivent être au même niveau.&lt;/li&gt;&lt;li&gt;Vous ne pouver pas déposer sur une seule pièce.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Vous jouez Foncé, Placez une tuile en hauteur.</target>
+        <target>Vous pouvez superposer les tuiles. Pour ce faire vous devez respecter deux règles :&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Les deux pièces doivent être au même niveau.&lt;/li&gt;&lt;li&gt;Vous ne pouver pas déposer votre tuile sur une seule tuile.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Vous jouez Foncé, placez une tuile en hauteur.</target>
       </trans-unit>
       <trans-unit id="3088092342855643416" datatype="html">
         <source>Incorrect, you put that piece on the floor level, please put it on top of two pieces.</source>
-        <target>Incorrecte, vous avez mis cette pièce au niveau du plateau, veuillez placez une pièce sur les deux autres pièces.</target>
+        <target>Incorrect, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
       </trans-unit>
       <trans-unit id="6106348607957297864" datatype="html">
-        <source>To win at Trexo, you need to align 5 of your pieces, only the piece on top counts. Since you have to put the piece of your opponent first, if you create a victory for them and for you in the same turn, they&apos;ll be considered the winners (if you create only a victory for them too, obviously).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win.</source>
-        <target>Pour gagner à Trexo, vous devez aligner 5 de vos pièces, seulement la pièce en haut d'une pile compte. Puisque vous déposez les pièces adverses en premier, dans le cas où vous créez un alignement avec vos pièces et un alignement avec les pièces adverses, l'adversaire sera conisdéré vainqueur (si vous créez uniquement une victoire pour l'adversaire, il gagnera évidemment).&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+        <source>To win at Trexo, you need to align 5 of your pieces. Important, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+        <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte. Puisque vous déposez les pièces adverses en premier, dans le cas où vous créez un alignement avec vos pièces et un alignement avec les pièces adverses, l'adversaire sera conisdéré vainqueur. Si vous créez uniquement une victoire pour l'adversaire, il gagnera, évidemment.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">
         <source>The king is dead, long live the king. Congratulations, you won.</source>

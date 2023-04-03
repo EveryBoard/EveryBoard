@@ -14,6 +14,28 @@ export class MGPOptional<T> {
     public static empty<T>(): MGPOptional<T> {
         return new MGPOptional(null as T | null);
     }
+    /**
+     * Encodes a MGPOptional<T> using an encoder of T.
+     * It will use the same encoding as T, and use null to encode an empty optional.
+     */
+    public static getEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
+        return new class extends Encoder<MGPOptional<T>> {
+            public encode(opt: MGPOptional<T>): JSONValue {
+                if (opt.isPresent()) {
+                    return encoderT.encode(opt.get());
+                } else {
+                    return null;
+                }
+            }
+            public decode(encoded: JSONValue): MGPOptional<T> {
+                if (encoded === null) {
+                    return MGPOptional.empty();
+                } else {
+                    return MGPOptional.of(encoderT.decode(encoded));
+                }
+            }
+        };
+    }
     private constructor(private readonly value: T | null) {}
 
     public isPresent(): boolean {
@@ -62,29 +84,6 @@ export class MGPOptional<T> {
             return MGPOptional.empty();
         }
     }
-}
-
-/**
- * Encodes a MGPOptional<T> using an encoder of T.
- * It will use the same encoding as T, and use null to encode an empty optional.
- */
-export function getOptionalEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
-    return new class extends Encoder<MGPOptional<T>> {
-        public encode(opt: MGPOptional<T>): JSONValue {
-            if (opt.isPresent()) {
-                return encoderT.encode(opt.get());
-            } else {
-                return null;
-            }
-        }
-        public decode(encoded: JSONValue): MGPOptional<T> {
-            if (encoded === null) {
-                return MGPOptional.empty();
-            } else {
-                return MGPOptional.of(encoderT.decode(encoded));
-            }
-        }
-    };
 }
 
 /**

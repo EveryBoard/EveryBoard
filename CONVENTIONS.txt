@@ -1,0 +1,3 @@
+1. static readonly field are named in UPPER_SNAKE_CASE
+2. a. public static of(...constructorParams): MyClass for creator delegation
+   b. public static from(...constructorParams): MGPFallible<MyClass>

@@ -43,11 +43,11 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
     public isPieceMove(): this is KamisadoPieceMove {
         return true;
     }
-    public equals(o: KamisadoMove): boolean {
-        if (o === this) return true;
-        if (o.isPieceMove()) {
-            if (o.getStart().equals(this.getStart()) === false) return false;
-            return o.getEnd().equals(this.getEnd());
+    public equals(other: KamisadoMove): boolean {
+        if (other === this) return true;
+        if (other.isPieceMove()) {
+            if (other.getStart().equals(this.getStart()) === false) return false;
+            return other.getEnd().equals(this.getEnd());
         } else {
             return false;
         }

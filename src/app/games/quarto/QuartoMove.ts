@@ -42,9 +42,9 @@ export class QuartoMove extends MoveCoord {
                              this.piece.value +
                 ')';
     }
-    public equals(o: QuartoMove): boolean {
-        if (this === o) return true;
-        if (!o.coord.equals(this.coord)) return false;
-        return this.piece === o.piece;
+    public equals(other: QuartoMove): boolean {
+        if (this === other) return true;
+        if (!other.coord.equals(this.coord)) return false;
+        return this.piece === other.piece;
     }
 }

@@ -2,51 +2,19 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PylosCoord } from '../PylosCoord';
-import { JSONValue } from 'src/app/utils/utils';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('PylosCoord:', () => {
 
-    describe('encoder', () => {
-        it('should encode empty optional to null', () => {
-            // Given a empty optional
-            const optionalCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
-
-            // When encoding it
-            const encoded: JSONValue = PylosCoord.optionalEncoder.encode(optionalCoord);
-
-            // Then result should be null
-            expect(encoded).toEqual(null);
-        });
-        it('should decode null as empty optional', () => {
-            // Given the null value
-            const encoded: JSONValue = null;
-
-            // When decoding it
-            const decoded: MGPOptional<PylosCoord> = PylosCoord.optionalEncoder.decode(encoded);
-
-            // Then the value should be empty option
-            expect(decoded).toEqual(MGPOptional.empty());
-        });
-        it('should JSONify for encoding', () => {
-            // Given a optional pylos coord
-            const optionalCoord: MGPOptional<PylosCoord> = MGPOptional.of(new PylosCoord(2, 1, 0));
-
-            // When encoding it
-            const encoded: JSONValue = PylosCoord.optionalEncoder.encode(optionalCoord);
-
-            // Then result should be null
-            expect(encoded).toEqual({ x: 2, y: 1, z: 0 });
-        });
-        it('should decode json smartly', () => {
-            // Given the encoded json value
-            const encoded: JSONValue = { x: 2, y: 1, z: 0 };
-
-            // When decoding it
-            const decoded: MGPOptional<PylosCoord> = PylosCoord.optionalEncoder.decode(encoded);
-
-            // Then the value should be empty option
-            expect(decoded).toEqual(MGPOptional.of(new PylosCoord(2, 1, 0)));
-        });
+    it('should have a bijective encoder', () => {
+        const values: MGPOptional<PylosCoord>[] = [
+            MGPOptional.of(new PylosCoord(2, 1, 0)),
+            MGPOptional.empty(),
+            MGPOptional.of(new PylosCoord(0, 0, 0)),
+        ];
+        for (const value of values) {
+            EncoderTestUtils.expectToBeBijective(PylosCoord.optionalEncoder, value);
+        }
     });
 
     it('should forbid invalid coord creation', () => {

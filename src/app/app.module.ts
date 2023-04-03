@@ -72,7 +72,7 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
-import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
+import TrexoHalfPieceComponent from './games/trexo/trexo-half-piece.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';

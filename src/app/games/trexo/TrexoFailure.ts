@@ -8,5 +8,5 @@ export class TrexoFailure {
 
     public static readonly CANNOT_DROP_ON_ONLY_ONE_PIECE: Localized = () => $localize`You cannot drop on only one piece!`;
 
-    public static readonly CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS: Localized = () => $localize`You cannot drop piece on uneven grounds!`;
+    public static readonly CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS: Localized = () => $localize`You cannot drop a piece on uneven grounds!`;
 }

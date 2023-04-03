@@ -26,9 +26,9 @@ export class ActivePartsService {
         };
         const onDocumentModified: (modifiedParts: PartDocument[]) => void = (modifiedParts: PartDocument[]) => {
             const result: PartDocument[] = activeParts;
-            for (const p of modifiedParts) {
+            for (const modifiedPart of modifiedParts) {
                 result.forEach((part: PartDocument) => {
-                    if (part.id === p.id) part.data = p.data;
+                    if (part.id === modifiedPart.id) part.data = modifiedPart.data;
                 });
             }
             activeParts = result;
@@ -36,9 +36,9 @@ export class ActivePartsService {
         };
         const onDocumentDeleted: (deletedDocIds: PartDocument[]) => void = (deletedDocs: PartDocument[]) => {
             const result: PartDocument[] = [];
-            for (const p of activeParts) {
-                if (!deletedDocs.some((part: PartDocument) => part.id === p.id)) {
-                    result.push(p);
+            for (const activePart of activeParts) {
+                if (!deletedDocs.some((part: PartDocument) => part.id === activePart.id)) {
+                    result.push(activePart);
                 }
             }
             activeParts = result;
