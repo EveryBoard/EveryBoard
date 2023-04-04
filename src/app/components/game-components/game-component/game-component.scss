@@ -181,6 +181,12 @@
 .black-fill {
     fill: black;
 }
+.darker {
+    filter: brightness(80%);
+}
+.lighter {
+    filter: brightness(110%);
+}
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
 }

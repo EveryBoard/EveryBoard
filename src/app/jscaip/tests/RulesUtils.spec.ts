@@ -26,7 +26,7 @@ export class RulesUtils {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 expect(equals).withContext('states should be equal').toBeTrue();
             } else {
-                expect(resultingState).withContext('states should be equals').toEqual(expectedState);
+                expect(resultingState).withContext('states should be equal').toEqual(expectedState);
             }
         } else {
             throw new Error('expected move to be valid but it is not: ' + legality.getReason());

@@ -165,7 +165,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
     public static switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
         const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
-        assert(switchedPiece.isEmpty() === false, `Can't switch emptyness aliveness`);
+        assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
 
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;

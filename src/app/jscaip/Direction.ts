@@ -9,6 +9,7 @@ import { Vector } from './Vector';
 export abstract class BaseDirection extends Vector {
 
     public readonly x: 0|1|-1;
+
     public readonly y: 0|1|-1;
 
     public isDown(): boolean {

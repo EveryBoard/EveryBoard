@@ -16,6 +16,7 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { JSONValue } from 'src/app/utils/utils';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { HivePiece } from 'src/app/games/hive/HivePiece';
 
 describe('GameComponent', () => {
 
@@ -74,6 +75,10 @@ describe('GameComponent', () => {
             Epaminondas: { onClick: [0, 0] },
             Gipf: { onClick: [0, 0] },
             Go: { onClick: [0, 0] },
+            Hive: {
+                selectSpace: [new Coord(0, 0), 'space'],
+                selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
+            },
             Hnefatafl: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
             Lasca: { onClick: [0, 0] },

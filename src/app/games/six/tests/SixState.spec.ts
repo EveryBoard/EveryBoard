@@ -109,7 +109,7 @@ describe('SixState', () => {
                 [O, _, _, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(representation, 40);
-            const groups: MGPSet<MGPSet<Coord>> = SixState.getGroups(state.pieces, new Coord(2, 2));
+            const groups: MGPSet<MGPSet<Coord>> = state.getGroups();
             const expectedGroups: MGPSet<MGPSet<Coord>> = new MGPSet([
                 new CoordSet([new Coord(2, 0), new Coord(2, 1)]),
                 new CoordSet([new Coord(3, 2), new Coord(4, 2)]),

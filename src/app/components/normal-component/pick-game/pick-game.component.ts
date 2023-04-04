@@ -11,6 +11,7 @@ import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component'
 import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.component';
 import { GipfComponent } from 'src/app/games/gipf/gipf.component';
 import { GoComponent } from 'src/app/games/go/go.component';
+import { HiveComponent } from 'src/app/games/hive/hive.component';
 import { HnefataflComponent } from 'src/app/games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
@@ -110,6 +111,8 @@ import { HnefataflRules } from 'src/app/games/tafl/hnefatafl/HnefataflRules';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { LascaRules } from 'src/app/games/lasca/LascaRules';
 import { LascaTutorial } from 'src/app/games/lasca/LascaTutorial';
+import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
+import { HiveRules } from 'src/app/games/hive/HiveRules';
 
 class GameDescription {
 
@@ -136,6 +139,8 @@ class GameDescription {
     public static readonly GIPF: Localized = () => $localize`A hexagonal game of alignment. Insert your pieces on the board to capture your opponent's pieces!`;
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
+
+    public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent's queen in order to win!`;
 
     public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
 
@@ -208,6 +213,8 @@ export class GameInfo {
         new GameInfo($localize`Lodestone`, 'Lodestone', LodestoneComponent, new LodestoneTutorial(), LodestoneRules.get(), new Date('2022-06-24'), GameDescription.LODESTONE()),
         new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new MartianChessTutorial(), new MartianChessRules(MartianChessState), new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()),
         new GameInfo($localize`Hnefatafl`, 'Hnefatafl', HnefataflComponent, new HnefataflTutorial(), HnefataflRules.get(), new Date('2022-09-21'), GameDescription.HNEFATAFL()),
+
+        new GameInfo($localize`Hive`, 'Hive', HiveComponent, new HiveTutorial(), HiveRules.get(), new Date('2023-02-19'), GameDescription.HIVE()),
         new GameInfo($localize`Lasca`, 'Lasca', LascaComponent, new LascaTutorial(), LascaRules.get(), new Date('2023-02-15'), GameDescription.LASCA()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
@@ -233,7 +240,7 @@ export class PickGameComponent {
 
     public readonly games: GameInfo[] = GameInfo.ALL_GAMES();
 
-    @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
+    @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
 
     public onChange(event: Event): void {
         const select: HTMLSelectElement = event.target as HTMLSelectElement;

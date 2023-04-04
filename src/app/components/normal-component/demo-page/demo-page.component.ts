@@ -68,7 +68,7 @@ export class DemoPageComponent {
                     click: node.click,
                 });
                 i++;
-                column = (column+1) % numberOfColumns;
+                column = (column + 1) % numberOfColumns;
             }
         }
     }

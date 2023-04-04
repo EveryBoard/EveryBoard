@@ -22,7 +22,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
 
     public applyLegalMove(_move: YinshMove, _state: YinshState, info: YinshState): YinshState {
         const stateWithoutTurn: YinshState = info;
-        return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn+1);
+        return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn + 1);
     }
     public applyCaptures(captures: ReadonlyArray<YinshCapture>, state: YinshState): YinshState {
         let computedState: YinshState = state;
