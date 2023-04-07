@@ -308,7 +308,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private async onGameStart(part: PartDocument): Promise<void> {
-        this.timeManager.startClocks(Utils.getNonNullable(part.data.beginning) as Timestamp, this.configRoom);
+        this.timeManager.onGameStart(this.configRoom, part.data);
         await this.initializePlayersDatas(part);
         const turn: number = this.gameComponent.getTurn();
         assert(turn === 0, 'turn is always 0')
@@ -316,23 +316,28 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         console.log('onGameStart')
         // The game has started, we can subscribe to the events to receive moves etc.
         // We don't want to do it sooner, as the clocks need to be started before receiving any move
-        this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, (event: PartEvent) => {
-            console.log({type: event.eventType, player: event.player})
-            switch (event.eventType) {
-                case 'Move':
-                    const moveEvent: PartEventMove = event as PartEventMove;
-                    return this.onReceivedMove(moveEvent);
-                case 'Request':
-                    const requestEvent: PartEventRequest = event as PartEventRequest;
-                    return this.onReceivedRequest(requestEvent);
-                case 'Reply':
-                    const replyEvent: PartEventReply = event as PartEventReply;
-                    return this.onReceivedReply(replyEvent);
-                default:
-                    Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
-                    const actionEvent: PartEventAction = event as PartEventAction;
-                    return this.onReceivedAction(actionEvent);
+        // Importantly, we can receive more than one event at a time.
+        // This is in particular used to deal with joining a game in the middle: we don't want to apply all clock actions then
+        this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, (events: PartEvent[]) => {
+            for (const event of events) {
+                console.log({type: event.eventType, player: event.player})
+                switch (event.eventType) {
+                    case 'Move':
+                        const moveEvent: PartEventMove = event as PartEventMove;
+                        return this.onReceivedMove(moveEvent);
+                    case 'Request':
+                        const requestEvent: PartEventRequest = event as PartEventRequest;
+                        return this.onReceivedRequest(requestEvent);
+                    case 'Reply':
+                        const replyEvent: PartEventReply = event as PartEventReply;
+                        return this.onReceivedReply(replyEvent);
+                    default:
+                        Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
+                        const actionEvent: PartEventAction = event as PartEventAction;
+                        return this.onReceivedAction(actionEvent);
+                }
             }
+            this.afterEventsBatch();
         });
     }
     private async onGameEnd() {
@@ -356,14 +361,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const log: string = 'endGame is true and winner is ' + currentPart.getWinner().getOrElse({ id: 'fake', name: 'no one' }).name;
             display(OnlineGameWrapperComponent.VERBOSE, log);
         }
-        this.timeManager.stopEverything();
+        this.timeManager.onGameEnd();
     }
     private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
         console.log(moveEvent)
-        if (this.endGame === false) {
-            // If we receive moves on a finished game
-            this.timeManager.updateClocksOnMove(moveEvent.time as Timestamp, Player.of(moveEvent.player));
-        }
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
@@ -375,6 +376,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: boolean = rules.choose(chosenMove);
         assert(success, 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.updateBoard();
+        this.timeManager.onReceivedMove(moveEvent);
     }
     private onReceivedRequest(request: PartEventRequest): void {
         this.lastRequestOrReply = MGPOptional.of(request);
@@ -391,6 +393,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             default:
                 Utils.expectToBe(request.requestType, 'Draw', 'Request should be draw')
         }
+        this.timeManager.onReceivedRequest(request);
     }
     private async onReceivedReply(reply: PartEventReply): Promise<void> {
         this.lastRequestOrReply = MGPOptional.of(reply);
@@ -414,23 +417,28 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 // Nothing to do as the part will be updated with the draw
                 break;
         }
+        this.timeManager.onReceivedReply(reply);
     }
     private onReceivedAction(action: PartEventAction): void {
-        switch (action.action) {
-            case 'AddTurnTime':
-                // Add 30 seconds to the player
-                const addedTurnTime: number = 30 * 1000;
-                const playerWithExtraTurnTime: Player = Player.of(action.player).getOpponent();
-                this.timeManager.addTurnTimeTo(playerWithExtraTurnTime, addedTurnTime);
-                break;
-            default:
-                console.log(action)
-                Utils.expectToBe(action.action, 'AddGlobalTime')
-                const addedGlobalTime: number = 5 * 60 * 1000;
-                const playerWithExtraGlobalTime: Player = Player.of(action.player).getOpponent();
-                this.timeManager.addGlobalTimeTo(playerWithExtraGlobalTime, addedGlobalTime);
-                break;
-        }
+        // switch (action.action) {
+        //     case 'AddTurnTime':
+        //         // Add 30 seconds to the player
+        //         const addedTurnTime: number = 30 * 1000;
+        //         const playerWithExtraTurnTime: Player = Player.of(action.player).getOpponent();
+        //         this.timeManager.addTurnTimeTo(playerWithExtraTurnTime, addedTurnTime);
+        //         break;
+        //     default:
+        //         console.log(action)
+        //         Utils.expectToBe(action.action, 'AddGlobalTime')
+        //         const addedGlobalTime: number = 5 * 60 * 1000;
+        //         const playerWithExtraGlobalTime: Player = Player.of(action.player).getOpponent();
+        //         this.timeManager.addGlobalTimeTo(playerWithExtraGlobalTime, addedGlobalTime);
+        //         break;
+        // }
+        this.timeManager.onReceivedAction(action);
+    }
+    private afterEventsBatch(): void {
+        this.timeManager.afterEventsBatch(this.endGame);
     }
     public notifyDraw(scores?: [number, number]): Promise<void> {
         this.endGame = true;
@@ -514,7 +522,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         }
-        this.timeManager.updateClocksAfterTakeBack();
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         console.log(this.currentPlayer.name)
         this.gameComponent.updateBoard();
@@ -645,7 +652,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         const lastIndex: number = this.getLastIndex();
         const currentPlayer: Player = this.role as Player;
-        this.timeManager.stopEverything();
         if (this.isPlaying() === false) {
             return;
         }
@@ -752,7 +758,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 }
 
-class OGWCTimeManager {
+abstract class OGWCHelper {
+    public onReceivedRequest(_request: PartEventRequest): void {
+    }
+    public onReceivedReply(_reply: PartEventReply): void {
+    }
+    public onReceivedAction(_action: PartEventAction): void {
+    }
+    public onReceivedMove(_move: PartEventMove): void {
+    }
+}
+
+class OGWCTimeManager extends OGWCHelper {
 
     public static VERBOSE: boolean = true;
     /*
@@ -772,21 +789,23 @@ class OGWCTimeManager {
     public constructor(private readonly globalClocks: [CountDownComponent, CountDownComponent],
                        private readonly turnClocks: [CountDownComponent, CountDownComponent])
     {
+        super();
         this.allClocks = this.turnClocks.concat(this.globalClocks);
     }
-    // How to do it:
-    // We have: the clocks, and the computed remaining time
-    // The clocks progress (down), but the time is fixed as it will be used for computing stuff
-    // so we have remainingTime[0] and 1
-    // and globalClock[0] and turnClock[0] and 1
-    // We can assume we receive moves in order
-    // start game: when we receive it, set timer at (localTime - beginning) + totalPartTime, and start the countdown
-    //   drift = (localTime - beginning)
-    //   1. set takenGlobalTime[0] to drift
-    //   2. set globalClock[0] to totalPartTime - takenGlobalTime[0]
-    //   3. set turnClock[0] to turnTime - takenGlobalTime[0]
-    public startClocks(beginningTimestamp: Timestamp, configRoom: ConfigRoom): void {
-        display(OGWCTimeManager.VERBOSE, `TimeManager.startClocks(${beginningTimestamp})`);
+    // Starts all clocks at the beginning of a game
+    public onGameStart(configRoom: ConfigRoom, part: Part): void {
+        // How to do it:
+        // We have: the clocks, and the computed remaining time
+        // The clocks progress (down), but the time is fixed as it will be used for computing stuff
+        // so we have remainingTime[0] and 1
+        // and globalClock[0] and turnClock[0] and 1
+        // We can assume we receive moves in order
+        // start game: when we receive it, set timer at (localTime - beginning) + totalPartTime, and start the countdown
+        //   drift = (localTime - beginning)
+        //   1. set takenGlobalTime[0] to drift
+        //   2. set globalClock[0] to totalPartTime - takenGlobalTime[0]
+        //   3. set turnClock[0] to turnTime - takenGlobalTime[0]
+        const beginningTimestamp: Timestamp = Utils.getNonNullable(part.beginning) as Timestamp;
         this.configRoom = MGPOptional.of(configRoom);
         const localTime: Timestamp = Timestamp.now();
         this.beginningTimestamp = MGPOptional.of(beginningTimestamp);
@@ -820,19 +839,17 @@ class OGWCTimeManager {
     private getMoveDurationInMs(): number {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
-    // move: we know how long the previous player (i) has taken to play:
-    //   they took thisMoveTime - previousMoveTime if there is a last move
-    //             thisMoveTime - beginning if there is none
-    //   1. store this in local takenMoveTime
-    //   2. set takenGlobalTime[i] to takenGlobalTime[i] + takenMoveTime
-    //   3. set globalClock[i] to totalPartTime - takenGlobalTime[i]
-    //   4. set turnClock[i] to totalTurnTime - takenMoveTime
-    //   Then:
-    //   drift = localTime - thisMoveTime
-    //   a. set globalClock[i+1] to globalClock[i+1] - drift
-    //   b. set turnClock[i+1] to turnTime - drift and start it
-    public updateClocksOnMove(moveTimestamp: Timestamp, player: Player): void {
-        display(OGWCTimeManager.VERBOSE, `TimeManager.updateClocksOnMove(${moveTimestamp}, ${player})`);
+    public onReceivedReply(_reply: PartEventReply): void {
+        // TODO: takeback
+    }
+    public onReceivedAction(action: PartEventAction): void {
+        // TODO: add time
+    }
+    public onReceivedMove(move: PartEventMove): void {
+        display(OGWCTimeManager.VERBOSE, `TimeManager.updateClocksOnMove(${move})`);
+        const player: Player = Player.of(move.player);
+
+        const moveTimestamp: Timestamp = move.time as Timestamp;
         let takenMoveTime: number;
         if (this.lastMoveTimestamp.isPresent()) {
             takenMoveTime = getMillisecondsElapsed(moveTimestamp, this.lastMoveTimestamp.get());
@@ -841,28 +858,19 @@ class OGWCTimeManager {
         }
         this.lastMoveTimestamp = MGPOptional.of(moveTimestamp);
         this.takenGlobalTime[player.value] += takenMoveTime;
-        this.globalClocks[player.value].pause();
-        this.turnClocks[player.value].pause();
 
-        // TODO: joining a game that has already started with extra time fails
-        // TODO: maybe don't do anything to chronos (besides addTime) unless we have the current move
-        // -> not only current move but also latest action!
-        // -> currently refining
         const localTime: Timestamp = Timestamp.now();
         const nextPlayer: Player = player.getOpponent();
         const drift: number = getMillisecondsElapsed(moveTimestamp, localTime);
         const updatedTurnTime: number = Math.max(this.getMoveDurationInMs() - drift, 0);
         this.turnClocks[nextPlayer.value].changeDuration(updatedTurnTime);
-        this.turnClocks[nextPlayer.value].resume();
         // We recompute the global time because we can't trust our own clocks, but we can trust the server's
         const adaptedGlobalTime: number =
             Math.max(this.getPartDurationInMs() - this.takenGlobalTime[player.value] - drift, 0);
         this.globalClocks[nextPlayer.value].changeDuration(adaptedGlobalTime);
-        this.globalClocks[nextPlayer.value].resume();
     }
     // Stops all clocks that are running
-    public stopEverything(): void {
-        display(OGWCTimeManager.VERBOSE, `TimeManager.stopEverything`);
+    public onGameEnd(): void {
         for (const clock of this.allClocks) {
             // We want to stop the clock, but stop is just pause + change some variables
             // And stop throws if the clock is paused! So we just stop it if it's not paused already
@@ -872,22 +880,27 @@ class OGWCTimeManager {
             }
         }
     }
+    public afterEventsBatch(gameEnd: boolean) {
+        if (gameEnd === false) {
+            // TODO
+        }
+    }
     // Adds addedMs to the turn clock of player
-    public addTurnTimeTo(player: Player, addedMs: number): void {
+    private addTurnTimeTo(player: Player, addedMs: number): void {
         // this.pauseCountDownsFor(currentPlayer, false); // TODO FOR REVIEW: do we really need this? what's the point?
         this.turnClocks[player.value].add(addedMs);
         // this.resumeCountDownFor(currentPlayer, false);
     }
     // Adds addedMs to the global clock of player
-    public addGlobalTimeTo(player: Player, addedMs: number): void {
+    private addGlobalTimeTo(player: Player, addedMs: number): void {
         this.globalClocks[player.value].add(addedMs);
     }
     // Upon take back, timings are preserved, but clocks may need to be switched
-    public updateClocksAfterTakeBack(): void {
+    private updateClocksAfterTakeBack(): void {
         // TODO: maybe not needed, just switchTo(player) is enough
     }
     // Switches to player's turn, pausing all clocks and then continuing the player's clock only
-    public switchTurnTo(player: Player): void {
+    private switchTurnTo(player: Player): void {
         display(OGWCTimeManager.VERBOSE, `TimeManager.switchTurnTo(${player})`);
         // We pause all clocks to account for take backs where we are switching to the same player
         this.pauseAllClocks();

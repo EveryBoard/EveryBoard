@@ -83,25 +83,25 @@ export class PartService {
             action,
         });
     }
-    public subscribeToEvents(partId: string, callback: (event: PartEvent) => void) {
+    public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void) {
         const internalCallback: FirestoreCollectionObserver<PartEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<PartEvent>[]) => {
+                const realEvents: PartEvent[] = [];
                 for (const eventDoc of events) {
                     if (eventDoc.data.time == null) {
                         // When we add an event, firebase will initially have a null timestamp for the document creator
                         // When the event is really written, we receive a modification with the real timestamp
                         continue;
                     }
-                    callback(eventDoc.data);
+                    realEvents.push(eventDoc.data);
                 }
+                callback(realEvents);
             },
             (events: FirestoreDocument<PartEvent>[]) => {
                 // Events can't be modified
                 // The only modification is when firebase adds the timestamp.
                 // So all modifications are actually treated as creations, as we ignore creations with empty timestamps
-                for (const eventDoc of events) {
-                    callback(eventDoc.data);
-                }
+                callback(events.map((event: FirestoreDocument<PartEvent>) => event.data));
             },
             () => {
                 // Events can't be deleted,
