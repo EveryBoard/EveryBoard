@@ -61,6 +61,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public add(ms: number): void {
         this.changeDuration(this.remainingMs + ms);
     }
+    public subtract(ms: number): void {
+        this.changeDuration(this.remainingMs - ms);
+    }
     private displayDuration(): void {
         this.displayedSec = this.remainingMs % (60 * 1000);
         this.displayedMinute = (this.remainingMs - this.displayedSec) / (60 * 1000);

@@ -99,7 +99,9 @@ export class PartService {
                     }
                     realEvents.push(eventDoc.data);
                 }
-                callback(realEvents);
+                if (realEvents.length > 0) {
+                    callback(realEvents);
+                }
             },
             (events: FirestoreDocument<PartEvent>[]) => {
                 // Events can't be modified
