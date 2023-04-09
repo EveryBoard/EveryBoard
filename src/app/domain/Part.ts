@@ -45,7 +45,9 @@ export interface PartEventMove extends PartEvent {
     readonly move: JSONValue
 }
 
-export type Action = 'AddTurnTime' | 'AddGlobalTime'
+// The StartGame action is a dummy action to ensure that at least one event occurs at game start.
+// This is required because the clock logic relies on at least one event happening at the start of the game.
+export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame'
 export interface PartEventAction extends PartEvent {
     readonly eventType: 'Action'
     readonly action: Action

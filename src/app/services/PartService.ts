@@ -74,6 +74,10 @@ export class PartService {
             data,
         });
     }
+    public startGame(partId: string, player: Player): Promise<string> {
+        console.log('PARTSERVICE STARTGAME')
+        return this.addAction(partId, player, 'StartGame');
+    }
     public addAction(partId: string, player: Player, action: Action): Promise<string> {
         Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
         return this.addEvent(partId, {

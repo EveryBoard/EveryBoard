@@ -95,12 +95,13 @@ export class GameService {
         await this.createChat(gameId);
         return gameId;
     }
-    private startGameWithConfig(partId: string, user: Player, lastIndex: number, configRoom: ConfigRoom)
+    private async startGameWithConfig(partId: string, user: Player, lastIndex: number, configRoom: ConfigRoom)
     : Promise<void>
     {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(configRoom));
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        return this.updateAndBumpIndex(partId, user, lastIndex, update);
+        await Promise.all([this.updateAndBumpIndex(partId, user, lastIndex, update),
+                           this.partService.startGame(partId, user)]);
     }
     public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig {
         let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
@@ -230,6 +231,7 @@ export class GameService {
         await this.configRoomService.createConfigRoom(rematchId, newConfigRoom);
         await this.createChat(rematchId);
         await this.partService.addReply(partDocument.id, player, 'Accept', 'Rematch', rematchId);
+        await this.partService.startGame(rematchId, player);
     }
     public async askTakeBack(partId: string, player: Player): Promise<void> {
         await this.partService.addRequest(partId, player, 'TakeBack');
