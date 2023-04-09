@@ -10,7 +10,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
  * owner: to make us know which half of a tile it is (since trexo tiles are bicolor)
  * height: allow us to know where on the Z axis they are ... sound kind of bad no ?
  *     a stack contains [a, b, c], we know a, b and c height no??
- * tileId: we need this info to enforce the "don't play on online one tile" rules
+ * tileId: we need this info to enforce the "don't play on only one tile" rules
  *     it is filled with the turn at which the tile is dropped
  */
 export class TrexoPiece {
@@ -21,7 +21,7 @@ export class TrexoPiece {
     {
     }
     public toString(): string {
-        return `new TrexoPiece(${ this.owner.toString() }, ${ this.height }, ${ this.tileId })`;
+        return `TrexoPiece(${ this.owner.toString() }, ${ this.height }, ${ this.tileId })`;
     }
 }
 
@@ -74,6 +74,9 @@ export class TrexoPieceStack {
     public getPieceAt(z: number): TrexoPiece {
         assert(z < this.pieces.length, 'no element ' + z + 'in piece!');
         return this.pieces[z];
+    }
+    public isGround(): boolean {
+        return this.getUpperTileId() === -1;
     }
     public toString(): string {
         return '[' + this.pieces.map((piece: TrexoPiece) => {

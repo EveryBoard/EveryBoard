@@ -5,10 +5,10 @@
     stroke-linecap: butt;
     stroke-linejoin: round;
 }
-.strokeless {
+.manual-stroke {
     stroke-width: 0;
 }
-.base.strokeless {
+.base.manual-stroke {
     fill: var(--base-stroke);
 }
 .base-no-stroke {
@@ -112,7 +112,7 @@
 .last-move-stroke {
     stroke: var(--last-move);
 }
-.last-move-stroke.strokeless {
+.last-move-stroke.manual-stroke {
     fill: var(--last-move);
 }
 .victory-fill {
@@ -121,7 +121,7 @@
 .victory-stroke {
     stroke: var(--victory);
 }
-.victory-stroke.strokeless {
+.victory-stroke.manual-stroke {
     fill: var(--victory);
 }
 .selected-fill {

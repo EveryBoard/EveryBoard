@@ -24,6 +24,7 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
                     const squareScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
                     if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                         if (pieceOwner === lastPlayer) {
+                            // Cannot return right away, cause last player only win if the other don't align
                             lastPlayerAligned5 = true;
                         } else {
                             return new BoardValue(lastPlayer.getDefeatValue());

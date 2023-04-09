@@ -68,14 +68,11 @@ describe('NumberEncoder', () => {
                 return this.field1 === t.field1 && this.field2 === t.field2 && this.field3 === t.field3;
             }
         }
-        const encoders: [NumberEncoder<boolean>, NumberEncoder<number>, NumberEncoder<PlayerOrNone>] =
-            [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder];
-        const encode: (t: T) => [boolean, number, Player] =
-            (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3];
-        const decode: (fields: [boolean, number, Player]) => T =
-            (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]);
         const encoder: NumberEncoder<T> =
-            NumberEncoder.tuple<T, [boolean, number, PlayerOrNone]>(encoders, encode, decode);
+            NumberEncoder.tuple<T, [boolean, number, PlayerOrNone]>(
+                [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
+                (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
+                (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]));
         it('should have a bijective encoder', () => {
             NumberEncoderTestUtils.expectToBeBijective(encoder, new T(true, 3, Player.ONE));
             NumberEncoderTestUtils.expectToBeBijective(encoder, new T(false, 2, Player.ONE));

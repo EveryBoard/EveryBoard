@@ -38,7 +38,7 @@ export class TrexoTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Dropping a tile`,
-            $localize`When you drop at tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.<br/><br/>You're playing Dark, put a tile on the board.`,
+            $localize`When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.<br/><br/>You're playing Dark, put a tile on the board.`,
             TrexoState.getInitialState(),
             TrexoMove.from(new Coord(4, 4), new Coord(3, 4)).get(),
             $localize`Congratulations!`,
@@ -56,7 +56,7 @@ export class TrexoTutorial extends Tutorial {
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
-                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______]
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             ], 7),
             [
                 TrexoMove.from(new Coord(4, 0), new Coord(5, 0)).get(),
@@ -67,7 +67,7 @@ export class TrexoTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Victory`,
-            $localize`To win at Trexo, you need to align 5 of your pieces. Important, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they'll be considered the winners. If you create only a victory for them too, obviously.<br/><br/>You're playing Light, win.`,
+            $localize`To win at Trexo, you need to align 5 of your pieces. Importantly, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they'll be considered the winners. If you create only a victory for them too, obviously.<br/><br/>You're playing Light, win.`,
             new TrexoState([
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
                 [______, ______, ______, ZERO_5, ______, ______, ______, ______, ______, ______],
@@ -78,7 +78,7 @@ export class TrexoTutorial extends Tutorial {
                 [______, ______, ______, ______, ______, ONE__2, ______, ______, ______, ______],
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
-                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______]
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             ], 7),
             TrexoMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
             (lastMove: TrexoMove, _: TrexoState, resultingState: TrexoState) => {

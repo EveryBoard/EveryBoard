@@ -58,7 +58,7 @@ export class NInARowHelper<T> {
     {
         /**
          * for a square at the coord i, containing an ally
-         * we go through the board from this coord in the direction dir(dX, dY)
+         * we go through the board from this coord in the direction dir
          * and until a maximal distance of N cases
          */
         let freeSpaces: number = 0; // the number of aligned free square

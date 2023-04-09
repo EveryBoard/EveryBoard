@@ -50,8 +50,7 @@ export class RulesUtils {
         minimaxes: Minimax<M, S, L>[])
     : void
     {
-        const gameStatus: GameStatus = rules.getGameStatus(node);
-        expect(gameStatus)
+        expect(rules.getGameStatus(node))
             .withContext('Rules should consider gameStatus a victory for player ' + player.value)
             .toEqual(GameStatus.getVictory(player));
         for (const minimax of minimaxes) {

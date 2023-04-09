@@ -36,6 +36,31 @@ export class MGPOptional<T> {
             }
         };
     }
+    /**
+     * Encodes a MGPOptional<T> into a number using a number encoder of T.
+     * It will use the same encoding as T, and use maxValue+1 to encode an empty optional.
+     */
+    public static getNumberEncoder<T>(encoderT: NumberEncoder<T>): NumberEncoder<MGPOptional<T>> {
+        return new class extends NumberEncoder<MGPOptional<T>> {
+            public maxValue(): number {
+                return encoderT.maxValue() + 1;
+            }
+            public encodeNumber(opt: MGPOptional<T>): number {
+                if (opt.isPresent()) {
+                    return encoderT.encodeNumber(opt.get());
+                } else {
+                    return encoderT.maxValue()+1;
+                }
+            }
+            public decodeNumber(encoded: number): MGPOptional<T> {
+                if (encoded === this.maxValue()) {
+                    return MGPOptional.empty();
+                } else {
+                    return MGPOptional.of(encoderT.decodeNumber(encoded));
+                }
+            }
+        };
+    }
     private constructor(private readonly value: T | null) {}
 
     public isPresent(): boolean {
@@ -84,30 +109,4 @@ export class MGPOptional<T> {
             return MGPOptional.empty();
         }
     }
-}
-
-/**
- * Encodes a MGPOptional<T> into a number using a number encoder of T.
- * It will use the same encoding as T, and use maxValue+1 to encode an empty optional.
- */
-export function MGPOptionalNumberEncoder<T>(encoderT: NumberEncoder<T>): NumberEncoder<MGPOptional<T>> {
-    return new class extends NumberEncoder<MGPOptional<T>> {
-        public maxValue(): number {
-            return encoderT.maxValue() + 1;
-        }
-        public encodeNumber(opt: MGPOptional<T>): number {
-            if (opt.isPresent()) {
-                return encoderT.encodeNumber(opt.get());
-            } else {
-                return encoderT.maxValue()+1;
-            }
-        }
-        public decodeNumber(encoded: number): MGPOptional<T> {
-            if (encoded === this.maxValue()) {
-                return MGPOptional.empty();
-            } else {
-                return MGPOptional.of(encoderT.decodeNumber(encoded));
-            }
-        }
-    };
 }

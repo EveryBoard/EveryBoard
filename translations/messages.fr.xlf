@@ -3766,7 +3766,7 @@
       </trans-unit>
       <trans-unit id="4853714910007564389" datatype="html">
         <source>There is no way to put a piece there!</source>
-        <target>Il n'y a pas moyen de placer une pièce içi !</target>
+        <target>Il n'y a pas moyen de placer une pièce ici !</target>
       </trans-unit>
       <trans-unit id="7841599074494103882" datatype="html">
         <source>You cannot drop on only one piece!</source>
@@ -3785,7 +3785,7 @@
         <target>Déposer une tuile</target>
       </trans-unit>
       <trans-unit id="9144162616649352203" datatype="html">
-        <source>When you drop at tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
+        <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
         <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit où vous voulez déposer la pièce de l'adversaire, puis sur la case voisine où vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
       </trans-unit>
       <trans-unit id="6262113904872794006" datatype="html">
@@ -3801,7 +3801,7 @@
         <target>Incorrect, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
       </trans-unit>
       <trans-unit id="6106348607957297864" datatype="html">
-        <source>To win at Trexo, you need to align 5 of your pieces. Important, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+        <source>To win at Trexo, you need to align 5 of your pieces. Importantly, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
         <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte. Puisque vous déposez les pièces adverses en premier, dans le cas où vous créez un alignement avec vos pièces et un alignement avec les pièces adverses, l'adversaire sera conisdéré vainqueur. Si vous créez uniquement une victoire pour l'adversaire, il gagnera, évidemment.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">

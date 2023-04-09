@@ -4,7 +4,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import TrexoHalfPieceComponent from '../trexo-half-piece.component';
+import { TrexoHalfPieceComponent } from '../trexo-half-piece.component';
 import { TrexoComponent } from '../trexo.component';
 import { TrexoMove } from '../TrexoMove';
 

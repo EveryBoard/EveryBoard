@@ -314,12 +314,12 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
      * @returns the coord(x, y) of the upper left parallelogram to draw on the SVG;
      */
     private static getCoordTranslate(x: number, y: number, z: number, mode: ModeConfig): Coord {
-        const SPACE_WIDTH: number = this.SPACE_SIZE * mode.horizontalWidthRatio;
-        const SPACE_HEIGHT: number = this.SPACE_SIZE;
-        const SPACE_OFFSET: number = mode.offsetRatio * this.SPACE_SIZE;
+        const spaceWidth: number = this.SPACE_SIZE * mode.horizontalWidthRatio;
+        const spaceHeight: number = this.SPACE_SIZE;
+        const spaceOffset: number = mode.offsetRatio * this.SPACE_SIZE;
         const numberOfOffset: number = TrexoState.SIZE - y;
-        const xBase: number = (x * SPACE_WIDTH) + (numberOfOffset * SPACE_OFFSET);
-        const yBase: number = (y * SPACE_HEIGHT) - (mode.pieceHeightRatio * this.SPACE_SIZE * z);
+        const xBase: number = (x * spaceWidth) + (numberOfOffset * spaceOffset);
+        const yBase: number = (y * spaceHeight) - (mode.pieceHeightRatio * this.SPACE_SIZE * z);
         return new Coord(xBase, yBase);
     }
     public getTranslate(x: number, y: number, z: number): string {

@@ -2672,7 +2672,7 @@
         <source>Dropping a tile</source>
       </trans-unit>
       <trans-unit id="9144162616649352203" datatype="html">
-        <source>When you drop at tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
+        <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
       </trans-unit>
       <trans-unit id="6262113904872794006" datatype="html">
         <source>Dropping a piece over other pieces</source>
@@ -2684,7 +2684,7 @@
         <source>Incorrect, you put that piece on the floor level, please put it on top of two pieces.</source>
       </trans-unit>
       <trans-unit id="6106348607957297864" datatype="html">
-        <source>To win at Trexo, you need to align 5 of your pieces. Important, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+        <source>To win at Trexo, you need to align 5 of your pieces. Importantly, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>

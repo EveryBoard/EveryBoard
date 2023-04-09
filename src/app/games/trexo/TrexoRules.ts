@@ -106,6 +106,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
                     const squareScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
                     if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                         if (pieceOwner === lastPlayer) {
+                            // Cannot return right away, cause last player only win if the other don't align
                             lastPlayerAligned5 = true;
                         } else {
                             return GameStatus.getDefeat(lastPlayer);
@@ -139,14 +140,14 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     public getPossiblesMoves(state: TrexoState, first: Coord, second: Coord): TrexoMove[] {
         const firstStack: TrexoPieceStack = state.getPieceAt(first);
         const secondStack: TrexoPieceStack = state.getPieceAt(second);
-        let tileHideEntirelyOneTile: boolean;
-        if (firstStack.getUpperTileId() === -1) {
-            tileHideEntirelyOneTile = false;
+        let tileHidesEntirelyOneTile: boolean;
+        if (firstStack.isGround()) {
+            tileHidesEntirelyOneTile = false;
         } else {
-            tileHideEntirelyOneTile = (firstStack.getUpperTileId() === secondStack.getUpperTileId());
+            tileHidesEntirelyOneTile = (firstStack.getUpperTileId() === secondStack.getUpperTileId());
         }
         const stacksAreOnUnevenGround: boolean = firstStack.getHeight() !== secondStack.getHeight();
-        if (tileHideEntirelyOneTile || stacksAreOnUnevenGround) {
+        if (tileHidesEntirelyOneTile || stacksAreOnUnevenGround) {
             return [];
         } else {
             return [

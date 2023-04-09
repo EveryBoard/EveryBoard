@@ -11,7 +11,7 @@ import { TrexoMove } from './TrexoMove';
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export default class TrexoHalfPieceComponent {
+export class TrexoHalfPieceComponent {
 
     @Input() coord: Coord3D;
     @Input() move: TrexoMove | undefined; // When move is null, it is the first click (only one dropped piece)
@@ -22,7 +22,7 @@ export default class TrexoHalfPieceComponent {
     public static STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH / 2;
 
     public mustForceStrokeDisplay(): boolean {
-        console.log(this.pieceClasses, 'is it in there ?')
+
         return this.move === undefined ||
                this.pieceClasses.some((pieceClass: string) => pieceClass === 'victory-stroke') ||
                this.pieceClasses.some((pieceClass: string) => pieceClass === 'last-move-stroke');

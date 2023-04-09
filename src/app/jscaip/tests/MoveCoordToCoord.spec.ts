@@ -49,11 +49,6 @@ describe('MoveCoordToCoord', () => {
                 ConcreteMoveCoordToCoord.getEncoder(myMoveConstructor),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
-        // it('should have a bijective number encoder', () => {
-        //     NumberEncoderTestUtils.expectToBeBijective(
-        //         ConcreteMoveCoordToCoord.getNumberEncoder(10, 10, myMoveConstructor),
-        //         new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
-        // });
     });
 
 });
