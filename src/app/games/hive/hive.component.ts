@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';

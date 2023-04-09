@@ -424,7 +424,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const currentPartTurn: number = this.gameComponent.getTurn();
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
             const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
-            const stringListMoves: string = '[' + JSON.stringify(listMoves) + ']';
+            const stringListMoves: string = JSON.stringify(listMoves);
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
                                     ' in ' + stringListMoves + ' at turn ' + currentPartTurn +
                                     'because "' + legality.getReasonOr('') + '"';

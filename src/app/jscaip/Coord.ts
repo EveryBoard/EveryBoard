@@ -130,11 +130,11 @@ export class Coord extends Vector {
         const dy: number = c.y - this.y;
         return new Vector(dx, dy);
     }
-    public toMVector(): Vector {
+    public toVector(): Vector {
         return new Vector(this.x, this.y);
     }
     public toMinimalVector(): Vector {
-        const vector: Vector = this.toMVector();
+        const vector: Vector = this.toVector();
         return vector.toMinimalVector();
     }
     public getMinimalVectorToward(c: Coord): Vector {

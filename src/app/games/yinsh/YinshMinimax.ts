@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

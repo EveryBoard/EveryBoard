@@ -65,14 +65,15 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
     private getPieceDirections(state: LascaState, coord: Coord): Direction[] {
         const piece: LascaStack = state.getPieceAt(coord);
         const pieceOwner: Player = piece.getCommander().player;
-        const upDirection: number = pieceOwner.getScoreModifier();
+        // Since player zero must go up (-1) and player one go down (+1)
+        const verticalDirection: number = pieceOwner.getScoreModifier();
         const directions: Direction[] = [
-            Direction.factory.fromDelta(-1, upDirection).get(),
-            Direction.factory.fromDelta(1, upDirection).get(),
+            Direction.factory.fromDelta(-1, verticalDirection).get(),
+            Direction.factory.fromDelta(1, verticalDirection).get(),
         ];
         if (state.getPieceAt(coord).getCommander().isOfficer) {
-            directions.push(Direction.factory.fromDelta(-1, - upDirection).get(),
-                            Direction.factory.fromDelta(1, - upDirection).get());
+            directions.push(Direction.factory.fromDelta(-1, - verticalDirection).get(),
+                            Direction.factory.fromDelta(1, - verticalDirection).get());
         }
         return directions;
     }

@@ -314,11 +314,11 @@
       <trans-unit id="5306696079242551443" datatype="html">
         <source>Hnefatafl</source>
       </trans-unit>
-      <trans-unit id="692005285727565478" datatype="html">
-        <source>Lasca</source>
-      </trans-unit>
       <trans-unit id="6220801899147470326" datatype="html">
         <source>Hive</source>
+      </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1818,7 +1818,7 @@
       <trans-unit id="2693455583384082674" datatype="html">
         <source>Promotion</source>
       </trans-unit>
-      <trans-unit id="8214126313435881472" datatype="html">
+      <trans-unit id="2800005139114196090" datatype="html">
         <source>When a stack reach the last line, its commander become officer, and gain the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
       </trans-unit>
       <trans-unit id="3052116389115675860" datatype="html">
@@ -1827,8 +1827,8 @@
       <trans-unit id="4252782057421264089" datatype="html">
         <source>Officer move</source>
       </trans-unit>
-      <trans-unit id="3389398628017282880" datatype="html">
-        <source>You have an officer, it can move backward (and obviously, can still move forward) and capture backward as well.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+      <trans-unit id="1422370782594461909" datatype="html">
+        <source>Officer can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
@@ -1992,6 +1992,15 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
+      <trans-unit id="4174188766565583979" datatype="html">
+        <source>You must pick a piece from your side of the board in order to move it.</source>
+      </trans-unit>
+      <trans-unit id="4126120518252508337" datatype="html">
+        <source>This is not a valid promotion nor a valid capture.</source>
+      </trans-unit>
+      <trans-unit id="820589591452307194" datatype="html">
+        <source>You cannot perform a move that is the reverse of the previous one.</source>
+      </trans-unit>
       <trans-unit id="4594736386763524275" datatype="html">
         <source>Start coord cannot be out of range</source>
       </trans-unit>
@@ -2003,15 +2012,6 @@
       </trans-unit>
       <trans-unit id="4409865504289904426" datatype="html">
         <source>Drones must move one or two steps in any direction.</source>
-      </trans-unit>
-      <trans-unit id="4174188766565583979" datatype="html">
-        <source>You must pick a piece from your side of the board in order to move it.</source>
-      </trans-unit>
-      <trans-unit id="4126120518252508337" datatype="html">
-        <source>This is not a valid promotion nor a valid capture.</source>
-      </trans-unit>
-      <trans-unit id="820589591452307194" datatype="html">
-        <source>You cannot perform a move that is the reverse of the previous one.</source>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>

@@ -34,7 +34,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
             callback(this.getByIndex(i));
         }
     }
-    public getByIndex(index: number): {key: K, value: V} { // TODOTODO: ça, c'est acceptable ?
+    public getByIndex(index: number): {key: K, value: V} {
         return this.map[index];
     }
     public putAll(m: MGPMap<K, V>): void {
