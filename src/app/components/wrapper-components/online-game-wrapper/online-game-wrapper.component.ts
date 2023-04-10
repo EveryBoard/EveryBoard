@@ -56,7 +56,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -313,7 +313,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const turn: number = this.gameComponent.getTurn();
         assert(turn === 0, 'turn is always 0')
 
-        this.timeManager.onGameStart(this.configRoom, part.data);
+        this.timeManager.onGameStart(this.configRoom);
         console.log('onGameStart')
         // The game has started, we can subscribe to the events to receive moves etc.
         // We don't want to do it sooner, as the clocks need to be started before receiving any move
@@ -321,8 +321,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // This is in particular used to deal with joining a game in the middle: we don't want to apply all clock actions then
         this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, (events: PartEvent[]) => {
             this.beforeEventsBatch();
-
-            console.log(events.length)
             for (const event of events) {
                 console.log({type: event.eventType, player: event.player})
                 switch (event.eventType) {
@@ -345,7 +343,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                         break;
                 }
             }
-            console.log('TOTO')
             this.afterEventsBatch();
         });
     }
@@ -790,7 +787,6 @@ abstract class OGWCHelper {
 class OGWCTimeManager extends OGWCHelper {
     // TODO: joining a game in the middle, the non-player starts at 2:00 but should start at its latest time
 
-    public static VERBOSE: boolean = true;
     /*
      * The configRoom, which is set when starting the clocks.
      * We need it to know the maximal game and move durations.
@@ -802,6 +798,8 @@ class OGWCTimeManager extends OGWCHelper {
     private beginningTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
     // The time at which the last move was made. We need it for measuring the time of the current move
     private lastMoveTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
+    // The time the previous move took, useful to get accurate clocks after a move
+    private lastTakenMoveTime: MGPOptional<number> = MGPOptional.empty();
     // All clocks managed by this time manager
     private readonly allClocks: CountDownComponent[];
 
@@ -813,22 +811,9 @@ class OGWCTimeManager extends OGWCHelper {
         super();
         this.allClocks = this.turnClocks.concat(this.globalClocks);
     }
-    // Starts all clocks at the beginning of a game
-    public onGameStart(configRoom: ConfigRoom, part: Part): void {
-        // How to do it:
-        // We have: the clocks, and the computed remaining time
-        // The clocks progress (down), but the time is fixed as it will be used for computing stuff
-        // so we have remainingTime[0] and 1
-        // and globalClock[0] and turnClock[0] and 1
-        // We can assume we receive moves in order
-        // start game: when we receive it, set timer at (localTime - beginning) + totalPartTime, and start the countdown
-        //   drift = (localTime - beginning)
-        //   1. set takenGlobalTime[0] to drift
-        //   2. set globalClock[0] to totalPartTime - takenGlobalTime[0]
-        //   3. set turnClock[0] to turnTime - takenGlobalTime[0]
-        const beginningTimestamp: Timestamp = Utils.getNonNullable(part.beginning) as Timestamp;
+    // At the beginning of a game, set up clocks and remember when the game started
+    public onGameStart(configRoom: ConfigRoom): void {
         this.configRoom = MGPOptional.of(configRoom);
-        this.beginningTimestamp = MGPOptional.of(beginningTimestamp); // TODO: now useless if we rely on GameStart
         this.globalClocks[0].setDuration(this.getPartDurationInMs());
         this.globalClocks[1].setDuration(this.getPartDurationInMs());
         this.turnClocks[0].setDuration(this.getMoveDurationInMs());
@@ -841,10 +826,8 @@ class OGWCTimeManager extends OGWCHelper {
     private getMoveDurationInMs(): number {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
-    public onReceivedReply(_reply: PartEventReply): void {
-        // TODO: takeback -> probably already working, not needed!
-    }
-    public onReceivedAction(action: PartEventAction): void {
+    public override onReceivedAction(action: PartEventAction): void {
+        console.log('ACTION: ' + action.action);
         switch (action.action) {
             case 'AddTurnTime':
                 this.addTurnTime(Player.of(action.player));
@@ -853,17 +836,18 @@ class OGWCTimeManager extends OGWCHelper {
                 this.addGlobalTime(Player.of(action.player));
                 break;
             case 'StartGame':
-                // Ignore this action
+                this.beginningTimestamp = MGPOptional.of(action.time as Timestamp);
                 break;
         }
     }
-    public onReceivedMove(move: PartEventMove): void {
-        display(OGWCTimeManager.VERBOSE, `TimeManager.onReceivedMove`);
+    public override onReceivedMove(move: PartEventMove): void {
+        console.log('MOVE')
         const player: Player = Player.of(move.player);
         console.log(`player is ${player}`)
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
         const takenMoveTime: number = this.getMillisecondsElapsedSinceLastEvent(moveTimestamp);
+        this.lastTakenMoveTime = MGPOptional.of(takenMoveTime);
         this.lastMoveTimestamp = MGPOptional.of(moveTimestamp);
         console.log(`takenGlobalTime so far: ${this.takenGlobalTime[player.value] / 1000}`)
         console.log(`adding ${takenMoveTime / 1000} to taken global time of player ${player.value}`)
@@ -871,6 +855,7 @@ class OGWCTimeManager extends OGWCHelper {
         console.log(`takenGlobalTime now: ${this.takenGlobalTime[player.value] / 1000}`)
         const adaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[player.value];
         this.globalClocks[player.value].changeDuration(adaptedGlobalTime);
+        this.turnClocks[player.value].subtract(takenMoveTime);
 
         // Now is the time to update the other player's clock
         // They may get updated through later action such as time additions
@@ -878,9 +863,9 @@ class OGWCTimeManager extends OGWCHelper {
         this.turnClocks[nextPlayer.value].changeDuration(this.getMoveDurationInMs());
         const nextPlayerAdaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[nextPlayer.value];
         this.globalClocks[nextPlayer.value].changeDuration(nextPlayerAdaptedGlobalTime);
+        this.showClocks();
     }
     private getMillisecondsElapsedSinceLastEvent(timestamp: Timestamp) {
-        // TODO: since last time? event, and simply have beginning be GameStart
         if (this.lastMoveTimestamp.isPresent()) {
             return getMillisecondsElapsed(this.lastMoveTimestamp.get(), timestamp);
         } else {
@@ -905,6 +890,13 @@ class OGWCTimeManager extends OGWCHelper {
             console.log('pausing all clocks')
             this.pauseAllClocks();
         }
+        this.showClocks();
+    }
+    private showClocks(): void {
+        for (const player of [0, 1]) {
+            console.log(`clock turn ${player}: ${this.turnClocks[player].displayedMinute}:${this.turnClocks[player].displayedSec}`)
+            console.log(`clock global ${player}: ${this.globalClocks[player].displayedMinute}:${this.globalClocks[player].displayedSec}`)
+        }
     }
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player) {
@@ -919,6 +911,9 @@ class OGWCTimeManager extends OGWCHelper {
                 }
                 this.clocksStarted = true;
             }
+            if (this.lastTakenMoveTime.isPresent()) {
+                this.turnClocks[player.getOpponent().value].changeDuration(this.getMoveDurationInMs() - this.lastTakenMoveTime.get());
+            }
             // The drift is how long has passed since the last event occured
             const localTime: Timestamp = Timestamp.now();
             const drift: number = this.getMillisecondsElapsedSinceLastEvent(localTime);
@@ -929,14 +924,17 @@ class OGWCTimeManager extends OGWCHelper {
             this.turnClocks[player.value].resume();
             this.globalClocks[player.value].resume();
         }
+        this.showClocks();
     }
     // Add turn time to the opponent of a player
     private addTurnTime(player: Player): void {
-        this.turnClocks[player.getOpponent().value].add(30 * 1000);
+        const secondsToAdd: number = 30;
+        this.turnClocks[player.getOpponent().value].add(secondsToAdd * 1000);
     }
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
-        this.globalClocks[player.getOpponent().value].add(5 * 60 * 1000);
+        const secondsToAdd: number = 5 * 60;
+        this.globalClocks[player.getOpponent().value].add(secondsToAdd * 1000);
     }
     // Pauses all clocks that are running
     private pauseAllClocks(): void {
