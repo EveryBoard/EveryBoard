@@ -156,6 +156,7 @@
     stroke-linecap: round;
 }
 .text-giant {
+    fill: var(--base-stroke);
     font: 3.7rem sans-serif;
     stroke-width: 0.37rem;
     dominant-baseline: central;
