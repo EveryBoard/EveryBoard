@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder, NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { DvonnState } from './DvonnState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';

@@ -224,8 +224,8 @@
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
-      <trans-unit id="6934673888025031164" datatype="html">
-        <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of others pieces!</source>
+      <trans-unit id="265614119354246271" datatype="html">
+        <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
@@ -314,10 +314,11 @@
       <trans-unit id="5306696079242551443" datatype="html">
         <source>Hnefatafl</source>
       </trans-unit>
-      <trans-unit id="1760292529513431093" datatype="html">
-        <source>Trexo</source>
       <trans-unit id="6220801899147470326" datatype="html">
         <source>Hive</source>
+      </trans-unit>
+      <trans-unit id="1760292529513431093" datatype="html">
+        <source>Trexo</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -2662,7 +2663,7 @@
       <trans-unit id="7841599074494103882" datatype="html">
         <source>You cannot drop on only one piece!</source>
       </trans-unit>
-      <trans-unit id="7046446972233642847" datatype="html">
+      <trans-unit id="4138926893172482803" datatype="html">
         <source>You cannot drop a piece on uneven grounds!</source>
       </trans-unit>
       <trans-unit id="8777341718687257426" datatype="html">
@@ -2671,7 +2672,7 @@
       <trans-unit id="6011148802067949079" datatype="html">
         <source>Dropping a tile</source>
       </trans-unit>
-      <trans-unit id="9144162616649352203" datatype="html">
+      <trans-unit id="618673272879647861" datatype="html">
         <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
       </trans-unit>
       <trans-unit id="6262113904872794006" datatype="html">
@@ -2683,7 +2684,7 @@
       <trans-unit id="3088092342855643416" datatype="html">
         <source>Incorrect, you put that piece on the floor level, please put it on top of two pieces.</source>
       </trans-unit>
-      <trans-unit id="6106348607957297864" datatype="html">
+      <trans-unit id="2718728189382080564" datatype="html">
         <source>To win at Trexo, you need to align 5 of your pieces. Importantly, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">

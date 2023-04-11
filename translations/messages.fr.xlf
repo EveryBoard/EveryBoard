@@ -258,8 +258,8 @@
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
-      <trans-unit id="6934673888025031164" datatype="html">
-        <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of others pieces!</source>
+      <trans-unit id="265614119354246271" datatype="html">
+        <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
         <target>Alignez 5 pièces de votre couleur en ligne droite, mais attention, les pièces peuvent s'empiler !</target>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
@@ -377,6 +377,7 @@
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
         <target>Trexo</target>
+      </trans-unit>
       <trans-unit id="6220801899147470326" datatype="html">
         <source>Hive</source>
         <target>Hive</target>
@@ -3772,7 +3773,7 @@
         <source>You cannot drop on only one piece!</source>
         <target>Vous ne pouvez pas déposer de pièce sur seulement une autre pièce !</target>
       </trans-unit>
-      <trans-unit id="7046446972233642847" datatype="html">
+      <trans-unit id="4138926893172482803" datatype="html">
         <source>You cannot drop a piece on uneven grounds!</source>
         <target>Vous ne pouvez pas déposer de pièce sur deux piles de hauteur différentes !</target>
       </trans-unit>
@@ -3784,7 +3785,7 @@
         <source>Dropping a tile</source>
         <target>Déposer une tuile</target>
       </trans-unit>
-      <trans-unit id="9144162616649352203" datatype="html">
+      <trans-unit id="618673272879647861" datatype="html">
         <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
         <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit où vous voulez déposer la pièce de l'adversaire, puis sur la case voisine où vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
       </trans-unit>
@@ -3800,7 +3801,7 @@
         <source>Incorrect, you put that piece on the floor level, please put it on top of two pieces.</source>
         <target>Incorrect, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
       </trans-unit>
-      <trans-unit id="6106348607957297864" datatype="html">
+      <trans-unit id="2718728189382080564" datatype="html">
         <source>To win at Trexo, you need to align 5 of your pieces. Importantly, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
         <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte. Puisque vous déposez les pièces adverses en premier, dans le cas où vous créez un alignement avec vos pièces et un alignement avec les pièces adverses, l'adversaire sera conisdéré vainqueur. Si vous créez uniquement une victoire pour l'adversaire, il gagnera, évidemment.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
