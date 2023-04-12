@@ -94,7 +94,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Officer move`,
-            $localize`You have an officer, it can move backward (and obviously, can still move forward) and capture backward as well.<br/><br/>You're playing Dark, move your officier!`,
+            $localize`Officer can move and capture backward as well as forward.<br/><br/>You're playing Dark, move your officier!`,
             LascaState.from([
                 [__, __, __, __, Uv, __, _v],
                 [__, __, __, __, __, __, __],

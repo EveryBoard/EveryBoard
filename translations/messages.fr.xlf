@@ -377,6 +377,7 @@
       <trans-unit id="692005285727565478" datatype="html">
         <source>Lasca</source>
         <target>Lasca</target>
+      </trans-unit>
       <trans-unit id="6220801899147470326" datatype="html">
         <source>Hive</source>
         <target>Hive</target>
@@ -1181,10 +1182,6 @@
       <trans-unit id="6033788914683606777" datatype="html">
         <source>Feeding is mandatory</source>
         <target>Nourrir est obligatoire</target>
-      </trans-unit>
-      <trans-unit id="6501764281568922792" datatype="html">
-        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;Go ahead!</source>
-        <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.&lt;br/&gt;&lt;br/&gt;Faites-le !</target>
       </trans-unit>
       <trans-unit id="1521992636044776742" datatype="html">
         <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Give a seed to your opponent!</source>
@@ -2534,13 +2531,13 @@
         <source>Officer move</source>
         <target>Déplacement des Officiers</target>
       </trans-unit>
-      <trans-unit id="8214126313435881472" datatype="html">
+      <trans-unit id="2800005139114196090" datatype="html">
         <source>When a stack reach the last line, its commander become officer, and gain the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-        <target>Quand une pile atteint la dernière ligne, son commandeur devient officier, et gagne la capacité de se déplacer en marche arrière, ce qui est illégal pour les autres pièces! Une de vos pièces pourrait être promue ce tour-ci.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
+        <target>Quand une pile atteint la dernière ligne, son commandeur devient officier, et gagne la capacité de se déplacer en marche arrière, ce qui est illégal pour les autres pièces ! Une de vos pièces pourrait être promue ce tour-ci.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
       </trans-unit>
-      <trans-unit id="3389398628017282880" datatype="html">
-        <source>You have an officer, it can move backward (and obviously, can still move forward) and capture backward as well.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
-        <target>Vous avez un officier, il peut se déplacer en arrière (et naturellement, il peut toujours se déplacer en avant) and capturer en arrière également.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre officier !</target>
+      <trans-unit id="1422370782594461909" datatype="html">
+        <source>Officer can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+        <target>Les officiers peuvent se déplacer et capturer en arrière ainsi qu'en avant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre officier !</target>
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>

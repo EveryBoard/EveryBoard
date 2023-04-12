@@ -69,7 +69,7 @@ export class PentagoState extends GameStateWithTable<PlayerOrNone> {
         const newBoard: PlayerOrNone[][] = postDropState.getCopiedBoard();
         if (move.blockTurned.isPresent()) {
             const blockCenter: Coord = PentagoState.getBlockCenter(move.blockTurned.get());
-            const blockVector: Vector = blockCenter.toMVector();
+            const blockVector: Vector = blockCenter.toVector();
             if (move.turnedClockwise) {
                 for (const translation of PentagoState.ROTATION_MAP) {
                     const oldCoord: Coord = translation[0].getNext(blockVector);

@@ -3,8 +3,7 @@ import { MGPSet } from './MGPSet';
 
 export class MGPOrderedSet<T extends Comparable> extends MGPSet<T> {
 
-    // TODOTODO: override annotation ?
-    public equals(other: MGPOrderedSet<T>): boolean {
+    public override equals(other: MGPOrderedSet<T>): boolean {
         if (other.size() !== this.size()) {
             return false;
         }
@@ -17,11 +16,15 @@ export class MGPOrderedSet<T extends Comparable> extends MGPSet<T> {
         }
         return true;
     }
-    // TODOTODO: override annotation ?
     public get(index: number): T {
-        if (index < 0) {
-            index -= this.values.length;
-        }
         return this.values[index];
+    }
+    /**
+      * Get element starting to count from the end (0 for the last)
+      * @param index the index of the element to fetch, starting from the end (0 as last)
+      */
+    public getFromEnd(index: number): T {
+        const lastIndex: number = this.values.length - 1;
+        return this.get(lastIndex - index);
     }
 }

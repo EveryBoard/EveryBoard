@@ -212,7 +212,7 @@ describe('LascaMove', () => {
             const stringification: string = move.toString();
 
             // Then it should look like this
-            expect(stringification).toBe('LascaMove((0, 0), (2, 2))')
+            expect(stringification).toBe('LascaMove((0, 0), (2, 2))');
         });
     });
 });

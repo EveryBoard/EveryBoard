@@ -108,9 +108,7 @@ export class LascaMove extends Move {
         return this.coords.get(0);
     }
     public getEndingCoord(): Coord {
-        const list: Coord[] = this.coords.toList();
-        const last: number = list.length - 1;
-        return list[last];
+        return this.coords.getFromEnd(0);
     }
     public getCapturedCoords(): MGPFallible<MGPSet<Coord>> {
         return LascaMove.getSteppedOverCoords(this.coords.toList());

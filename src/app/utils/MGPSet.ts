@@ -83,13 +83,6 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return false;
     }
-    public map<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
-        const mappedList: V[] = [];
-        for (const element of this.values) {
-            mappedList.push(mapper(element));
-        }
-        return new MGPSet(mappedList, this.isMutable);
-    }
     public size(): number {
         return this.values.length;
     }
@@ -113,12 +106,12 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public hasElements(): boolean {
         return this.isEmpty() === false;
     }
-    public map<U extends Comparable>(f: (element: T) => U): MGPSet<U> {
-        const result: MGPSet<U> = new MGPSet();
-        for (const element of this) {
-            result.add(f(element));
+    public map<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
+        const result: V[] = [];
+        for (const element of this.values) {
+            result.push(mapper(element));
         }
-        return result;
+        return new MGPSet(result, this.isMutable);
     }
     public flatMap<U extends Comparable>(f: (element: T) => MGPSet<U>): MGPSet<U> {
         const result: MGPSet<U> = new MGPSet();
