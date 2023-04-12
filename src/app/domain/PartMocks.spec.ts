@@ -40,8 +40,6 @@ export class PartMocks {
         listMoves: [],
         result: MGPResult.UNACHIEVED.value,
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-        remainingMsForOne: 1800 * 1000,
-        remainingMsForZero: 1800 * 1000,
         beginning: serverTimestamp(),
     };
 
@@ -56,24 +54,8 @@ export class PartMocks {
         listMoves: [],
         result: MGPResult.UNACHIEVED.value,
         playerOne: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
-        remainingMsForOne: 1800 * 1000,
-        remainingMsForZero: 1800 * 1000,
         beginning: serverTimestamp(),
     };
 
-    public static readonly ANOTHER_STARTED: Part = {
-        lastUpdate: {
-            index: 1,
-            player: 1,
-        },
-        typeGame: 'Quarto',
-        playerZero: UserMocks.OTHER_CREATOR_MINIMAL_USER,
-        turn: 0,
-        listMoves: [],
-        result: MGPResult.UNACHIEVED.value,
-        playerOne: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
-        remainingMsForOne: 1800 * 1000,
-        remainingMsForZero: 1800 * 1000,
-        beginning: serverTimestamp(),
-    };
+    public static readonly ANOTHER_STARTED: Part = PartMocks.OTHER_STARTED;
 }

@@ -98,7 +98,7 @@ export class GameService {
     private async startGameWithConfig(partId: string, user: Player, lastIndex: number, configRoom: ConfigRoom)
     : Promise<void>
     {
-        display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(configRoom));
+        display(GameService.VERBOSE || true, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(configRoom));
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
         await Promise.all([this.updateAndBumpIndex(partId, user, lastIndex, update),
                            this.partService.startGame(partId, user)]);

@@ -21,8 +21,6 @@ import { ConfigRoomService } from '../ConfigRoomService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
-import { ErrorLoggerService } from '../ErrorLoggerService';
-import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { PartService } from '../PartService';
@@ -405,7 +403,7 @@ describe('GameService', () => {
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
             const scores: [number, number] = [5, 0];
-            await gameService.updatePart('partId', Player.ONE, [0, 0], scores);
+            await gameService.updatePart('partId', Player.ONE, scores);
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
                 turn: 2,
@@ -418,7 +416,7 @@ describe('GameService', () => {
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
             // When updating the board to notify of a draw
-            await gameService.updatePart('partId', Player.ONE, [0, 0], undefined, true);
+            await gameService.updatePart('partId', Player.ONE, undefined, true);
             // Then the result is set to draw in the update
             const expectedUpdate: Partial<Part> = {
                 lastUpdate: {

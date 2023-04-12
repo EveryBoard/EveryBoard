@@ -152,8 +152,6 @@ describe('PartDAO', () => {
                 { result: 3 },
                 { listMoves: [{ a: 1 }] },
                 { lastUpdateTime: serverTimestamp() },
-                { remainingMsForZero: 42 },
-                { remainingMsForOne: 42 },
                 { winner: creator },
                 { loser: user },
                 { scorePlayerZero: 42 },
@@ -293,7 +291,6 @@ describe('PartDAO', () => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
             // When chosen opponents updates the part document
-            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const result: Promise<void> = updateAndBumpIndex(partInfo.id,
                                                              Player.ONE,
                                                              partInfo.part.lastUpdate.index,
@@ -302,66 +299,21 @@ describe('PartDAO', () => {
                                                                  playerOne: partInfo.candidate,
                                                                  turn: 0,
                                                                  beginning: serverTimestamp(),
-                                                                 remainingMsForZero: remainingMs,
-                                                                 remainingMsForOne: remainingMs,
                                                              });
 
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
-        });
-        it('should forbid starting a part when setting incorrect remainingMs field for player zero', async() => {
-            // Given a part ready to be started
-            const partInfo: PartInfo = await preparePart();
-            // When chosen opponents updates the part document but uses an incorrect remainingMs for player zero
-            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
-            const result: Promise<void> = updateAndBumpIndex(partInfo.id,
-                                                             Player.ONE,
-                                                             partInfo.part.lastUpdate.index,
-                                                             {
-                                                                 playerZero: partInfo.creator,
-                                                                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                                                                 turn: 0,
-                                                                 beginning: serverTimestamp(),
-                                                                 remainingMsForZero: 42,
-                                                                 remainingMsForOne: remainingMs,
-                                                             });
-
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
-        });
-        it('should forbid starting a part when setting incorrect remainingMs field for player one', async() => {
-            // Given a part ready to be started
-            const partInfo: PartInfo = await preparePart();
-            // When chosen opponents updates the part document but uses an incorrect remainingMs for playerOne
-            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
-            const result: Promise<void> = updateAndBumpIndex(partInfo.id,
-                                                             Player.ONE,
-                                                             partInfo.part.lastUpdate.index,
-                                                             {
-                                                                 playerZero: partInfo.creator,
-                                                                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                                                                 turn: 0,
-                                                                 beginning: serverTimestamp(),
-                                                                 remainingMsForZero: remainingMs,
-                                                                 remainingMsForOne: 42424242,
-                                                             });
-
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
         });
         it('should forbid starting a part when setting playerZero to another user than chosenOpponent or creator', async() => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
 
             // When chosen opponents updates the part document but puts another user as playerOne
-            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const update: Partial<Part> = {
                 playerZero: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
                 playerOne: partInfo.candidate,
                 turn: 0,
                 beginning: serverTimestamp(),
-                remainingMsForZero: remainingMs,
-                remainingMsForOne: remainingMs,
             };
             const result: Promise<void> = updateAndBumpIndex(partInfo.id,
                                                              Player.ONE,
@@ -376,14 +328,11 @@ describe('PartDAO', () => {
             const partInfo: PartInfo = await preparePart();
 
             // When chosen opponents updates the part document but puts another user as playerOne
-            const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
             const update: Partial<Part> = {
                 playerZero: partInfo.creator,
                 playerOne: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
                 turn: 0,
                 beginning: serverTimestamp(),
-                remainingMsForZero: remainingMs,
-                remainingMsForOne: remainingMs,
             };
             const result: Promise<void> = updateAndBumpIndex(partInfo.id,
                                                              Player.ONE,
@@ -408,7 +357,6 @@ describe('PartDAO', () => {
 
             for (const update of forbiddenUpdates) {
                 // When chosen oopponent starts the part but modifies one of the forbidden field
-                const remainingMs: number = ConfigRoomMocks.INITIAL.totalPartDuration * 1000;
                 const result: Promise<void> = updateAndBumpIndex(partInfo.id,
                                                                  Player.ONE,
                                                                  partInfo.part.lastUpdate.index,
@@ -418,8 +366,6 @@ describe('PartDAO', () => {
                                                                      playerOne: partInfo.candidate,
                                                                      turn: 0,
                                                                      beginning: serverTimestamp(),
-                                                                     remainingMsForZero: remainingMs,
-                                                                     remainingMsForOne: remainingMs,
                                                                  });
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
@@ -529,26 +475,20 @@ describe('PartDAO', () => {
             for (const [turnDelta, listMoves] of turnDeltasAndListMoves) {
                 // Given a part in the middle of being played
                 const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero, playerOne });
-                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForZero);
-                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
                 await updateAndBumpIndex(partId, Player.ZERO, 1,
                                          { turn: 1, listMoves: [0] });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
-                remainingMsForZero -= 10;
                 await updateAndBumpIndex(partId, Player.ONE, 2,
-                                         { turn: 2, listMoves: [0, 1], remainingMsForZero });
+                                         { turn: 2, listMoves: [0, 1] });
                 await signOut();
                 await reconnectUser(CREATOR_EMAIL);
                 // When updating turns with a legitimate increase/decrease
                 const turn: number = 2 + turnDelta;
-                if (turnDelta > 0) {
-                    remainingMsForOne -= 10;
-                }
                 const result: Promise<void> =
                     updateAndBumpIndex(partId, Player.ZERO, 3,
-                                       { turn, listMoves, remainingMsForOne });
+                                       { turn, listMoves });
                 // Then it should succeed
                 await expectAsync(result).toBeResolvedTo();
             }
@@ -565,29 +505,24 @@ describe('PartDAO', () => {
             for (const turnDelta of turnDeltas) {
                 // Given a part in the middle of being played
                 const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero, playerOne });
-                let remainingMsForZero: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForZero);
-                let remainingMsForOne: number = Utils.getNonNullable(PartMocks.STARTED.remainingMsForOne);
                 // need to increase the turn sufficiently for take backs
                 await updateAndBumpIndex(partId, Player.ZERO, 1,
                                          { turn: 1, listMoves: [0] });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
-                remainingMsForZero -= 10;
                 await updateAndBumpIndex(partId, Player.ONE, 2,
-                                         { turn: 2, listMoves: [0, 1], remainingMsForZero });
+                                         { turn: 2, listMoves: [0, 1] });
                 await signOut();
                 await reconnectUser(CREATOR_EMAIL);
-                remainingMsForOne -= 10;
                 await updateAndBumpIndex(partId, Player.ZERO, 3,
-                                         { turn: 3, listMoves: [0, 1, 2], remainingMsForOne });
+                                         { turn: 3, listMoves: [0, 1, 2] });
                 await signOut();
                 await reconnectUser(CANDIDATE_EMAIL);
                 // When updating turns with an illegal increase/decrease
                 const turn: number = 3 + turnDelta;
-                remainingMsForZero -= 10;
                 const result: Promise<void> =
                     updateAndBumpIndex(partId, Player.ONE, 4,
-                                       { turn, listMoves: [0, 1, 2, 3], remainingMsForZero });
+                                       { turn, listMoves: [0, 1, 2, 3] });
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
 

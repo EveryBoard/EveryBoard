@@ -18,10 +18,7 @@ export interface Part extends FirestoreJSONObject {
     readonly result: IMGPResult,
 
     readonly playerOne?: MinimalUser, // the second player
-    /* Server time being handled on server by firestore, when we send it, it's a FieldValue
-     * so firebase write the server time and send us back a timestamp in the form of Time
-     */
-    readonly beginning?: FirestoreTime,
+    readonly beginning?: FirestoreTime, // beginning of the part
     readonly lastUpdateTime?: FirestoreTime,
     readonly winner?: MinimalUser,
     readonly loser?: MinimalUser,
