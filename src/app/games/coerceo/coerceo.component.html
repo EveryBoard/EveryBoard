@@ -47,9 +47,9 @@
              class="base no-fill selected-stroke"/>
     <g *ngFor="let player of [0, 1]">
         <g *ngIf="mustShowTilesOf(player)"
-        [id]="'tilesCount' + player">
+           [id]="'tilesCount' + player">
             <polygon [attr.points]="getTilesCountCoordinate(player === 0 ? 0 : 4.5, player === 0 ? 0 : 6)"
-                    [attr.stroke]="lastTurnWasTilesExchange(0) ? 'yellow' : 'black'"
+                    [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
                     [ngClass]="['base', 'player' + player + '-fill']"
                     stroke-linecap="round"
             />
