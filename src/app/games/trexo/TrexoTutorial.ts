@@ -63,11 +63,11 @@ export class TrexoTutorial extends Tutorial {
                 TrexoMove.from(new Coord(5, 0), new Coord(4, 0)).get(),
             ],
             $localize`Congratulations!`,
-            $localize`Incorrect, you put that piece on the floor level, please put it on top of two pieces.`,
+            $localize`Failed, you put that piece on the floor level, please put it on top of two pieces.`,
         ),
         TutorialStep.fromPredicate(
             $localize`Victory`,
-            $localize`To win at Trexo, you need to align 5 of your pieces. Importantly, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they'll be considered the winners. If you create only a victory for them too, obviously.<br/><br/>You're playing Light, win.`,
+            $localize`To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you loose, even if you aligned 5 of your pieces too.<br/><br/>You're playing Light, win.`,
             new TrexoState([
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
                 [______, ______, ______, ZERO_5, ______, ______, ______, ______, ______, ______],

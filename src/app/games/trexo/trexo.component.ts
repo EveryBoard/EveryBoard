@@ -152,15 +152,13 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
             ArrayUtils.create3DTable(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let maxZ: number = 1;
         for (let z: number = 0; z <= maxZ; z++) {
-            for (let y: number = 0; y < TrexoState.SIZE; y++) {
-                for (let x: number = 0; x < TrexoState.SIZE; x++) {
-                    const stack: TrexoPieceStack = this.getState().getPieceAtXY(x, y);
-                    const stackHeight: number = stack.getHeight();
-                    maxZ = Math.max(maxZ, stackHeight);
-                    if (z < stackHeight) {
-                        const move: TrexoMove = this.extractMoveFromState(x, y, z);
-                        this.addMoveToArray(z, move, moveByCoord);
-                    }
+            for (const stack of this.getState().toMap()) {
+                const coord: Coord = stack.key;
+                const stackHeight: number = stack.value.getHeight();
+                maxZ = Math.max(maxZ, stackHeight);
+                if (z < stackHeight) {
+                    const move: TrexoMove = this.extractMoveFromState(coord.x, coord.y, z);
+                    this.addMoveToArray(z, move, moveByCoord);
                 }
             }
         }

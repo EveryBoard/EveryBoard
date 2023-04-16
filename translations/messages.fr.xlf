@@ -3797,13 +3797,13 @@
         <source>You can put a tile on other tiles. For that you must respect two rules:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same level.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
         <target>Vous pouvez superposer les tuiles. Pour ce faire vous devez respecter deux règles :&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Les deux pièces doivent être au même niveau.&lt;/li&gt;&lt;li&gt;Vous ne pouver pas déposer votre tuile sur une seule tuile.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Vous jouez Foncé, placez une tuile en hauteur.</target>
       </trans-unit>
-      <trans-unit id="3088092342855643416" datatype="html">
-        <source>Incorrect, you put that piece on the floor level, please put it on top of two pieces.</source>
-        <target>Incorrect, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
+      <trans-unit id="8122888205935746981" datatype="html">
+        <source>Failed, you put that piece on the floor level, please put it on top of two pieces.</source>
+        <target>Raté, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
       </trans-unit>
-      <trans-unit id="2718728189382080564" datatype="html">
-        <source>To win at Trexo, you need to align 5 of your pieces. Importantly, only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them and for you at the same turn, they&apos;ll be considered the winners. If you create only a victory for them too, obviously.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
-        <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte. Puisque vous déposez les pièces adverses en premier, dans le cas où vous créez un alignement avec vos pièces et un alignement avec les pièces adverses, l'adversaire sera conisdéré vainqueur. Si vous créez uniquement une victoire pour l'adversaire, il gagnera, évidemment.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+      <trans-unit id="6595199974245946306" datatype="html">
+        <source>To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you loose, even if you aligned 5 of your pieces too.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+        <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte, les pièces cachées ne sont plus une menace, et une victoire peut inclure des pièces de hauteurs différentes. Puisque vous déposez les pièces adverses en premier, si vous créez un alignement avec les pièces adverses, vous perdez, même si vous alignez aussi 5 de vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">
         <source>The king is dead, long live the king. Congratulations, you won.</source>

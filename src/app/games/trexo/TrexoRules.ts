@@ -69,20 +69,18 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         const victoryOfLastPlayer: Coord[] = [];
         const victoryOfNextPlayer: Coord[] = [];
         const lastPlayer: Player = state.getCurrentOpponent();
-        for (let x: number = 0; x < TrexoState.SIZE; x++) {
+        for (const keyValue of state.toMap()) {
             // for every column, starting from the bottom of each column
-            for (let y: number = 0; y < TrexoState.SIZE; y++) {
-                // while we haven't reached the top or an empty space
-                const coord: Coord = new Coord(x, y);
-                const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
-                if (pieceOwner.isPlayer()) {
-                    const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                    if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                        if (pieceOwner === lastPlayer) {
-                            victoryOfLastPlayer.push(coord);
-                        } else {
-                            victoryOfNextPlayer.push(coord);
-                        }
+            // while we haven't reached the top or an empty space
+            const coord: Coord = keyValue.key;
+            const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
+            if (pieceOwner.isPlayer()) {
+                const squareScore: number = TrexoRules.getSquareScore(state, coord);
+                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                    if (pieceOwner === lastPlayer) {
+                        victoryOfLastPlayer.push(coord);
+                    } else {
+                        victoryOfNextPlayer.push(coord);
                     }
                 }
             }
@@ -97,20 +95,20 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();
         let lastPlayerAligned5: boolean = false;
-        for (let x: number = 0; x < TrexoState.SIZE; x++) {
+        for (const keyValue of state.toMap()) {
             // for every column, starting from the bottom of each column
-            for (let y: number = 0; y < TrexoState.SIZE; y++) {
-                // while we haven't reached the top or an empty space
-                const pieceOwner: PlayerOrNone = state.getPieceAtXY(x, y).getOwner();
-                if (pieceOwner.isPlayer()) {
-                    const squareScore: number = TrexoRules.getSquareScore(state, new Coord(x, y));
-                    if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                        if (pieceOwner === lastPlayer) {
-                            // Cannot return right away, cause last player only win if the other don't align
-                            lastPlayerAligned5 = true;
-                        } else {
-                            return GameStatus.getDefeat(lastPlayer);
-                        }
+            // while we haven't reached the top or an empty space
+            const coord: Coord = keyValue.key;
+            const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
+            if (pieceOwner.isPlayer()) {
+                const squareScore: number = TrexoRules.getSquareScore(state, coord);
+                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                    if (pieceOwner === lastPlayer) {
+                        // Cannot return right away
+                        // because the last player only wins if the other does not get an alignment
+                        lastPlayerAligned5 = true;
+                    } else {
+                        return GameStatus.getDefeat(lastPlayer);
                     }
                 }
             }
@@ -122,17 +120,15 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     }
     public getLegalMoves(state: TrexoState): TrexoMove[] {
         const moves: TrexoMove[] = [];
-        for (let x: number = 0; x < TrexoState.SIZE; x++) {
-            for (let y: number = 0; y < TrexoState.SIZE; y++) {
-                const upOrleftCord: Coord = new Coord(x, y);
-                if (x + 1 < TrexoState.SIZE) {
-                    const rightCoord: Coord = new Coord(x + 1, y);
-                    moves.push(...this.getPossiblesMoves(state, upOrleftCord, rightCoord));
-                }
-                if (y + 1 < TrexoState.SIZE) {
-                    const downCoord: Coord = new Coord(x, y + 1);
-                    moves.push(...this.getPossiblesMoves(state, upOrleftCord, downCoord));
-                }
+        for (const keyValue of state.toMap()) {
+            const upOrleftCord: Coord = keyValue.key;
+            if (upOrleftCord.x + 1 < TrexoState.SIZE) {
+                const rightCoord: Coord = new Coord(upOrleftCord.x + 1, upOrleftCord.y);
+                moves.push(...this.getPossiblesMoves(state, upOrleftCord, rightCoord));
+            }
+            if (upOrleftCord.y + 1 < TrexoState.SIZE) {
+                const downCoord: Coord = new Coord(upOrleftCord.x, upOrleftCord.y + 1);
+                moves.push(...this.getPossiblesMoves(state, upOrleftCord, downCoord));
             }
         }
         return moves;

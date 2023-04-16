@@ -10,20 +10,20 @@ import { TrexoMove } from '../TrexoMove';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
 const _____: TrexoPieceStack = TrexoPieceStack.EMPTY;
-const O1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 0)]);
-const O1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 1)]);
-const O2__T2: TrexoPieceStack = TrexoPieceStack.from([
+const O1_T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 0)]);
+const O1_T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 1)]);
+const O2_T2: TrexoPieceStack = TrexoPieceStack.from([
     new TrexoPiece(Player.ZERO, 1, 0),
     new TrexoPiece(Player.ZERO, 2, 2),
 ]);
-const O1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 3)]);
-const X1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 0)]);
-const X1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 1)]);
-const X2__T2: TrexoPieceStack = TrexoPieceStack.from([
+const O1_T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 3)]);
+const X1_T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 0)]);
+const X1_T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 1)]);
+const X2_T2: TrexoPieceStack = TrexoPieceStack.from([
     new TrexoPiece(Player.ONE, 1, 0),
     new TrexoPiece(Player.ONE, 2, 2),
 ]);
-const X1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 3)]);
+const X1_T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 3)]);
 
 describe('TrexoComponent', () => {
 
@@ -102,8 +102,8 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                            [_____, _____, _____, _____, O1__T0, _____, _____, _____, _____, _____],
-                            [_____, _____, _____, _____, X1__T0, _____, _____, _____, _____, _____],
+                            [_____, _____, _____, _____, O1_T0, _____, _____, _____, _____, _____],
+                            [_____, _____, _____, _____, X1_T0, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -177,9 +177,9 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                            [_____, _____, _____, _____, X1__T0, _____, _____, _____, _____, _____],
-                            [_____, _____, _____, _____, O1__T0, O1__T1, _____, _____, _____, _____],
-                            [_____, _____, _____, _____, _____, X1__T1, _____, _____, _____, _____],
+                            [_____, _____, _____, _____, X1_T0, _____, _____, _____, _____, _____],
+                            [_____, _____, _____, _____, O1_T0, O1_T1, _____, _____, _____, _____],
+                            [_____, _____, _____, _____, _____, X1_T1, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -243,9 +243,9 @@ describe('TrexoComponent', () => {
                         const state: TrexoState = TrexoState.from([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                            [_____, _____, _____, X1__T0, _____, X2__T2, _____, _____, _____, _____],
-                            [_____, _____, _____, O1__T0, O1__T1, O2__T2, O1__T3, _____, _____, _____],
-                            [_____, _____, _____, _____, X1__T1, _____, X1__T3, _____, _____, _____],
+                            [_____, _____, _____, X1_T0, _____, X2_T2, _____, _____, _____, _____],
+                            [_____, _____, _____, O1_T0, O1_T1, O2_T2, O1_T3, _____, _____, _____],
+                            [_____, _____, _____, _____, X1_T1, _____, X1_T3, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -305,11 +305,11 @@ describe('TrexoComponent', () => {
         }));
         it('should not transfer upper piece style to lower piece', fakeAsync(async() => {
             // Given one 3D display with one Stack in two color
-            const MIXXED: TrexoPieceStack = TrexoPieceStack.from([
+            const O0_X2: TrexoPieceStack = TrexoPieceStack.from([
                 new TrexoPiece(Player.ZERO, 1, 0),
                 new TrexoPiece(Player.ONE, 2, 2),
             ]);
-            const MONOCO: TrexoPieceStack = TrexoPieceStack.from([
+            const O1_X2: TrexoPieceStack = TrexoPieceStack.from([
                 new TrexoPiece(Player.ZERO, 1, 1),
                 new TrexoPiece(Player.ONE, 2, 2),
             ]);
@@ -317,9 +317,9 @@ describe('TrexoComponent', () => {
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, X1__T0, _____, _____, _____, _____, _____],
-                [_____, _____, _____, _____, MIXXED, MONOCO, _____, _____, _____, _____],
-                [_____, _____, _____, _____, _____, X1__T1, _____, _____, _____, _____],
+                [_____, _____, _____, _____, X1_T0, _____, _____, _____, _____, _____],
+                [_____, _____, _____, _____, O0_X2, O1_X2, _____, _____, _____, _____],
+                [_____, _____, _____, _____, _____, X1_T1, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
