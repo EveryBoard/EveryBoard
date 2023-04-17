@@ -788,7 +788,6 @@ abstract class OGWCHelper {
  * On top of that, it is important to remember that time can be added to a player.
  */
 class OGWCTimeManager extends OGWCHelper {
-    // TODO: adding time does not preserved "passed" time
     // TODO: global clocks is broken on time addition
 
     /*
@@ -802,8 +801,8 @@ class OGWCTimeManager extends OGWCHelper {
     private availableTurnTime: [number, number] = [0, 0];
     // All clocks managed by this time manager
     private readonly allClocks: CountDownComponent[];
-
-    private lastEventTimestamp: MGPOptional<Timestamp> = MGPOptional.empty(); // TODO: this is actually last move start
+    // The time at which the current move started
+    private lastMoveStartTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
 
     private clocksStarted: boolean = false;
 
@@ -838,7 +837,7 @@ class OGWCTimeManager extends OGWCHelper {
                 this.addGlobalTime(Player.of(action.player));
                 break;
             case 'StartGame':
-                this.lastEventTimestamp = MGPOptional.of(action.time as Timestamp);
+                this.lastMoveStartTimestamp = MGPOptional.of(action.time as Timestamp);
                 break;
         }
     }
@@ -848,8 +847,8 @@ class OGWCTimeManager extends OGWCHelper {
         console.log(`player is ${player}`)
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
-        const takenMoveTime: number = this.getMillisecondsElapsedSinceLastEvent(moveTimestamp);
-        this.lastEventTimestamp = MGPOptional.of(moveTimestamp);
+        const takenMoveTime: number = this.getMillisecondsElapsedSinceLastMoveStart(moveTimestamp);
+        this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
         console.log(`takenGlobalTime so far: ${this.takenGlobalTime[player.value] / 1000}`)
         console.log(`adding ${takenMoveTime / 1000} to taken global time of player ${player.value}`)
         this.takenGlobalTime[player.value] += takenMoveTime;
@@ -868,8 +867,8 @@ class OGWCTimeManager extends OGWCHelper {
         console.log('AFTER EVENT')
         this.showClocks();
     }
-    private getMillisecondsElapsedSinceLastEvent(timestamp: Timestamp): number {
-        return getMillisecondsElapsed(this.lastEventTimestamp.get(), timestamp);
+    private getMillisecondsElapsedSinceLastMoveStart(timestamp: Timestamp): number {
+        return getMillisecondsElapsed(this.lastMoveStartTimestamp.get(), timestamp);
     }
     // Stops all clocks that are running
     public onGameEnd(): void {
@@ -915,7 +914,7 @@ class OGWCTimeManager extends OGWCHelper {
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
             const localTime: Timestamp = Timestamp.now();
-            const drift: number = this.getMillisecondsElapsedSinceLastEvent(localTime);
+            const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(localTime);
             console.log(`DRIFT: ${drift}`)
             // We need to subtract the time to take the drift into account
             this.turnClocks[player.value].subtract(drift);
