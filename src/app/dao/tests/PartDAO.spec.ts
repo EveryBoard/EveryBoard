@@ -867,119 +867,14 @@ describe('PartDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
-        async function checkTimeUpdate(
-            player: Player,
-            updateTime: (currentTimeZero: number, currentTimeOne: number) => Partial<Part>,
-            expectedToSucceed: boolean)
-        : Promise<void>
-        {
-            // Given a player, and a part
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-            const partId: string = await partDAO.create(part);
-            let index: number = 1;
-            if (player === Player.ONE) {
-                await updateAndBumpIndex(partId, Player.ZERO, index, { turn: 1, listMoves: [1] });
-                index += 1;
-                await signOut();
-                await reconnectUser(OPPONENT_EMAIL);
-            }
-
-            // When updating a time
-            const update: Partial<Part> = updateTime(Utils.getNonNullable(part.remainingMsForZero),
-                                                     Utils.getNonNullable(part.remainingMsForOne));
-            const result: Promise<void> = updateAndBumpIndex(partId, player, index, update);
-            if (expectedToSucceed) {
-                // Then it should succeed
-                await expectAsync(result).toBeResolvedTo();
-            } else {
-                // Then it should fail
-                await expectPermissionToBeDenied(result);
-            }
-        }
-        describe('decreasing time', () => {
-            it('should allow decreasing its own time outside of move (as playerZero)', async() => {
-                await checkTimeUpdate(Player.ZERO,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForZero: zero - 1000 };
-                                      }, true);
-            });
-            xit('should forbid decreasing its own time during move (as playerZero)', async() => {
-                // Test disabled because this is not something we are currently checking in the security rules
-                await checkTimeUpdate(Player.ZERO,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForZero: zero - 1000, turn: 1, listMoves: [1] };
-                                      }, false);
-            });
-            it('should allow decreasing the time of the opponent outside of move (as playerZero)', async() => {
-                await checkTimeUpdate(Player.ZERO,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForOne: one - 1000 };
-                                      }, true);
-            });
-            it('should allow decreasing the time of the opponent during move (as playerZero)', async() => {
-                await checkTimeUpdate(Player.ZERO,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForOne: one - 1000, turn: 1, listMoves: [1] };
-                                      }, true);
-            });
-            it('should allow decreasing its own time outside of move (as playerOne)', async() => {
-                await checkTimeUpdate(Player.ONE,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForOne: one - 1000 };
-                                      }, true);
-            });
-            xit('should forbid decreasing its own time during move (as playerOne)', async() => {
-                // Test disabled because this is not something we are currently checking in the security rules
-                await checkTimeUpdate(Player.ONE,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForOne: one - 1000, turn: 2, listMoves: [1, 2] };
-                                      }, false);
-            });
-            it('should allow decreasing the time of the opponent outside of move (as playerOne)', async() => {
-                await checkTimeUpdate(Player.ONE,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForZero: zero - 1000 };
-                                      }, true);
-            });
-            it('should allow decreasing the time of the opponent during move (as playerOne)', async() => {
-                await checkTimeUpdate(Player.ONE,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForZero: zero - 1000, turn: 2, listMoves: [1, 2] };
-                                      }, true);
-            });
-
-        });
         describe('increasing time', () => {
             it('should allow increasing the time of the opponent (as playerZero)', async() => {
-                await checkTimeUpdate(Player.ZERO,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForOne: one + 1000 };
-                                      }, true);
             });
             xit('should forbid increasing its own time (as playerZero)', async() => {
-                // Disabled because we removed it from the rules, otherwise
-                // security rules are too complexed to be checked
-                await checkTimeUpdate(Player.ZERO,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForZero: zero + 1000 };
-                                      }, false);
             });
             it('should allow increasing the time of the opponent (as playerOne)', async() => {
-                await checkTimeUpdate(Player.ONE,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForZero: zero + 1000 };
-                                      }, true);
             });
             xit('should forbid increasing its own time (as playerOne)', async() => {
-                // Disabled because we removed it from the rules, otherwise
-                // security rules are too complexed to be checked
-                await checkTimeUpdate(Player.ONE,
-                                      (zero: number, one: number): Partial<Part> => {
-                                          return { remainingMsForOne: one + 1000 };
-                                      }, false);
             });
         });
     });

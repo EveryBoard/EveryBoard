@@ -788,7 +788,7 @@ abstract class OGWCHelper {
  * On top of that, it is important to remember that time can be added to a player.
  */
 class OGWCTimeManager extends OGWCHelper {
-    // TODO: global clocks is broken on time addition
+    // TODO: wrong chrono is playing in some take backs (when it switches player)
 
     /*
      * The configRoom, which is set when starting the clocks.

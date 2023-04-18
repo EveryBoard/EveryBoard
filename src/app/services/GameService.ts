@@ -155,7 +155,6 @@ export class GameService {
             winner,
             loser,
             result: MGPResult.RESIGN.value,
-            request: null,
         };
         return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
@@ -170,7 +169,6 @@ export class GameService {
             winner,
             loser,
             result: MGPResult.TIMEOUT.value,
-            request: null,
         };
         return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
@@ -276,7 +274,6 @@ export class GameService {
         const turn: number = part.turn + 1;
         let update: Partial<Part> = {
             turn,
-            request: null,
             lastUpdateTime: serverTimestamp(),
         };
         update = this.updateScore(update, scores);

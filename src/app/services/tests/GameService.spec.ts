@@ -364,8 +364,6 @@ describe('GameService', () => {
                 result: MGPResult.UNACHIEVED.value,
                 listMoves: [],
                 beginning: serverTimestamp(),
-                remainingMsForZero: 25000,
-                remainingMsForOne: 25000,
             };
             const configRoom: ConfigRoom = {
                 chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
@@ -392,7 +390,6 @@ describe('GameService', () => {
             playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 1,
             listMoves: [MOVE_1],
-            request: null,
             result: MGPResult.UNACHIEVED.value,
         };
         beforeEach(() => {
@@ -407,7 +404,6 @@ describe('GameService', () => {
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
                 turn: 2,
-                request: null,
                 lastUpdateTime: serverTimestamp(),
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
@@ -424,7 +420,6 @@ describe('GameService', () => {
                     player: Player.ONE.value,
                 },
                 turn: 2,
-                request: null,
                 lastUpdateTime: serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             };
@@ -449,7 +444,6 @@ describe('GameService', () => {
                         index: 6,
                         player: player.value,
                     },
-                    request: null,
                     result,
                 });
             });
