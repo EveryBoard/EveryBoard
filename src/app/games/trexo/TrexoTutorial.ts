@@ -7,26 +7,26 @@ import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { Player } from 'src/app/jscaip/Player';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
-const ONE__0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 0)]);
-const ZERO_0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 0)]);
-const ONE__1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 1)]);
-const ZERO_1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 1)]);
-const ZERO_2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 2)]);
-const ONE__2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 2)]);
+const ONE__0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
+const ZERO_0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
+const ONE__1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1)]);
+const ZERO_1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1)]);
+const ZERO_2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 2)]);
+const ONE__2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 2)]);
 const ZERO_3: TrexoPieceStack = TrexoPieceStack.from([
-    new TrexoPiece(Player.ZERO, 1, 0),
-    new TrexoPiece(Player.ZERO, 2, 3),
+    new TrexoPiece(Player.ZERO, 0),
+    new TrexoPiece(Player.ZERO, 3),
 ]);
 const ONE__3: TrexoPieceStack = TrexoPieceStack.from([
-    new TrexoPiece(Player.ONE, 1, 1),
-    new TrexoPiece(Player.ONE, 2, 3),
+    new TrexoPiece(Player.ONE, 1),
+    new TrexoPiece(Player.ONE, 3),
 ]);
-const ZERO_4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 4)]);
-const ONE__4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 4)]);
-const ZERO_5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 5)]);
-const ONE__5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 5)]);
-const ONE__6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 6)]);
-const ZERO_6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 6)]);
+const ZERO_4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 4)]);
+const ONE__4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 4)]);
+const ZERO_5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 5)]);
+const ONE__5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 5)]);
+const ONE__6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 6)]);
+const ZERO_6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 6)]);
 
 export class TrexoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
@@ -38,14 +38,14 @@ export class TrexoTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Dropping a tile`,
-            $localize`When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.<br/><br/>You're playing Dark, put a tile on the board.`,
+            $localize`When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To drop a tile, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.<br/><br/>You're playing Dark, put a tile on the board.`,
             TrexoState.getInitialState(),
             TrexoMove.from(new Coord(4, 4), new Coord(3, 4)).get(),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
             $localize`Dropping a piece over other pieces`,
-            $localize`You can put a tile on other tiles. For that you must respect two rules:<br/><ul><li>The two pieces must be at the same level.</li><li>You cannot drop your piece on only one other piece.</li></ul><br/>You're playing Dark, do such a move!`,
+            $localize`You can put a tile on other tiles. For that you must respect two rules:<br/><ul><li>The two pieces must be at the same height.</li><li>You cannot drop your piece on only one other piece.</li></ul><br/>You're playing Dark, do such a move!`,
             new TrexoState([
                 [______, ______, ______, ONE__0, ZERO_0, ZERO_1, ONE__1, ______, ______, ______],
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
@@ -67,7 +67,7 @@ export class TrexoTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Victory`,
-            $localize`To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you loose, even if you aligned 5 of your pieces too.<br/><br/>You're playing Light, win.`,
+            $localize`To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you lose, even if you aligned 5 of your pieces too.<br/><br/>You're playing Light, win.`,
             new TrexoState([
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
                 [______, ______, ______, ZERO_5, ______, ______, ______, ______, ______, ______],

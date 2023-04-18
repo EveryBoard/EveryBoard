@@ -3775,7 +3775,7 @@
       </trans-unit>
       <trans-unit id="4138926893172482803" datatype="html">
         <source>You cannot drop a piece on uneven grounds!</source>
-        <target>Vous ne pouvez pas déposer de pièce sur deux piles de hauteur différentes !</target>
+        <target>Vous ne pouvez pas déposer de pièce sur deux piles de hauteurs différentes !</target>
       </trans-unit>
       <trans-unit id="8777341718687257426" datatype="html">
         <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
@@ -3785,24 +3785,24 @@
         <source>Dropping a tile</source>
         <target>Déposer une tuile</target>
       </trans-unit>
-      <trans-unit id="618673272879647861" datatype="html">
-        <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To do that, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
-        <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit où vous voulez déposer la pièce de l'adversaire, puis sur la case voisine où vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
+      <trans-unit id="2972240786684210487" datatype="html">
+        <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To drop a tile, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
+        <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, ou à même le plateau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit où vous voulez déposer la pièce de l'adversaire, puis sur la case voisine où vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
       </trans-unit>
       <trans-unit id="6262113904872794006" datatype="html">
         <source>Dropping a piece over other pieces</source>
         <target>Placer une pièce sur d'autres pièces</target>
       </trans-unit>
-      <trans-unit id="5849352329538631605" datatype="html">
-        <source>You can put a tile on other tiles. For that you must respect two rules:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same level.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-        <target>Vous pouvez superposer les tuiles. Pour ce faire vous devez respecter deux règles :&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Les deux pièces doivent être au même niveau.&lt;/li&gt;&lt;li&gt;Vous ne pouver pas déposer votre tuile sur une seule tuile.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Vous jouez Foncé, placez une tuile en hauteur.</target>
+      <trans-unit id="882687674117366349" datatype="html">
+        <source>You can put a tile on other tiles. For that you must respect two rules:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same height.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Vous pouvez superposer les tuiles. Pour ce faire vous devez respecter deux règles :&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Les deux pièces doivent être au même niveau.&lt;/li&gt;&lt;li&gt;Vous ne pouvez pas déposer votre tuile sur une seule tuile.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Vous jouez Foncé, placez une tuile en hauteur.</target>
       </trans-unit>
       <trans-unit id="8122888205935746981" datatype="html">
         <source>Failed, you put that piece on the floor level, please put it on top of two pieces.</source>
         <target>Raté, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
       </trans-unit>
-      <trans-unit id="6595199974245946306" datatype="html">
-        <source>To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you loose, even if you aligned 5 of your pieces too.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+      <trans-unit id="3210337788599026628" datatype="html">
+        <source>To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you lose, even if you aligned 5 of your pieces too.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
         <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte, les pièces cachées ne sont plus une menace, et une victoire peut inclure des pièces de hauteurs différentes. Puisque vous déposez les pièces adverses en premier, si vous créez un alignement avec les pièces adverses, vous perdez, même si vous alignez aussi 5 de vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">

@@ -12,22 +12,22 @@ import { TrexoNode, TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
-const O1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 0)]);
-const O1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 1)]);
+const O1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
+const O1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1)]);
 const O2__T2: TrexoPieceStack = TrexoPieceStack.from([
-    new TrexoPiece(Player.ZERO, 1, 0),
-    new TrexoPiece(Player.ZERO, 2, 2),
+    new TrexoPiece(Player.ZERO, 0),
+    new TrexoPiece(Player.ZERO, 2),
 ]);
-const O1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 3)]);
-const O1__T4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1, 4)]);
-const X1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 0)]);
-const X1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 1)]);
+const O1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 3)]);
+const O1__T4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 4)]);
+const X1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
+const X1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1)]);
 const X2__T2: TrexoPieceStack = TrexoPieceStack.from([
-    new TrexoPiece(Player.ONE, 1, 0),
-    new TrexoPiece(Player.ONE, 2, 2),
+    new TrexoPiece(Player.ONE, 0),
+    new TrexoPiece(Player.ONE, 2),
 ]);
-const X1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 3)]);
-const X1__T4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1, 4)]);
+const X1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 3)]);
+const X1__T4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 4)]);
 
 describe('TrexoRules', () => {
 
@@ -85,8 +85,8 @@ describe('TrexoRules', () => {
     });
     it('should accept to drop piece on two other piece', () => {
         // Given a board with two pieces that are neighbor on it
-        let LEFT: TrexoPiece[] = [new TrexoPiece(Player.ZERO, 1, 0)];
-        let RIGHT: TrexoPiece[] = [new TrexoPiece(Player.ZERO, 1, 1)];
+        let LEFT: TrexoPiece[] = [new TrexoPiece(Player.ZERO, 0)];
+        let RIGHT: TrexoPiece[] = [new TrexoPiece(Player.ZERO, 1)];
         const LEFT_0: TrexoPieceStack = TrexoPieceStack.from(LEFT);
         const RIGHT0: TrexoPieceStack = TrexoPieceStack.from(RIGHT);
         const state: TrexoState = TrexoState.from([
@@ -108,8 +108,8 @@ describe('TrexoRules', () => {
         // Then it should succeed
         LEFT = ArrayUtils.copyImmutableArray(LEFT);
         RIGHT = ArrayUtils.copyImmutableArray(RIGHT);
-        LEFT.push(new TrexoPiece(Player.ZERO, 2, 2));
-        RIGHT.push(new TrexoPiece(Player.ONE, 2, 2));
+        LEFT.push(new TrexoPiece(Player.ZERO, 2));
+        RIGHT.push(new TrexoPiece(Player.ONE, 2));
         const LEFT_1: TrexoPieceStack = TrexoPieceStack.from(LEFT);
         const RIGHT1: TrexoPieceStack = TrexoPieceStack.from(RIGHT);
         const expectedState: TrexoState = TrexoState.from([

@@ -39,7 +39,7 @@ describe('TrexoState', () => {
         const nextState: TrexoState = state.drop(coord, owner);
 
         // Then it should be dropped at the lowest level
-        const piece: TrexoPiece = new TrexoPiece(owner, 1, dropTurn);
+        const piece: TrexoPiece = new TrexoPiece(owner, dropTurn);
         expect(nextState.getPieceAt(coord)).toEqual(TrexoPieceStack.from([piece]));
     });
 });

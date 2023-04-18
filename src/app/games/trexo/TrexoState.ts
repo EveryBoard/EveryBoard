@@ -16,12 +16,11 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 export class TrexoPiece {
 
     public constructor(public readonly owner: PlayerOrNone,
-                       public readonly height: number,
                        public readonly tileId: number)
     {
     }
     public toString(): string {
-        return `TrexoPiece(${ this.owner.toString() }, ${ this.height }, ${ this.tileId })`;
+        return `TrexoPiece(${ this.owner.toString() }, ${ this.tileId })`;
     }
 }
 
@@ -31,9 +30,7 @@ export class TrexoPieceStack {
 
     public static from(pieces: ReadonlyArray<TrexoPiece>): TrexoPieceStack {
         let previousTurn: number = -1;
-        for (let z: number = 0; z < pieces.length; z++) {
-            const piece: TrexoPiece = pieces[z];
-            assert(piece.height === z + 1, 'TrexoPieceStack: piece height should be incremental');
+        for (const piece of pieces) {
             assert(previousTurn < piece.tileId, 'TrexoPieceStack: dropped turn should be ascending');
             previousTurn = piece.tileId;
         }
@@ -42,13 +39,7 @@ export class TrexoPieceStack {
     private constructor(private readonly pieces: ReadonlyArray<TrexoPiece>) {}
 
     public getHeight(): number {
-        const numberOfPiece: number = this.pieces.length;
-        if (numberOfPiece === 0) {
-            return 0;
-        } else {
-            const lastPiece: TrexoPiece = this.pieces[numberOfPiece - 1];
-            return lastPiece.height;
-        }
+        return this.pieces.length;
     }
     public getOwner(): PlayerOrNone {
         const numberOfPiece: number = this.pieces.length;
@@ -103,9 +94,8 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
         return MGPFallible.success(new TrexoState(board, turn));
     }
     public drop(coord: Coord, player: Player): TrexoState {
-        const oldHeight: number = this.getPieceAt(coord).getHeight();
         const newBoard: TrexoPieceStack[][] = this.getCopiedBoard();
-        const droppedPiece: TrexoPiece = new TrexoPiece(player, oldHeight + 1, this.turn);
+        const droppedPiece: TrexoPiece = new TrexoPiece(player, this.turn);
         newBoard[coord.y][coord.x] = newBoard[coord.y][coord.x].add(droppedPiece);
         return new TrexoState(newBoard, this.turn);
     }

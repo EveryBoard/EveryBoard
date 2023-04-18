@@ -364,7 +364,7 @@ describe('LocalGameWrapperComponent', () => {
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
             expect(winnerTag).toBe('Player 1 won');
         }));
-        it(`should display 'You Lost' when human loose against AI`, fakeAsync(async() => {
+        it(`should display 'You Lost' when human lose against AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for AI
             const board: PlayerOrNone[][] = [
                 [O, O, O, _, _, O, O],
