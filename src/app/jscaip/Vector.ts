@@ -24,9 +24,8 @@ export class Vector implements ComparableObject {
         while (divider <= maxAbs) {
             if (this.x % divider === 0 && this.y % divider === 0) {
                 greatestCommonDivider = divider;
-            } else {
-                divider++;
             }
+            divider++;
         }
         return new Vector(this.x / greatestCommonDivider,
                           this.y / greatestCommonDivider);
