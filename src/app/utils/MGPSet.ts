@@ -6,15 +6,12 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
 
     protected values: T[];
 
-    constructor(values?: readonly T[], private isMutable: boolean = true) {
+    constructor(values?: readonly T[]) {
         if (values === undefined) {
             this.values = [];
         } else {
             this.values = Sets.toComparableSet(values);
         }
-    }
-    public makeImmutable(): void {
-        this.isMutable = false;
     }
     public equals(other: MGPSet<T>): boolean {
         if (other.size() !== this.size()) {
@@ -39,9 +36,6 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return '[' + result.slice(0, -2) + ']';
     }
     public add(element: T): boolean {
-        if (this.isMutable === false) {
-            throw new Error('Cannot add to immutable MGPSet');
-        }
         if (this.contains(element)) {
             return false;
         } else {
@@ -63,9 +57,6 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return false;
     }
     public addAll(otherSet: MGPSet<T>): void {
-        if (this.isMutable === false) {
-            throw new Error('Cannot addAll to immutable MGPSet');
-        }
         for (const element of otherSet) {
             this.add(element);
         }
@@ -111,7 +102,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         for (const element of this.values) {
             result.push(mapper(element));
         }
-        return new MGPSet(result, this.isMutable);
+        return new MGPSet(result);
     }
     public flatMap<U extends Comparable>(f: (element: T) => MGPSet<U>): MGPSet<U> {
         const result: MGPSet<U> = new MGPSet();

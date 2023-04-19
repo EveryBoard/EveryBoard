@@ -133,14 +133,6 @@ export class Coord extends Vector {
     public toVector(): Vector {
         return new Vector(this.x, this.y);
     }
-    public toMinimalVector(): Vector {
-        const vector: Vector = this.toVector();
-        return vector.toMinimalVector();
-    }
-    public getMinimalVectorToward(c: Coord): Vector {
-        const undividedVector: Vector = this.getVectorToward(c);
-        return undividedVector.toMinimalVector();
-    }
     public getCoordsToward(c: Coord): Coord[] {
         if (c.equals(this)) return [];
         if (!c.isAlignedWith(this)) return [];
