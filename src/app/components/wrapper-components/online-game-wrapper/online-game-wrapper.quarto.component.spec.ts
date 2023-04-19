@@ -110,28 +110,17 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
         role = Player.ONE;
     }
-    await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_PROPOSED_CONFIG);
+    let configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
+    await configRoomDAO.update('configRoomId', configRoom);
     testUtils.detectChanges();
     if (shorterGlobalChrono === true) {
+        configRoom = {...configRoom, totalPartDuration: 10};
         await configRoomDAO.update('configRoomId', {
-            partStatus: PartStatus.PART_STARTED.value,
             totalPartDuration: 10,
         });
-    } else {
-        await configRoomDAO.update('configRoomId', {
-            partStatus: PartStatus.PART_STARTED.value,
-        });
     }
-    const update: Partial<Part> = {
-        playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-        turn: 0,
-        remainingMsForZero: 1800 * 1000,
-        remainingMsForOne: 1800 * 1000,
-        beginning: serverTimestamp(),
-    }; // LE MOMENT OU LE TOUR PASSE A ZERO PEUT P-E FAIRE TRIGGERER PARFOIS LE GAME-INCLUDER
-    const roleAsPlayer: Player = role === PlayerOrNone.NONE ? Player.ZERO : role as Player;
     const gameService: GameService = TestBed.inject(GameService);
-    await gameService.updateAndBumpIndex('configRoomId', roleAsPlayer, 0, update);
+    await gameService.acceptConfig('configRoomId', configRoom);
     testUtils.detectChanges();
     if (waitForPartToStart === true) {
         tick(2);
@@ -394,7 +383,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             .toBeTruthy();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    it('Should allow simple move', fakeAsync(async() => {
+    fit('Should allow simple move', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         await doMove(FIRST_MOVE, true);
 

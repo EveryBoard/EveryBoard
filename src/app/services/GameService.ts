@@ -38,6 +38,7 @@ export class GameService {
     {
         display(GameService.VERBOSE, 'GameService.constructor');
     }
+    // TODO FOR REVIEW: should be made private! And higher-level functions should be defined
     public async updateAndBumpIndex(id: string,
                                     user: Player,
                                     lastIndex: number,
@@ -95,14 +96,6 @@ export class GameService {
         await this.createChat(gameId);
         return gameId;
     }
-    private async startGameWithConfig(partId: string, user: Player, lastIndex: number, configRoom: ConfigRoom)
-    : Promise<void>
-    {
-        display(GameService.VERBOSE || true, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(configRoom));
-        const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        await Promise.all([this.updateAndBumpIndex(partId, user, lastIndex, update),
-                           this.partService.startGame(partId, user)]);
-    }
     public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig {
         let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
         if (whoStarts === FirstPlayer.RANDOM) {
@@ -136,7 +129,11 @@ export class GameService {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, configRoom } });
 
         await this.configRoomService.acceptConfig(partId);
-        return this.startGameWithConfig(partId, Player.ONE, 0, configRoom);
+
+        const accepter: Player = Player.ONE
+        const update: StartingPartConfig = this.getStartingConfig(configRoom);
+        await Promise.all([this.updateAndBumpIndex(partId, accepter, 0, update),
+                           this.partService.startGame(partId, accepter)]);
     }
     public getPart(partId: string): Promise<MGPOptional<Part>> {
         return this.partDAO.read(partId);
