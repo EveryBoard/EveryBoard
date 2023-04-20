@@ -8,8 +8,6 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 /**
  * Represent half a tile
  * owner: to make us know which half of a tile it is (since trexo tiles are bicolor)
- * height: allow us to know where on the Z axis they are ... sound kind of bad no ?
- *     a stack contains [a, b, c], we know a, b and c height no??
  * tileId: we need this info to enforce the "don't play on only one tile" rules
  *     it is filled with the turn at which the tile is dropped
  */

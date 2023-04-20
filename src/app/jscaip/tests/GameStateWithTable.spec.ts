@@ -31,7 +31,7 @@ describe('GameStateWithTable', () => {
         });
     });
     describe('iterator', () => {
-        it('should travel the element for left to right then top to bottom', () => {
+        it('should traverse the element from left to right then top to bottom', () => {
             // Given an initial board
             const state: MyGameState = new MyGameState([[0, 1], [2, 3]], 0);
 
