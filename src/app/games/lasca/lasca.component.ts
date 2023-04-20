@@ -279,8 +279,6 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         } else {
             const nextLegalLandings: Coord[] = possibleCaptures
                 .map((capture: LascaMove) => capture.coords.get(1));
-                // .filter((capture: MGPFallible<Coord>) => capture.isSuccess())
-                // .map((capture: MGPFallible<Coord>) => capture.get()); TODOTODO kill it
             for (const nextLegalLanding of nextLegalLandings) {
                 this.adaptedBoard[nextLegalLanding.y][nextLegalLanding.x].squareClasses.push('capturable-fill');
             }

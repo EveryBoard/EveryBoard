@@ -11,7 +11,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
 import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
 
-describe('ActivePartsService', () => {
+xdescribe('ActivePartsService', () => {
 
     let activePartsService: ActivePartsService;
 

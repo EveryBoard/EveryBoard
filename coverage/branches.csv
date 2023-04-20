@@ -1,13 +1,1 @@
-ActivePartsService.ts,2
-ActiveUsersService.ts,1
-ChatService.ts,2
-ConfigRoomService.ts,1
-ConnectedUserService.ts,35
-CoordXYZ.ts,2
-ErrorLoggerService.ts,5
-FirestoreDAO.ts,12
-GameService.ts,6
-MGPUniqueList.ts,13
-minimax-testing.component.ts,2
-ObservedPartService.ts,23
 online-game-wrapper.component.ts,3
