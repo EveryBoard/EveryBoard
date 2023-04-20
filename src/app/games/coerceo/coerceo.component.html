@@ -45,36 +45,20 @@
              id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
              [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
              class="base no-fill selected-stroke"/>
-    <g *ngIf="mustShowTilesOf(0)"
-       id="tilesCountZero"
-    >
-        <polygon [attr.points]="getTilesCountCoordinate(0, 0)"
-                 [attr.stroke]="lastTurnWasTilesExchange(0) ? 'yellow' : 'black'"
-                 class="base player0-fill"
-                 stroke-linecap="round"
-        />
-        <text id="playerZeroTilesCount"
-              [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
-              [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 0"
-              text-anchor="middle"
-              class="text"
-              [attr.font-size]="SPACE_SIZE / 2"
-        >{{ tiles[0] }}</text>
-    </g>
-    <g *ngIf="mustShowTilesOf(1)"
-        id="tilesCountOne"
-    >
-        <polygon [attr.points]="getTilesCountCoordinate(0, 9)"
-                 [attr.stroke]="lastTurnWasTilesExchange(1) ? 'yellow' : 'black'"
-                 class="base player1-fill"
-                 stroke-linecap="round"
-        />
-        <text id="playerOneTilesCount"
-              [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
-              [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 9"
-              text-anchor="middle"
-              class="text"
-              [attr.font-size]="SPACE_SIZE / 2"
-        >{{ tiles[1] }}</text>
+    <g *ngFor="let player of [0, 1]">
+        <g *ngIf="mustShowTilesOf(player)"
+           [id]="'tilesCount' + player">
+            <polygon [attr.points]="getTilesCountCoordinate(player === 0 ? 0 : 4.5, player === 0 ? 0 : 6)"
+                    [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
+                    [ngClass]="['base', 'player' + player + '-fill']"
+                    stroke-linecap="round"
+            />
+            <text id="playerZeroTilesCount"
+                [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * (player == 0 ? 0 : 6.4)"
+                [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * (player === 0 ? 0 : 8.5)"
+                class="text-giant"
+                [attr.font-size]="SPACE_SIZE / 2"
+            >{{ tiles[player] }}</text>
+        </g>
     </g>
 </svg>

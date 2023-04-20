@@ -43,9 +43,6 @@ export class SixState extends OpenHexagonalGameState<Player> {
         pieces.set(move.landing, this.getCurrentPlayer());
         return new SixState(pieces, this.turn);
     }
-    public isEmpty(piece: PlayerOrNone): boolean {
-        return piece === PlayerOrNone.NONE;
-    }
     public toRepresentation(): NumberTable {
         const board: number[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE.value);
         for (const piece of this.pieces.listKeys()) {
