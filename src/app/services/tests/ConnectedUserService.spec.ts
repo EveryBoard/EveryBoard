@@ -155,7 +155,7 @@ export async function createDisconnectedGoogleUser(email: string, username?: str
     return user;
 }
 
-xdescribe('ConnectedUserService', () => {
+describe('ConnectedUserService', () => {
 
     let auth: FireAuth.Auth;
     let connectedUserService: ConnectedUserService;

@@ -27,7 +27,7 @@ import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
 

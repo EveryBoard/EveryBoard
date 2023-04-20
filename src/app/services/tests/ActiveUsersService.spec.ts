@@ -10,7 +10,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 
-xdescribe('ActiveUsersService', () => {
+describe('ActiveUsersService', () => {
 
     let activeUsersService: ActiveUsersService;
 
