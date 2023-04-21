@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { LocaleUtils } from './LocaleUtils';
+import { LocaleUtils } from '../LocaleUtils';
 
 describe('LocaleUtils', () => {
     describe('getLocale', () => {

@@ -22,10 +22,10 @@ describe('MartianChessDummyMinimax', () => {
     let minimax: MartianChessDummyMinimax;
 
     function isPawnMove(move: MartianChessMove, state: MartianChessState): boolean {
-        return state.getPieceAt(move.coord) === MartianChessPiece.PAWN;
+        return state.getPieceAt(move.getStart()) === MartianChessPiece.PAWN;
     }
     function isDroneMove(move: MartianChessMove, state: MartianChessState): boolean {
-        return state.getPieceAt(move.coord) === MartianChessPiece.DRONE;
+        return state.getPieceAt(move.getStart()) === MartianChessPiece.DRONE;
     }
     beforeEach(() => {
         rules = new MartianChessRules(MartianChessState);

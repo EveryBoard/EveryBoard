@@ -4,18 +4,18 @@ export class Sets {
 
     public static toComparableObjectSet<T extends ComparableObject>(list: readonly T[]): T[] {
         const result: T[] = [];
-        list.forEach((o: T) => {
-            if (!result.some((el: T) => el.equals(o))) {
-                result.push(o);
+        list.forEach((other: T) => {
+            if (!result.some((el: T) => el.equals(other))) {
+                result.push(other);
             }
         });
         return result;
     }
     public static toComparableSet<T extends Comparable>(list: readonly T[]): T[] {
         const result: T[] = [];
-        list.forEach((o: T) => {
-            if (!result.some((el: T) => comparableEquals(el, o))) {
-                result.push(o);
+        list.forEach((other: T) => {
+            if (!result.some((el: T) => comparableEquals(el, other))) {
+                result.push(other);
             }
         });
         return result;

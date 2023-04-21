@@ -47,8 +47,9 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
 
     private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};
 
-    constructor(public readonly collectionName: string,
-                protected readonly firestore: Firestore.Firestore) {
+    public constructor(public readonly collectionName: string,
+                       protected readonly firestore: Firestore.Firestore)
+    {
         const genericConverter: Firestore.FirestoreDataConverter<T> = {
             fromFirestore(snapshot: Firestore.QueryDocumentSnapshot): T {
                 return snapshot.data() as T;
@@ -178,7 +179,7 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
             return this.subDAOs[fullPath] as IFirestoreDAO<T>;
         } else {
             const subDAO: FirestoreDAO<T> = new class extends FirestoreDAO<T> {
-                constructor(firestore: Firestore.Firestore) {
+                public constructor(firestore: Firestore.Firestore) {
                     super(fullPath, firestore);
                 }
             }(this.firestore);

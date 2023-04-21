@@ -93,7 +93,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             { key: Player.ONE, value: [] },
         ]),
     };
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = DiamRules.get();
         this.availableMinimaxes = [

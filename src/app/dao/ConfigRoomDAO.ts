@@ -11,7 +11,7 @@ export class ConfigRoomDAO extends FirestoreDAO<ConfigRoom> {
 
     public static VERBOSE: boolean = false;
 
-    constructor(firestore: Firestore) {
+    public constructor(firestore: Firestore) {
         super('config-room', firestore);
         display(ConfigRoomDAO.VERBOSE, 'ConfigRoomDAO.constructor');
     }

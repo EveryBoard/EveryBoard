@@ -29,8 +29,8 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (move.isDrop()) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();
         } else if (move.isSimple()) {
-            updatedBoard[move.coord.y][move.coord.x] = PlayerOrNone.NONE;
-            updatedBoard[move.end.y][move.end.x] = state.getCurrentPlayer();
+            updatedBoard[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
+            updatedBoard[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
         } else {
             const start: Coord = move.getStartingCoord();
             const end: Coord = move.getEndingCoord();
@@ -65,10 +65,10 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.turn < 40) {
             return MGPFallible.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
-        if (state.getPieceAt(move.coord) !== state.getCurrentPlayer()) {
+        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (state.getPieceAt(move.end).isPlayer()) {
+        if (state.getPieceAt(move.getEnd()).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         return MGPFallible.success(undefined);

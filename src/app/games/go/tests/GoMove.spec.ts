@@ -7,15 +7,14 @@ import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('GoMove', () => {
 
-    it('GoMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const rules: GoRules = new GoRules(GoState);
         const minimax: GoMinimax = new GoMinimax(rules, 'GoMinimax');
         const firstTurnMoves: GoMove[] = minimax.getListMoves(rules.node);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);
-        for (let i: number = 0; i < firstTurnMoves.length; i++) {
-            const move: GoMove = firstTurnMoves[i];
-            NumberEncoderTestUtils.expectToBeCorrect(GoMove.encoder, move);
+        for (const move of firstTurnMoves) {
+            NumberEncoderTestUtils.expectToBeBijective(GoMove.encoder, move);
         }
     });
     it('should stringify nicely', () => {

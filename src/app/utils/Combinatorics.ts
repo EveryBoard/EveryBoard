@@ -18,9 +18,9 @@ export class Combinatorics {
         while (i < length) {
             if (c[i] < i) {
                 const k: number = i % 2 && c[i];
-                const p: T = elements[i];
+                const element: T = elements[i];
                 elements[i] = elements[k];
-                elements[k] = p;
+                elements[k] = element;
                 ++c[i];
                 i = 1;
                 result.push(elements.slice());

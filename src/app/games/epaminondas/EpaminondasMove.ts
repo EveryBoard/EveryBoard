@@ -74,11 +74,11 @@ export class EpaminondasMove extends MoveCoord {
                                   this.stepSize + ', ' +
                                   this.direction.toString() + ')';
     }
-    public equals(o: EpaminondasMove): boolean {
-        if (this === o) return true;
-        if (!this.coord.equals(o.coord)) return false;
-        if (this.movedPieces !== o.movedPieces) return false;
-        if (this.stepSize !== o.stepSize) return false;
-        return this.direction.equals(o.direction);
+    public equals(other: EpaminondasMove): boolean {
+        if (this === other) return true;
+        if (!this.coord.equals(other.coord)) return false;
+        if (this.movedPieces !== other.movedPieces) return false;
+        if (this.stepSize !== other.stepSize) return false;
+        return this.direction.equals(other.direction);
     }
 }

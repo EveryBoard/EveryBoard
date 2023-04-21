@@ -8,6 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 type UserOS = ObservableSubject<MGPOptional<UserDocument>>
 
 export class UserDAOMock extends FirestoreDAOMock<User> {
+
     public static VERBOSE: boolean = false;
 
     private static usersDB: MGPMap<string, UserOS>;

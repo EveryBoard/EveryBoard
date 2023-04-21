@@ -41,7 +41,7 @@ export class QuixoTutorial extends Tutorial {
             [new QuixoMove(4, 4, Orthogonal.LEFT)],
             $localize`See how the four dark pieces have been moved one space to the right.
         The neutral piece has been move 4 pieces to the left and has become light.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
@@ -60,7 +60,7 @@ export class QuixoTutorial extends Tutorial {
             ], 31),
             [new QuixoMove(3, 0, Orthogonal.DOWN)],
             $localize`Congratulations, you won!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

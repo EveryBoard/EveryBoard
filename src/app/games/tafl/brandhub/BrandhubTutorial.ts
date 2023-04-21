@@ -90,7 +90,7 @@ export class BrandhubTutorial extends Tutorial {
             ], 72),
             [BrandhubMove.of(new Coord(2, 0), new Coord(2, 2))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king far from his throne`,
@@ -106,7 +106,7 @@ export class BrandhubTutorial extends Tutorial {
             ], 72),
             [BrandhubMove.of(new Coord(3, 6), new Coord(2, 6))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

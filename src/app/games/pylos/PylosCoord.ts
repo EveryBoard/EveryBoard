@@ -1,43 +1,20 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Coord3D } from 'src/app/jscaip/Coord3D';
+import { Encoder } from 'src/app/utils/Encoder';
 
-export class PylosCoord extends Coord {
+export class PylosCoord extends Coord3D {
 
-    public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
-        let result: number;
-        if (optionalCoord.isPresent()) {
-            result = PylosCoord.encode(optionalCoord.get()) + 1; // From 1 to 64
-        } else {
-            result = 0;
-        } // result from 0 to 64
-        return result;
-    }
-    public static encode(coord: PylosCoord): number {
-        const z: number = coord.z;
-        const y: number = coord.y * 4;
-        const x: number = coord.x * 16;
-        return x + y + z; // from 0 to 63
-    }
-    public static decodeToOptional(encodedOptional: number): MGPOptional<PylosCoord> {
-        if (encodedOptional === 0) {
-            return MGPOptional.empty();
-        }
-        return MGPOptional.of(PylosCoord.decode(encodedOptional - 1));
-    }
-    public static decode(coord: number): PylosCoord {
-        const z: number = coord % 4;
-        coord -= z; coord /= 4;
+    public static encoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
 
-        const y: number = coord % 4;
-        coord -= y; coord /= 4;
+    public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.encoder);
 
-        const x: number = coord;
-
+    public static from(x: number, y: number, z: number): PylosCoord {
         return new PylosCoord(x, y, z);
     }
-    constructor(x: number, y: number, public readonly z: number) {
-        super(x, y);
+    public constructor(x: number, y: number, z: number) {
+        super(x, y, z);
         if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
         if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);
         if (z < 0 || z > 3) throw new Error(`PylosCoord: Invalid Z: ${z}.`);
@@ -46,18 +23,6 @@ export class PylosCoord extends Coord {
     }
     public toString(): string {
         return 'PylosCoord' + this.toShortString();
-    }
-    public toShortString(): string {
-        return '(' + this.x + ', ' + this.y + ', ' + this.z + ')';
-    }
-    public equals(o: PylosCoord): boolean {
-        if (this === o) return true;
-        if (o.x !== this.x) return false;
-        if (o.y !== this.y) return false;
-        return o.z === this.z;
-    }
-    public isUpperThan(p: PylosCoord): boolean {
-        return this.z > p.z;
     }
     public getLowerPieces(): PylosCoord[] {
         if (this.z === 0) throw new Error(`PylosCoord: floor pieces don't have lower pieces.`);

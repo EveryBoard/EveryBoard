@@ -137,7 +137,7 @@ export class CoerceoTutorial extends Tutorial {
             ],
             $localize`Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent's piece has disappeared because the tile's capture has removed its last empty neighboring space.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { PylosCoord } from '../PylosCoord';
 import { PylosFailure } from '../PylosFailure';
 import { PylosMove, PylosMoveFailure } from '../PylosMove';
@@ -36,7 +36,7 @@ describe('PylosMove', () => {
         const otherMove: PylosMove = PylosMove.fromDrop(coord, [highCoord]);
         expect(PylosMove.changeCapture(move, [highCoord])).toEqual(otherMove);
     });
-    it('PylosMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const initialMoves: PylosMove[] = [
             PylosMove.fromClimb(coord, highCoord, []),
             PylosMove.fromClimb(coord, highCoord, [coord]),
@@ -46,7 +46,7 @@ describe('PylosMove', () => {
             PylosMove.fromDrop(coord, [highCoord]),
         ];
         for (const move of initialMoves) {
-            NumberEncoderTestUtils.expectToBeCorrect(PylosMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(PylosMove.encoder, move);
         }
     });
     it('should override toString correctly', () => {

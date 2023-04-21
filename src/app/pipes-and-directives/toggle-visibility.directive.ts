@@ -5,17 +5,18 @@ import { Directive, ElementRef } from '@angular/core';
 })
 
 export class ToggleVisibilityDirective {
+
     private shown: boolean = false;
     private readonly input: HTMLElement;
 
-    constructor(element: ElementRef) {
+    public constructor(element: ElementRef) {
         this.input = element.nativeElement.parentNode.previousSibling;
         element.nativeElement.addEventListener('click', (_: Event) => {
             this.toggle();
         });
     }
 
-    private toggle() {
+    private toggle(): void {
         this.shown = !this.shown;
         if (this.shown) {
             this.input.setAttribute('type', 'text');

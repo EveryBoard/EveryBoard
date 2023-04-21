@@ -17,8 +17,8 @@ export class ApagosSquare {
         const validSquare: ApagosSquare = new ApagosSquare(containing);
         return MGPFallible.success(validSquare);
     }
-    private constructor(private readonly containing: MGPMap<PlayerOrNone, number>)
-    { }
+    private constructor(private readonly containing: MGPMap<PlayerOrNone, number>) { }
+
     public isFull(): boolean {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);

@@ -98,7 +98,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             .filter((c: Coord): boolean =>
                 state.getPieceAt(c).containsSource());
     }
-    private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]) {
+    private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]): void {
         // For each neighbor, mark it as connected (if it contains something),
         // and recurse from there (only if it was not already marked)
         HexagonalUtils.getNeighbors(coord, 1).forEach((c: Coord) => {
@@ -130,11 +130,11 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         } else {
             // To apply a legal move, the stack is added in the front of its end coordinate
             // (and removed from its start coordinate)
-            const stack: DvonnPieceStack = state.getPieceAt(move.coord);
-            const targetStack: DvonnPieceStack = state.getPieceAt(move.end);
+            const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
+            const targetStack: DvonnPieceStack = state.getPieceAt(move.getEnd());
             const newState: DvonnState = state
-                .setAt(move.coord, DvonnPieceStack.EMPTY)
-                .setAt(move.end, DvonnPieceStack.append(stack, targetStack));
+                .setAt(move.getStart(), DvonnPieceStack.EMPTY)
+                .setAt(move.getEnd(), DvonnPieceStack.append(stack, targetStack));
             const resultingState: DvonnState =
                 this.removeDisconnectedPieces(new DvonnState(newState.board, state.turn + 1, false));
             return resultingState;
@@ -153,17 +153,17 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return MGPFallible.failure(RulesFailure.CANNOT_PASS());
         }
 
-        const pieceMovable: MGPValidation = this.isMovablePiece(state, move.coord);
+        const pieceMovable: MGPValidation = this.isMovablePiece(state, move.getStart());
         if (pieceMovable.isFailure()) {
             return pieceMovable.toFailedFallible();
         }
 
-        const stack: DvonnPieceStack = state.getPieceAt(move.coord);
+        const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
         if (move.length() !== stack.getSize()) {
             return MGPFallible.failure(DvonnFailure.INVALID_MOVE_LENGTH());
         }
 
-        const targetStack: DvonnPieceStack = state.getPieceAt(move.end);
+        const targetStack: DvonnPieceStack = state.getPieceAt(move.getEnd());
         if (targetStack.isEmpty()) {
             return MGPFallible.failure(DvonnFailure.EMPTY_TARGET_STACK());
         }

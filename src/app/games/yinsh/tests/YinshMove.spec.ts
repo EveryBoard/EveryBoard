@@ -39,19 +39,19 @@ describe('YinshCapture', () => {
 
 describe('YinshMove', () => {
     describe('encoder', () => {
-        it('should define decode as the inverse of encode for initial placements', () => {
+        it('should have a bijective encoder initial placements', () => {
             const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
-            EncoderTestUtils.expectToBeCorrect(YinshMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
         });
-        it('should define decode as the inverse of encode for move without capture', () => {
+        it('should have a bijective encoder for move without capture', () => {
             const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(5, 3)), []);
-            EncoderTestUtils.expectToBeCorrect(YinshMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
         });
-        it('should define decode as the inverse of encode for move with captures', () => {
+        it('should have a bijective encoder for move with captures', () => {
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(2, 3), new Coord(6, 3), new Coord(4, 5))],
                                                   new Coord(2, 3), MGPOptional.of(new Coord(5, 3)),
                                                   [YinshCapture.of(new Coord(3, 4), new Coord(7, 4), new Coord(5, 5))]);
-            EncoderTestUtils.expectToBeCorrect(YinshMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
         });
     });
     describe('isInitialPlacement', () => {

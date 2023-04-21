@@ -26,7 +26,7 @@ export class MartianChessPawnComponent {
         // The aim of the following computation is to make the shape vertically centered inside the square
         return MartianChessComponent.getRegularPolygon(3, MartianChessPawnComponent.TRIANGLE_Y_OFFSET);
     }
-    private static yOffsetForVerticalCentering() {
+    private static yOffsetForVerticalCentering(): number {
         const triangleCoords: Coord[] = MartianChessComponent.getRegularPolygonCoords(3);
         const yCoord: number[] = triangleCoords.map((c: Coord) => c.y);
         const upperTriangleY: number = yCoord.reduce((p: number, c: number) => Math.min(p, c));

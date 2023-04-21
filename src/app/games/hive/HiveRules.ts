@@ -48,11 +48,11 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     }
     private applyLegalMoveCoordToCoord(move: HiveMoveCoordToCoord, state: HiveState): HiveState {
         // Take the top piece of the source and move it on top of the destination
-        const sourcePieceStack: HivePieceStack = state.getAt(move.coord);
-        const destinationPieceStack: HivePieceStack = state.getAt(move.end);
+        const sourcePieceStack: HivePieceStack = state.getAt(move.getStart());
+        const destinationPieceStack: HivePieceStack = state.getAt(move.getEnd());
         return state.update()
-            .setAt(move.coord, sourcePieceStack.removeTopPiece())
-            .setAt(move.end, destinationPieceStack.add(sourcePieceStack.topPiece()))
+            .setAt(move.getStart(), sourcePieceStack.removeTopPiece())
+            .setAt(move.getEnd(), destinationPieceStack.add(sourcePieceStack.topPiece()))
             .increaseTurnAndFinalizeUpdate();
     }
     public isLegal(move: HiveMove, state: HiveState): MGPFallible<void> {
@@ -73,7 +73,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         if (state.queenBeeLocation(state.getCurrentPlayer()).isPresent() === false) {
             return MGPFallible.failure(HiveFailure.QUEEN_BEE_MUST_BE_ON_BOARD_BEFORE_MOVE());
         }
-        const stack: HivePieceStack = state.getAt(move.coord);
+        const stack: HivePieceStack = state.getAt(move.getStart());
         if (stack.isEmpty()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
@@ -87,13 +87,13 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return moveValidity;
         }
         const stateWithoutMovedPiece: HiveState = state.update()
-            .setAt(move.coord, stack.removeTopPiece())
+            .setAt(move.getStart(), stack.removeTopPiece())
             .increaseTurnAndFinalizeUpdate();
         if (stateWithoutMovedPiece.isDisconnected()) {
             // Cannot disconnect the hive, even in the middle of a move
             return MGPFallible.failure(HiveFailure.CANNOT_DISCONNECT_HIVE());
         }
-        const newEnd: Coord = move.end.getNext(stateWithoutMovedPiece.offset);
+        const newEnd: Coord = move.getEnd().getNext(stateWithoutMovedPiece.offset);
         if (stateWithoutMovedPiece.numberOfNeighbors(newEnd) === 0) {
             // Cannot disconnect the hive after the move, i.e., the destination should have one occupied neighbor
             return MGPFallible.failure(HiveFailure.CANNOT_DISCONNECT_HIVE());

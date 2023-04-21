@@ -12,6 +12,6 @@ export class AppComponent {
     public faFacebook: IconDefinition = faFacebook;
     public faGithub: IconDefinition = faGithub;
 
-    constructor(private readonly _themeService: ThemeService,
-                private readonly _errorLoggerService: ErrorLoggerService) {}
+    public constructor(private readonly _themeService: ThemeService,
+                       private readonly _errorLoggerService: ErrorLoggerService) {}
 }

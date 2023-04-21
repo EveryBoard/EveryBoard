@@ -68,7 +68,8 @@ export class EncapsuleMove extends Move {
     };
     private constructor(public readonly startingCoord: MGPOptional<Coord>,
                         public readonly landingCoord: Coord,
-                        public readonly piece: MGPOptional<EncapsulePiece>) {
+                        public readonly piece: MGPOptional<EncapsulePiece>)
+    {
         super();
     }
     public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
@@ -83,11 +84,11 @@ export class EncapsuleMove extends Move {
     public isDropping(): boolean {
         return this.startingCoord.isAbsent();
     }
-    public equals(o: EncapsuleMove): boolean {
-        if (this === o) return true;
-        if (o.landingCoord.equals(this.landingCoord) === false) return false;
-        if (this.startingCoord.equals(o.startingCoord) === false) return false;
-        return this.piece.equals(o.piece);
+    public equals(other: EncapsuleMove): boolean {
+        if (this === other) return true;
+        if (other.landingCoord.equals(this.landingCoord) === false) return false;
+        if (this.startingCoord.equals(other.startingCoord) === false) return false;
+        return this.piece.equals(other.piece);
     }
     public toString(): string {
         if (this.isDropping()) {

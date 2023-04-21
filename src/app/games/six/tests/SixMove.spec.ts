@@ -49,10 +49,10 @@ describe('SixMove', () => {
             expect(movement.toString()).toEqual('SixMove((5, 5) > (7, 5))');
             expect(cut.toString()).toEqual('SixMove((5, 5) > (7, 5), keep: (9, 9))');
         });
-        it('SixMove.encoder should be correct', () => {
+        it('should have a bijective encoder', () => {
             const moves: SixMove[] = [drop, movement, cut];
             for (const move of moves) {
-                EncoderTestUtils.expectToBeCorrect(SixMove.encoder, move);
+                EncoderTestUtils.expectToBeBijective(SixMove.encoder, move);
             }
         });
     });

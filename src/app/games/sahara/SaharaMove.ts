@@ -15,10 +15,10 @@ export class SaharaMove extends MoveCoordToCoord {
                 (6*SaharaState.WIDTH) + SaharaState.HEIGHT;
         }
         public encodeNumber(move: SaharaMove): number {
-            const ey: number = move.end.y;
-            const ex: number = move.end.x;
-            const sy: number = move.coord.y;
-            const sx: number = move.coord.x;
+            const ey: number = move.getEnd().y;
+            const ex: number = move.getEnd().x;
+            const sy: number = move.getStart().y;
+            const sx: number = move.getStart().x;
             return (6*11*6*sx) + (11*6*sy) + (6*ex) + ey;
         }
         public decodeNumber(encodedMove: number): SaharaMove {
@@ -76,16 +76,16 @@ export class SaharaMove extends MoveCoordToCoord {
         super(start, end);
     }
     public isSimpleStep(): boolean {
-        const dx: number = Math.abs(this.coord.x - this.end.x);
-        const dy: number = Math.abs(this.coord.y - this.end.y);
+        const dx: number = Math.abs(this.getStart().x - this.getEnd().x);
+        const dy: number = Math.abs(this.getStart().y - this.getEnd().y);
         return dx + dy === 1;
     }
-    public equals(o: SaharaMove): boolean {
-        if (o === this) return true;
-        if (!o.coord.equals(this.coord)) return false;
-        return o.end.equals(this.end);
+    public equals(other: SaharaMove): boolean {
+        if (other === this) return true;
+        if (!other.getStart().equals(this.getStart())) return false;
+        return other.getEnd().equals(this.getEnd());
     }
     public toString(): string {
-        return 'SaharaMove(' + this.coord + '->' + this.end + ')';
+        return 'SaharaMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
 }

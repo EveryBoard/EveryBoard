@@ -5,7 +5,7 @@ import { SiamPiece, SiamPieceValue } from '../SiamPiece';
 describe('SiamPiece:', () => {
     it('should give string version of each pieces', () => {
         const values: SiamPieceValue[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const pieces: SiamPiece[] = values.map((value: SiamPieceValue) => SiamPiece.decode(value));
+        const pieces: SiamPiece[] = values.map(SiamPiece.decode);
         const names: string[] = pieces.map((piece: SiamPiece) => piece.toString());
         const expectedPieces: SiamPiece[] = [
             SiamPiece.EMPTY,

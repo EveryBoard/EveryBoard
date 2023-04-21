@@ -13,7 +13,7 @@ export class GoMove extends MoveCoord {
             return 18*19 + 18;
         }
         public encodeNumber(move: GoMove): number {
-            // A go move goes on x from o to 18
+            // A go move goes on x from 0 to 18
             // and y from 0 to 18
             // encoded as y*19 + x
             return (move.coord.y * 19) + move.coord.x;
@@ -27,9 +27,9 @@ export class GoMove extends MoveCoord {
             return new GoMove(x, y);
         }
     };
-    public equals(o: GoMove): boolean {
-        if (this === o) return true;
-        return this.coord.equals(o.coord);
+    public equals(other: GoMove): boolean {
+        if (this === other) return true;
+        return this.coord.equals(other.coord);
     }
     public toString(): string {
         if (this === GoMove.PASS) {

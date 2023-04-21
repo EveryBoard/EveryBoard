@@ -93,8 +93,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
     public updateBoard(): void {
         const move: MGPOptional<SaharaMove> = this.rules.node.move;
-        this.lastCoord = move.map((move: SaharaMove) => move.coord);
-        this.lastMoved = move.map((move: SaharaMove) => move.end);
+        this.lastCoord = move.map((move: SaharaMove) => move.getStart());
+        this.lastMoved = move.map((move: SaharaMove) => move.getEnd());
         this.board = this.getState().board;
     }
     public getPlayerClassFor(x: number, y: number): string {
