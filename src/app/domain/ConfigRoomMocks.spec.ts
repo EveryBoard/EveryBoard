@@ -7,7 +7,7 @@ export class ConfigRoomMocks {
     public static readonly INITIAL: ConfigRoom = {
         creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenOpponent: null,
-        firstPlayer: FirstPlayer.RANDOM.value,
+        firstPlayer: FirstPlayer.CREATOR.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,

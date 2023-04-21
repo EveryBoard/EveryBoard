@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
-import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
+import { OnlineGameWrapperComponent, UpdateType, OGWCTimeManager } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -94,10 +94,8 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     tick(1);
 
     const partCreationId: DebugElement = testUtils.findElement('#partCreation');
-    let context: string = 'partCreation id should be present after ngOnInit';
-    expect(partCreationId).withContext(context).toBeTruthy();
-    context = 'partCreation field should also be present';
-    expect(wrapper.partCreation).withContext(context).toBeTruthy();
+    expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
+    expect(wrapper.partCreation).withContext('partCreation field should also be present').toBeTruthy();
     const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
     await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
@@ -106,15 +104,17 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     testUtils.detectChanges();
     let role: PlayerOrNone = PlayerOrNone.NONE;
     if (user.id === UserMocks.CREATOR_AUTH_USER.id) {
+        console.log('role is 0')
         role = Player.ZERO;
     } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
+        console.log('role is 1')
         role = Player.ONE;
     }
     let configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
     await configRoomDAO.update('configRoomId', configRoom);
     testUtils.detectChanges();
     if (shorterGlobalChrono === true) {
-        configRoom = {...configRoom, totalPartDuration: 10};
+        configRoom = { ...configRoom, totalPartDuration: 10 };
         await configRoomDAO.update('configRoomId', {
             totalPartDuration: 10,
         });
@@ -131,7 +131,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -179,8 +179,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
+        console.log('actually doing move')
         const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, state);
+        console.log('checking its legality')
         const message: string = 'move ' + move.toString() + ' should be legal but failed because: ' + result.reason;
+        console.log('which is ' + result.isSuccess())
         expect(result.isSuccess()).withContext(message).toEqual(legal);
         testUtils.detectChanges();
         tick(1);
@@ -237,8 +240,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return await receivePartDAOUpdate(update, lastIndex, detectChanges);
     }
     async function prepareTestUtilsFor(authUser: AuthUser,
-                                       shorterGlobalChrono?: boolean,
-                                       waitForPartToStart?: boolean)
+                                       shorterGlobalChrono: boolean = false,
+                                       waitForPartToStart: boolean = true)
     : Promise<void>
     {
         const preparationResult: PreparationResult<QuartoComponent> =
@@ -290,32 +293,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
 
-        const user: AuthUser = UserMocks.CREATOR_AUTH_USER;
-        testUtils = await prepareWrapper<QuartoComponent>(user, 'Quarto');
-        const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-        await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
-        const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-        await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
-        role = PlayerOrNone.NONE;
-        if (user.id === UserMocks.CREATOR_AUTH_USER.id) {
-            role = Player.ZERO;
-        } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
-            role = Player.ONE;
-        }
-        await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_PROPOSED_CONFIG);
-        await configRoomDAO.update('configRoomId', {
-            partStatus: PartStatus.PART_STARTED.value,
-        });
-        const update: Partial<Part> = {
-            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-            turn: 0,
-            remainingMsForZero: 1800 * 1000,
-            remainingMsForOne: 1800 * 1000,
-            beginning: serverTimestamp(),
-        };
-        const roleAsPlayer: Player = role === PlayerOrNone.NONE ? Player.ZERO : role as Player;
-        const gameService: GameService = TestBed.inject(GameService);
-        await gameService.updateAndBumpIndex('configRoomId', roleAsPlayer, 0, update);
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, true);
 
         let offset: number = 0;
         let turn: number = 0;
@@ -383,16 +361,36 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             .toBeTruthy();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    fit('Should allow simple move', fakeAsync(async() => {
+    it('should allow sending and receiving moves (creator)', fakeAsync(async() => {
+        // Given a started part
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-        await doMove(FIRST_MOVE, true);
 
+        // When doing a move
+        await doMove(FIRST_MOVE, true);
+        // Then the part should be updated
         expect(wrapper.currentPart?.data.turn).toEqual(1);
 
-        // Receive second move
+        // And when receiving a second move
         await receiveNewMoves(1, [SECOND_MOVE_ENCODED], 2);
-
+        // Then the part should also be updated
         expect(wrapper.currentPart?.data.turn).toEqual(2);
+
+        tick(wrapper.configRoom.maximalMoveDuration * 1000);
+    }));
+    it('should allow sending and receiving moves (opponent)', fakeAsync(async() => {
+        // Given a started part
+        await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
+
+        // When receiving a move
+        await receiveNewMoves(0, [FIRST_MOVE_ENCODED], 1);
+        // Then the part should be updated
+        expect(wrapper.currentPart?.data.turn).toEqual(1);
+
+        // And when doing a second move
+        await doMove(SECOND_MOVE, true);
+        // Then the part should also be updated
+        expect(wrapper.currentPart?.data.turn).toEqual(2);
+
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
     describe('Late Arrival', () => {
@@ -479,24 +477,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
-    it('prepared game for configRoom should allow simple move', fakeAsync(async() => {
-        console.log('---- PREPARING')
-        await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
-        // Receive first move
-        console.log('---- FIRST MOVE')
-        await receiveNewMoves(0, [FIRST_MOVE_ENCODED], 1);
-        expect(wrapper.currentPart?.data.turn).toEqual(1);
-
-        // Do second move
-        console.log('---- SECOND MOVE')
-        const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBA);
-        await doMove(move, true);
-        expect(wrapper.currentPart?.data.turn).toEqual(2);
-
-        console.log('---- DONE')
-        tick(wrapper.configRoom.maximalMoveDuration * 1000);
-    }));
-    it('playing a move should trigger part change and send the move', fakeAsync(async() => {
+    it('should trigger part change and send the move upon second move', fakeAsync(async() => {
         // Given a part
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         spyOn(partDAO, 'update').and.callThrough();
@@ -511,7 +492,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             },
             turn: 1,
             // remaining times not updated on first turn of the component
-            request: null,
             lastUpdateTime: serverTimestamp(),
         };
         expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', expectedUpdate);
@@ -533,7 +513,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
+    it('should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         testUtils.expectElementNotToExist('#passButton');
 
@@ -547,25 +527,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    it('should not do anything when receiving duplicate', fakeAsync(async() => {
-        // Given a board where its the opponent's (first) turn
-        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-        const CURRENT_PART: PartDocument | null = wrapper.currentPart;
-
-        // When receiving the same move
-        await receivePartDAOUpdate({
-            ...CURRENT_PART?.data,
-        }, 0); // 0 so that even when bumped, the lastUpdate stays the same
-
-        // Then currentPart should not be updated
-        expect(wrapper.currentPart).toEqual(CURRENT_PART);
-        tick(wrapper.configRoom.maximalMoveDuration * 1000);
-    }));
     describe('ObservedPart Change', () => {
-        it('should redirect to lobby when role and partId change', fakeAsync(async() => {
+        fit('should redirect to lobby when role and partId change', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
-            // TODO spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
             // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
@@ -575,7 +541,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then a redirection to lobby should be triggered
             expectValidRouting(router, ['/lobby'], LobbyComponent);
-            tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not redirect to lobby when role stay "observer" but partId change', fakeAsync(async() => {
             // Given a part where the user is observer

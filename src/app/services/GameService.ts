@@ -167,6 +167,7 @@ export class GameService {
             loser,
             result: MGPResult.TIMEOUT.value,
         };
+        console.log('update setting winner loser')
         return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {

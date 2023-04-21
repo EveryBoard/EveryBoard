@@ -101,6 +101,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private onCurrentUpdateOngoing: boolean = false;
 
+    // TODO FOR REVIEW: should this be a service instead? Better mockability, but worse initialization guarantees
     private timeManager!: OGWCTimeManager; // Initialized manually after view has been initialized
 
     constructor(actRoute: ActivatedRoute,
@@ -234,12 +235,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
-            before: this.currentPart?.data,
-            then: update,
-            before_part_turn: part.data.turn,
-            before_state_turn: this.gameComponent.rules.node.gameState.turn,
-        } });
+        // display(onlinegamewrappercomponent.verbose, { onlinegamewrappercomponent_oncurrentpartupdate: {
+        //     before: this.currentpart?.data,
+        //     then: update,
+        //     before_part_turn: part.data.turn,
+        //     before_state_turn: this.gameComponent.rules.node.gameState.turn,
+        // } });
         if (this.onCurrentUpdateOngoing) {
             attempt -= 1;
             assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
@@ -264,7 +265,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const currentPartDoc: Part | null = this.currentPart != null ? this.currentPart.data : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.data);
         const updatesTypes: UpdateType[] = [];
-        display(OnlineGameWrapperComponent.VERBOSE, { currentPartDoc, update, diff });
+        // display(OnlineGameWrapperComponent.VERBOSE, { currentPartDoc, update, diff });
         const nbDiffs: number = diff.countChanges();
         if (nbDiffs === 0) {
             updatesTypes.push(UpdateType.DUPLICATE);
@@ -459,6 +460,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     : Promise<void>
     {
         this.endGame = true;
+        console.log('notifying timeout victory')
         await this.gameService.notifyTimeout(this.currentPartId, user, lastIndex, victoriousPlayer, loser);
     }
     public notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
@@ -575,6 +577,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             MGPOptional.of(updatedICurrentPart.data.playerZero),
             MGPOptional.ofNullable(updatedICurrentPart.data.playerOne),
         ];
+        console.log('0: ' + this.players[0].get().id);
+        console.log('1: ' + this.players[1].get().id);
         assert(updatedICurrentPart.data.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();
         const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
@@ -588,7 +592,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {
-        console.log('setting roles')
+        console.log('setting roles. getPlayer is: ' + this.getPlayer()['id'])
         let opponent: MGPOptional<MinimalUser> = MGPOptional.empty();
         if (this.players[0].equalsValue(this.getPlayer())) {
             this.setRole(Player.ZERO);
@@ -660,22 +664,20 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return Utils.getNonNullable(this.currentPart).data.lastUpdate.index;
     }
     public async reachedOutOfTime(player: Player): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         const lastIndex: number = this.getLastIndex();
         const currentPlayer: Player = this.role as Player;
         if (this.isPlaying() === false) {
             return;
         }
         const opponent: MinimalUser = Utils.getNonNullable(this.opponent);
+        console.log(opponent.id)
+        console.log(player)
+        console.log(this.role)
         if (player === this.role) {
-            // the player has run out of time, he'll notify his own defeat by time
             await this.notifyTimeoutVictory(opponent, currentPlayer, lastIndex, this.authUser.toMinimalUser());
         } else {
-            assert(this.endGame === false, 'time might be better handled in the future');
-            if (this.opponentIsOffline()) { // the other player has timed out
-                await this.notifyTimeoutVictory(this.authUser.toMinimalUser(), currentPlayer, player.value, opponent);
-                this.endGame = true;
-            }
+            await this.notifyTimeoutVictory(this.authUser.toMinimalUser(), currentPlayer, player.value, opponent);
         }
     }
     public async acceptRematch(): Promise<boolean> {
@@ -787,7 +789,7 @@ abstract class OGWCHelper {
  *   2. we join mid-game.
  * On top of that, it is important to remember that time can be added to a player.
  */
-class OGWCTimeManager extends OGWCHelper {
+export class OGWCTimeManager extends OGWCHelper {
     // TODO: wrong chrono is playing in some take backs (when it switches player)
 
     /*
@@ -807,6 +809,9 @@ class OGWCTimeManager extends OGWCHelper {
     private lastMoveStartTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
 
     private clocksStarted: boolean = false;
+
+    // Used for testing purposes, set to false to never start the clocks
+    public static START_CLOCKS: boolean = true;
 
     public constructor(private readonly globalClocks: [CountDownComponent, CountDownComponent],
                        private readonly turnClocks: [CountDownComponent, CountDownComponent])
@@ -844,18 +849,12 @@ class OGWCTimeManager extends OGWCHelper {
         }
     }
     public override onReceivedMove(move: PartEventMove): void {
-        console.log('MOVE')
         const player: Player = Player.of(move.player);
-        console.log(`player is ${player}`)
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
         const takenMoveTime: number = this.getMillisecondsElapsedSinceLastMoveStart(moveTimestamp);
         this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
-        console.log(`takenGlobalTime so far: ${this.takenGlobalTime[player.value] / 1000}`)
-        console.log(`adding ${takenMoveTime / 1000} to taken global time of player ${player.value}`)
         this.takenGlobalTime[player.value] += takenMoveTime;
-        console.log(`takenGlobalTime now: ${this.takenGlobalTime[player.value] / 1000}`)
-        const adaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[player.value];
 
         // this.globalClocks[player.value].changeDuration(adaptedGlobalTime);
         this.availableTurnTime[player.value] -= takenMoveTime;
@@ -866,7 +865,6 @@ class OGWCTimeManager extends OGWCHelper {
         this.availableTurnTime[nextPlayer.value] = this.getMoveDurationInMs();
         const nextPlayerAdaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[nextPlayer.value];
         this.globalClocks[nextPlayer.value].changeDuration(nextPlayerAdaptedGlobalTime);
-        console.log('AFTER EVENT')
     }
     private getMillisecondsElapsedSinceLastMoveStart(timestamp: Timestamp): number {
         return getMillisecondsElapsed(this.lastMoveStartTimestamp.get(), timestamp);
@@ -884,15 +882,12 @@ class OGWCTimeManager extends OGWCHelper {
     }
     // Pauses all clocks before handling new events
     public beforeEventsBatch(gameEnd: boolean) {
-        console.log('before events batch')
         if (this.clocksStarted && gameEnd === false) {
-            console.log('pausing all clocks')
             this.pauseAllClocks();
         }
     }
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player) {
-        console.log('after events batch')
         if (gameEnd === false) {
             if (this.clocksStarted === false) {
                 // TODO: we can actually directly do that in onGameStart to simplify everything
@@ -909,12 +904,13 @@ class OGWCTimeManager extends OGWCHelper {
             // It can be only a few ms, or a much longer time in case we join mid-game
             const localTime: Timestamp = Timestamp.now();
             const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(localTime);
-            console.log(`DRIFT: ${drift}`)
             // We need to subtract the time to take the drift into account
             this.turnClocks[player.value].subtract(drift);
             this.globalClocks[player.value].subtract(drift);
-            this.turnClocks[player.value].resume();
-            this.globalClocks[player.value].resume();
+            if (OGWCTimeManager.START_CLOCKS) {
+                this.turnClocks[player.value].resume();
+                this.globalClocks[player.value].resume();
+            }
         }
     }
     // Add turn time to the opponent of a player
