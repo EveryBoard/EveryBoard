@@ -7,6 +7,9 @@ import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { serverTimestamp } from 'firebase/firestore';
+import { MinimalUser } from '../domain/MinimalUser';
+import { EloCalculationService, EloEntry, EloInfoPair } from './EloCalculationService';
+import { EloInfo } from '../domain/EloInfo';
 
 /**
   * The aim of this service is to:
@@ -50,5 +53,34 @@ export class UserService {
         return this.userDAO.update(userId, {
             lastUpdateTime: serverTimestamp(),
         });
+    }
+    public async updateElo(gameName: string, zero: MinimalUser, one: MinimalUser, winner: 'ZERO' | 'ONE' | 'DRAW')
+    : Promise<void>
+    {
+        // For both user: increment the number of game played
+        const playerZero: EloInfo = await this.getPlayerInfo(zero, gameName);
+        const playerOne: EloInfo = await this.getPlayerInfo(one, gameName);
+        // Calculate the game result
+        const eloEntry: EloEntry = {
+            eloInfoPair: {
+                playerZero,
+                playerOne,
+            },
+            winner,
+        };
+        const result: EloInfoPair = EloCalculationService.getNewElos(eloEntry);
+        // For both user: change the ELO
+        await this.updatePlayerElo(zero, gameName, result.playerZero);
+        await this.updatePlayerElo(one, gameName, result.playerOne);
+    }
+    public async getPlayerInfo(player: MinimalUser, gameName: string): Promise<EloInfo> {
+        const optionalInfo: MGPOptional<EloInfo> = await this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos').read(gameName);
+        return optionalInfo.getOrElse({
+            currentElo: 0,
+            numberOfGamePlayed: 0,
+        });
+    }
+    private async updatePlayerElo(player: MinimalUser, gameName: string, newEloInfo: EloInfo): Promise<void> {
+        return this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos').set(gameName, newEloInfo);
     }
 }

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Player } from '../jscaip/Player';
 import { Utils } from '../utils/utils';
+import { EloInfo } from '../domain/EloInfo';
 
-export interface EloResult {
-    newEloForZero: number,
-    newEloForOne: number,
+export interface EloInfoPair {
+    playerZero: EloInfo,
+    playerOne: EloInfo,
 }
 
 export interface EloDifferences {
@@ -13,10 +14,7 @@ export interface EloDifferences {
 }
 
 export interface EloEntry {
-    playerZeroElo: number,
-    playerOneElo: number,
-    playerZeroK: number,
-    playerOneK: number,
+    eloInfoPair: EloInfoPair,
     winner: 'ZERO' | 'ONE' | 'DRAW',
 }
 
@@ -25,24 +23,37 @@ export interface EloEntry {
 })
 export class EloCalculationService {
 
-    public static getNewElos(eloEntry: EloEntry): EloResult {
+    public static getNewElos(eloEntry: EloEntry): EloInfoPair {
         const normalEloDifferences: EloDifferences = EloCalculationService.getNormalEloDifferences(eloEntry);
+        const zeroNewElo: number = EloCalculationService.getActualNewElo(eloEntry.eloInfoPair.playerZero.currentElo,
+                                                                         normalEloDifferences.pointChangeForZero);
+        const oneNewElo: number = EloCalculationService.getActualNewElo(eloEntry.eloInfoPair.playerOne.currentElo,
+                                                                        normalEloDifferences.pointChangeForOne);
         return {
-            newEloForZero: EloCalculationService.getActualNewElo(eloEntry.playerZeroElo,
-                                                                 normalEloDifferences.pointChangeForZero),
-            newEloForOne: EloCalculationService.getActualNewElo(eloEntry.playerOneElo,
-                                                                normalEloDifferences.pointChangeForOne),
+            playerZero: {
+                currentElo: zeroNewElo,
+                numberOfGamePlayed: eloEntry.eloInfoPair.playerZero.numberOfGamePlayed + 1,
+            },
+            playerOne: {
+                currentElo: oneNewElo,
+                numberOfGamePlayed: eloEntry.eloInfoPair.playerOne.numberOfGamePlayed + 1,
+            },
         };
     }
     public static getNormalEloDifferences(eloEntry: EloEntry): EloDifferences {
         const wZero: number = EloCalculationService.getWFrom(eloEntry.winner, Player.ZERO);
         const wOne: number = EloCalculationService.getWFrom(eloEntry.winner, Player.ONE);
-        console.log(wZero, wOne)
-        const pZero: number = 0.25; // this.getWinningProbability(eloEntry.playerZeroElo, eloEntry.playerOneElo);
-        const pOne: number = 0.75; // this.getWinningProbability(eloEntry.playerOneElo, eloEntry.playerZeroElo);
+        const playerZeroInfo: EloInfo = eloEntry.eloInfoPair.playerZero;
+        const playerOneInfo: EloInfo = eloEntry.eloInfoPair.playerOne;
+        const eloZero: number = playerZeroInfo.currentElo;
+        const eloOne: number = eloEntry.eloInfoPair.playerOne.currentElo;
+        const pZero: number = this.getWinningProbability(eloZero, eloOne);
+        const pOne: number = this.getWinningProbability(eloOne, eloZero);
+        const playerZeroK: number = EloCalculationService.getKFrom(playerZeroInfo.numberOfGamePlayed);
+        const playerOneK: number = EloCalculationService.getKFrom(playerOneInfo.numberOfGamePlayed);
         return {
-            pointChangeForZero: EloCalculationService.getNormalEloDifference(eloEntry.playerZeroK, wZero, pZero),
-            pointChangeForOne: EloCalculationService.getNormalEloDifference(eloEntry.playerOneK, wOne, pOne),
+            pointChangeForZero: EloCalculationService.getNormalEloDifference(playerZeroK, wZero, pZero),
+            pointChangeForOne: EloCalculationService.getNormalEloDifference(playerOneK, wOne, pOne),
         };
     }
     public static getNormalEloDifference(K: number, W: number, P: number): number {
@@ -76,6 +87,15 @@ export class EloCalculationService {
             } else {
                 return 0;
             }
+        }
+    }
+    public static getKFrom(numberOfGamePlayed: number): number {
+        if (numberOfGamePlayed < 20) {
+            return 60;
+        } else if (numberOfGamePlayed < 40) {
+            return 40;
+        } else {
+            return 20;
         }
     }
     public static getWinningProbability(eloWinner: number, eloLooser: number): number {

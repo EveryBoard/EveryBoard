@@ -16,6 +16,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
+import { UserService } from './UserService';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
@@ -33,6 +34,7 @@ export class GameService {
 
     constructor(private readonly partDAO: PartDAO,
                 private readonly connectedUserService: ConnectedUserService,
+                private readonly userService: UserService,
                 private readonly configRoomService: ConfigRoomService,
                 private readonly chatService: ChatService)
     {
@@ -144,11 +146,11 @@ export class GameService {
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);
     }
-    public resign(partId: string,
-                  lastIndex: number,
-                  user: Player,
-                  winner: MinimalUser,
-                  loser: MinimalUser)
+    public async resign(part: PartDocument,
+                        lastIndex: number,
+                        user: Player,
+                        winner: MinimalUser,
+                        loser: MinimalUser)
     : Promise<void>
     {
         const update: Partial<Part> = {
@@ -157,13 +159,18 @@ export class GameService {
             result: MGPResult.RESIGN.value,
             request: null,
         };
-        return this.updateAndBumpIndex(partId, user, lastIndex, update);
+        const winningPlayer: 'ZERO' |'ONE' = part.data.playerZero.id === winner.id ? 'ZERO' : 'ONE';
+        await this.userService.updateElo(part.data.typeGame,
+                                         part.data.playerZero,
+                                         part.data.playerOne as MinimalUser,
+                                         winningPlayer);
+        return this.updateAndBumpIndex(part.id, user, lastIndex, update);
     }
-    public notifyTimeout(partId: string,
-                         user: Player,
-                         lastIndex: number,
-                         winner: MinimalUser,
-                         loser: MinimalUser)
+    public async notifyTimeout(part: PartDocument,
+                               user: Player,
+                               lastIndex: number,
+                               winner: MinimalUser,
+                               loser: MinimalUser)
     : Promise<void>
     {
         const update: Partial<Part> = {
@@ -172,7 +179,12 @@ export class GameService {
             result: MGPResult.TIMEOUT.value,
             request: null,
         };
-        return this.updateAndBumpIndex(partId, user, lastIndex, update);
+        const winningPlayer: 'ZERO' |'ONE' = part.data.playerZero.id === winner.id ? 'ZERO' : 'ONE';
+        await this.userService.updateElo(part.data.typeGame,
+                                         part.data.playerZero,
+                                         part.data.playerOne as MinimalUser,
+                                         winningPlayer);
+        return this.updateAndBumpIndex(part.id, user, lastIndex, update);
     }
     public sendRequest(partId: string, user: Player, lastIndex: number, request: Request): Promise<void> {
         return this.updateAndBumpIndex(partId, user, lastIndex, { request });
@@ -180,13 +192,17 @@ export class GameService {
     public proposeDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
         return this.sendRequest(partId, player, lastIndex, Request.drawProposed(player));
     }
-    public acceptDraw(partId: string, lastIndex: number, as: Player): Promise<void> {
+    public async acceptDraw(part: PartDocument, lastIndex: number, as: Player): Promise<void> {
         const mgpResult: MGPResult = as === Player.ZERO ? MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
         const update: Partial<Part> = {
             result: mgpResult.value,
             request: null,
         };
-        return this.updateAndBumpIndex(partId, as, lastIndex, update);
+        await this.userService.updateElo(part.data.typeGame,
+                                         part.data.playerZero,
+                                         part.data.playerOne as MinimalUser,
+                                         'DRAW');
+        return this.updateAndBumpIndex(part.id, as, lastIndex, update);
     }
     public refuseDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
         return this.sendRequest(partId, player, lastIndex, Request.drawRefused(player));
@@ -285,7 +301,7 @@ export class GameService {
         const update: Partial<Part> = { request: Request.addTurnTime(role.getOpponent()) };
         return await this.updateAndBumpIndex(id, role, lastIndex, update);
     }
-    public async updateDBBoard(partId: string,
+    public async updateDBBoard(part: PartDocument,
                                user: Player,
                                encodedMove: JSONValueWithoutArray,
                                msToSubstract: [number, number],
@@ -296,12 +312,12 @@ export class GameService {
     : Promise<void>
     {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
-            partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
+            partId: part.id, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: Part = (await this.partDAO.read(partId)).get(); // TODO: optimise this
-        const lastIndex: number = part.lastUpdate.index;
-        const turn: number = part.turn + 1;
-        const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
+        // const part: Part = (await this.partDAO.read(partId)).get(); // TODO: optimise this => MIGHT JUST BE DONE
+        const lastIndex: number = part.data.lastUpdate.index;
+        const turn: number = part.data.turn + 1;
+        const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.data.listMoves);
         listMoves[listMoves.length] = encodedMove;
         let update: Partial<Part> = {
             listMoves,
@@ -310,7 +326,7 @@ export class GameService {
             lastUpdateTime: serverTimestamp(),
         };
         update = this.updateScore(update, scores);
-        update = this.substractMs(update, part, msToSubstract);
+        update = this.substractMs(update, part.data, msToSubstract);
         if (winner != null) {
             update = {
                 ...update,
@@ -318,13 +334,22 @@ export class GameService {
                 loser,
                 result: MGPResult.VICTORY.value,
             };
+            const winningPlayer: 'ZERO' |'ONE' = part.data.playerZero.id === winner.id ? 'ZERO' : 'ONE';
+            await this.userService.updateElo(part.data.typeGame,
+                                             part.data.playerZero,
+                                             part.data.playerOne as MinimalUser,
+                                             winningPlayer);
         } else if (notifyDraw === true) {
             update = {
                 ...update,
                 result: MGPResult.HARD_DRAW.value,
             };
+            await this.userService.updateElo(part.data.typeGame,
+                                             part.data.playerZero,
+                                             part.data.playerOne as MinimalUser,
+                                             'DRAW');
         }
-        return await this.updateAndBumpIndex(partId, user, lastIndex, update);
+        return await this.updateAndBumpIndex(part.id, user, lastIndex, update);
     }
     private updateScore(update: Partial<Part>, scores?: [number, number]): Partial<Part> {
         if (scores !== undefined) {

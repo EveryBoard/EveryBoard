@@ -26,15 +26,34 @@ import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
+import { UserService } from '../UserService';
+import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
+import { UserDAO } from 'src/app/dao/UserDAO';
 
-describe('GameService', () => {
+fdescribe('GameService', () => {
 
     let gameService: GameService;
+    let userService: UserService;
 
     let partDAO: PartDAO;
 
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
+
+    const part: Part = {
+        lastUpdate: {
+            index: 4,
+            player: 0,
+        },
+        typeGame: 'Quarto',
+        playerZero: UserMocks.CREATOR_MINIMAL_USER,
+        playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+        turn: 1,
+        listMoves: [MOVE_1],
+        request: null,
+        result: MGPResult.UNACHIEVED.value,
+    };
+    const partDocument: PartDocument = new PartDocument('partId', part);
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -49,9 +68,11 @@ describe('GameService', () => {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
             ],
         }).compileComponents();
         gameService = TestBed.inject(GameService);
+        userService = TestBed.inject(UserService);
         partDAO = TestBed.inject(PartDAO);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
@@ -183,6 +204,59 @@ describe('GameService', () => {
         expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
     }));
+    describe('resign', () => {
+        it('should delegate to updateAndBumpIndex with a MGPResult.RESIGN value', fakeAsync(async() => {
+            // Given a part ongoing
+            const part: Part = {
+                lastUpdate: {
+                    index: 4,
+                    player: 0,
+                },
+                typeGame: 'Quarto',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                turn: 1,
+                listMoves: [MOVE_1],
+                request: null,
+                result: MGPResult.UNACHIEVED.value,
+            };
+            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
+            spyOn(partDAO, 'update').and.resolveTo();
+            spyOn(gameService, 'updateAndBumpIndex').and.callThrough();
+
+            // When some user resign
+            await gameService.resign(partDocument,
+                                     4,
+                                     Player.ONE,
+                                     UserMocks.CANDIDATE_MINIMAL_USER,
+                                     UserMocks.CREATOR_MINIMAL_USER);
+            // Then updateAndBumpIndex should have been called with a MGPResult.RESIGN value
+            const expectedUpdate: Partial<Part> = {
+                result: MGPResult.RESIGN.value,
+                winner: UserMocks.CANDIDATE_MINIMAL_USER,
+                loser: UserMocks.CREATOR_MINIMAL_USER,
+                request: null,
+            };
+            expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
+        }));
+        it('should update elo', fakeAsync(async() => {
+            // Given any state of service
+            spyOn(userService, 'updateElo').and.callThrough();
+            spyOn(partDAO, 'update').and.resolveTo();
+
+            // When calling resign method
+            await gameService.resign(partDocument,
+                                     5,
+                                     Player.ZERO,
+                                     UserMocks.OPPONENT_MINIMAL_USER, // By resigning, user set the other as winner
+                                     UserMocks.CREATOR_MINIMAL_USER);
+            // Then UserService should have been called with the appropriate EloHistory
+            expect(userService.updateElo).toHaveBeenCalledWith('Quarto',
+                                                               UserMocks.CREATOR_MINIMAL_USER,
+                                                               UserMocks.OPPONENT_MINIMAL_USER,
+                                                               'ONE');
+        }));
+    });
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // Given a configRoom config asking random start
@@ -227,7 +301,6 @@ describe('GameService', () => {
     });
     describe('rematch', () => {
         let configRoomService: ConfigRoomService;
-        let partDAO: PartDAO;
         beforeEach(() => {
             configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
@@ -406,19 +479,6 @@ describe('GameService', () => {
         }));
     });
     describe('updateDBBoard', () => {
-        const part: Part = {
-            lastUpdate: {
-                index: 4,
-                player: 0,
-            },
-            typeGame: 'Quarto',
-            playerZero: UserMocks.CREATOR_MINIMAL_USER,
-            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-            turn: 1,
-            listMoves: [MOVE_1],
-            request: null,
-            result: MGPResult.UNACHIEVED.value,
-        };
         beforeEach(() => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
@@ -427,7 +487,7 @@ describe('GameService', () => {
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
             const scores: [number, number] = [5, 0];
-            await gameService.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], scores);
+            await gameService.updateDBBoard(partDocument, Player.ONE, MOVE_2, [0, 0], scores);
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
                 listMoves: [MOVE_1, MOVE_2],
@@ -439,23 +499,77 @@ describe('GameService', () => {
             };
             expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
         }));
-        it('should include the draw notification if requested', fakeAsync(async() => {
-            // When updating the board to notify of a draw
-            await gameService.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], undefined, true);
-            // Then the result is set to draw in the update
-            const expectedUpdate: Partial<Part> = {
-                lastUpdate: {
-                    index: 5,
-                    player: Player.ONE.value,
-                },
-                listMoves: [MOVE_1, MOVE_2],
-                turn: 2,
-                request: null,
-                lastUpdateTime: serverTimestamp(),
-                result: MGPResult.HARD_DRAW.value,
-            };
-            expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);
-        }));
+        describe('draw', () => {
+            it('should include the draw notification if requested', fakeAsync(async() => {
+                // When updating the board to notify of a draw
+                await gameService.updateDBBoard(partDocument, Player.ONE, MOVE_2, [0, 0], undefined, true);
+                // Then the result is set to draw in the update
+                const expectedUpdate: Partial<Part> = {
+                    lastUpdate: {
+                        index: 5,
+                        player: Player.ONE.value,
+                    },
+                    listMoves: [MOVE_1, MOVE_2],
+                    turn: 2,
+                    request: null,
+                    lastUpdateTime: serverTimestamp(),
+                    result: MGPResult.HARD_DRAW.value,
+                };
+                expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);
+            }));
+            it('should delegate draw to user.elo service', fakeAsync(async() => {
+                // Given a part about to draw
+                spyOn(userService, 'updateElo').and.callThrough();
+                // When updating the board to notify of a draw
+                await gameService.updateDBBoard(partDocument, Player.ONE, MOVE_2, [0, 0], undefined, true);
+                // Then UserService should have been called with the appropriate EloHistory
+                expect(userService.updateElo).toHaveBeenCalledWith('Quarto',
+                                                                   UserMocks.CREATOR_MINIMAL_USER,
+                                                                   UserMocks.OPPONENT_MINIMAL_USER,
+                                                                   'DRAW');
+            }));
+        });
+        describe('victory', () => {
+            it('should notify victory', fakeAsync(async() => {
+                // When updating the board with a victory
+                await gameService.updateDBBoard(partDocument,
+                                                Player.ONE,
+                                                MOVE_2,
+                                                [0, 0],
+                                                undefined,
+                                                false,
+                                                UserMocks.CREATOR_MINIMAL_USER,
+                                                UserMocks.CANDIDATE_MINIMAL_USER);
+                // Then the update should contain the winner
+                const expectedUpdate: Partial<Part> = {
+                    listMoves: [MOVE_1, MOVE_2],
+                    turn: 2,
+                    request: null,
+                    lastUpdateTime: serverTimestamp(),
+                    winner: UserMocks.CREATOR_MINIMAL_USER,
+                    loser: UserMocks.CANDIDATE_MINIMAL_USER,
+                    result: MGPResult.VICTORY.value,
+                };
+                expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
+            }));
+            it('should modify user.elo victory', fakeAsync(async() => {
+                spyOn(userService, 'updateElo').and.callThrough();
+                // When updating the board with a victory
+                await gameService.updateDBBoard(partDocument,
+                                                Player.ONE,
+                                                MOVE_2,
+                                                [0, 0],
+                                                undefined,
+                                                false,
+                                                UserMocks.CREATOR_MINIMAL_USER,
+                                                UserMocks.OPPONENT_MINIMAL_USER);
+                // Then UserService should have been called with the appropriate EloHistory
+                expect(userService.updateElo).toHaveBeenCalledWith('Quarto',
+                                                                   UserMocks.CREATOR_MINIMAL_USER,
+                                                                   UserMocks.OPPONENT_MINIMAL_USER,
+                                                                   'ZERO');
+            }));
+        });
     });
     describe('acceptDraw', () => {
         for (const player of Player.PLAYERS) {
@@ -464,13 +578,13 @@ describe('GameService', () => {
                 spyOn(partDAO, 'update').and.resolveTo();
 
                 // When calling acceptDraw as the player
-                await gameService.acceptDraw('configRoomId', 5, player);
+                await gameService.acceptDraw(partDocument, 5, player);
 
                 // Then PartDAO should have been called with the appropriate MGPResult
                 const result: number = [
                     MGPResult.AGREED_DRAW_BY_ZERO.value,
                     MGPResult.AGREED_DRAW_BY_ONE.value][player.value];
-                expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
+                expect(partDAO.update).toHaveBeenCalledOnceWith('partId', {
                     lastUpdate: {
                         index: 6,
                         player: player.value,
@@ -479,6 +593,61 @@ describe('GameService', () => {
                     result,
                 });
             });
+            it('should update user.elo', fakeAsync(async() => {
+                // Given any state of service
+                spyOn(userService, 'updateElo').and.callThrough();
+                spyOn(partDAO, 'update').and.resolveTo();
+
+                // When calling acceptDraw as the player
+                await gameService.acceptDraw(partDocument, 5, player);
+
+                // Then UserService should have been called with the appropriate EloHistory
+                expect(userService.updateElo).toHaveBeenCalledWith('Quarto',
+                                                                   UserMocks.CREATOR_MINIMAL_USER,
+                                                                   UserMocks.OPPONENT_MINIMAL_USER,
+                                                                   'DRAW');
+            }));
         }
+    });
+    describe('notifyTimeout', () => {
+        it('should delegate to updateAndBumpIndex with MGPResult.TIMEOUT', fakeAsync(async() => {
+            // Given a part ongoing
+            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
+            spyOn(partDAO, 'update').and.resolveTo();
+            spyOn(gameService, 'updateAndBumpIndex').and.callThrough();
+
+            // When user notify opponent timed out
+            await gameService.notifyTimeout(partDocument,
+                                            Player.ZERO,
+                                            5,
+                                            UserMocks.CREATOR_MINIMAL_USER,
+                                            UserMocks.OPPONENT_MINIMAL_USER);
+            const expectedUpdate: Partial<Part> = {
+                winner: UserMocks.CREATOR_MINIMAL_USER,
+                loser: UserMocks.OPPONENT_MINIMAL_USER,
+                request: null,
+                result: MGPResult.TIMEOUT.value,
+            };
+            expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ZERO, 5, expectedUpdate);
+        }));
+        it('should call user.updateElo', fakeAsync(async() => {
+            // Given a part ongoing
+            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
+            spyOn(partDAO, 'update').and.resolveTo();
+            spyOn(gameService, 'updateAndBumpIndex').and.callThrough();
+            spyOn(userService, 'updateElo').and.callThrough();
+
+            // When user notify opponent timed out
+            await gameService.notifyTimeout(partDocument,
+                                            Player.ZERO,
+                                            5,
+                                            UserMocks.CREATOR_MINIMAL_USER,
+                                            UserMocks.OPPONENT_MINIMAL_USER);
+            // Then updateElo should have been called
+            expect(userService.updateElo).toHaveBeenCalledWith('Quarto',
+                                                               UserMocks.CREATOR_MINIMAL_USER,
+                                                               UserMocks.OPPONENT_MINIMAL_USER,
+                                                               'ZERO');
+        }));
     });
 });

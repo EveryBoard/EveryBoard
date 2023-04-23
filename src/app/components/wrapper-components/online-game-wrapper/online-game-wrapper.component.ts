@@ -30,6 +30,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { Timestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { EloInfo } from 'src/app/domain/EloInfo';
 
 export class OnlineGameWrapperMessages {
 
@@ -166,8 +167,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
+        this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             // player should be authenticated and have a username to be here
+            if (this.authUser == null) {
+                console.log('auth user était nul, récupérons les donnée du logged user')
+                const gameName: string = this.extractGameNameFromURL();
+                console.log('il joue au gameName')
+                const eloInfo: EloInfo = await this.userService.getPlayerInfo(user.toMinimalUser(), gameName);
+                console.log('ELO INFO:', eloInfo);
+            }
             this.authUser = user;
         });
         await this.setCurrentPartIdOrRedirect();
@@ -479,7 +487,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         this.endGame = true;
         const player: Player = this.role as Player;
-        return this.gameService.updateDBBoard(this.currentPartId, player, encodedMove, [0, 0], scores, true);
+        return this.gameService.updateDBBoard(this.currentPart as PartDocument,
+                                              player,
+                                              encodedMove,
+                                              [0, 0],
+                                              scores,
+                                              true);
     }
     public async notifyTimeoutVictory(victoriousPlayer: MinimalUser,
                                       user: Player,
@@ -493,7 +506,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const wonPart: PartDocument = Utils.getNonNullable(this.currentPart).setWinnerAndLoser(victoriousPlayer, loser);
         this.currentPart = wonPart;
 
-        await this.gameService.notifyTimeout(this.currentPartId, user, lastIndex, victoriousPlayer, loser);
+        await this.gameService.notifyTimeout(this.currentPart, user, lastIndex, victoriousPlayer, loser);
     }
     public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
@@ -511,7 +524,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.endGame = true;
         const player: Player = this.role as Player;
 
-        return this.gameService.updateDBBoard(this.currentPartId,
+        return this.gameService.updateDBBoard(this.currentPart,
                                               player,
                                               encodedMove,
                                               [0, 0],
@@ -704,7 +717,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         } else {
             const player: Player = this.role as Player;
-            return this.gameService.updateDBBoard(this.currentPartId,
+            return this.gameService.updateDBBoard(this.currentPart as PartDocument,
                                                   player,
                                                   encodedMove,
                                                   msToSubstract,
@@ -717,7 +730,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const player: Player = this.role as Player;
         const resigner: MinimalUser = this.getPlayer();
         const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
-        await this.gameService.resign(this.currentPartId, lastIndex, player, victoriousOpponent, resigner);
+        await this.gameService.resign(this.currentPart as PartDocument,
+                                      lastIndex,
+                                      player,
+                                      victoriousOpponent,
+                                      resigner);
     }
     private getLastIndex(): number {
         return Utils.getNonNullable(this.currentPart).data.lastUpdate.index;
@@ -760,7 +777,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public acceptDraw(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call acceptDraw');
-        return this.gameService.acceptDraw(this. currentPartId, this.getLastIndex(), this.role as Player);
+        return this.gameService.acceptDraw(this.currentPart as PartDocument, this.getLastIndex(), this.role as Player);
     }
     public refuseDraw(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call refuseDraw');
