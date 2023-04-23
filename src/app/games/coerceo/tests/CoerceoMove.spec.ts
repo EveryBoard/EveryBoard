@@ -64,17 +64,17 @@ describe('CoerceoMove', () => {
             expect(movement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
         describe('encoder', () => {
-            it('should be correct with first turn moves', () => {
+            it('should be bijective with first turn moves', () => {
                 const rules: CoerceoRules = new CoerceoRules(CoerceoState);
                 const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
                 const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
                 for (const move of moves) {
-                    NumberEncoderTestUtils.expectToBeCorrect(CoerceoMove.encoder, move);
+                    NumberEncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
                 }
             });
-            it('should be correct with tiles exchanges', () => {
+            it('should be bijective with tiles exchanges', () => {
                 const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 7));
-                NumberEncoderTestUtils.expectToBeCorrect(CoerceoMove.encoder, move);
+                NumberEncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
             });
         });
     });

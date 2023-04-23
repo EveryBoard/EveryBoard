@@ -26,6 +26,7 @@ export class SiamNode extends MGPNode<SiamRules, SiamMove, SiamState, SiamLegali
 export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformation> {
 
     private static singleton: MGPOptional<SiamRules> = MGPOptional.empty();
+
     public static get(): SiamRules {
         if (SiamRules.singleton.isAbsent()) {
             SiamRules.singleton = MGPOptional.of(new SiamRules());

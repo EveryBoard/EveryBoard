@@ -25,8 +25,8 @@ export class GoPiece implements ComparableObject {
 
     private constructor(readonly player: PlayerOrNone, readonly type: PieceType) {}
 
-    public equals(o: GoPiece): boolean {
-        return o === this;
+    public equals(other: GoPiece): boolean {
+        return other === this;
     }
     public toString(): string {
         switch (this) {

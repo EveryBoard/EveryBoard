@@ -8,9 +8,9 @@ export class PieceThreat implements ComparableObject {
                        public readonly mover: MGPSet<Coord>) {
     }
 
-    public equals(o: PieceThreat): boolean {
-        return o.directThreats.equals(this.directThreats) &&
-               o.mover.equals(this.mover);
+    public equals(other: PieceThreat): boolean {
+        return other.directThreats.equals(this.directThreats) &&
+               other.mover.equals(this.mover);
     }
 }
 

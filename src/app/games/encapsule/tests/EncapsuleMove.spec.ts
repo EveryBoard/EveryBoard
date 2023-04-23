@@ -17,17 +17,17 @@ describe('EncapsuleMove', () => {
         expect(() => EncapsuleMove.fromMove(new Coord(2, 1), new Coord(2, 1))).toThrow();
     });
     describe('encoder', () => {
-        it('should be correct for first turn moves', () => {
+        it('should be bijective for first turn moves', () => {
             const rules: EncapsuleRules = new EncapsuleRules(EncapsuleState);
             const minimax: EncapsuleMinimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
             const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(rules.node);
             for (const move of firstTurnMoves) {
-                NumberEncoderTestUtils.expectToBeCorrect(EncapsuleMove.encoder, move);
+                NumberEncoderTestUtils.expectToBeBijective(EncapsuleMove.encoder, move);
             }
         });
-        it('should be correct for moves', () => {
+        it('should be bijective for moves', () => {
             const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2));
-            NumberEncoderTestUtils.expectToBeCorrect(EncapsuleMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(EncapsuleMove.encoder, move);
         });
     });
     describe('equals', () => {

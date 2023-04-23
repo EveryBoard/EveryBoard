@@ -62,6 +62,7 @@ module.exports = {
             '@typescript-eslint/strict-boolean-expressions': ['warn'],
             '@typescript-eslint/no-empty-function': ['off'],
             '@typescript-eslint/no-namespace': ['off'],
+            '@typescript-eslint/explicit-function-return-type': ['error'],
             '@typescript-eslint/ban-types': [
                 'error',
                 { 'types': { 'String': { 'message': 'Use string instead', 'fixWith': 'string' } } },

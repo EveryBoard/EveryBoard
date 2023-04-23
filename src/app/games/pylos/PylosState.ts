@@ -24,8 +24,8 @@ export class PylosState extends GameState {
                 return [0, 1];
         }
     }
-    constructor(public readonly boards: Table<ReadonlyArray<PlayerOrNone>>,
-                turn: number)
+    public constructor(public readonly boards: Table<ReadonlyArray<PlayerOrNone>>,
+                       turn: number)
     {
         super(turn);
     }

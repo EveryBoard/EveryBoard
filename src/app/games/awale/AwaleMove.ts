@@ -42,9 +42,9 @@ export class AwaleMove extends Move {
             return AwaleMove.from(encoded);
         }
     };
-    public equals(o: AwaleMove): boolean {
-        if (o === this) return true;
-        return o.x === this.x;
+    public equals(other: AwaleMove): boolean {
+        if (other === this) return true;
+        return other.x === this.x;
     }
     public toString(): string {
         return 'AwaleMove(' + this.x + ')';

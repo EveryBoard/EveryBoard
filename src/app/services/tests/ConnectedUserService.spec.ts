@@ -32,7 +32,7 @@ export class ConnectedUserServiceMock {
 
     private readonly userRS: ReplaySubject<AuthUser>;
 
-    constructor() {
+    public constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
     public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {

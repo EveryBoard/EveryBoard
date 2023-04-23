@@ -36,7 +36,7 @@ export class LinesOfActionTutorial {
          Note that there is a helping indicator to let you know where a piece can land when you select it.<br/><br/>
          You're playing Dark, make the first move!`,
             LinesOfActionState.getInitialState(),
-            LinesOfActionMove.of(new Coord(1, 7), new Coord(1, 5)).get(),
+            LinesOfActionMove.from(new Coord(1, 7), new Coord(1, 5)).get(),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
@@ -54,7 +54,7 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, O],
             ], 0),
-            [LinesOfActionMove.of(new Coord(3, 1), new Coord(6, 1)).get()],
+            [LinesOfActionMove.from(new Coord(3, 1), new Coord(6, 1)).get()],
             $localize`Congratulations!`,
             $localize`Failed. You did not jump over one of your pieces.`,
         ),
@@ -82,10 +82,10 @@ export class LinesOfActionTutorial {
                 [_, _, _, O, _, _, _, _],
             ], 0),
             [
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(3, 0)).get(),
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(0, 0)).get(),
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(2, 3)).get(),
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 3)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(3, 0)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(0, 0)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(2, 3)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(4, 3)).get(),
             ],
             $localize`Congratulations!`,
             $localize`Failed. This was not one of the expected moves.`,
@@ -107,12 +107,12 @@ export class LinesOfActionTutorial {
                 [X, _, _, _, _, _, _, X],
                 [_, O, O, O, O, O, O, _],
             ], 0),
-            LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get(),
+            LinesOfActionMove.from(new Coord(2, 2), new Coord(4, 2)).get(),
             (move: LinesOfActionMove, previous: LinesOfActionState, _result: LinesOfActionState): MGPValidation => {
-                if (previous.getPieceAt(move.end) === PlayerOrNone.ONE) {
+                if (previous.getPieceAt(move.getEnd()) === PlayerOrNone.ONE) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Failed!`);
+                    return MGPValidation.failure($localize`Failed. Try again.`);
                 }
             },
             $localize`Congratulations!`,
@@ -132,9 +132,9 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],
             ], 0),
-            [LinesOfActionMove.of(new Coord(0, 2), new Coord(4, 2)).get()],
+            [LinesOfActionMove.from(new Coord(0, 2), new Coord(4, 2)).get()],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

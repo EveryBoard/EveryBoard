@@ -12,13 +12,13 @@ describe('KamisadoMove', () => {
         expect((KamisadoMove.of(new Coord(0, 0), new Coord(1, 5))).toString()).toEqual('KamisadoMove((0, 0)->(1, 5))');
         expect(KamisadoMove.PASS.toString()).toEqual('KamisadoMove(PASS)');
     });
-    it('should correctly encode and decode all moves', () => {
+    it('should have a bijective encoder', () => {
         const rules: KamisadoRules = new KamisadoRules(KamisadoState);
         const minimax: KamisadoMinimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
         const moves: KamisadoMove[] = minimax.getListMoves(rules.node);
         moves.push(KamisadoMove.PASS);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeCorrect(KamisadoMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, move);
         }
     });
     it('should force move to start and end inside the board', () => {

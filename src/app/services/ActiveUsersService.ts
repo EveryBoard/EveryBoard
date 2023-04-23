@@ -13,7 +13,7 @@ export class ActiveUsersService {
 
     public static VERBOSE: boolean = false;
 
-    constructor(public userDAO: UserDAO) {
+    public constructor(public userDAO: UserDAO) {
     }
     public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {
         display(ActiveUsersService.VERBOSE, 'ActiveUsersService.subscribeToActiveUsers');

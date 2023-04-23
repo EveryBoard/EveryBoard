@@ -12,6 +12,7 @@ import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
+import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class ConspirateursMoveDrop extends MoveCoord {
     public static encoder: MoveEncoder<ConspirateursMoveDrop> =
@@ -51,10 +52,11 @@ export class ConspirateursMoveDrop extends MoveCoord {
 }
 
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
-    public static encoder: MoveEncoder<ConspirateursMoveSimple> =
-        MoveCoordToCoord.getEncoder((start: Coord, end: Coord) => ConspirateursMoveSimple.of(start, end).get());
 
-    public static of(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
+    public static encoder: MoveEncoder<ConspirateursMoveSimple> =
+        MoveWithTwoCoords.getEncoder(ConspirateursMoveSimple.from);
+
+    public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
         if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&
             end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
             if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
@@ -71,13 +73,13 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         super(start, end);
     }
     public toString(): string {
-        return `ConspirateursMoveSimple(${this.coord.toString()} -> ${this.end.toString()})`;
+        return `ConspirateursMoveSimple(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
     public equals(other: ConspirateursMove): boolean {
         if (other.isSimple()) {
             if (other === this) return true;
-            if (other.coord.equals(this.coord) === false) return false;
-            if (other.end.equals(this.end) === false) return false;
+            if (other.getStart().equals(this.getStart()) === false) return false;
+            if (other.getEnd().equals(this.getEnd()) === false) return false;
             return true;
         } else {
             return false;

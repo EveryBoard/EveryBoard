@@ -29,7 +29,7 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
         this.encoder = HnefataflMove.encoder;
         this.tutorial = new HnefataflTutorial().tutorial;
     }
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.updateBoard();
     }
 }

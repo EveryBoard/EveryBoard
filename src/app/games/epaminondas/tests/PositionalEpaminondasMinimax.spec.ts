@@ -24,6 +24,31 @@ describe('PositionalEpaminondasMinimax:', () => {
     it('should filter number of choices', () => {
         expect(minimax.getListMoves(rules.node).length).toBeLessThan(114);
     });
+    it('should not filter number of choices if it is bellow 40', () => {
+        // Given a board with less than 40 choice in total
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, X, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ];
+        const state: EpaminondasState = new EpaminondasState(board, 1);
+        rules.node = new EpaminondasNode(state);
+
+        // When getting the list of move
+        const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
+
+        // Then we should have all of them (8)
+        expect(moves.length).toBe(8);
+    });
     it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],

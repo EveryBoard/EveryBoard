@@ -27,7 +27,7 @@ export abstract class HivePieceRules {
         return HivePieceRules.INSTANCES.get()[piece.kind];
     }
     protected checkEmptyDestination(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
-        if (state.getAt(move.end).hasPieces()) {
+        if (state.getAt(move.getEnd()).hasPieces()) {
             return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
         }
         return MGPFallible.success(undefined);
@@ -61,10 +61,10 @@ export class HiveQueenBeeRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
-        if (HexagonalUtils.areNeighbors(move.coord, move.end) === false) {
+        if (HexagonalUtils.areNeighbors(move.getStart(), move.getEnd()) === false) {
             return MGPFallible.failure(HiveFailure.QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
-        if (this.canSlideBetweenNeighbors(state, move.coord, move.end) === false) {
+        if (this.canSlideBetweenNeighbors(state, move.getStart(), move.getEnd()) === false) {
             return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
         }
         return this.checkEmptyDestination(move, state);
@@ -91,7 +91,7 @@ export class HiveBeetleRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
-        if (HexagonalUtils.areNeighbors(move.coord, move.end) === false) {
+        if (HexagonalUtils.areNeighbors(move.getStart(), move.getEnd()) === false) {
             return MGPFallible.failure(HiveFailure.BEETLE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
         return MGPFallible.success(undefined);
@@ -117,11 +117,11 @@ export class HiveGrasshopperRules extends HivePieceRules {
     }
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
 
-        const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(move.coord, move.end);
+        const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(move.getStart(), move.getEnd());
         if (direction.isFailure()) {
             return MGPFallible.failure(HiveFailure.GRASSHOPPER_MUST_MOVE_IN_STRAIGHT_LINE());
         }
-        const jumpedCoords: Coord[] = move.coord.getCoordsToward(move.end);
+        const jumpedCoords: Coord[] = move.getStart().getCoordsToward(move.getEnd());
         if (jumpedCoords.length === 0) {
             return MGPFallible.failure(HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES());
         }
@@ -266,7 +266,7 @@ export class HiveSoldierAntRules extends HivePieceRules {
         return false;
     }
     public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPFallible<void> {
-        if (this.pathExists(state, move.coord, move.end) === false) {
+        if (this.pathExists(state, move.getStart(), move.getEnd()) === false) {
             return MGPFallible.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
         }
         return this.checkEmptyDestination(move, state);

@@ -68,7 +68,7 @@ describe('AwaleComponent', () => {
         // When clicking on the empty house
         const move: AwaleMove = AwaleMove.ZERO;
 
-        // Then it should be rejected
+        // Then it should fail
         const reason: string = AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
         await testUtils.expectMoveFailure('#click_0_0', reason, move);
     }));
@@ -82,7 +82,7 @@ describe('AwaleComponent', () => {
         testUtils.setupState(state);
 
         // When clicking on a house of the opponent
-        // Then it should be rejected
+        // Then it should fail
         await testUtils.expectClickFailure('#click_0_0', AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
     }));
     it('should display filled-then-captured capture', fakeAsync(async() => {

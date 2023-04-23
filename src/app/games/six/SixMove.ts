@@ -71,13 +71,13 @@ export class SixMove extends Move {
                                 this.landing + ')';
         }
     }
-    public equals(o: SixMove): boolean {
-        if (this.landing.equals(o.landing) === false) {
+    public equals(other: SixMove): boolean {
+        if (this.landing.equals(other.landing) === false) {
             return false;
         }
-        if (this.start.equals(o.start) === false) {
+        if (this.start.equals(other.start) === false) {
             return false;
         }
-        return this.keep.equals(o.keep);
+        return this.keep.equals(other.keep);
     }
 }

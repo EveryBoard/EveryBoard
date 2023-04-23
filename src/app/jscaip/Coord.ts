@@ -24,6 +24,11 @@ export class Coord extends Vector {
             (fields: [number, number]): Coord => new Coord(fields[0], fields[1]),
         );
     }
+    public constructor(public readonly x: number,
+                       public readonly y: number)
+    {
+        super(x, y);
+    }
     public getNext(dir: Vector, distance?: number): Coord {
         // return the next coord in the direction 'dir'
         distance = distance == null ? 1 : distance;

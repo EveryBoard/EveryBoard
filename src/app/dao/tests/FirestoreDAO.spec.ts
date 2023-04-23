@@ -18,7 +18,8 @@ interface Foo extends FirestoreJSONObject {
     providedIn: 'root',
 })
 class FooDAO extends FirestoreDAO<Foo> {
-    constructor(firestore: Firestore.Firestore) {
+
+    public constructor(firestore: Firestore.Firestore) {
         super('foo', firestore);
     }
 }
@@ -86,10 +87,10 @@ describe('FirestoreDAO', () => {
             promise = new Promise((resolve: (value: Foo[]) => void) => {
                 createdResolve = resolve;
             });
-            callbackFunction = (created: {data: Foo, id: string}[]) => {
+            callbackFunction = (created: {data: Foo, id: string}[]): void => {
                 createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
             };
-            callbackFunctionLog = (created: {data: Foo, id: string}[]) => {
+            callbackFunctionLog = (created: {data: Foo, id: string}[]): void => {
                 for (const doc of created) {
                     console.log(doc);
                 }

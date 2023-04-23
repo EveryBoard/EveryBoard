@@ -161,7 +161,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new DvonnNode(state));
         for (const move of moves) {
-            expect(state.getPieceAt(move.end).isEmpty()).toBeFalse();
+            expect(state.getPieceAt(move.getEnd()).isEmpty()).toBeFalse();
         }
         const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(3, 2));
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.EMPTY_TARGET_STACK());
@@ -177,7 +177,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new DvonnNode(state));
         for (const move of moves) {
-            expect(move.length()).toEqual(state.getPieceAt(move.coord).getSize());
+            expect(move.length()).toEqual(state.getPieceAt(move.getStart()).getSize());
         }
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.INVALID_MOVE_LENGTH());
@@ -193,7 +193,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new DvonnNode(state));
         for (const move of moves) {
-            expect(state.getPieceAt(move.end).isEmpty()).toBeFalse();
+            expect(state.getPieceAt(move.getEnd()).isEmpty()).toBeFalse();
         }
     });
     it('should not allow to move a single red piece, but allows stacks with red pieces within it to move', () => {
@@ -207,7 +207,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new DvonnNode( state));
         for (const move of moves) {
-            const stack: DvonnPieceStack = state.getPieceAt(move.coord);
+            const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
             // every movable piece should belong to the current player
             expect(stack.belongsTo(state.getCurrentPlayer())).toBeTrue();
         }

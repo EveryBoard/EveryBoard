@@ -23,8 +23,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private userSubscription!: Subscription; // Initialized in ngOnInit
 
-    constructor(public router: Router,
-                public connectedUserService: ConnectedUserService) {
+    public constructor(public router: Router,
+                       public connectedUserService: ConnectedUserService)
+    {
     }
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {

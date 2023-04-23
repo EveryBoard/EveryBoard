@@ -9,8 +9,9 @@ export class DiamMoveDrop extends Move {
         (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
         (fields: [number, DiamPiece]): DiamMoveDrop => new DiamMoveDrop(fields[0], fields[1]),
     );
-    constructor(public readonly target: number,
-                public readonly piece: DiamPiece) {
+    public constructor(public readonly target: number,
+                       public readonly piece: DiamPiece)
+    {
         super();
         if (piece === DiamPiece.EMPTY) {
             throw new Error('Cannot drop an empty piece');
@@ -22,11 +23,13 @@ export class DiamMoveDrop extends Move {
     public getTarget(): number {
         return this.target;
     }
-    public equals(other: DiamMoveDrop): boolean {
-        if (other instanceof DiamMoveDrop === false) return false;
-        if (this.target !== other.target) return false;
-        if (this.piece !== other.piece) return false;
-        return true;
+    public equals(other: DiamMove): boolean {
+        if (other instanceof DiamMoveDrop) {
+            if (this.target !== other.target) return false;
+            if (this.piece !== other.piece) return false;
+            return true;
+        }
+        return false;
     }
     public toString(): string {
         return `DiamMoveDrop(${this.target}, ${this.piece})`;

@@ -26,7 +26,7 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
     public layerTransform: string = '';
     public hexaCenter: Coord = new Coord(0, 0);
 
-    public ngAfterContentChecked() {
+    public ngAfterContentChecked(): void {
         // This needs to be done after every content check,
         // otherwise modifications to selected will not be properly propagated
         const coord: Coord = new Coord(this.x, this.y);

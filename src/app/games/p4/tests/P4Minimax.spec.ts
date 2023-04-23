@@ -62,7 +62,9 @@ describe('P4Minimax', () => {
         const initialState: P4State = P4State.getInitialState();
         for (let depth: number = 1; depth < 6; depth ++) {
             const node: P4Node = new P4Node(initialState);
-            expect(node.findBestMove(depth, minimax)).toEqual(P4Move.THREE);
+            expect(node.findBestMove(depth, minimax))
+                .withContext('depth ' + depth + ' should still think center is better')
+                .toEqual(P4Move.THREE);
         }
     });
     it('Minimax should prune when instructed to do so', () => {
@@ -85,5 +87,83 @@ describe('P4Minimax', () => {
         // Then the number of calls is strictly lower
         expect(callsToGetBoardValueWithPruning).toBeLessThan(callsToGetBoardValueWithoutPruning);
         expect(callsToGetListMovesWithPruning).toBeLessThan(callsToGetListMovesWithoutPruning);
+    });
+    describe('getBoardValue', () => {
+        it('should count three point for the corner', () => {
+            // Given a board where player zero have one piece in the corner
+            const board: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O],
+            ];
+            const state: P4State = new P4State(board, 1);
+            const node: P4Node = new P4Node(state);
+
+            // When counting board value
+            const boardValue: number = minimax.getBoardValue(node).value;
+
+            // Then the value should be -3
+            expect(boardValue).toBe(-3);
+        });
+        it('should count four for the place next to the corner', () => {
+            // Given a board where player zero have one piece next to the corner
+            const board: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, O, _],
+            ];
+            const state: P4State = new P4State(board, 1);
+            const node: P4Node = new P4Node(state);
+
+            // When counting board value
+            const boardValue: number = minimax.getBoardValue(node).value;
+
+            // Then the value should be -4
+            expect(boardValue).toBe(-4);
+        });
+        it('should count 5 for the place next to the corner', () => {
+            // Given a board where player zero have one piece next to the center
+            const board: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _],
+            ];
+            const state: P4State = new P4State(board, 1);
+            const node: P4Node = new P4Node(state);
+
+            // When counting board value
+            const boardValue: number = minimax.getBoardValue(node).value;
+
+            // Then the value should be -5
+            expect(boardValue).toBe(-5);
+        });
+        it('should count 7 for the center', () => {
+            // Given a board where player zero have one piece in the center
+            const board: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, O, _, _, _],
+            ];
+            const state: P4State = new P4State(board, 1);
+            const node: P4Node = new P4Node(state);
+
+            // When counting board value
+            const boardValue: number = minimax.getBoardValue(node).value;
+
+            // Then the value should be -7
+            expect(boardValue).toBe(-7);
+        });
     });
 });

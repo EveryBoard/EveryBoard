@@ -30,7 +30,7 @@ export class QuartoMove extends MoveCoord {
             return new QuartoMove(x, y, QuartoPiece.fromInt(piece));
         }
     };
-    constructor(x: number, y: number, public readonly piece: QuartoPiece) {
+    public constructor(x: number, y: number, public readonly piece: QuartoPiece) {
         /* (x, y) is the coord where you put the 'inHand' quarto piece
          * piece is the quarto piece you give
          */
@@ -42,9 +42,9 @@ export class QuartoMove extends MoveCoord {
                              this.piece.value +
                 ')';
     }
-    public equals(o: QuartoMove): boolean {
-        if (this === o) return true;
-        if (!o.coord.equals(this.coord)) return false;
-        return this.piece === o.piece;
+    public equals(other: QuartoMove): boolean {
+        if (this === other) return true;
+        if (!other.coord.equals(this.coord)) return false;
+        return this.piece === other.piece;
     }
 }

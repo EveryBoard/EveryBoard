@@ -7,7 +7,12 @@ import { P4Node, P4Rules } from './P4Rules';
 
 export class P4Minimax extends Minimax<P4Move, P4State> {
     public getListMoves(node: P4Node): P4Move[] {
-        return P4Rules.getListMoves(node);
+        return P4Rules.getListMoves(node)
+            .sort((left: P4Move, right: P4Move) => {
+                const distanceFromCenterLeft: number = Math.abs(left.x - 3);
+                const distanceFromCenterRight: number = Math.abs(right.x - 3);
+                return distanceFromCenterLeft - distanceFromCenterRight;
+            });
     }
     public getBoardValue(node: P4Node): BoardValue {
         const state: P4State = node.gameState;

@@ -6,7 +6,7 @@ import { YinshPiece } from '../YinshPiece';
 
 describe('YinshPiece', () => {
 
-    it('should correctly encode and decode all pieces', () => {
+    it('should have a bijective encoder', () => {
         for (const piece of [
             YinshPiece.UNREACHABLE,
             YinshPiece.EMPTY,
@@ -14,7 +14,7 @@ describe('YinshPiece', () => {
             YinshPiece.MARKER_ONE,
             YinshPiece.RING_ZERO,
             YinshPiece.RING_ONE]) {
-            NumberEncoderTestUtils.expectToBeCorrect(YinshPiece.encoder, piece);
+            NumberEncoderTestUtils.expectToBeBijective(YinshPiece.encoder, piece);
         }
     });
     it('should have redefined toString', () => {

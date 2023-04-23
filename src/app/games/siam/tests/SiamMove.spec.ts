@@ -17,7 +17,7 @@ describe('SiamMove', () => {
 
     const D: SiamPiece = SiamPiece.LIGHT_DOWN;
 
-    it('encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const board: Table<SiamPiece> = [
             [_, _, D, _, _],
             [_, _, _, _, _],
@@ -32,7 +32,7 @@ describe('SiamMove', () => {
         const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
         const moves: SiamMove[] = minimax.getListMoves(node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeCorrect(SiamMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
         }
     });
     it('should ensure move ends inside the board', () => {

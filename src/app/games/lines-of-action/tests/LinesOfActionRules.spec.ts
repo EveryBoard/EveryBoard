@@ -31,7 +31,7 @@ describe('LinesOfActionRules', () => {
     });
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(2, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(2, 2)).get();
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
@@ -46,7 +46,7 @@ describe('LinesOfActionRules', () => {
             [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -62,7 +62,7 @@ describe('LinesOfActionRules', () => {
             [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 7), new Coord(2, 5)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 7), new Coord(2, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -88,7 +88,7 @@ describe('LinesOfActionRules', () => {
             [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(5, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 2), new Coord(5, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -104,7 +104,7 @@ describe('LinesOfActionRules', () => {
             [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 0), new Coord(3, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -120,7 +120,7 @@ describe('LinesOfActionRules', () => {
             [_, _, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 7), new Coord(3, 5)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 7), new Coord(3, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -146,13 +146,13 @@ describe('LinesOfActionRules', () => {
             [X, _, _, _, _, _, _, X],
             [_, O, O, _, O, O, O, _],
         ];
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(3, 5)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(3, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 1)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         RulesUtils.expectMoveFailure(rules, state, move, LinesOfActionFailure.INVALID_MOVE_LENGTH());
     });
     it(`should forbid to land on one of the player's pieces`, () => {
@@ -167,7 +167,7 @@ describe('LinesOfActionRules', () => {
             [_, O, _, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_SELF_CAPTURE());
     });
     it(`should forbid to jump over an opponent's piece`, () => {
@@ -182,7 +182,7 @@ describe('LinesOfActionRules', () => {
             [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(0, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 2), new Coord(0, 2)).get();
         RulesUtils.expectMoveFailure(rules, state, move, LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
     });
     it('should allow to jump over its own pieces', () => {
@@ -197,7 +197,7 @@ describe('LinesOfActionRules', () => {
             [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(7, 0)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 0), new Coord(7, 0)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -223,7 +223,7 @@ describe('LinesOfActionRules', () => {
             [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 2), new Coord(4, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -283,7 +283,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(4, 2)).get();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(4, 2)).get();
         const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
