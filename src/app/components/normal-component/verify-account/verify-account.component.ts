@@ -33,9 +33,10 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         username: new FormControl(),
     });
 
-    constructor(private readonly connectedUserService: ConnectedUserService,
-                public router: Router) {}
-
+    public constructor(private readonly connectedUserService: ConnectedUserService,
+                       public router: Router)
+    {
+    }
     public async ngOnInit(): Promise<void> {
         this.userSubscription = this.connectedUserService.subscribeToUser(
             async(user: AuthUser) => {

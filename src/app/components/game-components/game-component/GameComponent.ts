@@ -96,7 +96,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
      *     - if it's offline, he'll tell the game-component what the bot have done
      */
 
-    constructor(public readonly messageDisplayer: MessageDisplayer) {
+    public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }
     public message(msg: string): void {

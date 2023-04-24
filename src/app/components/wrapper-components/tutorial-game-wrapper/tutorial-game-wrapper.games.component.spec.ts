@@ -42,6 +42,10 @@ import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 
+import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
+import { HiveRules } from 'src/app/games/hive/HiveRules';
+import { HiveMove } from 'src/app/games/hive/HiveMove';
+
 import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
 import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
 import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
@@ -77,6 +81,10 @@ import { SixRules } from 'src/app/games/six/SixRules';
 import { SixState } from 'src/app/games/six/SixState';
 import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
 
+import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
+import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
+import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
+
 import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
@@ -84,9 +92,6 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
 import { TutorialStepFailure } from './TutorialStepFailure';
 import { Comparable } from 'src/app/utils/Comparable';
-import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
-import { HiveRules } from 'src/app/games/hive/HiveRules';
-import { HiveMove } from 'src/app/games/hive/HiveMove';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -115,6 +120,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
+            const trexoTutorial: TutorialStep[] = new TrexoTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, GameState, unknown>, TutorialStep, Move, MGPValidation][] = [
                 [
@@ -140,7 +146,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     ConspirateursRules.get(),
                     conspirateursTutorial[3],
-                    ConspirateursMoveSimple.of(new Coord(4, 6), new Coord(4, 5)).get(),
+                    ConspirateursMoveSimple.from(new Coord(4, 6), new Coord(4, 5)).get(),
                     MGPValidation.failure(`You have not performed a jump. Try again!`),
                 ], [
                     new DvonnRules(DvonnState),
@@ -185,8 +191,8 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new LinesOfActionRules(LinesOfActionState),
                     linesOfActionTutorial[4],
-                    LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get(),
-                    MGPValidation.failure(`Failed!`),
+                    LinesOfActionMove.from(new Coord(1, 0), new Coord(3, 2)).get(),
+                    MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[5],
@@ -287,6 +293,11 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     sixTutorial[6],
                     SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
                     MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`),
+                ], [
+                    TrexoRules.get(),
+                    trexoTutorial[3],
+                    TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get(),
+                    MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     new YinshRules(YinshState),
                     yinshTutorial[3],

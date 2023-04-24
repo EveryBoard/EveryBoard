@@ -22,12 +22,12 @@ describe('EpaminondasMove: ', () => {
         expect(() => new EpaminondasMove(2, 2, 1, 0, Direction.UP))
             .toThrowError('Step size must be minimum one (got 0).');
     });
-    it('EpaminondasMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const rules: EpaminondasRules = new EpaminondasRules(EpaminondasState);
         const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
         const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeCorrect(EpaminondasMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
         }
     });
     it('should forbid non integer number to decode', () => {

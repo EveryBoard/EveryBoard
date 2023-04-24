@@ -38,8 +38,8 @@ export class YinshPiece implements ComparableObject {
         }
     }
 
-    private constructor(public readonly player: PlayerOrNone, public readonly isRing: boolean) {
-    }
+    private constructor(public readonly player: PlayerOrNone, public readonly isRing: boolean) {}
+
     public equals(piece: YinshPiece): boolean {
         return this === piece;
     }

@@ -33,12 +33,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public botTimeOut: number = 1000;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
-                connectedUserService: ConnectedUserService,
-                router: Router,
-                messageDisplayer: MessageDisplayer,
-                private readonly cdr: ChangeDetectorRef)
+    public constructor(componentFactoryResolver: ComponentFactoryResolver,
+                       actRoute: ActivatedRoute,
+                       connectedUserService: ConnectedUserService,
+                       router: Router,
+                       messageDisplayer: MessageDisplayer,
+                       private readonly cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];

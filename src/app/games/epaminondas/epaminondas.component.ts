@@ -68,7 +68,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         this.board = this.getState().getCopiedBoard();
     }
-    private showPreviousMove() {
+    private showPreviousMove(): void {
         const move: EpaminondasMove = this.rules.node.move.get();
         let moved: Coord = move.coord;
         this.moveds = [moved];
@@ -113,7 +113,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
-    private hidePreviousMove() {
+    private hidePreviousMove(): void {
         this.capturedCoords = [];
         this.moveds = [];
     }

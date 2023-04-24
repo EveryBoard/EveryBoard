@@ -50,12 +50,13 @@ import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartServ
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
+
     private route: {[key: string]: string} = {};
     public snapshot: { paramMap: { get: (str: string) => string } };
     public constructor(compo?: string, id?: string) {
         this.snapshot = {
             paramMap: {
-                get: (str: string) => {
+                get: (str: string): string => {
                     // Returns null in case the route does not exist.
                     // This is the same behaviour than ActivatedRoute
                     return this.route[str];
@@ -477,7 +478,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         if (element.attributes.class == null) {
-            expect(false).withContext(elementName + ' should have class atrribute').toBeTrue();
+            expect(false).withContext(elementName + ' should have class attribute').toBeTrue();
         } else {
             const classAttribute: string = element.attributes.class;
             expect(classAttribute).withContext(elementName + ' should have a class attribute').toBeTruthy();

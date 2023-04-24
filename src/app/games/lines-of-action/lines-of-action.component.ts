@@ -64,7 +64,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     }
     private async concludeMove(coord: Coord): Promise<MGPValidation> {
         const move: MGPFallible<LinesOfActionMove> =
-            LinesOfActionMove.of(this.selected.get(), coord);
+            LinesOfActionMove.from(this.selected.get(), coord);
         if (move.isSuccess()) {
             return this.chooseMove(move.get(), this.rules.node.gameState);
         } else {
@@ -88,8 +88,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.lastMove = this.rules.node.move;
         if (this.lastMove.isPresent()) {
             const lastMove: LinesOfActionMove = this.lastMove.get();
-            if (this.getPreviousState().getPieceAt(lastMove.end).isPlayer()) {
-                this.captured = MGPOptional.of(lastMove.end);
+            if (this.getPreviousState().getPieceAt(lastMove.getEnd()).isPlayer()) {
+                this.captured = MGPOptional.of(lastMove.getEnd());
             } else {
                 this.captured = MGPOptional.empty();
             }
@@ -103,8 +103,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         const coord: Coord = new Coord(x, y);
 
         if (this.lastMove.isPresent()) {
-            const lastMoveStart: Coord = this.lastMove.get().coord;
-            const lastMoveEnd: Coord = this.lastMove.get().end;
+            const lastMoveStart: Coord = this.lastMove.get().getStart();
+            const lastMoveEnd: Coord = this.lastMove.get().getEnd();
             if (this.captured.isPresent() && coord.equals(this.captured.get())) {
                 return ['captured-fill'];
             }

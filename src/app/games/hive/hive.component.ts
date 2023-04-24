@@ -261,7 +261,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (move instanceof HiveMoveDrop) {
             lastMove = [move.coord];
         } else if (move instanceof HiveMoveCoordToCoord) {
-            lastMove = [move.coord, move.end];
+            lastMove = [move.getStart(), move.getEnd()];
         }
         // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
         const offset: Vector = this.getState().offset;
@@ -422,7 +422,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 .map((move: HiveMoveSpider) => move.coords[this.selectedSpiderCoords.length])
                 .toList();
         } else {
-            return moves.map((move: HiveMoveCoordToCoord) => move.end).toList();
+            return moves.map((move: HiveMoveCoordToCoord) => move.getEnd()).toList();
         }
     }
     private async selectNextSpiderSpace(coord: Coord): Promise<MGPValidation> {

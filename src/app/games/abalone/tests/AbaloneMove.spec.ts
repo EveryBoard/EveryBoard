@@ -58,12 +58,12 @@ describe('AbaloneMove', () => {
         expect(AbaloneMove.fromDoubleCoord(new Coord(0, 0), new Coord(1, 1), HexaDirection.UP))
             .toEqual(MGPFallible.failure('Invalid direction'));
     });
-    it('AbaloneMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const rules: AbaloneRules = new AbaloneRules(AbaloneState);
         const minimax: AbaloneDummyMinimax = new AbaloneDummyMinimax(rules, 'dummy');
         const firstTurnMoves: AbaloneMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeCorrect(AbaloneMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(AbaloneMove.encoder, move);
         }
     });
 });

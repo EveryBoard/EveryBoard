@@ -22,5 +22,5 @@ export class BoardValue {
     public toString(): string {
         return '' + this.value;
     }
-    constructor(public readonly value: number) {}
+    public constructor(public readonly value: number) {}
 }

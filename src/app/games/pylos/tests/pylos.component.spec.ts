@@ -61,7 +61,7 @@ describe('PylosComponent', () => {
         expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     describe('First click', () => {
-        it('should allow droping piece on occupable space', fakeAsync(async() => {
+        it('should allow dropping piece on occupable space', fakeAsync(async() => {
             // Given a board where a drop is possible
             // When clicking on it
             // Then the move should be accepted

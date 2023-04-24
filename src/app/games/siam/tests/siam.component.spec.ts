@@ -157,7 +157,7 @@ describe('SiamComponent', () => {
         testUtils.setupState(state);
 
         // When making the piece exit the board
-        // The the orientation of the piece does not have to be chosen
+        // Then the orientation of the piece does not have to be chosen
         await testUtils.expectClickSuccess('#square_4_4');
         const move: SiamMove = SiamMove.of(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         await testUtils.expectMoveSuccess('#square_4_5', move);

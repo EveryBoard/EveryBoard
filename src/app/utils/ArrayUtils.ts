@@ -23,19 +23,26 @@ export class ArrayUtils {
         }
         return result;
     }
-    public static createTable<T>(width: number, height: number, initValue: T): T[][] {
-        const retour: Array<Array<T>> = [];
-        let y: number = height - 1;
-        while (y >= 0) {
-            retour[y] = [];
-            let x: number = width - 1;
-            while (x >= 0) {
-                retour[y][x] = initValue;
-                x--;
-            }
-            y--;
+    public static create3DTable<T>(depth: number, width: number, height: number, initValue: T): T[][][] {
+        const triTable: Array<Array<Array<T>>> = [];
+        for (let z: number = 0; z < depth; z++) {
+            triTable.push(ArrayUtils.createTable(width, height, initValue));
         }
-        return retour;
+        return triTable;
+    }
+    public static createTable<T>(width: number, height: number, initValue: T): T[][] {
+        const table: Array<Array<T>> = [];
+        for (let y: number = 0; y < height; y++) {
+            table.push(ArrayUtils.createArray(width, initValue));
+        }
+        return table;
+    }
+    public static createArray<T>(width: number, initValue: T): T[] {
+        const array: Array<T> = [];
+        for (let x: number = 0; x < width; x++) {
+            array.push(initValue);
+        }
+        return array;
     }
     public static copyBiArray<T>(biArray: Table<T>): T[][] {
         const retour: Array<Array<T>> = [];

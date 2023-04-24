@@ -32,12 +32,12 @@ export class TaflMinimax extends Minimax<TaflMove,
         const king: Coord = this.ruler.getKingCoord(state).get();
         if (state.getCurrentPlayer() === this.ruler.config.INVADER) { // Invader
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
-                return - move.end.getOrthogonalDistance(king);
+                return - move.getEnd().getOrthogonalDistance(king);
             });
         } else {
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
-                if (move.coord.equals(king)) {
-                    if (this.ruler.isExternalThrone(move.end)) {
+                if (move.getStart().equals(king)) {
+                    if (this.ruler.isExternalThrone(move.getEnd())) {
                         return 2;
                     } else {
                         return 1;

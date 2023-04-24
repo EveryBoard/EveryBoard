@@ -58,6 +58,7 @@ export class ConspirateursComponent
         sidePieces: [20, 20],
     };
     private selected: MGPOptional<Coord> = MGPOptional.empty();
+
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -151,8 +152,8 @@ export class ConspirateursComponent
         if (lastMove.isDrop()) {
             this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');
         } else if (lastMove.isSimple()) {
-            this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');
-            this.viewInfo.boardInfo[lastMove.end.y][lastMove.end.x].squareClasses.push('moved-fill');
+            this.viewInfo.boardInfo[lastMove.getStart().y][lastMove.getStart().x].squareClasses.push('moved-fill');
+            this.viewInfo.boardInfo[lastMove.getEnd().y][lastMove.getEnd().x].squareClasses.push('moved-fill');
         } else {
             this.viewInfo.lastMoveArrow = '';
             for (const coord of lastMove.coords) {
@@ -227,7 +228,7 @@ export class ConspirateursComponent
     }
     private async selectNextCoord(coord: Coord): Promise<MGPValidation> {
         const selected: Coord = this.selected.get();
-        const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.of(selected, coord);
+        const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.from(selected, coord);
         if (move.isSuccess()) {
             return this.chooseMove(move.get(), this.getState());
         } else {

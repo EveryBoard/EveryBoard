@@ -48,4 +48,24 @@ export abstract class GameStateWithTable<P> extends GameState {
     public getCopiedBoard(): P[][] {
         return ArrayUtils.copyBiArray(this.board);
     }
+    public toMap(): {key: Coord, value: P}[] {
+        const elements: {key: Coord, value: P}[] = [];
+        for (let y: number = 0; y < this.board.length; y++) {
+            for (let x: number = 0; x < this.board[0].length; x++) {
+                const coord: Coord = new Coord(x, y);
+                elements.push({
+                    key: coord,
+                    value: this.getPieceAt(coord),
+                });
+            }
+        }
+        return elements;
+    }
+    [Symbol.iterator](): IterableIterator<P> {
+        const linedUpElements: P[] = [];
+        for (const lines of this.board) {
+            linedUpElements.push(...lines);
+        }
+        return linedUpElements.values();
+    }
 }

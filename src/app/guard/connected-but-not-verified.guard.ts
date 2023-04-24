@@ -7,8 +7,8 @@ import { AccountGuard } from './account-guard';
     providedIn: 'root',
 })
 export class ConnectedButNotVerifiedGuard extends AccountGuard {
-    constructor(connectedUserService: ConnectedUserService,
-                private readonly router: Router)
+    public constructor(connectedUserService: ConnectedUserService,
+                       private readonly router: Router)
     {
         super(connectedUserService);
     }

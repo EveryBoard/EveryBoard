@@ -13,7 +13,7 @@ export abstract class AccountGuard implements CanActivate {
 
     protected userSubscription!: Subscription; // always bound in canActivate
 
-    constructor(protected readonly connectedUserService: ConnectedUserService) {
+    public constructor(protected readonly connectedUserService: ConnectedUserService) {
     }
 
     public async canActivate(): Promise<boolean | UrlTree> {

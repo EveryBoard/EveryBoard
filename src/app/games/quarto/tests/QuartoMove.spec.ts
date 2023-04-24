@@ -8,12 +8,12 @@ import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('QuartoMove', () => {
 
-    it('QuartoMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const rules: QuartoRules = new QuartoRules(QuartoState);
         const minimax: QuartoMinimax = new QuartoMinimax(rules, 'QuartoMinimax');
         const firstTurnMoves: QuartoMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeCorrect(QuartoMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(QuartoMove.encoder, move);
         }
     });
     it('should override toString and equals correctly', () => {

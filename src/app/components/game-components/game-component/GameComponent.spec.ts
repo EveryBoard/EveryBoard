@@ -135,6 +135,9 @@ describe('GameComponent', () => {
                 onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
+            Trexo: {
+                onClick: [0, 0],
+            },
             Yinsh: { onClick: [0, 0] },
         };
         const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());

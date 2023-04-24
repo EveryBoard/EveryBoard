@@ -1,11 +1,12 @@
 import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export type Click = string
-export type TutorialPredicate = (move: Move, previousState: GameState, resultingState: GameState) => MGPValidation
+export type Click = string;
+
+export type TutorialPredicate = (move: Move, previousState: GameState, resultingState: GameState) => MGPValidation;
 
 export abstract class TutorialStep {
     public static fromMove(title: string,
@@ -94,13 +95,15 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
     public constructor(title: string,
                        instruction: string,
                        state: GameState,
-                       private readonly successMessage: string) {
+                       private readonly successMessage: string)
+    {
         super(title, instruction, state);
     }
     public hasSolution(): this is TutorialStepWithSolution {
         return true;
     }
-    public abstract getSolution(): Move | Click
+    public abstract getSolution(): Move | Click;
+
     public getSuccessMessage(): string {
         return this.successMessage;
     }
@@ -112,7 +115,8 @@ export class TutorialStepMove extends TutorialStepWithSolution {
                        state: GameState,
                        public readonly acceptedMoves: ReadonlyArray<Move>,
                        successMessage: string,
-                       private readonly failureMessage: string) {
+                       private readonly failureMessage: string)
+    {
         super(title, instruction, state, successMessage);
         assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
     }
@@ -149,7 +153,8 @@ export class TutorialStepClick extends TutorialStepWithSolution {
                        state: GameState,
                        public readonly acceptedClicks: ReadonlyArray<string>,
                        successMessage: string,
-                       private readonly failureMessage: string) {
+                       private readonly failureMessage: string)
+    {
         super(title, instruction, state, successMessage);
     }
     public isClick(): this is TutorialStepClick {
@@ -169,7 +174,8 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
                        state: GameState,
                        private readonly solutionMove: Move,
                        public readonly predicate: TutorialPredicate,
-                       successMessage: string) {
+                       successMessage: string)
+    {
         super(title, instruction, state, successMessage);
     }
     public getSolution(): Move | Click {

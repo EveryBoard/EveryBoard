@@ -119,7 +119,7 @@ describe('ConspirateursComponent', () => {
 
             // When clicking on its destination
             // Then the simple move should be performed
-            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.of(new Coord(5, 4), new Coord(4, 4)).get();
+            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(4, 4)).get();
             await testUtils.expectMoveSuccess('#click_4_4', move);
         }));
         it('should forbid illegal simple moves', fakeAsync(async() => {
@@ -127,7 +127,7 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_5_4');
             // When clicking on an illegal destination
             // Then the move fails
-            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.of(new Coord(5, 4), new Coord(5, 3)).get();
+            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(5, 3)).get();
             await testUtils.expectMoveFailure('#click_5_3', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
         }));
         it('should allow performing a jump in two clicks if this is the only choice', fakeAsync(async() => {

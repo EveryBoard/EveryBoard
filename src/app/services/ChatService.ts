@@ -20,7 +20,7 @@ export class ChatMessages {
 export class ChatService {
     public static VERBOSE: boolean = false;
 
-    constructor(private readonly chatDAO: ChatDAO) {
+    public constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
     public async addMessage(chatId: string, message: Message): Promise<string> {

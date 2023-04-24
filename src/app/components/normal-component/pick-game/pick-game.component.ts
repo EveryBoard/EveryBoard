@@ -1,118 +1,141 @@
 import { Component, EventEmitter, Output, Type } from '@angular/core';
+
+
+import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
+import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 import { AwaleComponent } from 'src/app/games/awale/awale.component';
-import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
-import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
-import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
-import { DiamComponent } from 'src/app/games/diam/diam.component';
-import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
-import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component';
-import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.component';
-import { GipfComponent } from 'src/app/games/gipf/gipf.component';
-import { GoComponent } from 'src/app/games/go/go.component';
-import { HiveComponent } from 'src/app/games/hive/hive.component';
-import { HnefataflComponent } from 'src/app/games/tafl/hnefatafl/hnefatafl.component';
-import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
-import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
-import { LodestoneComponent } from 'src/app/games/lodestone/lodestone.component';
-import { MartianChessComponent } from 'src/app/games/martian-chess/martian-chess.component';
-import { P4Component } from 'src/app/games/p4/p4.component';
-import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
-import { PylosComponent } from 'src/app/games/pylos/pylos.component';
-import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
-import { QuixoComponent } from 'src/app/games/quixo/quixo.component';
-import { ReversiComponent } from 'src/app/games/reversi/reversi.component';
-import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
-import { SiamComponent } from 'src/app/games/siam/siam.component';
-import { SixComponent } from 'src/app/games/six/six.component';
-import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
-import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { LascaComponent } from 'src/app/games/lasca/lasca.component';
-import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { P4Tutorial } from 'src/app/games/p4/P4Tutorial';
-import { P4Rules } from 'src/app/games/p4/P4Rules';
-import { P4State } from 'src/app/games/p4/P4State';
 import { AwaleRules } from 'src/app/games/awale/AwaleRules';
 import { AwaleTutorial } from 'src/app/games/awale/AwaleTutorial';
-import { AwaleState } from 'src/app/games/awale/AwaleState';
-import { QuartoTutorial } from 'src/app/games/quarto/QuartoTutorial';
-import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
-import { QuartoState } from 'src/app/games/quarto/QuartoState';
-import { TablutTutorial } from 'src/app/games/tafl/tablut/TablutTutorial';
-import { TablutRules } from 'src/app/games/tafl/tablut/TablutRules';
-import { ReversiTutorial } from 'src/app/games/reversi/ReversiTutorial';
-import { ReversiRules } from 'src/app/games/reversi/ReversiRules';
-import { ReversiState } from 'src/app/games/reversi/ReversiState';
-import { GoTutorial } from 'src/app/games/go/GoTutorial';
-import { GoRules } from 'src/app/games/go/GoRules';
-import { GoState } from 'src/app/games/go/GoState';
-import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
-import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
-import { EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
-import { SiamTutorial } from 'src/app/games/siam/SiamTutorial';
-import { SiamRules } from 'src/app/games/siam/SiamRules';
-import { SaharaTutorial } from 'src/app/games/sahara/SaharaTutorial';
-import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
-import { SaharaState } from 'src/app/games/sahara/SaharaState';
-import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
-import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosState } from 'src/app/games/pylos/PylosState';
-import { KamisadoTutorial } from 'src/app/games/kamisado/KamisadoTutorial';
-import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
-import { QuixoTutorial } from 'src/app/games/quixo/QuixoTutorial';
-import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { QuixoState } from 'src/app/games/quixo/QuixoState';
-import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
-import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnState } from 'src/app/games/dvonn/DvonnState';
-import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
-import { EpaminondasTutorial } from 'src/app/games/epaminondas/EpaminondasTutorial';
-import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { GipfTutorial } from 'src/app/games/gipf/GipfTutorial';
-import { GipfRules } from 'src/app/games/gipf/GipfRules';
-import { GipfState } from 'src/app/games/gipf/GipfState';
-import { CoerceoTutorial } from 'src/app/games/coerceo/CoerceoTutorial';
-import { CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
-import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
-import { SixTutorial } from 'src/app/games/six/SixTutorial';
-import { SixRules } from 'src/app/games/six/SixRules';
-import { SixState } from 'src/app/games/six/SixState';
-import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
-import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
-import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
-import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
-import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
-import { PentagoState } from 'src/app/games/pentago/PentagoState';
 import { AbaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
 import { AbaloneState } from 'src/app/games/abalone/AbaloneState';
-import { YinshTutorial } from 'src/app/games/yinsh/YinshTutorial';
-import { YinshRules } from 'src/app/games/yinsh/YinshRules';
-import { YinshState } from 'src/app/games/yinsh/YinshState';
-import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
-import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
-import { DiamTutorial } from 'src/app/games/diam/DiamTutorial';
-import { DiamRules } from 'src/app/games/diam/DiamRules';
+import { AwaleState } from 'src/app/games/awale/AwaleState';
+
+import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 import { BrandhubTutorial } from 'src/app/games/tafl/brandhub/BrandhubTutorial';
 import { BrandhubRules } from 'src/app/games/tafl/brandhub/BrandhubRules';
+
 import { ConspirateursTutorial } from 'src/app/games/conspirateurs/ConspirateursTutorial';
 import { ConspirateursRules } from 'src/app/games/conspirateurs/ConspirateursRules';
+
+import { DiamRules } from 'src/app/games/diam/DiamRules';
+import { DiamTutorial } from 'src/app/games/diam/DiamTutorial';
+
+import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
+import { CoerceoTutorial } from 'src/app/games/coerceo/CoerceoTutorial';
+import { CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
+import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
+import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
+
+import { DiamComponent } from 'src/app/games/diam/diam.component';
+import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
+import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
+import { DvonnState } from 'src/app/games/dvonn/DvonnState';
+import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
+
+import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component';
+import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
+import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
+import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.component';
+import { EpaminondasTutorial } from 'src/app/games/epaminondas/EpaminondasTutorial';
+import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
+
+import { GipfComponent } from 'src/app/games/gipf/gipf.component';
+import { GoTutorial } from 'src/app/games/go/GoTutorial';
+import { GoRules } from 'src/app/games/go/GoRules';
+import { GoState } from 'src/app/games/go/GoState';
+import { GoComponent } from 'src/app/games/go/go.component';
+import { GipfTutorial } from 'src/app/games/gipf/GipfTutorial';
+import { GipfRules } from 'src/app/games/gipf/GipfRules';
+import { GipfState } from 'src/app/games/gipf/GipfState';
+
+import { HiveComponent } from 'src/app/games/hive/hive.component';
+import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
+import { HiveRules } from 'src/app/games/hive/HiveRules';
+import { HnefataflRules } from 'src/app/games/tafl/hnefatafl/HnefataflRules';
+import { HnefataflTutorial } from 'src/app/games/tafl/hnefatafl/HnefataflTutorial';
+import { HnefataflComponent } from 'src/app/games/tafl/hnefatafl/hnefatafl.component';
+
+import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
+import { KamisadoTutorial } from 'src/app/games/kamisado/KamisadoTutorial';
+import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
+import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
+
+import { LascaComponent } from 'src/app/games/lasca/lasca.component';
+import { LascaRules } from 'src/app/games/lasca/LascaRules';
+import { LascaTutorial } from 'src/app/games/lasca/LascaTutorial';
+import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
+import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
+import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
+import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
 import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
+import { LodestoneComponent } from 'src/app/games/lodestone/lodestone.component';
 import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
+
 import { MartianChessTutorial } from 'src/app/games/martian-chess/MartianChessTutorial';
 import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
 import { MartianChessState } from 'src/app/games/martian-chess/MartianChessState';
-import { HnefataflTutorial } from 'src/app/games/tafl/hnefatafl/HnefataflTutorial';
-import { HnefataflRules } from 'src/app/games/tafl/hnefatafl/HnefataflRules';
+import { MartianChessComponent } from 'src/app/games/martian-chess/martian-chess.component';
+
+import { P4Component } from 'src/app/games/p4/p4.component';
+import { P4Tutorial } from 'src/app/games/p4/P4Tutorial';
+import { P4Rules } from 'src/app/games/p4/P4Rules';
+import { P4State } from 'src/app/games/p4/P4State';
+import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
+import { PylosComponent } from 'src/app/games/pylos/pylos.component';
+import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
+import { PylosRules } from 'src/app/games/pylos/PylosRules';
+import { PylosState } from 'src/app/games/pylos/PylosState';
+import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
+import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
+import { PentagoState } from 'src/app/games/pentago/PentagoState';
+
+import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
+import { QuartoTutorial } from 'src/app/games/quarto/QuartoTutorial';
+import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
+import { QuartoState } from 'src/app/games/quarto/QuartoState';
+import { QuixoComponent } from 'src/app/games/quixo/quixo.component';
+import { QuixoTutorial } from 'src/app/games/quixo/QuixoTutorial';
+import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
+import { QuixoState } from 'src/app/games/quixo/QuixoState';
+
+import { ReversiComponent } from 'src/app/games/reversi/reversi.component';
+import { ReversiTutorial } from 'src/app/games/reversi/ReversiTutorial';
+import { ReversiRules } from 'src/app/games/reversi/ReversiRules';
+import { ReversiState } from 'src/app/games/reversi/ReversiState';
+
+import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
+import { SaharaTutorial } from 'src/app/games/sahara/SaharaTutorial';
+import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
+import { SaharaState } from 'src/app/games/sahara/SaharaState';
+import { SiamComponent } from 'src/app/games/siam/siam.component';
+import { SiamTutorial } from 'src/app/games/siam/SiamTutorial';
+import { SiamRules } from 'src/app/games/siam/SiamRules';
+import { SixComponent } from 'src/app/games/six/six.component';
+import { SixTutorial } from 'src/app/games/six/SixTutorial';
+import { SixRules } from 'src/app/games/six/SixRules';
+import { SixState } from 'src/app/games/six/SixState';
+
+import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
+import { TablutTutorial } from 'src/app/games/tafl/tablut/TablutTutorial';
+import { TablutRules } from 'src/app/games/tafl/tablut/TablutRules';
+import { TrexoComponent } from 'src/app/games/trexo/trexo.component';
+import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
+import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
+
+import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
+import { YinshTutorial } from 'src/app/games/yinsh/YinshTutorial';
+import { YinshRules } from 'src/app/games/yinsh/YinshRules';
+import { YinshState } from 'src/app/games/yinsh/YinshState';
+
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { AbstractRules } from 'src/app/jscaip/Rules';
-import { LascaRules } from 'src/app/games/lasca/LascaRules';
-import { LascaTutorial } from 'src/app/games/lasca/LascaTutorial';
-import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
-import { HiveRules } from 'src/app/games/hive/HiveRules';
+import { Localized } from 'src/app/utils/LocaleUtils';
+import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 class GameDescription {
 
@@ -174,6 +197,8 @@ class GameDescription {
 
     public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
+    public static readonly TREXO: Localized = () => $localize`Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!`;
+
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 
 }
@@ -216,6 +241,8 @@ export class GameInfo {
 
         new GameInfo($localize`Hive`, 'Hive', HiveComponent, new HiveTutorial(), HiveRules.get(), new Date('2023-04-02'), GameDescription.HIVE()),
         new GameInfo($localize`Lasca`, 'Lasca', LascaComponent, new LascaTutorial(), LascaRules.get(), new Date('2023-04-21'), GameDescription.LASCA()),
+        new GameInfo($localize`Hive`, 'Hive', HiveComponent, new HiveTutorial(), HiveRules.get(), new Date('2023-03-29'), GameDescription.HIVE()),
+        new GameInfo($localize`Trexo`, 'Trexo', TrexoComponent, new TrexoTutorial(), TrexoRules.get(), new Date('2023-04-16'), GameDescription.TREXO()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

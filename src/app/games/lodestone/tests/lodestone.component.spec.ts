@@ -140,7 +140,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#square_3_3');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
             testUtils.expectElementNotToExist('#platePiece_top_0');
-            // When the the player clicks on the plates where the captures will go
+            // When the player clicks on the plates where the captures will go
             await testUtils.expectClickSuccess('#plate_top_0');
             // Then the move should be performed, and the captures should be shown
             const move: LodestoneMove = new LodestoneMove(new Coord(3, 3),

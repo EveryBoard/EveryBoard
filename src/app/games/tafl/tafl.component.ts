@@ -53,7 +53,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const previousState: S = this.rules.node.mother.get().gameState;
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
-            const captured: Coord = this.lastMove.get().end.getNext(orthogonal, 1);
+            const captured: Coord = this.lastMove.get().getEnd().getNext(orthogonal, 1);
             if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
@@ -164,8 +164,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
         } else if (this.lastMove.isPresent()) {
-            const lastStart: Coord = this.lastMove.get().coord;
-            const lastEnd: Coord = this.lastMove.get().end;
+            const lastStart: Coord = this.lastMove.get().getStart();
+            const lastEnd: Coord = this.lastMove.get().getEnd();
             if (coord.equals(lastStart) || coord.equals(lastEnd)) {
                 classes.push('moved-fill');
             }

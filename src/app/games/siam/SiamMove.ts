@@ -3,14 +3,13 @@ import { Orthogonal, OrthogonalNumberEncoder } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptionalNumberEncoder } from 'src/app/utils/MGPOptionalEncoder';
 
 export class SiamMove extends MoveCoord {
     public static encoder: NumberEncoder<SiamMove> = NumberEncoder.tuple(
         [
             NumberEncoder.numberEncoder(6), // x (from -1 to 5)
             NumberEncoder.numberEncoder(6), // y (from -1 to 5)
-            MGPOptionalNumberEncoder<Orthogonal>(new OrthogonalNumberEncoder()), // direction
+            MGPOptional.getNumberEncoder<Orthogonal>(new OrthogonalNumberEncoder()), // direction
             new OrthogonalNumberEncoder(), // orientation
         ],
         (move: SiamMove): [number, number, MGPOptional<Orthogonal>, Orthogonal] => {

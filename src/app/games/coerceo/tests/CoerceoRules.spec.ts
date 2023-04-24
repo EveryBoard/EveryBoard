@@ -208,7 +208,7 @@ describe('CoerceoRules', () => {
         });
     });
     describe('Tiles Exchange', () => {
-        it(`Should forbid exchanges when player don't have enough tiles`, () => {
+        it(`should forbid exchanges when player don't have enough tiles`, () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

@@ -48,11 +48,11 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public Player: typeof Player = Player;
 
-    constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
-                protected readonly actRoute: ActivatedRoute,
-                protected readonly connectedUserService: ConnectedUserService,
-                protected readonly router: Router,
-                protected readonly messageDisplayer: MessageDisplayer)
+    public constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
+                       protected readonly actRoute: ActivatedRoute,
+                       protected readonly connectedUserService: ConnectedUserService,
+                       protected readonly router: Router,
+                       protected readonly messageDisplayer: MessageDisplayer)
     {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.boardRef != null));
     }
@@ -124,7 +124,8 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
-                                  scores?: [number, number]): Promise<MGPValidation>
+                                  scores?: [number, number])
+    : Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,

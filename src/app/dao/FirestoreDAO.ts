@@ -179,7 +179,7 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
             return this.subDAOs[fullPath] as IFirestoreDAO<T>;
         } else {
             const subDAO: FirestoreDAO<T> = new class extends FirestoreDAO<T> {
-                constructor(firestore: Firestore.Firestore) {
+                public constructor(firestore: Firestore.Firestore) {
                     super(fullPath, firestore);
                 }
             }(this.firestore);

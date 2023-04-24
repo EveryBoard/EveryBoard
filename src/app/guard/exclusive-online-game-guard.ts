@@ -16,8 +16,8 @@ export class ExclusiveOnlineGameGuard implements CanActivate {
 
     protected observedPartSubscription: MGPOptional<Subscription> = MGPOptional.empty();
 
-    constructor(private readonly observedPartService: ObservedPartService,
-                private readonly router: Router)
+    public constructor(private readonly observedPartService: ObservedPartService,
+                       private readonly router: Router)
     {
     }
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {

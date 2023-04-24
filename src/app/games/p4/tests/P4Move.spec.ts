@@ -29,13 +29,11 @@ describe('P4Move', () => {
             expect(move1.equals(move2)).toBeFalse();
         });
     });
-    describe('encoder', () => {
-        it('should be correct', () => {
-            for (let i: number = 0; i < 7; i++) {
-                const move: P4Move = P4Move.of(i);
-                NumberEncoderTestUtils.expectToBeCorrect(P4Move.encoder, move);
-            }
-        });
+    it('should have a bijective encoder', () => {
+        for (let i: number = 0; i < 7; i++) {
+            const move: P4Move = P4Move.of(i);
+            NumberEncoderTestUtils.expectToBeBijective(P4Move.encoder, move);
+        }
     });
     describe('toString', () => {
         it('should contain information on the column', () => {

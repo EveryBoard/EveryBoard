@@ -24,9 +24,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public static VERBOSE: boolean = false;
 
     // 4*100 for each pieces at z=0 level + 2*4 for each direction there is stroke
-    public BOARD_WIDTH: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
-    public PIECE_ROW_HEIGHT: number = this.SPACE_SIZE / 2;
-    public BOARD_HEIGHT: number = this.BOARD_WIDTH + 2 * this.PIECE_ROW_HEIGHT;
+    public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
+    public pieceRowHeight: number = this.SPACE_SIZE / 2;
+    public boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
     public state: PylosState;
     public constructedState: PylosState;
 
@@ -61,9 +61,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {
-            return this.PIECE_ROW_HEIGHT / 2;
+            return this.pieceRowHeight / 2;
         } else {
-            return this.BOARD_WIDTH + ( 1.5 * this.PIECE_ROW_HEIGHT);
+            return this.boardWidth + ( 1.5 * this.pieceRowHeight);
         }
     }
     public getLevelRange(z: number): number[] {

@@ -398,8 +398,7 @@ export class LodestoneComponent
             });
         }
     }
-    private nextLodestone(player: Player, description: LodestoneDescription): LodestoneInfo
-    {
+    private nextLodestone(player: Player, description: LodestoneDescription): LodestoneInfo {
         const lodestone: LodestonePieceLodestone =
             LodestonePieceLodestone.of(player, description);
         const info: LodestoneInfo = {

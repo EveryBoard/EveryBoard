@@ -21,9 +21,9 @@ export class ReversiMove extends MoveCoord {
 
     public static readonly PASS_NUMBER: number = ReversiMove.encoder.encodeNumber(ReversiMove.PASS);
 
-    public equals(o: ReversiMove): boolean {
-        if (o === this) return true;
-        return o.coord.equals(this.coord);
+    public equals(other: ReversiMove): boolean {
+        if (other === this) return true;
+        return other.coord.equals(this.coord);
     }
     public toString(): string {
         return 'ReversiMove(' + this.coord.x + ', ' + this.coord.y + ')';

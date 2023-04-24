@@ -23,7 +23,7 @@ export class MartianChessMove extends MoveCoordToCoord {
 
     public static encoder: NumberEncoder<MartianChessMove> = NumberEncoder.tuple(
         [Coord.numberEncoder(4, 8), Coord.numberEncoder(4, 8), NumberEncoder.booleanEncoder],
-        (move: MartianChessMove): [Coord, Coord, boolean] => [move.coord, move.end, move.calledTheClock],
+        (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
@@ -47,21 +47,21 @@ export class MartianChessMove extends MoveCoordToCoord {
     }
     public toString(): string {
         const ending: string = this.calledTheClock ? ', CALL_THE_CLOCK' : '';
-        return 'MartianChessMove((' + this.coord.x + ', ' + this.coord.y + ') -> (' +
-                                      this.end.x + ', ' + this.end.y + ')' +
+        return 'MartianChessMove((' + this.getStart().x + ', ' + this.getStart().y + ') -> (' +
+                                      this.getEnd().x + ', ' + this.getEnd().y + ')' +
                                       ending + ')';
     }
-    public equals(o: MartianChessMove): boolean {
-        if (this.coord.equals(o.coord) === false) return false;
-        if (this.end.equals(o.end) === false) return false;
-        return this.calledTheClock === o.calledTheClock;
+    public equals(other: MartianChessMove): boolean {
+        if (this.getStart().equals(other.getStart()) === false) return false;
+        if (this.getEnd().equals(other.getEnd()) === false) return false;
+        return this.calledTheClock === other.calledTheClock;
     }
     public isValidForPawn(): boolean {
-        const vector: Vector = this.coord.getVectorToward(this.end);
+        const vector: Vector = this.getStart().getVectorToward(this.getEnd());
         return vector.isDiagonalOfLength(1);
     }
     public isValidForDrone(): boolean {
-        const distance: number = this.coord.getDistance(this.end);
+        const distance: number = this.getStart().getDistance(this.getEnd());
         return distance <= 2;
     }
     public isUndoneBy(moveOpt: MGPOptional<MartianChessMove>): boolean {
@@ -69,6 +69,6 @@ export class MartianChessMove extends MoveCoordToCoord {
             return false;
         }
         const move: MartianChessMove = moveOpt.get();
-        return move.end.equals(this.coord) && move.coord.equals(this.end);
+        return move.getEnd().equals(this.getStart()) && move.getStart().equals(this.getEnd());
     }
 }

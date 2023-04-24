@@ -49,7 +49,7 @@ export class AbaloneTutorial extends Tutorial {
             ], 0),
             [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.RIGHT).get()],
             $localize`Congratulations! You know everything you need to start a game!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

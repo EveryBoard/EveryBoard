@@ -4,7 +4,7 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 
 export class QuartoState extends GameStateWithTable<QuartoPiece> {
 
-    constructor(b: Table<QuartoPiece>, turn: number, public readonly pieceInHand: QuartoPiece) {
+    public constructor(b: Table<QuartoPiece>, turn: number, public readonly pieceInHand: QuartoPiece) {
         super(b, turn);
     }
     public static getInitialState(): QuartoState {
