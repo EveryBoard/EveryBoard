@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+
+import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Player } from 'src/app/jscaip/Player';
@@ -17,6 +18,7 @@ import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaTutorial } from './LascaTutorial';
+import { TrexoState } from '../trexo/TrexoState';
 
 interface SpaceInfo {
     squareClasses: string[];
@@ -31,19 +33,25 @@ interface LascaPieceInfo {
     templateUrl: './lasca.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class LascaComponent extends RectangularGameComponent<LascaRules,
-                                                             LascaMove,
-                                                             LascaState,
-                                                             LascaStack>
+export class LascaComponent extends ParallelogramGameComponent<LascaRules,
+                                                               LascaMove,
+                                                               LascaState,
+                                                               LascaStack>
 {
-    public readonly WIDTH_RATIO: number = 1.2;
-    public readonly SLOPE_RATIO: number = 0.4;
     public readonly THICKNESS: number = 40;
+    public readonly mode: ModeConfig = {
+        horizontalWidthRatio: 1.2,
+        offsetRatio: 0.4,
+        pieceHeightRatio: 1,
+        parallelogramHeight: 100,
+        abstractBoardSize: TrexoState.SIZE,
+    };
 
     public readonly LEFT: number = 0;
     public readonly UP: number = - this.SPACE_SIZE;
-    public readonly WIDTH: number = (7 * this.SPACE_SIZE) * (this.WIDTH_RATIO + this.SLOPE_RATIO);
-    public readonly HEIGHT: number = (7 * this.SPACE_SIZE) + this.THICKNESS + this.STROKE_WIDTH - this.UP;
+    public readonly basicWidth: number = this.mode.abstractBoardSize * this.mode.parallelogramHeight;
+    public readonly WIDTH: number = this.basicWidth * (this.mode.horizontalWidthRatio + this.mode.offsetRatio);
+    public readonly HEIGHT: number = this.basicWidth + this.THICKNESS + this.STROKE_WIDTH - this.UP;
     public readonly CX: number = this.WIDTH / 2;
     public readonly CY: number = (this.HEIGHT + this.UP) / 2;
 
@@ -284,41 +292,22 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
             }
         }
     }
-    public getCoordTransform(x: number, y: number): string {
-        const WIDTH: number = this.SPACE_SIZE;
-        const OFFSET: number = this.SLOPE_RATIO * this.SPACE_SIZE;
-        const xBase: number = (x * this.WIDTH_RATIO * WIDTH) + ((6 - y) * OFFSET);
-        const yBase: number = y * WIDTH;
-        const translate: string = 'translate(' + xBase + ' ' + yBase + ')';
+    public getTranslate(x: number, y: number, z: number): string {
+        const coordTransform: Coord = this.getCoordTranslate(x, y, z, this.mode);
+        const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
         return translate;
     }
     public getParallelogramPoints(): string {
-        const parallelogramCoords: Coord[] = this.getParallelogramCoords();
+        const parallelogramCoords: Coord[] = this.getParallelogramCoordsForLasca();
         return parallelogramCoords
             .map((coord: Coord) => coord.x + ', ' + coord.y)
             .join(' ');
     }
-    public getParallelogramCoords(): Coord[] {
-        const OFFSET: number = this.SLOPE_RATIO * this.SPACE_SIZE;
-        const WIDTH: number = this.SPACE_SIZE;
-        const PIECE_WIDTH: number = this.WIDTH_RATIO * WIDTH;
-        const x0: number = OFFSET;
-        const y0: number = 0;
-        const x1: number = OFFSET + PIECE_WIDTH;
-        const y1: number = 0;
-        const x2: number = PIECE_WIDTH;
-        const y2: number = WIDTH;
-        const x3: number = 0;
-        const y3: number = WIDTH;
-        return [
-            new Coord(x0, y0),
-            new Coord(x1, y1),
-            new Coord(x2, y2),
-            new Coord(x3, y3),
-        ];
+    public getParallelogramCoordsForLasca(): Coord[] {
+        return this.getParallelogramCoords(this.mode);
     }
     public getParallelogramCenter(): Coord {
-        const parallelogramCoords: Coord[] = this.getParallelogramCoords();
+        const parallelogramCoords: Coord[] = this.getParallelogramCoordsForLasca();
         return this.getParallelogramCenterOf(
             parallelogramCoords[0],
             parallelogramCoords[1],
@@ -343,33 +332,30 @@ export class LascaComponent extends RectangularGameComponent<LascaRules,
         return new Coord(x, y);
     }
     public getRightEdge(): string {
-        const WIDTH: number = this.SPACE_SIZE * 7 * this.WIDTH_RATIO;
-        const OFFSET: number = this.SPACE_SIZE * 7 * this.SLOPE_RATIO;
+        const WIDTH: number = this.basicWidth * this.mode.horizontalWidthRatio;
+        const OFFSET: number = this.basicWidth * this.mode.offsetRatio;
         const x0: number = OFFSET + WIDTH;
         const y0: number = 0;
         const x1: number = OFFSET + WIDTH;
         const y1: number = this.THICKNESS;
         const x2: number = WIDTH;
-        const y2: number = 700 + this.THICKNESS;
+        const y2: number = this.basicWidth + this.THICKNESS;
         const x3: number = WIDTH;
-        const y3: number = 700;
+        const y3: number = this.basicWidth;
         return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
     }
     public getPieceTranslate(z: number): string {
         // We want the piece to be in the center of the parallelogram, here are its coords
         const parallelogramCenter: Coord = this.getParallelogramCenter();
-        const cx: number = parallelogramCenter.x;
         const cy: number = parallelogramCenter.y;
         // We want to center the full piece, which is width=80, height=45, so here are it's center
         // See the define to confirm theses
-        const pieceCx: number = 40;
         const pieceCy: number = (50 + 15) / 2;
         // We the need "pieceCx + offsetX" to equal "cx"
         // and "pieceCy + offsetY" to equal "cy", so :
-        const offsetX: number = cx - pieceCx;
         const offsetY: number = cy - pieceCy;
         // Each piece on the Z axis will be higher, here is how much (see the define to confirm)
         const pieceHeight: number = this.SPACE_SIZE * 0.15;
-        return 'translate(' + offsetX + ' ' + (offsetY - (z * pieceHeight)) + ')';
+        return 'translate(' + 0 + ' ' + (offsetY - (z * pieceHeight)) + ')';
     }
 }

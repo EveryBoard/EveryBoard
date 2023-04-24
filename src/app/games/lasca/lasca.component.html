@@ -6,11 +6,6 @@
     <defs>
         <g id="piece">
             <path d="M 0 25 v 15 a 40 25, 0, 0, 0, 80 0 v -15 a 40 25, 0, 0, 0, -80 0 Z"/>
-            <!--   LEFT: 0
-              --     UP: 0
-              --  WIDTH: 80
-              -- HEIGHT: 65 (50 for the elipse + 15 for the height)
-            -->
             <ellipse cx="40" cy="25" rx="40" ry="25"/>
         </g>
     </defs>
@@ -18,8 +13,8 @@
     <g *ngFor="let line of adaptedBoard; index as y">
         <g *ngFor="let squareInfo of line; index as x">
             <g id="coord_{{ x }}_{{ y }}"
-               (click)="onClick(x, y)"
-               [attr.transform]="getCoordTransform(x, y)">
+               [attr.transform]="getTranslate(x, y, 0)"
+               (click)="onClick(x, y)">
                 <polygon id="square_{{ x }}_{{ y }}"
                          [attr.points]="getParallelogramPoints()"
                          [ngClass]="squareInfo.squareClasses"
@@ -44,8 +39,8 @@
     </g>
 
     <rect x="0"
-          y="700"
-          [attr.width]="700 * WIDTH_RATIO"
+          [attr.y]="basicWidth"
+          [attr.width]="basicWidth * mode.horizontalWidthRatio"
           [attr.height]="THICKNESS"
           class="base"/>
 
