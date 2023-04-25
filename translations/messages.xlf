@@ -320,11 +320,11 @@
       <trans-unit id="6220801899147470326" datatype="html">
         <source>Hive</source>
       </trans-unit>
-      <trans-unit id="692005285727565478" datatype="html">
-        <source>Lasca</source>
-      </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
+      </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
