@@ -48,21 +48,22 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     public applyLegalMove(move: SaharaMove, state: SaharaState, _status: void): SaharaState {
         display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         const board: FourStatePiece[][] = state.getCopiedBoard();
-        board[move.end.y][move.end.x] = board[move.coord.y][move.coord.x];
-        board[move.coord.y][move.coord.x] = FourStatePiece.EMPTY;
+        board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
+        board[move.getStart().y][move.getStart().x] = FourStatePiece.EMPTY;
         const resultingState: SaharaState = new SaharaState(board, state.turn + 1);
         return resultingState;
     }
     public isLegal(move: SaharaMove, state: SaharaState): MGPFallible<void> {
-        const movedPawn: FourStatePiece = state.getPieceAt(move.coord);
+        const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.value !== state.getCurrentPlayer().value) {
             return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
-        const landingSpace: FourStatePiece = state.getPieceAt(move.end);
+        const landingSpace: FourStatePiece = state.getPieceAt(move.getEnd());
         if (landingSpace !== FourStatePiece.EMPTY) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        const commonNeighbor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighbor(move.coord, move.end);
+        const commonNeighbor: MGPOptional<Coord> =
+            TriangularCheckerBoard.getCommonNeighbor(move.getStart(), move.getEnd());
         if (commonNeighbor.isPresent()) {
             if (state.getPieceAt(commonNeighbor.get()) === FourStatePiece.EMPTY) {
                 return MGPFallible.success(undefined);

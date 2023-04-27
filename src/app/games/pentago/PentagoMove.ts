@@ -68,13 +68,13 @@ export class PentagoMove extends MoveCoord {
             return 'PentagoMove' + this.coord.toString();
         }
     }
-    public equals(o: PentagoMove): boolean {
-        if (this.coord.equals(o.coord) === false) {
+    public equals(other: PentagoMove): boolean {
+        if (this.coord.equals(other.coord) === false) {
             return false;
         }
-        if (this.blockTurned.equals(o.blockTurned) === false) {
+        if (this.blockTurned.equals(other.blockTurned) === false) {
             return false;
         }
-        return this.turnedClockwise === o.turnedClockwise;
+        return this.turnedClockwise === other.turnedClockwise;
     }
 }

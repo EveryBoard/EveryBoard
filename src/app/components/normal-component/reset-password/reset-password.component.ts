@@ -9,7 +9,8 @@ import { assert } from 'src/app/utils/assert';
     templateUrl: './reset-password.component.html',
 })
 export class ResetPasswordComponent {
-    constructor(public connectedUserService: ConnectedUserService) {}
+
+    public constructor(public connectedUserService: ConnectedUserService) {}
 
     public success: boolean = false;
     public errorMessage: MGPOptional<string> = MGPOptional.empty();

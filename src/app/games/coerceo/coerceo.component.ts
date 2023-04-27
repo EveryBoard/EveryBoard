@@ -37,7 +37,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public possibleLandings: Coord[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new CoerceoRules(CoerceoState);
@@ -65,7 +65,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
         this.board = this.getState().board;
     }
-    private showHighlight() {
+    private showHighlight(): void {
         this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
     }
     public cancelMoveAttempt(): void {

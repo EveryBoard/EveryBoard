@@ -71,7 +71,7 @@ describe('AbaloneDummyMinimax', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         // When computing the scores
-        // The the board with the most player pieces should have the highest score
+        // Then the board with the most player pieces should have the highest score
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            new AbaloneState(boardWithLessPieces, 0),
                                                            MGPOptional.empty(),

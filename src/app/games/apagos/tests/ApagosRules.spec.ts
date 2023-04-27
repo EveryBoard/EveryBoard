@@ -30,10 +30,10 @@ describe('ApagosRules', () => {
             new ApagosDummyMinimax(rules, 'ApagosDummyMinimax'),
         ];
     });
-    it('should refuse droping on a full square', () => {
+    it('should refuse dropping on a full square', () => {
         // Given a board with one full square
         const state: ApagosState = stateWithOneFullSquare;
-        // When droping on that full square
+        // When dropping on that full square
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.TWO, Player.ONE);
         // Then move should be illegal
         const reason: string = ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE();
@@ -90,7 +90,7 @@ describe('ApagosRules', () => {
     it('should drop piece when on low square', () => {
         // Given the initial board
         const state: ApagosState = ApagosState.getInitialState();
-        // When droping piece on one of the 3 low squares
+        // When dropping piece on one of the 3 low squares
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
         // Then the square should climb one place up
         const expectedState: ApagosState = ApagosState.fromRepresentation(1, [
@@ -103,7 +103,7 @@ describe('ApagosRules', () => {
     it('should drop piece when on higher square', () => {
         // Given the initial board
         const state: ApagosState = ApagosState.getInitialState();
-        // When droping piece on one of the 3 low squares
+        // When dropping piece on one of the 3 low squares
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.THREE, Player.ZERO);
         // Then the square should not move
         const expectedState: ApagosState = ApagosState.fromRepresentation(1, [

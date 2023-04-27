@@ -7,12 +7,12 @@ import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('AwaleMove', () => {
 
-    it('AwaleMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const rules: AwaleRules = new AwaleRules(AwaleState);
         const minimax: AwaleMinimax = new AwaleMinimax(rules, 'AwaleMinimax');
         const firstTurnMoves: AwaleMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeCorrect(AwaleMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(AwaleMove.encoder, move);
         }
     });
     it('should override equals correctly', () => {

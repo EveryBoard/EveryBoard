@@ -1,7 +1,9 @@
 import { MGPFallible } from './MGPFallible';
 
 export class MGPValidation {
+
     public static readonly SUCCESS: MGPValidation = new MGPValidation(null);
+
     public static ofFallible<T>(fallible: MGPFallible<T>): MGPValidation {
         if (fallible.isSuccess()) {
             return MGPValidation.SUCCESS;

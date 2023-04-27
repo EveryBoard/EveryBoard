@@ -216,7 +216,7 @@ describe('DiamRules', () => {
             // Then it is detected as a v ictory for player zero
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
-        it('should detect win when two alignments happen in the same turn', () => {
+        it('should detect win when two alignments happen at the same turn', () => {
             // Given a board where two alignment exist, but player one has a higher alignment
             const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],

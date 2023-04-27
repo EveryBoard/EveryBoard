@@ -10,7 +10,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
 
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
 
-    constructor(board: EncapsuleSpace[][], turn: number, remainingPieces: EncapsulePiece[]) {
+    public constructor(board: EncapsuleSpace[][], turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
         this.remainingPieces = remainingPieces;
     }
@@ -18,8 +18,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
         const emptySpace: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         const emptyNumber: number = emptySpace.encode();
         const startingNumberBoard: number[][] = ArrayUtils.createTable(3, 3, emptyNumber);
-        const startingBoard: EncapsuleSpace[][] =
-            ArrayUtils.mapBiArray(startingNumberBoard, (piece: number) => EncapsuleSpace.decode(piece));
+        const startingBoard: EncapsuleSpace[][] = ArrayUtils.mapBiArray(startingNumberBoard, EncapsuleSpace.decode);
         const initialPieces: EncapsulePiece[] = [
             EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
             EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
@@ -66,9 +65,10 @@ export class EncapsuleSpace {
         const big: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleSpace);
         return new EncapsuleSpace(small, medium, big);
     }
-    constructor(public readonly small: PlayerOrNone,
-                public readonly medium: PlayerOrNone,
-                public readonly big: PlayerOrNone) {
+    public constructor(public readonly small: PlayerOrNone,
+                       public readonly medium: PlayerOrNone,
+                       public readonly big: PlayerOrNone)
+    {
     }
     public isEmpty(): boolean {
         return this.small === PlayerOrNone.NONE && this.medium === PlayerOrNone.NONE && this.big === PlayerOrNone.NONE;

@@ -11,7 +11,8 @@ export class TaflPawn {
     public static readonly DEFENDERS: TaflPawn = new TaflPawn(PlayerOrNone.ONE, false);
 
     private constructor(private readonly owner: PlayerOrNone,
-                        private readonly king: boolean) {
+                        private readonly king: boolean)
+    {
     }
     public isKing(): boolean {
         return this.king;

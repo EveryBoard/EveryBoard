@@ -136,13 +136,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit asynchronouseries finisheds');
         return;
     }
-    private checkInputs() {
+    private checkInputs(): void {
         const user: MGPOptional<AuthUser> = this.connectedUserService.user;
         assert(user.isPresent(), 'PartCreationComponent should not be called without connected user');
         assert(user.get() !== AuthUser.NOT_CONNECTED, 'PartCreationComponent should not be created with an empty userName');
         assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
-    private createForms() {
+    private createForms(): void {
         this.configFormGroup = this.formBuilder.group({
             firstPlayer: [FirstPlayer.RANDOM.value, Validators.required],
             maximalMoveDuration: [PartType.NORMAL_MOVE_DURATION, Validators.required],
@@ -341,7 +341,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         return;
     }
-    private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>) {
+    private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>): Promise<void> {
         display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentConfigRoomUpdate: {
                     before: JSON.stringify(this.currentConfigRoom),
@@ -395,7 +395,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const thereIsNoLongerChosenOpponent: boolean = newConfigRoom.chosenOpponent == null;
         return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
     }
-    private async onGameCancelled() {
+    private async onGameCancelled(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
         await this.router.navigate(['/lobby']);
@@ -404,7 +404,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
         return Utils.getNonNullable(configRoom).partStatus === PartStatus.PART_STARTED.value;
     }
-    private onGameStarted() {
+    private onGameStarted(): void {
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
         display(PartCreationComponent.VERBOSE, { partCreationComponent_onGameStarted: { configRoom } });
 

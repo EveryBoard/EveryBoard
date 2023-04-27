@@ -123,8 +123,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
     public static isLegal(move: KamisadoMove, state: KamisadoState): MGPFallible<void> {
         if (move.isPieceMove()) {
-            const start: Coord = move.coord;
-            const end: Coord = move.end;
+            const start: Coord = move.getStart();
+            const end: Coord = move.getEnd();
             const colorToPlay: KamisadoColor = state.colorToPlay;
 
             // A move is legal if:
@@ -183,8 +183,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     // Apply the move by only relying on tryMove
     public applyLegalMove(move: KamisadoMove, state: KamisadoState, _status: void): KamisadoState {
         if (move.isPieceMove()) {
-            const start: Coord = move.coord;
-            const end: Coord = move.end;
+            const start: Coord = move.getStart();
+            const end: Coord = move.getEnd();
 
             const newBoard: KamisadoPiece[][] = state.getCopiedBoard();
             newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move

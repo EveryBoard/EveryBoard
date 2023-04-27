@@ -40,13 +40,13 @@
     </g>
     <!-- Highlight last move -->
     <g *ngIf="lastPieceMove.isPresent()">
-        <rect [attr.x]="lastPieceMove.get().coord.x * SPACE_SIZE"
-              [attr.y]="lastPieceMove.get().coord.y * SPACE_SIZE"
+        <rect [attr.x]="lastPieceMove.get().getStart().x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().getStart().y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke last-move-stroke"/>
-        <rect [attr.x]="lastPieceMove.get().end.x * SPACE_SIZE"
-              [attr.y]="lastPieceMove.get().end.y * SPACE_SIZE"
+        <rect [attr.x]="lastPieceMove.get().getEnd().x * SPACE_SIZE"
+              [attr.y]="lastPieceMove.get().getEnd().y * SPACE_SIZE"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke last-move-stroke"/>

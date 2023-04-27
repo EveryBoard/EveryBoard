@@ -6,7 +6,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
 
     protected values: T[];
 
-    constructor(values?: readonly T[]) {
+    public constructor(values?: readonly T[]) {
         if (values === undefined) {
             this.values = [];
         } else {

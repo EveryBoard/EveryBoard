@@ -8,7 +8,7 @@ import { JSONValue, Utils } from 'src/app/utils/utils';
 import { Encoder, MoveEncoder, NumberEncoder } from '../Encoder';
 
 export class EncoderTestUtils {
-    public static expectToBeCorrect<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
+    public static expectToBeBijective<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
         const encoded: JSONValue = encoder.encode(value);
         const decoded: T = encoder.decode(encoded);
         expect(decoded.equals(value)).toBeTrue();
@@ -16,7 +16,7 @@ export class EncoderTestUtils {
 }
 
 export class NumberEncoderTestUtils {
-    public static expectToBeCorrect<T>(encoder: NumberEncoder<T>, value: T): void {
+    public static expectToBeBijective<T>(encoder: NumberEncoder<T>, value: T): void {
         const encoded: number = encoder.encodeNumber(value);
         expect(encoded).toBeLessThanOrEqual(encoder.maxValue());
         const decoded: T = encoder.decodeNumber(encoded);
@@ -68,13 +68,14 @@ describe('NumberEncoder', () => {
                 return this.field1 === t.field1 && this.field2 === t.field2 && this.field3 === t.field3;
             }
         }
-        const encoder: NumberEncoder<T> = NumberEncoder.tuple<T, [boolean, number, PlayerOrNone]>(
-            [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
-            (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
-            (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]));
-        it('should successfully encode and decode', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(true, 3, Player.ONE));
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(false, 2, Player.ONE));
+        const encoder: NumberEncoder<T> =
+            NumberEncoder.tuple<T, [boolean, number, PlayerOrNone]>(
+                [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
+                (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
+                (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]));
+        it('should have a bijective encoder', () => {
+            NumberEncoderTestUtils.expectToBeBijective(encoder, new T(true, 3, Player.ONE));
+            NumberEncoderTestUtils.expectToBeBijective(encoder, new T(false, 2, Player.ONE));
         });
     });
     describe('disjunction', () => {
@@ -86,12 +87,12 @@ describe('NumberEncoder', () => {
                                       (value : number | boolean): value is number => {
                                           return typeof(value) === 'number';
                                       });
-        it('should successfully encode and decode', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, 0 as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, 1 as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, 3 as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, true as number | boolean);
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, false as number | boolean);
+        it('should have a bijective encoder', () => {
+            NumberEncoderTestUtils.expectToBeBijective(encoder, 0 as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, 1 as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, 3 as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, true as number | boolean);
+            NumberEncoderTestUtils.expectToBeBijective(encoder, false as number | boolean);
         });
     });
 });
@@ -100,15 +101,15 @@ describe('MoveEncoder', () => {
     describe('tuple', () => {
         class MyMove extends MoveCoordToCoord {
             public toString(): string {
-                return `${this.coord.toString()} -> ${this.end.toString()}`;
+                return `${this.getStart().toString()} -> ${this.getEnd().toString()}`;
             }
             public equals(other: this): boolean {
-                return this.coord.equals(other.coord) && this.end.equals(other.end);
+                return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
             }
         }
         const myMoveEncoder: MoveEncoder<MyMove> = MoveEncoder.tuple<MyMove, [Coord, Coord]>(
             [Coord.encoder, Coord.encoder],
-            (move: MyMove): [Coord, Coord] => [move.coord, move.end],
+            (move: MyMove): [Coord, Coord] => [move.getStart(), move.getEnd()],
             (fields: [Coord, Coord]): MyMove => new MyMove(fields[0], fields[1]));
 
         class MyComplexMove extends Move {
@@ -136,8 +137,8 @@ describe('MoveEncoder', () => {
                 (fields: [Coord, Coord, Coord]): MyComplexMove => new MyComplexMove(fields));
 
         it('should successfully encode and decode', () => {
-            EncoderTestUtils.expectToBeCorrect(myMoveEncoder, new MyMove(new Coord(0, 0), new Coord(2, 3)));
-            EncoderTestUtils.expectToBeCorrect(myComplexMoveEncoder, new MyComplexMove(
+            EncoderTestUtils.expectToBeBijective(myMoveEncoder, new MyMove(new Coord(0, 0), new Coord(2, 3)));
+            EncoderTestUtils.expectToBeBijective(myComplexMoveEncoder, new MyComplexMove(
                 [new Coord(0, 0), new Coord(2, 3), new Coord(3, 4)]));
         });
     });

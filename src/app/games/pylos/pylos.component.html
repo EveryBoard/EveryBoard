@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="'0 0 ' + BOARD_WIDTH + ' ' + BOARD_HEIGHT"
+     [attr.viewBox]="'0 0 ' + boardWidth + ' ' + boardHeight"
      preserveAspectRatio="xMidYMid meet">
 
-    <g [attr.transform]="'rotate(' + (this.role.value * 180) + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
+    <g [attr.transform]="'rotate(' + (this.role.value * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">
         <g *ngFor="let player of Player.PLAYERS">
             <circle *ngFor="let p of getPlayerSidePieces(player)"
                     id="piece_{{ player.value }}_{{ p }}"
-                    [attr.cx]="(SPACE_SIZE / 4) + ((BOARD_WIDTH - (SPACE_SIZE / 4)) * (p / 15))"
+                    [attr.cx]="(SPACE_SIZE / 4) + ((boardWidth - (SPACE_SIZE / 4)) * (p / 15))"
                     [attr.cy]="getPiecesCyForPlayer(player)"
                     [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
                     [ngClass]="getPlayerClass(player)"
@@ -16,7 +16,7 @@
     </g>
 
     <g #boardInItself
-       [attr.transform]="'translate(' + (STROKE_WIDTH / 2) + ' ' + ((STROKE_WIDTH / 2) + PIECE_ROW_HEIGHT) + ')'">
+       [attr.transform]="'translate(' + (STROKE_WIDTH / 2) + ' ' + ((STROKE_WIDTH / 2) + pieceRowHeight) + ')'">
         <rect x="0"
               y="0"
               [attr.width]="4 * SPACE_SIZE"

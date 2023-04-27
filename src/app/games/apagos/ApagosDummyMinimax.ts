@@ -10,7 +10,7 @@ export class ApagosDummyMinimax extends Minimax<ApagosMove, ApagosState> {
 
     public getListMoves(node: ApagosNode): ApagosMove[] {
         const state: ApagosState = node.gameState;
-        function isLegal(move: ApagosMove) {
+        function isLegal(move: ApagosMove): boolean {
             return ApagosRules.get().isLegal(move, state).isSuccess();
         }
         return ApagosMove.ALL_MOVES.filter(isLegal);

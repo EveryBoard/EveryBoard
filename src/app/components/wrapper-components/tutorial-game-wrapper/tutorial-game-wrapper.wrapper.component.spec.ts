@@ -48,7 +48,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         wrapper = testUtils.wrapper as TutorialGameWrapperComponent;
     }));
     describe('Common behavior', () => {
-        // ///////////////////////// BEFORE ///////////////////////////////////////
+        // ///////////////////////// Before ///////////////////////////////////////
         it('should create', () => {
             expect(testUtils.wrapper).toBeTruthy();
             expect(testUtils.getComponent()).toBeTruthy();
@@ -161,7 +161,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When starting tutorial
             wrapper.startTutorial(tutorial);
 
-            // expect to see setted previous move
+            // Then there should be a previous move
             const componentPreviousMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
             const componentPreviousState: QuartoState =
                 wrapper.gameComponent.rules.node.mother.get().gameState as QuartoState;

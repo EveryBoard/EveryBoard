@@ -24,11 +24,11 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     @ViewChild('board', { read: ViewContainerRef })
     public boardRef: ViewContainerRef | null = null;
 
-    constructor(actRoute: ActivatedRoute,
-                connectedUserService: ConnectedUserService,
-                router: Router,
-                messageDisplayer: MessageDisplayer,
-                private readonly cdr: ChangeDetectorRef)
+    public constructor(actRoute: ActivatedRoute,
+                       connectedUserService: ConnectedUserService,
+                       router: Router,
+                       messageDisplayer: MessageDisplayer,
+                       private readonly cdr: ChangeDetectorRef)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
     }

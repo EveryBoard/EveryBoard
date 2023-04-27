@@ -20,10 +20,10 @@ describe('ApagosMove', () => {
         // Then it should not be legal
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosFailure.PIECE_SHOULD_MOVE_DOWNWARD()));
     });
-    it('ApagosMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const moves: ApagosMove[] = ApagosMove.ALL_MOVES;
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeCorrect(ApagosMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(ApagosMove.encoder, move);
         }
     });
     it('should override equals correctly', () => {

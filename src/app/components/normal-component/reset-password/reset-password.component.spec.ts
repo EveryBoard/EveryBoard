@@ -12,7 +12,7 @@ describe('ResetPasswordComponent', () => {
 
     const email: string = 'jean@jaja.europe';
 
-    function fillInEmail() {
+    function fillInEmail(): void {
         testUtils.fillInput('#email', email);
         testUtils.detectChanges();
     }

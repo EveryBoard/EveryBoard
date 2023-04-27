@@ -14,7 +14,9 @@ import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-ca
     templateUrl: './demo-page.component.html',
 })
 export class DemoPageComponent {
+
     public numberOfColumns: FormControl = new FormControl(5);
+
     public squared: FormControl = new FormControl(true);
 
     public columns: DemoNodeInfo[][] = [];
@@ -25,7 +27,7 @@ export class DemoPageComponent {
             this.fillColumns(columns);
         });
     }
-    public fillColumns(numberOfColumns: number) {
+    public fillColumns(numberOfColumns: number): void {
         const allGames: GameInfo[] = GameInfo.ALL_GAMES();
         let column: number = 0;
         let i: number = 0;
@@ -36,24 +38,9 @@ export class DemoPageComponent {
             const rules: AbstractRules = game.rules;
             const steps: TutorialStep[] = game.tutorial.tutorial;
             for (const step of steps) {
-                if (step.hasSolution()) {
-                    const solution: Move | string = step.getSolution();
-                    if (typeof solution === 'string') {
-                        demoNodes.push({
-                            node: new MGPNode(step.state),
-                            click: MGPOptional.of(solution as string),
-                        });
-                    } else {
-                        const move: Move = solution as Move;
-                        const node: AbstractNode =
-                            new MGPNode(rules.applyLegalMove(move,
-                                                             step.state,
-                                                             rules.isLegal(move, step.state).get()),
-                                        MGPOptional.of(new MGPNode(step.state)),
-                                        MGPOptional.of(move));
-                        demoNodes.push({ node, click: MGPOptional.empty() });
-                    }
-                }
+                const nodeFromStep: { node: AbstractNode, click: MGPOptional<string>} =
+                    this.getNodeFromStep(step, rules);
+                demoNodes.push(nodeFromStep);
             }
             for (const node of demoNodes) {
                 // We fill from right to left, one node per column at a time
@@ -69,6 +56,33 @@ export class DemoPageComponent {
                 i++;
                 column = (column + 1) % numberOfColumns;
             }
+        }
+    }
+    public getNodeFromStep(step: TutorialStep, rules: AbstractRules)
+    : { node: AbstractNode, click: MGPOptional<string> }
+    {
+        if (step.hasSolution()) {
+            const solution: Move | string = step.getSolution();
+            if (typeof solution === 'string') {
+                return {
+                    node: new MGPNode(step.state),
+                    click: MGPOptional.of(solution as string),
+                };
+            } else {
+                const move: Move = solution as Move;
+                const node: AbstractNode =
+                    new MGPNode(rules.applyLegalMove(move,
+                                                     step.state,
+                                                     rules.isLegal(move, step.state).get()),
+                                MGPOptional.of(new MGPNode(step.state)),
+                                MGPOptional.of(move));
+                return { node, click: MGPOptional.empty() };
+            }
+        } else {
+            return {
+                node: new MGPNode(step.state),
+                click: MGPOptional.empty(),
+            };
         }
     }
 }

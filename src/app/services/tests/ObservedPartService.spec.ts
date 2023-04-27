@@ -27,7 +27,7 @@ export class ObservedPartServiceMock {
 
     private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
-    constructor() {
+    public constructor() {
         this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
     }
     public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {

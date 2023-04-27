@@ -104,14 +104,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     // TODO FOR REVIEW: should this be a service instead? Better mockability, but worse initialization guarantees
     private timeManager!: OGWCTimeManager; // Initialized manually after view has been initialized
 
-    constructor(actRoute: ActivatedRoute,
-                connectedUserService: ConnectedUserService,
-                router: Router,
-                messageDisplayer: MessageDisplayer,
-                private readonly observedPartService: ObservedPartService,
-                private readonly userService: UserService,
-                private readonly gameService: GameService,
-                private readonly partService: PartService)
+    public constructor(actRoute: ActivatedRoute,
+                       connectedUserService: ConnectedUserService,
+                       router: Router,
+                       messageDisplayer: MessageDisplayer,
+                       private readonly observedPartService: ObservedPartService,
+                       private readonly userService: UserService,
+                       private readonly gameService: GameService,
+                       private readonly partService: PartService)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');

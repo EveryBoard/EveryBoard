@@ -29,7 +29,7 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         this.encoder = BrandhubMove.encoder;
         this.tutorial = new BrandhubTutorial().tutorial;
     }
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.updateBoard();
     }
 }

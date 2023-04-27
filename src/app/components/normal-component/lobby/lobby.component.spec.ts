@@ -95,7 +95,7 @@ describe('LobbyComponent', () => {
         // When clicking on the first part
         await testUtils.clickElement('#part_0');
 
-        // The the component should have navigate to the part
+        // Then the component should have navigate to the part
         expectValidRouting(router, ['/play', 'Quarto', partList[0].id], OnlineGameWrapperComponent);
     }
     async function shouldForbidToJoinPart(partList: PartDocument[], reason: string): Promise<void> {
@@ -135,7 +135,7 @@ describe('LobbyComponent', () => {
                 // Given an user not part of any part
                 ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
             });
-            it('Should redirect to /play', fakeAsync(async() => {
+            it('should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
                 await shouldAllowJoinPart([startedPartUserDoNotPlay]);
             }));
@@ -242,7 +242,7 @@ describe('LobbyComponent', () => {
                 // Given an user not part of any part
                 ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
             });
-            it('Should redirect to /play', fakeAsync(async() => {
+            it('should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
                 await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
             }));
