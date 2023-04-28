@@ -129,6 +129,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     }
     const update: Partial<Part> = {
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+        playerOneElo: 0,
         turn: 0,
         remainingMsForZero: 1800 * 1000,
         remainingMsForOne: 1800 * 1000,
@@ -329,6 +330,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
         const update: Partial<Part> = {
             playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+            playerOneElo: 0,
             turn: 0,
             remainingMsForZero: 1800 * 1000,
             remainingMsForOne: 1800 * 1000,
@@ -1234,6 +1236,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When accepting the draw
             await testUtils.clickElement('#acceptDrawButton');
+            tick(1000);
+            testUtils.detectChanges();
 
             // Then a request indicating game is an agreed draw should be sent
             expect(partDAO.update).toHaveBeenCalledWith('configRoomId', {
@@ -1607,6 +1611,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When clicking on resign button
             spyOn(partDAO, 'update').and.callThrough();
             await testUtils.clickElement('#resignButton');
+            tick(1000);
+            testUtils.detectChanges();
 
             // Then the game should be ended
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
@@ -1627,6 +1633,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
             await testUtils.clickElement('#resignButton');
+            tick(1000);
+            testUtils.detectChanges();
 
             // When attempting a move
             spyOn(partDAO, 'update').and.callThrough();
@@ -1687,10 +1695,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 3,
                 listMoves: [1, 2, 3],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -1715,6 +1725,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 3,
                 listMoves: [1, 2, 3],
                 result: MGPResult.UNACHIEVED.value,
@@ -1755,10 +1766,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 0,
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -1794,10 +1807,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 0,
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -1832,10 +1847,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 1,
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -1874,10 +1891,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 1,
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -1914,10 +1933,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 1,
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -1955,10 +1976,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 1,
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -1994,10 +2017,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 1,
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -2032,10 +2057,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 turn: 1,
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                playerOneElo: 0,
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
@@ -2078,6 +2105,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1000);
+            testUtils.detectChanges();
 
             // When the propose rematch button is clicked
             const gameService: GameService = TestBed.inject(GameService);
@@ -2128,6 +2157,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
             await testUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1000);
+            testUtils.detectChanges();
             await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // When opponent accepts it
@@ -2277,6 +2308,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When the game is over
             await testUtils.clickElement('#resignButton');
+            tick(1000);
+            testUtils.detectChanges();
 
             // Then it should highlight the board with its color
             testUtils.expectElementToHaveClass('#board-tile', 'endgame-bg');
@@ -2296,3 +2329,5 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
 });
+// It should display the name of the player
+

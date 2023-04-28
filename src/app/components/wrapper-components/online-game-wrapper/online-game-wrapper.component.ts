@@ -172,7 +172,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             if (this.authUser == null) {
                 console.log('auth user était nul, récupérons les donnée du logged user')
                 const gameName: string = this.extractGameNameFromURL();
-                console.log('il joue au gameName')
+                console.log('il joue au', gameName)
                 const eloInfo: EloInfo = await this.userService.getPlayerInfo(user.toMinimalUser(), gameName);
                 console.log('ELO INFO:', eloInfo);
             }

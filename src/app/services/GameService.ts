@@ -17,10 +17,13 @@ import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
 import { UserService } from './UserService';
+import { EloInfo } from '../domain/EloInfo';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
+    playerZeroElo: number,
     playerOne: MinimalUser,
+    playerOneElo: number,
     turn: number,
     beginning?: FirestoreTime,
 }
@@ -66,11 +69,14 @@ export class GameService {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    private createUnstartedPart(typeGame: string): Promise<string> {
+    private async createUnstartedPart(typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
                 'GameService.createPart(' + typeGame + ')');
 
         const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+        console.log("c'est chiantous qu'on m'attindou")
+        const playerZeroElo: number = (await this.userService.getPlayerInfo(playerZero, typeGame)).currentElo;
+        console.log("mazis j'aistu finitos!")
 
         const newPart: Part = {
             lastUpdate: {
@@ -79,6 +85,7 @@ export class GameService {
             },
             typeGame,
             playerZero,
+            playerZeroElo,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -94,18 +101,18 @@ export class GameService {
         display(GameService.VERBOSE, `GameService.createGame(${typeGame})`);
 
         const gameId: string = await this.createUnstartedPart(typeGame);
-        await this.configRoomService.createInitialConfigRoom(gameId);
+        await this.configRoomService.createInitialConfigRoom(gameId, typeGame);
         await this.createChat(gameId);
         return gameId;
     }
-    private startGameWithConfig(partId: string, user: Player, lastIndex: number, configRoom: ConfigRoom)
+    private async startGameWithConfig(partId: string, user: Player, lastIndex: number, configRoom: ConfigRoom)
     : Promise<void>
     {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(configRoom));
-        const update: StartingPartConfig = this.getStartingConfig(configRoom);
+        const update: StartingPartConfig = await this.getStartingConfig(configRoom);
         return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
-    public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig
+    public async getStartingConfig(configRoom: ConfigRoom): Promise<StartingPartConfig>
     {
         let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
         if (whoStarts === FirstPlayer.RANDOM) {
@@ -124,9 +131,17 @@ export class GameService {
             playerZero = Utils.getNonNullable(configRoom.chosenOpponent);
             playerOne = configRoom.creator;
         }
+        const playerZeroInfo: EloInfo = await this.userService.getPlayerInfo(playerZero, configRoom.typeGame);
+        const playerZeroElo: number = playerZeroInfo.currentElo;
+        const playerOneInfo: EloInfo = await this.userService.getPlayerInfo(playerOne, configRoom.typeGame);
+        const playerOneElo: number = playerOneInfo.currentElo;
+        // TODO: TODOTODO round low the elo
+        console.log('getStartingConfig', playerZeroElo, ' vs ', playerOneElo)
         return {
             playerZero,
+            playerZeroElo,
             playerOne,
+            playerOneElo,
             turn: 0,
             beginning: serverTimestamp(),
             remainingMsForZero: configRoom.totalPartDuration * 1000,
@@ -233,7 +248,7 @@ export class GameService {
             chosenOpponent,
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
-        const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
+        const startingConfig: StartingPartConfig = await this.getStartingConfig(newConfigRoom);
         const newPart: Part = {
             lastUpdate: {
                 index: 0,

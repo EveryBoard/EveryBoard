@@ -5,7 +5,7 @@ import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
 import { EloCalculationService, EloEntry, EloInfoPair } from './EloCalculationService';
@@ -74,7 +74,11 @@ export class UserService {
         await this.updatePlayerElo(one, gameName, result.playerOne);
     }
     public async getPlayerInfo(player: MinimalUser, gameName: string): Promise<EloInfo> {
-        const optionalInfo: MGPOptional<EloInfo> = await this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos').read(gameName);
+        console.log('getPlayerInfo', player, gameName)
+        const chose: IFirestoreDAO<EloInfo> = this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos');
+        console.log('subco, on est bon !')
+        const optionalInfo: MGPOptional<EloInfo> = await chose.read(gameName);
+        console.log('lu!')
         return optionalInfo.getOrElse({
             currentElo: 0,
             numberOfGamePlayed: 0,

@@ -9,6 +9,7 @@ export class ConfigRoomMocks {
         chosenOpponent: null,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
+        typeGame: 'Quarto',
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,

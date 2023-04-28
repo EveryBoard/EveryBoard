@@ -10,7 +10,8 @@ export interface ConfigRoom extends JSONObject {
     readonly partStatus: IPartStatus;
 
     readonly firstPlayer: IFirstPlayer;
-    readonly partType: IPartType
+    readonly partType: IPartType;
+    readonly typeGame: string;
     readonly maximalMoveDuration: number;
     readonly totalPartDuration: number;
 }

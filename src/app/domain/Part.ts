@@ -14,11 +14,13 @@ export interface Part extends FirestoreJSONObject {
     readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
     readonly playerZero: MinimalUser, // the first player
+    readonly playerZeroElo: number, // the elo of the first player at the beginning of the part
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn
     readonly result: IMGPResult,
     readonly listMoves: ReadonlyArray<JSONValueWithoutArray>,
 
     readonly playerOne?: MinimalUser, // the second player
+    readonly playerOneElo?: number, // must always be there once playerOne enters the document
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
      * so firebase write the server time and send us back a timestamp in the form of Time
      */

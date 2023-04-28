@@ -30,7 +30,7 @@ import { UserService } from '../UserService';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 
-fdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
     let userService: UserService;
@@ -47,6 +47,7 @@ fdescribe('GameService', () => {
         },
         typeGame: 'Quarto',
         playerZero: UserMocks.CREATOR_MINIMAL_USER,
+        playerZeroElo: 0,
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
         turn: 1,
         listMoves: [MOVE_1],
@@ -108,6 +109,7 @@ fdescribe('GameService', () => {
             },
             typeGame: 'Quarto',
             playerZero: UserMocks.CREATOR_MINIMAL_USER,
+            playerZeroElo: 0,
             playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 2,
             listMoves: [MOVE_1, MOVE_2],
@@ -153,6 +155,7 @@ fdescribe('GameService', () => {
                 },
                 typeGame: 'Quarto',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 turn: 2,
                 listMoves: [MOVE_1, MOVE_2],
@@ -214,6 +217,7 @@ fdescribe('GameService', () => {
                 },
                 typeGame: 'Quarto',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 turn: 1,
                 listMoves: [MOVE_1],
@@ -267,12 +271,13 @@ fdescribe('GameService', () => {
                 maximalMoveDuration: 10,
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
+                typeGame: 'Quarto',
                 totalPartDuration: 25,
             };
 
             // When calling getStartingConfig
             spyOn(Math, 'random').and.returnValue(0.4);
-            const startConfig: StartingPartConfig = gameService.getStartingConfig(configRoom);
+            const startConfig: StartingPartConfig = await gameService.getStartingConfig(configRoom);
 
             // Then we should have a creator starting the game
             expect(startConfig.playerZero).toEqual(configRoom.creator);
@@ -287,12 +292,13 @@ fdescribe('GameService', () => {
                 maximalMoveDuration: 10,
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
+                typeGame: 'Quarto',
                 totalPartDuration: 25,
             };
 
             // When calling getStartingConfig
             spyOn(Math, 'random').and.returnValue(0.6);
-            const startConfig: StartingPartConfig = gameService.getStartingConfig(configRoom);
+            const startConfig: StartingPartConfig = await gameService.getStartingConfig(configRoom);
 
             // Then we should have a creator starting the game
             expect(startConfig.playerZero).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
@@ -321,10 +327,11 @@ fdescribe('GameService', () => {
                 },
                 listMoves: [MOVE_1, MOVE_2],
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
-                typeGame: 'laMarelle',
+                typeGame: 'Quarto',
                 beginning: new Timestamp(1700102, 680000000),
                 lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
@@ -338,6 +345,7 @@ fdescribe('GameService', () => {
                 maximalMoveDuration: 10,
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
+                typeGame: 'Quarto',
                 totalPartDuration: 25,
             };
             spyOn(gameService, 'sendRequest').and.resolveTo();
@@ -364,10 +372,11 @@ fdescribe('GameService', () => {
                 },
                 listMoves: [MOVE_1, MOVE_2],
                 playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+                playerZeroElo: 0,
                 playerOne: UserMocks.CREATOR_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
-                typeGame: 'laMarelle',
+                typeGame: 'Quarto',
                 beginning: new Timestamp(1700102, 680000000),
                 lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
@@ -381,6 +390,7 @@ fdescribe('GameService', () => {
                 maximalMoveDuration: 10,
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
+                typeGame: 'Quarto',
                 totalPartDuration: 25,
             };
             spyOn(gameService, 'sendRequest').and.resolveTo();
@@ -409,10 +419,11 @@ fdescribe('GameService', () => {
                 },
                 listMoves: [MOVE_1, MOVE_2],
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerZeroElo: 0,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
-                typeGame: 'laMarelle',
+                typeGame: 'Quarto',
                 beginning: new Timestamp(1700102, 680000000),
                 lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
@@ -426,6 +437,7 @@ fdescribe('GameService', () => {
                 maximalMoveDuration: 10,
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
+                typeGame: 'Quarto',
                 totalPartDuration: 25,
             };
             spyOn(gameService, 'sendRequest').and.resolveTo();
@@ -454,9 +466,13 @@ fdescribe('GameService', () => {
             // Moreover, everything needs to have been called eventually
             const part: Part = {
                 lastUpdate: { index: 0, player: 1 },
-                typeGame: 'laMarelle',
+                typeGame: 'Quarto',
                 playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+                // No one can have 0 elo after its first game,
+                // but here we did not pass by the end of the game in this test, so this value is the default value
+                playerZeroElo: 0,
                 playerOne: UserMocks.CREATOR_MINIMAL_USER,
+                playerOneElo: 0,
                 turn: 0,
                 result: MGPResult.UNACHIEVED.value,
                 listMoves: [],
@@ -469,6 +485,7 @@ fdescribe('GameService', () => {
                 creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
                 partType: PartType.BLITZ.value,
+                typeGame: 'Quarto',
                 partStatus: PartStatus.PART_STARTED.value,
                 maximalMoveDuration: 10,
                 totalPartDuration: 25,
