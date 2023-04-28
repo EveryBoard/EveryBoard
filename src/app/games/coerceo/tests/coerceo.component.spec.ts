@@ -42,9 +42,9 @@ describe('CoerceoComponent', () => {
         it('should show tile when more than zero', fakeAsync(async() => {
             const board: Table<FourStatePiece> = CoerceoState.getInitialState().getCopiedBoard();
             const state: CoerceoState = new CoerceoState(board, 0, [1, 0], [0, 0]);
-            testUtils.expectElementNotToExist('#playerZeroTilesCount');
+            testUtils.expectElementNotToExist('#tilesCount0');
             testUtils.setupState(state);
-            testUtils.expectElementToExist('#playerZeroTilesCount');
+            testUtils.expectElementToExist('#tilesCount0');
         }));
         it('should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
             // Given a board with just removed pieces
@@ -86,8 +86,8 @@ describe('CoerceoComponent', () => {
             expectCoordToBeOfRemovedFill(8, 7);
             expectCoordToBeOfRemovedFill(7, 7);
             expectCoordToBeOfRemovedFill(6, 7);
-            testUtils.expectElementToExist('#tilesCountZero');
-            testUtils.expectElementNotToExist('#tilesCountOne');
+            testUtils.expectElementToExist('#tilesCount0');
+            testUtils.expectElementNotToExist('#tilesCount1');
         }));
         it('should show removed tiles, and captured piece (after movement)', fakeAsync(async() => {
             // Given a board with just removed pieces

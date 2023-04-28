@@ -5,8 +5,15 @@
     stroke-linecap: butt;
     stroke-linejoin: round;
 }
+.manual-stroke {
+    stroke-width: 0;
+}
+.base.manual-stroke {
+    fill: var(--base-stroke);
+}
 .base-no-stroke {
     stroke: none;
+    stroke-width: 0;
     fill: var(--base-stroke);
 }
 .base-no-fill {
@@ -105,11 +112,17 @@
 .last-move-stroke {
     stroke: var(--last-move);
 }
+.last-move-stroke.manual-stroke {
+    fill: var(--last-move);
+}
 .victory-fill {
     fill: var(--victory);
 }
 .victory-stroke {
     stroke: var(--victory);
+}
+.victory-stroke.manual-stroke {
+    fill: var(--victory);
 }
 .selected-fill {
     fill: var(--selected);
@@ -156,6 +169,7 @@
     stroke-linecap: round;
 }
 .text-giant {
+    fill: var(--base-stroke);
     font: 3.7rem sans-serif;
     stroke-width: 0.37rem;
     dominant-baseline: central;
@@ -177,6 +191,12 @@
 }
 .black-fill {
     fill: black;
+}
+.darker {
+    filter: brightness(80%);
+}
+.lighter {
+    filter: brightness(110%);
 }
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */

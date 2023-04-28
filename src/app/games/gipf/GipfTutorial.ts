@@ -76,18 +76,18 @@ export class GipfTutorial extends Tutorial {
             )],
             $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
         Let's now see how captures can really be useful.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Capture (2/3)`,
-            $localize`Here, there are three different ways of capturing.
+            $localize`Here, there are three different ways for Dark to capture.
         <ol>
           <li>One way does not capture any of your opponent's pieces.</li>
           <li>Another way captures one of your opponent's pieces.</li>
           <li>The last way captures two of your opponent's pieces.</li>
         </ol>
-        <br/><br/>
-        Pick the last one.`,
+        <br/>
+        You're playing Dark, capture the most pieces from your opponent.`,
             new GipfState([
                 [N, N, N, _, _, _, _],
                 [N, N, _, X, _, _, _],
@@ -119,7 +119,8 @@ export class GipfTutorial extends Tutorial {
         This is due to a move of your opponent at the previous turn
         (even though this is a fictitious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent's pieces!
-        Keep it mind that the most useful in a capture is to take your opponent's pieces.`,
+        Keep it mind that the most useful in a capture is to take your opponent's pieces.<br/><br/>
+        You're playing Dark, capture the most pieces from your opponent.`,
             new GipfState([
                 [N, N, N, O, _, _, O],
                 [N, N, _, O, _, _, O],

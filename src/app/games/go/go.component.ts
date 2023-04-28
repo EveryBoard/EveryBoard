@@ -34,7 +34,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new GoRules(GoState);
@@ -81,7 +81,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                const wasOccupied: boolean = previousState.getPieceAt(coord).isEmpty() === false;
+                const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
                 const isNotKo: boolean = this.ko.equalsValue(coord) === false;
                 if (wasOccupied && isEmpty && isNotKo) {

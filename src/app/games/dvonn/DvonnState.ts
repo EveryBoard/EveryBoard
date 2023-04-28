@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { DvonnPieceStack } from './DvonnPieceStack';
 
@@ -50,7 +51,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
             for (let x: number = 0; x < DvonnState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isOnBoard(coord) && this.getPieceAt(coord).isEmpty() === false) {
+                if (this.isOnBoard(coord) && this.getPieceAt(coord).hasPieces()) {
                     pieces.push(coord);
                 }
             }
@@ -58,9 +59,10 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         return pieces;
     }
     public numberOfNeighbors(coord: Coord): number {
-        return HexagonalGameState.neighbors(coord, 1)
-            .filter((c: Coord): boolean => this.isOnBoard(c) && this.getPieceAt(c).isEmpty() === false)
-            .length;
+        const neighbors: Coord[] = HexagonalUtils.getNeighbors(coord, 1);
+        const occupiedNeighbors: Coord[] = neighbors.filter((c: Coord): boolean =>
+            this.isOnBoard(c) && this.getPieceAt(c).hasPieces());
+        return occupiedNeighbors.length;
     }
     public setAtUnsafe(coord: Coord, value: DvonnPieceStack): this {
         const newBoard: DvonnPieceStack[][] = ArrayUtils.copyBiArray(this.board);

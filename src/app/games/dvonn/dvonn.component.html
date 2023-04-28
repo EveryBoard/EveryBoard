@@ -7,7 +7,7 @@
            id="click_{{ coord.x }}_{{ coord.y }}"
            (click)="onClick(coord.x, coord.y)">
             <!-- Background -->
-            <polygon [attr.points]="getHexaCoordsAt(coord)"
+            <polygon [attr.points]="getHexaPointsAt(coord)"
                      class="base mid-stroke"/>
             <!-- Piece -->
             <circle *ngIf="spaceContent.getSize() > 0"
@@ -31,7 +31,7 @@
     </g>
     <!-- Show disconnecteds -->
     <g *ngFor="let disconnected of disconnecteds">
-        <polygon [attr.points]="getHexaCoordsAt(disconnected.coord)"
+        <polygon [attr.points]="getHexaPointsAt(disconnected.coord)"
                  class="base mid-stroke captured-fill"/>
         <circle id="captured_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}"
                 [attr.cx]="getCenterAt(disconnected.coord).x"
@@ -47,13 +47,13 @@
     </g>
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove.isPresent()">
-        <polygon [attr.points]="getHexaCoordsAt(lastMove.get().coord)"
+        <polygon [attr.points]="getHexaPointsAt(lastMove.get().getStart())"
                  class="base no-fill last-move-stroke"/>
-        <polygon [attr.points]="getHexaCoordsAt(lastMove.get().end)"
+        <polygon [attr.points]="getHexaPointsAt(lastMove.get().getEnd())"
                  class="base no-fill last-move-stroke"/>
     </ng-container>
     <!-- Highlight selected piece -->
     <polygon *ngIf="chosen.isPresent()"
-             [attr.points]="getHexaCoordsAt(chosen.get())"
+             [attr.points]="getHexaPointsAt(chosen.get())"
              class="base no-fill selected-stroke"/>
 </svg>

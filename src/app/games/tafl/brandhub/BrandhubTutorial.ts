@@ -25,7 +25,7 @@ export class BrandhubTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
-            $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>Capture it.`,
+            $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>You're playing Light. Capture the soldier.`,
             new BrandhubState([
                 [_, _, _, O, _, _, _],
                 [_, _, _, O, _, _, _],
@@ -43,7 +43,7 @@ export class BrandhubTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
-            $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>Capture it.`,
+            $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>You're playing Dark. Capture the soldier.`,
             new BrandhubState([
                 [_, _, _, O, _, _, _],
                 [_, _, O, _, _, _, _],
@@ -62,7 +62,7 @@ export class BrandhubTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king on his throne`,
-            $localize`To capture the king when he sits on his throne, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.<br/><br/>Capture the king.`,
+            $localize`To capture the king when he sits on his throne, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.<br/><br/>You're playing Dark. Capture the king.`,
             new BrandhubState([
                 [_, _, _, _, _, _, _],
                 [_, _, _, X, _, _, _],
@@ -78,7 +78,7 @@ export class BrandhubTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king next to his throne`,
-            $localize`Another way to capture the king is to use three soldier plus the central throne to surround the king on four sides.<br/><br/>Capture the king.`,
+            $localize`Another way to capture the king is to use three soldier plus the central throne to surround the king on four sides.<br/><br/>You're playing Dark. Capture the king.`,
             new BrandhubState([
                 [_, _, O, _, _, _, _],
                 [_, _, _, O, _, _, _],
@@ -90,11 +90,11 @@ export class BrandhubTutorial extends Tutorial {
             ], 72),
             [BrandhubMove.of(new Coord(2, 0), new Coord(2, 2))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king far from his throne`,
-            $localize`When the king is not on his central throne nor next to it, he can be captured like a soldier.<br/><br/>Capture the king.`,
+            $localize`When the king is not on his central throne nor next to it, he can be captured like a soldier.<br/><br/>You're playing Dark. Capture the king.`,
             new BrandhubState([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -106,7 +106,7 @@ export class BrandhubTutorial extends Tutorial {
             ], 72),
             [BrandhubMove.of(new Coord(3, 6), new Coord(2, 6))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

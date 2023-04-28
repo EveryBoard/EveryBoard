@@ -22,7 +22,7 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
             // We can't have DvonnMove.PASS here, because it would be the single move of the list
             assert(move !== DvonnMove.PASS, 'Cannot sort with DvonnMove.PASS');
 
-            const stack: DvonnPieceStack = state.getPieceAt(move.end);
+            const stack: DvonnPieceStack = state.getPieceAt(move.getEnd());
             const opponentPieces: number = stack.belongsTo(opponent) ? stack.getSize() : 0;
             return opponentPieces;
         });

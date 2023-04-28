@@ -1,11 +1,10 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder, NumberEncoder } from '../utils/Encoder';
 
-export class Coord implements ComparableObject {
+export class Coord extends Vector {
 
     public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
         public encode(coord: Coord): JSONValueWithoutArray {
@@ -25,9 +24,10 @@ export class Coord implements ComparableObject {
             (fields: [number, number]): Coord => new Coord(fields[0], fields[1]),
         );
     }
-    constructor(public readonly x: number,
-                public readonly y: number)
+    public constructor(public readonly x: number,
+                       public readonly y: number)
     {
+        super(x, y);
     }
     public getNext(dir: Vector, distance?: number): Coord {
         // return the next coord in the direction 'dir'
@@ -199,5 +199,8 @@ export class Coord implements ComparableObject {
     }
     public toString(): string {
         return '(' + this.x + ', ' + this.y + ')';
+    }
+    public toSVGPoint(): string {
+        return this.x + ',' + this.y;
     }
 }

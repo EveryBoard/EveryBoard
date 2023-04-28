@@ -55,6 +55,7 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     private addLegalMoves(state: MartianChessState,
                           startingCoord: Coord,
                           validLandingCoords: Coord[])
+    : MartianChessMove[]
     {
         const moves: MartianChessMove[] = [];
         const firstPiece: MartianChessPiece = state.getPieceAt(startingCoord);

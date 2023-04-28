@@ -17,7 +17,7 @@ class MoveMock extends Move {
     public toString(): string {
         throw new Error('MoveMock.toString method not implemented.');
     }
-    public equals(o: this): boolean {
+    public equals(other: this): boolean {
         throw new Error('MoveMock.equals method not implemented.');
     }
 }

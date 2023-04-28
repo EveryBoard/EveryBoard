@@ -25,7 +25,7 @@ export class MartianChessCapture {
             map.set(piece, 1);
         }
     }
-    constructor(public readonly captures: MGPMap<MartianChessPiece, number>) {
+    public constructor(public readonly captures: MGPMap<MartianChessPiece, number>) {
         captures.makeImmutable();
     }
     public toValue(): number {

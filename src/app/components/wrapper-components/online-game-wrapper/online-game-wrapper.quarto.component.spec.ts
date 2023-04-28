@@ -286,7 +286,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         for (let i: number = offset; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
-            receivedMoves.push(QuartoMove.encoder.encodeNumber(move), QuartoMove.encoder.encodeNumber(moves[i+1]));
+            receivedMoves.push(QuartoMove.encoder.encodeNumber(move), QuartoMove.encoder.encodeNumber(moves[i + 1]));
             if (i > 1) {
                 if (i % 2 === 0) {
                     remainingMsForOne -= 1;
@@ -376,7 +376,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.bindGameComponent();
         testUtils.prepareSpies();
     }
-    it('Should be able to prepare a started game for creator', fakeAsync(async() => {
+    it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         spyOn(wrapper, 'reachedOutOfTime').and.callFake(async() => {});
         // Should not even been called but:
@@ -418,7 +418,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             .toBeTruthy();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    it('Should allow simple move', fakeAsync(async() => {
+    it('should allow simple move', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         await doMove(FIRST_MOVE, true);
 
@@ -435,7 +435,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
     describe('Late Arrival', () => {
-        it('Should allow user to arrive late on the game (on his turn)', fakeAsync(async() => {
+        it('should allow user to arrive late on the game (on his turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
             await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED]);
 
@@ -446,7 +446,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(testUtils.wrapper.gameComponent.getState().turn).toBe(2);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('Should allow user to arrive late on the game (not on his turn)', fakeAsync(async() => {
+        it('should allow user to arrive late on the game (not on his turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
             await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED]);
 
@@ -570,12 +570,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
+    it('should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         testUtils.expectElementNotToExist('#passButton');
 
         wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent.pass = async() => {
+        wrapper.gameComponent.pass = async(): Promise<MGPValidation> => {
             return MGPValidation.SUCCESS;
         };
         testUtils.detectChanges();
@@ -869,7 +869,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
+            it('should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
@@ -907,7 +907,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
+            it('should forbid player to ask take back again after refusal', fakeAsync(async() => {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack();
@@ -972,7 +972,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(wrapper.resetChronoFor).toHaveBeenCalledOnceWith(Player.ZERO);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it(`Should reduce opponent's remainingTime, since opponent just played`, fakeAsync(async() => {
+            it(`should reduce opponent's remainingTime, since opponent just played`, fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
@@ -1018,7 +1018,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(wrapper.gameComponent.getTurn()).toBe(0);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it(`Should resumeCountDown for opponent and reset user's time`, fakeAsync(async() => {
+            it(`should resumeCountDown for opponent and reset user's time`, fakeAsync(async() => {
                 // Given an initial board where it's user's (first) turn, and opponent asked for take back
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
@@ -1191,7 +1191,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
     });
     describe('Agreed Draw', () => {
-        async function setup() {
+        async function setup(): Promise<void> {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         }
         it('should send draw request when player asks to', fakeAsync(async() => {
@@ -1342,7 +1342,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When he reach time out
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
@@ -1356,7 +1356,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When he reach time out
             tick(wrapper.configRoom.maximalMoveDuration * 1000); // TODO: maximalPartDuration, for this one!!
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
         }));
@@ -1371,7 +1371,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When he reach time out
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
@@ -1388,7 +1388,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When opponent reach time out locally
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
-            // Then it shoud be considered as a timeout
+            // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
@@ -1436,7 +1436,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('AddTime feature', () => {
         describe('creator', () => {
-            async function prepareStartedGameForCreator() {
+            async function prepareStartedGameForCreator(): Promise<void> {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             }
             it('should allow to add local time to opponent', fakeAsync(async() => {
@@ -1663,7 +1663,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(resignText).toBe(`firstCandidate has resigned.`);
             expectGameToBeOver();
         }));
-        it('Should removeObservedPart when the opponent resigned', fakeAsync(async() => {
+        it('should removeObservedPart when the opponent resigned', fakeAsync(async() => {
             // Given a board where user has resign
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -2261,7 +2261,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
-            // Given a part that the two player agreed to draw
+            // Given a part that the two players agreed to draw
             await prepareTestUtilsFor(USER_OBSERVER);
             spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
             await receiveRequest(Request.drawProposed(Player.ONE), 1);

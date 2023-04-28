@@ -78,10 +78,10 @@ export class MGPNode<R extends Rules<M, S, L>,
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
-    constructor(public readonly gameState: S,
-                public readonly mother: MGPOptional<MGPNode<R, M, S, L, U>> = MGPOptional.empty(),
-                public readonly move: MGPOptional<M> = MGPOptional.empty(),
-                public minimaxCreator?: Minimax<M, S, L, U>)
+    public constructor(public readonly gameState: S,
+                       public readonly mother: MGPOptional<MGPNode<R, M, S, L, U>> = MGPOptional.empty(),
+                       public readonly move: MGPOptional<M> = MGPOptional.empty(),
+                       public minimaxCreator?: Minimax<M, S, L, U>)
     {
         /* Initialization condition:
          * mother: null for initial board
@@ -175,7 +175,9 @@ export class MGPNode<R extends Rules<M, S, L>,
         let extremumExpected: number =
             currentPlayer === Player.ZERO ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
         const newValueIsBetter: (newValue: number, currentValue: number) => boolean =
-            currentPlayer === Player.ZERO ? ((a: number, b: number) => a < b) : ((a: number, b: number) => a > b);
+            currentPlayer === Player.ZERO ?
+                ((a: number, b: number): boolean => a < b) :
+                ((a: number, b: number): boolean => b < a);
         for (const move of possibleMoves) {
             const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
             const bestChildDescendant: MGPNode<R, M, S, L, U> =

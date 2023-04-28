@@ -50,7 +50,7 @@ export class KamisadoTutorial extends Tutorial {
             $localize`Here is the initial board.
         At Kamisado, pieces can only move forward, vertically or diagonally.
         You're playing first, with dark pieces, you can make your first move.<br/><br/>
-        Click on the piece of your choice and click on the landing square.`,
+        You're playing Dark, click on the piece of your choice and click on a landing square.`,
             KamisadoState.getInitialState(),
             KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
             $localize`Perfect! Note that each of your piece has a different color.`,
@@ -62,7 +62,7 @@ export class KamisadoTutorial extends Tutorial {
         of the square upon which the last move ended.
         Here, the last move ended on the pink square, hence the pink piece must move.
         It is already selected, you do not have to click on it.<br/><br/>
-        Move it on a blue square.`,
+        You're playing Light, move your piece on a blue square.`,
             new KamisadoState(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 0)), false, [
                 [Or, Bl, Pu, Pi, Ye, Re, Gr, Br],
                 [__, __, __, __, __, __, __, __],
@@ -102,7 +102,7 @@ export class KamisadoTutorial extends Tutorial {
         In other words, if a player forces its opponent to move a piece that the opponent cannot move,
         and the player cannot move its own piece of the same color, then that player loses.
         Here, you're playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!<br/><br/>
-        Try to make this move.`,
+        You're playing Dark, analyze the board and make the winning move.`,
             new KamisadoState(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
                 [__, Bl, Pu, __, __, Re, __, __],
                 [__, __, __, Ye, __, __, __, __],
@@ -120,7 +120,7 @@ export class KamisadoTutorial extends Tutorial {
          Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
     ];
 }

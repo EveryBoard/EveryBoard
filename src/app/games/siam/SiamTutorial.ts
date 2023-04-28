@@ -42,7 +42,7 @@ export class SiamTutorial extends Tutorial {
             <li>Click on one of the highlighted squares to select a landing for your piece.</li>
             <li>Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.</li>
         </ol><br/>
-        You're playing Light, insert a piece on the board.`,
+        You're playing Dark, insert a piece on the board.`,
             SiamState.getInitialState(),
             SiamMove.of(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
             $localize`Congratulations!`,
@@ -59,7 +59,7 @@ export class SiamTutorial extends Tutorial {
                 You can also click a second time on your piece to change its orientation without moving it.</li>
             <li>Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.</li>
         </ol><br/>
-        Try to move your piece that is already on the board one square upwards and to orient it to the left.`,
+        You're playing Dark. Try to move your piece that is already on the board one square upwards and to orient it to the left.`,
             new SiamState([
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -69,12 +69,12 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT).get()],
             $localize`Congratulations, you made a side-slip!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Moving a piece out of the board`,
             $localize`To move a piece out of the board, you do not have to pick an orientation after the move.<br/><br/>
-        Get that piece out of the board!`,
+        You're playing Dark, get that piece out of the board!`,
             new SiamState([
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -96,7 +96,7 @@ export class SiamTutorial extends Tutorial {
         </ol>
         Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
         On the second row, you can push because there are two pieces against one.<br/><br/>
-        Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.`,
+        You're playing Dark. Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.`,
             new SiamState([
                 [_, R, l, _, _],
                 [R, r, L, _, _],
@@ -106,15 +106,16 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get()],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Pushing (2/2)`,
             $localize`To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
         In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains.
-        On the following board, you can push the mountain on the first row.
-        On the second and third row, because of the resisting forces, you cannot push.<br/><br/>
-        On the fourth row, you can push as there is one more pusher than resistant pieces. Do it.`,
+        On the following board, as Dark, you can push the mountain on the first row.
+        On the second and third row, because of the resisting forces, you cannot push.
+        On the fourth row, you can push as there is one more pusher than resistant pieces.<br/><br/>
+        You're playing Dark, push on the fourth row it.`,
             new SiamState([
                 [_, _, R, M, _],
                 [_, _, R, M, L],
@@ -124,7 +125,7 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(1, 3, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get()],
             $localize`Congratulations! Note that this move made you lose the game, you will see why in the next step.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
@@ -132,7 +133,7 @@ export class SiamTutorial extends Tutorial {
         If you pushed it and nobody is in front of you, you're the winner.
         However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
         However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.<br/><br/>
-        Here, you can push a mountain off the board and either win, or lose. Choose correctly!`,
+        Here, playing Dark, you can push a mountain off the board and either win, or lose. Choose correctly!`,
             new SiamState([
                 [_, _, _, _, _],
                 [_, _, _, _, _],

@@ -1,13 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoder } from 'src/app/utils/Encoder';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TaflMove } from '../TaflMove';
 
 export class BrandhubMove extends TaflMove {
 
-    public static encoder: NumberEncoder<BrandhubMove> =
-        MoveCoordToCoord.getEncoder<BrandhubMove>(7, 7, BrandhubMove.of);
+    public static encoder: MoveEncoder<BrandhubMove> = MoveWithTwoCoords.getEncoder<BrandhubMove>(BrandhubMove.from);
 
     public static of(start: Coord, end: Coord): BrandhubMove {
         return new BrandhubMove(start, end);

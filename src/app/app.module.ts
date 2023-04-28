@@ -52,6 +52,7 @@ import { EncapsuleComponent } from './games/encapsule/encapsule.component';
 import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
+import { HiveComponent } from './games/hive/hive.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
@@ -70,6 +71,8 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
+import { TrexoComponent } from './games/trexo/trexo.component';
+import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
@@ -95,6 +98,7 @@ import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { HivePieceComponent } from './games/hive/hive-piece.component';
 
 registerLocaleData(localeFr);
 
@@ -186,6 +190,7 @@ export class FirebaseProviders {
         EpaminondasComponent,
         GipfComponent,
         GoComponent,
+        HiveComponent, HivePieceComponent,
         HnefataflComponent,
         KamisadoComponent,
         LinesOfActionComponent,
@@ -201,6 +206,7 @@ export class FirebaseProviders {
         SiamComponent,
         SixComponent,
         TablutComponent,
+        TrexoComponent, TrexoHalfPieceComponent,
         YinshComponent,
 
         HumanDurationPipe,

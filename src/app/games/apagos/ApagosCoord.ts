@@ -22,7 +22,7 @@ export class ApagosCoord {
     }
     private constructor(public readonly x: number) {}
 
-    public equals(o: ApagosCoord): boolean {
-        return this.x === o.x;
+    public equals(other: ApagosCoord): boolean {
+        return this.x === other.x;
     }
 }

@@ -104,9 +104,9 @@ export class AbaloneMove extends MoveCoord {
     public isSingleCoord(): boolean {
         return this.lastPiece.isAbsent();
     }
-    public equals(o: AbaloneMove): boolean {
-        return o.coord.equals(this.coord) &&
-               o.dir.equals(this.dir) &&
-               o.lastPiece.equals(this.lastPiece);
+    public equals(other: AbaloneMove): boolean {
+        return other.coord.equals(this.coord) &&
+               other.dir.equals(this.dir) &&
+               other.lastPiece.equals(this.lastPiece);
     }
 }

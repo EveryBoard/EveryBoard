@@ -51,10 +51,10 @@ export class DvonnTutorial extends Tutorial {
             ], 0, false),
             DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
             (move: DvonnMove, _previous: DvonnState, _result: DvonnState) => {
-                if (move.end.equals(new Coord(3, 0))) {
+                if (move.getEnd().equals(new Coord(3, 0))) {
                     return MGPValidation.failure($localize`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`);
                 } else {
-                    assert(move.end.equals(new Coord(2, 0)), 'player made an impossible move'); // this is the only valid move remaining
+                    assert(move.getEnd().equals(new Coord(2, 0)), 'player made an impossible move'); // this is the only valid move remaining
                     return MGPValidation.SUCCESS;
                 }
             },
@@ -77,7 +77,7 @@ export class DvonnTutorial extends Tutorial {
             ], 0, false),
             DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
             (move: DvonnMove, _previous: DvonnState, _result: DvonnState) => {
-                if (move.end.equals(new Coord(2, 0))) {
+                if (move.getEnd().equals(new Coord(2, 0))) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`You have not taken possession of a source, try again.`);
@@ -100,8 +100,7 @@ export class DvonnTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`End of the game`,
-            $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>
-        Make your last move.`,
+            $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>You're playing Dark, make your last move.`,
             new DvonnState([
                 [NN, NN, SO, __, __, __, __, __, __, __, __],
                 [NN, __, O1, __, __, __, __, __, __, __, __],

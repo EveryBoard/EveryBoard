@@ -7,11 +7,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 
@@ -49,15 +49,15 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     private static pieceHasTarget(state: DvonnState, coord: Coord): boolean {
         // A piece has a target if it can move to an occupied space at a distance equal to its length
         const stackSize: number = state.getPieceAt(coord).getSize();
-        const possibleTargets: Coord[] = HexagonalGameState.neighbors(coord, stackSize);
+        const possibleTargets: Coord[] = HexagonalUtils.getNeighbors(coord, stackSize);
         return possibleTargets.find((c: Coord): boolean =>
             state.isOnBoard(c) && !state.getPieceAt(c).isEmpty()) !== undefined;
     }
     public static pieceTargets(state: DvonnState, coord: Coord): Coord[] {
         const stackSize: number = state.getPieceAt(coord).getSize();
-        const possibleTargets: Coord[] = HexagonalGameState.neighbors(coord, stackSize);
+        const possibleTargets: Coord[] = HexagonalUtils.getNeighbors(coord, stackSize);
         return possibleTargets.filter((c: Coord): boolean =>
-            state.isOnBoard(c) && state.getPieceAt(c).isEmpty() === false);
+            state.isOnBoard(c) && state.getPieceAt(c).hasPieces());
     }
     public static getScores(state: DvonnState): [number, number] {
         // Board value is the total number of pieces controlled by player 0 - by player 1
@@ -98,10 +98,10 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             .filter((c: Coord): boolean =>
                 state.getPieceAt(c).containsSource());
     }
-    private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]) {
+    private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]): void {
         // For each neighbor, mark it as connected (if it contains something),
         // and recurse from there (only if it was not already marked)
-        HexagonalGameState.neighbors(coord, 1).forEach((c: Coord) => {
+        HexagonalUtils.getNeighbors(coord, 1).forEach((c: Coord) => {
             if (state.isOnBoard(c) && !markBoard[c.y][c.x] && !state.getPieceAt(c).isEmpty()) {
                 // This piece has not been marked as connected, but it is connected, and not empty
                 markBoard[c.y][c.x] = true; // mark it as connected
@@ -130,11 +130,11 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         } else {
             // To apply a legal move, the stack is added in the front of its end coordinate
             // (and removed from its start coordinate)
-            const stack: DvonnPieceStack = state.getPieceAt(move.coord);
-            const targetStack: DvonnPieceStack = state.getPieceAt(move.end);
+            const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
+            const targetStack: DvonnPieceStack = state.getPieceAt(move.getEnd());
             const newState: DvonnState = state
-                .setAt(move.coord, DvonnPieceStack.EMPTY)
-                .setAt(move.end, DvonnPieceStack.append(stack, targetStack));
+                .setAt(move.getStart(), DvonnPieceStack.EMPTY)
+                .setAt(move.getEnd(), DvonnPieceStack.append(stack, targetStack));
             const resultingState: DvonnState =
                 this.removeDisconnectedPieces(new DvonnState(newState.board, state.turn + 1, false));
             return resultingState;
@@ -153,17 +153,17 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return MGPFallible.failure(RulesFailure.CANNOT_PASS());
         }
 
-        const pieceMovable: MGPValidation = this.isMovablePiece(state, move.coord);
+        const pieceMovable: MGPValidation = this.isMovablePiece(state, move.getStart());
         if (pieceMovable.isFailure()) {
             return pieceMovable.toFailedFallible();
         }
 
-        const stack: DvonnPieceStack = state.getPieceAt(move.coord);
+        const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
         if (move.length() !== stack.getSize()) {
             return MGPFallible.failure(DvonnFailure.INVALID_MOVE_LENGTH());
         }
 
-        const targetStack: DvonnPieceStack = state.getPieceAt(move.end);
+        const targetStack: DvonnPieceStack = state.getPieceAt(move.getEnd());
         if (targetStack.isEmpty()) {
             return MGPFallible.failure(DvonnFailure.EMPTY_TARGET_STACK());
         }

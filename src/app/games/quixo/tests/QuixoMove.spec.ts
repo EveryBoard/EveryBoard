@@ -33,7 +33,7 @@ describe('QuixoMove:', () => {
         expect(() => new QuixoMove(2, 4, Orthogonal.DOWN))
             .toThrowError(`Invalid direction: pawn on the bottom side can't be moved down.`);
     });
-    it('QuixoMove.encoder should be correct', () => {
+    it('should have a bijective encoder', () => {
         const board: Table<PlayerOrNone> = [
             [_, X, _, _, _],
             [_, _, _, _, X],
@@ -48,7 +48,7 @@ describe('QuixoMove:', () => {
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeCorrect(QuixoMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(QuixoMove.encoder, move);
         }
     });
     it('should override correctly equals and toString', () => {

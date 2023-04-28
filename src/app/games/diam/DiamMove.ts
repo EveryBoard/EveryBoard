@@ -9,8 +9,9 @@ export class DiamMoveDrop extends Move {
         (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
         (fields: [number, DiamPiece]): DiamMoveDrop => new DiamMoveDrop(fields[0], fields[1]),
     );
-    constructor(public readonly target: number,
-                public readonly piece: DiamPiece) {
+    public constructor(public readonly target: number,
+                       public readonly piece: DiamPiece)
+    {
         super();
         if (piece === DiamPiece.EMPTY) {
             throw new Error('Cannot drop an empty piece');
@@ -22,10 +23,13 @@ export class DiamMoveDrop extends Move {
     public getTarget(): number {
         return this.target;
     }
-    public equals(other: DiamMoveDrop): boolean {
-        if (this.target !== other.target) return false;
-        if (this.piece !== other.piece) return false;
-        return true;
+    public equals(other: DiamMove): boolean {
+        if (other instanceof DiamMoveDrop) {
+            if (this.target !== other.target) return false;
+            if (this.piece !== other.piece) return false;
+            return true;
+        }
+        return false;
     }
     public toString(): string {
         return `DiamMoveDrop(${this.target}, ${this.piece})`;
@@ -58,10 +62,14 @@ export class DiamMoveShift extends Move {
             return (this.start.x + 7) % 8;
         }
     }
-    public equals(other: DiamMoveShift): boolean {
-        if (this.start.equals(other.start) === false) return false;
-        if (this.moveDirection !== other.moveDirection) return false;
-        return true;
+    public equals(other: DiamMove): boolean {
+        if (other instanceof DiamMoveShift) {
+            if (this.start.equals(other.start) === false) return false;
+            if (this.moveDirection !== other.moveDirection) return false;
+            return true;
+        } else {
+            return false;
+        }
     }
     public toString(): string {
         return `DiamMoveShift(${this.start}, ${this.moveDirection})`;

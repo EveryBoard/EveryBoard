@@ -10,12 +10,14 @@ describe('DiamMove', () => {
             expect(() => new DiamMoveDrop(3, DiamPiece.EMPTY)).toThrowError('Cannot drop an empty piece');
         });
         it('should correctly define equality', () => {
-            const move1: DiamMoveDrop = new DiamMoveDrop(3, DiamPiece.ZERO_FIRST);
-            const move2: DiamMoveDrop = new DiamMoveDrop(3, DiamPiece.ZERO_SECOND);
-            const move3: DiamMoveDrop = new DiamMoveDrop(1, DiamPiece.ZERO_FIRST);
-            expect(move1.equals(move1)).toBeTrue();
-            expect(move1.equals(move2)).toBeFalse();
-            expect(move1.equals(move3)).toBeFalse();
+            const move: DiamMoveDrop = new DiamMoveDrop(3, DiamPiece.ZERO_FIRST);
+            const moveDifferentPiece: DiamMoveDrop = new DiamMoveDrop(3, DiamPiece.ZERO_SECOND);
+            const moveDifferentTarget: DiamMoveDrop = new DiamMoveDrop(1, DiamPiece.ZERO_FIRST);
+            const shiftMove: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');
+            expect(move.equals(move)).toBeTrue();
+            expect(move.equals(moveDifferentPiece)).toBeFalse();
+            expect(move.equals(moveDifferentTarget)).toBeFalse();
+            expect(move.equals(shiftMove)).toBeFalse();
         });
         it('should redefine toString', () => {
             const move: DiamMoveDrop = new DiamMoveDrop(3, DiamPiece.ZERO_FIRST);
@@ -35,21 +37,20 @@ describe('DiamMove', () => {
             const move1: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');
             const move2: DiamMoveShift = new DiamMoveShift(new Coord(0, 1), 'clockwise');
             const move3: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'counterclockwise');
+            const drop: DiamMoveDrop = new DiamMoveDrop(1, DiamPiece.ZERO_FIRST);
             expect(move1.equals(move1)).toBeTrue();
             expect(move1.equals(move2)).toBeFalse();
             expect(move1.equals(move3)).toBeFalse();
+            expect(move1.equals(drop)).toBeFalse();
         });
         it('should redefine toString', () => {
             const move: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');
             expect(move.toString()).toEqual('DiamMoveShift((0, 0), clockwise)');
         });
     });
-    describe('encoder', () => {
-        it('should correctly encode and decode all moves', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'counterclockwise'));
-        });
-
+    it('should have a bijective encoder', () => {
+        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
+        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
+        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'counterclockwise'));
     });
 });

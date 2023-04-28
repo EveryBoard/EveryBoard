@@ -21,7 +21,7 @@ export class KamisadoPiece implements ComparableObject {
     public static of(player: Player, value: number): KamisadoPiece {
         return new KamisadoPiece(player, KamisadoColor.of(value));
     }
-    private static createPlayerColors(player: Player) {
+    private static createPlayerColors(player: Player): KamisadoPieceList {
         return {
             ORANGE: new KamisadoPiece(player, KamisadoColor.ORANGE),
             BLUE: new KamisadoPiece(player, KamisadoColor.BLUE),

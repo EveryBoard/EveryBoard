@@ -11,14 +11,14 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SaharaMoves', () => {
 
-    it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
+    it('should have a bijective encoder', () => {
         const rules: SaharaRules = new SaharaRules(SaharaState);
         expect(rules).toBeTruthy();
         const minimax: SaharaMinimax = new SaharaMinimax(rules, 'SaharaMinimax');
         const moves: SaharaMove[] = minimax.getListMoves(rules.node);
         expect(moves.length).toEqual(12);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeCorrect(SaharaMove.encoder, move);
+            NumberEncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);
         }
     });
     it('should throw error when starting coord is outside the board', () => {

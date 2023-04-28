@@ -6,5 +6,5 @@ export abstract class Move implements ComparableObject {
 
     public abstract toString(): string;
 
-    public abstract equals(o: this): boolean;
+    public abstract equals(other: this): boolean;
 }

@@ -198,6 +198,10 @@
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
         <target>Le plus vieux jeu de stratégie encore joué. Un jeu de contrôle de territoire</target>
       </trans-unit>
+      <trans-unit id="4865500405661191388" datatype="html">
+        <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
+        <target>Vous contrôlez une colonie d'insectes. Utilisez les capacités de vos insectes pour bloquer la reine de votre adversaire afin de gagner !</target>
+      </trans-unit>
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
         <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
@@ -208,7 +212,7 @@
       </trans-unit>
       <trans-unit id="8346622786152147853" datatype="html">
         <source>Win points by capturing pieces, but you only control pieces on your side of the board!</source>
-        <target>Gagnez des points en capturant des pièces, mais en ne contrôlant que celles dans votre camp!</target>
+        <target>Gagnez des points en capturant des pièces, mais en ne contrôlant que celles dans votre camp !</target>
       </trans-unit>
       <trans-unit id="8186407897395128360" datatype="html">
         <source>Push and crush your opponent&apos;s pieces using magnetic forces!</source>
@@ -253,6 +257,10 @@
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
+      </trans-unit>
+      <trans-unit id="265614119354246271" datatype="html">
+        <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
+        <target>Alignez 5 pièces de votre couleur en ligne droite, mais attention, les pièces peuvent s'empiler !</target>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
@@ -365,6 +373,14 @@
       <trans-unit id="5306696079242551443" datatype="html">
         <source>Hnefatafl</source>
         <target>Hnefatafl</target>
+      </trans-unit>
+      <trans-unit id="1760292529513431093" datatype="html">
+        <source>Trexo</source>
+        <target>Trexo</target>
+      </trans-unit>
+      <trans-unit id="6220801899147470326" datatype="html">
+        <source>Hive</source>
+        <target>Hive</target>
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
@@ -520,7 +536,7 @@
       </trans-unit>
       <trans-unit id="3862672024084051383" datatype="html">
         <source>You have not verified your email! Click on the link in the verification email.</source>
-        <target>Vous n'avez pas vérifié votre email! Cliquez sur le lien dans l'email de vérification.</target>
+        <target>Vous n'avez pas vérifié votre email ! Cliquez sur le lien dans l'email de vérification.</target>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -990,10 +1006,6 @@
         <source>Congratulations! You know everything you need to start a game!</source>
         <target>Bravo ! Vous savez tout ce qu&apos;il faut pour commencer une partie !</target>
       </trans-unit>
-      <trans-unit id="8139485336036692612" datatype="html">
-        <source>Failed!</source>
-        <target>Raté !</target>
-      </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
         <target>Les pièces ne peuvent se déplacer que vers le bas !</target>
@@ -1022,9 +1034,9 @@
         <source>Drop</source>
         <target>Pose</target>
       </trans-unit>
-      <trans-unit id="3315005504406796815" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You&apos;re playing Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
-        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
+      <trans-unit id="4169063394256604189" datatype="html">
+        <source>There are two kinds of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light. Drop a piece on one of those three squares.</source>
+        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair. Posez une pièce sur l'une de ces trois cases.</target>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
@@ -1032,11 +1044,11 @@
       </trans-unit>
       <trans-unit id="1035614445063065926" datatype="html">
         <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from a higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
-        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
+        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert !</target>
       </trans-unit>
       <trans-unit id="2553091915151695430" datatype="html">
         <source>This move is a drop, please do a transfer!</source>
-        <target>Ce coup est une pose! Veuillez faire un transfert!</target>
+        <target>Ce coup est une pose ! Veuillez faire un transfert !</target>
       </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>
@@ -1054,15 +1066,15 @@
         <source>Sowing</source>
         <target>Égrénage</target>
       </trans-unit>
-      <trans-unit id="2110548298430403036" datatype="html">
+      <trans-unit id="4554834958359154581" datatype="html">
         <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
          Let&apos;s see how seeds are sown. The spaces in Awalé are called the houses.
-         As you&apos;re playing first, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
-         Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
+         As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
+         Click on any of the bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
         <target>L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
         Nous allons voir comment s'égrènent (se distribuent) les graines. Les cases à l'Awalé sont appelées les maisons.
-        Comme vous jouez en premier, les 6 maisons du bas vous appartiennent.&lt;br/&gt;&lt;br/&gt;
-        Cliquez sur l&apos;une d&apos;entre elles pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d&apos;une graine par maison.</target>
+        Comme vous jouez Foncé, les 6 maisons du bas vous appartiennent.&lt;br/&gt;&lt;br/&gt;
+        Cliquez sur l&apos;une des maisons du bas pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d&apos;une graine par maison.</target>
       </trans-unit>
       <trans-unit id="8638152355669938683" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
@@ -1075,12 +1087,12 @@
         <source>Big sowing</source>
         <target>Gros égrénage</target>
       </trans-unit>
-      <trans-unit id="6117558662745355702" datatype="html">
-        <source>You are still the first player.
-        When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
+      <trans-unit id="436684043682883572" datatype="html">
+        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark.
         Sow the house that contains 12 seeds.</source>
-        <target>Vous êtes toujours le premier joueur.
-        Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
+        <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé.
         Distribuez la maison qui contient 12 graines.</target>
       </trans-unit>
       <trans-unit id="498712253814253582" datatype="html">
@@ -1091,9 +1103,9 @@
         <source>Simple capture</source>
         <target>Capture simple</target>
       </trans-unit>
-      <trans-unit id="3870488699470511412" datatype="html">
-        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
-        <target>Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu&apos;il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votre, faites une capture !</target>
+      <trans-unit id="3385498353856500123" datatype="html">
+        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+        <target>Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu&apos;il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
@@ -1107,9 +1119,9 @@
         <source>Multiple captures</source>
         <target>Capture composée</target>
       </trans-unit>
-      <trans-unit id="887019765676174793" datatype="html">
-        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
-        <target>En distribuant la maison la plus à gauche, vous terminerez dans la deuxième maison la plus à gauche, qui en contient maintenant 3, donc ce sera une capture. Mais maintenant, la maison immédiatement précédente en contient 2, ce qui est également capturable, donc cette maison sera capturée aussi !&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votres, faites une capture !</target>
+      <trans-unit id="8132141725426684303" datatype="html">
+        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+        <target>En distribuant la maison la plus à gauche, vous terminerez dans la deuxième maison la plus à gauche, qui en contient maintenant 3, donc ce sera une capture. Mais maintenant, la maison immédiatement précédente en contient 2, ce qui est également capturable, donc cette maison sera capturée aussi !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -1123,9 +1135,9 @@
         <source>Interrupted capture</source>
         <target>Capture interrompue</target>
       </trans-unit>
-      <trans-unit id="1079008869838849535" datatype="html">
-        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;The houses on the bottom are yours, do a capture!</source>
-        <target>En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.&lt;br/&gt;&lt;br/&gt;Les maisons du bas sont les votre, faites une capture !</target>
+      <trans-unit id="7194484246142571256" datatype="html">
+        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+        <target>En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
       </trans-unit>
       <trans-unit id="2820925339032006267" datatype="html">
         <source>Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.</source>
@@ -1135,9 +1147,9 @@
         <source>Capture on the other side only</source>
         <target>Capture chez l&apos;adversaire uniquement</target>
       </trans-unit>
-      <trans-unit id="6544432318052544187" datatype="html">
-        <source>Your houses are the one below. Try to capture the two leftmost houses of the opponent.</source>
-        <target>Vos maisons sont celles du bas. Essayez de capturer les deux maisons les plus à gauche de l’adversaire.</target>
+      <trans-unit id="8733312107623328684" datatype="html">
+        <source>You&apos;re playing Dark. Try to capture the two leftmost houses of the opponent.</source>
+        <target>Vous jouez Foncé. Essayez de capturer les deux maisons les plus à gauche de l’adversaire.</target>
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
@@ -1151,11 +1163,11 @@
         <source>Do not starve</source>
         <target>Ne pas affamer</target>
       </trans-unit>
-      <trans-unit id="6918764867191654456" datatype="html">
+      <trans-unit id="9161677839138932324" datatype="html">
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        Your houses are the one below. Try it.</source>
+        You&apos;re playing Dark. Try it.</source>
         <target>Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;
-        Vos maisons sont celles du bas. Lancez-vous !</target>
+        Vous jouez Foncé. Lancez-vous !</target>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
@@ -1167,10 +1179,10 @@
         <source>Feeding is mandatory</source>
         <target>Nourrir est obligatoire</target>
       </trans-unit>
-      <trans-unit id="6501764281568922792" datatype="html">
-        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;Go ahead!</source>
+      <trans-unit id="1521992636044776742" datatype="html">
+        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Give a seed to your opponent!</source>
         <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.&lt;br/&gt;&lt;br/&gt;
-        Allez-y !</target>
+        Vous jouez Foncé. Donnez une graine à votre adversaire !</target>
       </trans-unit>
       <trans-unit id="3908210272037108493" datatype="html">
         <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
@@ -1182,9 +1194,9 @@
         <source>End of the game</source>
         <target>Fin de partie</target>
       </trans-unit>
-      <trans-unit id="5221665367101424107" datatype="html">
-        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;Your houses are still the bottom one, sow the leftmost house.</source>
-        <target>Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.&lt;br/&gt;&lt;br/&gt;Vos maisons sont toujours celles du bas, distribuez la maison la plus à gauche.</target>
+      <trans-unit id="6064716171153653290" datatype="html">
+        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, sow the leftmost house.</source>
+        <target>Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, distribuez la maison la plus à gauche.</target>
       </trans-unit>
       <trans-unit id="51867831368251774" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
@@ -1234,14 +1246,14 @@
         <source>Move</source>
         <target>Deplacement</target>
       </trans-unit>
-      <trans-unit id="5025791529917646902" datatype="html">
+      <trans-unit id="9151826160725505568" datatype="html">
         <source>To move a piece, you need to:
         &lt;ol&gt;
           &lt;li&gt;Click on one of your pieces.&lt;/li&gt;
           &lt;li&gt;Click on one of the triangular space highlighted in yellow.&lt;/li&gt;
         &lt;/ol&gt;
-        You can pass through the opponent&apos;s pieces.
-        You&apos;re playing first, hence you&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
+        You can pass through the opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing first, hence you&apos;re playing Dark.
         Perform any move.</source>
         <target>Pour effectuer un déplacement, il faut :
         &lt;ol&gt;
@@ -1249,8 +1261,7 @@
             &lt;li&gt;Cliquer sur l&apos;une des cases triangulaires encadrées en jaune.&lt;/li&gt;
         &lt;/ol&gt;
         Vous pouvez passer à travers les pièces adverses.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez en premier, vous jouez donc Foncé, faites n&apos;importe quel déplacement.&lt;br/&gt;
-        Note : peut importe ce que vous faites, aucune pièce ne peut être capturée pendant votre tour.</target>
+        Vous jouez en premier, vous jouez donc Foncé, faites n&apos;importe quel déplacement.</target>
       </trans-unit>
       <trans-unit id="3313068005460528101" datatype="html">
         <source>Congratulations! Let&apos;s see captures now.</source>
@@ -1278,19 +1289,19 @@
         <source>Gain a tile</source>
         <target>Gagner une tuile</target>
       </trans-unit>
-      <trans-unit id="7052807946706006375" datatype="html">
+      <trans-unit id="9136644118167529369" datatype="html">
         <source>When a tile is empty, it can become removable from the board.
         For it to be removable, at least three of its sides must be free, and these should be neighboring sides.
         Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.&lt;br/&gt;&lt;br/&gt;
-        Perform a move that lets you gain two tiles.</source>
+        You&apos;re playing Dark, perform a move that lets you gain two tiles.</source>
         <target>Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
         Pour qu&apos;elle soit enlevée, il faut qu'au moins trois de ses bords soient libres, et qu&apos;ils soient l&apos;un à côté de l&apos;autre.
         Notez que si une tuile vide et voisine d&apos;une tuile qu&apos;on vient de retirer devient retirable, elle sera retirée.
         Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci !
         Mais en quittant la tuile en bas à gauche, deux tuiles seront enlevées.&lt;br/&gt;&lt;br/&gt;
-        Effectuez un mouvement pour récupérer deux tuiles.</target>
+        Vous jouez Foncé, effectuez un mouvement pour récupérer deux tuiles.</target>
       </trans-unit>
       <trans-unit id="7294424193498666339" datatype="html">
         <source>Failed, you have not gained the two tiles that you could, try again!</source>
@@ -1300,17 +1311,17 @@
         <source>Exchanging a tile</source>
         <target>Échanger une tuile</target>
       </trans-unit>
-      <trans-unit id="3691443303448920401" datatype="html">
+      <trans-unit id="7295193204515268317" datatype="html">
         <source>When you have a tile, you can see it on the left of the board.
         As soon as you have two, you can click on an opponent&apos;s piece to capture it immediately instead of moving one of your pieces.
         This will cost you two tiles.
         If any tiles are removed during that turn, nobody will get them.&lt;br/&gt;&lt;br/&gt;
-        Gain some time and capture the last piece!</source>
+        You&apos;re playing Light, gain some time and capture the last piece to win directly!</source>
         <target>Dès que vous avez au moins une tuile, vous pourrez le voir sur la gauche du plateau.
         Dès que vous en avez deux, vous pouvez, en cliquant sur une pièce adverse, la capturer immédiatement au lieu de déplacer une de vos pièces.
         Cet action vous coûtera deux tuiles.
         Si une ou plusieurs tuile sont retirées pendant ce tour, personne ne les récupérera.&lt;br/&gt;&lt;br/&gt;
-        Gagnez du temps, et capturez la dernière pièce adverse !</target>
+        Vous jouez Clair, gagnez du temps et capturez directement la dernière pièce adverse !</target>
       </trans-unit>
       <trans-unit id="6149833006202189547" datatype="html">
         <source>It&apos;s nice to move a piece, but you could have had the opponent&apos;s piece immediately by clicking on it!</source>
@@ -1320,10 +1331,10 @@
         <source>Special capture</source>
         <target>Capture spéciale</target>
       </trans-unit>
-      <trans-unit id="3077646110828157145" datatype="html">
+      <trans-unit id="8878891269019803" datatype="html">
         <source>When a tile is removed from the board during your turn, some of the opponent&apos;s pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it will however stay on the board.&lt;br/&gt;&lt;br/&gt;
-        A move that demonstrate both of these things can be done on this board by Light. Try it!</source>
+        A move that demonstrates both of these things can be done on this board by Light. Try it!</source>
         <target>Dès qu&apos;une tuile est enlevée du plateau pendant votre tour, certaines pièces de l&apos;adversaire peuvent n&apos;avoir plus aucune case voisine libre, elle seront alors capturées !
         Si cela arrivait à l&apos;une de vos pièces, celle-ci resterait cependant sur le plateau.&lt;br/&gt;&lt;br/&gt;
         Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !</target>
@@ -1374,9 +1385,9 @@
         <source>Initial phase</source>
         <target>Phase initiale</target>
       </trans-unit>
-      <trans-unit id="2655986823906349764" datatype="html">
-        <source>In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.&lt;br/&gt;&lt;br/&gt;Drop one of your piece in the central zone.</source>
-        <target>Dans la phase initiale du jeu, chaque joueur dépose ses 20 pièces, une à chaque tour, dans la zone centrale du plateau. Cette phase n'autorise aucun autre mouvement.&lt;br/&gt;&lt;br/&gt;Déposez l'une de vos pièces dans la zone centrale.</target>
+      <trans-unit id="3249808638587981433" datatype="html">
+        <source>In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, drop one of your piece in the central zone.</source>
+        <target>Dans la phase initiale du jeu, chaque joueur dépose ses 20 pièces, une à chaque tour, dans la zone centrale du plateau. Cette phase n'autorise aucun autre mouvement.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déposez l'une de vos pièces dans la zone centrale.</target>
       </trans-unit>
       <trans-unit id="6144661124534225012" datatype="html">
         <source>Simple move</source>
@@ -1446,9 +1457,9 @@
         <source>Diam&apos;s board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark&apos;s pieces are on the left, Light&apos;s pieces are on the right.</source>
         <target>Le plateau de Diam est un plateau circulaire composé de 8 cases. Chaque joueur possède 8 pièces : 4 d'une couleur, et 4 d'une autre couleur. Initialement, le plateau est vide. Toutes les pièces restantes sont montrées sur les côté du plateau : les pièces de Foncé sur la gauche, les pièces de Clair sur la droite.</target>
       </trans-unit>
-      <trans-unit id="1679691893411241087" datatype="html">
-        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.&lt;br/&gt;&lt;br/&gt;Do it!</source>
-        <target>À Diam, le but est d'aligner deux de vos pièces, ayant exactement la même couleurs, sur des cases diamétralement opposées, au dessus d'au moins une pièce. Notez qu'ici, Foncé ne gagne pas car ses pièces ne sont pas au dessus d'une autre pièce. Vous jouez Clair. Ici, vous pouvez gagner en déposant une de vos pièces dans la case la plus à gauche. Vous pouvez le faire en cliquant sur la pièce correspondante à côté du plateau, et ensuite sur la case où vous souhaitez déposer votre pièce.&lt;br/&gt;&lt;br/&gt;Faites le !</target>
+      <trans-unit id="6692453785979358274" datatype="html">
+        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win the game!</source>
+        <target>À Diam, le but est d'aligner deux de vos pièces, ayant exactement la même couleurs, sur des cases diamétralement opposées, au dessus d'au moins une pièce. Notez qu'ici, Foncé ne gagne pas car ses pièces ne sont pas au dessus d'une autre pièce. Vous jouez Clair. Ici, vous pouvez gagner en déposant une de vos pièces dans la case la plus à gauche. Vous pouvez le faire en cliquant sur la pièce correspondante à côté du plateau, et ensuite sur la case où vous souhaitez déposer votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, gagnez la partie !</target>
       </trans-unit>
       <trans-unit id="6480264860477304836" datatype="html">
         <source>Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.</source>
@@ -1540,7 +1551,7 @@
         You&apos;re playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!</source>
         <target>Les pièces avec un éclair sont appelées « sources ».
         Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, essayez de déconnecter une pile de 4 pièces de votre adversaire. Il y a deux façons de le faire, l'une étant mieux que l'autre : essayer de trouver celle-là !</target>
+        Vous jouez Foncé, essayez de déconnecter une pile de 4 pièces de votre adversaire. Il y a deux façons de le faire, l'une étant mieux que l'autre : essayez de trouver celle-là !</target>
       </trans-unit>
       <trans-unit id="2017860068625343028" datatype="html">
         <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
@@ -1588,11 +1599,10 @@
         Si c'est le cas, et si votre adversaire peut toujours effectuer un mouvement, vous devez passer votre tour.&lt;br/&gt;&lt;br/&gt;
         Cette situation arrive ici a Foncé.</target>
       </trans-unit>
-      <trans-unit id="2190782768169600552" datatype="html">
-        <source>When no more move is possible for both players, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
-        Make your last move.</source>
+      <trans-unit id="4959059457063090536" datatype="html">
+        <source>When no more move is possible for both players, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make your last move.</source>
         <target>Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne.&lt;br/&gt;&lt;br/&gt;
-        Faites votre dernier mouvement !</target>
+        Vous jouez Foncé, faites votre dernier mouvement !</target>
       </trans-unit>
       <trans-unit id="2963709509031109432" datatype="html">
         <source>Congratulations, you won 6 - 0!</source>
@@ -1636,39 +1646,39 @@
         <source>Putting a piece</source>
         <target>Placement</target>
       </trans-unit>
-      <trans-unit id="5080810072548080541" datatype="html">
-        <source>This is the initial board. You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Pick one of your piece on the side of the board and put it on the board.</source>
-        <target>Ceci est le plateau de départ. Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Choisissez une des pièces sur le côté du plateau et placez la sur le plateau.</target>
+      <trans-unit id="6720382486946228687" datatype="html">
+        <source>This is the initial board.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark. Pick one of your piece on the side of the board and put it on the board.</source>
+        <target>Ceci est le plateau de départ.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé. Choisissez une des pièces sur le côté du plateau et placez la sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="7284208001705901171" datatype="html">
+      <trans-unit id="864238899096934560" datatype="html">
         <source>Another possible action is to move one of your pieces that is already on the board.&lt;br/&gt;&lt;br/&gt;
-        Click on your dark piece and then on any empty square of the board.</source>
+        You&apos;re playing Dark, click on your piece already on the board and then on any empty square of the board.</source>
         <target>Un autre type de coup à Encapsule est de déplacer une de ses pièces déjà sur le plateau.&lt;br/&gt;&lt;br/&gt;
-        Cliquez sur votre pièce foncée et puis sur n&apos;importe quel emplacement vide du plateau.</target>
+        Vous jouez Foncé. Cliquez sur votre pièce foncée et puis sur n&apos;importe quel emplacement vide du plateau.</target>
       </trans-unit>
       <trans-unit id="7502910762990406647" datatype="html">
         <source>Particularity</source>
         <target>Spécificité</target>
       </trans-unit>
-      <trans-unit id="84167177778071000" datatype="html">
+      <trans-unit id="5705047859470313792" datatype="html">
         <source>At Encapsule, pieces encapsulate each other.
         It is therefore possible to have up to three pieces per square!
         However, only the biggest piece of each square counts:
         you cannot win with a piece that is &quot;hidden&quot; by a bigger piece.
         Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
         Finally, you cannot encapsulate a piece with a smaller piece.
-        You&apos;re playing Dark and you can win now in various ways.&lt;br/&gt;&lt;br/&gt;
-        Try to win by making a move, and not by putting a new piece on the board.</source>
+        Here, Dark can win now in various ways.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, try to win by making a move, and not by putting a new piece on the board.</source>
         <target>À Encapsule, les pièces s&apos;encapsulent les unes sur les autres.
         Il est donc possible d&apos;avoir jusqu&apos;à trois pièces par case !
         Cependant, seulement la plus grosse pièce de chaque case compte :
         il n&apos;est pas possible de gagner avec une pièce « cachée » par une pièce plus grande.
         De même, il n&apos;est pas possible de déplacer une pièce qui est recouverte par une autre pièce plus grande.
         Finalement, il est interdit de recouvrir une pièce avec une autre pièce plus petite.
-        Vous jouez Foncé et pouvez gagner à ce tour de plusieurs façons.&lt;br/&gt;&lt;br/&gt;
-        Essayez de gagner en effectuant un déplacement, et non un placement (c&apos;est à dire en déposant une nouvelle pièce).</target>
+        Ici, Foncé peut gagner à ce tour de plusieurs façons.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé, essayez de gagner en effectuant un déplacement, et non un placement (c&apos;est à dire en déposant une nouvelle pièce).</target>
       </trans-unit>
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
@@ -1746,19 +1756,19 @@
         Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
         <target>Dans ce cas ci, c&apos;est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n&apos;en a qu&apos;une sur la ligne de départ de Clair.</target>
       </trans-unit>
-      <trans-unit id="8121866892801377016" datatype="html">
+      <trans-unit id="3855586609525448246" datatype="html">
         <source>Here is the starting board. Dark plays first.
         Let&apos;s start with moving a single piece:
         &lt;ol&gt;
             &lt;li&gt;Click on a piece.&lt;/li&gt;
             &lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;
-        &lt;/ol&gt;</source>
+        &lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
         <target>Voici le plateau de départ, c&apos;est à Foncé de commencer.
         Commençons simplement par un déplacement d&apos;une seule pièce :
         &lt;ol&gt;
             &lt;li&gt;Cliquez sur une pièce.&lt;/li&gt;
             &lt;li&gt;Cliquez sur une case voisine libre.&lt;/li&gt;
-        &lt;/ol&gt;</target>
+        &lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
       </trans-unit>
       <trans-unit id="3304007702447669410" datatype="html">
         <source>Congratulations, you are in advance. But this is not the exercise here, try again.</source>
@@ -1772,14 +1782,14 @@
         <source>Moving a phalanx</source>
         <target>Déplacement de phalange</target>
       </trans-unit>
-      <trans-unit id="2998213093973304032" datatype="html">
+      <trans-unit id="2958210260003819098" datatype="html">
         <source>Let us now see how to move multiple pieces along a line, which is called a phalanx:
         &lt;ol&gt;
             &lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;
             &lt;li&gt;Click on the last piece of the phalanx.&lt;/li&gt;
             &lt;li&gt;Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Move a phalanx!</source>
+        You&apos;re playing Dark, Move a phalanx!</source>
         <target>Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
         &lt;ol&gt;
             &lt;li&gt;Cliquez sur la première pièce.&lt;/li&gt;
@@ -1802,21 +1812,21 @@
         Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
         Il ne peut y avoir ni pièces adverses ni trous dans la phalange.</target>
       </trans-unit>
-      <trans-unit id="1735581478820014059" datatype="html">
+      <trans-unit id="757498846466496147" datatype="html">
         <source>In order to capture pieces of the opponent:
         &lt;ol&gt;
             &lt;li&gt;It must be aligned with the phalanx you are moving.&lt;/li&gt;
             &lt;li&gt;It must be strictly shorter than your phalanx.&lt;/li&gt;
             &lt;li&gt;The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Capture a phalanx.</source>
+        You&apos;re playing Dark, capture a phalanx.</source>
         <target>Pour capturer une phalange de l'adversaire :
         &lt;ol&gt;
             &lt;li&gt;Il faut que celle-ci soit alignée avec la phalange en déplacement.&lt;/li&gt;
             &lt;li&gt;Qu&apos;elle soit strictement plus courte.&lt;/li&gt;
             &lt;li&gt;Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Capturez la phalange.</target>
+        Vous jouez Foncé, capturez une phalange.</target>
       </trans-unit>
       <trans-unit id="8213276201685541009" datatype="html">
         <source>Congratulations, you made it!
@@ -1943,15 +1953,15 @@
         <source>Capture (2/3)</source>
         <target>Capture (2/3)</target>
       </trans-unit>
-      <trans-unit id="723905750865646237" datatype="html">
-        <source>Here, there are three different ways of capturing.
+      <trans-unit id="624120683333042102" datatype="html">
+        <source>Here, there are three different ways for Dark to capture.
         &lt;ol&gt;
           &lt;li&gt;One way does not capture any of your opponent&apos;s pieces.&lt;/li&gt;
           &lt;li&gt;Another way captures one of your opponent&apos;s pieces.&lt;/li&gt;
           &lt;li&gt;The last way captures two of your opponent&apos;s pieces.&lt;/li&gt;
         &lt;/ol&gt;
-        &lt;br/&gt;&lt;br/&gt;
-        Pick the last one.</source>
+        &lt;br/&gt;
+        You&apos;re playing Dark, capture the most pieces from your opponent.</source>
         <target>Ici, il est possible de capturer de trois façons différentes.
         &lt;ol&gt;
         &lt;li&gt;L&apos;une ne permet aucune capture de pièce adverse.&lt;/li&gt;
@@ -1959,7 +1969,7 @@
         &lt;li&gt;La dernière en permet deux.&lt;/li&gt;
         &lt;/ol&gt;
         &lt;br/&gt;
-        Choisissez cette dernière.</target>
+        Vous jouez Foncé, capturez le plus de pièce de votre adversaire.</target>
       </trans-unit>
       <trans-unit id="9167352512805148919" datatype="html">
         <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s.
@@ -1975,17 +1985,19 @@
         <source>Capture (3/3)</source>
         <target>Capture (3/3)</target>
       </trans-unit>
-      <trans-unit id="1122045241923673041" datatype="html">
+      <trans-unit id="1160906405303068410" datatype="html">
         <source>Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
         (even though this is a fictitious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent&apos;s pieces!
-        Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.</source>
+        Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, capture the most pieces from your opponent.</source>
         <target>Ici, vous aurez une capture à faire au début de votre tour.
         Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu
         (bien que ce plateau soit fictif à des fins pédagogiques).
         En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
-        Gardez à l&apos;esprit que le plus utile d&apos;une capture, est de capturer les pièces adverses !</target>
+        Gardez à l&apos;esprit que le plus utile d&apos;une capture, est de capturer les pièces adverses !&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé, capturez le plus de pièces adverses.</target>
       </trans-unit>
       <trans-unit id="2182334345707735267" datatype="html">
         <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
@@ -2041,15 +2053,15 @@
         La zone en haut au milieu n&apos;appartient à personne.
         Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
-      <trans-unit id="6064677838844428466" datatype="html">
+      <trans-unit id="2047079418793425161" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
-        The light piece only has one liberty left, play there.</source>
+        You&apos;re playing Dark. The light piece on the board only has one liberty left, play there.</source>
         <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
         Il est dit d'un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés.
         Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
-        Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
+        Vous jouez Foncé. Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
       </trans-unit>
       <trans-unit id="4986672646268662936" datatype="html">
         <source>Congratulations, you have earned one point.</source>
@@ -2063,11 +2075,11 @@
         <source>Capturing multiple stones</source>
         <target>Capture de plusieurs pierres</target>
       </trans-unit>
-      <trans-unit id="4946332372680472019" datatype="html">
+      <trans-unit id="3197348089105327020" datatype="html">
         <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        The light group here only has one liberty left, capture it.</source>
+        You&apos;re playing Dark. The light group here only has one liberty left, capture it.</source>
         <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;
-        Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
+        Vous jouez Foncé. Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
         <source>Congratulations, you have earned three points and formed a territory.</source>
@@ -2138,11 +2150,11 @@
         <source>Ko</source>
         <target>Ko</target>
       </trans-unit>
-      <trans-unit id="5425125770484596220" datatype="html">
+      <trans-unit id="6420048221002682719" datatype="html">
         <source>A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.&lt;br/&gt;&lt;br/&gt;
-        Capture the light stone.</source>
+        You&apos;re playing Dark, capture the light stone.</source>
         <target>Un joueur, en posant une pierre, ne doit pas redonner au goban un état identique à l&apos;un de ceux qu&apos;il lui avait déjà donné, ce afin d&apos;empêcher qu&apos;une partie soit sans fin.&lt;br/&gt;&lt;br/&gt;
-        Capturez la pierre claire.</target>
+        Vous jouez Foncé, capturez la pierre claire.</target>
       </trans-unit>
       <trans-unit id="1862851019657740194" datatype="html">
         <source>Now, if Light tries to recapture the stone that Dark has just put on the Goban, this one would go back to its previous state, opening the door for an endless game.
@@ -2154,19 +2166,19 @@
          Cette règle s&apos;appelle le Ko.
          Toute l&apos;astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n&apos;ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer juste après.</target>
       </trans-unit>
-      <trans-unit id="1867501821252119171" datatype="html">
+      <trans-unit id="84181370484059161" datatype="html">
         <source>When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
         The game phase stops when both players pass consecutively, and we move on to the counting phase.
         The dead groups are then marked by clicking on them.
         Every intersection in a player&apos;s territory earns that player a point.
         The winner is the one with most points.&lt;br/&gt;&lt;br/&gt;
-        A last stone is dead, mark it.</source>
+        You&apos;re playing Dark. A last stone is dead, mark it.</source>
         <target>Quand un joueur estime qu&apos;il n&apos;a plus intérêt à placer une pierre, il l&apos;indique en passant son tour.
         La phase de jeu s&apos;arrête lorsque les deux joueurs passent consécutivement, on passe alors en phase de comptage.
         On marque alors les groupes morts en cliquant dessus.
         Chaque intersection du territoire d&apos;un joueur lui rapporte un point.
         Le gagnant est celui qui a le plus de points.&lt;br/&gt;&lt;br/&gt;
-        Une dernière pierre est morte, marquez-la.</target>
+        Vous jouez Foncé. Une dernière pierre est morte, marquez-la.</target>
       </trans-unit>
       <trans-unit id="4959862943655130220" datatype="html">
         <source>Congratulations, Dark has 15 territories and 3 light stones still present, called prisoners at the end of the game.
@@ -2181,6 +2193,162 @@
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>
         <target>Raté, recommencez.</target>
+      </trans-unit>
+      <trans-unit id="4791280679911297134" datatype="html">
+        <source>The queen bee can only move to one of its direct neighbors.</source>
+        <target>La reine ne peut se déplacer que sur une des cases voisines.</target>
+      </trans-unit>
+      <trans-unit id="1639583872704216434" datatype="html">
+        <source>The beetle can only move to one of its direct neighbors.</source>
+        <target>Le scarabée ne peut se déplacer que sur une des cases voisines.</target>
+      </trans-unit>
+      <trans-unit id="7402975532187036733" datatype="html">
+        <source>The grasshopper must move in a straight line.</source>
+        <target>La sauterelle doit se déplacer en ligne droite.</target>
+      </trans-unit>
+      <trans-unit id="5523450052915914627" datatype="html">
+        <source>The grasshopper must jump over other pieces, without any empty spaces.</source>
+        <target>La sauterelle doit sauter au dessus d'autres pièces, sans passer au dessus d'une case vide.</target>
+      </trans-unit>
+      <trans-unit id="8771557289052450532" datatype="html">
+        <source>The spider must move on neighboring spaces.</source>
+        <target>L'araignée doit se déplacer sur des cases voisines.</target>
+      </trans-unit>
+      <trans-unit id="3098163088355072426" datatype="html">
+        <source>The spider can only move around pieces that are in direct contact with it.</source>
+        <target>L'araignée doit se déplacer autour des pièces avec lesquelles elle est en contact direct.</target>
+      </trans-unit>
+      <trans-unit id="7928136093693713176" datatype="html">
+        <source>The spider cannot go twice through the same space in the same move.</source>
+        <target>L'araignée ne peut pas passer deux fois au même endroit durant le même mouvement.</target>
+      </trans-unit>
+      <trans-unit id="2053370063642446913" datatype="html">
+        <source>The queen bee must be placed on the board before moving a piece.</source>
+        <target>La reine doit être déposée sur le plateau afin de pouvoir déplacer une pièce.</target>
+      </trans-unit>
+      <trans-unit id="5380773634484088090" datatype="html">
+        <source>Only the beetle is allowed to climb over other pieces.</source>
+        <target>Cette pièce n'est pas autorisée à grimper sur d'autres pièces.</target>
+      </trans-unit>
+      <trans-unit id="8284939639567724336" datatype="html">
+        <source>You are not allowed to split the hive.</source>
+        <target>Vous ne pouvez pas scinder la ruche.</target>
+      </trans-unit>
+      <trans-unit id="4146942272384883649" datatype="html">
+        <source>This piece must be able to slide to its destination.</source>
+        <target>Cette pièce doit être capable de glisser jusqu'à sa destination.</target>
+      </trans-unit>
+      <trans-unit id="4339124628235355617" datatype="html">
+        <source>You must place your queen bee at this turn!</source>
+        <target>Vous devez placer la reine à votre quatrième tour au plus tard.</target>
+      </trans-unit>
+      <trans-unit id="7948763683129821975" datatype="html">
+        <source>You cannot drop a piece next to one of your opponent&apos;s stack.</source>
+        <target>Vous ne pouvez pas déposer une pièce à côté d'une pile adverse.</target>
+      </trans-unit>
+      <trans-unit id="8046013978585107003" datatype="html">
+        <source>You must always drop your piece on an empty space.</source>
+        <target>Vous devez toujours déposer votre pièce sur une case vide.</target>
+      </trans-unit>
+      <trans-unit id="106536486701689545" datatype="html">
+        <source>The piece you are dropping must be connected to the hive.</source>
+        <target>La pièce que vous introduisez doit être connectée à la ruche.</target>
+      </trans-unit>
+      <trans-unit id="3008604417903239806" datatype="html">
+        <source>Hive is a game without a board, where pieces are placed on the side of each other, in a contiguous block called the hive. Each player has 11 pieces, representing various insects.</source>
+        <target>Hive est un jeu sans plateau, où les pièces sont placées l'une à côté des autres en un bloc contigu, appelé la ruche. Chaque joueur dispose de 11 pièces, représentant divers insectes.</target>
+      </trans-unit>
+      <trans-unit id="4039332567259986532" datatype="html">
+        <source>Object of the game</source>
+        <target>But du jeu</target>
+      </trans-unit>
+      <trans-unit id="6900505086205524561" datatype="html">
+        <source>The object of the game at Hive is to surround the opponent&apos;s queen. Once the queen is surrounded by 6 pieces, no matter the owner of these pieces, the game ends. The player with a queen that is not surrounded wins. In case both queens are fully surrounded at the same turn, it is a draw. Here, Dark won.</source>
+        <target>Le but du jeu est d'entourer complètement la reine adverse. Une fois que qu'une reine est entourée par 6 pièces, peu importe le propriétaire de ces pièces, le jeu s'arrête. Le joueur avec une reine qui n'est pas entourée gagne. Si les deux reines sont complètement entourées au même tour, il y a match nul. Ici, Foncé a gagné.</target>
+      </trans-unit>
+      <trans-unit id="1124156761679970164" datatype="html">
+        <source>Placing the first and second piece</source>
+        <target>Placer la première et seconde pièce</target>
+      </trans-unit>
+      <trans-unit id="2065654476590106098" datatype="html">
+        <source>There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by Light, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and starting the game, put any piece on the board.</source>
+        <target>Il y a deux types d'actions: déposer une pièce et déplacer une pièce. Initialement, le plateau est vide et il nous faudra donc déposer une pièce sur le plateau. Pour la première pièce, il n'y a pas de restriction de placement : vous pouvez choisir n'importe quelle pièce et la mettre sur le plateau. La deuxième pièce, introduite par Clair, devra être placée sur une case voisine de la première pièce. Pour déposer une pièce, sélectionner la pièce de votre choix parmis vos pièces restantes (en dessous du plateau), et cliquez ensuite sur la case où vous voulez la déposer.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé et commencez la partie, placez une pièce sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="4766965064757095472" datatype="html">
+        <source>Placing pieces after the second turn</source>
+        <target>Placer des pièces après le deuxième tour</target>
+      </trans-unit>
+      <trans-unit id="7211778570517391304" datatype="html">
+        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
+        <target>Après le deuxième tour, vous êtes toujours autorisé à déposer des pièces quand vous le désirez, à condition de respecter deux conditions :&lt;ol&gt;&lt;li&gt;votre pièce doit être connectée à la ruche ;&lt;/li&gt;&lt;li&gt;la case sur laquelle vous déposez votre pièce ne peut pas toucher une pile adverse&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, introduisez une pièce sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="2751556568646013753" datatype="html">
+        <source>Moving pieces: the queen bee</source>
+        <target>Déplacer les pièces : la reine</target>
+      </trans-unit>
+      <trans-unit id="1929474568921893905" datatype="html">
+        <source>Once you have placed you queen bee on the board, you can move your pieces. You must place your queen bee on the board as your fourth piece at the latest. Each creature moves in a different way, and moves should respect two restrictions:&lt;ol&gt;&lt;li&gt;the hive must always remain fully connected, and&lt;/li&gt;&lt;li&gt;pieces should be able to physically slide to their destination (except for the beetle and grasshopper as we will see later).&lt;/li&gt;&lt;/ol&gt;The queen bee can move to any of its empty neighbors. To move a piece, click on it and then click on its destination. The possible destinations are highlighted.&lt;br/&gt;&lt;br/&gt;You are playing Dark, move your queen bee.</source>
+        <target>Une fois que votre reine est placée sur le plateau, vous pouvez déplacer vos pièces. Vous devez placer votre reine au plus tard à votre quatrième tour. Chaque insecte se déplace d'une façon différente, et les déplacements doivent respecter deux conditions :&lt;ol&gt;&lt;li&gt;la ruche doit toujours former un bloc contigu ;&lt;/li&gt;&lt;li&gt;les pièces doivent être capables de glisser jusqu'à leur destination (à l'exception du scarabée et de la sauterelle, comme nous le verrons plus tard).&lt;/li&gt;&lt;/ol&gt;La reine peut se déplacer vers n'importe quelle case voisine libre. Pour déplacer une pièce, cliquez dessus et cliquez ensuite sur sa destination. Les destinations possibles sont mises en évidence.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre reine.</target>
+      </trans-unit>
+      <trans-unit id="8573010608388393091" datatype="html">
+        <source>Moving the beetle</source>
+        <target>Déplacer le scarabée</target>
+      </trans-unit>
+      <trans-unit id="6645197773482117918" datatype="html">
+        <source>The beetle moves like the queen bee, but it is allowed to climb on top of other pieces! Therefore, it need not adhere to the sliding restriction. Note that you are not allowed to drop the beetle on top of another piece in the drop phase, this can only be achieved when moving a beetle already on the board. A piece with a beetle on top is not allowed to move. A stack is considered to be of the player who has the beetle of the top.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, block your opponent&apos;s queen by moving on top of it!</source>
+        <target>Le scarabée se déplace comme la reine, mais est autorisé à grimper sur les autres pièces ! Il n'a donc pas besoin d'adhérer à la restriction des glissades. Notez que vous ne pouvez pas introduire le scarabée en le déposant sur une autre pièce, cela ne peut être effectué qu'en déplaçant un scarabée déjà sur le plateau. Une pièce avec un scarabée au dessus n'est pas autorisée à se déplacer. Une pile est considérée comme appartenant au joueur ayant le scarabée sur son dessus.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, bloquez la reine adverse en grimpant dessus !</target>
+      </trans-unit>
+      <trans-unit id="6641485598833513426" datatype="html">
+        <source>Inspecting stacks</source>
+        <target>Inspecter les piles</target>
+      </trans-unit>
+      <trans-unit id="8679169125111911637" datatype="html">
+        <source>When pieces are stacked together, you are allowed to inspect the stack to see which pieces are under the beetle. This works with opponent-controlled stacks too. To do so, you can simply click on any stack to see their composition.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and your opponent has a beetle on top of one of your piece, click on it.</source>
+        <target>Quand des pièces sont empilées, vous pouvez inspecter la pile afin de voir quelles pièces se trouvent sous le scarabée. Cela fonctionne également avec les piles controlées par l'adversaire. Pour ce faire, cliquez simplement sur une pile afin de voir sa composition.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé et votre adversaire a un scarabée au dessus d'une de vos pièces, cliquez dessus.</target>
+      </trans-unit>
+      <trans-unit id="6207423912703337741" datatype="html">
+        <source>Moving the grasshopper</source>
+        <target>Déplacer la sauterelle</target>
+      </trans-unit>
+      <trans-unit id="6824181934070796921" datatype="html">
+        <source>The grasshopper jumps over one or more pieces in a straight line, and stops at the first empty space encountered. It cannot jump over empty spaces, and can only move through jumps. Because it jumps, it does not adhere to the sliding restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Jump over three pieces with your grasshopper!</source>
+        <target>La sauterelle saute au dessus d'une ou plusieurs pièces en ligne droite, et s'arrête à la première case vide. Elle ne peut pas sauter au dessus de cases vides, et peut uniquement se déplacer en sautant. Car elle saute, elle ne doit pas adhérer à la restriction des glissades.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Sautez au-dessus de trois pièces avec votre sauterelle !</target>
+      </trans-unit>
+      <trans-unit id="5124714891438504376" datatype="html">
+        <source>Moving the soldier ant</source>
+        <target>Déplacer la fourmi légionnaire</target>
+      </trans-unit>
+      <trans-unit id="2899217750291886948" datatype="html">
+        <source>The soldier ant is a powerful piece: it can move anywhere in the hive as long as it respects the sliding and the one hive restrictions!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Your queen bee is stuck, move your soldier ant to free up your queen!</source>
+        <target>La fourmi légionnaire est une pièce puissante : elle peut se déplacer n'importe où dans la ruche tant qu'elle respecte la règle des glissades et la règle de la ruche unique !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Votre reine est bloquée, déplacez votre fourmi afin de la libérer !</target>
+      </trans-unit>
+      <trans-unit id="7623079085925548808" datatype="html">
+        <source>You have not freed your queen, try again!</source>
+        <target>Vous n'avez pas libéré votre reine, essayez à nouveau !</target>
+      </trans-unit>
+      <trans-unit id="3777509045596617031" datatype="html">
+        <source>Moving the spider</source>
+        <target>Déplacer l'araignée</target>
+      </trans-unit>
+      <trans-unit id="2739227784886826925" datatype="html">
+        <source>Finally, the spider can move exactly 3 spaces at a time. It is not allowed to go twice through the same space in a move. As the spider crawls around other pieces, it can only move around pieces that are in direct contact with it. This means that the spider is not allowed to temporarily split the hive. For example, here, Dark&apos;s spider cannot go on the left as its first move. To do a spider move, select a spider and click on the three spaces that compose the move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your spider!</source>
+        <target>Finalement, l'araignée peut se déplacer d'exactement 3 cases. Elle n'est pas autorisée à passer deux fois par la même case au lors d'un tour. L'araignée se déplace le long des autres pièces : elle ne peut que se déplacer autour des pièces avec lesquelles elle est en contact direct. Ici par exemple, l'araignée de Foncé ne peut pas aller vers la gauche comme premier déplacement. Cela signifie que l'araignée ne peut pas temporairement séparer la ruche. Pour déplacer une araignée, sélectionnez-en une et cliquez sur les trois cases qui composent son mouvement.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre araignée.</target>
+      </trans-unit>
+      <trans-unit id="3146815812493244221" datatype="html">
+        <source>Restrictions</source>
+        <target>Restrictions</target>
+      </trans-unit>
+      <trans-unit id="7714176760825514669" datatype="html">
+        <source>Let us clarify the two restrictions during moves.&lt;ol&gt;&lt;li&gt;All pieces of the hive should always be connected in a way that there is a single hive. It can be the case that your piece disconnects from the hive when you slide it, but after the move there should be only one hive.&lt;/li&gt;&lt;li&gt;Except grasshoppers and beetles, all moves should be done by sliding the piece without disturbing the rest of the hive.&lt;/li&gt;&lt;/ol&gt;Observe here how the queen bee is stuck, as it is not possible to slide it without moving one of the other pieces. Moreover, moving it would split the hive in two.</source>
+        <target>Clarifions les deux restrictions durant les mouvements.&lt;ol&gt;&lt;li&gt;Toutes les pièces de la ruche doivent être connectées de façon à ne former qu'une seule ruche. Il se peut que durant un mouvement, la pièce glissée se déconnecte temporairement de la ruche, mais après le mouvement il ne doit y avoir qu'une seule ruche.&lt;/li&gt;&lt;li&gt;À l'exception des sauterelles et des scarabées, tous les mouvements doivent être faits en glissant les pièces, sans devoir écarter d'autres pièces de la ruche.&lt;/li&gt;&lt;/ol&gt;</target>
+      </trans-unit>
+      <trans-unit id="7503459122405953820" datatype="html">
+        <source>Passing your turn</source>
+        <target>Passer son tour</target>
+      </trans-unit>
+      <trans-unit id="3226372248582035130" datatype="html">
+        <source>Finally, it is possible that you are not able to do any move: when it is the case, you must pass your turn. Here, Dark must pass: the queen bee cannot move without disconnecting the hive, the beetle is stuck beneath another beetle, and a dropped piece would be in contact with an opponent&apos;s piece.</source>
+        <target>Finalement, il est possible que vous ne soyez pas capable d'effectuer un mouvement. Quand c'est le cas, vous devez passer votre tour. Ici, Foncé doit passer : la reine ne peut bouger sans déconnecter la ruche, le scarabée est bloqué en dessous d'un autre scarabée, et introduire une pièce ne peut se faire sans la mettre en contact avec une pièce adverse.</target>
       </trans-unit>
       <trans-unit id="3643526530572280396" datatype="html">
         <source>This piece is not of the color you have to play.</source>
@@ -2211,33 +2379,33 @@
         <source>Initial board and initial move</source>
         <target>Plateau de départ et déplacement initial</target>
       </trans-unit>
-      <trans-unit id="4612740589877593757" datatype="html">
+      <trans-unit id="8508262450449373253" datatype="html">
         <source>Here is the initial board.
         At Kamisado, pieces can only move forward, vertically or diagonally.
         You&apos;re playing first, with dark pieces, you can make your first move.&lt;br/&gt;&lt;br/&gt;
-        Click on the piece of your choice and click on the landing square.</source>
+        You&apos;re playing Dark, click on the piece of your choice and click on a landing square.</source>
         <target>Voici le plateau de départ.
         Au Kamisado, les pièces ne peuvent se déplacer que vers l&apos;avant, verticalement ou diagonalement.
         Vous jouez en premier, donc avec les pièces foncées, vous pouvez faire votre premier déplacement.&lt;br/&gt;&lt;br/&gt;
-        Cliquez sur la pièce de votre choix, et cliquez sur sa case d&apos;arrivée.</target>
+        Vous jouez Foncé. Cliquez sur la pièce de votre choix, et cliquez sur sa case d&apos;arrivée.</target>
       </trans-unit>
       <trans-unit id="3923056974694699821" datatype="html">
         <source>Perfect! Note that each of your piece has a different color.</source>
         <target>Parfait ! Notez bien que chacune de vos pièces a une couleur différente.</target>
       </trans-unit>
-      <trans-unit id="3441963406679900625" datatype="html">
+      <trans-unit id="460652905180615593" datatype="html">
         <source>Let us now consider the move of Light, after the blue piece has been moved by Dark.
         All moves after the initial move must be made from the piece that corresponds to the color
         of the square upon which the last move ended.
         Here, the last move ended on the pink square, hence the pink piece must move.
         It is already selected, you do not have to click on it.&lt;br/&gt;&lt;br/&gt;
-        Move it on a blue square.</source>
+        You&apos;re playing Light, move your piece on a blue square.</source>
         <target>Considérons maintenant le coup du joueur clair, après le déplacement de la pièce bleue.
         Tous les déplacements après le déplacement initial se font obligatoirement à partir de la pièce correspondant
         à la couleur sur laquelle le dernier déplacement s&apos;est terminé.
         Ici, le déplacement précédent s&apos;étant terminé sur une case rose, c&apos;est donc au pion rose de se déplacer.
         Il est d&apos;ailleurs déjà sélectionné, vous ne devez donc plus cliquer dessus.&lt;br/&gt;&lt;br/&gt;
-        Déplacez-le jusqu&apos;à la case bleue.</target>
+        Vous jouez Clair, déplacez-votre pièce jusqu&apos;à la case bleue.</target>
       </trans-unit>
       <trans-unit id="8902613702570774815" datatype="html">
         <source>You have not moved your pink piece on a blue square!</source>
@@ -2259,18 +2427,18 @@
         <source>Victory by blocking</source>
         <target>Victoire par blocage</target>
       </trans-unit>
-      <trans-unit id="5546725507412628775" datatype="html">
+      <trans-unit id="7208401461859346704" datatype="html">
         <source>At any time, if a player blocks the entire game, that player loses.
         In other words, if a player forces its opponent to move a piece that the opponent cannot move,
         and the player cannot move its own piece of the same color, then that player loses.
         Here, you&apos;re playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!&lt;br/&gt;&lt;br/&gt;
-        Try to make this move.</source>
+        You&apos;re playing Dark, analyze the board and make the winning move.</source>
         <target>À tout moment, si un joueur provoque un blocage total du jeu, il perd.
         C&apos;est-à-dire que si un joueur oblige son adversaire à déplacer une pièce que l&apos;adversaire ne peut bouger,
         et que lui-même ne peut pas déplacer sa pièce de la même couleur, il perd.
         Ici, en jouant avec les pions foncés,
         vous pouvez obliger votre adversaire à provoquer cette situation et donc l&apos;obliger à perdre !&lt;br/&gt;&lt;br/&gt;
-        Essayez de faire ce mouvement.</target>
+        Vous jouez Foncé, analysej le plateau et effectuez le mouvement gagnant.</target>
       </trans-unit>
       <trans-unit id="3072006962189197081" datatype="html">
         <source>Perfect!
@@ -2335,25 +2503,27 @@
         <source>Failed. You did not jump over one of your pieces.</source>
         <target>Vous n'avez pas sauté au dessus d'une de vos pièces.</target>
       </trans-unit>
-      <trans-unit id="3870517439874058072" datatype="html">
+      <trans-unit id="9103512134624014654" datatype="html">
         <source>Here is a different board. Pick the dark piece in the middle (line 4, column 4)
         and observe its possible moves.
-        Horizontally, this piece can move only of one square because it is the only piece on this line.
-        Vertically, this piece can move of three squares because there are in total three pieces on that vertical line.
-        But it can only go up, as below it the landing square is occupied by one of your pieces.
-        Diagonally, only one move is possible: on the diagonal that contains three pieces,
-        only in the direction where it does not jump over one of the opponent&apos;s pieces.
-        On the other diagonal, there are too many pieces to end the move on the board.&lt;br/&gt;&lt;br/&gt;
-        Make one of these moves.</source>
+        &lt;ul&gt;
+            &lt;li&gt;Horizontally, this piece can move only of one square because it is the only piece on this line.&lt;/li&gt;
+            &lt;li&gt;Vertically, this piece can move of three squares because there are in total three pieces on that vertical line.
+                But it can only go up, as below it the landing square is occupied by one of your pieces.&lt;/li&gt;
+            &lt;li&gt;Diagonally, only one move is possible: on the diagonal that contains three pieces,
+                only in the direction where it does not jump over one of the opponent&apos;s pieces.
+                On the other diagonal, there are too many pieces to end the move on the board.&lt;/li&gt;
+        &lt;/ul&gt;&lt;br/&gt;
+        You&apos;re playing Dark, make one of these moves.</source>
         <target>Voici une configuration différente. Sélectionnez la pièce foncée au milieu (ligne 4, colonne 4)
         et observez bien les déplacements possibles.
-        Horizontalement, elle se déplace d&apos;une case car elle est seule sur cette ligne.
-        Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
-        Mais elle ne peut qu&apos;aller vers le haut, car vers le bas la case d&apos;atterrissage est occupée par une autre
-        de vos pièces.
-        Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
-        direction où on ne doit pas sauter au dessus d&apos;une pièce adverse.
-        Sur l&apos;autre diagonale, il y a trop de pièces pour que le déplacement se termine sur le plateau.&lt;br/&gt;&lt;br/&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Horizontalement, elle se déplace d&apos;une case car elle est seule sur cette ligne.&lt;/li&gt;
+            &lt;li&gt;Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
+            Mais elle ne peut qu&apos;aller vers le haut, car vers le bas la case d&apos;atterrissage est occupée par une autre de vos pièces.&lt;/li&gt;
+            &lt;li&gt;Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
+            direction où on ne doit pas sauter au dessus d&apos;une pièce adverse.
+            Sur l&apos;autre diagonale, il y a trop de pièces pour que le déplacement se termine sur le plateau.&lt;/li&gt;&lt;br/&gt;
         Effectuez un de ces déplacements.</target>
       </trans-unit>
       <trans-unit id="2794355525571555595" datatype="html">
@@ -2505,8 +2675,8 @@
         <source>Restarting the clock</source>
         <target>Redémarrer le compte à rebour</target>
       </trans-unit>
-      <trans-unit id="1506256477130467669" datatype="html">
-        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture to restart the countdown.</source>
+      <trans-unit id="3901600798817118089" datatype="html">
+        <source>If the clock has been called, whenever a capture is done the countdown restarts.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture to restart the countdown.</source>
         <target>Si le compte à rebour a été lancé, chaque capture remet le compteur à 7.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture pour redémarrer le compte à rebour.</target>
       </trans-unit>
       <trans-unit id="7392280182595989107" datatype="html">
@@ -2517,8 +2687,8 @@
         <source>End game (by clock)</source>
         <target>Fin au temps</target>
       </trans-unit>
-      <trans-unit id="8197598020273984721" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the last move.</source>
+      <trans-unit id="5334745019478145111" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the last move.</source>
         <target>7 Tours après le lancement du compte à rebour, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le dernier mouvement.</target>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">
@@ -2603,7 +2773,7 @@
       </trans-unit>
       <trans-unit id="1164074897639591703" datatype="html">
         <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a repelling lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with an attracting lodestone, by moving your pieces on your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on a piece you just put on a pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
-        <target>En résumé, il est possible de capturer les pièces de l'adversaire de deux façons :&lt;ul&gt;&lt;li&gt;avec une pierre magnétique sur sa face répulsive, en poussant les pièces adverses hors du plateau ;&lt;/li&gt;&lt;li&gt;avec une pierre magnétique sur sa face attractive, en attirant vos pièces pour qu'elles écrasent les pièces adverses.&lt;/li&gt;&lt;/ul&gt;Une fois qu'une pierre magnétique est placée et que les pièces ont été déplacées et/ou capturées, si des pièces adverses ont été capturées, vous devez les placer sur les &lt;i&gt;plaques de pressions&lt;/i&gt;, situées autour du plateau. Pour ce faire, cliquez sur un espace libre de la plaque de pression de votre choix pour chaque capture. Vous pouvez annuler ce placement en cliquant sur une pièce récemment placée sur plaque de pression.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un mouvement qui capture au moins une pièce adverse, et placez vos captures sur des plaques de pression.</target>
+        <target>En résumé, il est possible de capturer les pièces de l'adversaire de deux façons :&lt;ul&gt;&lt;li&gt;avec une pierre magnétique sur sa face répulsive, en poussant les pièces adverses hors du plateau ;&lt;/li&gt;&lt;li&gt;avec une pierre magnétique sur sa face attractive, en attirant vos pièces pour qu'elles écrasent les pièces adverses.&lt;/li&gt;&lt;/ul&gt;Une fois qu'une pierre magnétique est placée et que les pièces ont été déplacées et/ou capturées, si des pièces adverses ont été capturées, vous devez les placer sur les &lt;i&gt;plaques de pressions&lt;/i&gt;, situées autour du plateau. Pour ce faire, cliquez sur une case libre de la plaque de pression de votre choix pour chaque capture. Vous pouvez annuler ce placement en cliquant sur une pièce récemment placée sur plaque de pression.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un mouvement qui capture au moins une pièce adverse, et placez vos captures sur des plaques de pression.</target>
       </trans-unit>
       <trans-unit id="575124313782539246" datatype="html">
         <source>You have not captured any of the opponent&apos;s pieces, try again!</source>
@@ -2647,7 +2817,7 @@
       </trans-unit>
       <trans-unit id="2420281248578493085" datatype="html">
         <source>If, at any point during the game, your lodestone is situated on a square that crumbles with a pressure plate, you will be allowed to select any lodestone side on your next turn.&lt;br/&gt;&lt;br/&gt;In this board, playing Dark, you can place your lodestone and make a pressure plate crumble so that your lodestone falls too, allowing to choose more freely its side on your next turn. Do it!</source>
-        <target>À tout moment durant le jeu, si votre pierre magnétique se trouve sur une case qui s'effondre avec une plaque de pression, vous pourrez sélectionner n'importe quelle face de votre pierre magnétique lors de votre prochain tour.&lt;br/&gt;&lt;br/&gt;Sur ce plateau, en jouant Foncé, vous pouvez placer votre pierre magnétique et faire s'effondre une plaque de pression de façon à ce que votre pierre magnétique tombe également. Cela vous permettra de choisir plus librement le côté de votre pierre magnétique lors de votre prochain tour. Faites-le !</target>
+        <target>À tout moment durant le jeu, si votre pierre magnétique se trouve sur une case qui s'effondre avec une plaque de pression, vous pourrez sélectionner n'importe quelle face de votre pierre magnétique lors de votre prochain tour.&lt;br/&gt;&lt;br/&gt;Sur ce plateau, en jouant Foncé, vous pouvez placer votre pierre magnétique et faire s'effondrer une plaque de pression de façon à ce que votre pierre magnétique tombe également. Cela vous permettra de choisir plus librement le côté de votre pierre magnétique lors de votre prochain tour. Faites-le !</target>
       </trans-unit>
       <trans-unit id="387688094870283606" datatype="html">
         <source>Congratulations! At your next turn, you will be allowed to place your lodestone on any side.</source>
@@ -2738,15 +2908,15 @@
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
         <target>Le but du Pentago est d&apos;aligner 5 de vos pièces. Dans le plateau ci-dessous, Foncé gagne.</target>
       </trans-unit>
-      <trans-unit id="3238348765317457854" datatype="html">
+      <trans-unit id="7705561938199496212" datatype="html">
         <source>At their turn, players put a piece on the board and possibly rotate one quadrant.
         As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
         To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
+        You&apos;re playing dark, do a simple move.</source>
         <target>Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d&apos;un quadrant.
-        Tant qu&apos;il existe des quadrants neutres, c&apos;est à dire des quadrants qui ne changeraient pas après avoir été tournés, l&apos;option de ne pas effectueur de rotation est acceptée.
+        Tant qu&apos;il existe des quadrants neutres, c&apos;est à dire des quadrants qui ne changeraient pas après avoir été tournés, l&apos;option de ne pas effectuer de rotation est acceptée.
         Pour ce faire il faut cliquer sur le rond barré qui apparaît au centre du plateau quand c&apos;est possible.&lt;br/&gt;&lt;br/&gt;
-        Faites-le.</target>
+        Vous jouez Foncé, faites un mouvement simple.</target>
       </trans-unit>
       <trans-unit id="1640662905904405955" datatype="html">
         <source>You have made a move with a rotation. This tutorial step is about moves without rotations!</source>
@@ -2756,11 +2926,11 @@
         <source>Move with rotation</source>
         <target>Mouvement avec rotation</target>
       </trans-unit>
-      <trans-unit id="5479634148355425392" datatype="html">
+      <trans-unit id="2438755881589163638" datatype="html">
         <source>After putting a piece, arrows will appear on non-neutral quadrants.&lt;br/&gt;&lt;br/&gt;
-        Click on one of them and see the rotation!</source>
+        You&apos;re playing Dark, place a piece on a quadrant and do a rotation!</source>
         <target>Après avoir déposé une pièce, des flèches apparaîtront sur les quadrants non neutres.&lt;br/&gt;&lt;br/&gt;
-        Cliquez sur l&apos;une d&apos;entre elles et voyez la rotation !</target>
+        Vous jouez Foncé, placez une pièce sur un quadrant et effectuez une rotation !</target>
       </trans-unit>
       <trans-unit id="5427363142376983767" datatype="html">
         <source>You made a move without rotation, try again!</source>
@@ -2824,7 +2994,7 @@
         <source>Climbing</source>
         <target>Grimper</target>
       </trans-unit>
-      <trans-unit id="6934393717447664003" datatype="html">
+      <trans-unit id="7544559714308131014" datatype="html">
         <source>When 4 pieces form a square, it is possible to put a fifth piece on top.
         However, when that happens, you can save a piece by climbing instead of dropping a piece.
         To climb:
@@ -2832,7 +3002,7 @@
             &lt;li&gt;Click on one of your free pieces, which should be lower than the landing square.&lt;/li&gt;
             &lt;li&gt;Click on an empty landing square, higher than your selected piece.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Go ahead, climb!</source>
+        You&apos;re playing Dark, go ahead and climb!</source>
         <target>Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
         Cependant, à ce moment là, se crée une opportunité d&apos;économiser une pièce en &quot;grimpant&quot; au lieu de déposer.
         Pour grimper :
@@ -2840,7 +3010,7 @@
             &lt;li&gt;Cliquez sur une de vos pièces libres et plus basse que la case d&apos;atterrissage.&lt;/li&gt;
             &lt;li&gt;Cliquez sur une case vide plus haute.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Allez-y, grimpez !</target>
+        Vous jouez Foncé, allez-y et grimpez !</target>
       </trans-unit>
       <trans-unit id="7055621102989388488" datatype="html">
         <source>Congratulations!&lt;br/&gt;
@@ -2862,21 +3032,19 @@
         <source>Square (1/2)</source>
         <target>Carré (1/2)</target>
       </trans-unit>
-      <trans-unit id="6362834810107211217" datatype="html">
+      <trans-unit id="517712097339838490" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
-        A chosen piece can be the piece you just placed.
-        You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
+        A chosen piece can be the piece you just placed.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark. Form a square, click on one of the four pieces, then click on the V symbol on the bottom right to finalize your move.</source>
         <target>Quand la pièce que vous venez de poser est la quatrième d&apos;un carré de pièces de votre couleur,
         vous pouvez choisir alors n&apos;importe où sur le plateau une où deux de vos pièces.
         Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant de les économiser.
         Une pièce choisie pour être enlevée ne peut pas être en dessous d&apos;autres pièces.
-        Une pièce choisie peut être la pièce que vous venez de placer.
-        Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Formez un carré, cliquez sur une des quatres pièces, puis cliquez sur le V en bas à droite pour finaliser votre mouvement.</target>
+        Une pièce choisie peut être la pièce que vous venez de placer.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé. Formez un carré, cliquez sur une des quatres pièces, puis cliquez sur le V en bas à droite pour finaliser votre mouvement.</target>
       </trans-unit>
       <trans-unit id="4722414845520402682" datatype="html">
         <source>Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.</source>
@@ -2916,7 +3084,7 @@
         <source>You cannot give the piece that was in your hands.</source>
         <target>Vous ne pouvez pas donner la pièce qui était dans vos mains.</target>
       </trans-unit>
-      <trans-unit id="6000784742663627686" datatype="html">
+      <trans-unit id="5993757870187587252" datatype="html">
         <source>Quarto is an alignment game.
         The goal is to align four pieces that have at least one common aspect:
         &lt;ul&gt;
@@ -2925,7 +3093,8 @@
           &lt;li&gt;their pattern (empty or dotted),&lt;/li&gt;
           &lt;li&gt;their shape (round or square).&lt;/li&gt;
         &lt;/ul&gt;
-        Here, we have a board with a victory by an alignment of dark pieces.</source>
+        Here, we have a board with a victory by an alignment of dark pieces.
+        Note that the pieces are not owned by any player.</source>
         <target>Quarto est un jeu d&apos;alignement.
         Le but est d&apos;aligner quatre pièces qui possèdent au moins un point commun :
         &lt;ul&gt;
@@ -2934,7 +3103,8 @@
           &lt;li&gt;leur motif (vide ou à point),&lt;/li&gt;
           &lt;li&gt;leur forme (ronde ou carrée).&lt;/li&gt;
         &lt;/ul&gt;
-        Ici, nous avons un plateau avec une victoire par alignement de pièces foncées.</target>
+        Ici, nous avons un plateau avec une victoire par alignement de pièces foncées.
+        Notez que le spièces n'appartiennent à aucun joueur.</target>
       </trans-unit>
       <trans-unit id="5869780110608474933" datatype="html">
         <source>Placement</source>
@@ -2969,6 +3139,10 @@
       <trans-unit id="4715207105849605918" datatype="html">
         <source>Well done!</source>
         <target>Bien joué !</target>
+      </trans-unit>
+      <trans-unit id="8424758512320418629" datatype="html">
+        <source>Failed! Your opponent can either align:&lt;ul&gt;&lt;li&gt;the squares horizontally on the third line or vertically on the third column,&lt;/li&gt;&lt;li&gt;small pieces horizontally on the first line or vertically on the second or third column,&lt;/li&gt;&lt;li&gt;empty pieces horizontally on the first line or vertically on the first column,&lt;/li&gt;&lt;li&gt;clear pieces diagonally.&lt;/li&gt;&lt;/ul&gt;</source>
+        <target>Raté ! Votre adversaire peut soit aligner:&lt;ul&gt;&lt;li&gt;les carrés horizontalement sur la troisième ligne ou verticalement sur la troisième colonne ;&lt;/li&gt;&lt;li&gt;les petites pièces horizontalement sur la première ligne ou verticalement sur la deuxième ou troisième colonne ;&lt;/li&gt;&lt;li&gt;les pièces vides horizontalement sur la première ligne ou verticalement sur la première colonne ;&lt;/li&gt;&lt;li&gt;les pièces claires diagonalement.&lt;/li&gt;&lt;/ul&gt;</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>
@@ -3069,13 +3243,11 @@
         <source>Capture (2/2)</source>
         <target>Capture (2/2)</target>
       </trans-unit>
-      <trans-unit id="5763897640314321260" datatype="html">
-        <source>A move can also capture a bigger line, and more than one lines at a time
-        You&apos;re playing light here.&lt;br/&gt;&lt;br/&gt;
-        Play on the bottom left to see an example.</source>
-        <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.
-        Vous êtes le joueur clair ici.&lt;br/&gt;&lt;br/&gt;
-        Jouez en bas à gauche pour voir un exemple.</target>
++      <trans-unit id="4872428604450835795" datatype="html">
+        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing light here. Play on the bottom left to see a capture.</source>
+        <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Clair. Joueez en bas à gauche pour voir un exemple de capture.</target>
       </trans-unit>
       <trans-unit id="863291659187903950" datatype="html">
         <source>Lower and more to the left, please.</source>
@@ -3137,23 +3309,23 @@
         <source>Simple step</source>
         <target>Simple pas</target>
       </trans-unit>
-      <trans-unit id="6555319865807115204" datatype="html">
+      <trans-unit id="3615756484359681386" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
-        You&apos;re the first player, playing with the dark pyramids.
+        To perform a move:
         &lt;ol&gt;
             &lt;li&gt;Click on one of your pyramids.&lt;/li&gt;
             &lt;li&gt;Click on one of its two or three neighboring spaces in order to move your pyramid there.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Do any simple step.</source>
+        You&apos;re playing Dark, do any simple step.</source>
         <target>Pour parvenir à immobiliser l&apos;adversaire, il faut déplacer ses pyramides.
         Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (appelons ceci, faire un pas simple).
-        Vous jouez en premier et contrôlez donc les pyramides foncées.
+        Pour effectuer un mouvement :
         &lt;ol&gt;
             &lt;li&gt;Cliquez sur une de vos pyramides.&lt;/li&gt;
             &lt;li&gt;Cliquez ensuite sur une des deux ou trois cases voisines, pour y déplacer votre pyramide.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Faites un simple pas.</target>
+        Vous jouez Foncé, faites un simple pas.</target>
       </trans-unit>
       <trans-unit id="6109976694950516137" datatype="html">
         <source>You have made a double step, which is good but it is the next exercise!</source>
@@ -3163,21 +3335,23 @@
         <source>Double step</source>
         <target>Double pas</target>
       </trans-unit>
-      <trans-unit id="8522179824520099976" datatype="html">
+      <trans-unit id="8606604811382882198" datatype="html">
         <source>When a pyramid shares its vertices with dark spaces, it can move one or two steps.
         To do so:
         &lt;ol&gt;
             &lt;li&gt;Click on the pyramid to move.&lt;/li&gt;
             &lt;li&gt;Click on one of the 6 destinations that you can reach in two steps:
                  the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
-        &lt;/ol&gt;</source>
+        &lt;/ol&gt;&lt;br/&gt;
+        You&apos;re playing Dark, do a double step.</source>
         <target>Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
         Pour ce faire :
         &lt;ol&gt;
             &lt;li&gt;Cliquez sur la pyramide à déplacer (celle tout au centre).&lt;/li&gt;
             &lt;li&gt;Cliquez directement sur l&apos;une des 6 destinations possibles en deux pas :
-                les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.&lt;li&gt;
-        &lt;/ol&gt;</target>
+                les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.&lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        Vous jouez Foncé, faites un pas double.</target>
       </trans-unit>
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
@@ -3231,7 +3405,7 @@
         <source>Inserting a piece</source>
         <target>Insérer une pièce</target>
       </trans-unit>
-      <trans-unit id="3137783298375495022" datatype="html">
+      <trans-unit id="1688278147418935793" datatype="html">
         <source>Each player has 5 pieces in total.
         As long as you have remaining pieces next to the board, you can insert new pieces. To do so:
         &lt;ol&gt;
@@ -3239,7 +3413,7 @@
             &lt;li&gt;Click on one of the highlighted squares to select a landing for your piece.&lt;/li&gt;
             &lt;li&gt;Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        You&apos;re playing Light, insert a piece on the board.</source>
+        You&apos;re playing Dark, insert a piece on the board.</source>
         <target>Chaque joueur a en tout 5 pièces.
         Tant qu&apos;il vous reste des pièces de réserves sur le côté du plateau, vous pouvez en insérer une. Pour ce faire :
         &lt;ol&gt;
@@ -3247,9 +3421,9 @@
             &lt;li&gt;Cliquez sur une des cases mises en avant pour sélectionner une case de destination pour votre pièce.&lt;/li&gt;
             &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Vous jouez Clair, insérez une pièce sur le plateau.</target>
+        Vous jouez Flair, insérez une pièce sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="6681876930126126119" datatype="html">
+      <trans-unit id="7782687335751701597" datatype="html">
         <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
         A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically.
         You can also move a piece out of the board.
@@ -3260,7 +3434,7 @@
                 You can also click a second time on your piece to change its orientation without moving it.&lt;/li&gt;
             &lt;li&gt;Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Try to move your piece that is already on the board one square upwards and to orient it to the left.</source>
+        You&apos;re playing Dark. Try to move your piece that is already on the board one square upwards and to orient it to the left.</source>
         <target>Nous distinguerons ici &quot;déplacer&quot; et &quot;pousser&quot;.
         Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement.
         Il est également possible de faire sortir une pièce du plateau.
@@ -3271,7 +3445,7 @@
               Vous pouvez aussi cliquer une seconde fois sur votre pièce pour changer son orientation sans la déplacer.&lt;/li&gt;
             &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Essayer de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
+        Vous jouez Foncé. Essayez de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
         <source>Congratulations, you made a side-slip!</source>
@@ -3281,11 +3455,11 @@
         <source>Moving a piece out of the board</source>
         <target>Sortir une pièce</target>
       </trans-unit>
-      <trans-unit id="4080355461737897031" datatype="html">
+      <trans-unit id="5828269978064614633" datatype="html">
         <source>To move a piece out of the board, you do not have to pick an orientation after the move.&lt;br/&gt;&lt;br/&gt;
-        Get that piece out of the board!</source>
+        You&apos;re playing Dark, get that piece out of the board!</source>
         <target>Sortir une pièce du plateau est plus simple, préciser son orientation d&apos;arrivée n&apos;est pas nécessaire.&lt;br/&gt;&lt;br/&gt;
-        Sortez cette pièce du plateau !</target>
+        Vous jouez Foncé, sortez cette pièce du plateau !</target>
       </trans-unit>
       <trans-unit id="423861981305705638" datatype="html">
         <source>Congratulations, even if in this context it was not a useful move.</source>
@@ -3299,7 +3473,7 @@
         <source>Pushing (1/2)</source>
         <target>Pousser (1/2)</target>
       </trans-unit>
-      <trans-unit id="5017134997515199928" datatype="html">
+      <trans-unit id="4878801304019441011" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
         In order to push player pieces, the following conditions must hold:
         &lt;ol&gt;
@@ -3308,7 +3482,7 @@
         &lt;/ol&gt;
         Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
         On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;
-        Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
+        You&apos;re playing Dark. Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
         Pour pousser des pièces d'un joueur, plusieurs critères doivent être vérifiés :
         &lt;ol&gt;
@@ -3317,39 +3491,41 @@
         &lt;/ol&gt;
         Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée.
         Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;
-        Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
+        Vous jouez Foncé. Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
       </trans-unit>
       <trans-unit id="6284799875777459303" datatype="html">
         <source>Pushing (2/2)</source>
         <target>Pousser (2/2)</target>
       </trans-unit>
-      <trans-unit id="5293434509291141449" datatype="html">
+      <trans-unit id="2275010489466223556" datatype="html">
         <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
         In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains.
-        On the following board, you can push the mountain on the first row.
-        On the second and third row, because of the resisting forces, you cannot push.&lt;br/&gt;&lt;br/&gt;
-        On the fourth row, you can push as there is one more pusher than resistant pieces. Do it.</source>
+        On the following board, as Dark, you can push the mountain on the first row.
+        On the second and third row, because of the resisting forces, you cannot push.
+        On the fourth row, you can push as there is one more pusher than resistant pieces.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, push on the fourth row it.</source>
         <target>Pour pousser une montane, vous avez besoin d'un pièce pousseuse par montagne. Chaque résistant (pièce dans la direction opposée) annule la force d'une pousseuse.
         En résumé, s'il n'y a pas de montagne vous devez avoir strictement plus de pousseurs que de résistants. S'il y a une montagne, vous devez avoir autant de pousseurs qu'il y a de résistants et montagnes.
-        Sur le plateau, vous pouvez pousser la montagne de la première ligne.
-        Sur la deuxième et troisième, vous ne pouvez pas pousser à cause des pièces et montagnes résistantes.&lt;br/&gt;&lt;br/&gt;
-        Sur la quatrième ligne, vous pouvez pousser car il y a une pousseuse de plus que de pièces résistantes. Faites-le.</target>
+        Sur le plateau, vous pouvez, en tant que Foncé, pousser la montagne de la première ligne.
+        Sur la deuxième et troisième, vous ne pouvez pas pousser à cause des pièces et montagnes résistantes.
+        Sur la quatrième ligne, vous pouvez pousser car il y a une pousseuse de plus que de pièces résistantes.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé, poussez sur la quatrième ligne.</target>
       </trans-unit>
       <trans-unit id="709861006710076010" datatype="html">
         <source>Congratulations! Note that this move made you lose the game, you will see why in the next step.</source>
         <target>Bravo ! Notez que ce mouvement vous fait perdre, comme vous allez le voir dans l'étape suivante.</target>
       </trans-unit>
-      <trans-unit id="6651584028213138803" datatype="html">
+      <trans-unit id="335102281625337037" datatype="html">
         <source>The game ends when a mountain is pushed out of the board.
         If you pushed it and nobody is in front of you, you&apos;re the winner.
         However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
         However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;
-        Here, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
+        Here, playing Dark, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
         <target>Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
         Si vous l&apos;avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.
         Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
         En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.&lt;br/&gt;&lt;br/&gt;
-        Ici, vous pouvez pousser une montagne hors du plateau et soit gagner, soit perdre. Choisissez consciencieusement !</target>
+        Ici, en jouant Foncé, vous pouvez pousser une montagne hors du plateau et soit gagner, soit perdre. Choisissez consciencieusement !</target>
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>
@@ -3517,9 +3693,9 @@
         <source>Capturing a soldier (1/2)</source>
         <target>Capturer un simple soldat (1/2)</target>
       </trans-unit>
-      <trans-unit id="1850808010105870709" datatype="html">
-        <source>All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
-        <target>Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l&apos;exception du roi. Pour les capturer, il faut en prendre une en sandwich entre deux de vos pièces. En s&apos;approchant trop, un soldat de l&apos;envahisseur s&apos;est mis en danger.&lt;br/&gt;&lt;br/&gt;Capturez le.</target>
+      <trans-unit id="4542556047957483359" datatype="html">
+        <source>All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light. Capture the soldier.</source>
+        <target>Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l&apos;exception du roi. Pour les capturer, il faut en prendre une en sandwich entre deux de vos pièces. En s&apos;approchant trop, un soldat de l&apos;envahisseur s&apos;est mis en danger.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair. Capturez le soldat.</target>
       </trans-unit>
       <trans-unit id="1504890408061490574" datatype="html">
         <source>Congratulations, that will teach him a lesson!</source>
@@ -3533,9 +3709,9 @@
         <source>Capturing a soldier (2/2)</source>
         <target>Capturer un simple soldat (2/2)</target>
       </trans-unit>
-      <trans-unit id="7815830988890986315" datatype="html">
-        <source>A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
-        <target>Un deuxième moyen de capturer un soldat est de le prendre en sandwich contre un trône vide. Le roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt; Capturez le.</target>
+      <trans-unit id="1349136475821045956" datatype="html">
+        <source>A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the soldier.</source>
+        <target>Un deuxième moyen de capturer un soldat est de le prendre en sandwich contre un trône vide. Le roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé. Capturez le soldat.</target>
       </trans-unit>
       <trans-unit id="6149168030196118189" datatype="html">
         <source>Congratulations, one less defender. But keep an eye on the king, it is the most important.</source>
@@ -3549,17 +3725,17 @@
         <source>Capturing the king on his throne</source>
         <target>Capturer le roi sur son trône</target>
       </trans-unit>
-      <trans-unit id="4384170874923825000" datatype="html">
-        <source>To capture the king when he sits on his throne, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
-        <target>Pour capturer le roi quand il est sur son trône, les 4 cases voisines au roi (horizontalement et verticalement) doivent être occupées par vos pions.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      <trans-unit id="1735534781216205320" datatype="html">
+        <source>To capture the king when he sits on his throne, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the king.</source>
+        <target>Pour capturer le roi quand il est sur son trône, les 4 cases voisines au roi (horizontalement et verticalement) doivent être occupées par vos pions.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2222427678565473040" datatype="html">
         <source>Capturing the king (1/2)</source>
         <target>Capturer le roi (1/2)</target>
       </trans-unit>
-      <trans-unit id="8109622767341644037" datatype="html">
-        <source>To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
-        <target>Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus. Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats. Ceci fonctionne également si le roi est assis sur son trône.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      <trans-unit id="6006281576137172714" datatype="html">
+        <source>To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, capture the king.</source>
+        <target>Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus. Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats. Ceci fonctionne également si le roi est assis sur son trône.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2543567724882527416" datatype="html">
         <source>Failed, you let the king run away.</source>
@@ -3569,21 +3745,65 @@
         <source>Capturing the king next to his throne</source>
         <target>Capturer le roi à côté de son trône</target>
       </trans-unit>
-      <trans-unit id="2153359406126924155" datatype="html">
-        <source>Another way to capture the king is to use three soldier plus the central throne to surround the king on four sides.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
-        <target>Un autre moyen de capturer le roi est d'utiliser trois soldats plus le trône central pour entourer le roi des 4 côtés.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      <trans-unit id="8145627268762433482" datatype="html">
+        <source>Another way to capture the king is to use three soldier plus the central throne to surround the king on four sides.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the king.</source>
+        <target>Un autre moyen de capturer le roi est d'utiliser trois soldats plus le trône central pour entourer le roi des 4 côtés.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2262651303124763617" datatype="html">
         <source>Capturing the king (2/2)</source>
         <target>Capturer le roi (2/2)</target>
       </trans-unit>
-      <trans-unit id="3205871514812378752" datatype="html">
-        <source>Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
-        <target>Un autre moyen de capturer le roi est de l&apos;immobiliser à 3 contre un bord. Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      <trans-unit id="8429826787913397956" datatype="html">
+        <source>Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, capture the king.</source>
+        <target>Un autre moyen de capturer le roi est de l&apos;immobiliser à 3 contre un bord. Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
+      </trans-unit>
+      <trans-unit id="1739222080553143193" datatype="html">
+        <source>Those two spaces are not neighbors!</source>
+        <target>Ces deux cases ne sont pas voisines !</target>
+      </trans-unit>
+      <trans-unit id="4853714910007564389" datatype="html">
+        <source>There is no way to put a piece there!</source>
+        <target>Il n'y a pas moyen de placer une pièce ici !</target>
+      </trans-unit>
+      <trans-unit id="7841599074494103882" datatype="html">
+        <source>You cannot drop on only one piece!</source>
+        <target>Vous ne pouvez pas déposer de pièce sur seulement une autre pièce !</target>
+      </trans-unit>
+      <trans-unit id="4138926893172482803" datatype="html">
+        <source>You cannot drop a piece on uneven grounds!</source>
+        <target>Vous ne pouvez pas déposer de pièce sur deux piles de hauteurs différentes !</target>
+      </trans-unit>
+      <trans-unit id="8777341718687257426" datatype="html">
+        <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
+        <target>Au Trexo, le but du jeu est d'aligner 5 pièces de votre couleur dans une ligne horizontale, verticale, ou diagonale. Mais les joueurs déposent des tuiles constituées de deux pièces, une pour chaque joueur !</target>
+      </trans-unit>
+      <trans-unit id="6011148802067949079" datatype="html">
+        <source>Dropping a tile</source>
+        <target>Déposer une tuile</target>
+      </trans-unit>
+      <trans-unit id="2972240786684210487" datatype="html">
+        <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To drop a tile, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
+        <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, ou à même le plateau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit où vous voulez déposer la pièce de l'adversaire, puis sur la case voisine où vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
+      </trans-unit>
+      <trans-unit id="6262113904872794006" datatype="html">
+        <source>Dropping a piece over other pieces</source>
+        <target>Placer une pièce sur d'autres pièces</target>
+      </trans-unit>
+      <trans-unit id="882687674117366349" datatype="html">
+        <source>You can put a tile on other tiles. For that you must respect two rules:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same height.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Vous pouvez superposer les tuiles. Pour ce faire vous devez respecter deux règles :&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Les deux pièces doivent être au même niveau.&lt;/li&gt;&lt;li&gt;Vous ne pouvez pas déposer votre tuile sur une seule tuile.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Vous jouez Foncé, placez une tuile en hauteur.</target>
+      </trans-unit>
+      <trans-unit id="8122888205935746981" datatype="html">
+        <source>Failed, you put that piece on the floor level, please put it on top of two pieces.</source>
+        <target>Raté, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
+      </trans-unit>
+      <trans-unit id="3210337788599026628" datatype="html">
+        <source>To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you lose, even if you aligned 5 of your pieces too.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+        <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte, les pièces cachées ne sont plus une menace, et une victoire peut inclure des pièces de hauteurs différentes. Puisque vous déposez les pièces adverses en premier, si vous créez un alignement avec les pièces adverses, vous perdez, même si vous alignez aussi 5 de vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">
         <source>The king is dead, long live the king. Congratulations, you won.</source>
@@ -3593,9 +3813,9 @@
         <source>Capturing the king far from his throne</source>
         <target>Capturer le roi loin de son trône</target>
       </trans-unit>
-      <trans-unit id="3108682754212137830" datatype="html">
-        <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
-        <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé comme un soldat.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      <trans-unit id="1214950240176247246" datatype="html">
+        <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the king.</source>
+        <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé comme un soldat.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2511498870151087692" datatype="html">
         <source>Hnefatafl is a strategy game that was played by the vikings, it&apos;s part of a larger family of games called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
@@ -3665,15 +3885,15 @@
         <source>Initial board and placement phase</source>
         <target>Plateau initial et phase de placement</target>
       </trans-unit>
-      <trans-unit id="7928933913009298966" datatype="html">
+      <trans-unit id="3619666883540312330" datatype="html">
         <source>The initial board is empty.
         At the beginning of the game, each player puts one of its ring on the board at their turn.
-        This phase stops when all rings have been placed on the board.
-        Put one of your ring on the board by clicking the space where you want to place it.</source>
+        This phase stops when all rings have been placed on the board.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, put one of your ring on the board by clicking the space where you want to place it.</source>
         <target>Le plateau initial est vide.
         Au début de la partie, chaque joueur place à son tour un de ses anneaux.
-        Cette phase s&apos;arrête lorsque que tous les anneaux ont été placés.
-        Placez un de vos anneaux en cliquant sur la case du plateau où vous désirez le placer.</target>
+        Cette phase s&apos;arrête lorsque que tous les anneaux ont été placés.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé, placez un de vos anneaux en cliquant sur la case du plateau où vous désirez le placer.</target>
       </trans-unit>
       <trans-unit id="6117091506461787133" datatype="html">
         <source>Putting a marker</source>
@@ -3717,15 +3937,15 @@
         <source>Compound captures</source>
         <target>Captures composées</target>
       </trans-unit>
-      <trans-unit id="323630988500443195" datatype="html">
+      <trans-unit id="4474897538192187001" datatype="html">
         <source>During a turn, you could have to choose between multiple captures,
         or you could even capture multiple times!
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
-        Here, you can capture two rings, do it!</source>
+        Here, playing Dark, you can capture two rings, do it!</source>
         <target>Il est possible que lors d'un tour, vous ayez la possibilité de choisir entre plusieurs captures,
         ou même d'effectuer plusieurs captures !
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
-        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
+        Ici, en tant que Foncé, vous pouvez récupérer deux anneaux, faites-le !</target>
       </trans-unit>
       <trans-unit id="7542102025019708759" datatype="html">
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>

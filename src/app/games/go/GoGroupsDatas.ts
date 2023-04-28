@@ -7,12 +7,12 @@ import { GoPiece } from './GoState';
 
 export class GoGroupDatas extends GroupDatas<GoPiece> {
 
-    constructor(color: GoPiece,
-                public emptyCoords: Coord[],
-                public darkCoords: Coord[],
-                public lightCoords: Coord[],
-                public deadDarkCoords: Coord[],
-                public deadLightCoords: Coord[])
+    public constructor(color: GoPiece,
+                       public emptyCoords: Coord[],
+                       public darkCoords: Coord[],
+                       public lightCoords: Coord[],
+                       public deadDarkCoords: Coord[],
+                       public deadLightCoords: Coord[])
     {
         super(color);
     }

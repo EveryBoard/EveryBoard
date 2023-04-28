@@ -56,6 +56,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     });
 
     private static singleton: MGPOptional<LodestoneRules> = MGPOptional.empty();
+
     public static get(): LodestoneRules {
         if (LodestoneRules.singleton.isAbsent()) {
             LodestoneRules.singleton = MGPOptional.of(new LodestoneRules());

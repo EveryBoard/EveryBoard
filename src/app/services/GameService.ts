@@ -35,11 +35,11 @@ export class GameService {
 
     public static VERBOSE: boolean = false;
 
-    constructor(private readonly partDAO: PartDAO,
-                private readonly connectedUserService: ConnectedUserService,
-                private readonly userService: UserService,
-                private readonly configRoomService: ConfigRoomService,
-                private readonly chatService: ChatService)
+    public constructor(private readonly partDAO: PartDAO,
+                       private readonly connectedUserService: ConnectedUserService,
+                       private readonly userService: UserService,
+                       private readonly configRoomService: ConfigRoomService,
+                       private readonly chatService: ChatService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');
     }

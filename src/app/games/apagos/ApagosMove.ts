@@ -79,9 +79,9 @@ export class ApagosMove extends Move {
             return 'ApagosMove.slideDown(' + this.starting.get().x + ' > ' + this.landing.x + ')';
         }
     }
-    public equals(o: ApagosMove): boolean {
-        if (this.starting.equals(o.starting) === false) return false;
-        if (this.landing.equals(o.landing) === false) return false;
-        return this.piece.equals(o.piece);
+    public equals(other: ApagosMove): boolean {
+        if (this.starting.equals(other.starting) === false) return false;
+        if (this.landing.equals(other.landing) === false) return false;
+        return this.piece.equals(other.piece);
     }
 }

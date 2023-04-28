@@ -20,8 +20,8 @@ export class ConfigRoomService {
 
     public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
 
-    constructor(private readonly configRoomDAO: ConfigRoomDAO,
-                private readonly connectedUserService: ConnectedUserService)
+    public constructor(private readonly configRoomDAO: ConfigRoomDAO,
+                       private readonly connectedUserService: ConnectedUserService)
     {
         display(ConfigRoomService.VERBOSE, 'ConfigRoomService.constructor');
     }

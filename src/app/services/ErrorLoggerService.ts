@@ -15,7 +15,7 @@ export class ErrorLoggerService {
 
     private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
 
-    public static setSingletonInstance(service: ErrorLoggerService) {
+    public static setSingletonInstance(service: ErrorLoggerService): void {
         ErrorLoggerService.singleton = MGPOptional.of(service);
     }
     public static logErrorAndFail(component: string, message: string, data?: JSONValue): never {
@@ -36,7 +36,8 @@ export class ErrorLoggerService {
     }
     public constructor(private readonly errorDAO: ErrorDAO,
                        private readonly router: Router,
-                       private readonly messageDisplayer: MessageDisplayer) {
+                       private readonly messageDisplayer: MessageDisplayer)
+    {
         ErrorLoggerService.setSingletonInstance(this);
     }
     public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {

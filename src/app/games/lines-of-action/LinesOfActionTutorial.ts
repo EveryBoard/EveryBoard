@@ -36,7 +36,7 @@ export class LinesOfActionTutorial {
          Note that there is a helping indicator to let you know where a piece can land when you select it.<br/><br/>
          You're playing Dark, make the first move!`,
             LinesOfActionState.getInitialState(),
-            LinesOfActionMove.of(new Coord(1, 7), new Coord(1, 5)).get(),
+            LinesOfActionMove.from(new Coord(1, 7), new Coord(1, 5)).get(),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
@@ -54,7 +54,7 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, O],
             ], 0),
-            [LinesOfActionMove.of(new Coord(3, 1), new Coord(6, 1)).get()],
+            [LinesOfActionMove.from(new Coord(3, 1), new Coord(6, 1)).get()],
             $localize`Congratulations!`,
             $localize`Failed. You did not jump over one of your pieces.`,
         ),
@@ -62,13 +62,15 @@ export class LinesOfActionTutorial {
             $localize`Moving`,
             $localize`Here is a different board. Pick the dark piece in the middle (line 4, column 4)
         and observe its possible moves.
-        Horizontally, this piece can move only of one square because it is the only piece on this line.
-        Vertically, this piece can move of three squares because there are in total three pieces on that vertical line.
-        But it can only go up, as below it the landing square is occupied by one of your pieces.
-        Diagonally, only one move is possible: on the diagonal that contains three pieces,
-        only in the direction where it does not jump over one of the opponent's pieces.
-        On the other diagonal, there are too many pieces to end the move on the board.<br/><br/>
-        Make one of these moves.`,
+        <ul>
+            <li>Horizontally, this piece can move only of one square because it is the only piece on this line.</li>
+            <li>Vertically, this piece can move of three squares because there are in total three pieces on that vertical line.
+                But it can only go up, as below it the landing square is occupied by one of your pieces.</li>
+            <li>Diagonally, only one move is possible: on the diagonal that contains three pieces,
+                only in the direction where it does not jump over one of the opponent's pieces.
+                On the other diagonal, there are too many pieces to end the move on the board.</li>
+        </ul><br/>
+        You're playing Dark, make one of these moves.`,
             new LinesOfActionState([
                 [_, _, _, _, _, _, X, _],
                 [_, _, _, _, _, O, _, _],
@@ -80,10 +82,10 @@ export class LinesOfActionTutorial {
                 [_, _, _, O, _, _, _, _],
             ], 0),
             [
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(3, 0)).get(),
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(0, 0)).get(),
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(2, 3)).get(),
-                LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 3)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(3, 0)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(0, 0)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(2, 3)).get(),
+                LinesOfActionMove.from(new Coord(3, 3), new Coord(4, 3)).get(),
             ],
             $localize`Congratulations!`,
             $localize`Failed. This was not one of the expected moves.`,
@@ -105,12 +107,12 @@ export class LinesOfActionTutorial {
                 [X, _, _, _, _, _, _, X],
                 [_, O, O, O, O, O, O, _],
             ], 0),
-            LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get(),
+            LinesOfActionMove.from(new Coord(2, 2), new Coord(4, 2)).get(),
             (move: LinesOfActionMove, previous: LinesOfActionState, _result: LinesOfActionState): MGPValidation => {
-                if (previous.getPieceAt(move.end) === PlayerOrNone.ONE) {
+                if (previous.getPieceAt(move.getEnd()) === PlayerOrNone.ONE) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Failed!`);
+                    return MGPValidation.failure($localize`Failed. Try again.`);
                 }
             },
             $localize`Congratulations!`,
@@ -130,9 +132,9 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],
             ], 0),
-            [LinesOfActionMove.of(new Coord(0, 2), new Coord(4, 2)).get()],
+            [LinesOfActionMove.from(new Coord(0, 2), new Coord(4, 2)).get()],
             $localize`Congratulations!`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

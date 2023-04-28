@@ -247,17 +247,17 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     public getPieceTransform(x: number, y: number): string {
         const piece: SiamPiece = this.board[y][x];
-        return this.getArrowTransform(x+1, y+1, piece.getDirection());
+        return this.getArrowTransform(x + 1, y + 1, piece.getDirection());
     }
     public getIndicatorTransform(arrow: SiamIndicatorArrow): string {
         const startingAt: Coord = arrow.target.getPrevious(arrow.direction, 0.5);
-        return this.getArrowTransform(startingAt.x+1, startingAt.y+1, arrow.direction);
+        return this.getArrowTransform(startingAt.x + 1, startingAt.y + 1, arrow.direction);
     }
     public getRemainingPieceTransform(piece: number, player: Player): string {
         const remainingPieces: number = this.playerPieces(player);
         const closenessFactor: number = 3;
         const maxRemainingPieces: number = 5;
-        let x: number = (maxRemainingPieces+1)/closenessFactor;
+        let x: number = (maxRemainingPieces + 1)/closenessFactor;
         let y: number;
         let orientation: Orthogonal;
         if (player === Player.ONE) {

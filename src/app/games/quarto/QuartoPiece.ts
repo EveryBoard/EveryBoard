@@ -50,8 +50,8 @@ export class QuartoPiece implements ComparableObject {
     }
     private constructor(public value: number) { }
 
-    public equals(o: QuartoPiece): boolean {
-        return this === o;
+    public equals(other: QuartoPiece): boolean {
+        return this === other;
     }
     public toString(): string {
         return 'QuartoPiece(' + this.value + ')';

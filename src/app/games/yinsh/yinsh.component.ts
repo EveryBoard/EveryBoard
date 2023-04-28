@@ -93,7 +93,7 @@ export class YinshComponent
         sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new YinshRules(YinshState);
@@ -112,7 +112,7 @@ export class YinshComponent
             }
             this.viewInfo.spaceInfo[coord.y][coord.x] = {
                 coord,
-                coordinates: this.getHexaCoordsAt(coord),
+                coordinates: this.getHexaPointsAt(coord),
                 center: this.getCenterAt(coord),
                 spaceClasses: [],
                 markerClasses: [],
@@ -344,7 +344,7 @@ export class YinshComponent
             return this.selectCapture(captures[0]);
         }
     }
-    private selectCapture(capture: YinshCapture) {
+    private selectCapture(capture: YinshCapture): MGPValidation {
         this.currentCapture = MGPOptional.of(capture);
         this.constructedState = new YinshState(
             this.rules.applyCaptureWithoutTakingRing(this.constructedState, capture),

@@ -31,7 +31,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
     ];
     private filledCoords: Coord[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);

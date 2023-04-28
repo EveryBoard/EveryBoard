@@ -34,7 +34,7 @@ export class MartianChessTutorial extends Tutorial {
             MartianChessState.getInitialState(),
             MartianChessMove.from(new Coord(2, 5), new Coord(1, 4)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
-                if (result.getPieceAt(move.end) === MartianChessPiece.PAWN) {
+                if (result.getPieceAt(move.getEnd()) === MartianChessPiece.PAWN) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`This is not a pawn!`);
@@ -48,7 +48,7 @@ export class MartianChessTutorial extends Tutorial {
             MartianChessState.getInitialState(),
             MartianChessMove.from(new Coord(1, 7), new Coord(0, 7)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
-                if (result.getPieceAt(move.end) === MartianChessPiece.DRONE) {
+                if (result.getPieceAt(move.getEnd()) === MartianChessPiece.DRONE) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`This is not a drone!`);
@@ -71,7 +71,7 @@ export class MartianChessTutorial extends Tutorial {
             ], 1),
             MartianChessMove.from(new Coord(2, 3), new Coord(2, 7)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
-                if (result.getPieceAt(move.end) === MartianChessPiece.QUEEN) {
+                if (result.getPieceAt(move.getEnd()) === MartianChessPiece.QUEEN) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`This is not a queen!`);
@@ -131,7 +131,7 @@ export class MartianChessTutorial extends Tutorial {
             ], 0),
             MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
-                const landed: MartianChessPiece = result.getPieceAt(move.end);
+                const landed: MartianChessPiece = result.getPieceAt(move.getEnd());
                 if (landed === MartianChessPiece.QUEEN) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -156,7 +156,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Restarting the clock`,
-            $localize`If the clock has been called, whenever a capture is done the countdown restarts.<br/><br/>You are playing Dark, do a capture to restart the countdown.`,
+            $localize`If the clock has been called, whenever a capture is done the countdown restarts.<br/><br/>You're playing Dark, do a capture to restart the countdown.`,
             new MartianChessState([
                 [_, _, _, _],
                 [_, A, _, _],
@@ -173,7 +173,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`End game (by clock)`,
-            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You are playing Dark, do the last move.`,
+            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You're playing Dark, do the last move.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],
@@ -202,7 +202,7 @@ export class MartianChessTutorial extends Tutorial {
             ], 0),
             MartianChessMove.from(new Coord(2, 4), new Coord(1, 3)).get(),
             (move: MartianChessMove, _previous: MartianChessState, _result: MartianChessState) => {
-                if (move.end.y === 3) {
+                if (move.getEnd().y === 3) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`Your piece is still in you territory!`);

@@ -42,7 +42,7 @@ export class GoTutorial extends Tutorial {
             $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
-        The light piece only has one liberty left, play there.`,
+        You're playing Dark. The light piece on the board only has one liberty left, play there.`,
             new GoState([
                 [_, _, _, _, _],
                 [_, _, O, _, _],
@@ -57,7 +57,7 @@ export class GoTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Capturing multiple stones`,
             $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
-        The light group here only has one liberty left, capture it.`,
+        You're playing Dark. The light group here only has one liberty left, capture it.`,
             new GoState([
                 [_, O, _, _, _],
                 [O, X, _, _, _],
@@ -131,7 +131,7 @@ export class GoTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Ko`,
             $localize`A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.<br/><br/>
-        Capture the light stone.`,
+        You're playing Dark, capture the light stone.`,
             new GoState([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -146,7 +146,7 @@ export class GoTutorial extends Tutorial {
         This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`End of the game`,
@@ -155,7 +155,7 @@ export class GoTutorial extends Tutorial {
         The dead groups are then marked by clicking on them.
         Every intersection in a player's territory earns that player a point.
         The winner is the one with most points.<br/><br/>
-        A last stone is dead, mark it.`,
+        You're playing Dark. A last stone is dead, mark it.`,
             new GoState([
                 [X, O, O, O, O, O, b, b, b],
                 [X, X, X, X, O, O, O, b, b],
