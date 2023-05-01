@@ -100,12 +100,19 @@ def check():
 
     print('we will print a page')
     print(os.listdir())
-    print(os.curdir)
-    the_file = open('./coverage/app/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
-    the_page = the_file.read()
-    the_file.close()
-    print(the_page)
-    print('and now we did')
+    try:
+        print(os.listdir('.'))
+        print(os.listdir('./coverage'))
+        print(os.listdir('./coverage/app'))
+        print(os.listdir('./coverage/app/wrapper-components'))
+        print(os.listdir('./coverage/app/wrapper-components/GameWrapper.ts.html'))
+        the_file = open('./coverage/app/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
+        the_page = the_file.read()
+        the_file.close()
+        print(the_page)
+        print('and now we did')
+    except Exception:
+        print('exception au-cul-red')
     if decreased:
         exit(1) # fail for CI script
     else:
