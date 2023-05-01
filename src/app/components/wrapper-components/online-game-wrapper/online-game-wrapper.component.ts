@@ -66,6 +66,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public static VERBOSE: boolean = false;
 
+    public displayAIThough: boolean = false; // TODO TODOTODO: connect this to some button for nerdy user and devs
+
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
 
