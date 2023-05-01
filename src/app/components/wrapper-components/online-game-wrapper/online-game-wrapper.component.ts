@@ -888,6 +888,7 @@ export class OGWCTimeManager extends OGWCHelper {
     }
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player) {
+        console.log('AFTER EVENTS')
         if (gameEnd === false) {
             if (this.clocksStarted === false) {
                 // TODO: we can actually directly do that in onGameStart to simplify everything
@@ -926,9 +927,13 @@ export class OGWCTimeManager extends OGWCHelper {
     // Update clocks with the available time
     private updateClocks(): void {
         for (const player of Player.PLAYERS) {
+            console.log('PLAYER ' + player.value);
+            console.log('turn clock: ' + this.availableTurnTime[player.value]);
             this.turnClocks[player.value].changeDuration(this.availableTurnTime[player.value]);
             const globalTime: number =
                 this.getPartDurationInMs() + this.extraGlobalTime[player.value] - this.takenGlobalTime[player.value];
+            console.log('global clock: ' + globalTime);
+            console.log('taken global time: '+ this.takenGlobalTime[player.value]);
             this.globalClocks[player.value].changeDuration(globalTime);
         }
     }

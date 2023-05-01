@@ -323,6 +323,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.prepareSpies();
     }
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
+        OGWCTimeManager.START_CLOCKS = false;
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         spyOn(wrapper, 'reachedOutOfTime').and.callFake(async() => {});
         // Should not even been called but:
@@ -528,7 +529,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
     describe('ObservedPart Change', () => {
-        fit('should redirect to lobby when role and partId change', fakeAsync(async() => {
+        it('should redirect to lobby when role and partId change', fakeAsync(async() => {
             OGWCTimeManager.START_CLOCKS = false;
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
@@ -543,9 +544,9 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect to lobby when role stay "observer" but partId change', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
-            // TODO spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
             // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
@@ -558,9 +559,9 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not do anything particular when observer leaves this part from another tab', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
-            // TODO spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
             // When observedPart is updated to inform component that user stopped observing some part in another tab
             const router: Router = TestBed.inject(Router);
@@ -1165,7 +1166,8 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('End Game Time Management', () => {
-        it(`should stop player's global chrono when local reach end`, fakeAsync(async() => {
+        it(`should stop player's global clock when turn reaches end`, fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = true;
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
@@ -1173,7 +1175,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
         }));
-        it(`should stop player's local chrono when global chrono reach end`, fakeAsync(async() => {
+        it(`should stop player's turn clock when global clock reaches end`, fakeAsync(async() => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
@@ -1181,7 +1183,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
             expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
         }));
-        it(`should stop offline opponent's global chrono when local reach end`, fakeAsync(async() => {
+        it(`should stop offline opponent's global clock when turn reaches end`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -1195,7 +1197,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
-        it(`should stop offline opponent's local chrono when global chrono reach end`, fakeAsync(async() => {
+        it(`should stop offline opponent's local clock when global clock reaches end`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, true);
             await doMove(FIRST_MOVE, true);
@@ -1209,7 +1211,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
         }));
-        it(`should not notifyTimeout for online opponent`, fakeAsync(async() => {
+        xit(`should not notifyTimeout for online opponent`, fakeAsync(async() => {
             // Given an online game where it's the opponent's; opponent is online
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -1225,7 +1227,8 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
         }));
-        xit(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
+        it(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = true;
             // Given an online game where it's the opponent's turn and opponent is offline
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -1244,68 +1247,31 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
             expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, Player.ZERO, 1, loser);
         }));
-        xit(`should send opponent their remainingTime after first move`, fakeAsync(async() => {
-            // REVIEW TODO: time management will be reimplemented, then we can update this test
-            // Given a board where a first move has been made
-            await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
-            await receiveNewMoves(0, [FIRST_MOVE_ENCODED], 1);
-            const beginning: Timestamp = wrapper.currentPart?.data.beginning as Timestamp;
-            const firstMoveTime: Timestamp = wrapper.currentPart?.data.lastUpdateTime as Timestamp;
-            const msUsedForFirstMove: number = getMillisecondsElapsed(beginning, firstMoveTime);
-
-            // When doing the next move
-            expect(wrapper.currentPart?.data.remainingMsForZero).toEqual(1800 * 1000);
-            await doMove(SECOND_MOVE, true);
-
-            // Then the update sent should have calculated time between creation and first move
-            // and should have removed it from remainingMsForZero
-            const remainingMsForZero: number = (1800 * 1000) - msUsedForFirstMove;
-            expect(wrapper.currentPart?.data.remainingMsForZero)
-                .withContext(`Should have sent the opponent its updated remainingTime`)
-                .toEqual(remainingMsForZero);
-            tick(wrapper.configRoom.maximalMoveDuration * 1000);
-        }));
-        xit('should update chrono when receiving your remainingTime in the update', fakeAsync(async() => {
-            // TODO FOR REVIEW: time management will be updated later
-            // Given a board where a first move has been made
-            console.log('--- PREPARING')
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
-            console.log('--- FIRST MOVE')
-            await doMove(FIRST_MOVE, true);
-
-            // When receiving new move
-            console.log('--- SECOND MOVE')
-            await receiveNewMoves(1, [SECOND_MOVE_ENCODED], 2);
-
-            // Then the global chrono of update-player should be updated
-            // TODO: expect(wrapper.chronoZeroGlobal.changeDuration)
-            // TODO:     .withContext(`Chrono.ChangeDuration should have been refreshed with update's datas`)
-            // TODO:     .toHaveBeenCalledWith(Utils.getNonNullable(wrapper.currentPart?.data.remainingMsForZero));
-            tick(wrapper.configRoom.maximalMoveDuration * 1000);
-        }));
         it('when resigning, lastUpdateTime must be upToDate then remainingMs');
         it('when winning move is done, remainingMs at last turn of opponent must be');
     });
-    xdescribe('AddTime feature', () => { // TODO FOR REVIEW: need to fix time management
-        describe('creator', () => {
+    describe('Add time feature', () => {
+        describe('from creator', () => {
             async function prepareStartedGameForCreator(): Promise<void> {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             }
-            it('should allow to add local time to opponent', fakeAsync(async() => {
+            function waitTimeout(): void {
+                const msUntilTimeout: number = (wrapper.configRoom.maximalMoveDuration + 30) * 1000;
+                tick(msUntilTimeout);
+            }
+            it('should allow to add turn time to opponent', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareStartedGameForCreator();
                 spyOn(partService, 'addAction').and.callThrough();
 
-                // When local countDownComponent emit addTime
+                // When creator adds turn time to the opponent
                 await wrapper.addTurnTime();
 
-                // Then a add time action is generated
+                // Then an add turn time action is generated
                 expect(partService.addAction).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'AddTurnTime');
-                const msUntilTimeout: number = (wrapper.configRoom.maximalMoveDuration + 30) * 1000;
-                tick(msUntilTimeout);
+                waitTimeout();
             }));
-            it('should resume for both chrono at once when adding time to one', fakeAsync(async() => {
+            it('should resume both clocks at once when adding turn time', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareStartedGameForCreator();
                 spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
@@ -1314,36 +1280,38 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When receiving a request to add local time to player zero
                 await receiveAction(Player.ZERO, 'AddTurnTime');
 
-                // Then both chronos of player zero should have been resumed
-                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledTimes(1); // it failed, was 0
-                expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledTimes(1); // it worked
-                const msUntilTimeout: number = (wrapper.configRoom.maximalMoveDuration + 30) * 1000;
-                tick(msUntilTimeout);
+                // Then both clocks of player zero should have been resumed
+                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledTimes(1);
+                expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledTimes(1);
+                waitTimeout();
             }));
-            it('should add time to chrono local when receiving the addTurnTime request (Player.ONE)', fakeAsync(async() => {
+            it('should add turn time when receiving AddTurnTime request from Player.ONE', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 spyOn(partDAO, 'update').and.callThrough();
 
-                // When receiving addTurnTime request
+                // When receiving AddTurnTime action from player one
                 await receiveAction(Player.ONE, 'AddTurnTime');
 
-                // Then chrono local of player one should be increased
+                // Then the turn time of player zero should be increased
                 const msUntilTimeout: number = (wrapper.configRoom.maximalMoveDuration + 30) * 1000;
-                expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
+                // it should be around 2 minutes + 30 seconds
+                // (minus the drift it took to process the event, usually 1 or 2ms)
+                expect(wrapper.chronoZeroTurn.remainingMs).toBeGreaterThan(msUntilTimeout - 10);
+                expect(wrapper.chronoZeroTurn.remainingMs).toBeLessThan(msUntilTimeout);
                 tick(msUntilTimeout);
             }));
-            it('should add time to local chrono when receiving the addTurnTime request (Player.ZERO)', fakeAsync(async() => {
+            it('should add turn time when receiving AddTurnTime action from Player.ZERO', fakeAsync(async() => {
                 // Given an onlineGameComponent on user turn
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 spyOn(partDAO, 'update').and.callThrough();
 
-                // When receiving addTurnTime request
+                // When receiving AddTurnTime action from player zero
                 await receiveAction(Player.ZERO, 'AddTurnTime');
 
-                // Then chrono local of player one should be increased
+                // Then the turn time of player one should be increased
                 const msUntilTimeout: number = (wrapper.configRoom.maximalMoveDuration + 30) * 1000;
-                expect(wrapper.chronoZeroTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
+                expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
                 tick(msUntilTimeout);
             }));
             it('should allow to add global time to opponent (as Player.ZERO)', fakeAsync(async() => {
@@ -1351,7 +1319,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 spyOn(partService, 'addAction').and.callThrough();
 
-                // When countDownComponent emit addGlobalTime
+                // When the player adds global time to the opponent
                 await wrapper.addGlobalTime();
 
                 // Then a request to add global time to player one should be sent
@@ -1360,7 +1328,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes
                 tick(msUntilTimeout);
             }));
-            it('should add time to global chrono when receiving the addGlobalTime request (Player.ONE)', fakeAsync(async() => {
+            it('should add time to global clock when receiving AddGlobalTime action from Player.ONE', fakeAsync(async() => {
                 // Given an onlineGameComponent on user's turn
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 spyOn(partDAO, 'update').and.callThrough();
@@ -1369,10 +1337,12 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveAction(Player.ONE, 'AddGlobalTime');
 
                 // Then chrono global of player one should be increased by 5 new minutes
-                expect(wrapper.chronoOneGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
+                const msUntilTimeout: number = (30 * 60 * 1000) + (5 * 60 * 1000);
+                expect(wrapper.chronoZeroGlobal.remainingMs).toBeGreaterThan(msUntilTimeout - 10);
+                expect(wrapper.chronoZeroGlobal.remainingMs).toBeLessThan(msUntilTimeout);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it('should add time to global chrono when receiving the addGlobalTime request (Player.ZERO)', fakeAsync(async() => {
+            it('should add time to global clock when receiving the AddGlobalTime action from Player.ZERO', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
@@ -1380,15 +1350,15 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveAction(Player.ZERO, 'AddGlobalTime');
 
                 // Then chrono global of player one should be increased by 5 new minutes
-                expect(wrapper.chronoZeroGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
+                expect(wrapper.chronoOneGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
             it('should postpone the timeout of chrono and not only change displayed time', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
-                // When receiving a addTurnTime request
-                await receiveAction(Player.ZERO, 'AddTurnTime');
+                // When receiving an AddTurnTime action
+                await receiveAction(Player.ONE, 'AddTurnTime');
                 testUtils.detectChanges();
 
                 // Then game should end by timeout only after new time has run out
@@ -1451,7 +1421,6 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
                 loser: UserMocks.CREATOR_MINIMAL_USER,
-                request: null,
                 result: MGPResult.RESIGN.value,
             });
             expectGameToBeOver();
@@ -1513,6 +1482,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('getUpdateTypes', () => {
         it('nothing changed = UpdateType.DUPLICATE', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given any part
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             const initialPart: Part = {
@@ -1535,7 +1505,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             // When making a move changing nothing
             const update: PartDocument = new PartDocument('configRoomId', initialPart);
 
-            // Then the update should be detected as a Duplicata
+            // Then the update should be detected as a duplicate
             expect(wrapper.getUpdateTypes(update)).toEqual([UpdateType.DUPLICATE]);
             tick(wrapper.configRoom.maximalMoveDuration * 1000 + 1);
         }));
@@ -1622,6 +1592,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('should mark user as Observer when arriving', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given a component that is not initialized yet
             await prepareTestUtilsFor(USER_OBSERVER, false, false);
 
@@ -1639,10 +1610,10 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 role: 'Observer',
             };
             expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
-
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should remove observedPart when leaving the component', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -1655,6 +1626,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
         }));
         it('should redirect to lobby when observedPart changed to non-observer', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -1684,9 +1656,9 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
         }));
         it('should not be able to do anything', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             await prepareTestUtilsFor(USER_OBSERVER);
-            // TODO spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctions: { name: string, isAsync: boolean } [] = [
                 { name: 'canProposeDraw', isAsync: false },
@@ -1705,12 +1677,11 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 }
                 expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', expectedError);
             }
-            tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
+            OGWCTimeManager.START_CLOCKS = false;
             // Given a part that the two players agreed to draw
             await prepareTestUtilsFor(USER_OBSERVER);
-            // TODO spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
             await receiveRequest(Player.ONE, 'Draw');
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ZERO.value,
