@@ -100,7 +100,8 @@ def check():
 
     print('we will print a page')
     print(os.listdir())
-    the_file = open('/coverage/app/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
+    print(os.curdir)
+    the_file = open('./coverage/app/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
     the_page = the_file.read()
     the_file.close()
     print(the_page)
