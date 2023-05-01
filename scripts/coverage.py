@@ -100,13 +100,12 @@ def check():
 
     print('we will print a page')
     try:
-        print(os.listdir())
         print(os.listdir('.'))
         print(os.listdir('./coverage/'))
         print(os.listdir('./coverage/app/'))
+        print(os.listdir('./coverage/app/components/'))
         print(os.listdir('./coverage/app/components/wrapper-components/'))
-        print(os.listdir('./coverage/app/wrapper-components/components/GameWrapper.ts.html'))
-        the_file = open('./coverage/app/wrapper-components/components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
+        the_file = open('./coverage/app/components/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
         the_page = the_file.read()
         the_file.close()
         print(the_page)
