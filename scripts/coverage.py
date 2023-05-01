@@ -76,7 +76,9 @@ def check():
     new = load_coverage_data()
 
     decreased = False
+    print('we are checking')
     for type_ in ['statements', 'branches', 'functions', 'lines']:
+        print('checking', type_)
         for directory in set.union(set(old[type_]), set(new[type_])):
             if directory in old[type_] and directory in new[type_]:
                 new_missing = new[type_][directory]
@@ -95,12 +97,17 @@ def check():
                 if new_missing > 0:
                     decreased = True
                     print('ERROR: increased missing %s in coverage of %s: uncovered %d %s' % (type_, directory, new_missing, type_))
+
+    print('we will print a page')
+    the_file = open('coverage/app/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
+    the_page = the_file.read()
+    the_file.close()
+    print(the_page)
+    print('and now we did')
     if decreased:
-        the_file = open('coverage/app/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
-        the_page = the_file.read()
-        the_file.close()
-        print(the_page)
         exit(1) # fail for CI script
+    else:
+        print('we did not decrease')
 
 if sys.argv[1] == 'check':
     check()
