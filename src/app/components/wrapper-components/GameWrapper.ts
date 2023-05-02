@@ -160,9 +160,8 @@ export abstract class GameWrapper<P extends Comparable> {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
     }
-    public onCancelMove(_reason?: string): void {
-        // Not needed by default
-    }
+    public abstract onCancelMove(_reason?: string): void;
+
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
             return false;
