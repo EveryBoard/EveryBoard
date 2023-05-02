@@ -13,7 +13,7 @@ describe('MGPValidation', () => {
             // Given a successful MGPFallible
             const fallible: MGPFallible<number> = MGPFallible.success(42);
 
-            // When getting it's MGPValidation version
+            // when converting it to a MGPValidation
             const validation: MGPValidation = MGPValidation.ofFallible(fallible);
 
             // Then it should be MGPValidation.SUCCESS

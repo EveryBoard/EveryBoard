@@ -109,7 +109,7 @@ describe('LascaMove', () => {
     });
     describe('equals', () => {
         it('should see as equal identical moves', () => {
-            // Given two identicals moves
+            // Given two identical moves
             const first: LascaMove = LascaMove.fromStep(new Coord(2, 2), new Coord(3, 3)).get();
             const second: LascaMove = LascaMove.fromStep(new Coord(2, 2), new Coord(3, 3)).get();
 
@@ -117,8 +117,8 @@ describe('LascaMove', () => {
             // Then the result should be true
             expect(first.equals(second)).toBeTrue();
         });
-        it('should see as unequal differents moves', () => {
-            // Given two differents moves
+        it('should see as unequal different moves', () => {
+            // Given two different moves
             const first: LascaMove = LascaMove.fromStep(new Coord(2, 2), new Coord(3, 3)).get();
             const second: LascaMove = LascaMove.fromStep(new Coord(0, 4), new Coord(1, 5)).get();
 
@@ -139,7 +139,7 @@ describe('LascaMove', () => {
             expect(short.isPrefix(long)).toBeTrue();
         });
         it('should not consider equal move as prefix to each others', () => {
-            // Given two differents moves
+            // Given two different moves
             const first: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]).get();
             const second: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]).get();
 

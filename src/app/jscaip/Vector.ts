@@ -12,9 +12,6 @@ export class Vector implements ComparableObject {
         return Math.abs(this.x) === length &&
                Math.abs(this.y) === length;
     }
-    // public getOpposite(): Vector {
-    //     return new Vector(-this.x, -this.y);
-    // }
     public toMinimalVector(): Vector {
         const absX: number = Math.abs(this.x);
         const absY: number = Math.abs(this.y);

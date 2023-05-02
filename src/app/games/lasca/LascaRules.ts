@@ -66,6 +66,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const piece: LascaStack = state.getPieceAt(coord);
         const pieceOwner: Player = piece.getCommander().player;
         // Since player zero must go up (-1) and player one go down (+1)
+        // Then we can use the score modifier that happends to match to the "vertical direction" of each players
         const verticalDirection: number = pieceOwner.getScoreModifier();
         const directions: Direction[] = [
             Direction.factory.fromDelta(-1, verticalDirection).get(),

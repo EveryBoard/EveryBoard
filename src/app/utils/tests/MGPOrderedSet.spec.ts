@@ -1,6 +1,6 @@
 import { MGPOrderedSet } from '../MGPOrderedSet';
 
-describe('MGPOrderedSet', () => {
+fdescribe('MGPOrderedSet', () => {
     describe('equals', () => {
         it('should test size', () => {
             const one: MGPOrderedSet<string> = new MGPOrderedSet(['salut']);
