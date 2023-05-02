@@ -423,4 +423,29 @@ describe('LocalGameWrapperComponent', () => {
             expect(winnerTag).toBe('P4Minimax (Player 2) won');
         }));
     });
+    describe('onCancelMove', () => {
+        it('should showLastMove when there is one', fakeAsync(async() => {
+            // Given a component with a last move
+            const component: P4Component = testUtils.getComponent();
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should have been called
+            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+        }));
+        it('should not showLastMove when there is none', fakeAsync(async() => {
+            // Given a component with a last move
+            const component: P4Component = testUtils.getComponent();
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should have been called
+            expect(component.showLastMove).not.toHaveBeenCalled();
+        }));
+    });
 });

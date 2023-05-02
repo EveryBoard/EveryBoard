@@ -98,16 +98,16 @@ def check():
                     decreased = True
                     print('ERROR: increased missing %s in coverage of %s: uncovered %d %s' % (type_, directory, new_missing, type_))
 
-    print('we will print a page')
     try:
-        the_file = open('./coverage/app/components/wrapper-components/GameWrapper.ts.html', mode='r', encoding='utf8', newline='\n')
+        the_file = open('./coverage/app/components/wrapper-components/local-game-wrapper/local-game-wrapper-component.ts.html', mode='r', encoding='utf8', newline='\n')
         the_page = the_file.read()
         the_file.close()
         print(the_page)
-        print('and now we did')
+        print('tadam')
     except Exception:
         print('exception au-cul-red')
     if decreased:
+        print('enodecrize')
         exit(1) # fail for CI script
     else:
         print('we did not decrease')

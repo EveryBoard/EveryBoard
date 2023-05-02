@@ -25,7 +25,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public static VERBOSE: boolean = false;
 
-    public displayAIThough: boolean = false; // TODO TODOTODO: connect this to some button for nerdy user and devs
+    public displayAIThough: boolean = true;
 
     public aiDepths: [string, string] = ['0', '0'];
 

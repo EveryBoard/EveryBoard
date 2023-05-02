@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output, Type } from '@angular/core';
 
-
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
@@ -86,13 +85,13 @@ import { P4Tutorial } from 'src/app/games/p4/P4Tutorial';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
+import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
+import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
+import { PentagoState } from 'src/app/games/pentago/PentagoState';
 import { PylosComponent } from 'src/app/games/pylos/pylos.component';
 import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
 import { PylosState } from 'src/app/games/pylos/PylosState';
-import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
-import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
-import { PentagoState } from 'src/app/games/pentago/PentagoState';
 
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { QuartoTutorial } from 'src/app/games/quarto/QuartoTutorial';
@@ -241,7 +240,7 @@ export class GameInfo {
 
         new GameInfo($localize`Hive`, 'Hive', HiveComponent, new HiveTutorial(), HiveRules.get(), new Date('2023-04-02'), GameDescription.HIVE()),
         new GameInfo($localize`Trexo`, 'Trexo', TrexoComponent, new TrexoTutorial(), TrexoRules.get(), new Date('2023-04-23'), GameDescription.TREXO()),
-        new GameInfo($localize`Lasca`, 'Lasca', LascaComponent, new LascaTutorial(), LascaRules.get(), new Date('2023-05-01'), GameDescription.LASCA()),
+        new GameInfo($localize`Lasca`, 'Lasca', LascaComponent, new LascaTutorial(), LascaRules.get(), new Date('2023-05-05'), GameDescription.LASCA()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
