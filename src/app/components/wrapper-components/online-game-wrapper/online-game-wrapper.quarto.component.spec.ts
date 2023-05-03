@@ -2192,7 +2192,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
             // Given a part component where user was observer
-            // then receive an update telling that user is now non-observer-elsewhere
+            // Then receive an update telling that user is now non-observer-elsewhere
             await prepareTestUtilsFor(USER_OBSERVER);
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
             spyOn(observedPartService, 'removeObservedPart').and.callThrough();

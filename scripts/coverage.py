@@ -77,7 +77,6 @@ def check():
 
     decreased = False
     for type_ in ['statements', 'branches', 'functions', 'lines']:
-        print('checking', type_)
         for directory in set.union(set(old[type_]), set(new[type_])):
             if directory in old[type_] and directory in new[type_]:
                 new_missing = new[type_][directory]
