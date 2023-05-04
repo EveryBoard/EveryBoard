@@ -428,11 +428,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
                                     ' in ' + stringListMoves + ' at turn ' + currentPartTurn +
                                     'because "' + legality.getReasonOr('') + '"';
-            if (legality.isFailure()) {
-                console.log(message);
-                console.log(listMoves);
-            }
-            assert(legality.isSuccess(), message);
+            assert(legality.isSuccess(), message, listMoves);
             rules.choose(chosenMove);
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();

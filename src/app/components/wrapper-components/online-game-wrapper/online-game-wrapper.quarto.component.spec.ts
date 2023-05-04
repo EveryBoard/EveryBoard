@@ -2295,4 +2295,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+    describe('onCancelMove', () => {
+        it('should delegate to gameComponent.showLastMove', () => {
+            // Given a any component
+            const component: QuartoComponent = testUtils.getComponent();
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should have been called
+            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+        });
+    });
 });

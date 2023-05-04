@@ -32,7 +32,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Capture`,
-            $localize`A capture happends when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.<br/><br/>You're playing Dark, go ahead.`,
+            $localize`A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.<br/><br/>You're playing Dark, go ahead.`,
             LascaState.from([
                 [_v, __, __, __, _v, __, _v],
                 [__, __, __, _v, __, _v, __],
@@ -75,7 +75,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Promotion`,
-            $localize`When a stack reach the last line, its commander become officer, and gain the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            $localize`When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
             LascaState.from([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
@@ -94,7 +94,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Officer move`,
-            $localize`Officer can move and capture backward as well as forward.<br/><br/>You're playing Dark, move your officier!`,
+            $localize`Officers can move and capture backward as well as forward.<br/><br/>You're playing Dark, move your officier!`,
             LascaState.from([
                 [__, __, __, __, Uv, __, _v],
                 [__, __, __, __, __, __, __],

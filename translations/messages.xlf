@@ -1803,8 +1803,8 @@
       <trans-unit id="5101419651122121441" datatype="html">
         <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
       </trans-unit>
-      <trans-unit id="6259240946070821983" datatype="html">
-        <source>A capture happends when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+      <trans-unit id="7013110290486741787" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
@@ -1821,8 +1821,8 @@
       <trans-unit id="2693455583384082674" datatype="html">
         <source>Promotion</source>
       </trans-unit>
-      <trans-unit id="2800005139114196090" datatype="html">
-        <source>When a stack reach the last line, its commander become officer, and gain the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      <trans-unit id="2042191715997917496" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
       </trans-unit>
       <trans-unit id="3052116389115675860" datatype="html">
         <source>You did not choose the correct stack, and got no promotion.</source>
@@ -1830,8 +1830,8 @@
       <trans-unit id="4252782057421264089" datatype="html">
         <source>Officer move</source>
       </trans-unit>
-      <trans-unit id="1422370782594461909" datatype="html">
-        <source>Officer can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+      <trans-unit id="8730503950999903830" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
