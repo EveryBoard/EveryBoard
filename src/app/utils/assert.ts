@@ -13,4 +13,3 @@ export function assert(condition: boolean, message: string, notStringMessage?: a
         throw new Error(`Assertion failure: ${message}`);
     }
 }
-;
