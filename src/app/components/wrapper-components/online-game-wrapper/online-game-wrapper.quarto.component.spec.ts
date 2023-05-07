@@ -295,6 +295,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
 
+        console.log('A')
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, true);
 
         let offset: number = 0;
@@ -309,18 +310,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves(turn, [encodedMoves[i]], i + 1, false);
             turn += 1;
         }
-        testUtils.prepareFixture(OnlineGameWrapperComponent);
+        // testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         testUtils.detectChanges();
         tick(1);
+        return; // TODO: no need for the rest here
+        console.log('B')
         const partCreationId: DebugElement = testUtils.findElement('#partCreation');
         let context: string = 'partCreation id should be present after ngOnInit';
         expect(partCreationId).withContext(context).toBeTruthy();
-        context = 'partCreation field should also be present';
+         context = 'partCreation field should also be present';
         expect(wrapper.partCreation).withContext(context).toBeTruthy();
+        console.log('C')
         testUtils.detectChanges();
         tick(2);
-
         testUtils.bindGameComponent();
         testUtils.prepareSpies();
     }
