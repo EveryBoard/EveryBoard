@@ -4,9 +4,9 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
-import { OnlineGameWrapperComponent, UpdateType, OGWCTimeManager } from './online-game-wrapper.component';
+import { OnlineGameWrapperComponent, UpdateType, OGWCTimeManagerService } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
-import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
+import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartService } from 'src/app/services/PartService';
@@ -131,7 +131,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -150,6 +150,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     let partDAO: PartDAO;
     let partService: PartService;
     let gameService: GameService;
+    let timeManagerService: OGWCTimeManagerService;
 
     const OBSERVER: User = {
         username: 'jeanJaja',
@@ -254,6 +255,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         partDAO = TestBed.inject(PartDAO);
         partService = TestBed.inject(PartService);
         gameService = TestBed.inject(GameService);
+        timeManagerService = TestBed.inject(OGWCTimeManagerService);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
     }
     async function prepareBoard(moves: QuartoMove[], player: Player = Player.ZERO): Promise<void> {
@@ -323,11 +325,8 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.prepareSpies();
     }
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
-        OGWCTimeManager.START_CLOCKS = false;
+        spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-        spyOn(wrapper, 'reachedOutOfTime').and.callFake(async() => {});
-        // Should not even been called but:
-        // reachedOutOfTime is called (in test) after tick(1) even though there is still remainingTime
         expect(Utils.getNonNullable(wrapper.currentPlayer).name).toEqual('creator');
     }));
     it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
@@ -530,7 +529,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     describe('ObservedPart Change', () => {
         it('should redirect to lobby when role and partId change', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -544,7 +543,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect to lobby when role stay "observer" but partId change', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -559,7 +558,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not do anything particular when observer leaves this part from another tab', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -1167,7 +1166,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('End Game Time Management', () => {
         it(`should stop player's global clock when turn reaches end`, fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = true;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
@@ -1176,6 +1175,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop player's turn clock when global clock reaches end`, fakeAsync(async() => {
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
@@ -1184,6 +1184,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's global clock when turn reaches end`, fakeAsync(async() => {
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -1198,6 +1199,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's local clock when global clock reaches end`, fakeAsync(async() => {
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, true);
             await doMove(FIRST_MOVE, true);
@@ -1228,7 +1230,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
         }));
         it(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = true;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given an online game where it's the opponent's turn and opponent is offline
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -1482,7 +1484,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('getUpdateTypes', () => {
         it('nothing changed = UpdateType.DUPLICATE', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given any part
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             const initialPart: Part = {
@@ -1592,7 +1594,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('should mark user as Observer when arriving', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a component that is not initialized yet
             await prepareTestUtilsFor(USER_OBSERVER, false, false);
 
@@ -1613,7 +1615,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should remove observedPart when leaving the component', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -1626,7 +1628,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
         }));
         it('should redirect to lobby when observedPart changed to non-observer', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -1656,7 +1658,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
         }));
         it('should not be able to do anything', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             await prepareTestUtilsFor(USER_OBSERVER);
 
@@ -1679,7 +1681,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             }
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
-            OGWCTimeManager.START_CLOCKS = false;
+            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part that the two players agreed to draw
             await prepareTestUtilsFor(USER_OBSERVER);
             await receiveRequest(Player.ONE, 'Draw');

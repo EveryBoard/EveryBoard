@@ -14,6 +14,11 @@ export class ConfigRoomMocks {
         totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
 
+    public static readonly INITIAL_RANDOM: ConfigRoom = {
+        ...ConfigRoomMocks.INITIAL,
+        firstPlayer: FirstPlayer.RANDOM.value,
+    };
+
     public static readonly WITH_CHOSEN_OPPONENT: ConfigRoom = {
         ...ConfigRoomMocks.INITIAL,
         chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,

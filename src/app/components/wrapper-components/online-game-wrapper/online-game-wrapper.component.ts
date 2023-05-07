@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
@@ -101,9 +101,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private onCurrentUpdateOngoing: boolean = false;
 
-    // TODO FOR REVIEW: should this be a service instead? Better mockability, but worse initialization guarantees
-    private timeManager!: OGWCTimeManager; // Initialized manually after view has been initialized
-
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
@@ -111,7 +108,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly observedPartService: ObservedPartService,
                        private readonly userService: UserService,
                        private readonly gameService: GameService,
-                       private readonly partService: PartService)
+                       private readonly partService: PartService,
+                       private readonly timeManager: OGWCTimeManagerService)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
@@ -212,8 +210,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         window.setTimeout(async() => {
             // the small waiting is there to make sure that the chronos are charged by view
             const createdSuccessfully: boolean = await this.afterViewInit();
-            this.timeManager = new OGWCTimeManager([this.chronoZeroGlobal, this.chronoOneGlobal],
-                                                   [this.chronoZeroTurn, this.chronoOneTurn]);
+            this.timeManager.setClocks([this.chronoZeroGlobal, this.chronoOneGlobal],
+                                       [this.chronoZeroTurn, this.chronoOneTurn]);
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             await this.startPart();
         }, 2);
@@ -789,35 +787,43 @@ abstract class OGWCHelper {
  *   2. we join mid-game.
  * On top of that, it is important to remember that time can be added to a player.
  */
-export class OGWCTimeManager extends OGWCHelper {
+@Injectable({
+    providedIn: 'root',
+})
+export class OGWCTimeManagerService extends OGWCHelper {
     // TODO: wrong chrono is playing in some take backs (when it switches player)
 
+    // The turn clocks of each player
+    private turnClocks: [CountDownComponent, CountDownComponent]; // Initialized by setClocks
+    // The global clocks of each player
+    private globalClocks: [CountDownComponent, CountDownComponent]; // Initialized by setClocks
+    // All clocks managed by this time manager
+    private allClocks: CountDownComponent[]; // Initialized by setClocks
     /*
      * The configRoom, which is set when starting the clocks.
      * We need it to know the maximal game and move durations.
      */
     private configRoom: MGPOptional<ConfigRoom> = MGPOptional.empty();
     // The global time taken by each player since the beginning of the part
-    private takenGlobalTime: [number, number] = [0, 0];
+    private readonly takenGlobalTime: [number, number] = [0, 0];
     // The global time added to each player
-    private extraGlobalTime: [number, number] = [0, 0];
+    private readonly extraGlobalTime: [number, number] = [0, 0];
     // The turn time available for each player. Distinct from the clocks so it stays constant within a turn
-    private availableTurnTime: [number, number] = [0, 0];
-    // All clocks managed by this time manager
-    private readonly allClocks: CountDownComponent[];
+    private readonly availableTurnTime: [number, number] = [0, 0];
     // The time at which the current move started
     private lastMoveStartTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
 
     private clocksStarted: boolean = false;
 
-    // Used for testing purposes, set to false to never start the clocks
-    public static START_CLOCKS: boolean = true;
-
-    public constructor(private readonly globalClocks: [CountDownComponent, CountDownComponent],
-                       private readonly turnClocks: [CountDownComponent, CountDownComponent])
-    {
+    public constructor() {
         super();
-        this.allClocks = this.turnClocks.concat(this.globalClocks);
+    }
+    public setClocks(turnClocks: [CountDownComponent, CountDownComponent],
+                     globalClocks: [CountDownComponent, CountDownComponent])
+    {
+        this.turnClocks = turnClocks;
+        this.globalClocks = globalClocks;
+        this.allClocks = turnClocks.concat(globalClocks);
     }
     // At the beginning of a game, set up clocks and remember when the game started
     public onGameStart(configRoom: ConfigRoom): void {
@@ -908,11 +914,13 @@ export class OGWCTimeManager extends OGWCHelper {
             // We need to subtract the time to take the drift into account
             this.turnClocks[player.value].subtract(drift);
             this.globalClocks[player.value].subtract(drift);
-            if (OGWCTimeManager.START_CLOCKS) {
-                this.turnClocks[player.value].resume();
-                this.globalClocks[player.value].resume();
-            }
+            this.resumeClocks(player);
         }
+    }
+    // Resumes the clocks of player. Public for testing purposes only.
+    public resumeClocks(player: Player): void {
+        this.turnClocks[player.value].resume();
+        this.globalClocks[player.value].resume();
     }
     // Add turn time to the opponent of a player
     private addTurnTime(player: Player): void {

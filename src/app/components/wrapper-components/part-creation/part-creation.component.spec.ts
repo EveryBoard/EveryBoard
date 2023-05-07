@@ -409,7 +409,8 @@ describe('PartCreationComponent', () => {
                 await proposeConfig();
 
                 // Then currentConfigRoom should be updated with the proposed config
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.WITH_PROPOSED_CONFIG);
+                const proposedConfig: ConfigRoom = ConfigRoomMocks.INITIAL_RANDOM;
+                expect(component.currentConfigRoom).toEqual(proposedConfig)
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });

@@ -157,7 +157,7 @@ describe('GameService', () => {
         // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
         // Moreover, everything needs to have been called eventually
         const part: Part = PartMocks.INITIAL;
-        const configRoom: ConfigRoom = ConfigRoomMocks.INITIAL;
+        const configRoom: ConfigRoom = ConfigRoomMocks.INITIAL_RANDOM;
         expect(partDAO.create).toHaveBeenCalledOnceWith(part);
         expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
