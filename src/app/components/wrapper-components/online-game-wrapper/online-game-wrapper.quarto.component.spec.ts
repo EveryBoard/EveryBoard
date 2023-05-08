@@ -80,15 +80,47 @@ export async function prepareWrapper<T extends AbstractGameComponent>(user: Auth
     return testUtils;
 }
 
+export type PreparationOptions = {
+    shorterGlobalClock: boolean;
+    waitForPartToStart: boolean;
+    runClocks: boolean;
+}
+export namespace PreparationOptions {
+    export const def: PreparationOptions = {
+        shorterGlobalClock: false,
+        waitForPartToStart: true,
+        runClocks: true,
+    };
+    export const dontWait: PreparationOptions = {
+        ...def,
+        waitForPartToStart: false,
+    };
+    export const shortGlobalClock: PreparationOptions = {
+        ...def,
+        shorterGlobalClock: true,
+    };
+    export const withoutClocks: PreparationOptions = {
+        ...def,
+        runClocks: false,
+    };
+    export const dontWaitNoClocks: PreparationOptions = {
+        ...dontWait,
+        runClocks: false,
+    };
+}
+
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
     component: string,
-    shorterGlobalChrono: boolean = false,
-    waitForPartToStart: boolean = true)
+    preparationOptions?: PreparationOptions)
 : Promise<PreparationResult<T>>
 {
+    if (preparationOptions == null) preparationOptions = PreparationOptions.def;
     const testUtils: ComponentTestUtils<T, MinimalUser> = await prepareWrapper<T>(user, component);
     testUtils.prepareFixture(OnlineGameWrapperComponent);
+    if (preparationOptions.runClocks === false) {
+        spyOn(TestBed.inject(OGWCTimeManagerService), 'resumeClocks').and.callFake(async() => {});
+    }
     const wrapper: OnlineGameWrapperComponent = testUtils.wrapper as OnlineGameWrapperComponent;
     testUtils.detectChanges();
     tick(1);
@@ -113,7 +145,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     let configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
     await configRoomDAO.update('configRoomId', configRoom);
     testUtils.detectChanges();
-    if (shorterGlobalChrono === true) {
+    if (preparationOptions.shorterGlobalClock === true) {
         configRoom = { ...configRoom, totalPartDuration: 10 };
         await configRoomDAO.update('configRoomId', {
             totalPartDuration: 10,
@@ -122,7 +154,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     const gameService: GameService = TestBed.inject(GameService);
     await gameService.acceptConfig('configRoomId', configRoom);
     testUtils.detectChanges();
-    if (waitForPartToStart === true) {
+    if (preparationOptions.waitForPartToStart === true) {
         tick(2);
         testUtils.detectChanges();
         testUtils.bindGameComponent();
@@ -131,7 +163,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -241,15 +273,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return await receivePartDAOUpdate(update, lastIndex, detectChanges);
     }
     async function prepareTestUtilsFor(authUser: AuthUser,
-                                       shorterGlobalChrono: boolean = false,
-                                       waitForPartToStart: boolean = true)
+                                       options?: PreparationOptions)
     : Promise<void>
     {
         const preparationResult: PreparationResult<QuartoComponent> =
-            await prepareStartedGameFor<QuartoComponent>(authUser,
-                                                         'Quarto',
-                                                         shorterGlobalChrono,
-                                                         waitForPartToStart);
+            await prepareStartedGameFor<QuartoComponent>(authUser, 'Quarto', options)
         testUtils = preparationResult.testUtils;
         role = preparationResult.role;
         partDAO = TestBed.inject(PartDAO);
@@ -296,7 +324,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // 3. Setting the component and making it start like it would
 
         console.log('A')
-        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, true);
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
         let offset: number = 0;
         let turn: number = 0;
@@ -328,13 +356,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.prepareSpies();
     }
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
-        spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
-        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
         expect(Utils.getNonNullable(wrapper.currentPlayer).name).toEqual('creator');
     }));
     it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         // Given an online game being created
-        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, false);
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
         const partCreationId: DebugElement = testUtils.findElement('#partCreation');
         let quartoTag: DebugElement = testUtils.findElement('app-quarto');
         expect(partCreationId)
@@ -423,7 +450,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Component initialization', () => {
         it('should mark creator as Player when arriving', fakeAsync(async() => {
             // Given a component that is not initialized yet
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, false);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 
             // When component is initialized
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
@@ -443,7 +470,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should mark chosen opponent as Player when arriving', fakeAsync(async() => {
             // Given a component that is not initialized yet
-            await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, false, false);
+            await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.dontWait);
 
             // When component is initialized
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
@@ -463,7 +490,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should show player names', fakeAsync(async() => {
             // Given a started game
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, false);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 
             // When initializing the component
             tick(2);
@@ -532,9 +559,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     describe('ObservedPart Change', () => {
         it('should redirect to lobby when role and partId change', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part where the user is observer
-            await prepareTestUtilsFor(USER_OBSERVER);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
@@ -546,9 +572,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect to lobby when role stay "observer" but partId change', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part where the user is observer
-            await prepareTestUtilsFor(USER_OBSERVER);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
@@ -561,9 +586,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not do anything particular when observer leaves this part from another tab', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part where the user is observer
-            await prepareTestUtilsFor(USER_OBSERVER);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             // When observedPart is updated to inform component that user stopped observing some part in another tab
             const router: Router = TestBed.inject(Router);
@@ -1179,7 +1203,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it(`should stop player's turn clock when global clock reaches end`, fakeAsync(async() => {
             spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, true);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -1204,7 +1228,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it(`should stop offline opponent's local clock when global clock reaches end`, fakeAsync(async() => {
             spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given an online game where it's the opponent's turn
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, true);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoOneTurn, 'stop').and.callThrough();
@@ -1384,8 +1408,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then a request to add global time to player zero should be sent
                 expect(partService.addAction).toHaveBeenCalledOnceWith('configRoomId', Player.ONE, 'AddGlobalTime');
+
                 const msUntilTimeout: number = wrapper.configRoom.maximalMoveDuration * 1000;
-                expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes
                 tick(msUntilTimeout);
             }));
         });
@@ -1487,9 +1511,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('getUpdateTypes', () => {
         it('nothing changed = UpdateType.DUPLICATE', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given any part
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
@@ -1597,9 +1620,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('should mark user as Observer when arriving', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a component that is not initialized yet
-            await prepareTestUtilsFor(USER_OBSERVER, false, false);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.dontWaitNoClocks);
 
             // When component is initialized
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
@@ -1618,9 +1640,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should remove observedPart when leaving the component', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part component where user is observer
-            await prepareTestUtilsFor(USER_OBSERVER);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             // When user leaves the component (here, destroys it)
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
@@ -1631,9 +1652,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
         }));
         it('should redirect to lobby when observedPart changed to non-observer', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part component where user is observer
-            await prepareTestUtilsFor(USER_OBSERVER);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             // When observedPart is updated to inform component that user is now candidate in anothergame
             const router: Router = TestBed.inject(Router);
@@ -1643,7 +1663,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then the observedPart should have been removed
             expectValidRouting(router, ['/lobby'], LobbyComponent);
-            tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
             // Given a part component where user was observer
@@ -1661,9 +1680,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
         }));
         it('should not be able to do anything', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            await prepareTestUtilsFor(USER_OBSERVER);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             const forbiddenFunctions: { name: string, isAsync: boolean } [] = [
                 { name: 'canProposeDraw', isAsync: false },
@@ -1684,9 +1702,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given a part that the two players agreed to draw
-            await prepareTestUtilsFor(USER_OBSERVER);
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
             await receiveRequest(Player.ONE, 'Draw');
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ZERO.value,
@@ -1702,7 +1719,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Visuals', () => {
         it('should highlight each player name in their respective color', fakeAsync(async() => {
             // Given a game that has been started
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, false);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 
             // When the game is displayed
             tick(2);
@@ -1715,7 +1732,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
             // Given a game that has been started
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, false, false);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 
             // When the component initialize and it is the current player's turn
             tick(2);

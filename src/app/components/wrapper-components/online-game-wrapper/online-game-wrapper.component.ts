@@ -902,6 +902,7 @@ export class OGWCTimeManagerService extends OGWCHelper {
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
         const secondsToAdd: number = 5 * 60;
+        console.log('Adding ' + secondsToAdd)
         this.extraGlobalTime[player.getOpponent().value] += secondsToAdd * 1000;
     }
     // Update clocks with the available time
