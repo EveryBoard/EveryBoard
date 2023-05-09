@@ -10,7 +10,7 @@
         </g>
     </defs>
 
-    <g *ngFor="let line of adaptedBoard; index as y">
+    <g *ngFor="let line of adaptedBoard.spaceInfo; index as y">
         <g *ngFor="let squareInfo of line; index as x">
             <g id="coord_{{ x }}_{{ y }}"
                [attr.transform]="getTranslate(x, y, 0)"
