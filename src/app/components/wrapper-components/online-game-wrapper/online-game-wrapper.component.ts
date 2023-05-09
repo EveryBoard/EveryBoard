@@ -210,8 +210,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         window.setTimeout(async() => {
             // the small waiting is there to make sure that the chronos are charged by view
             const createdSuccessfully: boolean = await this.afterViewInit();
-            this.timeManager.setClocks([this.chronoZeroGlobal, this.chronoOneGlobal],
-                                       [this.chronoZeroTurn, this.chronoOneTurn]);
+            this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn], [this.chronoZeroGlobal, this.chronoOneGlobal]);
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             await this.startPart();
         }, 2);
@@ -832,7 +831,6 @@ export class OGWCTimeManagerService extends OGWCHelper {
         this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
         this.takenGlobalTime[player.value] += takenMoveTime;
 
-        // this.globalClocks[player.value].changeDuration(adaptedGlobalTime);
         this.availableTurnTime[player.value] -= takenMoveTime;
 
         // Now is the time to update the other player's clock
@@ -870,10 +868,8 @@ export class OGWCTimeManagerService extends OGWCHelper {
                 // TODO: we can actually directly do that in onGameStart to simplify everything
                 // The first time we reach here, we need to start all clocks
                 // But we want them to be paused, as we will only activate the required ones
-                console.log('START AND PAUSE CLOCKS')
                 for (const clock of this.allClocks) {
                     clock.start();
-                    console.log('START AND PAUSE CLOCKS')
                     clock.pause();
                 }
                 this.clocksStarted = true;
@@ -897,7 +893,9 @@ export class OGWCTimeManagerService extends OGWCHelper {
     // Add turn time to the opponent of a player
     private addTurnTime(player: Player): void {
         const secondsToAdd: number = 30;
+        console.log('Adding ' + secondsToAdd + ' to player ' + player.getOpponent().value)
         this.availableTurnTime[player.getOpponent().value] += secondsToAdd * 1000;
+        console.log('They now have '+ this.availableTurnTime[player.getOpponent().value] )
     }
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
@@ -907,7 +905,10 @@ export class OGWCTimeManagerService extends OGWCHelper {
     }
     // Update clocks with the available time
     private updateClocks(): void {
+        console.log('UPDATING CLOCKS')
         for (const player of Player.PLAYERS) {
+            if (player.value == 0)
+                console.log('Setting turnClock of player ' + player.value + ' to: ' + this.availableTurnTime[player.value])
             this.turnClocks[player.value].changeDuration(this.availableTurnTime[player.value]);
             const globalTime: number =
                 this.getPartDurationInMs() + this.extraGlobalTime[player.value] - this.takenGlobalTime[player.value];

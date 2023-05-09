@@ -163,7 +163,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -1314,7 +1314,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledTimes(1);
                 waitTimeout();
             }));
-            it('should add turn time when receiving AddTurnTime request from Player.ONE', fakeAsync(async() => {
+            it('should add turn time when receiving AddTurnTime action from Player.ONE', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 spyOn(partDAO, 'update').and.callThrough();

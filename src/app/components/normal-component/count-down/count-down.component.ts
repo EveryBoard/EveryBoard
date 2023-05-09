@@ -58,9 +58,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
             this.resume();
         }
     }
-    public add(ms: number): void {
-        this.changeDuration(this.remainingMs + ms);
-    }
     public subtract(ms: number): void {
         this.changeDuration(this.remainingMs - ms);
     }
@@ -75,13 +72,11 @@ export class CountDownComponent implements OnInit, OnDestroy {
         Utils.assert(this.isSet, 'Should not start a chrono that has not been set!');
         Utils.assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
 
-        console.log('----------------------- CHRONO START')
         this.started = true;
         this.resume();
     }
     public resume(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingMs + 'ms)');
-        console.log({paused: this.isPaused, started: this.started})
         Utils.assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
 
         this.startTime = Date.now();
@@ -95,7 +90,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
     private onEndReached(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.onEndReached');
 
-        console.log('----------------------- CHRONO DONE')
         this.isPaused = true;
         this.started = false;
         this.clearTimeouts();
@@ -125,7 +119,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         Utils.assert(this.started, 'Should only stop chrono that are started!');
 
 
-        console.log('----------------------- CHRONO STOP')
         this.pause();
         this.started = false;
         this.isSet = false;
