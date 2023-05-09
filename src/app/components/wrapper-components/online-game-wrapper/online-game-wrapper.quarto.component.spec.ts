@@ -1193,7 +1193,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('End Game Time Management', () => {
         it(`should stop player's global clock when turn reaches end`, fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
@@ -1202,7 +1201,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop player's turn clock when global clock reaches end`, fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
@@ -1211,7 +1209,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's global clock when turn reaches end`, fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -1226,7 +1223,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's local clock when global clock reaches end`, fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
             await doMove(FIRST_MOVE, true);
@@ -1257,7 +1253,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
         }));
         it(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
-            spyOn(timeManagerService, 'resumeClocks').and.callFake(async() => {});
             // Given an online game where it's the opponent's turn and opponent is offline
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
