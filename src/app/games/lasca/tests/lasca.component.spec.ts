@@ -329,7 +329,6 @@ describe('LascaComponent', () => {
             testUtils.expectElementNotToHaveClass('#square_6_4', 'selectable-fill'); // And the reversed one not present yet
 
             // When flipping the board
-            console.log('ON VA RETOURSLER TOUTE!')
             testUtils.wrapper.setRole(Player.ONE); // changing role
 
             // Then the old highlight should disappear and the reversed one come
