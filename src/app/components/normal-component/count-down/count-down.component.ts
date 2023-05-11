@@ -47,16 +47,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.changeDuration(duration);
     }
     public changeDuration(ms: number): void {
-        let mustResume: boolean = false;
-        if (this.isPaused === false) {
-            this.pause();
-            mustResume = true;
-        }
+        Utils.assert(this.isPaused, 'Should not change duration of a clock while it is running');
         this.remainingMs = ms;
         this.displayDuration();
-        if (mustResume) {
-            this.resume();
-        }
     }
     public subtract(ms: number): void {
         this.changeDuration(this.remainingMs - ms);
