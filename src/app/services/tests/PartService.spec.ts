@@ -27,7 +27,7 @@ describe('PartService', () => {
         }).compileComponents();
 
         partDAO = TestBed.inject(PartDAO);
-        partService = TestBed.inject(PartService)
+        partService = TestBed.inject(PartService);
     }));
     it('should be created', () => {
         expect(partService).toBeTruthy();

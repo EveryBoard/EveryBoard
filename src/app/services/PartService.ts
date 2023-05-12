@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { serverTimestamp } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { PartDAO } from '../dao/PartDAO';
 import { Action, PartEvent, PartEventMove, Reply, RequestType } from '../domain/Part';
 import { Player } from '../jscaip/Player';
@@ -14,7 +15,7 @@ export class PartService {
 
     public constructor(private readonly partDAO: PartDAO) {}
 
-    private eventsCollection(partId: string) {
+    private eventsCollection(partId: string): IFirestoreDAO<PartEvent> {
         return this.partDAO.subCollectionDAO<PartEvent>(partId, 'events');
     }
     private addEvent(partId: string, event: PartEvent): Promise<string> {
@@ -38,7 +39,13 @@ export class PartService {
             requestType,
         });
     }
-    public addReply(partId: string, player: Player, reply: Reply, requestType: RequestType, data: JSONValue = null): Promise<string> {
+    public addReply(partId: string,
+                    player: Player,
+                    reply: Reply,
+                    requestType: RequestType,
+                    data: JSONValue = null)
+    : Promise<string>
+    {
         Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
         return this.addEvent(partId, {
             eventType: 'Reply',
@@ -67,7 +74,7 @@ export class PartService {
         Utils.assert(results.length === 1, `There should be exactly one last move, found ${results.length}`);
         return results[0] as FirestoreDocument<PartEventMove>;
     }
-    public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void) {
+    public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<PartEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<PartEvent>[]) => {
                 const realEvents: PartEvent[] = [];

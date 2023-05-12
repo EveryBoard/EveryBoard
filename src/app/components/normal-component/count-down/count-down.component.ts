@@ -36,7 +36,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public cssClasses: string = CountDownComponent.SAFE_TIME;
 
     public ngOnInit(): void {
-        display(CountDownComponent.VERBOSE || true, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
     }
     // Set the duration (in ms) for a non-started countdown
     public setDuration(duration: number): void {

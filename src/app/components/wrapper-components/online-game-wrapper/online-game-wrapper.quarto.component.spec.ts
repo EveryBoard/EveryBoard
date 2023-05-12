@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
@@ -85,6 +85,7 @@ export type PreparationOptions = {
     waitForPartToStart: boolean;
     runClocks: boolean;
 }
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace PreparationOptions {
     export const def: PreparationOptions = {
         shorterGlobalClock: false,
@@ -136,10 +137,8 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     testUtils.detectChanges();
     let role: PlayerOrNone = PlayerOrNone.NONE;
     if (user.id === UserMocks.CREATOR_AUTH_USER.id) {
-        console.log('role is 0')
         role = Player.ZERO;
     } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
-        console.log('role is 1')
         role = Player.ONE;
     }
     let configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
@@ -182,7 +181,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let partDAO: PartDAO;
     let partService: PartService;
     let gameService: GameService;
-    let timeManagerService: OGWCTimeManagerService;
 
     const OBSERVER: User = {
         username: 'jeanJaja',
@@ -212,11 +210,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
-        console.log('actually doing move')
         const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, state);
-        console.log('checking its legality')
         const message: string = 'move ' + move.toString() + ' should be legal but failed because: ' + result.reason;
-        console.log('which is ' + result.isSuccess())
         expect(result.isSuccess()).withContext(message).toEqual(legal);
         testUtils.detectChanges();
         tick(1);
@@ -267,8 +262,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const gameService: GameService = TestBed.inject(GameService);
         let currentPlayer: Player = Player.of(initialTurn % 2);
         for (const move of newMoves) {
-            gameService.addMove('configRoomId', currentPlayer, move);
-            currentPlayer = currentPlayer.getOpponent()
+            await gameService.addMove('configRoomId', currentPlayer, move);
+            currentPlayer = currentPlayer.getOpponent();
         }
         return await receivePartDAOUpdate(update, lastIndex, detectChanges);
     }
@@ -277,13 +272,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     : Promise<void>
     {
         const preparationResult: PreparationResult<QuartoComponent> =
-            await prepareStartedGameFor<QuartoComponent>(authUser, 'Quarto', options)
+            await prepareStartedGameFor<QuartoComponent>(authUser, 'Quarto', options);
         testUtils = preparationResult.testUtils;
         role = preparationResult.role;
         partDAO = TestBed.inject(PartDAO);
         partService = TestBed.inject(PartService);
         gameService = TestBed.inject(GameService);
-        timeManagerService = TestBed.inject(OGWCTimeManagerService);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
     }
     async function prepareBoard(moves: QuartoMove[], player: Player = Player.ZERO): Promise<void> {
@@ -306,7 +300,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         for (let i: number = offset; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
-            const newMoves: number[] = [QuartoMove.encoder.encodeNumber(move), QuartoMove.encoder.encodeNumber(moves[i+1])];
+            const newMoves: number[] = [
+                QuartoMove.encoder.encodeNumber(move),
+                QuartoMove.encoder.encodeNumber(moves[i+1]),
+            ];
             await receiveNewMoves(turn, newMoves, i + 2);
             turn += 2;
         }
@@ -323,7 +320,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
 
-        console.log('A')
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
         let offset: number = 0;
@@ -338,22 +334,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves(turn, [encodedMoves[i]], i + 1, false);
             turn += 1;
         }
-        // testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         testUtils.detectChanges();
         tick(1);
-        return; // TODO: no need for the rest here
-        console.log('B')
-        const partCreationId: DebugElement = testUtils.findElement('#partCreation');
-        let context: string = 'partCreation id should be present after ngOnInit';
-        expect(partCreationId).withContext(context).toBeTruthy();
-         context = 'partCreation field should also be present';
-        expect(wrapper.partCreation).withContext(context).toBeTruthy();
-        console.log('C')
-        testUtils.detectChanges();
-        tick(2);
-        testUtils.bindGameComponent();
-        testUtils.prepareSpies();
     }
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -848,7 +831,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await doMove(SECOND_MOVE, true);
                 await receiveRequest(Player.ZERO, 'TakeBack');
                 expect(wrapper.gameComponent.getTurn()).toBe(2);
-                // TODO spyOn(wrapper, 'resetChronoFor').and.callThrough();
 
                 // When accepting opponent's take back
                 await acceptTakeBack();
@@ -856,7 +838,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // Then turn should be changed to 0 and resumeCountDown be called
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
-                // TODO expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
                 expect(wrapper.gameComponent.getTurn()).toBe(0);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
@@ -868,11 +849,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveRequest(Player.ZERO, 'TakeBack');
 
                 // When accepting opponent's take back
-                // TODO spyOn(wrapper, 'resetChronoFor').and.callThrough();
                 await acceptTakeBack();
 
                 // Then opponents chrono should have been reset
-                // TODO expect(wrapper.resetChronoFor).toHaveBeenCalledOnceWith(Player.ZERO);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
             xit(`Should reduce opponent's remainingTime, since opponent just played`, fakeAsync(async() => {
@@ -1097,7 +1076,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.clickElement('#proposeDrawButton');
 
             // Then a draw request should have been sent
-            expect(partService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Draw')
+            expect(partService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Draw');
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
@@ -1650,7 +1629,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user is now candidate in anothergame
+            // When observedPart is updated to inform component that user is now candidate in another game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
@@ -1709,6 +1688,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the text should indicate players have agreed to draw
             testUtils.expectElementToExist('#playersAgreedToDraw');
             expectGameToBeOver();
+        }));
+        it('should not notify timeout victory', fakeAsync(async() => {
+            // Given a part where we are observer
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
+            spyOn(gameService, 'notifyTimeout').and.callThrough();
+            // When a player times out
+            await wrapper.reachedOutOfTime(Player.ZERO);
+            // Then we should not notify the timeout
+            expect(gameService.notifyTimeout).not.toHaveBeenCalled();
         }));
     });
     describe('Visuals', () => {

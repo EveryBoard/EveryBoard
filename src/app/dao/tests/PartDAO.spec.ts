@@ -14,7 +14,6 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
-import { Utils } from 'src/app/utils/utils';
 import { FocusedPart } from 'src/app/domain/User';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';

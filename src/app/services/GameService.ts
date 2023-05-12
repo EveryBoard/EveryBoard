@@ -130,10 +130,12 @@ export class GameService {
 
         await this.configRoomService.acceptConfig(partId);
 
-        const accepter: Player = Player.ONE
+        const accepter: Player = Player.ONE;
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        await Promise.all([this.updateAndBumpIndex(partId, accepter, 0, update),
-                           this.partService.startGame(partId, accepter)]);
+        await Promise.all([
+            this.updateAndBumpIndex(partId, accepter, 0, update),
+            this.partService.startGame(partId, accepter),
+        ]);
     }
     public getPart(partId: string): Promise<MGPOptional<Part>> {
         return this.partDAO.read(partId);
@@ -167,7 +169,6 @@ export class GameService {
             loser,
             result: MGPResult.TIMEOUT.value,
         };
-        console.log('update setting winner loser')
         return this.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {
@@ -252,7 +253,7 @@ export class GameService {
         await this.partService.addReply(partId, player, 'Reject', 'TakeBack');
     }
     public async addGlobalTime(partId: string, player: Player): Promise<void> {
-        await this.partService.addAction(partId, player, 'AddGlobalTime')
+        await this.partService.addAction(partId, player, 'AddGlobalTime');
     }
     public async addTurnTime(partId: string, player: Player): Promise<void> {
         await this.partService.addAction(partId, player, 'AddTurnTime');
