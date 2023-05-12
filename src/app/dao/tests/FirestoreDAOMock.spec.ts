@@ -52,7 +52,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                 callback(subject.map((doc: FirestoreDocument<T>) => doc.data)));
         } else {
             throw new Error('No doc of id ' + id + ' to observe in ' + this.collectionName);
-            // TODO: check that observing unexisting doc throws
         }
     }
     public async create(element: T): Promise<string> {

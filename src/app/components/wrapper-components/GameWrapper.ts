@@ -146,7 +146,6 @@ export abstract class GameWrapper<P extends Comparable> {
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
     public onUserClick(_elementName: string): MGPValidation {
-        // TODO: Not the same logic to use in Online and Local, make abstract
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);

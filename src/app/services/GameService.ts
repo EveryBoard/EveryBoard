@@ -38,7 +38,7 @@ export class GameService {
     {
         display(GameService.VERBOSE, 'GameService.constructor');
     }
-    // TODO FOR REVIEW: should be made private! And higher-level functions should be defined
+    // REVIEW: should be made private! And higher-level functions should be defined
     public async updateAndBumpIndex(id: string,
                                     user: Player,
                                     lastIndex: number,

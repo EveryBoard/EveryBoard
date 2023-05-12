@@ -853,6 +853,7 @@ export class OGWCTimeManagerService {
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
         if (gameEnd === false) {
             if (this.clocksStarted === false) {
+                console.log('starting clocks')
                 // TODO: we can actually directly do that in onGameStart to simplify everything
                 // The first time we reach here, we need to start all clocks
                 // But we want them to be paused, as we will only activate the required ones
@@ -865,7 +866,8 @@ export class OGWCTimeManagerService {
             this.updateClocks();
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
-            const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
+            const drift: number = 0; // TODO: joining mid-game: this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
+            // console.log({drift, current: currentTime.toString(), lastMoveTime: this.lastMoveStartTimestamp.get().toString()})
             // We need to subtract the time to take the drift into account
             this.turnClocks[player.value].subtract(drift);
             this.globalClocks[player.value].subtract(drift);
@@ -874,6 +876,7 @@ export class OGWCTimeManagerService {
     }
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
+        console.log('resuming clocks')
         this.turnClocks[player.value].resume();
         this.globalClocks[player.value].resume();
     }

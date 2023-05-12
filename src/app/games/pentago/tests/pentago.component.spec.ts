@@ -37,7 +37,6 @@ describe('PentagoComponent', () => {
         testUtils.expectElementToExist('#currentDrop_0_0');
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
         await testUtils.expectMoveSuccess('#rotate_0_clockwise', move);
-        // TODO: test that block itself is of moved style
     }));
     it('should not display arrows on neutral blocks and display dropped piece meanwhile', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [

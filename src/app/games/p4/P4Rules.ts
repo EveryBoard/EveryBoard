@@ -54,7 +54,6 @@ export class P4Rules extends Rules<P4Move, P4State> {
                     // if we find a pre-victory
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { state, squareScore, coord: { x, y } } });
                     return new BoardValue(squareScore); // we return it
-                    // TODO check that PRE_VICTORY does not overwrite VICTORY in this case
                     // It seems possible to have a pre victory on one column, and a victory on the next
                 }
                 score += squareScore;
