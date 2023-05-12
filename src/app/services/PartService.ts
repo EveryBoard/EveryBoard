@@ -29,12 +29,6 @@ export class PartService {
             move,
         });
     }
-    public async getLastMoveDoc(partId: string): Promise<FirestoreDocument<PartEventMove>> {
-        const results: FirestoreDocument<PartEvent>[] =
-            await this.eventsCollection(partId).findWhere([['eventType', '==', 'Move']], 'time', 1);
-        Utils.assert(results.length === 1, `There should be exactly one last move, found ${results.length}`);
-        return results[0] as FirestoreDocument<PartEventMove>;
-    }
     public addRequest(partId: string, player: Player, requestType: RequestType): Promise<string> {
         Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
         return this.addEvent(partId, {
@@ -67,6 +61,12 @@ export class PartService {
             action,
         });
     }
+    public async getLastMoveDoc(partId: string): Promise<FirestoreDocument<PartEventMove>> {
+        const results: FirestoreDocument<PartEvent>[] =
+            await this.eventsCollection(partId).findWhere([['eventType', '==', 'Move']], 'time', 1);
+        Utils.assert(results.length === 1, `There should be exactly one last move, found ${results.length}`);
+        return results[0] as FirestoreDocument<PartEventMove>;
+    }
     public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void) {
         const internalCallback: FirestoreCollectionObserver<PartEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<PartEvent>[]) => {
@@ -89,6 +89,7 @@ export class PartService {
                 // So all modifications are actually treated as creations, as we ignore creations with empty timestamps
                 callback(events.map((event: FirestoreDocument<PartEvent>) => event.data));
             },
+            /* istanbul ignore next */
             () => {
                 // Events can't be deleted,
             });
