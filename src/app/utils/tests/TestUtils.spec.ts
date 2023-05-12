@@ -45,6 +45,7 @@ import { Comparable } from '../Comparable';
 import { Subscription } from 'rxjs';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 
 @Component({})
 export class BlankComponent {}
@@ -197,6 +198,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
+        const gameInfo: MGPOptional<GameInfo> =
+            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === game));
+        if (gameInfo.isAbsent()) {
+            throw new Error(game + ' is not a game developped on MGP, check if its name is in the second param of GameInfo');
+        }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
                                                      AuthUser.NOT_CONNECTED,

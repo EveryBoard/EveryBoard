@@ -4,6 +4,7 @@ import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 import { AwaleComponent } from 'src/app/games/awale/awale.component';
 import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
+import { ConnectSixComponent } from 'src/app/games/connect-six/connect-six.component';
 import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from 'src/app/games/diam/diam.component';
 import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
@@ -113,6 +114,8 @@ import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
 import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
 import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
 import { HiveRules } from 'src/app/games/hive/HiveRules';
+import { ConnectSixTutorial } from 'src/app/games/connect-six/ConnectSixTutorial.spec';
+import { ConnectSixRules } from 'src/app/games/connect-six/ConnectSixRules';
 
 class GameDescription {
 
@@ -125,6 +128,8 @@ class GameDescription {
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
+
+    public static readonly CONNECT_SIX: Localized = () => $localize`Put two piece on the board each turn, and be the first to align six!`;
 
     public static readonly CONSPIRATEURS: Localized = () => $localize`Hide all of your pieces before your opponent does, or risk to be discovered!`;
 
@@ -213,8 +218,10 @@ export class GameInfo {
         new GameInfo($localize`Lodestone`, 'Lodestone', LodestoneComponent, new LodestoneTutorial(), LodestoneRules.get(), new Date('2022-06-24'), GameDescription.LODESTONE()),
         new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new MartianChessTutorial(), new MartianChessRules(MartianChessState), new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()),
         new GameInfo($localize`Hnefatafl`, 'Hnefatafl', HnefataflComponent, new HnefataflTutorial(), HnefataflRules.get(), new Date('2022-09-21'), GameDescription.HNEFATAFL()),
+
         new GameInfo($localize`Hive`, 'Hive', HiveComponent, new HiveTutorial(), HiveRules.get(), new Date('2023-03-29'), GameDescription.HIVE()),
         new GameInfo($localize`Trexo`, 'Trexo', TrexoComponent, new TrexoTutorial(), TrexoRules.get(), new Date('2023-04-16'), GameDescription.TREXO()),
+        new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-12'), GameDescription.CONNECT_SIX()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

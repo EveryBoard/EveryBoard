@@ -45,6 +45,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -183,6 +184,7 @@ export class FirebaseProviders {
         AwaleComponent,
         BrandhubComponent,
         CoerceoComponent,
+        ConnectSixComponent,
         ConspirateursComponent,
         DiamComponent,
         DvonnComponent,

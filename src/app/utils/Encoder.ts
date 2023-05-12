@@ -35,7 +35,41 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
             }
         };
     }
-
+    /**
+     * This creates a "sum" encoder, i.e., it encodes values of either type T and U
+     */
+    public static disjunction<T, U>(encoderT: Encoder<T>,
+                                    encoderU: Encoder<U>,
+                                    isT: (v: T | U) => v is T)
+    : MoveEncoder<T | U>
+    {
+        return new class extends MoveEncoder<T | U> {
+            public encodeMove(value: T | U): JSONValueWithoutArray {
+                if (isT(value)) {
+                    return {
+                        type: 'T',
+                        encoded: encoderT.encode(value),
+                    };
+                } else {
+                    return {
+                        type: 'U',
+                        encoded: encoderU.encode(value),
+                    };
+                }
+            }
+            public decodeMove(encoded: JSONValueWithoutArray): T | U {
+                // eslint-disable-next-line dot-notation
+                const type_: string = Utils.getNonNullable(encoded)['type'];
+                // eslint-disable-next-line dot-notation
+                const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
+                if (type_ === 'T') {
+                    return encoderT.decode(content);
+                } else {
+                    return encoderU.decode(content);
+                }
+            }
+        };
+    }
     public static disjunction3<T, U, V>(encoderT: MoveEncoder<T>,
                                         encoderU: MoveEncoder<U>,
                                         encoderV: MoveEncoder<V>,
