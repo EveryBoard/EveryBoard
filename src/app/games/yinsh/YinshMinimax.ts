@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -20,8 +19,7 @@ export class YinshMinimax
         if (gameStatus.isEndGame) {
             return BoardValue.fromWinner(gameStatus.winner);
         } else {
-            return new BoardValue(node.gameState.sideRings[0] * Player.ZERO.getScoreModifier() +
-                node.gameState.sideRings[1] * Player.ONE.getScoreModifier());
+            return BoardValue.from(node.gameState.sideRings[0], node.gameState.sideRings[1]);
         }
     }
     public getListMoves(node: YinshNode): YinshMove[] {

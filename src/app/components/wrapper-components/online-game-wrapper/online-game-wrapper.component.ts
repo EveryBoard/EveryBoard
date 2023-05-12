@@ -424,10 +424,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const currentPartTurn: number = this.gameComponent.getTurn();
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
             const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
+            const stringListMoves: string = JSON.stringify(listMoves);
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
-                                    ' in ' + listMoves + ' at turn ' + currentPartTurn +
+                                    ' in ' + stringListMoves + ' at turn ' + currentPartTurn +
                                     'because "' + legality.getReasonOr('') + '"';
-            assert(legality.isSuccess(), message);
+            assert(legality.isSuccess(), message, listMoves);
             rules.choose(chosenMove);
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
@@ -912,6 +913,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const currentDuration: number = this.chronoOneGlobal.remainingMs;
             this.chronoOneGlobal.changeDuration(currentDuration + addedMs);
         }
+    }
+    public onCancelMove(reason?: string): void {
+        this.gameComponent.showLastMove();
     }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');

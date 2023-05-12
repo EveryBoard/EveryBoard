@@ -120,6 +120,7 @@ export abstract class GameWrapper<P extends Comparable> {
         if (this.gameComponent.hasAsymetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
+        this.gameComponent.updateBoard(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
@@ -159,9 +160,8 @@ export abstract class GameWrapper<P extends Comparable> {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
     }
-    public onCancelMove(_reason?: string): void {
-        // Not needed by default
-    }
+    public abstract onCancelMove(_reason?: string): void;
+
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
             return false;

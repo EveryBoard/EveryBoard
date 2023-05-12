@@ -16,6 +16,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     templateUrl: './verify-account.component.html',
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
+
     public verificationType: 'send-email' | 'enter-username' | null = null;
 
     public success: boolean = false;

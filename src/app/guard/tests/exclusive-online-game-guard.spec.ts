@@ -92,9 +92,4 @@ describe('ExclusiveOnlineGameGuard', () => {
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
         tick(3000);
     }));
-    xit('should unsubscribe from observedPartSubscription upon destruction', fakeAsync(async() => {
-        // TODO FOR REVIEW: maintenant comme tu le sais, on se désabonne immédiatement
-        // vu que de toute façon c'est du code dans une promise
-        // on "promisifie" un observable, aller jusqu'au bout c'est s'en désabonner au plus tôt ?
-    }));
 });

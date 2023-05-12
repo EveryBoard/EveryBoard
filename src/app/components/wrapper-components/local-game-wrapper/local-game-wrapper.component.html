@@ -65,7 +65,7 @@
         </div>
         <div *ngIf="gameComponent"
              class="tile is-child box is-vcentered">
-            <ng-container *ngIf="gameComponent.rules.node.move">
+            <ng-container *ngIf="gameComponent.rules.node.move && displayAIMetrics">
                 <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
                     {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.rules.node) }} <br/>
                 </ng-container>

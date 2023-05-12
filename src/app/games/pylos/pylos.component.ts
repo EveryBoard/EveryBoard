@@ -309,7 +309,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.hideLastMove();
         }
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         const lastMove: PylosMove = this.lastMove.get();
         this.lastLandingCoord = MGPOptional.of(lastMove.landingCoord);
         this.lastStartingCoord = lastMove.startingCoord;

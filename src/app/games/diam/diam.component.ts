@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -240,7 +240,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             };
         }
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         this.showLastMoveOnSpaces();
         this.showLastMoveOnPieces();
     }
@@ -387,7 +387,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         return false;
     }
     private getDrawPositionOnBoard(x: number, y: number): Coord {
-        return DiamComponent.CENTER[x].getNext(new Vector(0, -y*DiamComponent.PIECE_HEIGHT));
+        return DiamComponent.CENTER[x].getNext(new Vector(0, -y * DiamComponent.PIECE_HEIGHT));
     }
     public cancelMoveAttempt(): void {
         this.selected = MGPOptional.empty();

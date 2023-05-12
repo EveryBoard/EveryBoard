@@ -306,10 +306,17 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
     }
-    public async expectClickSuccess(elementName: string): Promise<void> {
-        await this.expectInterfaceClickSuccess(elementName);
-        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+    /**
+     * @param nameInHtml The real name (id) of the element in the XML
+     * @param nameInFunction Its name inside the code
+     */
+    public async expectClickSuccessWithAsymetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
+        await this.expectInterfaceClickSuccess(nameInHtml);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
+    }
+    public async expectClickSuccess(elementName: string): Promise<void> {
+        return this.expectClickSuccessWithAsymetricNaming(elementName, elementName);
     }
     public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
@@ -332,16 +339,20 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             .withContext(context)
             .toHaveBeenCalledWith();
     }
-    public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
+    public async expectClickFailureWithAsymetricNaming(nameInHtml: string,
+                                                       nameInFunction: string,
+                                                       reason?: string)
+    : Promise<void>
+    {
+        const element: DebugElement = this.findElement(nameInHtml);
+        expect(element).withContext('Element "' + nameInHtml + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             if (reason == null) {
@@ -352,6 +363,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             this.cancelMoveSpy.calls.reset();
             tick(3000); // needs to be >2999
         }
+    }
+    public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
+        return this.expectClickFailureWithAsymetricNaming(elementName, elementName, reason);
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);

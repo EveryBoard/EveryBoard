@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent }
     from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -42,7 +42,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new PentagoRules(PentagoState);
+        this.rules = PentagoRules.get();
         this.availableMinimaxes = [
             new PentagoMinimax(this.rules, 'PentagoMinimax'),
         ];
@@ -115,7 +115,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             ['M 0 ' + (B - c) + ' q -' + C + ' -' + C + ' 0 -' + (2 * C), 2, true],
             ['M ' + c + ' ' + B + ' q ' + C + ' ' + C + ' ' + (2 * C) + ' 0', 2, false],
             ['M ' + (B - c) + ' ' + B + ' q -' + C + ' ' + C + ' -' + (2 * C) + ' 0', 3, true],
-            ['M ' + B + ' ' + (B - c) + '  q ' + C + ' -' + C + ' 0 -' + (2 * C), 3, false],
+            ['M ' + B + ' ' + (B - c) + ' q ' + C + ' -' + C + ' 0 -' + (2 * C), 3, false],
         ];
     }
     public cancelMoveAttempt(): void {

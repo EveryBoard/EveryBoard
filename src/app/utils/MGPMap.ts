@@ -141,6 +141,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
 }
 
 export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
+
     public reverse(): ReversibleMap<V, MGPSet<K>> {
         const reversedMap: ReversibleMap<V, MGPSet<K>> = new ReversibleMap<V, MGPSet<K>>();
         for (const key of this.listKeys()) {

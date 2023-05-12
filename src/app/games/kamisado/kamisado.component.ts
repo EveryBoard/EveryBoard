@@ -22,7 +22,6 @@ import { GameStatus } from 'src/app/jscaip/Rules';
     templateUrl: './kamisado.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-
 export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoMove,
                                                                 KamisadoState,

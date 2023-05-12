@@ -240,7 +240,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
-            RulesUtils.expectMoveFailure(rules, state, move, CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
+            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_SELF_CAPTURE());
         });
         it('should forbid capturing empty space', () => {
             const board: FourStatePiece[][] = [

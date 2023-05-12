@@ -36,9 +36,7 @@ export class SaharaMove extends MoveCoordToCoord {
         }
     };
     public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
-        const dx: number = Math.abs(start.x - end.x);
-        const dy: number = Math.abs(start.y - end.y);
-        const distance: number = dx+dy;
+        const distance: number = start.getOrthogonalDistance(end);
         if (distance === 0) {
             return MGPValidation.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         } else if (distance === 1) {
