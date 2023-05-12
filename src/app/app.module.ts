@@ -55,6 +55,7 @@ import { GoComponent } from './games/go/go.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
+import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
@@ -124,6 +125,7 @@ export const routes: Route[] = [
 ];
 
 export class FirebaseProviders {
+
     public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
         return Firebase.provideFirebaseApp(() => {
             return Firebase.initializeApp(environment.firebaseConfig);
@@ -193,6 +195,7 @@ export class FirebaseProviders {
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
         KamisadoComponent,
+        LascaComponent,
         LinesOfActionComponent,
         LodestoneComponent,
         MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,

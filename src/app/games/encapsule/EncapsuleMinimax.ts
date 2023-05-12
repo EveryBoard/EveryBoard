@@ -15,7 +15,7 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, Enc
 
     public getBoardValue(node: EncapsuleNode): BoardValue {
         const gameStatus: GameStatus = EncapsuleRules.getGameStatus(node);
-        return new BoardValue(gameStatus.toBoardValue());
+        return gameStatus.toBoardValue();
     }
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];

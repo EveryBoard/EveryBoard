@@ -90,7 +90,7 @@ describe('PylosComponent', () => {
             const initialState: PylosState = new PylosState(initialBoard, 0);
             testUtils.setupState(initialState);
 
-            //  When clicking on one
+            // When clicking on one
             // Then the move should be illegal
             await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));

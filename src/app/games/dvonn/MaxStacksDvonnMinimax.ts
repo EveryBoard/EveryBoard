@@ -31,7 +31,7 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
     public getBoardValue(node: DvonnNode): BoardValue {
         const gameStatus: GameStatus = DvonnRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const state: DvonnState = node.gameState;
         // Board value is percentage of the stacks controlled by the player

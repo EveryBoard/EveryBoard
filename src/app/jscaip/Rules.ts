@@ -35,11 +35,11 @@ export class GameStatus {
     }
     private constructor(public readonly isEndGame: boolean, public readonly winner: PlayerOrNone) {
     }
-    public toBoardValue(): number {
+    public toBoardValue(): BoardValue {
         if (this.winner.isPlayer()) {
-            return this.winner.getVictoryValue();
+            return new BoardValue(this.winner.getVictoryValue());
         } else {
-            return 0;
+            return new BoardValue(0);
         }
     }
 }

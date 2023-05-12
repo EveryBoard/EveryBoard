@@ -19,9 +19,11 @@ export type DemoNodeInfo = {
     template: `<div #board></div>`,
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit {
+
     @Input() public demoNodeInfo: DemoNodeInfo;
 
     @ViewChild('board', { read: ViewContainerRef })
+
     public boardRef: ViewContainerRef | null = null;
 
     public constructor(componentFactoryResolver: ComponentFactoryResolver,
@@ -61,5 +63,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
     public getPlayer(): string {
         return 'no-player';
+    }
+    public onCancelMove(_reason?: string | undefined): void {
+        return;
     }
 }

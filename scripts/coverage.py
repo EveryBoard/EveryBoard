@@ -95,6 +95,7 @@ def check():
                 if new_missing > 0:
                     decreased = True
                     print('ERROR: increased missing %s in coverage of %s: uncovered %d %s' % (type_, directory, new_missing, type_))
+
     if decreased:
         exit(1) # fail for CI script
 

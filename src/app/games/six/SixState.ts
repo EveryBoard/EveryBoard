@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';

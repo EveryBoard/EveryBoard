@@ -374,7 +374,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.displayModePanel = false;
     }
     public getPieceTranslation(y: number): string {
-        return 'translate(0,  ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
+        return 'translate(0, ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
     }
     public getBoardTransformation(): string {
         const translation: string = 'translate(' + this.SPACE_SIZE + ', 0)';
