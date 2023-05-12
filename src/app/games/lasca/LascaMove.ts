@@ -10,7 +10,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { JSONObject, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { LascaFailure } from './LascaFailure';
 import { LascaState } from './LascaState';
-import { MGPOrderedSet } from 'src/app/utils/MGPOrderedSet';
+import { MGPUniqueList } from 'src/app/utils/MGPUniqueList';
 
 export class LascaMove extends Move {
 
@@ -77,11 +77,11 @@ export class LascaMove extends Move {
             return new LascaMove(coords, casted.isStep as boolean);
         }
     };
-    public readonly coords: MGPOrderedSet<Coord>;
+    public readonly coords: MGPUniqueList<Coord>;
 
     private constructor(coords: Coord[], public readonly isStep: boolean) {
         super();
-        this.coords = new MGPOrderedSet(coords);
+        this.coords = new MGPUniqueList(coords);
     }
     public toString(): string {
         const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());

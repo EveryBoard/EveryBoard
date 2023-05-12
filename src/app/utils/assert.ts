@@ -1,5 +1,6 @@
 import { ErrorLoggerService } from '../services/ErrorLoggerService';
 
+// @deprecated Prefer to use Utils.assert instead
 export function assert(condition: boolean, message: string, notStringMessage?: any): void {
     if (condition === false) {
         // We log the error but we also throw an exception
