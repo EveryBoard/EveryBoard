@@ -112,6 +112,24 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         super(actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
+    // Gets the server time by relying on the presence token of the user.
+    private async getServerTime(): Promise<Timestamp> {
+        const userId: string = this.connectedUserService.user.get().id;
+        // We force the presence token update, and once we receive it, check the time written by firebase
+        return new Promise((resolve: (result: Timestamp) => void) => {
+            let updateSent: boolean = false;
+            const callback = (user: MGPOptional<User>): void => {
+                console.log(user)
+                if (updateSent && user.get().lastUpdateTime != null) {
+                    subscription.unsubscribe();
+                    resolve(user.get().lastUpdateTime as Timestamp);
+                }
+            };
+            const subscription: Subscription = this.userService.observeUser(userId, callback);
+            this.userService.updatePresenceToken(userId);
+            updateSent = true;
+        });
+    }
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
     }
@@ -403,9 +421,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private beforeEventsBatch(): void {
         this.timeManager.beforeEventsBatch(this.endGame);
     }
-    private afterEventsBatch(): void {
+    private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.fromTurn(this.gameComponent.getTurn());
-        this.timeManager.afterEventsBatch(this.endGame, player);
+        this.timeManager.afterEventsBatch(this.endGame, player, await this.getServerTime());
     }
     public notifyDraw(scores?: [number, number]): Promise<void> {
         this.endGame = true;
@@ -832,7 +850,7 @@ export class OGWCTimeManagerService {
         }
     }
     // Continue the current player clock after receiving events
-    public afterEventsBatch(gameEnd: boolean, player: Player): void {
+    public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
         if (gameEnd === false) {
             if (this.clocksStarted === false) {
                 // TODO: we can actually directly do that in onGameStart to simplify everything
@@ -847,8 +865,7 @@ export class OGWCTimeManagerService {
             this.updateClocks();
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
-            const localTime: Timestamp = Timestamp.now();
-            const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(localTime);
+            const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
             // We need to subtract the time to take the drift into account
             this.turnClocks[player.value].subtract(drift);
             this.globalClocks[player.value].subtract(drift);
