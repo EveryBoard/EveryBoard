@@ -2,7 +2,7 @@ import { Comparable } from '../utils/Comparable';
 import { ReversibleMap } from '../utils/MGPMap';
 import { MGPSet } from '../utils/MGPSet';
 import { Coord } from './Coord';
-import { Vector } from './Direction';
+import { Vector } from './Vector';
 import { GameState } from './GameState';
 import { HexagonalUtils } from './HexagonalUtils';
 

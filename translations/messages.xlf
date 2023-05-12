@@ -185,6 +185,9 @@
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
       </trans-unit>
+      <trans-unit id="8831529968086851272" datatype="html">
+        <source>Similar to checkers, capture opponent&apos;s pieces, free your own, and immobilize your opponent to win the game!</source>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
       </trans-unit>
@@ -319,6 +322,9 @@
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
+      </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -920,9 +926,6 @@
       </trans-unit>
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
-      </trans-unit>
-      <trans-unit id="1137390440747939689" datatype="html">
-        <source>You cannot capture your own pieces.</source>
       </trans-unit>
       <trans-unit id="7117895259187122182" datatype="html">
         <source>Board and goal of the game</source>
@@ -1761,6 +1764,78 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
+      <trans-unit id="3581037377692107358" datatype="html">
+        <source>You cannot go backward with normal pieces!</source>
+      </trans-unit>
+      <trans-unit id="2164034395199252113" datatype="html">
+        <source>You cannot capture an empty square, nor jump over it!</source>
+      </trans-unit>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
+      </trans-unit>
+      <trans-unit id="3183138660002989080" datatype="html">
+        <source>You must finish this capture!</source>
+      </trans-unit>
+      <trans-unit id="6689969573280113485" datatype="html">
+        <source>This piece cannot move!</source>
+      </trans-unit>
+      <trans-unit id="4481226927895530871" datatype="html">
+        <source>A capture should be a double diagonal step. Look at the green indicators to help you!</source>
+      </trans-unit>
+      <trans-unit id="924257200871471773" datatype="html">
+        <source>You must move in a single diagonal step!</source>
+      </trans-unit>
+      <trans-unit id="8938938109993892899" datatype="html">
+        <source>You cannot jump over the same square several times!</source>
+      </trans-unit>
+      <trans-unit id="8274439231274366704" datatype="html">
+        <source>Lasca: origins</source>
+      </trans-unit>
+      <trans-unit id="3954016636522783040" datatype="html">
+        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
+      </trans-unit>
+      <trans-unit id="4475600219932113977" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+      </trans-unit>
+      <trans-unit id="5101419651122121441" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      </trans-unit>
+      <trans-unit id="7013110290486741787" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+      </trans-unit>
+      <trans-unit id="3662184238859847370" datatype="html">
+        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
+      </trans-unit>
+      <trans-unit id="8288645478824152244" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+      </trans-unit>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
+      </trans-unit>
+      <trans-unit id="4604841825883708598" datatype="html">
+        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>
+      </trans-unit>
+      <trans-unit id="2693455583384082674" datatype="html">
+        <source>Promotion</source>
+      </trans-unit>
+      <trans-unit id="2042191715997917496" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="3052116389115675860" datatype="html">
+        <source>You did not choose the correct stack, and got no promotion.</source>
+      </trans-unit>
+      <trans-unit id="4252782057421264089" datatype="html">
+        <source>Officer move</source>
+      </trans-unit>
+      <trans-unit id="8730503950999903830" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+      </trans-unit>
+      <trans-unit id="7994037258587314442" datatype="html">
+        <source>You did not move your officer.</source>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
       </trans-unit>
@@ -1920,6 +1995,15 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
+      <trans-unit id="4174188766565583979" datatype="html">
+        <source>You must pick a piece from your side of the board in order to move it.</source>
+      </trans-unit>
+      <trans-unit id="4126120518252508337" datatype="html">
+        <source>This is not a valid promotion nor a valid capture.</source>
+      </trans-unit>
+      <trans-unit id="820589591452307194" datatype="html">
+        <source>You cannot perform a move that is the reverse of the previous one.</source>
+      </trans-unit>
       <trans-unit id="4594736386763524275" datatype="html">
         <source>Start coord cannot be out of range</source>
       </trans-unit>
@@ -1931,15 +2015,6 @@
       </trans-unit>
       <trans-unit id="4409865504289904426" datatype="html">
         <source>Drones must move one or two steps in any direction.</source>
-      </trans-unit>
-      <trans-unit id="4174188766565583979" datatype="html">
-        <source>You must pick a piece from your side of the board in order to move it.</source>
-      </trans-unit>
-      <trans-unit id="4126120518252508337" datatype="html">
-        <source>This is not a valid promotion nor a valid capture.</source>
-      </trans-unit>
-      <trans-unit id="820589591452307194" datatype="html">
-        <source>You cannot perform a move that is the reverse of the previous one.</source>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
@@ -2782,6 +2857,9 @@
       </trans-unit>
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="1137390440747939689" datatype="html">
+        <source>You cannot capture your own pieces.</source>
       </trans-unit>
       <trans-unit id="6986218395331151516" datatype="html">
         <source>You must pick one of your pieces.</source>

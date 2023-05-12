@@ -64,7 +64,7 @@
                             <ng-template #otherstep>
                                 <option [value]="i">
                                     <ng-container *ngIf="stepFinished[i] else notdone">v </ng-container>
-                                    <ng-template  #notdone>x </ng-template>
+                                    <ng-template #notdone>x </ng-template>
                                     <span id="step_{{ i }}">{{ step.title }}</span>
                                 </option>
                             </ng-template>

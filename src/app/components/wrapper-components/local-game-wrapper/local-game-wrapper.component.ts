@@ -24,6 +24,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public static VERBOSE: boolean = false;
 
+    public displayAIMetrics: boolean = true;
+
     public aiDepths: [string, string] = ['0', '0'];
 
     public playerSelection: [string, string] = ['human', 'human'];
@@ -165,5 +167,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public getPlayer(): string {
         return 'human';
+    }
+    public onCancelMove(reason?: string): void {
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            this.gameComponent.showLastMove();
+        }
     }
 }

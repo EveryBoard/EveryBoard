@@ -43,7 +43,7 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
         // The board value is based on the number of neighbors to the queen
         const status: GameStatus = HiveRules.get().getGameStatus(node);
         if (status !== GameStatus.ONGOING) {
-            return new BoardValue(status.toBoardValue());
+            return status.toBoardValue();
         }
         const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
         const scoreOne: number = this.queenBeeMobility(node.gameState, Player.ONE);

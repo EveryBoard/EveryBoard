@@ -87,7 +87,7 @@ describe('SaharaComponent', () => {
             testUtils.expectElementNotToExist('chosen_coord_2_0');
             testUtils.expectElementNotToExist('possible_landing_2_1');
         }));
-        it('should deselect piece when clicking on it for a second time', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given the initial board with one selected piece
             await testUtils.expectClickSuccess('#click_2_0');
             testUtils.expectElementToExist('#chosen_coord_2_0');

@@ -216,26 +216,26 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             if (this.isThrone(state, backCoord) === false) {
                 display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                         'cannot capture a pawn without an ally; ' +
-                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                         ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
                         'cannot capture a pawn without an ally behind');
                 return MGPOptional.empty();
             } // here, back is an empty throne
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 1 opponent and 1 throne; ' +
-                    threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                    threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                     ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by 1 opponent and 1 throne
         }
         if (back === RelativePlayer.PLAYER) {
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 2 opponents; ' + threatenedPieceCoord +
-                    'threatened by ' + player + `'s pawn in  ` + coord +
+                    'threatened by ' + player + `'s pawn in ` + coord +
                     ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by two opponents
         }
         display(TaflRules.VERBOSE || LOCAL_VERBOSE,
-                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                 ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }

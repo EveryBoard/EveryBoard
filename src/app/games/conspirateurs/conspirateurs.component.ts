@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -147,7 +147,7 @@ export class ConspirateursComponent
             }
         }
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         const lastMove: ConspirateursMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
             this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');

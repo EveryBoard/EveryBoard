@@ -702,6 +702,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const giver: Player = this.role as Player;
         return this.gameService.addTurnTime(this.currentPartId, giver);
     }
+    public onCancelMove(reason?: string): void {
+        this.gameComponent.showLastMove();
+    }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');
         this.routerEventsSubscription.unsubscribe();

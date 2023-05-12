@@ -70,6 +70,6 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
         return legalRotations;
     }
     public getBoardValue(node: PentagoNode): BoardValue {
-        return new BoardValue(PentagoRules.get().getGameStatus(node).toBoardValue());
+        return PentagoRules.get().getGameStatus(node).toBoardValue();
     }
 }

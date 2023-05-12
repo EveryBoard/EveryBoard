@@ -228,7 +228,7 @@ describe('ChatComponent', () => {
             // Then the message is sent
             const user: MinimalUser = UserMocks.CONNECTED_MINIMAL_USER;
             expect(chatService.sendMessage).toHaveBeenCalledWith('fauxChat', user, 'hello', 2);
-            //  and the form is cleared
+            // and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));
         it('should scroll to bottom when sending a message', fakeAsync(async() => {

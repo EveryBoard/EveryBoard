@@ -19,8 +19,7 @@ export class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActi
             return new BoardValue(Player.ONE.getVictoryValue());
         } else {
             // More groups = less score
-            return new BoardValue((100 / zero) * Player.ZERO.getScoreModifier() +
-                (100 / one) * Player.ONE.getScoreModifier());
+            return BoardValue.from(100 / zero, 100 / one);
         }
     }
 }
