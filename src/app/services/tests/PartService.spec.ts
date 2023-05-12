@@ -10,7 +10,7 @@ import { JSONValue } from 'src/app/utils/utils';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
 
-fdescribe('PartService', () => {
+describe('PartService', () => {
 
     let partService: PartService;
     let partDAO: PartDAO;

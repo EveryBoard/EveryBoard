@@ -739,17 +739,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 }
 
-abstract class OGWCHelper {
-    public onReceivedRequest(_request: PartEventRequest): void {
-    }
-    public onReceivedReply(_reply: PartEventReply): void {
-    }
-    public onReceivedAction(_action: PartEventAction): void {
-    }
-    public onReceivedMove(_move: PartEventMove): void {
-    }
-}
-
 /**
  * The time manager manages clocks of each player.
  * There are two main scenarios to consider:
@@ -760,7 +749,7 @@ abstract class OGWCHelper {
 @Injectable({
     providedIn: 'root',
 })
-export class OGWCTimeManagerService extends OGWCHelper {
+export class OGWCTimeManagerService {
     // TODO: wrong chrono is playing in some take backs (when it switches player)
 
     // The turn clocks of each player
