@@ -112,6 +112,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         super(actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
+    private showTimestamp(t: Timestamp): string {
+        if (t == null) return 'null';
+        return Math.floor(t.seconds % (60*60) / 60) + ':' + (t.seconds % 60) + ':' + (t.nanoseconds / 1000000)
+    }
     // Gets the server time by relying on the presence token of the user.
     private async getServerTime(): Promise<Timestamp> {
         const userId: string = this.connectedUserService.user.get().id;
@@ -119,7 +123,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return new Promise((resolve: (result: Timestamp) => void) => {
             let updateSent: boolean = false;
             const callback = (user: MGPOptional<User>): void => {
-                console.log(user)
+                // console.log({updateSent, time: this.showTimestamp(user.get().lastUpdateTime as Timestamp)});
                 if (updateSent && user.get().lastUpdateTime != null) {
                     subscription.unsubscribe();
                     resolve(user.get().lastUpdateTime as Timestamp);
@@ -314,6 +318,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // This is in particular used to deal with joining a game in the middle:
         // we don't want to apply all clock actions then
         const callback: (events: PartEvent[]) => Promise<void> = async(events: PartEvent[]): Promise<void> => {
+            console.log('CALLBACK')
             this.beforeEventsBatch();
             for (const event of events) {
                 switch (event.eventType) {
@@ -336,7 +341,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                         break;
                 }
             }
-            this.afterEventsBatch();
+            await this.afterEventsBatch();
         };
         this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, callback);
     }
@@ -773,9 +778,6 @@ export class OGWCTimeManagerService {
     // The time at which the current move started
     private lastMoveStartTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
 
-    private clocksStarted: boolean = false;
-
-    public constructor() {}
     public setClocks(turnClocks: [CountDownComponent, CountDownComponent],
                      globalClocks: [CountDownComponent, CountDownComponent])
     : void
@@ -792,6 +794,12 @@ export class OGWCTimeManagerService {
             this.globalClocks[player.value].setDuration(this.getPartDurationInMs());
             this.availableTurnTime[player.value] = this.getMoveDurationInMs();
             this.turnClocks[player.value].setDuration(this.getMoveDurationInMs());
+        }
+        console.log('Starting Clocks')
+        // We want the clocks to be paused, as we will only activate the required ones
+        for (const clock of this.allClocks) {
+            clock.start();
+            clock.pause();
         }
     }
     private getPartDurationInMs(): number {
@@ -849,8 +857,8 @@ export class OGWCTimeManagerService {
     }
     // Pauses all clocks before handling new events
     public beforeEventsBatch(gameEnd: boolean): void {
-        console.log('BeforeEventsBatch')
-        if (this.clocksStarted && gameEnd === false) {
+        console.log('BeforeEventsBatch -> pause clocks')
+        if (gameEnd === false) {
             this.pauseAllClocks();
         }
     }
@@ -858,20 +866,10 @@ export class OGWCTimeManagerService {
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
         console.log('AfterEventsBatch')
         if (gameEnd === false) {
-            if (this.clocksStarted === false) {
-                console.log('starting clocks')
-                // TODO: we can actually directly do that in onGameStart to simplify everything
-                // The first time we reach here, we need to start all clocks
-                // But we want them to be paused, as we will only activate the required ones
-                for (const clock of this.allClocks) {
-                    clock.start();
-                    clock.pause();
-                }
-                this.clocksStarted = true;
-            }
             this.updateClocks();
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
+            console.log('actual drift is ' + this.getMillisecondsElapsedSinceLastMoveStart(currentTime) + 'ms')
             const drift: number = 0; // TODO: joining mid-game: this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
             // console.log({drift, current: currentTime.toString(), lastMoveTime: this.lastMoveStartTimestamp.get().toString()})
             // We need to subtract the time to take the drift into account
@@ -882,7 +880,7 @@ export class OGWCTimeManagerService {
     }
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
-        console.log('resuming clocks')
+        console.log('ResumingClocks')
         this.turnClocks[player.value].resume();
         this.globalClocks[player.value].resume();
     }

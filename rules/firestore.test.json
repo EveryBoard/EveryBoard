@@ -112,6 +112,7 @@ service cloud.firestore {
             return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
         match /parts/{id} {
+            allow read, write: if true; // TODO: tempoary
             allow create: if verifiedUserCreatesPart(request.resource.data);
             allow delete: if creatorDeletesUnstartedPart(id, resource.data);
             allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);
@@ -122,6 +123,7 @@ service cloud.firestore {
             allow read: if userIsVerified();
         }
         match /parts/{partId}/events/{eventId} {
+            allow read, write: if true; // TODO: tempoary
             allow read: if userIsVerified();
             allow create: if playerAddsMove(partId, request.resource.data); // TODO: player is in the game and adds the move as expected
             allow delete: if true; // TODO: Temporary allowed for take backs (but in the future this will be forbidden as takebacks will be another event)
