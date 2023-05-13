@@ -1,3 +1,4 @@
+import { Mutex } from 'async-mutex';
 import { Component, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -325,32 +326,33 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // Importantly, we can receive more than one event at a time.
         // This is in particular used to deal with joining a game in the middle:
         // we don't want to apply all clock actions then
+        const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
         const callback: (events: PartEvent[]) => Promise<void> = async(events: PartEvent[]): Promise<void> => {
-            console.log('CALLBACK')
-            console.log(events)
-            this.beforeEventsBatch();
-            for (const event of events) {
-                switch (event.eventType) {
-                    case 'Move':
-                        const moveEvent: PartEventMove = event as PartEventMove;
-                        await this.onReceivedMove(moveEvent);
-                        break;
-                    case 'Request':
-                        const requestEvent: PartEventRequest = event as PartEventRequest;
-                        this.onReceivedRequest(requestEvent);
-                        break;
-                    case 'Reply':
-                        const replyEvent: PartEventReply = event as PartEventReply;
-                        await this.onReceivedReply(replyEvent);
-                        break;
-                    default:
-                        Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
-                        const actionEvent: PartEventAction = event as PartEventAction;
-                        this.onReceivedAction(actionEvent);
-                        break;
+            await mutex.runExclusive(async() => {
+                this.beforeEventsBatch();
+                for (const event of events) {
+                    switch (event.eventType) {
+                        case 'Move':
+                            const moveEvent: PartEventMove = event as PartEventMove;
+                            await this.onReceivedMove(moveEvent);
+                            break;
+                        case 'Request':
+                            const requestEvent: PartEventRequest = event as PartEventRequest;
+                            this.onReceivedRequest(requestEvent);
+                            break;
+                        case 'Reply':
+                            const replyEvent: PartEventReply = event as PartEventReply;
+                            await this.onReceivedReply(replyEvent);
+                            break;
+                        default:
+                            Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
+                            const actionEvent: PartEventAction = event as PartEventAction;
+                            this.onReceivedAction(actionEvent);
+                            break;
+                    }
                 }
-            }
-            await this.afterEventsBatch();
+                await this.afterEventsBatch();
+            });
         };
         this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, callback);
     }
