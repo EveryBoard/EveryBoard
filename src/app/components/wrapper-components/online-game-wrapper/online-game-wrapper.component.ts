@@ -882,8 +882,8 @@ export class OGWCTimeManagerService {
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
         console.log('AfterEventsBatch, player is ' + player)
+        this.updateClocks();
         if (gameEnd === false) {
-            this.updateClocks();
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
             console.log('actual drift is ' + this.getMillisecondsElapsedSinceLastMoveStart(currentTime) + 'ms')
