@@ -12,6 +12,11 @@ import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPFallible } from '../utils/MGPFallible';
 
+export class MGPNodeStats {
+    public static createdNodes: number = 0;
+    public static minimaxTime: number = 0;
+}
+
 export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
                      S extends GameState,
@@ -88,6 +93,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             this.ownValue.set(minimaxCreator.name, firstValue);
             this.hopedValue.set(minimaxCreator.name, firstValue.value);
         }
+        MGPNodeStats.createdNodes++;
         display(MGPNode.VERBOSE, 'creating ' + this.myToString());
     }
     public findBestMove(readingDepth: number,
@@ -107,6 +113,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             bestDescendant = bestDescendant.mother.get();
             readingDepth--;
         }
+        MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
         return bestDescendant.move.get();
     }
     public alphaBeta(depth: number,

@@ -1,5 +1,6 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
@@ -32,6 +33,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public botTimeOut: number = 1000;
 
+    public displayAIMetrics: boolean = false;
+
     public constructor(componentFactoryResolver: ComponentFactoryResolver,
                        actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
@@ -43,6 +46,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
+    }
+    public getCreatedNodes(): number {
+        return MGPNodeStats.createdNodes;
+    }
+    public getMinimaxTime(): number {
+        return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
