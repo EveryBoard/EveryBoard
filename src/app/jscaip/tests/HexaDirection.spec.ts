@@ -25,12 +25,12 @@ describe('HexaDirection', () => {
         expect(HexaDirection.DOWN_LEFT.toString()).toEqual('DOWN_LEFT');
         expect(HexaDirection.LEFT.toString()).toEqual('LEFT');
     });
-    it('should encode/decode nicely', () => {
+    it('should have a bijective encoder', () => {
         for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
             const encoded: number = HexaDirection.encoder.encodeNumber(dir);
             expect(encoded).toBe(i);
-            NumberEncoderTestUtils.expectToBeCorrect(HexaDirection.encoder, dir);
+            NumberEncoderTestUtils.expectToBeBijective(HexaDirection.encoder, dir);
         }
     });
     it('should map to angle correctly', () => {

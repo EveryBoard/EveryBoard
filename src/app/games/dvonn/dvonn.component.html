@@ -47,9 +47,9 @@
     </g>
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove.isPresent()">
-        <polygon [attr.points]="getHexaPointsAt(lastMove.get().coord)"
+        <polygon [attr.points]="getHexaPointsAt(lastMove.get().getStart())"
                  class="base no-fill last-move-stroke"/>
-        <polygon [attr.points]="getHexaPointsAt(lastMove.get().end)"
+        <polygon [attr.points]="getHexaPointsAt(lastMove.get().getEnd())"
                  class="base no-fill last-move-stroke"/>
     </ng-container>
     <!-- Highlight selected piece -->

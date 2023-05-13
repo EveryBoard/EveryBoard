@@ -96,12 +96,14 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
     }
     public mapBoard(board: GoPiece[][], mapper: (pawn: GoPiece) => GoPiece): GoPiece[][] {
+        const newBoard: GoPiece[][] = [];
         for (let y: number = 0; y < board.length; y++) {
+            newBoard[y] = [];
             for (let x: number = 0; x < board[0].length; x++) {
-                board[y][x] = mapper(board[y][x]);
+                newBoard[y][x] = mapper(board[y][x]);
             }
         }
-        return board;
+        return newBoard;
     }
     public setAliveUniqueWrapper(allDeadState: GoState,
                                  monoWrappedEmptyGroups: GoGroupDatas[])
@@ -123,7 +125,7 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
         const state: GoState = node.gameState;
         const gameStatus: GameStatus = GoRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const LOCAL_VERBOSE: boolean = false;
 

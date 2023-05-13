@@ -21,7 +21,7 @@ describe('RegisterComponent', () => {
     const password: string = 'hunter2';
     const user: FireAuth.User = { displayName: 'jeanjaja', email: 'jean@jaja.europe' } as FireAuth.User;
 
-    function fillInUserDetails() {
+    function fillInUserDetails(): void {
         testUtils.fillInput('#email', email);
         testUtils.fillInput('#username', username);
         testUtils.fillInput('#password', password);

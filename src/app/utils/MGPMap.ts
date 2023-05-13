@@ -16,7 +16,8 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         return map;
     }
     public constructor(private map: {key: K, value: V}[] = [],
-                       private isImmutable: boolean = false) {
+                       private isImmutable: boolean = false)
+    {
     }
     public makeImmutable(): void {
         this.isImmutable = true;
@@ -140,6 +141,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
 }
 
 export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
+
     public reverse(): ReversibleMap<V, MGPSet<K>> {
         const reversedMap: ReversibleMap<V, MGPSet<K>> = new ReversibleMap<V, MGPSet<K>>();
         for (const key of this.listKeys()) {

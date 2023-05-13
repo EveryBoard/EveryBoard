@@ -27,10 +27,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
 
-    constructor(public router: Router,
-                public connectedUserService: ConnectedUserService,
-                public observedPartService: ObservedPartService,
-                public userService: UserService)
+    public constructor(public router: Router,
+                       public connectedUserService: ConnectedUserService,
+                       public observedPartService: ObservedPartService,
+                       public userService: UserService)
     {
     }
     public ngOnInit(): void {

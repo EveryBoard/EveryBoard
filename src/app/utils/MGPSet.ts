@@ -6,7 +6,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
 
     protected values: T[];
 
-    constructor(values?: readonly T[]) {
+    public constructor(values?: readonly T[]) {
         if (values === undefined) {
             this.values = [];
         } else {
@@ -97,12 +97,12 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public hasElements(): boolean {
         return this.isEmpty() === false;
     }
-    public map<U extends Comparable>(f: (element: T) => U): MGPSet<U> {
-        const result: MGPSet<U> = new MGPSet();
-        for (const element of this) {
-            result.add(f(element));
+    public map<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
+        const result: V[] = [];
+        for (const element of this.values) {
+            result.push(mapper(element));
         }
-        return result;
+        return new MGPSet(result);
     }
     public flatMap<U extends Comparable>(f: (element: T) => MGPSet<U>): MGPSet<U> {
         const result: MGPSet<U> = new MGPSet();
@@ -141,3 +141,4 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return this.values.values();
     }
 }
+

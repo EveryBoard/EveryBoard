@@ -33,7 +33,7 @@ export class QuixoMove extends MoveCoord {
         }
         return MGPValidation.SUCCESS;
     }
-    constructor(x: number, y: number, public readonly direction: Orthogonal) {
+    public constructor(x: number, y: number, public readonly direction: Orthogonal) {
         super(x, y);
         const coordValidity: MGPValidation = QuixoMove.isValidCoord(this.coord);
         if (coordValidity.isFailure()) throw new Error(coordValidity.getReason());
@@ -53,9 +53,9 @@ export class QuixoMove extends MoveCoord {
     public toString(): string {
         return 'QuixoMove(' + this.coord.x + ', ' + this.coord.y + ', ' + this.direction.toString() + ')';
     }
-    public equals(o: QuixoMove): boolean {
-        if (o === this) return true;
-        if (!o.coord.equals(this.coord)) return false;
-        return o.direction === this.direction;
+    public equals(other: QuixoMove): boolean {
+        if (other === this) return true;
+        if (!other.coord.equals(this.coord)) return false;
+        return other.direction === this.direction;
     }
 }

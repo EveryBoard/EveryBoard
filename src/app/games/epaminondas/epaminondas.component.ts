@@ -44,7 +44,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private moveds: Coord[] = [];
 
-    private captureds: Coord[] = [];
+    private capturedCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -68,7 +68,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         this.board = this.getState().getCopiedBoard();
     }
-    private showPreviousMove() {
+    private showPreviousMove(): void {
         const move: EpaminondasMove = this.rules.node.move.get();
         let moved: Coord = move.coord;
         this.moveds = [moved];
@@ -80,7 +80,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
         while (moved.isInRange(14, 12) &&
                previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT) {
-            this.captureds.push(moved);
+            this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
     }
@@ -113,8 +113,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
-    private hidePreviousMove() {
-        this.captureds = [];
+    private hidePreviousMove(): void {
+        this.capturedCoords = [];
         this.moveds = [];
     }
     private getValidExtensions(PLAYER: Player): Coord[] {
@@ -386,7 +386,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     public getRectClasses(x: number, y: number): string[] {
         const clicked: Coord = new Coord(x, y);
-        if (this.captureds.some((c: Coord) => c.equals(clicked))) {
+        if (this.capturedCoords.some((c: Coord) => c.equals(clicked))) {
             return ['captured-fill'];
         } else if (this.moveds.some((c: Coord) => c.equals(clicked))) {
             return ['moved-fill'];

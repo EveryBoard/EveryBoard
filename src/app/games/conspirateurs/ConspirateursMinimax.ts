@@ -64,7 +64,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
             new Coord(coord.x - 1, coord.y - 1),
         ];
         for (const target of targets) {
-            const move: MGPFallible<ConspirateursMoveSimple> = ConspirateursMoveSimple.of(coord, target);
+            const move: MGPFallible<ConspirateursMoveSimple> = ConspirateursMoveSimple.from(coord, target);
             if (move.isSuccess() && ConspirateursRules.get().simpleMoveLegality(move.get(), state).isSuccess()) {
                 moves.push(move.get());
             }

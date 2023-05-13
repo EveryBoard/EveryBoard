@@ -65,7 +65,7 @@ describe('SiamComponent', () => {
         // Then it should be selected
         testUtils.expectElementToHaveClass('#remainingPieces_0_4', 'selected-stroke');
     }));
-    it('should deselect piece when clicking a second time on the remaining pieces', fakeAsync(async() => {
+    it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
         // Given a component where the player has selected a piece for insertion
         await testUtils.expectClickSuccess('#remainingPieces_0');
         // When clicking a second time on the remaining pieces
@@ -157,7 +157,7 @@ describe('SiamComponent', () => {
         testUtils.setupState(state);
 
         // When making the piece exit the board
-        // The the orientation of the piece does not have to be chosen
+        // Then the orientation of the piece does not have to be chosen
         await testUtils.expectClickSuccess('#square_4_4');
         const move: SiamMove = SiamMove.of(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         await testUtils.expectMoveSuccess('#square_4_5', move);

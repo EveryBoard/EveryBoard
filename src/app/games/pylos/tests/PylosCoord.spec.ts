@@ -2,21 +2,19 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PylosCoord } from '../PylosCoord';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('PylosCoord:', () => {
 
-    it('should encode optional and decode should be symetrical', () => {
-        const initialValues: MGPOptional<PylosCoord>[] = [
+    it('should have a bijective encoder', () => {
+        const values: MGPOptional<PylosCoord>[] = [
+            MGPOptional.of(new PylosCoord(2, 1, 0)),
             MGPOptional.empty(),
             MGPOptional.of(new PylosCoord(0, 0, 0)),
         ];
-        const encodedValues: number[] = initialValues.map((optionalCoord: MGPOptional<PylosCoord>) =>
-            PylosCoord.encodeOptional(optionalCoord));
-        const decodedValues: MGPOptional<PylosCoord>[] = encodedValues.map((value: number) =>
-            PylosCoord.decodeToOptional(value));
-        const expectedValues: number[] = [0, 1];
-        expect(encodedValues).toEqual(expectedValues);
-        expect(decodedValues).toEqual(initialValues);
+        for (const value of values) {
+            EncoderTestUtils.expectToBeBijective(PylosCoord.optionalEncoder, value);
+        }
     });
 
     it('should forbid invalid coord creation', () => {
@@ -28,21 +26,21 @@ describe('PylosCoord:', () => {
 
     it('should override equals correctly', () => {
         const coord: PylosCoord = new PylosCoord(0, 0, 0);
-        const close1: PylosCoord = new PylosCoord(1, 0, 0);
-        const close2: PylosCoord = new PylosCoord(0, 1, 0);
-        const close3: PylosCoord = new PylosCoord(0, 0, 1);
+        const closeOnX: PylosCoord = new PylosCoord(1, 0, 0);
+        const closeOnY: PylosCoord = new PylosCoord(0, 1, 0);
+        const closeOnZ: PylosCoord = new PylosCoord(0, 0, 1);
         const twin: PylosCoord = new PylosCoord(0, 0, 0);
         expect(coord.equals(coord)).toBeTrue();
-        expect(coord.equals(close1)).toBeFalse();
-        expect(coord.equals(close2)).toBeFalse();
-        expect(coord.equals(close3)).toBeFalse();
+        expect(coord.equals(closeOnX)).toBeFalse();
+        expect(coord.equals(closeOnY)).toBeFalse();
+        expect(coord.equals(closeOnZ)).toBeFalse();
         expect(coord.equals(twin)).toBeTrue();
     });
 
     it('should compare Z correctly', () => {
         const coord: PylosCoord = new PylosCoord(0, 0, 0);
         const upperCoord: PylosCoord = new PylosCoord(0, 0, 1);
-        expect(coord.isUpperThan(upperCoord)).toBeFalse();
+        expect(coord.isHigherThan(upperCoord)).toBeFalse();
     });
 
     it('should give list of lower pieces, except for floor coord', () => {

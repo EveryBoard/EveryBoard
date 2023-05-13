@@ -2,9 +2,11 @@
 import { comparableEquals, ComparableJSON, ComparableObject, isComparableJSON, isComparableObject, isComparableValue } from '../Comparable';
 
 class DummyComparableObject implements ComparableObject {
+
     public constructor(readonly value: number) {}
-    public equals(o: DummyComparableObject): boolean {
-        return this.value === o.value;
+
+    public equals(other: DummyComparableObject): boolean {
+        return this.value === other.value;
     }
     public toString(): string {
         return 'dummy';

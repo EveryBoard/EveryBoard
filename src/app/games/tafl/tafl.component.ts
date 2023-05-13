@@ -22,7 +22,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     public EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
-    protected captureds: Coord[] = [];
+    protected capturedCoords: Coord[] = [];
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -43,7 +43,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         display(this.VERBOSE, 'taflComponent.updateBoard');
         this.lastMove = this.rules.node.move;
         this.board = this.getState().getCopiedBoard();
-        this.captureds = [];
+        this.capturedCoords = [];
         if (this.lastMove.isPresent()) {
             this.showPreviousMove();
         }
@@ -53,14 +53,14 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const previousState: S = this.rules.node.mother.get().gameState;
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
-            const captured: Coord = this.lastMove.get().end.getNext(orthogonal, 1);
+            const captured: Coord = this.lastMove.get().getEnd().getNext(orthogonal, 1);
             if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
                 const currentPiece: TaflPawn = this.getState().getPieceAt(captured);
                 const isEmpty: boolean = currentPiece === TaflPawn.UNOCCUPIED;
                 if (wasOpponent && isEmpty) {
-                    this.captureds.push(captured);
+                    this.capturedCoords.push(captured);
                 }
             }
         }
@@ -161,11 +161,11 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const classes: string[] = [];
 
         const coord: Coord = new Coord(x, y);
-        if (this.captureds.some((c: Coord) => c.equals(coord))) {
+        if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
         } else if (this.lastMove.isPresent()) {
-            const lastStart: Coord = this.lastMove.get().coord;
-            const lastEnd: Coord = this.lastMove.get().end;
+            const lastStart: Coord = this.lastMove.get().getStart();
+            const lastEnd: Coord = this.lastMove.get().getEnd();
             if (coord.equals(lastStart) || coord.equals(lastEnd)) {
                 classes.push('moved-fill');
             }

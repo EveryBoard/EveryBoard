@@ -19,8 +19,9 @@ export class VerifiedAccountGuard extends AccountGuard {
             return true;
         }
     }
-    constructor(connectedUserService: ConnectedUserService,
-                protected readonly router: Router) {
+    public constructor(connectedUserService: ConnectedUserService,
+                       protected readonly router: Router)
+    {
         super(connectedUserService);
     }
     public async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {

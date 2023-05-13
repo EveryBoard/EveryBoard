@@ -30,7 +30,7 @@ describe('ConspirateursRules', () => {
         return ConspirateursMoveDrop.of(coord).get();
     }
     function simpleMove(start: Coord, end: Coord): ConspirateursMove {
-        return ConspirateursMoveSimple.of(start, end).get();
+        return ConspirateursMoveSimple.from(start, end).get();
     }
     function jump(coords: Coord[]): ConspirateursMove {
         return ConspirateursMoveJump.of(coords).get();

@@ -84,7 +84,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
         }
         if (captured.is(state.getCurrentPlayer())) {
-            return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
+            return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
         return MGPFallible.success(undefined);
     }

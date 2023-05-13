@@ -211,7 +211,7 @@ describe('DiamComponent', () => {
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected-stroke');
         }));
-        it('should deselect piece on board when clicking on it again', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board with piece on, one of them selected
             const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],

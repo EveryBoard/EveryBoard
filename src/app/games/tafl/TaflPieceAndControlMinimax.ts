@@ -21,7 +21,7 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
     public getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const state: TaflState = node.gameState;
         const width: number = this.ruler.config.WIDTH;

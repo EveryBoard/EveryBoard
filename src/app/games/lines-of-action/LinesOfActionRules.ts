@@ -29,7 +29,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 const piece: PlayerOrNone = state.getPieceAt(coord);
                 if (piece.isPlayer()) {
                     for (const target of LinesOfActionRules.possibleTargets(state, coord)) {
-                        const move: LinesOfActionMove = LinesOfActionMove.of(coord, target).get();
+                        const move: LinesOfActionMove = LinesOfActionMove.from(coord, target).get();
                         moves.push(move);
                     }
                 }
@@ -82,24 +82,24 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     : LinesOfActionState
     {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
-        board[move.coord.y][move.coord.x] = PlayerOrNone.NONE;
-        board[move.end.y][move.end.x] = state.getCurrentPlayer();
+        board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
+        board[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
 
         return new LinesOfActionState(board, state.turn + 1);
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPFallible<void> {
-        if (state.getPieceAt(move.coord) !== state.getCurrentPlayer()) {
+        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (move.length() !== this.numberOfPiecesOnLine(state, move.coord, move.direction)) {
+        if (move.length() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
             return MGPFallible.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
         }
-        if (move.coord.getCoordsToward(move.end).some((c: Coord) =>
+        if (move.getStart().getCoordsToward(move.getEnd()).some((c: Coord) =>
             state.getPieceAt(c) === state.getCurrentOpponent())) {
             return MGPFallible.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
         }
-        if (state.getPieceAt(move.end) === state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
+        if (state.getPieceAt(move.getEnd()) === state.getCurrentPlayer()) {
+            return MGPFallible.failure(RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE());
         }
         return MGPFallible.success(undefined);
     }
@@ -164,7 +164,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
             if (state.isOnBoard(target)) {
-                const move: LinesOfActionMove = LinesOfActionMove.of(start, target).get();
+                const move: LinesOfActionMove = LinesOfActionMove.from(start, target).get();
                 const legality: MGPFallible<void> = LinesOfActionRules.isLegal(move, state);
                 if (legality.isSuccess()) {
                     targets.push(target);

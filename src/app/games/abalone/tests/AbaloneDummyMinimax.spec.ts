@@ -20,11 +20,11 @@ describe('AbaloneDummyMinimax', () => {
         minimax = new AbaloneDummyMinimax(new AbaloneRules(AbaloneState), 'dummy');
     });
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
-        // given initial node
+        // Given initial node
         const initialState: AbaloneState = AbaloneState.getInitialState();
         const initialNode: AbaloneNode = new AbaloneNode(initialState);
 
-        // then we should have 44 moves
+        // Then we should have 44 moves
         expect(minimax.getListMoves(initialNode).length).toEqual(44);
     });
     it('should include pushing moves', () => {
@@ -71,7 +71,7 @@ describe('AbaloneDummyMinimax', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         // When computing the scores
-        // The the board with the most player pieces should have the highest score
+        // Then the board with the most player pieces should have the highest score
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            new AbaloneState(boardWithLessPieces, 0),
                                                            MGPOptional.empty(),

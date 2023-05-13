@@ -76,7 +76,7 @@ export class GipfTutorial extends Tutorial {
             )],
             $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
         Let's now see how captures can really be useful.`,
-            $localize`Failed!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Capture (2/3)`,

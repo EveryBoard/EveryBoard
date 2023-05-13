@@ -195,7 +195,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
             // Once by changing it on the select, once after the AI move and check who is next
         });
-        it('Should rotate the board when selecting AI as player zero', async() => {
+        it('should rotate the board when selecting AI as player zero', async() => {
             // Given a board of a reversible component
             testUtils.getComponent().hasAsymetricBoard = true;
 
@@ -206,7 +206,7 @@ describe('LocalGameWrapperComponent', () => {
             const rotation: string = testUtils.getComponent().rotation;
             expect(rotation).toBe('rotate(180)');
         });
-        it('Should de-rotate the board when selecting human as player zero again', async() => {
+        it('should de-rotate the board when selecting human as player zero again', async() => {
             // Given a board of a reversible component, where AI is player zero
             testUtils.getComponent().hasAsymetricBoard = true;
             await selectAIPlayer(Player.ZERO);
@@ -364,7 +364,7 @@ describe('LocalGameWrapperComponent', () => {
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
             expect(winnerTag).toBe('Player 1 won');
         }));
-        it(`should display 'You Lost' when human loose against AI`, fakeAsync(async() => {
+        it(`should display 'You Lost' when human lose against AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for AI
             const board: PlayerOrNone[][] = [
                 [O, O, O, _, _, O, O],
@@ -421,6 +421,31 @@ describe('LocalGameWrapperComponent', () => {
             // Then 'AI (Player 0) won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
             expect(winnerTag).toBe('P4Minimax (Player 2) won');
+        }));
+    });
+    describe('onCancelMove', () => {
+        it('should showLastMove when there is one', fakeAsync(async() => {
+            // Given a component with a last move
+            const component: P4Component = testUtils.getComponent();
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should have been called
+            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+        }));
+        it('should not showLastMove when there is none', fakeAsync(async() => {
+            // Given a component with a last move
+            const component: P4Component = testUtils.getComponent();
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should have been called
+            expect(component.showLastMove).not.toHaveBeenCalled();
         }));
     });
 });

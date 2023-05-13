@@ -72,7 +72,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         return upLeft + ' ' + upRight + ' ' + middleMiddleRight + ' ' + middleExtremeRight + ' ' +
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = ApagosRules.get();
         this.hasAsymetricBoard = true;
@@ -106,7 +106,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         const lastMove: ApagosMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
             this.showLastDrop(lastMove);

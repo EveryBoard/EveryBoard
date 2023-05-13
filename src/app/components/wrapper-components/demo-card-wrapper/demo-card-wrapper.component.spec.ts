@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { LodestoneNode } from 'src/app/games/lodestone/LodestoneRules';
@@ -69,5 +70,12 @@ describe('DemoCardComponent', () => {
 
         // Then it should not call rules.choose
         expect(testUtils.getComponent().gameComponent.rules.choose).not.toHaveBeenCalled();
+    }));
+    it('should do nothing when you pass', fakeAsync(async() => {
+        // Given any starting state of component
+        // When passing
+        const result: void = testUtils.getComponent().onCancelMove('not even necessary');
+        // Then nothing should have happend (for coverage sake)
+        expect(result).withContext('should be null').toBe();
     }));
 });

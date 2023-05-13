@@ -68,7 +68,7 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState> {
     public getBoardValue(node: DiamNode): BoardValue {
         const gameStatus: GameStatus = DiamRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         else return new BoardValue(0);
     }

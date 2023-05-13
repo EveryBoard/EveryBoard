@@ -8,10 +8,11 @@ import { faTwitter, faFacebook, faGithub, IconDefinition } from '@fortawesome/fr
     templateUrl: './app.component.html',
 })
 export class AppComponent {
+
     public faTwitter: IconDefinition = faTwitter;
     public faFacebook: IconDefinition = faFacebook;
     public faGithub: IconDefinition = faGithub;
 
-    constructor(private readonly _themeService: ThemeService,
-                private readonly _errorLoggerService: ErrorLoggerService) {}
+    public constructor(private readonly _themeService: ThemeService,
+                       private readonly _errorLoggerService: ErrorLoggerService) {}
 }

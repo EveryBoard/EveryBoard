@@ -7,12 +7,12 @@ import { GoPiece } from './GoState';
 
 export class GoGroupDatas extends GroupDatas<GoPiece> {
 
-    constructor(color: GoPiece,
-                public emptyCoords: Coord[],
-                public darkCoords: Coord[],
-                public lightCoords: Coord[],
-                public deadDarkCoords: Coord[],
-                public deadLightCoords: Coord[])
+    public constructor(color: GoPiece,
+                       public emptyCoords: Coord[],
+                       public darkCoords: Coord[],
+                       public lightCoords: Coord[],
+                       public deadDarkCoords: Coord[],
+                       public deadLightCoords: Coord[])
     {
         super(color);
     }
@@ -69,10 +69,10 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         // If a piece is wrapped by a player and/or by dead pawn of his opponent, it's returning the player
         // If a piece is wrapped by two player, it's throwing
         // If a piece is wrapped by a player and dead pawn of this player, it's throwing
-        // color, [ empty,  dark, light,  deadDark, deadLight ]
-        // empty, [  0(2),     0,     4,         2,         0 ] => LIGHT
-        // empty, [  0(2),     2,     2,         0,         0 ] => throw
-        // empty, [  0(2),     0,     0,         6,         0 ] => LIGHT
+        // color, [empty, dark, light, deadDark, deadLight]
+        // empty, [ 0(2),    0,     4,        2,         0] => LIGHT
+        // empty, [ 0(2),    2,     2,        0,         0] => throw
+        // empty, [ 0(2),    0,     0,        6,         0] => LIGHT
         const wrapperSizes: MGPMap<GoPiece, number> = new MGPMap();
         wrapperSizes.set(GoPiece.EMPTY, this.emptyCoords.length);
         wrapperSizes.set(GoPiece.DARK, this.darkCoords.length + this.deadLightCoords.length);

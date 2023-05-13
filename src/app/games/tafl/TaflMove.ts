@@ -19,13 +19,13 @@ export abstract class TaflMove extends MoveCoordToCoord {
             throw new Error(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
         }
     }
-    public equals(o: TaflMove): boolean {
-        if (o === this) return true;
-        if (o.coord.equals(this.coord) === false) return false;
-        return o.end.equals(this.end);
+    public equals(other: TaflMove): boolean {
+        if (other === this) return true;
+        if (other.getStart().equals(this.getStart()) === false) return false;
+        return other.getEnd().equals(this.getEnd());
     }
     public toString(): string {
-        return 'TaflMove(' + this.coord + '->' + this.end + ')';
+        return 'TaflMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
     public abstract getMaximalDistance(): number;
 }

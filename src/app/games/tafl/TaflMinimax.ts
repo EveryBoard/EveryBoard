@@ -32,12 +32,12 @@ export class TaflMinimax extends Minimax<TaflMove,
         const king: Coord = this.ruler.getKingCoord(state).get();
         if (state.getCurrentPlayer() === this.ruler.config.INVADER) { // Invader
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
-                return - move.end.getOrthogonalDistance(king);
+                return - move.getEnd().getOrthogonalDistance(king);
             });
         } else {
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
-                if (move.coord.equals(king)) {
-                    if (this.ruler.isExternalThrone(move.end)) {
+                if (move.getStart().equals(king)) {
+                    if (this.ruler.isExternalThrone(move.getEnd())) {
                         return 2;
                     } else {
                         return 1;
@@ -62,12 +62,10 @@ export class TaflMinimax extends Minimax<TaflMove,
         }
         const nbPlayerZeroPawns: number = this.ruler.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.ruler.getPlayerListPawns(Player.ONE, state).length;
-        let zeroMult: number = [1, 2][this.ruler.config.INVADER.value]; // invaders pawn are twice as numerous
-        zeroMult *= Player.ZERO.getScoreModifier();
-        let oneMult: number = [2, 1][this.ruler.config.INVADER.value]; // so they're twice less valuable
-        oneMult *= Player.ONE.getScoreModifier();
+        const zeroMult: number = [1, 2][this.ruler.config.INVADER.value]; // invaders pawn are twice as numerous
+        const oneMult: number = [2, 1][this.ruler.config.INVADER.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;
         const scoreOne: number = nbPlayerOnePawns * oneMult;
-        return new BoardValue(scoreZero + scoreOne);
+        return BoardValue.from(scoreZero, scoreOne);
     }
 }

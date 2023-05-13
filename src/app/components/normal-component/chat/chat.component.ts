@@ -38,8 +38,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     @ViewChild('chatDiv')
     private readonly chatDiv: ElementRef<HTMLElement>;
 
-    constructor(private readonly chatService: ChatService,
-                private readonly connectedUserService: ConnectedUserService) {
+    public constructor(private readonly chatService: ChatService,
+                       private readonly connectedUserService: ConnectedUserService)
+    {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';

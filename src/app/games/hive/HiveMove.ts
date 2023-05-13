@@ -7,6 +7,7 @@ import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { HivePiece } from './HivePiece';
+import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class HiveMoveDrop extends MoveCoord {
 
@@ -34,9 +35,8 @@ export class HiveMoveDrop extends MoveCoord {
 
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
-    public static encoder: Encoder<HiveMoveCoordToCoord> = MoveCoordToCoord.getEncoder((start: Coord, end: Coord) => {
-        return new HiveMoveCoordToCoord(start, end);
-    });
+    public static encoder: Encoder<HiveMoveCoordToCoord> = MoveWithTwoCoords.getEncoder(HiveMoveCoordToCoord.from);
+
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
         if (start.equals(end)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
@@ -47,7 +47,7 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
         super(start, end);
     }
     public toString(): string {
-        return `HiveMoveCoordToCoord(${this.coord.toString()} -> ${this.end.toString()})`;
+        return `HiveMoveCoordToCoord(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
     public equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveSpider) {
@@ -55,7 +55,7 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
             return false;
         }
         if (other instanceof HiveMoveCoordToCoord) {
-            return this.coord.equals(other.coord) && this.end.equals(other.end);
+            return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
         }
         return false;
     }
@@ -80,7 +80,7 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
     }
     public equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveSpider) {
-            return this.coord.equals(other.coord) && this.end.equals(other.end);
+            return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
         }
         return false;
     }

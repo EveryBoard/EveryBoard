@@ -61,7 +61,7 @@ describe('PylosComponent', () => {
         expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     describe('First click', () => {
-        it('should allow droping piece on occupable space', fakeAsync(async() => {
+        it('should allow dropping piece on occupable space', fakeAsync(async() => {
             // Given a board where a drop is possible
             // When clicking on it
             // Then the move should be accepted
@@ -90,7 +90,7 @@ describe('PylosComponent', () => {
             const initialState: PylosState = new PylosState(initialBoard, 0);
             testUtils.setupState(initialState);
 
-            //  When clicking on one
+            // When clicking on one
             // Then the move should be illegal
             await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));

@@ -10,7 +10,7 @@ export class BoardValue {
         }
     }
     /**
-     * Returns the board value constructed from the player's scores
+     * Returns the board value link to those player's scores
      * @param playerZeroScore the positive score of player zero
      * @param playerOneScore the positive score of player one
      */
@@ -22,5 +22,5 @@ export class BoardValue {
     public toString(): string {
         return '' + this.value;
     }
-    constructor(public readonly value: number) {}
+    public constructor(public readonly value: number) {}
 }

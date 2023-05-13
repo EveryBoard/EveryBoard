@@ -81,6 +81,7 @@ describe('GameComponent', () => {
             },
             Hnefatafl: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
+            Lasca: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },
             Lodestone: {
                 selectCoord: [new Coord(0, 0)],
@@ -134,6 +135,9 @@ describe('GameComponent', () => {
                 onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
+            Trexo: {
+                onClick: [0, 0],
+            },
             Yinsh: { onClick: [0, 0] },
         };
         const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());

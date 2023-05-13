@@ -75,7 +75,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
     public getBoardValue(node: EpaminondasNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         return new BoardValue(this.getPieceCountPlusRowDomination(node.gameState));
     }

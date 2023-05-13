@@ -16,6 +16,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     templateUrl: './verify-account.component.html',
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
+
     public verificationType: 'send-email' | 'enter-username' | null = null;
 
     public success: boolean = false;
@@ -32,9 +33,10 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         username: new FormControl(),
     });
 
-    constructor(private readonly connectedUserService: ConnectedUserService,
-                public router: Router) {}
-
+    public constructor(private readonly connectedUserService: ConnectedUserService,
+                       public router: Router)
+    {
+    }
     public async ngOnInit(): Promise<void> {
         this.userSubscription = this.connectedUserService.subscribeToUser(
             async(user: AuthUser) => {

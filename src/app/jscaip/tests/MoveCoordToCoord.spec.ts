@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EncoderTestUtils, NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
@@ -10,12 +10,12 @@ class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
         return 'lel';
     }
     public equals(other: ConcreteMoveCoordToCoord): boolean {
-        return this.coord.equals(other.coord) && this.end.equals(other.end);
+        return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
     }
 }
 describe('MoveCoordToCoord', () => {
-    function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
-        return new ConcreteMoveCoordToCoord(start, end);
+    function myMoveConstructor(start: Coord, end: Coord): MGPFallible<ConcreteMoveCoordToCoord> {
+        return MGPFallible.success(new ConcreteMoveCoordToCoord(start, end));
     }
 
     describe('getDirection', () => {
@@ -44,16 +44,9 @@ describe('MoveCoordToCoord', () => {
         });
     });
     describe('encoder', () => {
-        it('should correctly encode and decode moves', () => {
-            EncoderTestUtils.expectToBeCorrect(
+        it('should have a bijective encoder', () => {
+            EncoderTestUtils.expectToBeBijective(
                 ConcreteMoveCoordToCoord.getEncoder(myMoveConstructor),
-                new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
-        });
-    });
-    describe('numberEncoder', () => {
-        it('should correctly encode and decode moves', () => {
-            NumberEncoderTestUtils.expectToBeCorrect(
-                ConcreteMoveCoordToCoord.getNumberEncoder(10, 10, myMoveConstructor),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });

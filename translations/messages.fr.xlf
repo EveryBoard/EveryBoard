@@ -206,13 +206,17 @@
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
         <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
       </trans-unit>
+      <trans-unit id="8831529968086851272" datatype="html">
+        <source>Similar to checkers, capture opponent&apos;s pieces, free your own, and immobilize your opponent to win the game!</source>
+        <target>Cousin du jeu de Dame, capturez les pièces adverses, libérez les vôtres, et immobilisez l'adversaire pour gagner la partie !</target>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
         <target>Regroupez vos pièces pour gagner. Mais les mouvements possibles changent constamment !</target>
       </trans-unit>
       <trans-unit id="8346622786152147853" datatype="html">
         <source>Win points by capturing pieces, but you only control pieces on your side of the board!</source>
-        <target>Gagnez des points en capturant des pièces, mais en ne contrôlant que celles dans votre camp!</target>
+        <target>Gagnez des points en capturant des pièces, mais en ne contrôlant que celles dans votre camp !</target>
       </trans-unit>
       <trans-unit id="8186407897395128360" datatype="html">
         <source>Push and crush your opponent&apos;s pieces using magnetic forces!</source>
@@ -257,6 +261,10 @@
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
+      </trans-unit>
+      <trans-unit id="265614119354246271" datatype="html">
+        <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
+        <target>Alignez 5 pièces de votre couleur en ligne droite, mais attention, les pièces peuvent s'empiler !</target>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
@@ -369,6 +377,14 @@
       <trans-unit id="5306696079242551443" datatype="html">
         <source>Hnefatafl</source>
         <target>Hnefatafl</target>
+      </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
+        <target>Lasca</target>
+      </trans-unit>
+      <trans-unit id="1760292529513431093" datatype="html">
+        <source>Trexo</source>
+        <target>Trexo</target>
       </trans-unit>
       <trans-unit id="6220801899147470326" datatype="html">
         <source>Hive</source>
@@ -528,7 +544,7 @@
       </trans-unit>
       <trans-unit id="3862672024084051383" datatype="html">
         <source>You have not verified your email! Click on the link in the verification email.</source>
-        <target>Vous n'avez pas vérifié votre email! Cliquez sur le lien dans l'email de vérification.</target>
+        <target>Vous n'avez pas vérifié votre email ! Cliquez sur le lien dans l'email de vérification.</target>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -998,10 +1014,6 @@
         <source>Congratulations! You know everything you need to start a game!</source>
         <target>Bravo ! Vous savez tout ce qu&apos;il faut pour commencer une partie !</target>
       </trans-unit>
-      <trans-unit id="8139485336036692612" datatype="html">
-        <source>Failed!</source>
-        <target>Raté !</target>
-      </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
         <target>Les pièces ne peuvent se déplacer que vers le bas !</target>
@@ -1040,11 +1052,11 @@
       </trans-unit>
       <trans-unit id="1035614445063065926" datatype="html">
         <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from a higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
-        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
+        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa destination en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
       </trans-unit>
       <trans-unit id="2553091915151695430" datatype="html">
         <source>This move is a drop, please do a transfer!</source>
-        <target>Ce coup est une pose! Veuillez faire un transfert!</target>
+        <target>Ce coup est une pose ! Veuillez faire un transfert !</target>
       </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>
@@ -2451,6 +2463,102 @@
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
          Ici, votre adversaire a déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
       </trans-unit>
+      <trans-unit id="4481226927895530871" datatype="html">
+        <source>A capture should be a double diagonal step. Look at the green indicators to help you!</source>
+        <target>Les captures doivent être des sauts de deux pas en diagonale ! Regardez les indications en vert pour vous aider !</target>
+      </trans-unit>
+      <trans-unit id="924257200871471773" datatype="html">
+        <source>You must move in a single diagonal step!</source>
+        <target>Les déplacements doivent être des simples pas en diagonale !</target>
+      </trans-unit>
+      <trans-unit id="8938938109993892899" datatype="html">
+        <source>You cannot jump over the same square several times!</source>
+        <target>Vous ne pouvez pas sauter au dessus d'une même case plusieurs fois !</target>
+      </trans-unit>
+      <trans-unit id="3581037377692107358" datatype="html">
+        <source>You cannot go backward with normal pieces!</source>
+        <target>Vous ne pouvez pas aller en arrière avec une pièce normale !</target>
+      </trans-unit>
+      <trans-unit id="2164034395199252113" datatype="html">
+        <source>You cannot capture an empty square, nor jump over it!</source>
+        <target>Vous ne pouvez pas capturer une case vide, ni sauter par dessus !</target>
+      </trans-unit>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
+        <target>Vous devez capturer quand c'est possible !</target>
+      </trans-unit>
+      <trans-unit id="3183138660002989080" datatype="html">
+        <source>You must finish this capture!</source>
+        <target>Vous devez finir cette capture !</target>
+      </trans-unit>
+      <trans-unit id="8274439231274366704" datatype="html">
+        <source>Lasca: origins</source>
+        <target>Lasca : les origines</target>
+      </trans-unit>
+      <trans-unit id="3954016636522783040" datatype="html">
+        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
+        <target>Lasca est un jeu basé sur le jeu de dames, créé en 1911 par Emanuel Lasker, champion du monde d'échecs. Lasca se joue sur un plateau de 7x7 cases, chaque joueur a 11 pièces.</target>
+      </trans-unit>
+      <trans-unit id="4475600219932113977" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.</source>
+        <target>Le but de Lasca est, comme aux dames, de rendre l'adversaire incapable de jouer, soit en capturant toutes ses pièces, soit en les bloquant.</target>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+        <target>Pas</target>
+      </trans-unit>
+      <trans-unit id="5101419651122121441" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+        <target>Un simple pas est un déplacement d'une case en diagonale, en avant, vers la gauche ou la droite. Pour faire un déplacement cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
+      </trans-unit>
+      <trans-unit id="7013110290486741787" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+        <target>Une capture arrive quand vous sautez diagonalement par dessus une pièce adverse et atterrissez immédiatement derrière. Vous devez capturer quand vous le pouvez. C'est le cas ici : cliquez sur la pièce qui doit capturer, et ensuite sur sa destination&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
+      </trans-unit>
+      <trans-unit id="3662184238859847370" datatype="html">
+        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
+        <target>Félicitations, constatez que la pièce capturée n'as pas été enlevée du plateau, mais placée en dessous de la pièce qui l'a capturé.</target>
+      </trans-unit>
+      <trans-unit id="8288645478824152244" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+        <target>Si, après le début de la capture, la pièce que vous venez de bouger peut encore capturer une autre pièce, elle doit le faire tant qu'elle le peut. Pour ce faire, vous devez juste cliquer sur sa destination suivante. Notez que vous ne pouvez pas sauter deux fois au dessus de la même pile.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, une double capture est possible, faites-la.</target>
+      </trans-unit>
+      <trans-unit id="2693455583384082674" datatype="html">
+        <source>Promotion</source>
+        <target>Promotion</target>
+      </trans-unit>
+      <trans-unit id="3052116389115675860" datatype="html">
+        <source>You did not choose the correct stack, and got no promotion.</source>
+        <target>Vous n'avez pas choisi la bonne pile, et vous n'avez pas causé de promotion.</target>
+      </trans-unit>
+      <trans-unit id="4252782057421264089" datatype="html">
+        <source>Officer move</source>
+        <target>Déplacement des Officiers</target>
+      </trans-unit>
+      <trans-unit id="2042191715997917496" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+        <target>Quand une pile atteint la dernière ligne, son commandeur devient officier, et gagne la capacité de se déplacer en marche arrière, ce qui est illégal pour les autres pièces ! Une de vos pièces pourrait être promue ce tour-ci.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="8730503950999903830" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+        <target>Les officiers peuvent se déplacer et capturer en arrière ainsi qu'en avant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre officier !</target>
+      </trans-unit>
+      <trans-unit id="7994037258587314442" datatype="html">
+        <source>You did not move your officer.</source>
+        <target>Vous n'avez pas déplacé votre officier.</target>
+      </trans-unit>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
+        <target>La capture minoritaire est autorisée !</target>
+      </trans-unit>
+      <trans-unit id="4604841825883708598" datatype="html">
+        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>
+        <target>Si vous avez plusieurs choix de captures, vous êtes autorisé à choisir n'importe lequel. Par exemple, si un des choix ne capture qu'une pièce, et l'autre en capture deux, vous pouvez choisir celui que vous préférez.</target>
+      </trans-unit>
+      <trans-unit id="6689969573280113485" datatype="html">
+        <source>This piece cannot move!</source>
+        <target>Cette pièce ne peut pas bouger !</target>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
         <target>Vous devez vous effectuer un déplacement de longueur égale au nombre de pièces présente sur la ligne de votre déplacement.</target>
@@ -3756,6 +3864,50 @@
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
+      </trans-unit>
+      <trans-unit id="1739222080553143193" datatype="html">
+        <source>Those two spaces are not neighbors!</source>
+        <target>Ces deux cases ne sont pas voisines !</target>
+      </trans-unit>
+      <trans-unit id="4853714910007564389" datatype="html">
+        <source>There is no way to put a piece there!</source>
+        <target>Il n'y a pas moyen de placer une pièce ici !</target>
+      </trans-unit>
+      <trans-unit id="7841599074494103882" datatype="html">
+        <source>You cannot drop on only one piece!</source>
+        <target>Vous ne pouvez pas déposer de pièce sur seulement une autre pièce !</target>
+      </trans-unit>
+      <trans-unit id="4138926893172482803" datatype="html">
+        <source>You cannot drop a piece on uneven grounds!</source>
+        <target>Vous ne pouvez pas déposer de pièce sur deux piles de hauteurs différentes !</target>
+      </trans-unit>
+      <trans-unit id="8777341718687257426" datatype="html">
+        <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
+        <target>Au Trexo, le but du jeu est d'aligner 5 pièces de votre couleur dans une ligne horizontale, verticale, ou diagonale. Mais les joueurs déposent des tuiles constituées de deux pièces, une pour chaque joueur !</target>
+      </trans-unit>
+      <trans-unit id="6011148802067949079" datatype="html">
+        <source>Dropping a tile</source>
+        <target>Déposer une tuile</target>
+      </trans-unit>
+      <trans-unit id="2972240786684210487" datatype="html">
+        <source>When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To drop a tile, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a tile on the board.</source>
+        <target>Quand vous déposez une tuile, elle doit être mise sur deux pièces au même niveau, ou à même le plateau, mais ces deux pièces ne peuvent pas faire partie de la même tuile. En d'autres mots elle doit soit être immédiatement sur le plateau, soit à cheval sur deux tuiles de même hauteur. Pour ce faire, cliquez d'abord sur l'endroit où vous voulez déposer la pièce de l'adversaire, puis sur la case voisine où vous voulez mettre votre pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
+      </trans-unit>
+      <trans-unit id="6262113904872794006" datatype="html">
+        <source>Dropping a piece over other pieces</source>
+        <target>Placer une pièce sur d'autres pièces</target>
+      </trans-unit>
+      <trans-unit id="882687674117366349" datatype="html">
+        <source>You can put a tile on other tiles. For that you must respect two rules:&lt;br/&gt;&lt;ul&gt;&lt;li&gt;The two pieces must be at the same height.&lt;/li&gt;&lt;li&gt;You cannot drop your piece on only one other piece.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Vous pouvez superposer les tuiles. Pour ce faire vous devez respecter deux règles :&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Les deux pièces doivent être au même niveau.&lt;/li&gt;&lt;li&gt;Vous ne pouvez pas déposer votre tuile sur une seule tuile.&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Vous jouez Foncé, placez une tuile en hauteur.</target>
+      </trans-unit>
+      <trans-unit id="8122888205935746981" datatype="html">
+        <source>Failed, you put that piece on the floor level, please put it on top of two pieces.</source>
+        <target>Raté, vous avez mis cette pièce au niveau du plateau, veuillez placer une tuile sur les deux autres tuiles.</target>
+      </trans-unit>
+      <trans-unit id="3210337788599026628" datatype="html">
+        <source>To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you lose, even if you aligned 5 of your pieces too.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+        <target>Pour gagner au Trexo, vous devez aligner 5 de vos pièces. Seule la pièce en haut d'une pile compte, les pièces cachées ne sont plus une menace, et une victoire peut inclure des pièces de hauteurs différentes. Puisque vous déposez les pièces adverses en premier, si vous créez un alignement avec les pièces adverses, vous perdez, même si vous alignez aussi 5 de vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="2462375977615446954" datatype="html">
         <source>The king is dead, long live the king. Congratulations, you won.</source>

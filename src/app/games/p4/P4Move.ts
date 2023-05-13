@@ -37,8 +37,8 @@ export class P4Move extends Move {
     private constructor(public readonly x: number) {
         super();
     }
-    public equals(o: P4Move): boolean {
-        return this === o;
+    public equals(other: P4Move): boolean {
+        return this === other;
     }
     public toString(): string {
         return 'P4Move(' + this.x + ')';

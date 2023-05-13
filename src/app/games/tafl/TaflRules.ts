@@ -39,29 +39,29 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPFallible.success(undefined);
     }
     private getMoveValidity(player: Player, move: TaflMove, state: S): MGPValidation {
-        const owner: RelativePlayer = state.getRelativeOwner(player, move.coord);
+        const owner: RelativePlayer = state.getRelativeOwner(player, move.getStart());
         if (owner === RelativePlayer.NONE) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (owner === RelativePlayer.OPPONENT) {
             return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
-        const landingCoordOwner: RelativePlayer = state.getRelativeOwner(player, move.end);
+        const landingCoordOwner: RelativePlayer = state.getRelativeOwner(player, move.getEnd());
         if (landingCoordOwner !== RelativePlayer.NONE) {
             return MGPValidation.failure(TaflFailure.LANDING_ON_OCCUPIED_SQUARE());
         }
-        if (this.isThrone(state, move.end)) {
-            if (state.getPieceAt(move.coord).isKing()) {
-                if (state.isCentralThrone(move.end) && this.config.CASTLE_IS_LEFT_FOR_GOOD) {
+        if (this.isThrone(state, move.getEnd())) {
+            if (state.getPieceAt(move.getStart()).isKing()) {
+                if (state.isCentralThrone(move.getEnd()) && this.config.CASTLE_IS_LEFT_FOR_GOOD) {
                     return MGPValidation.failure(TaflFailure.THRONE_IS_LEFT_FOR_GOOD());
                 }
             } else {
                 return MGPValidation.failure(TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
             }
         }
-        const dir: Direction = move.coord.getDirectionToward(move.end).get();
-        const dist: number = move.coord.getOrthogonalDistance(move.end);
-        let inspectedCoord: Coord = move.coord.getNext(dir);
+        const dir: Direction = move.getStart().getDirectionToward(move.getEnd()).get();
+        const dist: number = move.getStart().getOrthogonalDistance(move.getEnd());
+        let inspectedCoord: Coord = move.getStart().getNext(dir);
         for (let i: number = 1; i < dist; i++) {
             if (state.getPieceAt(inspectedCoord) !== TaflPawn.UNOCCUPIED) {
                 return MGPValidation.failure(RulesFailure.SOMETHING_IN_THE_WAY());
@@ -216,26 +216,26 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             if (this.isThrone(state, backCoord) === false) {
                 display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                         'cannot capture a pawn without an ally; ' +
-                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                         ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
                         'cannot capture a pawn without an ally behind');
                 return MGPOptional.empty();
             } // here, back is an empty throne
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 1 opponent and 1 throne; ' +
-                    threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                    threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                     ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by 1 opponent and 1 throne
         }
         if (back === RelativePlayer.PLAYER) {
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 2 opponents; ' + threatenedPieceCoord +
-                    'threatened by ' + player + `'s pawn in  ` + coord +
+                    'threatened by ' + player + `'s pawn in ` + coord +
                     ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by two opponents
         }
         display(TaflRules.VERBOSE || LOCAL_VERBOSE,
-                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                 ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }
@@ -274,12 +274,12 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
 
         const board: TaflPawn[][] = state.getCopiedBoard();
         const player: Player = state.getCurrentPlayer();
-        const start: Coord = move.coord;
-        const end: Coord = move.end;
+        const start: Coord = move.getStart();
+        const end: Coord = move.getEnd();
         board[end.y][end.x] = board[start.y][start.x]; // move the piece to the new position
         board[start.y][start.x] = TaflPawn.UNOCCUPIED; // remove it from the previous position
         for (const d of Orthogonal.ORTHOGONALS) {
-            const captured: MGPOptional<Coord> = this.tryCapture(player, move.end, d, state);
+            const captured: MGPOptional<Coord> = this.tryCapture(player, move.getEnd(), d, state);
             if (captured.isPresent()) {
                 board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
             }

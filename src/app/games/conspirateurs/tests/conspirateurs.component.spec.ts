@@ -119,7 +119,7 @@ describe('ConspirateursComponent', () => {
 
             // When clicking on its destination
             // Then the simple move should be performed
-            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.of(new Coord(5, 4), new Coord(4, 4)).get();
+            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(4, 4)).get();
             await testUtils.expectMoveSuccess('#click_4_4', move);
         }));
         it('should forbid illegal simple moves', fakeAsync(async() => {
@@ -127,7 +127,7 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_5_4');
             // When clicking on an illegal destination
             // Then the move fails
-            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.of(new Coord(5, 4), new Coord(5, 3)).get();
+            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(5, 3)).get();
             await testUtils.expectMoveFailure('#click_5_3', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
         }));
         it('should allow performing a jump in two clicks if this is the only choice', fakeAsync(async() => {
@@ -184,7 +184,7 @@ describe('ConspirateursComponent', () => {
             testUtils.expectElementNotToExist('#sidePiece_0_0');
             testUtils.expectElementNotToExist('#sidePiece_1_0');
         }));
-        it('should deselect piece when double clicking it', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board on which a piece is selected
             await testUtils.expectClickSuccess('#click_5_4');
             testUtils.expectElementToHaveClass('#piece_5_4', 'selected-stroke');

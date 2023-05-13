@@ -109,14 +109,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private onCurrentUpdateOngoing: boolean = false;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
-                connectedUserService: ConnectedUserService,
-                router: Router,
-                messageDisplayer: MessageDisplayer,
-                private readonly observedPartService: ObservedPartService,
-                private readonly userService: UserService,
-                private readonly gameService: GameService)
+    public constructor(componentFactoryResolver: ComponentFactoryResolver,
+                       actRoute: ActivatedRoute,
+                       connectedUserService: ConnectedUserService,
+                       router: Router,
+                       messageDisplayer: MessageDisplayer,
+                       private readonly observedPartService: ObservedPartService,
+                       private readonly userService: UserService,
+                       private readonly gameService: GameService)
     {
         super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
@@ -415,7 +415,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private didUserPlay(player: Player): boolean {
         return this.hasUserPlayed[player.value];
     }
-    private doNewMoves(part: PartDocument) {
+    private doNewMoves(part: PartDocument): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.doNewMoves' + JSON.stringify(part));
         this.switchPlayer();
         const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.data.listMoves);
@@ -424,10 +424,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const currentPartTurn: number = this.gameComponent.getTurn();
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
             const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
+            const stringListMoves: string = JSON.stringify(listMoves);
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
-                                    ' in ' + listMoves + ' at turn ' + currentPartTurn +
+                                    ' in ' + stringListMoves + ' at turn ' + currentPartTurn +
                                     'because "' + legality.getReasonOr('') + '"';
-            assert(legality.isSuccess(), message);
+            assert(legality.isSuccess(), message, listMoves);
             rules.choose(chosenMove);
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
@@ -452,7 +453,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.pauseCountDownsFor(player);
         this.resumeCountDownFor(player);
     }
-    private async applyEndGame() {
+    private async applyEndGame(): Promise<void> {
         // currently working for normal victory, resign, and timeouts!
         await this.observedPartService.removeObservedPart();
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
@@ -838,7 +839,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             turnChrono.pause();
         }
     }
-    private stopCountdownsFor(player: Player) {
+    private stopCountdownsFor(player: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE,
                 'cdc::stopCountDownsFor(' + player.toString() +
                 ') (turn ' + this.currentPart?.data.turn + ')');
@@ -912,6 +913,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const currentDuration: number = this.chronoOneGlobal.remainingMs;
             this.chronoOneGlobal.changeDuration(currentDuration + addedMs);
         }
+    }
+    public onCancelMove(reason?: string): void {
+        this.gameComponent.showLastMove();
     }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');

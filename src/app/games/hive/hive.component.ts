@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
@@ -248,7 +248,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.computeViewBox();
     }
-    private showLastMove(): void {
+    public showLastMove(): void {
         for (const coord of this.getLastMoveCoords()) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');
@@ -261,7 +261,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (move instanceof HiveMoveDrop) {
             lastMove = [move.coord];
         } else if (move instanceof HiveMoveCoordToCoord) {
-            lastMove = [move.coord, move.end];
+            lastMove = [move.getStart(), move.getEnd()];
         }
         // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
         const offset: Vector = this.getState().offset;
@@ -422,7 +422,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 .map((move: HiveMoveSpider) => move.coords[this.selectedSpiderCoords.length])
                 .toList();
         } else {
-            return moves.map((move: HiveMoveCoordToCoord) => move.end).toList();
+            return moves.map((move: HiveMoveCoordToCoord) => move.getEnd()).toList();
         }
     }
     private async selectNextSpiderSpace(coord: Coord): Promise<MGPValidation> {

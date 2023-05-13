@@ -15,12 +15,6 @@ describe('Coord', () => {
         const bigCoord: Coord = new Coord(2, 2);
         expect(smallCoord.compareTo(bigCoord)).toBe(-1);
     });
-    it('should know whether A is between B and C', () => {
-        const upLeft: Coord = new Coord(1, 1);
-        const middle: Coord = new Coord(3, 3);
-        const downRight: Coord = new Coord(9, 9);
-        expect(middle.isBetween(upLeft, downRight)).toBeTrue();
-    });
     it('should override equals correctly', () => {
         const coord: Coord = new Coord(0, 0);
         const horizontalNeighbors: Coord = new Coord(1, 0);
@@ -28,16 +22,6 @@ describe('Coord', () => {
         expect(coord.equals(coord)).toBeTrue();
         expect(coord.equals(horizontalNeighbors)).toBeFalse();
         expect(coord.equals(verticalNeighbors)).toBeFalse();
-    });
-    it('should vectorise correctly', () => {
-        const c: Coord = new Coord(3, -11);
-        expect(c.toVector()).toEqual(c);
-
-        const c0: Coord = new Coord(4, -8);
-        expect(c0.toVector()).toEqual(new Coord(1, -2));
-
-        const c1: Coord = new Coord(-3, -9);
-        expect(c1.toVector()).toEqual(new Coord(-1, -3));
     });
     it('should give correct coords between this and other coord', () => {
         const coord: Coord = new Coord(0, 0);

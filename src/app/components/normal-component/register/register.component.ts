@@ -23,9 +23,10 @@ export class RegisterComponent {
         password: new FormControl(),
     });
 
-    constructor(public connectedUserService: ConnectedUserService,
-                public router: Router) {}
-
+    public constructor(public connectedUserService: ConnectedUserService,
+                       public router: Router)
+    {
+    }
     public async registerWithEmail(): Promise<void> {
         const username: string | null = this.registrationForm.value.username;
         const email: string | null = this.registrationForm.value.email;
