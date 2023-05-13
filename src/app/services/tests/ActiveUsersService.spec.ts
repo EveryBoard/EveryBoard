@@ -37,7 +37,7 @@ describe('ActiveUsersService', () => {
             verified: true,
         });
         let observerCalls: number = 0;
-        const subscription: Subscription = activeUsersService.subscribeToActiveUsers(async(users: UserDocument[]) => {
+        const subscription: Subscription = activeUsersService.subscribeToActiveUsers((users: UserDocument[]) => {
             if (observerCalls === 1) {
                 expect(users).toEqual([{
                     id: 'playerDocId',
@@ -104,7 +104,7 @@ describe('ActiveUsersService', () => {
                 });
 
             // When subscribing to the active users
-            const subscription: Subscription = activeUsersService.subscribeToActiveUsers(async() => {});
+            const subscription: Subscription = activeUsersService.subscribeToActiveUsers(() => {});
             // Then it should call observingWhere from the DAO with the right parameters
             expect(userDAO.observingWhere).toHaveBeenCalledTimes(1);
             subscription.unsubscribe();
@@ -118,14 +118,14 @@ describe('ActiveUsersService', () => {
             });
             let seenActiveUsers: UserDocument[] = [];
             let activeUsersSubscription: Subscription = activeUsersService.subscribeToActiveUsers(
-                async(activeUsers: UserDocument[]) => {
+                (activeUsers: UserDocument[]) => {
                     seenActiveUsers = activeUsers;
                 });
             activeUsersSubscription.unsubscribe();
 
             // When subscribing a second time
             activeUsersSubscription = activeUsersService.subscribeToActiveUsers(
-                async(activeUsers: UserDocument[]) => {
+                (activeUsers: UserDocument[]) => {
                     seenActiveUsers = activeUsers;
                 });
 

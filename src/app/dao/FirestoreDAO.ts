@@ -121,7 +121,7 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
     {
         display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.observingWhere' });
         const query: Firestore.Query<T> = this.constructQuery(conditions, order);
-        return new Subscription(Firestore.onSnapshot(query, async(snapshot: Firestore.QuerySnapshot<T>) => {
+        return new Subscription(Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
             const createdDocs: FirestoreDocument<T>[] = [];
             const modifiedDocs: FirestoreDocument<T>[] = [];
             const deletedDocs: FirestoreDocument<T>[] = [];
@@ -146,17 +146,17 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
             if (createdDocs.length > 0) {
                 display(FirestoreDAO.VERBOSE,
                         'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
-                await callback.onDocumentCreated(createdDocs);
+                callback.onDocumentCreated(createdDocs);
             }
             if (modifiedDocs.length > 0) {
                 display(FirestoreDAO.VERBOSE,
                         'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
-                await callback.onDocumentModified(modifiedDocs);
+                callback.onDocumentModified(modifiedDocs);
             }
             if (deletedDocs.length > 0) {
                 display(FirestoreDAO.VERBOSE,
                         'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
-                await callback.onDocumentDeleted(deletedDocs);
+                callback.onDocumentDeleted(deletedDocs);
             }
         }));
     }

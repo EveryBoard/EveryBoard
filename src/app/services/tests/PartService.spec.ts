@@ -138,7 +138,7 @@ describe('PartService', () => {
         it('should receive newly added events', fakeAsync(async() => {
             // Given a part service with a part without event, and where we subscribed to the part's events
             let receivedEvents: number = 0;
-            partService.subscribeToEvents(partId, async(events: PartEvent[]): Promise<void> => {
+            partService.subscribeToEvents(partId, (events: PartEvent[]) => {
                 receivedEvents += events.length;
             });
             // When a new event is added
@@ -153,9 +153,8 @@ describe('PartService', () => {
             await partService.addMove(partId, Player.ONE, { x: 0, y: 1 });
             // When we subscribed to the part events
             let receivedEvents: number = 0;
-            partService.subscribeToEvents(partId, async(events: PartEvent[]): Promise<void> => {
+            partService.subscribeToEvents(partId, (events: PartEvent[]) => {
                 receivedEvents += events.length;
-                return;
             });
             // Then we receive the existing events
             expect(receivedEvents).toBe(2);

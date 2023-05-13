@@ -129,7 +129,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             this.getStaticDB().put(id, new ObservableSubject(subject, observable));
             for (const callback of this.callbacks) {
                 if (this.conditionsHold(callback[0], subject.value.get().data)) {
-                    await callback[1].onDocumentCreated([subject.value.get()]);
+                    callback[1].onDocumentCreated([subject.value.get()]);
                 }
             }
         }
@@ -156,7 +156,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             observableSubject.subject.next(MGPOptional.of({ id, data: newDoc }));
             for (const callback of this.callbacks) {
                 if (this.conditionsHold(callback[0], observableSubject.subject.value.get().data)) {
-                    await callback[1].onDocumentModified([observableSubject.subject.value.get()]);
+                    callback[1].onDocumentModified([observableSubject.subject.value.get()]);
                 }
             }
             return Promise.resolve();
@@ -174,7 +174,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             this.getStaticDB().delete(id);
             for (const callback of this.callbacks) {
                 if (this.conditionsHold(callback[0], removed.data)) {
-                    await callback[1].onDocumentDeleted([removed]);
+                    callback[1].onDocumentDeleted([removed]);
                 }
             }
         } else {

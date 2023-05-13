@@ -42,11 +42,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');
         this.activeUsersSubscription = this.activeUsersService.subscribeToActiveUsers(
-            async(activeUsers: UserDocument[]) => {
+            (activeUsers: UserDocument[]) => {
                 this.activeUsers = activeUsers;
             });
         this.activePartsSubscription = this.activePartsService.subscribeToActiveParts(
-            async(activeParts: PartDocument[]) => {
+            (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
         this.observedPartService.subscribeToObservedPart((observed: MGPOptional<FocusedPart>) => {

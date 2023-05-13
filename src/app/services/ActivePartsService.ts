@@ -18,13 +18,13 @@ export class ActivePartsService {
 
     public constructor(private readonly partDAO: PartDAO) {
     }
-    public subscribeToActiveParts(callback: (parts: PartDocument[]) => Promise<void>): Subscription {
+    public subscribeToActiveParts(callback: (parts: PartDocument[]) => void): Subscription {
         let activeParts: PartDocument[] = [];
-        const onDocumentCreated: (createdParts: PartDocument[]) => Promise<void> = async(createdParts: PartDocument[]) => {
+        const onDocumentCreated: (createdParts: PartDocument[]) => void = (createdParts: PartDocument[]) => {
             activeParts = activeParts.concat(...createdParts);
             callback(activeParts);
         };
-        const onDocumentModified: (modifiedParts: PartDocument[]) => Promise<void> = async(modifiedParts: PartDocument[]) => {
+        const onDocumentModified: (modifiedParts: PartDocument[]) => void = (modifiedParts: PartDocument[]) => {
             const result: PartDocument[] = activeParts;
             for (const modifiedPart of modifiedParts) {
                 result.forEach((part: PartDocument) => {
@@ -34,7 +34,7 @@ export class ActivePartsService {
             activeParts = result;
             callback(activeParts);
         };
-        const onDocumentDeleted: (deletedDocIds: PartDocument[]) => Promise<void> = async(deletedDocs: PartDocument[]) => {
+        const onDocumentDeleted: (deletedDocIds: PartDocument[]) => void = (deletedDocs: PartDocument[]) => {
             const result: PartDocument[] = [];
             for (const activePart of activeParts) {
                 if (!deletedDocs.some((part: PartDocument) => part.id === activePart.id)) {
@@ -42,7 +42,7 @@ export class ActivePartsService {
                 }
             }
             activeParts = result;
-            return callback(activeParts);
+            callback(activeParts);
         };
         const partObserver: FirestoreCollectionObserver<Part> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);

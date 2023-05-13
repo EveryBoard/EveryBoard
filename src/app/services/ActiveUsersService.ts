@@ -15,15 +15,15 @@ export class ActiveUsersService {
 
     public constructor(public userDAO: UserDAO) {
     }
-    public subscribeToActiveUsers(callback: (users: UserDocument[]) => Promise<void>): Subscription {
+    public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {
         display(ActiveUsersService.VERBOSE, 'ActiveUsersService.subscribeToActiveUsers');
         let activeUsers: UserDocument[] = [];
-        const onDocumentCreated: (newUsers: UserDocument[]) => Promise<void> = async(newUsers: UserDocument[]) => {
+        const onDocumentCreated: (newUsers: UserDocument[]) => void = (newUsers: UserDocument[]) => {
             display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
             activeUsers = this.sort(activeUsers.concat(...newUsers));
-            return callback(activeUsers);
+            callback(activeUsers);
         };
-        const onDocumentModified: (modifiedUsers: UserDocument[]) => Promise<void> = async(modifiedUsers: UserDocument[]) => {
+        const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
             let updatedUsers: UserDocument[] = activeUsers;
             display(ActiveUsersService.VERBOSE, 'our DAO updated ' + modifiedUsers.length + ' user(s)');
             for (const u of modifiedUsers) {
@@ -33,14 +33,14 @@ export class ActiveUsersService {
                 updatedUsers = this.sort(updatedUsers);
             }
             activeUsers = updatedUsers;
-            return callback(activeUsers);
+            callback(activeUsers);
         };
-        const onDocumentDeleted: (deletedUsers: UserDocument[]) => Promise<void> = async(deletedUsers: UserDocument[]) => {
+        const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {
             // No need to sort again upon deletion
             activeUsers =
                 activeUsers.filter((u: UserDocument) =>
                     !deletedUsers.some((user: UserDocument) => user.id === u.id));
-            return callback(activeUsers);
+            callback(activeUsers);
         };
         const usersObserver: FirestoreCollectionObserver<User> =
             new FirestoreCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);

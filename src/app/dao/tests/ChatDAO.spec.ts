@@ -53,7 +53,7 @@ describe('ChatDAO', () => {
             spyOn(messagesDAO, 'observingWhere').and.returnValue(new Subscription());
             // When calling subscribeToMessages
             const callback: FirestoreCollectionObserver<Message> =
-                new FirestoreCollectionObserver<Message>(async() => {}, async() => {}, async() => {});
+                new FirestoreCollectionObserver<Message>(() => {}, () => {}, () => {});
             chatService.subscribeToMessages('chatId', callback);
             // Then it should call observingWhere and sort by postedTime
             expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');

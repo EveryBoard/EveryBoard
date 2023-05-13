@@ -49,7 +49,7 @@ describe('ActivePartsService', () => {
             // Given a service where we are observing active parts
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -66,7 +66,7 @@ describe('ActivePartsService', () => {
             // Given a service where we were observing active parts, but have unsubscribed
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
             activePartsSubscription.unsubscribe();
@@ -83,7 +83,7 @@ describe('ActivePartsService', () => {
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -101,7 +101,7 @@ describe('ActivePartsService', () => {
             const partThatWillRemain: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -119,7 +119,7 @@ describe('ActivePartsService', () => {
             const partId: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -138,7 +138,7 @@ describe('ActivePartsService', () => {
             const partThatWontChange: string = await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
             const activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -169,7 +169,7 @@ describe('ActivePartsService', () => {
                 });
 
             // When subscribing to the active users
-            const subscription: Subscription = activePartsService.subscribeToActiveParts(async() => {});
+            const subscription: Subscription = activePartsService.subscribeToActiveParts(() => {});
             // Then it should call observingWhere from the DAO with the right parameters
             expect(partDAO.observingWhere).toHaveBeenCalledTimes(1);
             subscription.unsubscribe();
@@ -179,14 +179,14 @@ describe('ActivePartsService', () => {
             await partDAO.create(part);
             let seenActiveParts: PartDocument[] = [];
             let activePartsSubscription: Subscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
             activePartsSubscription.unsubscribe();
 
             // When subscribing a second time
             activePartsSubscription = activePartsService.subscribeToActiveParts(
-                async(activeParts: PartDocument[]) => {
+                (activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 

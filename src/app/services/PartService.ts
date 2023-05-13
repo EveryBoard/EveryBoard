@@ -74,10 +74,9 @@ export class PartService {
         Utils.assert(results.length === 1, `There should be exactly one last move, found ${results.length}`);
         return results[0] as FirestoreDocument<PartEventMove>;
     }
-    public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => Promise<void>): Subscription {
-        let n = 0;
+    public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<PartEvent> = new FirestoreCollectionObserver(
-            async(events: FirestoreDocument<PartEvent>[]) => {
+            (events: FirestoreDocument<PartEvent>[]) => {
                 const realEvents: PartEvent[] = [];
                 for (const eventDoc of events) {
                     if (eventDoc.data.time == null) {
@@ -88,19 +87,17 @@ export class PartService {
                     realEvents.push(eventDoc.data);
                 }
                 if (realEvents.length > 0) {
-                    n++;
-                    await callback(realEvents);
+                    callback(realEvents);
                 }
             },
-            async(events: FirestoreDocument<PartEvent>[]): Promise<void> => {
+            (events: FirestoreDocument<PartEvent>[]) => {
                 // Events can't be modified
                 // The only modification is when firebase adds the timestamp.
                 // So all modifications are actually treated as creations, as we ignore creations with empty timestamps
-                n++;
-                await  callback(events.map((event: FirestoreDocument<PartEvent>) => event.data));
+                callback(events.map((event: FirestoreDocument<PartEvent>) => event.data));
             },
             /* istanbul ignore next */
-            async() => {
+            () => {
                 // Events can't be deleted,
             });
         return this.eventsCollection(partId).observingWhere([], internalCallback, 'time');

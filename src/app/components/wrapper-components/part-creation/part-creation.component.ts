@@ -182,11 +182,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return userOrUndefined;
     }
     private subscribeToConfigRoomDoc(): void {
-        const configRoomCallback: (configRoom: MGPOptional<ConfigRoom>) => Promise<void> =
+        const configRoomCallback: (configRoom: MGPOptional<ConfigRoom>) => void =
             async(configRoom: MGPOptional<ConfigRoom>) => {
                 await this.onCurrentConfigRoomUpdate(configRoom);
             };
-        const candidatesCallback: (candidates: MinimalUser[]) => Promise<void> = async(candidates: MinimalUser[]) => {
+        const candidatesCallback: (candidates: MinimalUser[]) => void = async(candidates: MinimalUser[]) => {
             await this.onCandidatesUpdate(candidates);
         };
         this.configRoomSubscription =

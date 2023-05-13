@@ -34,16 +34,16 @@ export class ConfigRoomService {
     public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
         return this.configRoomDAO.subscribeToChanges(configRoomId, callback);
     }
-    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => Promise<void>): Subscription {
+    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
         let candidates: MinimalUser[] = [];
         const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
-            async(created: FirestoreDocument<MinimalUser>[]) => {
+            (created: FirestoreDocument<MinimalUser>[]) => {
                 for (const candidate of created) {
                     candidates.push(candidate.data);
                 }
-                return callback(candidates);
+                callback(candidates);
             },
-            async(modified: FirestoreDocument<MinimalUser>[]) => {
+            (modified: FirestoreDocument<MinimalUser>[]) => {
                 // This should never happen, but we can still update the candidates list just in case
                 for (const modifiedCandidate of modified) {
                     candidates = candidates.map((candidate: MinimalUser) => {
@@ -54,14 +54,14 @@ export class ConfigRoomService {
                         }
                     });
                 }
-                return callback(candidates);
+                callback(candidates);
             },
-            async(deleted: FirestoreDocument<MinimalUser>[]) => {
+            (deleted: FirestoreDocument<MinimalUser>[]) => {
                 for (const deletedCandidate of deleted) {
                     candidates = candidates.filter((candidate: MinimalUser) =>
                         candidate.id !== deletedCandidate.data.id);
                 }
-                return callback(candidates);
+                callback(candidates);
             });
         const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.configRoomDAO.subCollectionDAO(configRoomId, 'candidates');
         return subCollection.observingWhere([], observer);
