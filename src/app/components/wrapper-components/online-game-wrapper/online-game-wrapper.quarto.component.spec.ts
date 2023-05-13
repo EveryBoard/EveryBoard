@@ -162,7 +162,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -718,7 +718,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(partService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'TakeBack');
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it('should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
+            fit('should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
                 // Given a board where nobody already played
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
 
@@ -732,7 +732,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When doing the first move, it should become possible, but only once
                 await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA), true);
                 await askTakeBack();
+                tick(1);
+                tick(1);
+                console.log('checking absence of button')
                 testUtils.expectElementNotToExist('#askTakeBackButton');
+                console.log('done')
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
@@ -1082,6 +1086,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
             await setup();
             await testUtils.clickElement('#proposeDrawButton');
+            tick(1);
             testUtils.expectElementNotToExist('#proposeDrawButton');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -1089,6 +1094,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
             await setup();
             await testUtils.clickElement('#proposeDrawButton');
+            tick(1);
             await receiveReply(Player.ONE, 'Reject', 'Draw');
 
             testUtils.expectElementNotToExist('#proposeDrawButton');

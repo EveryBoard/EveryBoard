@@ -79,18 +79,18 @@ describe('FirestoreDAO', () => {
 
         let promise: Promise<Foo[]>; // This promise will be resolved when the callback function is called
 
-        let callbackFunction: (created: {data: Foo, id: string}[]) => void;
-        let callbackFunctionLog: (created: {data: Foo, id: string}[]) => void;
+        let callbackFunction: (created: {data: Foo, id: string}[]) => Promise<void>;
+        let callbackFunctionLog: (created: {data: Foo, id: string}[]) => Promise<void>;
 
         beforeEach(() => {
             let createdResolve: (value: Foo[]) => void;
             promise = new Promise((resolve: (value: Foo[]) => void) => {
                 createdResolve = resolve;
             });
-            callbackFunction = (created: {data: Foo, id: string}[]): void => {
+            callbackFunction = async(created: {data: Foo, id: string}[]): Promise<void> => {
                 createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
             };
-            callbackFunctionLog = (created: {data: Foo, id: string}[]): void => {
+            callbackFunctionLog = async(created: {data: Foo, id: string}[]): Promise<void> => {
                 for (const doc of created) {
                     console.log(doc);
                 }
@@ -100,8 +100,8 @@ describe('FirestoreDAO', () => {
         it('should observe document creation with the given condition', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunction,
-                () => void { },
-                () => void { },
+                async() => { },
+                async() => { },
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
@@ -111,8 +111,8 @@ describe('FirestoreDAO', () => {
         it('should observe document creation according to multiple conditions', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunction,
-                () => void { },
-                () => void { },
+                async() => { },
+                async() => { },
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 1]], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
@@ -123,8 +123,8 @@ describe('FirestoreDAO', () => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunctionLog,
-                () => void { },
-                () => void { },
+                async() => { },
+                async() => { },
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
@@ -135,8 +135,8 @@ describe('FirestoreDAO', () => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
                 callbackFunctionLog,
-                () => void { },
-                () => void { },
+                async() => { },
+                async() => { },
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
             await fooDAO.create({ value: 'foo', otherValue: 1 });
@@ -145,9 +145,9 @@ describe('FirestoreDAO', () => {
         });
         it('should observe document update with the given condition', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
+                async() => { },
                 callbackFunction,
-                () => void { },
+                async() => { },
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
@@ -157,9 +157,9 @@ describe('FirestoreDAO', () => {
         });
         it('should not observe document update when the condition does not hold', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
+                async() => { },
                 callbackFunction,
-                () => void { },
+                async() => { },
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
             const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
@@ -169,8 +169,8 @@ describe('FirestoreDAO', () => {
         });
         it('should observe document deletions with the given condition', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
-                () => void { },
+                async() => { },
+                async() => { },
                 callbackFunction,
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
@@ -181,9 +181,9 @@ describe('FirestoreDAO', () => {
         });
         it('should not observe document deletions when the condition does not hold', async() => {
             const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
+                async() => { },
                 callbackFunction,
-                () => void { },
+                async() => { },
             );
             const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });

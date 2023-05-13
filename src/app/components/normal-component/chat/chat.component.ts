@@ -53,7 +53,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.scrollToBottomIfNeeded();
     }
     public loadChatContent(): void {
-        const updateMessages: (messages: MessageDocument[]) => void = (messages: MessageDocument[]) => {
+        const updateMessages: (messages: MessageDocument[]) => Promise<void> = async(messages: MessageDocument[]) => {
             this.updateMessages(messages.flatMap((doc: MessageDocument) => {
                 if (doc.data.postedTime == null) {
                     // This is a local update that does not contain the time yet, ignore it
@@ -65,8 +65,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         const callback: FirestoreCollectionObserver<Message> = new FirestoreCollectionObserver(
             updateMessages,
             updateMessages,
-            () => {
+            async() => {
                 // We don't care about deleted messages
+                return;
             });
         this.chatSubscription = this.chatService.subscribeToMessages(this.chatId, callback);
     }

@@ -284,7 +284,7 @@ describe('ConfigRoomService', () => {
             // Given a configRoom for which we are observing the candidates
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
             configRoomService.subscribeToChanges('configRoomId', () => {});
-            configRoomService.subscribeToCandidates('configRoomId', (newCandidates: MinimalUser[]) => {
+            configRoomService.subscribeToCandidates('configRoomId', async(newCandidates: MinimalUser[]) => {
                 candidates = newCandidates;
             });
         }));
