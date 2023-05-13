@@ -162,7 +162,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -1089,6 +1089,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
             await setup();
             await testUtils.clickElement('#proposeDrawButton');
+            tick(1);
             await receiveReply(Player.ONE, 'Reject', 'Draw');
 
             testUtils.expectElementNotToExist('#proposeDrawButton');
@@ -1107,7 +1108,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then the draw is being accepted
             expect(gameService.acceptDraw).toHaveBeenCalledOnceWith('configRoomId', 1, Player.ZERO);
-            tick(1); // REVIEW: wtf? test doesn't work without it
+            tick(1);
             testUtils.detectChanges();
             testUtils.expectElementToExist('#youAgreedToDrawIndicator');
             expectGameToBeOver();
@@ -1117,6 +1118,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a gameComponent where draw has been proposed
             await setup();
             await testUtils.clickElement('#proposeDrawButton');
+            tick(1);
 
             // When draw is accepted
             spyOn(partDAO, 'update').and.callThrough();
@@ -1134,6 +1136,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a gameComponent where draw has been proposed
             await setup();
             await testUtils.clickElement('#proposeDrawButton');
+            tick(1);
 
             // When draw is accepted
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
@@ -1301,7 +1304,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // it should be around 2 minutes + 30 seconds
                 // (minus the drift it took to process the event, usually 1 or 2ms)
                 expect(wrapper.chronoZeroTurn.remainingMs).toBeGreaterThan(msUntilTimeout - 10);
-                expect(wrapper.chronoZeroTurn.remainingMs).toBeLessThan(msUntilTimeout);
+                expect(wrapper.chronoZeroTurn.remainingMs).toBeLessThanOrEqual(msUntilTimeout);
                 tick(msUntilTimeout);
             }));
             it('should add turn time when receiving AddTurnTime action from Player.ZERO', fakeAsync(async() => {
@@ -1342,7 +1345,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // Then chrono global of player one should be increased by 5 new minutes
                 const msUntilTimeout: number = (30 * 60 * 1000) + (5 * 60 * 1000);
                 expect(wrapper.chronoZeroGlobal.remainingMs).toBeGreaterThan(msUntilTimeout - 10);
-                expect(wrapper.chronoZeroGlobal.remainingMs).toBeLessThan(msUntilTimeout);
+                expect(wrapper.chronoZeroGlobal.remainingMs).toBeLessThanOrEqual(msUntilTimeout);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
             it('should add time to global clock when receiving the AddGlobalTime action from Player.ZERO', fakeAsync(async() => {

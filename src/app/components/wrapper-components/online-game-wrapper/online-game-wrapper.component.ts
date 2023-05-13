@@ -786,6 +786,7 @@ export class OGWCTimeManagerService {
     }
     // At the beginning of a game, set up clocks and remember when the game started
     public onGameStart(configRoom: ConfigRoom): void {
+        console.log('GameStart')
         this.configRoom = MGPOptional.of(configRoom);
         for (const player of Player.PLAYERS) {
             this.globalClocks[player.value].setDuration(this.getPartDurationInMs());
@@ -800,6 +801,7 @@ export class OGWCTimeManagerService {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
     public onReceivedAction(action: PartEventAction): void {
+        console.log('ReceivedAction')
         switch (action.action) {
             case 'AddTurnTime':
                 this.addTurnTime(Player.of(action.player));
@@ -813,6 +815,7 @@ export class OGWCTimeManagerService {
         }
     }
     public onReceivedMove(move: PartEventMove): void {
+        console.log('ReceivedMove')
         const player: Player = Player.of(move.player);
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
@@ -834,6 +837,7 @@ export class OGWCTimeManagerService {
     }
     // Stops all clocks that are running
     public onGameEnd(): void {
+        console.log('GameEnd')
         for (const clock of this.allClocks) {
             // We want to stop the clock, but stop is just pause + change some variables
             // And stop throws if the clock is paused! So we just stop it if it's not paused already
@@ -845,12 +849,14 @@ export class OGWCTimeManagerService {
     }
     // Pauses all clocks before handling new events
     public beforeEventsBatch(gameEnd: boolean): void {
+        console.log('BeforeEventsBatch')
         if (this.clocksStarted && gameEnd === false) {
             this.pauseAllClocks();
         }
     }
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
+        console.log('AfterEventsBatch')
         if (gameEnd === false) {
             if (this.clocksStarted === false) {
                 console.log('starting clocks')
@@ -892,6 +898,7 @@ export class OGWCTimeManagerService {
     }
     // Update clocks with the available time
     private updateClocks(): void {
+        console.log('UpdateClocks')
         for (const player of Player.PLAYERS) {
             this.turnClocks[player.value].changeDuration(this.availableTurnTime[player.value]);
             const globalTime: number =
@@ -901,6 +908,7 @@ export class OGWCTimeManagerService {
     }
     // Pauses all clocks that are running
     private pauseAllClocks(): void {
+        console.log('PauseClocks')
         for (const clock of this.allClocks) {
             if (clock.isIdle() === false) {
                 clock.pause();
