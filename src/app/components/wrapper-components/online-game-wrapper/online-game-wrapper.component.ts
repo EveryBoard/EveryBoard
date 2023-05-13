@@ -131,10 +131,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                     subscription.unsubscribe();
                     resolve(user.get().lastUpdateTime as Timestamp);
                 }
+                if (user.get().lastUpdateTime == null) {
+                    // We know that the update has been sent when we actually see a null here
+                    updateSent = true;
+                }
             };
             const subscription: Subscription = this.userService.observeUser(userId, callback);
             console.log('sending token')
-            this.userService.updatePresenceToken(userId).then(() => { updateSent = true; });
+            this.userService.updatePresenceToken(userId);
         });
     }
     private extractPartIdFromURL(): string {
@@ -314,6 +318,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const turn: number = this.gameComponent.getTurn();
         assert(turn === 0, 'turn is always 0');
 
+
         this.timeManager.onGameStart(this.configRoom);
         // The game has started, we can subscribe to the events to receive moves etc.
         // We don't want to do it sooner, as the clocks need to be started before receiving any move
@@ -322,6 +327,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // we don't want to apply all clock actions then
         const callback: (events: PartEvent[]) => Promise<void> = async(events: PartEvent[]): Promise<void> => {
             console.log('CALLBACK')
+            console.log(events)
             this.beforeEventsBatch();
             for (const event of events) {
                 switch (event.eventType) {
@@ -430,7 +436,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.timeManager.beforeEventsBatch(this.endGame);
     }
     private async afterEventsBatch(): Promise<void> {
+        console.log(this.gameComponent.getTurn())
         const player: Player = Player.fromTurn(this.gameComponent.getTurn());
+        console.log(player);
         this.timeManager.afterEventsBatch(this.endGame, player, await this.getServerTime());
     }
     public notifyDraw(scores?: [number, number]): Promise<void> {
@@ -826,7 +834,7 @@ export class OGWCTimeManagerService {
         }
     }
     public onReceivedMove(move: PartEventMove): void {
-        console.log('ReceivedMove')
+        console.log('ReceivedMove from player ' + move.player)
         const player: Player = Player.of(move.player);
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
@@ -868,7 +876,7 @@ export class OGWCTimeManagerService {
     }
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
-        console.log('AfterEventsBatch')
+        console.log('AfterEventsBatch, player is ' + player)
         if (gameEnd === false) {
             this.updateClocks();
             // The drift is how long has passed since the last event occurred
@@ -885,7 +893,7 @@ export class OGWCTimeManagerService {
     }
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
-        console.log('ResumingClocks')
+        console.log('ResumingClocks for player ' + player)
         this.turnClocks[player.value].resume();
         this.globalClocks[player.value].resume();
     }

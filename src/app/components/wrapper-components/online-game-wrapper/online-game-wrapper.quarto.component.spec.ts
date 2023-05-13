@@ -1212,6 +1212,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper.chronoOneTurn, 'stop').and.callThrough();
 
             // When he reach time out
+            console.log('WAITING')
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
             // Then it should be considered as a timeout
@@ -1518,7 +1519,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('rematch', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             testUtils.expectElementNotToExist('#proposeRematchButton');
 
             // When it is finished
@@ -1529,41 +1530,35 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should send proposal request when proposing', fakeAsync(async() => {
             // Given an ended game
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
 
             // When the propose rematch button is clicked
             const gameService: GameService = TestBed.inject(GameService);
             spyOn(gameService, 'proposeRematch').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
-            // For some reason the first onCurrentPartUpdate is not finished when this update arrive, so waiting 1sec
-            tick(1000);
 
             // Then the gameService must be called
             expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
         }));
         it('should show accept/refuse button when proposition has been sent', fakeAsync(async() => {
             // Given an ended game
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
 
             // When request is received
             testUtils.expectElementNotToExist('#acceptRematchButton');
             await receiveRequest(Player.ONE, 'Rematch');
-            // For some reason the first onCurrentPartUpdate is not finished when this update arrive, so waiting 1sec
-            tick(1000);
 
             // Then accept/refuse buttons must be shown
             testUtils.detectChanges();
             testUtils.expectElementToExist('#acceptRematchButton');
         }));
-        it('should sent accepting request when user accept rematch', fakeAsync(async() => {
+        it('should send accepting request when user accept rematch', fakeAsync(async() => {
             // give a part with rematch request send by opponent
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
             await receiveRequest(Player.ONE, 'Rematch');
-            // For some reason the first onCurrentPartUpdate is not finished when this update arrive, so waiting 1sec
-            tick(1000);
 
             // When accepting it
             const router: Router = TestBed.inject(Router);
@@ -1578,7 +1573,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
             // Given a part lost with rematch request send by user
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
 
             await testUtils.expectInterfaceClickSuccess('#resignButton');
             await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
@@ -1587,8 +1582,6 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             await receiveReply(Player.ONE, 'Accept', 'Rematch', 'nextPartId');
-            // For some reason the first onCurrentPartUpdate is not finished when this update arrive, so waiting 1sec
-            tick(1000);
 
             // Then it should redirect to new part
             expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, { otherRoutes: true });
