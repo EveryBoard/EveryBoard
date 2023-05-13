@@ -802,8 +802,13 @@ export class OGWCTimeManagerService {
         console.log('GameStart')
         this.configRoom = MGPOptional.of(configRoom);
         for (const player of Player.PLAYERS) {
-            this.globalClocks[player.value].setDuration(this.getPartDurationInMs());
+            // We need to initialize the service's data
+            // Otherwise if we go to another page and come back, the service stays alive and the data is off
+            this.takenGlobalTime[player.value] = 0;
+            this.extraGlobalTime[player.value] = 0;
             this.availableTurnTime[player.value] = this.getMoveDurationInMs();
+            // And we setup the clocks
+            this.globalClocks[player.value].setDuration(this.getPartDurationInMs());
             this.turnClocks[player.value].setDuration(this.getMoveDurationInMs());
         }
         console.log('Starting Clocks')
@@ -812,6 +817,7 @@ export class OGWCTimeManagerService {
             clock.start();
             clock.pause();
         }
+
     }
     private getPartDurationInMs(): number {
         return this.configRoom.get().totalPartDuration * 1000;
@@ -820,7 +826,7 @@ export class OGWCTimeManagerService {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
     public onReceivedAction(action: PartEventAction): void {
-        console.log('ReceivedAction')
+        console.log('ReceivedAction: ', action.action)
         switch (action.action) {
             case 'AddTurnTime':
                 this.addTurnTime(Player.of(action.player));
@@ -904,6 +910,7 @@ export class OGWCTimeManagerService {
     }
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
+        console.log('Adding global time to player ' + player);
         const secondsToAdd: number = 5 * 60;
         this.extraGlobalTime[player.getOpponent().value] += secondsToAdd * 1000;
     }
