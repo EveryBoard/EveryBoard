@@ -767,7 +767,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     providedIn: 'root',
 })
 export class OGWCTimeManagerService {
-    // TODO: wrong chrono is playing in some take backs (when it switches player)
 
     // The turn clocks of each player
     private turnClocks: [CountDownComponent, CountDownComponent]; // Initialized by setClocks
@@ -817,7 +816,6 @@ export class OGWCTimeManagerService {
             clock.start();
             clock.pause();
         }
-
     }
     private getPartDurationInMs(): number {
         return this.configRoom.get().totalPartDuration * 1000;
@@ -867,11 +865,12 @@ export class OGWCTimeManagerService {
         for (const clock of this.allClocks) {
             // We want to stop the clock, but stop is just pause + change some variables
             // And stop throws if the clock is paused! So we just stop it if it's not paused already
-            // We don't care what state the clocks are after calling this function, since the part is finished
             if (clock.isIdle() === false) {
                 clock.stop();
             }
         }
+        // Finally, we update the clocks to make sure we show the correct time
+        this.updateClocks();
     }
     // Pauses all clocks before handling new events
     public beforeEventsBatch(gameEnd: boolean): void {
@@ -888,7 +887,6 @@ export class OGWCTimeManagerService {
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
             console.log('actual drift is ' + this.getMillisecondsElapsedSinceLastMoveStart(currentTime) + 'ms')
-            // TODO: drift is ok at first turn, not after first move
             const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
             // console.log({drift, current: currentTime.toString(), lastMoveTime: this.lastMoveStartTimestamp.get().toString()})
             // We need to subtract the time to take the drift into account
