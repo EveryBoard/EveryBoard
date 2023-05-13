@@ -88,7 +88,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         if (move instanceof ConnectSixFirstMove) {
             return MGPFallible.success(undefined);
         } else {
-            return MGPFallible.failure(ConnectSixFailure.CANNOT_DROP_TWO_PIECES_AT_FIRST_TURN());
+            return MGPFallible.failure(ConnectSixFailure.MUST_DROP_EXACTLY_ONE_PIECE_AT_FIRST_TURN());
         }
     }
     public isLegalDrops(move: ConnectSixMove, state: ConnectSixState): MGPFallible<void> {
@@ -101,7 +101,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
                 return MGPFallible.success(undefined);
             }
         } else {
-            return MGPFallible.failure(`ta mère c'est un drops ça !`);
+            return MGPFallible.failure(ConnectSixFailure.MUST_DROP_TWO_PIECES());
         }
     }
     public getGameStatus(node: ConnectSixNode): GameStatus {
@@ -114,7 +114,6 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
                 }
             }
         }
-        // TODOTODO: TODO: calculate the theoritic last turn
-        return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
+        return state.turn === 181 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
 }

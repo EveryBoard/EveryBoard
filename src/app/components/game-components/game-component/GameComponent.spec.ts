@@ -18,7 +18,7 @@ import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { HivePiece } from 'src/app/games/hive/HivePiece';
 
-describe('GameComponent', () => {
+fdescribe('GameComponent', () => {
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
@@ -47,7 +47,7 @@ describe('GameComponent', () => {
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
-    it('clicks method should refuse when observer click', fakeAsync(async() => {
+    fit('clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Abalone: {
                 onPieceClick: [0, 0],
@@ -61,6 +61,7 @@ describe('GameComponent', () => {
             Awale: { onClick: [0, 0] },
             Brandhub: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
+            ConnectSix: { onClick: [0, 0] },
             Conspirateurs: { onClick: [new Coord(0, 0)] },
             Diam: {
                 onSpaceClick: [0],

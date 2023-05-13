@@ -23,6 +23,8 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
 {
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
+    public lastMoved: Coord[] = [];
+
     public victoryCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -37,21 +39,33 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
+        if (this.rules.node.move.isPresent()) {
+            this.showLastMove();
+        }
+    }
+    public showLastMove(): void {
+        const move: ConnectSixMove = this.rules.node.move.get();
+        if (move instanceof ConnectSixFirstMove) {
+            this.lastMoved = [move.coord];
+        } else {
+            this.lastMoved = [move.getFirst(), move.getSecond()];
+        }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            return this.chooseMove(new ConnectSixFirstMove(x, y), this.getState());
+            return this.chooseMove(ConnectSixFirstMove.from(clickedCoord).get(), this.getState());
         } else {
-            const clickedCoord: Coord = new Coord(x, y);
             if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoord.isPresent()) {
                 if (this.droppedCoord.equalsValue(clickedCoord)) {
-                    return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+                    this.droppedCoord = MGPOptional.empty();
+                    return MGPValidation.SUCCESS;
                 } else {
                     const move: ConnectSixMove = ConnectSixDrops.from(this.droppedCoord.get(), clickedCoord).get();
                     return this.chooseMove(move, this.getState());
@@ -65,21 +79,22 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
-        const classes: string[] = [this.getPlayerClass(owner)];
-        if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
-            classes.push('victory-stroke');
+        const classes: string[] = [];
+        if (this.droppedCoord.equalsValue(coord)) {
+            classes.push(this.getPlayerClass(this.getState().getCurrentPlayer()));
+            classes.push('highlighted-stroke');
+        } else {
+            classes.push(this.getPlayerClass(owner));
+            if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
+                classes.push('victory-stroke');
+            }
+            if (this.lastMoved.some((c: Coord) => c.equals(coord))) {
+                classes.push('last-move-stroke');
+            }
         }
         return classes;
     }
     public cancelMoveAttempt(): void {
         this.droppedCoord = MGPOptional.empty();
-    }
-    public async removeDroppedCoord(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#dropped');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        this.droppedCoord = MGPOptional.empty();
-        return MGPValidation.SUCCESS;
     }
 }

@@ -1,5 +1,5 @@
-import { MoveEncoder, NumberEncoder } from 'src/app/utils/Encoder';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { MoveEncoder } from 'src/app/utils/Encoder';
+import { MoveCoord, MoveCoordEncoder } from 'src/app/jscaip/MoveCoord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -8,24 +8,21 @@ import { ConnectSixFailure } from './ConnectSixFailure';
 
 export class ConnectSixFirstMove extends MoveCoord {
 
-    public static encoder: NumberEncoder<ConnectSixFirstMove> = new class extends NumberEncoder<ConnectSixFirstMove> {
-        public maxValue(): number {
-            return 18*19 + 18;
+    public static from(coord: Coord): MGPFallible<ConnectSixFirstMove> {
+        if (coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH)) {
+            return MGPFallible.success(new ConnectSixFirstMove(coord.x, coord.y));
+        } else {
+            return MGPFallible.failure(ConnectSixFailure.FIRST_COORD_IS_OUT_OF_RANGE());
         }
-        public encodeNumber(move: ConnectSixFirstMove): number {
-            // A ConnectSix move ConnectSixes on x from 0 to 18
-            // and y from 0 to 18
-            // encoded as y*19 + x
-            return (move.coord.y * 19) + move.coord.x;
-        }
-        public decodeNumber(encodedMove: number): ConnectSixFirstMove {
-            const x: number = encodedMove % 19;
-            const y: number = (encodedMove - x) / 19;
-            return new ConnectSixFirstMove(x, y);
-        }
-    };
+    }
+    private constructor(x: number, y: number) {
+        super(x, y);
+    }
+    public static encoder: MoveEncoder<ConnectSixFirstMove> =
+        MoveCoordEncoder.getEncoder(ConnectSixState.WIDTH,
+                                    ConnectSixState.WIDTH,
+                                    (coord: Coord) => ConnectSixFirstMove.from(coord).get());
     public equals(other: ConnectSixFirstMove): boolean {
-        if (this === other) return true;
         return this.coord.equals(other.coord);
     }
     public toString(): string {
@@ -34,11 +31,15 @@ export class ConnectSixFirstMove extends MoveCoord {
 }
 export class ConnectSixDrops extends MoveWithTwoCoords {
 
+    public static encoder: MoveEncoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.from);
+
     public static from(first: Coord, second: Coord): MGPFallible<ConnectSixDrops> {
         if (first.isNotInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH)) {
             return MGPFallible.failure(ConnectSixFailure.FIRST_COORD_IS_OUT_OF_RANGE());
         } else if (second.isNotInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH)) {
             return MGPFallible.failure(ConnectSixFailure.SECOND_COORD_IS_OUT_OF_RANGE());
+        } else if (first.equals(second)) {
+            return MGPFallible.failure(ConnectSixFailure.COORDS_SHOULD_BE_DIFFERENT());
         } else {
             return MGPFallible.success(new ConnectSixDrops(first, second));
         }
@@ -46,8 +47,18 @@ export class ConnectSixDrops extends MoveWithTwoCoords {
     public toString(): string {
         return 'TODOTODO';
     }
-    public equals(other: ConnectSixMove): boolean {
-        return false; // TODOTODO: (a,b) === (b, a)
+    public equals(other: ConnectSixDrops): boolean {
+        const thisFirst: Coord = this.getFirst();
+        const otherFirst: Coord = other.getFirst();
+        const thisSecond: Coord = this.getSecond();
+        const otherSecond: Coord = other.getSecond();
+        if (thisFirst.equals(otherFirst) && thisSecond.equals(otherSecond)) {
+            return true;
+        } else if (thisFirst.equals(otherSecond) && thisSecond.equals(otherFirst)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -55,7 +66,7 @@ export type ConnectSixMove = ConnectSixFirstMove | ConnectSixDrops;
 
 export const ConnectSixMoveEncoder: MoveEncoder<ConnectSixMove> =
     MoveEncoder.disjunction(ConnectSixFirstMove.encoder,
-                            MoveWithTwoCoords.getEncoder(ConnectSixDrops.from),
+                            ConnectSixDrops.encoder,
                             (value: ConnectSixFirstMove): value is ConnectSixFirstMove => {
                                 return value instanceof ConnectSixFirstMove;
                             });

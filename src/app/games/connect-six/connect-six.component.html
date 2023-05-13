@@ -26,18 +26,16 @@
                 />
                 <line [attr.x1]="50 * x"      [attr.y1]="25 + 50 * y"
                       [attr.x2]="50 + 50 * x" [attr.y2]="25 + 50 * y"
-                      (click)="onClick(x, y)"
                       class="base mid-stroke"/>
                 <line [attr.x1]="25 + 50 * x" [attr.y1]="50 * y"
                       [attr.x2]="25 + 50 * x" [attr.y2]="50 + 50 * y"
-                      (click)="onClick(x, y)"
                       class="base mid-stroke"/>
             </ng-template>
         </g>
     </g>
     <circle *ngIf="droppedCoord.isPresent()"
             id="dropped"
-            (click)="removeDroppedCoord()"
+            (click)="onClick(droppedCoord.get().x, droppedCoord.get().y)"
             [attr.cx]="25 + 50 * droppedCoord.get().x" [attr.cy]="25 + 50 * droppedCoord.get().y"
             [attr.r]="22"
             [ngClass]="getSpaceClass(droppedCoord.get().x, droppedCoord.get().y)"
