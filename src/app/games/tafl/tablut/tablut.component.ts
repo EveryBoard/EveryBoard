@@ -8,7 +8,7 @@ import { TaflComponent } from '../tafl.component';
 import { TaflMinimax } from '../TaflMinimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControl';
+import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 
 @Component({
     selector: 'app-tablut',

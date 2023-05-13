@@ -64,6 +64,10 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
         if (y === 0 || y === width - 1) {
             value *= width;
         }
+        /** 1 for center
+          * width for border
+          * width*width for corners
+          */
         return value;
     }
 }
