@@ -705,7 +705,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Take Back', () => {
         describe('sending/receiving', () => {
-            it('should send take back request when player ask to', fakeAsync(async() => {
+            it('should send take back request when player asks to', fakeAsync(async() => {
                 // Given a board where its the opponent's (first) turn
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
@@ -718,7 +718,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(partService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'TakeBack');
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it('should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
+            it('should not propose to Player.ONE to take back before their first move', fakeAsync(async() => {
                 // Given a board where nobody already played
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
 
@@ -755,7 +755,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.expectElementNotToExist('#acceptTakeBackButton');
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it('should remove take back refusal button after it has been rejected', fakeAsync(async() => {
+            it('should remove take back rejection button after it has been rejected', fakeAsync(async() => {
                 // Given a board with previous move
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
@@ -774,7 +774,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it('should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
+            it('should not allow player to play while take back request is waiting for them', fakeAsync(async() => {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves(1, [SECOND_MOVE_ENCODED], 2);
@@ -823,10 +823,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
-        describe('Opponent given take back during his turn', () => {
-            it('should move board back two turn and call restartCountDown', fakeAsync(async() => {
+        describe('Opponent given take back during their turn', () => {
+            it('should move board back two turn', fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
-                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
+                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
                 await receiveNewMoves(0, [FIRST_MOVE_ENCODED], 1);
                 await doMove(SECOND_MOVE, true);
                 await receiveRequest(Player.ZERO, 'TakeBack');
@@ -835,49 +835,29 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When accepting opponent's take back
                 await acceptTakeBack();
 
-                // Then turn should be changed to 0 and resumeCountDown be called
+                // Then turn should be changed to 0
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
                 expect(wrapper.gameComponent.getTurn()).toBe(0);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
-            it(`should reset opponents chronos to what it was at pre-take-back turn beginning`, fakeAsync(async() => {
+            it(`should preserve opponent's clocks to what it was before asking take back`, fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
                 await receiveNewMoves(0, [FIRST_MOVE_ENCODED], 1);
                 await doMove(SECOND_MOVE, true);
                 await receiveRequest(Player.ZERO, 'TakeBack');
+                const globalTimeBeforeTakeBack: number = wrapper.chronoZeroGlobal.remainingMs;
+                const turnTimeBeforeTakeBack: number = wrapper.chronoZeroTurn.remainingMs;
 
                 // When accepting opponent's take back
                 await acceptTakeBack();
 
-                // Then opponents chrono should have been reset
-                tick(wrapper.configRoom.maximalMoveDuration * 1000);
-            }));
-            xit(`Should reduce opponent's remainingTime, since opponent just played`, fakeAsync(async() => {
-                // REVIEW: TODO
-                // Given an initial board where it's opponent second turn, and opponent asked for take back
-                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
-                await receiveNewMoves(0, [FIRST_MOVE_ENCODED], 1);
-                await doMove(SECOND_MOVE, true);
-                await receiveRequest(Player.ZERO, 'TakeBack');
-
-                // When accepting opponent's take back
-                spyOn(partDAO, 'update').and.callThrough();
-                await acceptTakeBack();
-
-                // Then opponents take back request should have include remainingTime and lastTimeMove
-                expect(partDAO.update).toHaveBeenCalledWith('configRoomId', {
-                    lastUpdate: {
-                        index: 5,
-                        player: Player.ONE.value,
-                    },
-                    // TODO request: Request.takeBackAccepted(Player.ONE),
-                    turn: 0,
-                    remainingMsForZero: 1799998,
-                    remainingMsForOne: 1799999,
-                    lastUpdateTime: serverTimestamp(),
-                });
+                // Then opponents chrono should have continued to decrease
+                const globalTimeAfterTakeBack: number = wrapper.chronoZeroGlobal.remainingMs;
+                const turnTimeAfterTakeBack: number = wrapper.chronoZeroTurn.remainingMs;
+                expect(globalTimeAfterTakeBack).toBeLessThanOrEqual(globalTimeBeforeTakeBack);
+                expect(turnTimeAfterTakeBack).toBeLessThanOrEqual(turnTimeBeforeTakeBack);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
