@@ -50,6 +50,13 @@ export class UpdateType {
 
     private constructor(public readonly value: string) {}
 }
+
+
+function showTimestamp(t: Timestamp): string {
+    if (t == null) return 'null';
+    return Math.floor(t.seconds % (60*60) / 60) + ':' + (t.seconds % 60) + ':' + (t.nanoseconds / 1000000)
+}
+
 @Component({
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
@@ -112,10 +119,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         super(actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
-    private showTimestamp(t: Timestamp): string {
-        if (t == null) return 'null';
-        return Math.floor(t.seconds % (60*60) / 60) + ':' + (t.seconds % 60) + ':' + (t.nanoseconds / 1000000)
-    }
     // Gets the server time by relying on the presence token of the user.
     private async getServerTime(): Promise<Timestamp> {
         const userId: string = this.connectedUserService.user.get().id;
@@ -123,15 +126,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return new Promise((resolve: (result: Timestamp) => void) => {
             let updateSent: boolean = false;
             const callback = (user: MGPOptional<User>): void => {
-                // console.log({updateSent, time: this.showTimestamp(user.get().lastUpdateTime as Timestamp)});
+                console.log({updateSent, time: showTimestamp(user.get().lastUpdateTime as Timestamp)});
                 if (updateSent && user.get().lastUpdateTime != null) {
                     subscription.unsubscribe();
                     resolve(user.get().lastUpdateTime as Timestamp);
                 }
             };
             const subscription: Subscription = this.userService.observeUser(userId, callback);
-            this.userService.updatePresenceToken(userId);
-            updateSent = true;
+            console.log('sending token')
+            this.userService.updatePresenceToken(userId).then(() => { updateSent = true; });
         });
     }
     private extractPartIdFromURL(): string {
@@ -828,6 +831,7 @@ export class OGWCTimeManagerService {
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
         const takenMoveTime: number = this.getMillisecondsElapsedSinceLastMoveStart(moveTimestamp);
+        console.log('Got move, updating lastMoveStartTimestamp to ' + showTimestamp(moveTimestamp))
         this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
         this.takenGlobalTime[player.value] += takenMoveTime;
 
@@ -870,7 +874,8 @@ export class OGWCTimeManagerService {
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
             console.log('actual drift is ' + this.getMillisecondsElapsedSinceLastMoveStart(currentTime) + 'ms')
-            const drift: number = 0; // TODO: joining mid-game: this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
+            // TODO: drift is ok at first turn, not after first move
+            const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
             // console.log({drift, current: currentTime.toString(), lastMoveTime: this.lastMoveStartTimestamp.get().toString()})
             // We need to subtract the time to take the drift into account
             this.turnClocks[player.value].subtract(drift);
