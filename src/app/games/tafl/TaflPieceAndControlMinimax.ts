@@ -35,9 +35,9 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
         scoreValue += metrics.safeScore * this.getScoreBySafePiece(state);
         const maxControl: number = this.getScoreByThreatenedPiece(state);
         scoreValue += metrics.threatenedScore * maxControl;
-        assert(metrics.controlScore <= maxControl, 'Control Score should be bellow ' + maxControl + ', got ' + metrics.controlScore);
-        assert(metrics.threatenedScore <= 16, 'Threatened Score should be bellow 16, got ' + metrics.threatenedScore);
-        assert(metrics.safeScore <= 16, 'Safe Score should be bellow 16, got ' + metrics.threatenedScore);
+        assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
+        assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
+        assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
         return new BoardValue(scoreValue);
     }
     protected getControlScoreAndPieceScores(width: number,
@@ -88,9 +88,9 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
     }
     public getScoreByThreatenedPiece(state: TaflState): number {
         const width: number = state.board.length;
-        // The value of the four corner (each being "width" * "width")
+        // The value of the four corners (each being "width" * "width")
         // + the value of what remains of the four edges (each border square being worth "width")
-        // + the value of what remain of the board (each square being worth one point)
+        // + the value of what remains of the board (each square being worth one point)
         const reducedWidth: number = width - 2;
         return (4 * width * width) + (4 * reducedWidth * width) + (reducedWidth * reducedWidth);
     }

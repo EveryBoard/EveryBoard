@@ -36,8 +36,8 @@ describe('TaflPieceAndControlMinimax', () => {
         ];
         const weakState: BrandhubState = new BrandhubState(weakBoard, 1);
 
-        // And a board where what threatens your is a threatened piece
-        // (and each player have 1 threat)
+        // And a board where what threatens you is a threatened piece
+        // (and each player has 1 threat)
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
             [O, X, _, _, _, _, _],
@@ -49,7 +49,7 @@ describe('TaflPieceAndControlMinimax', () => {
         ];
         const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
 
-        // Then the strong board should be prefered
+        // Then the strong board should be preffered
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),

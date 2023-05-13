@@ -36,14 +36,14 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
                               (metrics.threatenedScore * (maxControl + 1)) +
                               metrics.controlScore);
     }
-    public getStepForEscape(state: TaflState): number {
+    private getStepForEscape(state: TaflState): number {
         const king: Coord = this.ruler.getKingCoord(state).get();
         return this._getStepForEscape(state, 1, [king], []).getOrElse(-1);
     }
-    public _getStepForEscape(state: TaflState,
-                             step: number,
-                             previousGen: Coord[],
-                             handledCoords: Coord[])
+    private _getStepForEscape(state: TaflState,
+                              step: number,
+                              previousGen: Coord[],
+                              handledCoords: Coord[])
     : MGPOptional<number>
     {
         const nextGen: Coord[] = this.getNextGen(state, previousGen, handledCoords);
@@ -60,7 +60,7 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
             return this._getStepForEscape(state, step, nextGen, handledCoords);
         }
     }
-    public getNextGen(state: TaflState, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
+    private getNextGen(state: TaflState, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
         const newGen: Coord[] = [];
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {

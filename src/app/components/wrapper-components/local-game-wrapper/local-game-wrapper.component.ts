@@ -6,7 +6,6 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';

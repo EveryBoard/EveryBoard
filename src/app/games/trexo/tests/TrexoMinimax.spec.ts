@@ -18,7 +18,7 @@ describe('TrexoMinimax', () => {
         minimax = new TrexoMinimax(rules, 'Trexo Minimax');
     });
     it('should prefer to have more visible pieces aligned than less', () => {
-        // Given a board where two piece are aligned of player zero
+        // Given a board where two pieces of player zero are aligned
         const weakState: TrexoState = TrexoState.from([
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
@@ -32,7 +32,7 @@ describe('TrexoMinimax', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 1).get();
 
-        // And a board where three piece are aligned of player zero
+        // And a board where three piece of player zero are aligned
         const strongState: TrexoState = TrexoState.from([
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],

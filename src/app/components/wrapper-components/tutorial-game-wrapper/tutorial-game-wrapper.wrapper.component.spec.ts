@@ -53,7 +53,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(testUtils.wrapper).toBeTruthy();
             expect(testUtils.getComponent()).toBeTruthy();
         });
-        it('should show informations bellow/beside the board', fakeAsync(async() => {
+        it('should show informations below/beside the board', fakeAsync(async() => {
             // Given a certain TutorialStep
             const state: QuartoState = new QuartoState([
                 [QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA],
