@@ -45,12 +45,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.role = Player.ZERO; // The user is playing, not observing
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
-    public getCreatedNodes(): number {
-        return MGPNodeStats.createdNodes;
-    }
-    public getMinimaxTime(): number {
-        return MGPNodeStats.minimaxTime;
-    }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
             const createdSuccessfully: boolean = await this.afterViewInit();
