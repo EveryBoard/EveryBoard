@@ -3,14 +3,14 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { BrandhubState } from '../brandhub/BrandhubState';
-import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
+import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('TaflEscapeThenPieceAndControlMinimax', () => {
+describe('TaflEscapeThenPieceThenControlMinimax', () => {
 
-    let minimax: TaflEscapeThenPieceAndControlMinimax;
+    let minimax: TaflEscapeThenPieceThenControlMinimax;
 
     let rules: BrandhubRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -21,7 +21,7 @@ describe('TaflEscapeThenPieceAndControlMinimax', () => {
     beforeEach(() => {
         rules = BrandhubRules.get();
         rules.setInitialBoard();
-        minimax = new TaflEscapeThenPieceAndControlMinimax(rules, 'TaflEscapeThenPieceAndControlMinimax');
+        minimax = new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control');
     });
     it('should be better when king can escape than when he cannot', () => {
         const weakBoard: Table<TaflPawn> = [

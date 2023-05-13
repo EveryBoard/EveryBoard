@@ -166,8 +166,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
             return false;
         }
     }
-    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>,
-                           state: TaflState)
+    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: TaflState)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
