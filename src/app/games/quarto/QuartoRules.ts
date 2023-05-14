@@ -8,14 +8,13 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -24,8 +23,10 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
  * (if a line contains a big and a small piece, for example).
  */
 class QuartoCriterion {
+
     private readonly subCriterion: MGPOptional<boolean>[] =
         [MGPOptional.empty(), MGPOptional.empty(), MGPOptional.empty(), MGPOptional.empty()];
+
     public constructor(piece: QuartoPiece) {
         // a criterion is initialized with a piece, it takes the piece's value
         this.subCriterion[0] = MGPOptional.of((piece.value & 8) === 8);
@@ -94,23 +95,40 @@ class QuartoCriterion {
             }).join(' ') + '}';
     }
 }
+
 export interface BoardStatus {
+
     score: SCORE;
+
     sensitiveSquares: MGPSet<Coord>;
 }
+
 class QuartoLine {
     public constructor(public readonly initialCoord: Coord,
                        public readonly direction: Direction) {}
+    public allCoords(): Coord[] {
+        const coords: Coord[] = [];
+        for (let i: number = 0; i < 4; i++) {
+            coords.push(this.initialCoord.getNext(this.direction, i));
+        }
+        return coords;
+    }
 }
 export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
 
 interface LineInfos {
+
     commonCriterion: MGPOptional<QuartoCriterion>;
+
     sensitiveCoord: MGPOptional<Coord>;
+
     boardStatus: MGPOptional<BoardStatus>;
 }
+
 export class QuartoRules extends Rules<QuartoMove, QuartoState> {
+
     public static VERBOSE: boolean = false;
+
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Direction.DOWN),
@@ -126,16 +144,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new QuartoLine(new Coord(0, 0), Direction.DOWN_RIGHT),
         new QuartoLine(new Coord(0, 3), Direction.UP_RIGHT),
     ];
-    public static readonly QUARTO_HELPER: NInARowHelper<QuartoPiece> =
-        new NInARowHelper(QuartoRules.isInRange, QuartoRules.getOwner, 4);
     public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
-    public static isInRange(coord: Coord): boolean {
-        return coord.isInRange(4, 4);
-    }
-    public static getOwner(_: QuartoPiece, state: QuartoState): PlayerOrNone {
-        return state.getCurrentPlayer();
-    }
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);
     }
@@ -170,6 +180,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
         return QuartoRules.isLegal(move, state).toFallible(undefined);
     }
@@ -232,6 +243,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         const commonCriterion: MGPOptional<QuartoCriterion> = lineInfos.commonCriterion;
         const sensitiveCoord: MGPOptional<Coord> = lineInfos.sensitiveCoord;
+
         // we now have looked through the entire line, we summarize everything
         if (commonCriterion.isPresent() && (commonCriterion.get().areAllAbsent() === false)) {
             // this line is not null and has a common criterion between all of its pieces
@@ -252,6 +264,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     private static getLineInfos(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): LineInfos {
         let sensitiveCoord: MGPOptional<Coord> = MGPOptional.empty(); // the first square is empty
         let commonCriterion: MGPOptional<QuartoCriterion> = MGPOptional.empty();
+
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
             const c: QuartoPiece = state.getPieceAt(coord);
@@ -304,6 +317,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
     }
     public getVictoriousCoords(state: QuartoState): Coord[] {
-        return QuartoRules.QUARTO_HELPER.getVictoriousCoord(state);
+        for (const line of QuartoRules.lines) {
+            if (QuartoRules.isThereAVictoriousLine(line, state)) {
+                return line.allCoords();
+            }
+        }
+        return [];
     }
 }
