@@ -161,7 +161,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -1343,7 +1343,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             expectGameToBeOver();
         }));
-        fit('should not allow player to move after resigning', fakeAsync(async() => {
+        it('should not allow player to move after resigning', fakeAsync(async() => {
             // Given a component where user has resigned
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
@@ -1400,31 +1400,6 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then removeObservedPart should be called
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
-        }));
-    });
-    describe('getUpdateTypes', () => {
-        it('nothing changed = UpdateType.DUPLICATE', fakeAsync(async() => {
-            // Given any part
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-            const initialPart: Part = {
-                typeGame: 'P4',
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                turn: 3,
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
-                lastUpdateTime: new Timestamp(333, 333000000),
-            };
-            wrapper.currentPart = new PartDocument('configRoomId', initialPart);
-
-            // When making a move changing nothing
-            const update: PartDocument = new PartDocument('configRoomId', initialPart);
-
-            // Then the update should be detected as a duplicate
-            expect(wrapper.getUpdateTypes(update)).toEqual([UpdateType.DUPLICATE]);
-            tick(wrapper.configRoom.maximalMoveDuration * 1000 + 1);
         }));
     });
     describe('rematch', () => {

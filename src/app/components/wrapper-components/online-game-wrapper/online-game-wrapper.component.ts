@@ -239,61 +239,17 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
         // Trigger the first update manually, so that we will have info on the part before receiving any moves
         // This is useful when we join a part in the middle.
-        await this.onCurrentPartUpdate((await this.gameService.getPart(this.currentPartId)).get());
+        const part = (await this.gameService.getPart(this.currentPartId)).get();
+        this.currentPart = new PartDocument(this.currentPartId, part);
+        await this.onGameStart(this.currentPart);
 
         // We subscribe to the part only at this point.
         // Once we receive the notification that the part started, we will subscribe to the events
         this.partSubscription =
             this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
                 assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
-                await this.onCurrentPartUpdate(part.get());
+                this.currentPart = new PartDocument(this.currentPartId, part.get());
             });
-    }
-    private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
-        const part: PartDocument = new PartDocument(this.currentPartId, update);
-        const updateTypes: UpdateType[] = this.getUpdateTypes(part);
-        display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateTypes.map((u: UpdateType) => u.value) + '(' + update.turn + ')');
-        const oldPart: PartDocument | null = this.currentPart;
-        this.currentPart = part;
-
-        for (const updateType of updateTypes) {
-            await this.applyUpdate(updateType, part, oldPart);
-        }
-    }
-    public getUpdateTypes(update: PartDocument): UpdateType[] {
-        const currentPartDoc: Part | null = this.currentPart != null ? this.currentPart.data : null;
-        const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.data);
-        const updatesTypes: UpdateType[] = [];
-        display(OnlineGameWrapperComponent.VERBOSE, { currentPartDoc, update, diff });
-        const nbDiffs: number = diff.countChanges();
-        if (nbDiffs === 0) {
-            updatesTypes.push(UpdateType.DUPLICATE);
-        }
-        if (diff.isFullyCreated() && diff.isPresent('beginning').present) {
-            updatesTypes.push(UpdateType.STARTING_DOC);
-        }
-        if (update.data.beginning == null) {
-            updatesTypes.push(UpdateType.PRE_START_DOC);
-        }
-        if (diff.isPresent('result').present &&
-            update.data.result !== MGPResult.UNACHIEVED.value)
-        {
-            updatesTypes.push(UpdateType.END_GAME);
-        }
-        return updatesTypes;
-    }
-    private async applyUpdate(updateType: UpdateType, part: PartDocument, oldPart: PartDocument | null): Promise<void> {
-        switch (updateType) {
-            case UpdateType.DUPLICATE:
-                return;
-            case UpdateType.END_GAME:
-                return;
-            case UpdateType.PRE_START_DOC:
-                return;
-            default:
-                assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);
-                return this.onGameStart(part);
-        }
     }
     private async onGameStart(part: PartDocument): Promise<void> {
         console.log('GameStart')
@@ -448,6 +404,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         assert(this.currentPart != null, 'should not call canAskTakeBack when currentPart is not defined yet');
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         if (currentPart.data.turn <= this.role.value) {
+            console.log(currentPart.data.turn + ' <= ' + this.role.value)
             return false;
         } else if (this.takeBackHasJustBeenRefusedByOpponent()) {
             return false;
