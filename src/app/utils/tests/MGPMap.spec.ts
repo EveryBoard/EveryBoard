@@ -143,4 +143,17 @@ describe('MGPMap', () => {
             expect(sum).toBe(3);
         });
     });
+    describe('getAnyPair', () => {
+        it('should return an element from the set', () => {
+            const set: MGPMap<string, number> = new MGPMap();
+            set.set('salut', 5);
+
+            const element: number = set.getAnyPair().get().value;
+            expect(element).toBe(5);
+        });
+        it('should not return anything if the set is empty', () => {
+            const emptySet: MGPMap<string, number> = new MGPMap();
+            expect(emptySet.getAnyPair().isAbsent()).toBeTrue();
+        });
+    });
 });
