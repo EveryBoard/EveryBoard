@@ -193,7 +193,7 @@ export class ConspirateursMoveJump extends Move {
     }
 }
 
-export type ConspirateursMove = ConspirateursMoveDrop | ConspirateursMoveSimple | ConspirateursMoveJump
+export type ConspirateursMove = ConspirateursMoveDrop | ConspirateursMoveSimple | ConspirateursMoveJump;
 
 export const ConspirateursMoveEncoder: MoveEncoder<ConspirateursMove> =
     MoveEncoder.disjunction3(ConspirateursMoveDrop.encoder,
