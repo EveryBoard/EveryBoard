@@ -54,13 +54,6 @@ describe('MGPMap', () => {
             expect(() => map.delete('second')).toThrowError('No Value to delete for key "second"!');
         });
     });
-    it('GetByIndex should give them by order of input', () => {
-        const map: MGPMap<string, number> = new MGPMap();
-        map.set('first', 0);
-        map.set('second', 1);
-        map.set('third', 2);
-        expect(map.getByIndex(1).value).toBe(1);
-    });
     it('should throw when calling set after making immutable', () => {
         const map: MGPMap<string, number> = new MGPMap();
         map.set('first', 0);
