@@ -7,7 +7,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { SCORE } from 'src/app/jscaip/SCORE';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 
@@ -23,31 +22,11 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         }
         return ConnectSixRules.singleton.get();
     }
-    public static getOwner(piece: PlayerOrNone): PlayerOrNone {
-        return piece;
-    }
     private static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(ConnectSixFirstMove.isInRange, ConnectSixRules.getOwner, 6);
+        new NInARowHelper(ConnectSixFirstMove.isInRange, Utils.identity, 6);
 
-    public static getSquareScore(state: ConnectSixState, coord: Coord): number {
-        return ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coord);
-    }
     public static getVictoriousCoords(state: ConnectSixState): Coord[] {
-        const coords: Coord[] = [];
-        for (const coordAndContents of state.getCoordsAndContents()) {
-            if (coordAndContents.content.isPlayer()) {
-                const coord: Coord = coordAndContents.coord;
-                const squareScore: number = ConnectSixRules.getSquareScore(state, coord);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                    if (squareScore === Player.ZERO.getVictoryValue() ||
-                        squareScore === Player.ONE.getVictoryValue())
-                    {
-                        coords.push(coord);
-                    }
-                }
-            }
-        }
-        return coords;
+        return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
     private constructor() {
         super(ConnectSixState);
@@ -94,13 +73,9 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
     }
     public getGameStatus(node: ConnectSixNode): GameStatus {
         const state: ConnectSixState = node.gameState;
-        for (const coordAndContents of state.getCoordsAndContents()) {
-            if (coordAndContents.content.isPlayer()) {
-                const squareScore: number = ConnectSixRules.getSquareScore(state, coordAndContents[0]);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                    return GameStatus.getVictory(state.getCurrentOpponent());
-                }
-            }
+        const victoriousCoord: Coord[] = ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
+        if (victoriousCoord.length > 0) {
+            return GameStatus.getVictory(state.getCurrentOpponent());
         }
         return state.turn === 181 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
