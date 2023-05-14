@@ -127,7 +127,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return new Promise((resolve: (result: Timestamp) => void) => {
             let updateSent: boolean = false;
             const callback = (user: MGPOptional<User>): void => {
-                console.log({updateSent, time: showTimestamp(user.get().lastUpdateTime as Timestamp)});
                 if (updateSent && user.get().lastUpdateTime != null) {
                     subscription.unsubscribe();
                     resolve(user.get().lastUpdateTime as Timestamp);
