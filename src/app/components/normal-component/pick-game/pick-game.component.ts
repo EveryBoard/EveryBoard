@@ -151,7 +151,7 @@ class GameDescription {
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
 
-    public static readonly CONNECT_SIX: Localized = () => $localize`Put two piece on the board each turn, and be the first to align six!`;
+    public static readonly CONNECT_SIX: Localized = () => $localize`Put two pieces on the board at each turn, and be the first to align six pieces!`;
 
     public static readonly CONSPIRATEURS: Localized = () => $localize`Hide all of your pieces before your opponent does, or risk to be discovered!`;
 
@@ -246,7 +246,7 @@ export class GameInfo {
         new GameInfo($localize`Hive`, 'Hive', HiveComponent, new HiveTutorial(), HiveRules.get(), new Date('2023-04-02'), GameDescription.HIVE()),
         new GameInfo($localize`Trexo`, 'Trexo', TrexoComponent, new TrexoTutorial(), TrexoRules.get(), new Date('2023-04-23'), GameDescription.TREXO()),
         new GameInfo($localize`Lasca`, 'Lasca', LascaComponent, new LascaTutorial(), LascaRules.get(), new Date('2023-05-11'), GameDescription.LASCA()),
-        new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-12'), GameDescription.CONNECT_SIX()),
+        new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-13'), GameDescription.CONNECT_SIX()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

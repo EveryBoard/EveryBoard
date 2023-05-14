@@ -8,7 +8,7 @@ import { ConnectSixState } from '../ConnectSixState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 
-fdescribe('ConnectSixCompnent', () => {
+describe('ConnectSixCompnent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -27,11 +27,11 @@ fdescribe('ConnectSixCompnent', () => {
             // Given the initial state of the component
             // When clicking anywhere
             // Then a first move should be done
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)).get();
+            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9));
             await testUtils.expectMoveSuccess('#click_9_9', move);
         }));
         it('should cancel move when clicking on occupied stone from previous turns', fakeAsync(async() => {
-            // Given a component with piece on it, from previous turns
+            // Given a component with pieces on it, from previous turns
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -58,7 +58,7 @@ fdescribe('ConnectSixCompnent', () => {
             // Then the move should be cancelled
             await testUtils.expectClickFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }));
-        it('should drop the first of two piece when clicking empty coord', fakeAsync(async() => {
+        it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
             // Given a component with one move already done
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -195,7 +195,7 @@ fdescribe('ConnectSixCompnent', () => {
             testUtils.expectElementToHaveClass('#piece_9_8', 'victory-stroke');
             testUtils.expectElementToHaveClass('#piece_10_8', 'victory-stroke');
         }));
-        it('should show previous move', fakeAsync(async() => {
+        it('should show previous move (first move)', fakeAsync(async() => {
             // Given a board with a last move
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -220,10 +220,41 @@ fdescribe('ConnectSixCompnent', () => {
             ], 1);
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixFirstMove.from(new Coord(9, 9)).get());
+            testUtils.setupState(state, undefined, ConnectSixFirstMove.from(new Coord(9, 9)));
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_9_9', 'last-move-stroke');
+        }));
+        it('should show previous move (next moves)', fakeAsync(async() => {
+            // Given a board with a last move
+            const state: ConnectSixState = new ConnectSixState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, X, X, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+
+            // When displaying it
+            testUtils.setupState(state, undefined, ConnectSixDrops.from(new Coord(10, 9), new Coord(11, 9)).get());
+
+            // Then last piece should have the highlight
+            testUtils.expectElementToHaveClass('#piece_10_9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#piece_11_9', 'last-move-stroke');
         }));
     });
 });

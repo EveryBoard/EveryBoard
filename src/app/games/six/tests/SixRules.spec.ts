@@ -187,7 +187,7 @@ describe('SixRules', () => {
     });
     describe('Deconnection', () => {
         it('should deconnect smaller group automatically', () => {
-            // Given a board where two piece could be disconnected
+            // Given a board where two pieces could be disconnected
             const board: NumberTable = [
                 [X, X, O, _, _],
                 [X, X, O, _, _],
@@ -225,7 +225,7 @@ describe('SixRules', () => {
             // When doing that move without choosing which half to keep
             const move: SixMove = SixMove.fromMovement(new Coord(2, 2), new Coord(4, 3));
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             const reason: string = SixFailure.MUST_CUT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });

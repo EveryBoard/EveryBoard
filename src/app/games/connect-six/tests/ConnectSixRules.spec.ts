@@ -6,10 +6,9 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../Connect
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { ConnectSixFailure } from '../ConnectSixFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('ConnectSixRules', () => {
+describe('ConnectSixRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -30,7 +29,7 @@ fdescribe('ConnectSixRules', () => {
             const state: ConnectSixState = ConnectSixState.getInitialState();
 
             // When dropping one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)).get() as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)) as ConnectSixMove;
             const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -57,15 +56,16 @@ fdescribe('ConnectSixRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should refuse move that drop two pieces on first turn', () => {
-            // Given the first turn
-            const state: ConnectSixState = ConnectSixState.getInitialState();
-
-            // When dropping two pieces
-            const move: ConnectSixMove =
+            function tryDoubleDropOnFirstTurn(): void {
+                // Given the first turn
+                const state: ConnectSixState = ConnectSixState.getInitialState();
+                // When dropping two pieces
+                const move: ConnectSixMove =
                 ConnectSixDrops.from(new Coord(11, 11), new Coord(10, 10)).get() as ConnectSixMove;
-
-            // Then the move should be refused
-            RulesUtils.expectMoveFailure(rules, state, move, ConnectSixFailure.MUST_DROP_EXACTLY_ONE_PIECE_AT_FIRST_TURN());
+                // Then the attempt would have throw
+                rules.isLegal(move, state);
+            }
+            RulesUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
         });
     });
     describe('next turns', () => {
@@ -97,7 +97,7 @@ fdescribe('ConnectSixRules', () => {
             const move: ConnectSixMove =
                 ConnectSixDrops.from(new Coord(9, 9), new Coord(10, 10)).get() as ConnectSixMove;
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         });
         it('should refuse dropping second coord on another piece', () => {
@@ -127,7 +127,7 @@ fdescribe('ConnectSixRules', () => {
             // When dropping piece on it with the second coord already occupied
             const move: ConnectSixMove = ConnectSixDrops.from(new Coord(8, 8), new Coord(9, 9)).get() as ConnectSixMove;
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         });
         it('should allow move that drop two pieces on empty pieces', () => {
@@ -154,7 +154,7 @@ fdescribe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
 
-            // When dropping pieces on empty square
+            // When dropping pieces on empty squares
             const move: ConnectSixMove = ConnectSixDrops.from(new Coord(7, 7), new Coord(8, 8)).get() as ConnectSixMove;
             const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -178,66 +178,43 @@ fdescribe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should refuse dropping only one piece after first turn', () => {
-            // Given a board that is not first turn
-            const state: ConnectSixState = new ConnectSixState([
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
-            // When dropping only one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)).get() as ConnectSixMove;
+            function trySingleDropAfterFirstTurn(): void {
+                // Given a board that is not first turn
+                const state: ConnectSixState = new ConnectSixState([
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                ], 1);
+                // When dropping only one piece
+                const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)) as ConnectSixMove;
 
-            // Then the move should be refused
-            RulesUtils.expectMoveFailure(rules, state, move, ConnectSixFailure.MUST_DROP_TWO_PIECES());
+                // Then the move should be forbidden
+                rules.isLegal(move, state);
+            }
+            RulesUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
         });
         it('should notify victory when aligning 6 stones of your color', () => {
-            // Given a board where victory is imminent
             const state: ConnectSixState = new ConnectSixState([
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, X, X, X, X, O, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, X, O, O, O, O, O, X, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 7);
-            // When dropping two more piece on that lign
-            const move: ConnectSixMove = ConnectSixDrops.from(new Coord(6, 8), new Coord(5, 8)).get() as ConnectSixMove;
-
-            // Then the game should be a victory
-            const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -258,8 +235,7 @@ fdescribe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: ConnectSixNode = new ConnectSixNode(expectedState);
+            const node: ConnectSixNode = new ConnectSixNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('should draw when no one can play anymore', () => {

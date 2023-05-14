@@ -7,9 +7,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ConnectSixFailure } from './ConnectSixFailure';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
+import { Utils } from 'src/app/utils/utils';
 
 export class ConnectSixNode extends MGPNode<ConnectSixRules, ConnectSixMove, ConnectSixState> {}
 
@@ -17,21 +17,18 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
 
     private static singleton: MGPOptional<ConnectSixRules> = MGPOptional.empty();
 
-    private static isInRange(coord: Coord): boolean {
-        return coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH); // TODO: TODOTODO centralise this
-    }
-    public static getOwner(piece: PlayerOrNone): PlayerOrNone {
-        return piece;
-    }
-    private static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(ConnectSixRules.isInRange, ConnectSixRules.getOwner, 6);
-
     public static get(): ConnectSixRules {
         if (ConnectSixRules.singleton.isAbsent()) {
             ConnectSixRules.singleton = MGPOptional.of(new ConnectSixRules());
         }
         return ConnectSixRules.singleton.get();
     }
+    public static getOwner(piece: PlayerOrNone): PlayerOrNone {
+        return piece;
+    }
+    private static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
+        new NInARowHelper(ConnectSixFirstMove.isInRange, ConnectSixRules.getOwner, 6);
+
     public static getSquareScore(state: ConnectSixState, coord: Coord): number {
         return ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coord);
     }
@@ -79,29 +76,20 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
     }
     public isLegal(move: ConnectSixMove, state: ConnectSixState): MGPFallible<void> {
         if (state.turn === 0) {
-            return this.isLegalFirstMove(move, state);
-        } else {
-            return this.isLegalDrops(move, state);
-        }
-    }
-    public isLegalFirstMove(move: ConnectSixMove, state: ConnectSixState): MGPFallible<void> {
-        if (move instanceof ConnectSixFirstMove) {
+            Utils.assert(move instanceof ConnectSixFirstMove, 'First move should be instance of ConnectSixFirstMove');
             return MGPFallible.success(undefined);
         } else {
-            return MGPFallible.failure(ConnectSixFailure.MUST_DROP_EXACTLY_ONE_PIECE_AT_FIRST_TURN());
+            Utils.assert(move instanceof ConnectSixDrops, 'non-firsts moves should be instance of ConnectSixDrops');
+            return this.isLegalDrops(move as ConnectSixDrops, state);
         }
     }
-    public isLegalDrops(move: ConnectSixMove, state: ConnectSixState): MGPFallible<void> {
-        if (move instanceof ConnectSixDrops) {
-            if (state.getPieceAt(move.getFirst()).isPlayer()) {
-                return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else if (state.getPieceAt(move.getSecond()).isPlayer()) {
-                return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else {
-                return MGPFallible.success(undefined);
-            }
+    public isLegalDrops(move: ConnectSixDrops, state: ConnectSixState): MGPFallible<void> {
+        if (state.getPieceAt(move.getFirst()).isPlayer()) {
+            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+        } else if (state.getPieceAt(move.getSecond()).isPlayer()) {
+            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         } else {
-            return MGPFallible.failure(ConnectSixFailure.MUST_DROP_TWO_PIECES());
+            return MGPFallible.success(undefined);
         }
     }
     public getGameStatus(node: ConnectSixNode): GameStatus {

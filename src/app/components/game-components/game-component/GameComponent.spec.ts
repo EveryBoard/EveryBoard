@@ -18,7 +18,7 @@ import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { HivePiece } from 'src/app/games/hive/HivePiece';
 
-fdescribe('GameComponent', () => {
+describe('GameComponent', () => {
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
@@ -47,7 +47,7 @@ fdescribe('GameComponent', () => {
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
-    fit('clicks method should refuse when observer click', fakeAsync(async() => {
+    it('clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Abalone: {
                 onPieceClick: [0, 0],

@@ -9,6 +9,8 @@ import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SCORE } from '../SCORE';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 
 export class RulesUtils {
 
@@ -141,5 +143,10 @@ export class RulesUtils {
             expect(MGPNode.getScoreStatus(value)).toBe(SCORE.PRE_VICTORY);
             expect(value).toBe(expectedValue);
         }
+    }
+    public static expectToThrowAndLog(func: () => void, error: string): void {
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        expect(func).toThrowError('Assertion failure: ' + error);
+        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }
 }

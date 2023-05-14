@@ -4,24 +4,22 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixState } from './ConnectSixState';
-import { ConnectSixFailure } from './ConnectSixFailure';
+import { Utils } from 'src/app/utils/utils';
 
 export class ConnectSixFirstMove extends MoveCoord {
 
-    public static from(coord: Coord): MGPFallible<ConnectSixFirstMove> {
-        if (coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH)) {
-            return MGPFallible.success(new ConnectSixFirstMove(coord.x, coord.y));
-        } else {
-            return MGPFallible.failure(ConnectSixFailure.FIRST_COORD_IS_OUT_OF_RANGE());
-        }
+    public static isInRange(coord: Coord): boolean {
+        return coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH);
+    }
+    public static from(coord: Coord): ConnectSixFirstMove {
+        Utils.assert(ConnectSixFirstMove.isInRange(coord), 'FIRST_COORD_IS_OUT_OF_RANGE');
+        return new ConnectSixFirstMove(coord.x, coord.y);
     }
     private constructor(x: number, y: number) {
         super(x, y);
     }
     public static encoder: MoveEncoder<ConnectSixFirstMove> =
-        MoveCoordEncoder.getEncoder(ConnectSixState.WIDTH,
-                                    ConnectSixState.WIDTH,
-                                    (coord: Coord) => ConnectSixFirstMove.from(coord).get());
+        MoveCoordEncoder.getEncoder(ConnectSixState.WIDTH, ConnectSixState.WIDTH, ConnectSixFirstMove.from);
     public equals(other: ConnectSixFirstMove): boolean {
         return this.coord.equals(other.coord);
     }
@@ -34,18 +32,13 @@ export class ConnectSixDrops extends MoveWithTwoCoords {
     public static encoder: MoveEncoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.from);
 
     public static from(first: Coord, second: Coord): MGPFallible<ConnectSixDrops> {
-        if (first.isNotInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH)) {
-            return MGPFallible.failure(ConnectSixFailure.FIRST_COORD_IS_OUT_OF_RANGE());
-        } else if (second.isNotInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH)) {
-            return MGPFallible.failure(ConnectSixFailure.SECOND_COORD_IS_OUT_OF_RANGE());
-        } else if (first.equals(second)) {
-            return MGPFallible.failure(ConnectSixFailure.COORDS_SHOULD_BE_DIFFERENT());
-        } else {
-            return MGPFallible.success(new ConnectSixDrops(first, second));
-        }
+        Utils.assert(first.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'FIRST_COORD_IS_OUT_OF_RANGE');
+        Utils.assert(second.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'SECOND_COORD_IS_OUT_OF_RANGE');
+        Utils.assert(first.equals(second) === false, 'COORDS_SHOULD_BE_DIFFERENT');
+        return MGPFallible.success(new ConnectSixDrops(first, second));
     }
     public toString(): string {
-        return 'TODOTODO';
+        return 'ConnectSixDrops(' + this.getFirst().toString() + ', ' + this.getSecond().toString() + ')';
     }
     public equals(other: ConnectSixDrops): boolean {
         const thisFirst: Coord = this.getFirst();
