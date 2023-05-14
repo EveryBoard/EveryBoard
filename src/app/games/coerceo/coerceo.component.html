@@ -14,6 +14,7 @@
             />
             <ng-template #emptySpace>
                 <polygon *ngIf="isEmptySpace(x, y)"
+                         id="empty_{{ x }}_{{ y }}"
                          [attr.points]="getTriangleCoordinate(x, y)"
                          [ngClass]="getEmptyClass(x, y)"
                          class="base small-stroke"
@@ -32,19 +33,24 @@
             />
         </g>
     </g>
-    <polygon *ngFor="let possibleLanding of possibleLandings"
-             [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
-             class="base no-fill selectable-stroke"/>
-    <polygon *ngIf="lastStart.isPresent()"
-             [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
-             class="base no-fill last-move-stroke"/>
-    <polygon *ngIf="lastEnd.isPresent()"
-             [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
-             class="base no-fill last-move-stroke"/>
-    <polygon *ngIf="chosenCoord.isPresent()"
-             id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
+    <g *ngIf="chosenCoord.isPresent() else lastMove">
+        <polygon id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
              [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
              class="base no-fill selected-stroke"/>
+        <polygon *ngFor="let possibleLanding of possibleLandings"
+             [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
+             class="base no-fill selectable-stroke"/>
+    </g>
+    <ng-template #lastMove>
+        <polygon *ngIf="lastStart.isPresent()"
+                 id="last_start_{{ lastStart.get().x }}_{{ lastStart.get().y }}"
+                 [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
+                 class="base no-fill last-move-stroke"/>
+        <polygon *ngIf="lastEnd.isPresent()"
+                 id="last_end_{{ lastEnd.get().x }}_{{ lastEnd.get().y }}"
+                 [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
+                 class="base no-fill last-move-stroke"/>
+    </ng-template>
     <g *ngFor="let player of [0, 1]">
         <g *ngIf="mustShowTilesOf(player)"
            [id]="'tilesCount' + player">
