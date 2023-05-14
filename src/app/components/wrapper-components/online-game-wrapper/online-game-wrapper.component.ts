@@ -52,12 +52,6 @@ export class UpdateType {
     private constructor(public readonly value: string) {}
 }
 
-
-function showTimestamp(t: Timestamp): string {
-    if (t == null) return 'null';
-    return Math.floor(t.seconds % (60*60) / 60) + ':' + (t.seconds % 60) + ':' + (t.nanoseconds / 1000000)
-}
-
 @Component({
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
@@ -844,7 +838,6 @@ export class OGWCTimeManagerService {
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
         const takenMoveTime: number = this.getMillisecondsElapsedSinceLastMoveStart(moveTimestamp);
-        console.log('Got move, updating lastMoveStartTimestamp to ' + showTimestamp(moveTimestamp))
         this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
         this.takenGlobalTime[player.value] += takenMoveTime;
 

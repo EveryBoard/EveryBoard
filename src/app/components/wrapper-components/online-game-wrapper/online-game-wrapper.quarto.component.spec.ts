@@ -161,7 +161,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)

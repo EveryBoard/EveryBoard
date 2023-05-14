@@ -112,7 +112,6 @@ service cloud.firestore {
             return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
         match /parts/{id} {
-            allow read, write: if true; // TODO: tempoary
             allow create: if verifiedUserCreatesPart(request.resource.data);
             allow delete: if creatorDeletesUnstartedPart(id, resource.data);
             allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);
