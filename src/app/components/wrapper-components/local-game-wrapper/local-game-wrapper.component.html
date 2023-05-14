@@ -83,7 +83,7 @@
                     i18n
             >Start a new game</button>
             <div *ngIf="gameComponent.rules.node.move.isPresent() && displayAIMetrics"
-                id="AIMetrics">
+                 id="AIMetrics">
                 <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
                     {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.rules.node) }} <br/>
                 </ng-container>
