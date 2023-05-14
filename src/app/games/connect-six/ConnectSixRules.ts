@@ -35,8 +35,8 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
     public static getVictoriousCoords(state: ConnectSixState): Coord[] {
         const coords: Coord[] = [];
         for (const coordAndContents of state.getCoordsAndContents()) {
-            if (coordAndContents[1].isPlayer()) {
-                const coord: Coord = coordAndContents[0];
+            if (coordAndContents.content.isPlayer()) {
+                const coord: Coord = coordAndContents.coord;
                 const squareScore: number = ConnectSixRules.getSquareScore(state, coord);
                 if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                     if (squareScore === Player.ZERO.getVictoryValue() ||
@@ -95,7 +95,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
     public getGameStatus(node: ConnectSixNode): GameStatus {
         const state: ConnectSixState = node.gameState;
         for (const coordAndContents of state.getCoordsAndContents()) {
-            if (coordAndContents[1].isPlayer()) {
+            if (coordAndContents.content.isPlayer()) {
                 const squareScore: number = ConnectSixRules.getSquareScore(state, coordAndContents[0]);
                 if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                     return GameStatus.getVictory(state.getCurrentOpponent());
