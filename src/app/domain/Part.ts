@@ -5,13 +5,7 @@ import { MinimalUser } from './MinimalUser';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MGPOptional } from '../utils/MGPOptional';
 
-interface LastUpdateInfo extends FirestoreJSONObject {
-    readonly index: number,
-    readonly player: number,
-}
-
 export interface Part extends FirestoreJSONObject {
-    readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
     readonly playerZero: MinimalUser, // the first player
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn
@@ -19,7 +13,6 @@ export interface Part extends FirestoreJSONObject {
 
     readonly playerOne?: MinimalUser, // the second player
     readonly beginning?: FirestoreTime, // beginning of the part
-    readonly lastUpdateTime?: FirestoreTime,
     readonly winner?: MinimalUser,
     readonly loser?: MinimalUser,
     readonly scorePlayerZero?: number,

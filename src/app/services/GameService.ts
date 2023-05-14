@@ -38,20 +38,7 @@ export class GameService {
     {
         display(GameService.VERBOSE, 'GameService.constructor');
     }
-    // REVIEW: should be made private! And higher-level functions should be defined
-    public async updateAndBumpIndex(id: string,
-                                    user: Player,
-                                    lastIndex: number,
-                                    update: Partial<Part>)
-    : Promise<void>
-    {
-        update = {
-            ...update,
-            lastUpdate: {
-                index: lastIndex + 1,
-                player: user.value,
-            },
-        };
+    private async update(id: string, update: Partial<Part>): Promise<void> {
         return this.partDAO.update(id, update);
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
@@ -71,15 +58,10 @@ export class GameService {
         const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
 
         const newPart: Part = {
-            lastUpdate: {
-                index: 0,
-                player: 0,
-            },
             typeGame,
             playerZero,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
-            listMoves: [],
         };
         return this.partDAO.create(newPart);
     }
@@ -133,7 +115,7 @@ export class GameService {
         const accepter: Player = Player.ONE;
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
         await Promise.all([
-            this.updateAndBumpIndex(partId, accepter, 0, update),
+            this.update(partId, update),
             this.partService.startGame(partId, accepter),
         ]);
     }
@@ -143,45 +125,33 @@ export class GameService {
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);
     }
-    public resign(partId: string,
-                  lastIndex: number,
-                  user: Player,
-                  winner: MinimalUser,
-                  loser: MinimalUser)
-    : Promise<void>
-    {
+    public resign(partId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const update: Partial<Part> = {
             winner,
             loser,
             result: MGPResult.RESIGN.value,
         };
-        return this.updateAndBumpIndex(partId, user, lastIndex, update);
+        return this.update(partId, update);
     }
-    public notifyTimeout(partId: string,
-                         user: Player,
-                         lastIndex: number,
-                         winner: MinimalUser,
-                         loser: MinimalUser)
-    : Promise<void>
-    {
+    public notifyTimeout(partId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const update: Partial<Part> = {
             winner,
             loser,
             result: MGPResult.TIMEOUT.value,
         };
-        return this.updateAndBumpIndex(partId, user, lastIndex, update);
+        return this.update(partId, update);
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {
         await this.partService.addRequest(partId, player, 'Draw');
     }
-    public async acceptDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
+    public async acceptDraw(partId: string, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Accept', 'Draw');
         const result: MGPResult = player === Player.ZERO ?
             MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
         const update: Partial<Part> = {
             result: result.value,
         };
-        return this.updateAndBumpIndex(partId, player, lastIndex, update);
+        return this.update(partId, update);
     }
     public async refuseDraw(partId: string, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Reject', 'Draw');
@@ -214,13 +184,8 @@ export class GameService {
         };
         const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
         const newPart: Part = {
-            lastUpdate: {
-                index: 0,
-                player: player.value,
-            },
             typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,
-            listMoves: [],
             ...startingConfig,
         };
 
@@ -243,11 +208,9 @@ export class GameService {
         }
         const update: Partial<Part> = {
             turn,
-            lastUpdateTime: serverTimestamp(),
         };
-        const lastIndex: number = part.data.lastUpdate.index;
         await this.partService.addReply(partId, player, 'Accept', 'TakeBack' );
-        return await this.updateAndBumpIndex(partId, player, lastIndex, update);
+        return await this.update(partId, update);
     }
     public async refuseTakeBack(partId: string, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Reject', 'TakeBack');
@@ -269,11 +232,9 @@ export class GameService {
         display(GameService.VERBOSE, { gameService_updateDBBoard: { partId, scores, notifyDraw, winner, loser } });
 
         const part: Part = (await this.partDAO.read(partId)).get();
-        const lastIndex: number = part.lastUpdate.index;
         const turn: number = part.turn + 1;
         let update: Partial<Part> = {
             turn,
-            lastUpdateTime: serverTimestamp(),
         };
         update = this.updateScore(update, scores);
         if (winner != null) {
@@ -289,7 +250,8 @@ export class GameService {
                 result: MGPResult.HARD_DRAW.value,
             };
         }
-        return await this.updateAndBumpIndex(partId, player, lastIndex, update);
+        console.log(update)
+        return await this.update(partId, update);
     }
     public async addMove(partId: string, player: Player, encodedMove: JSONValue): Promise<void> {
         await this.partService.addMove(partId, player, encodedMove);

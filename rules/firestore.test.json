@@ -116,7 +116,6 @@ service cloud.firestore {
             allow delete: if creatorDeletesUnstartedPart(id, resource.data);
             allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);
             allow update: if chosenOpponentStartsPart(id, resource.data, request.resource.data);
-            allow update: if playerPerformsMove(resource.data, request.resource.data);
             allow update: if playerPerformsNonMoveUpdate(resource.data, request.resource.data);
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
@@ -125,7 +124,6 @@ service cloud.firestore {
             allow read, write: if true; // TODO: tempoary
             allow read: if userIsVerified();
             allow create: if playerAddsMove(partId, request.resource.data); // TODO: player is in the game and adds the move as expected
-            allow delete: if true; // TODO: Temporary allowed for take backs (but in the future this will be forbidden as takebacks will be another event)
         }
         function verifiedUserCreatesPart(part) {
             // Any verified user can create a part with the proper fields set, and has to be the creator
@@ -183,17 +181,7 @@ service cloud.firestore {
         }
         function playerPerformsNonMoveUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
-            // Time can be increased (add more time to other player) or decreased (on take backs, for any player)
-//            let playerZeroTimeUnchanged = preservesField('remainingMsForZero');
-//            let safeTimeIncreasePlayerZero = userIsPlayerOne(part) && safeTimeIncrease(part.playerZero, 'remainingMsForZero', part, update);
-//            let playerZeroTimeDecreased = update.remainingMsForZero < part.remainingMsForZero;
-//            let playerOneTimeUnchanged = preservesField('remainingMsForOne');
-//            let safeTimeIncreasePlayerOne = userIsPlayerZero(part) && safeTimeUpdate(part.playerOne, 'remainingMsForOne', part, update);
-//            let playerOneTimeDecreased = update.remainingMsForOne < part.remainingMsForOne;
-//            let safeTimeManagement = (playerZeroTimeUnchanged || safeTimeIncreasePlayerZero || playerZeroTimeDecreased) &&
-//                (playerOneTimeUnchanged || safeTimeIncreasePlayerOne || playerOneTimeDecreased);
             return isValidPartUpdateDuringGame(part) &&
-//                safeTimeManagement &&
                 (preservesField('turn') || safeTurnDecrease(part.turn, update.turn)) &&
                 preservesWinnerAndLoserUnlessResultChanges() &&
                 onlyAcceptsDrawIfProposed(part, update) &&

@@ -231,8 +231,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number, detectChanges: boolean = true)
     : Promise<void>
     {
-        const roleAsPlayer: Player = role === PlayerOrNone.NONE ? Player.ZERO : role as Player;
-        await gameService.updateAndBumpIndex('configRoomId', roleAsPlayer, lastIndex, update);
+        await partDAO.update('configRoomId', update);
         if (detectChanges) {
             testUtils.detectChanges();
         }
@@ -498,13 +497,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
         // Then it should update the part in the DB and send the move
         const expectedUpdate: Partial<Part> = {
-            lastUpdate: {
-                index: 2,
-                player: role.value,
-            },
             turn: 1,
-            // remaining times not updated on first turn of the component
-            lastUpdateTime: serverTimestamp(),
         };
         expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', expectedUpdate);
         expect(partService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, FIRST_MOVE_ENCODED);
@@ -613,7 +606,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
         }));
         it('should notifyVictory when active player loses', fakeAsync(async() => {
-            // Given a board on which user can lose on his turn
+            // Given a board on which user can lose on their turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.ONE_WON);
             testUtils.expectElementNotToExist('#youLostIndicator');
@@ -628,6 +621,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 partDAOCalled = true;
                 return partDAO['updateBackup'](id, update);
             });
+            console.log('DOING MOVE')
             await doMove(FIRST_MOVE, true);
             // the call to the serverTimeMock() is very close to the update
             // hence, the second update got called while the first update was executing
@@ -950,14 +944,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then partDAO should be updated without including remainingMsFor(any)
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                    lastUpdate: {
-                        index: 6,
-                        player: Player.ZERO.value,
-                    },
                     turn: 1,
                     remainingMsForOne: 1799998,
                     request: null,
-                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
@@ -1011,14 +1000,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then partDAO should be updated without including remainingMsFor(any)
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                    lastUpdate: {
-                        index: 5,
-                        player: Player.ZERO.value,
-                    },
                     turn: 1,
                     remainingMsForZero: 1799998,
                     request: null,
-                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
@@ -1071,7 +1055,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.clickElement('#acceptDrawButton');
 
             // Then the draw is being accepted
-            expect(gameService.acceptDraw).toHaveBeenCalledOnceWith('configRoomId', 1, Player.ZERO);
+            expect(gameService.acceptDraw).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
             tick(1);
             testUtils.detectChanges();
             testUtils.expectElementToExist('#youAgreedToDrawIndicator');
@@ -1216,7 +1200,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
             const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
-            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, Player.ZERO, 1, loser);
+            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, loser);
         }));
         it('when resigning, lastUpdateTime must be upToDate then remainingMs');
         it('when winning move is done, remainingMs at last turn of opponent must be');
@@ -1386,10 +1370,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then the game should be ended
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                lastUpdate: {
-                    index: 3,
-                    player: Player.ZERO.value,
-                },
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
                 loser: UserMocks.CREATOR_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
@@ -1456,10 +1436,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given any part
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             const initialPart: Part = {
-                lastUpdate: {
-                    index: 3,
-                    player: 0,
-                },
                 typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
                 turn: 3,

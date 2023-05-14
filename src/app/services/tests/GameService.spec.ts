@@ -59,38 +59,13 @@ describe('GameService', () => {
     it('should create', () => {
         expect(gameService).toBeTruthy();
     });
-    it('should delegate updateAndBumpIndex to the DAO update, and bump the index', async() => {
-        // Given a part and an update to make to the part
-        spyOn(partDAO, 'update').and.resolveTo();
-        const update: Partial<Part> = {
-            turn: 42,
-        };
-
-        // When calling updateAndBumpIndex
-        await gameService.updateAndBumpIndex('partId', Player.ZERO, 73, update);
-
-        // Then update should have been called with lastUpdate infos added to it
-        const expectedUpdate: Partial<Part> = {
-            lastUpdate: {
-                index: 74,
-                player: Player.ZERO.value,
-            },
-            turn: 42,
-        };
-        expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
-    });
     it('should delegate subscribeToChanges callback to partDAO', fakeAsync(async() => {
         // Given an existing part
         const part: Part = {
-            lastUpdate: {
-                index: 4,
-                player: 0,
-            },
             typeGame: 'Quarto',
             playerZero: UserMocks.CREATOR_MINIMAL_USER,
             playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 2,
-            listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
         };
         await partDAO.set('partId', part);
@@ -221,18 +196,12 @@ describe('GameService', () => {
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous match with creator starting
             const lastPart: PartDocument = new PartDocument('partId', {
-                lastUpdate: {
-                    index: 4,
-                    player: 0,
-                },
-                listMoves: [MOVE_1, MOVE_2],
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
                 beginning: new Timestamp(1700102, 680000000),
-                lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
             });
@@ -263,18 +232,12 @@ describe('GameService', () => {
         it('should start with the other player when first player was random', fakeAsync(async() => {
             // Given a previous match with creator starting
             const lastPart: PartDocument = new PartDocument('partId', {
-                lastUpdate: {
-                    index: 4,
-                    player: 0,
-                },
-                listMoves: [MOVE_1, MOVE_2],
                 playerZero: UserMocks.OPPONENT_MINIMAL_USER,
                 playerOne: UserMocks.CREATOR_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
                 beginning: new Timestamp(1700102, 680000000),
-                lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
             });
@@ -307,18 +270,12 @@ describe('GameService', () => {
             const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
             // Given a part that will be replayed
             const lastPart: PartDocument = new PartDocument('partId', {
-                lastUpdate: {
-                    index: 4,
-                    player: 0,
-                },
-                listMoves: [MOVE_1, MOVE_2],
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.VICTORY.value,
                 turn: 2,
                 typeGame: 'laMarelle',
                 beginning: new Timestamp(1700102, 680000000),
-                lastUpdateTime: new Timestamp(2, 3000000),
                 loser: UserMocks.CREATOR_MINIMAL_USER,
                 winner: UserMocks.OPPONENT_MINIMAL_USER,
             });
@@ -356,13 +313,11 @@ describe('GameService', () => {
             // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
             // Moreover, everything needs to have been called eventually
             const part: Part = {
-                lastUpdate: { index: 0, player: 1 },
                 typeGame: 'laMarelle',
                 playerZero: UserMocks.OPPONENT_MINIMAL_USER,
                 playerOne: UserMocks.CREATOR_MINIMAL_USER,
                 turn: 0,
                 result: MGPResult.UNACHIEVED.value,
-                listMoves: [],
                 beginning: serverTimestamp(),
             };
             const configRoom: ConfigRoom = {
@@ -381,21 +336,15 @@ describe('GameService', () => {
     });
     describe('updatePart', () => {
         const part: Part = {
-            lastUpdate: {
-                index: 4,
-                player: 0,
-            },
             typeGame: 'Quarto',
             playerZero: UserMocks.CREATOR_MINIMAL_USER,
             playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 1,
-            listMoves: [MOVE_1],
             result: MGPResult.UNACHIEVED.value,
         };
         beforeEach(() => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
-            spyOn(gameService, 'updateAndBumpIndex').and.callThrough();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
@@ -404,23 +353,17 @@ describe('GameService', () => {
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
                 turn: 2,
-                lastUpdateTime: serverTimestamp(),
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
-            expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
+            expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
             // When updating the board to notify of a draw
             await gameService.updatePart('partId', Player.ONE, undefined, true);
             // Then the result is set to draw in the update
             const expectedUpdate: Partial<Part> = {
-                lastUpdate: {
-                    index: 5,
-                    player: Player.ONE.value,
-                },
                 turn: 2,
-                lastUpdateTime: serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             };
             expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);
@@ -433,17 +376,13 @@ describe('GameService', () => {
                 spyOn(partDAO, 'update').and.resolveTo();
 
                 // When calling acceptDraw as the player
-                await gameService.acceptDraw('configRoomId', 5, player);
+                await gameService.acceptDraw('configRoomId', player);
 
                 // Then PartDAO should have been called with the appropriate MGPResult
                 const result: number = [
                     MGPResult.AGREED_DRAW_BY_ZERO.value,
                     MGPResult.AGREED_DRAW_BY_ONE.value][player.value];
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                    lastUpdate: {
-                        index: 6,
-                        player: player.value,
-                    },
                     result,
                 });
             });
