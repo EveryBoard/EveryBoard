@@ -33,9 +33,6 @@ describe('GameService', () => {
 
     let partService: PartService;
 
-    const MOVE_1: number = 161;
-    const MOVE_2: number = 107;
-
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [

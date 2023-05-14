@@ -135,7 +135,6 @@ export class GameService {
         await this.partService.addAction(partId, player, 'EndGame');
     }
     public async notifyTimeout(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
-        console.log('notifyTimeout')
         const update: Partial<Part> = {
             winner,
             loser,
@@ -148,7 +147,6 @@ export class GameService {
         await this.partService.addRequest(partId, player, 'Draw');
     }
     public async acceptDraw(partId: string, player: Player): Promise<void> {
-        console.log('acceptDraw')
         await this.partService.addReply(partId, player, 'Accept', 'Draw');
         const result: MGPResult = player === Player.ZERO ?
             MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
@@ -259,7 +257,6 @@ export class GameService {
             };
             gameEnd = true;
         }
-        console.log(update)
         await this.update(partId, update);
         if (gameEnd) {
             await this.partService.addAction(partId, player, 'EndGame');

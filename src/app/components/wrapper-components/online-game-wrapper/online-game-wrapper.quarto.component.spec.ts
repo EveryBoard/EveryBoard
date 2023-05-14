@@ -4,7 +4,7 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
-import { OnlineGameWrapperComponent, UpdateType, OGWCTimeManagerService } from './online-game-wrapper.component';
+import { OnlineGameWrapperComponent, OGWCTimeManagerService } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -15,7 +15,7 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { Action, MGPResult, Part, PartDocument, Reply, RequestType } from 'src/app/domain/Part';
+import { Action, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { FocusedPart, User } from 'src/app/domain/User';
@@ -191,7 +191,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                                  MGPOptional.ofNullable(OBSERVER.username),
                                                  MGPOptional.of('observer@home'),
                                                  true);
-    const FAKE_MOMENT: Timestamp = new Timestamp(123, 456000000);
 
     let role: PlayerOrNone;
 
@@ -618,7 +617,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 partDAOCalled = true;
                 return partDAO['updateBackup'](id, update);
             });
-            console.log('DOING MOVE')
             await doMove(FIRST_MOVE, true);
             // the call to the serverTimeMock() is very close to the update
             // hence, the second update got called while the first update was executing
@@ -877,13 +875,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // When accepting opponent's take back
                 spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
-                console.log('ACCEPTING TAKEBACK')
                 await acceptTakeBack();
-                console.log('ACCEPTED TAKEBACK')
                 tick(1);
 
                 // Then count down should be resumed for opponent and user should receive his decision time back
-                console.log('CHECKING')
                 expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -918,7 +913,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.detectChanges();
                 await receiveReply(Player.ONE, 'Accept', 'TakeBack');
                 await receivePartDAOUpdate({ turn: 0 }); // go back to turn 0
-                tick(1)
+                tick(1);
 
                 // When playing an alternative move
                 spyOn(partDAO, 'update').and.callThrough();
@@ -929,7 +924,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then partDAO should be updated, and move should be sent
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
-                expect(partService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, alternativeMoveEncoded)
+                expect(partService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, alternativeMoveEncoded);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
@@ -981,7 +976,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then partDAO should be updated, and move should be sent
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
-                expect(partService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, alternativeMoveEncoded)
+                expect(partService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, alternativeMoveEncoded);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
@@ -1141,7 +1136,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper.chronoOneTurn, 'stop').and.callThrough();
 
             // When he reach time out
-            console.log('WAITING')
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
 
             // Then it should be considered as a timeout
