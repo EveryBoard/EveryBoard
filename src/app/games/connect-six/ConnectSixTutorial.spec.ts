@@ -12,22 +12,22 @@ export class ConnectSixTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game & board`,
-            $localize`Connect Six is played on a 19*19 board, on which stone are put on the intersections. The aim of the game is to align 6 of your pieces.`,
+            $localize`Initial board and object of the game`,
+            $localize`Connect Six is played on a 19*19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.`,
             ConnectSixState.getInitialState(),
         ),
         // First turn: you must place only one
         TutorialStep.anyMove(
             $localize`First turn`,
-            $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece.`,
+            $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
             ConnectSixState.getInitialState(),
             ConnectSixFirstMove.from(new Coord(9, 9)),
-            $localize`Congratulation`,
+            $localize`Congratulations!`,
         ),
         // Next turn: you must place six, try to win
         TutorialStep.anyMove(
             $localize`Next turns`,
-            $localize`On the next turns, the player plays only two pieces.<br/><br/>You're playing Light, do the winning move.`,
+            $localize`On all following turns, the players play two pieces.<br/><br/>You're playing Light, do the winning move.`,
             new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -50,7 +50,7 @@ export class ConnectSixTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 20),
             ConnectSixDrops.from(new Coord(4, 11), new Coord(5, 10)).get(),
-            $localize`Congratulation`,
+            $localize`Congratulations!`,
         ),
     ];
 }

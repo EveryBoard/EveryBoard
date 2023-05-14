@@ -170,6 +170,10 @@
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
         <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
       </trans-unit>
+      <trans-unit id="2248512434888126204" datatype="html">
+        <source>Put two pieces on the board at each turn, and be the first to align six pieces!</source>
+        <target>Mettez deux de vos pièces sur la plateau à chaque tours, et soyez le premier à en aligner six !</target>
+      </trans-unit>
       <trans-unit id="1528017893097093154" datatype="html">
         <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
         <target>Cachez toutes vos pièces avant votre adversaire, ou risquez d'être découvert !</target>
@@ -381,6 +385,10 @@
       <trans-unit id="692005285727565478" datatype="html">
         <source>Lasca</source>
         <target>Lasca</target>
+      </trans-unit>
+      <trans-unit id="8745205959337703089" datatype="html">
+        <source>Connect Six</source>
+        <target>Connect Six</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -966,8 +974,8 @@
         <source>This space is not aligned with the current line.</source>
         <target>Cette case n&apos;est pas alignée avec la ligne actuellement formée.</target>
       </trans-unit>
-      <trans-unit id="6178824149031907459" datatype="html">
-        <source>Initial board and goal of the game</source>
+      <trans-unit id="8893431763975992974" datatype="html">
+        <source>Initial board and object of the game</source>
         <target>Plateau initial et but du jeu</target>
       </trans-unit>
       <trans-unit id="2613028380797438509" datatype="html">
@@ -1352,6 +1360,26 @@
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
+      </trans-unit>
+      <trans-unit id="1833529581452152256" datatype="html">
+        <source>Connect Six is played on a 19*19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
+        <target>Connect Six se joue sur un plateau de 19x19, sur lequel des pièces sont placées sur les intersections. Le but du jeu est d'aligner six de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="4094188563872795571" datatype="html">
+        <source>First turn</source>
+        <target>Premier tour</target>
+      </trans-unit>
+      <trans-unit id="227061499558746572" datatype="html">
+        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
+        <target>Au premier tour, le premier joueur place une seule pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez votre première pièce en cliquant sur une intersection.</target>
+      </trans-unit>
+      <trans-unit id="9212980897131132135" datatype="html">
+        <source>Next turns</source>
+        <target>Les tours suivant</target>
+      </trans-unit>
+      <trans-unit id="6989863591618494423" datatype="html">
+        <source>On all following turns, the players play two pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+        <target>Sur tout les tours qui suivent, les joueurs placent deux pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant.</target>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>

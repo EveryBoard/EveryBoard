@@ -8,7 +8,7 @@ import { ConnectSixState } from '../ConnectSixState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 
-describe('ConnectSixCompnent', () => {
+fdescribe('ConnectSixComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -118,7 +118,7 @@ describe('ConnectSixCompnent', () => {
             await testUtils.expectClickSuccess('#click_8_8');
 
             // When clicking again on this piece
-            await testUtils.expectClickSuccess('#click_8_8');
+            await testUtils.expectClickSuccessWithAsymetricNaming('#dropped', '#click_8_8');
 
             // Then it should deselect it without popup
             testUtils.expectElementNotToExist('#dropped');

@@ -155,6 +155,9 @@
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
       </trans-unit>
+      <trans-unit id="2248512434888126204" datatype="html">
+        <source>Put two pieces on the board at each turn, and be the first to align six pieces!</source>
+      </trans-unit>
       <trans-unit id="1528017893097093154" datatype="html">
         <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
       </trans-unit>
@@ -325,6 +328,9 @@
       </trans-unit>
       <trans-unit id="692005285727565478" datatype="html">
         <source>Lasca</source>
+      </trans-unit>
+      <trans-unit id="8745205959337703089" datatype="html">
+        <source>Connect Six</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -728,8 +734,8 @@
       <trans-unit id="6088417909306773667" datatype="html">
         <source>This space is not aligned with the current line.</source>
       </trans-unit>
-      <trans-unit id="6178824149031907459" datatype="html">
-        <source>Initial board and goal of the game</source>
+      <trans-unit id="8893431763975992974" datatype="html">
+        <source>Initial board and object of the game</source>
       </trans-unit>
       <trans-unit id="2613028380797438509" datatype="html">
         <source>At Abalone, the goal of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
@@ -1004,6 +1010,21 @@
       <trans-unit id="710072872152309867" datatype="html">
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
+      </trans-unit>
+      <trans-unit id="1833529581452152256" datatype="html">
+        <source>Connect Six is played on a 19*19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
+      </trans-unit>
+      <trans-unit id="4094188563872795571" datatype="html">
+        <source>First turn</source>
+      </trans-unit>
+      <trans-unit id="227061499558746572" datatype="html">
+        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
+      </trans-unit>
+      <trans-unit id="9212980897131132135" datatype="html">
+        <source>Next turns</source>
+      </trans-unit>
+      <trans-unit id="6989863591618494423" datatype="html">
+        <source>On all following turns, the players play two pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>

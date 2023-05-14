@@ -9,7 +9,7 @@ export class ApagosTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Initial board and goal of the game`,
+            $localize`Initial board and object of the game`,
             $localize`At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
             ApagosState.getInitialState(),
         ),
