@@ -241,7 +241,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // This is useful when we join a part in the middle.
         const part = (await this.gameService.getPart(this.currentPartId)).get();
         this.currentPart = new PartDocument(this.currentPartId, part);
-        await this.onGameStart(this.currentPart);
 
         // We subscribe to the part only at this point.
         // Once we receive the notification that the part started, we will subscribe to the events
@@ -250,15 +249,16 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
                 this.currentPart = new PartDocument(this.currentPartId, part.get());
             });
+        this.subscribeToEvents();
     }
-    private async onGameStart(part: PartDocument): Promise<void> {
+    private async onGameStart(): Promise<void> {
         console.log('GameStart')
-        await this.initializePlayersDatas(part);
+        await this.initializePlayersDatas(this.currentPart as PartDocument);
         const turn: number = this.gameComponent.getTurn();
         assert(turn === 0, 'turn is always 0');
-
-
         this.timeManager.onGameStart(this.configRoom);
+    }
+    private subscribeToEvents(): void {
         // The game has started, we can subscribe to the events to receive moves etc.
         // We don't want to do it sooner, as the clocks need to be started before receiving any move
         // Importantly, we can receive more than one event at a time.
@@ -286,6 +286,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                             Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
                             const actionEvent: PartEventAction = event as PartEventAction;
                             if (actionEvent.action == 'EndGame') await this.onGameEnd();
+                            if (actionEvent.action == 'StartGame') await this.onGameStart();
                             this.onReceivedAction(actionEvent);
                             break;
                     }
