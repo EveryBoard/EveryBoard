@@ -144,16 +144,16 @@ describe('MGPMap', () => {
         });
     });
     describe('getAnyPair', () => {
-        it('should return an element from the set', () => {
-            const set: MGPMap<string, number> = new MGPMap();
-            set.set('salut', 5);
+        it('should return an element from the map', () => {
+            const map: MGPMap<string, number> = new MGPMap();
+            map.set('salut', 5);
 
-            const element: number = set.getAnyPair().get().value;
+            const element: number = map.getAnyPair().get().value;
             expect(element).toBe(5);
         });
-        it('should not return anything if the set is empty', () => {
-            const emptySet: MGPMap<string, number> = new MGPMap();
-            expect(emptySet.getAnyPair().isAbsent()).toBeTrue();
+        it('should not return anything if the map is empty', () => {
+            const emptyMap: MGPMap<string, number> = new MGPMap();
+            expect(emptyMap.getAnyPair().isAbsent()).toBeTrue();
         });
     });
 });
