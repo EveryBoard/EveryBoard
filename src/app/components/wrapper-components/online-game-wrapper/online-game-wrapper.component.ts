@@ -129,7 +129,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 }
             };
             const subscription: Subscription = this.userService.observeUser(userId, callback);
-            console.log('sending token')
             this.userService.updatePresenceToken(userId);
         });
     }
@@ -297,6 +296,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private async onGameStart(part: PartDocument): Promise<void> {
+        console.log('GameStart')
         await this.initializePlayersDatas(part);
         const turn: number = this.gameComponent.getTurn();
         assert(turn === 0, 'turn is always 0');
@@ -375,6 +375,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.timeManager.onReceivedMove(moveEvent);
     }
     private onReceivedRequest(request: PartEventRequest): void {
+        console.log('ReceivedRequest: ' + request.requestType)
         this.lastRequestOrReply = MGPOptional.of(request);
         switch (request.requestType) {
             case 'TakeBack':
@@ -392,6 +393,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private async onReceivedReply(reply: PartEventReply): Promise<void> {
+        console.log('ReceivedReply: ' + reply.reply)
         this.lastRequestOrReply = MGPOptional.of(reply);
         if (reply.reply === 'Reject') {
             // Nothing to do when a request is rejected
@@ -420,9 +422,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.timeManager.beforeEventsBatch(this.endGame);
     }
     private async afterEventsBatch(): Promise<void> {
-        console.log(this.gameComponent.getTurn())
         const player: Player = Player.fromTurn(this.gameComponent.getTurn());
-        console.log(player);
         this.timeManager.afterEventsBatch(this.endGame, player, await this.getServerTime());
     }
     public notifyDraw(scores?: [number, number]): Promise<void> {
@@ -770,7 +770,6 @@ export class OGWCTimeManagerService {
     }
     // At the beginning of a game, set up clocks and remember when the game started
     public onGameStart(configRoom: ConfigRoom): void {
-        console.log('GameStart')
         this.configRoom = MGPOptional.of(configRoom);
         for (const player of Player.PLAYERS) {
             // We need to initialize the service's data
@@ -782,7 +781,6 @@ export class OGWCTimeManagerService {
             this.globalClocks[player.value].setDuration(this.getPartDurationInMs());
             this.turnClocks[player.value].setDuration(this.getMoveDurationInMs());
         }
-        console.log('Starting Clocks')
         // We want the clocks to be paused, as we will only activate the required ones
         for (const clock of this.allClocks) {
             clock.start();
@@ -845,19 +843,16 @@ export class OGWCTimeManagerService {
     }
     // Pauses all clocks before handling new events
     public beforeEventsBatch(gameEnd: boolean): void {
-        console.log('BeforeEventsBatch -> pause clocks')
         if (gameEnd === false) {
             this.pauseAllClocks();
         }
     }
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
-        console.log('AfterEventsBatch, player is ' + player)
         this.updateClocks();
         if (gameEnd === false) {
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
-            console.log('actual drift is ' + this.getMillisecondsElapsedSinceLastMoveStart(currentTime) + 'ms')
             const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
             // console.log({drift, current: currentTime.toString(), lastMoveTime: this.lastMoveStartTimestamp.get().toString()})
             // We need to subtract the time to take the drift into account
@@ -868,7 +863,6 @@ export class OGWCTimeManagerService {
     }
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
-        console.log('ResumingClocks for player ' + player)
         this.turnClocks[player.value].resume();
         this.globalClocks[player.value].resume();
     }
@@ -879,13 +873,11 @@ export class OGWCTimeManagerService {
     }
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
-        console.log('Adding global time to player ' + player);
         const secondsToAdd: number = 5 * 60;
         this.extraGlobalTime[player.getOpponent().value] += secondsToAdd * 1000;
     }
     // Update clocks with the available time
     private updateClocks(): void {
-        console.log('UpdateClocks')
         for (const player of Player.PLAYERS) {
             this.turnClocks[player.value].changeDuration(this.availableTurnTime[player.value]);
             const globalTime: number =
@@ -895,7 +887,6 @@ export class OGWCTimeManagerService {
     }
     // Pauses all clocks that are running
     private pauseAllClocks(): void {
-        console.log('PauseClocks')
         for (const clock of this.allClocks) {
             if (clock.isIdle() === false) {
                 clock.pause();

@@ -368,4 +368,16 @@ describe('LobbyComponent', () => {
         const timeAsString: string = formatDate(timeStampInSecond * 1000, 'HH:mm:ss', 'en-US');
         expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': ' + timeAsString);
     }));
+    it('should display turn for humans', fakeAsync(async() => {
+        // Given a server with an existing part
+        setLobbyPartList([new PartDocument('started', PartMocks.STARTED)]);
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then it should show the turn, starting at turn 0 instead of -1
+        testUtils.expectElementToExist('#part_0 > .turn');
+        const turn: DebugElement = testUtils.findElement('#part_0 > .turn');
+        expect(turn.nativeElement.innerText).toEqual('1');
+    }));
 });
