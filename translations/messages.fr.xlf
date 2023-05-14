@@ -172,7 +172,7 @@
       </trans-unit>
       <trans-unit id="2248512434888126204" datatype="html">
         <source>Put two pieces on the board at each turn, and be the first to align six pieces!</source>
-        <target>Mettez deux de vos pièces sur la plateau à chaque tours, et soyez le premier à en aligner six !</target>
+        <target>Mettez deux de vos pièces sur la plateau à chaque tour, et soyez le premier à en aligner six !</target>
       </trans-unit>
       <trans-unit id="1528017893097093154" datatype="html">
         <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
@@ -1362,7 +1362,7 @@
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
       <trans-unit id="1833529581452152256" datatype="html">
-        <source>Connect Six is played on a 19*19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
+        <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
         <target>Connect Six se joue sur un plateau de 19x19, sur lequel des pièces sont placées sur les intersections. Le but du jeu est d'aligner six de vos pièces.</target>
       </trans-unit>
       <trans-unit id="4094188563872795571" datatype="html">
@@ -1379,7 +1379,7 @@
       </trans-unit>
       <trans-unit id="6989863591618494423" datatype="html">
         <source>On all following turns, the players play two pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
-        <target>Sur tout les tours qui suivent, les joueurs placent deux pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant.</target>
+        <target>Pour tous les tours qui suivent, les joueurs placent deux pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant.</target>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>

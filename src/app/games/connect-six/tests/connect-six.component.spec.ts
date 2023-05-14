@@ -8,7 +8,7 @@ import { ConnectSixState } from '../ConnectSixState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 
-fdescribe('ConnectSixComponent', () => {
+describe('ConnectSixComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

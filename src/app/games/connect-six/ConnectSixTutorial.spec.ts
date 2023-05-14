@@ -13,7 +13,7 @@ export class ConnectSixTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board and object of the game`,
-            $localize`Connect Six is played on a 19*19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.`,
+            $localize`Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.`,
             ConnectSixState.getInitialState(),
         ),
         // First turn: you must place only one
