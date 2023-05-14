@@ -1011,7 +1011,7 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
-      <trans-unit id="1833529581452152256" datatype="html">
+      <trans-unit id="3987391810258758141" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
       </trans-unit>
       <trans-unit id="4094188563872795571" datatype="html">

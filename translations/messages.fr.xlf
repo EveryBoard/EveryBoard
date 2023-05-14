@@ -1361,7 +1361,7 @@
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
-      <trans-unit id="1833529581452152256" datatype="html">
+      <trans-unit id="3987391810258758141" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
         <target>Connect Six se joue sur un plateau de 19x19, sur lequel des pièces sont placées sur les intersections. Le but du jeu est d'aligner six de vos pièces.</target>
       </trans-unit>
