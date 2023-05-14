@@ -9,7 +9,10 @@ import { TrexoState } from './TrexoState';
 
 export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
 
-    public static getBoardValue(node: TrexoNode): BoardValue {
+    public getListMoves(node: TrexoNode): TrexoMove[] {
+        return TrexoRules.get().getLegalMoves(node.gameState);
+    }
+    public getBoardValue(node: TrexoNode): BoardValue {
         let score: number = 0;
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();
@@ -37,11 +40,5 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
             return new BoardValue(lastPlayer.getVictoryValue());
         }
         return new BoardValue(score);
-    }
-    public getListMoves(node: TrexoNode): TrexoMove[] {
-        return TrexoRules.get().getLegalMoves(node.gameState);
-    }
-    public getBoardValue(node: TrexoNode): BoardValue {
-        return TrexoMinimax.getBoardValue(node);
     }
 }
