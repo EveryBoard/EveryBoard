@@ -107,13 +107,6 @@ export interface BoardStatus {
 class QuartoLine {
     public constructor(public readonly initialCoord: Coord,
                        public readonly direction: Direction) {}
-    public allCoords(): Coord[] {
-        const coords: Coord[] = [];
-        for (let i: number = 0; i < 4; i++) {
-            coords.push(this.initialCoord.getNext(this.direction, i));
-        }
-        return coords;
-    }
 }
 export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
 
@@ -152,8 +145,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(4, 4);
     }
-    public static getOwner(piece: QuartoPiece): PlayerOrNone {
-        return PlayerOrNone.NONE;
+    public static getOwner(_: QuartoPiece, state: QuartoState): PlayerOrNone {
+        return state.getCurrentPlayer();
     }
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);

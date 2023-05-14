@@ -34,9 +34,6 @@ export class TrexoPieceStack {
         }
         return new TrexoPieceStack(pieces);
     }
-    public static getOwner(trexoPieceStack: TrexoPieceStack): PlayerOrNone {
-        return trexoPieceStack.getOwner();
-    }
     private constructor(private readonly pieces: ReadonlyArray<TrexoPiece>) {}
 
     public getHeight(): number {

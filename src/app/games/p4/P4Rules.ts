@@ -103,15 +103,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
-        for (let x: number = 0; x < 7; x++) {
-            // for every column, starting from the bottom of each column
-            for (let y: number = 5; y >= 0 && state.board[y][x].isPlayer(); y--) {
-                // while we haven't reached the top or an empty space
-                const squareScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                    return GameStatus.getVictory(state.getCurrentOpponent());
-                }
-            }
+        const victoriousCoord: Coord[] = P4Rules.P4_HELPER.getVictoriousCoord(state);
+        if (victoriousCoord.length > 0) {
+            return GameStatus.getVictory(state.getCurrentOpponent());
         }
         return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
     }

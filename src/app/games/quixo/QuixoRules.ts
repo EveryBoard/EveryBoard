@@ -9,6 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
 
@@ -101,19 +102,15 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public getGameStatus(node: QuixoNode): GameStatus {
         const state: QuixoState = node.gameState;
-        const linesSums: {[key: string]: {[key: number]: number[]}} =
-            QuixoRules.getLinesSums(state);
-        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
-        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = state.getCurrentPlayer();
-        if (zerosFullestLine === 5) {
-            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                return GameStatus.ZERO_WON;
-            }
+        const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+        const unreducedWinners: PlayerOrNone[] = victoriousCoord.map((coord: Coord) => state.getPieceAt(coord));
+        const winners: MGPSet<PlayerOrNone> = new MGPSet(unreducedWinners);
+        if (winners.size() === 0) {
+            return GameStatus.ONGOING;
+        } else if (winners.size() === 1) {
+            return GameStatus.getVictory(winners.getAnyElement().get() as Player);
+        } else {
+            return GameStatus.getVictory(state.getCurrentPlayer());
         }
-        if (onesFullestLine === 5) {
-            return GameStatus.ONE_WON;
-        }
-        return GameStatus.ONGOING;
     }
 }
