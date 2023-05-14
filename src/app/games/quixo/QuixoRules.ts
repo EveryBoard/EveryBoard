@@ -7,10 +7,15 @@ import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
+import { Utils } from 'src/app/utils/utils';
 
 export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
+
+    public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
+        new NInARowHelper(QuixoMove.isInRange, Utils.identity, 5);
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
@@ -73,33 +78,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return sums;
     }
     public static getVictoriousCoords(state: QuixoState): Coord[] {
-        const lineSums: {[player: number]: {[lineType: string]: number[]}} = QuixoRules.getLinesSums(state);
-        const coords: Coord[] = [];
-        for (let player: number = 0; player < 2; player++) {
-            for (let i: number = 0; i < 5; i++) {
-                if (lineSums[player].columns[i] === 5) {
-                    for (let j: number = 0; j < 5; j++) {
-                        coords.push(new Coord(i, j));
-                    }
-                }
-                if (lineSums[player].rows[i] === 5) {
-                    for (let j: number = 0; j < 5; j++) {
-                        coords.push(new Coord(j, i));
-                    }
-                }
-            }
-            if (lineSums[player].diagonals[0] === 5) {
-                for (let i: number = 0; i < 5; i++) {
-                    coords.push(new Coord(i, i));
-                }
-            }
-            if (lineSums[player].diagonals[1] === 5) {
-                for (let i: number = 0; i < 5; i++) {
-                    coords.push(new Coord(i, 4-i));
-                }
-            }
-        }
-        return coords;
+        return QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
     }
     public static getFullestLine(playersLinesInfo: {[lineType: string]: number[]}): number {
         const linesScores: number[] = playersLinesInfo.columns.concat(

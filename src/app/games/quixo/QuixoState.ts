@@ -15,7 +15,7 @@ export class QuixoState extends GameStateWithTable<PlayerOrNone> {
         const newTurn : number = this.turn + 1;
         let currentCoordToFill: Coord = move.coord;
         let nextCoordToSlide: Coord = move.coord.getNext(move.direction);
-        while (nextCoordToSlide.isInRange(5, 5)) {
+        while (QuixoMove.isInRange(nextCoordToSlide)) {
             newBoard[currentCoordToFill.y][currentCoordToFill.x] = newBoard[nextCoordToSlide.y][nextCoordToSlide.x];
             currentCoordToFill = currentCoordToFill.getNext(move.direction);
             nextCoordToSlide = nextCoordToSlide.getNext(move.direction);

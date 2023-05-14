@@ -8,13 +8,14 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -144,8 +145,16 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new QuartoLine(new Coord(0, 0), Direction.DOWN_RIGHT),
         new QuartoLine(new Coord(0, 3), Direction.UP_RIGHT),
     ];
+    public static readonly QUARTO_HELPER: NInARowHelper<QuartoPiece> =
+        new NInARowHelper(QuartoRules.isInRange, QuartoRules.getOwner, 4);
     public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
+    public static isInRange(coord: Coord): boolean {
+        return coord.isInRange(4, 4);
+    }
+    public static getOwner(piece: QuartoPiece): PlayerOrNone {
+        return PlayerOrNone.NONE;
+    }
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);
     }
@@ -317,11 +326,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
     }
     public getVictoriousCoords(state: QuartoState): Coord[] {
-        for (const line of QuartoRules.lines) {
-            if (QuartoRules.isThereAVictoriousLine(line, state)) {
-                return line.allCoords();
-            }
-        }
-        return [];
+        return QuartoRules.QUARTO_HELPER.getVictoriousCoord(state);
     }
 }

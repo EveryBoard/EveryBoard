@@ -23,31 +23,14 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         }
         return ConnectSixRules.singleton.get();
     }
-    public static getOwner(piece: PlayerOrNone): PlayerOrNone {
-        return piece;
-    }
     private static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(ConnectSixFirstMove.isInRange, ConnectSixRules.getOwner, 6);
+        new NInARowHelper(ConnectSixFirstMove.isInRange, Utils.identity, 6);
 
     public static getSquareScore(state: ConnectSixState, coord: Coord): number {
         return ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coord);
     }
     public static getVictoriousCoords(state: ConnectSixState): Coord[] {
-        const coords: Coord[] = [];
-        for (const coordAndContents of state.getCoordsAndContents()) {
-            if (coordAndContents[1].isPlayer()) {
-                const coord: Coord = coordAndContents[0];
-                const squareScore: number = ConnectSixRules.getSquareScore(state, coord);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                    if (squareScore === Player.ZERO.getVictoryValue() ||
-                        squareScore === Player.ONE.getVictoryValue())
-                    {
-                        coords.push(coord);
-                    }
-                }
-            }
-        }
-        return coords;
+        return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
     private constructor() {
         super(ConnectSixState);

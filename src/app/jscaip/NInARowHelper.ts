@@ -3,7 +3,9 @@ import { MGPMap } from '../utils/MGPMap';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';
+import { MGPNode } from './MGPNode';
 import { Player, PlayerOrNone } from './Player';
+import { SCORE } from './SCORE';
 
 export class NInARowHelper<T> {
 
@@ -86,5 +88,22 @@ export class NInARowHelper<T> {
             testedCoords++;
         }
         return [freeSpaces, allies];
+    }
+    public getVictoriousCoord(state: GameStateWithTable<T>): Coord[] {
+        const coords: Coord[] = [];
+        for (const coordAndContents of state.getCoordsAndContents()) {
+            if (this.getOwner(coordAndContents[1]).isPlayer()) {
+                const coord: Coord = coordAndContents[0];
+                const squareScore: number = this.getSquareScore(state, coord);
+                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                    if (squareScore === Player.ZERO.getVictoryValue() ||
+                        squareScore === Player.ONE.getVictoryValue())
+                    {
+                        coords.push(coord);
+                    }
+                }
+            }
+        }
+        return coords;
     }
 }
