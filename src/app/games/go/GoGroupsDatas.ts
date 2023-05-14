@@ -81,7 +81,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         const nonEmptyWrapper: MGPMap<GoPiece, number> =
             wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
         if (nonEmptyWrapper.size() === 1) {
-            return nonEmptyWrapper.getByIndex(0).key;
+            return nonEmptyWrapper.getAnyPair().get().key;
         } else {
             throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
         }

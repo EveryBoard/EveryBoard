@@ -27,7 +27,7 @@ export class YinshMinimax
         const state: YinshState = node.gameState;
 
         if (state.isInitialPlacementPhase()) {
-            for (const [coord, content] of state.getCoordsAndContents()) {
+            for (const { coord, content } of state.getCoordsAndContents()) {
                 if (content === YinshPiece.EMPTY) {
                     moves.push(new YinshMove([], coord, MGPOptional.empty(), []));
                 }

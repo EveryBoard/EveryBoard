@@ -24,8 +24,11 @@ export class QuixoMove extends MoveCoord {
             return new QuixoMove(encodedMove, y, direction);
         }
     };
+    public static isInRange(coord: Coord): boolean {
+        return coord.isInRange(5, 5);
+    }
     public static isValidCoord(coord: Coord): MGPValidation {
-        if (coord.isNotInRange(5, 5)) {
+        if (QuixoMove.isInRange(coord) === false) {
             return MGPValidation.failure('Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
         }
         if (coord.x !== 0 && coord.x !== 4 && coord.y !== 0 && coord.y !== 4) {

@@ -66,7 +66,9 @@ export class Utils {
             throw new Error(`Assertion failure: ${message}`);
         }
     }
-
+    public static identity<T>(thing: T): T {
+        return thing;
+    }
 }
 
 export function display(verbose: boolean, message: unknown): void {
