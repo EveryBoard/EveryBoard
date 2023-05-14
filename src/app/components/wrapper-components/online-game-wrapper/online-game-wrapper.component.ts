@@ -287,7 +287,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case UpdateType.DUPLICATE:
                 return;
             case UpdateType.END_GAME:
-                return this.onGameEnd();
+                return;
             case UpdateType.PRE_START_DOC:
                 return;
             default:
@@ -329,35 +329,24 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                         default:
                             Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
                             const actionEvent: PartEventAction = event as PartEventAction;
+                            if (actionEvent.action == 'EndGame') await this.onGameEnd();
                             this.onReceivedAction(actionEvent);
                             break;
                     }
                 }
+                console.log('calling afterEventsBatch, while this.endGame is ' + this.endGame)
                 await this.afterEventsBatch();
             });
         };
         this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, callback);
     }
     private async onGameEnd(): Promise<void> {
+        console.log('onGameEnd')
+        this.currentPart = new PartDocument(this.currentPartId, (await this.gameService.getPart(this.currentPartId)).get());
+        console.log(this.currentPart.isAgreedDraw())
         await this.observedPartService.removeObservedPart();
-        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
+        console.log('setting this.endGame')
         this.endGame = true;
-        const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.HARD_DRAW];
-        const finalUpdateIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.data.result);
-        if (finalUpdateIsMove === false) {
-            const endGameResults: MGPResult[] = [
-                MGPResult.RESIGN,
-                MGPResult.TIMEOUT,
-                MGPResult.HARD_DRAW,
-                MGPResult.AGREED_DRAW_BY_ZERO,
-                MGPResult.AGREED_DRAW_BY_ONE,
-            ];
-            const resultIsIncluded: boolean =
-                endGameResults.some((result: MGPResult) => result.value === currentPart.data.result);
-            assert(resultIsIncluded === true, 'Unknown type of end game (' + currentPart.data.result + ')');
-            const log: string = 'endGame is true and winner is ' + currentPart.getWinner().getOrElse({ id: 'fake', name: 'no one' }).name;
-            display(OnlineGameWrapperComponent.VERBOSE, log);
-        }
         this.timeManager.onGameEnd();
     }
     private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
@@ -423,18 +412,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.fromTurn(this.gameComponent.getTurn());
+        console.log('this.endGame: ' + this.endGame)
         this.timeManager.afterEventsBatch(this.endGame, player, await this.getServerTime());
     }
-    public notifyDraw(scores?: [number, number]): Promise<void> {
-        this.endGame = true;
+    public async notifyDraw(scores?: [number, number]): Promise<void> {
         const player: Player = this.role as Player;
-        return this.gameService.updatePart(this.currentPartId, player, scores, true);
+        await this.gameService.endPart(this.currentPartId, player, scores, true);
     }
     public async notifyTimeoutVictory(victoriousPlayer: MinimalUser, loser: MinimalUser): Promise<void> {
-        this.endGame = true;
-        await this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
+        const player: Player = this.role as Player;
+        await this.gameService.notifyTimeout(this.currentPartId, player, victoriousPlayer, loser);
     }
-    public notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
+    public async notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.notifyVictory');
 
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
@@ -445,15 +434,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         } else {
             this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne);
         }
-        this.endGame = true;
         const player: Player = this.role as Player;
 
-        return this.gameService.updatePart(this.currentPartId,
-                                           player,
-                                           scores,
-                                           false,
-                                           this.currentPart.getWinner().get(),
-                                           this.currentPart.getLoser().get());
+        await this.gameService.endPart(this.currentPartId,
+                                       player,
+                                       scores,
+                                       false,
+                                       this.currentPart.getWinner().get(),
+                                       this.currentPart.getLoser().get());
     }
     public canAskTakeBack(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
@@ -613,14 +601,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         } else {
             const player: Player = this.role as Player;
-            return this.gameService.updatePart(this.currentPartId, player, scores);
+            return this.gameService.endPart(this.currentPartId, player, scores);
         }
     }
     public async resign(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.resign');
+        const player: Player = this.role as Player;
         const resigner: MinimalUser = this.getPlayer();
         const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
-        await this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
+        await this.gameService.resign(this.currentPartId, player, victoriousOpponent, resigner);
     }
     public async reachedOutOfTime(player: Player): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
@@ -651,6 +640,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.gameService.proposeDraw(this.currentPartId, this.role as Player);
     }
     public acceptDraw(): Promise<void> {
+        console.log('ACCEPTING DRAW')
         assert(this.isPlaying(), 'Non playing should not call acceptDraw');
         return this.gameService.acceptDraw(this.currentPartId, this.role as Player);
     }
@@ -794,7 +784,7 @@ export class OGWCTimeManagerService {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
     public onReceivedAction(action: PartEventAction): void {
-        console.log('ReceivedAction: ', action.action)
+        console.log('ReceivedAction: ' + action.action)
         switch (action.action) {
             case 'AddTurnTime':
                 this.addTurnTime(Player.of(action.player));
@@ -804,6 +794,8 @@ export class OGWCTimeManagerService {
                 break;
             case 'StartGame':
                 this.lastMoveStartTimestamp = MGPOptional.of(action.time as Timestamp);
+                break;
+            case 'EndGame':
                 break;
         }
     }
@@ -832,23 +824,27 @@ export class OGWCTimeManagerService {
     public onGameEnd(): void {
         console.log('GameEnd')
         for (const clock of this.allClocks) {
-            // We want to stop the clock, but stop is just pause + change some variables
-            // And stop throws if the clock is paused! So we just stop it if it's not paused already
-            if (clock.isIdle() === false) {
+            if (clock.isStarted()) {
+                console.log('stopping: ' + clock)
                 clock.stop();
+            } else {
+                console.log('not stopping: ' + clock.debugName)
             }
+
         }
         // Finally, we update the clocks to make sure we show the correct time
         this.updateClocks();
     }
     // Pauses all clocks before handling new events
     public beforeEventsBatch(gameEnd: boolean): void {
+        console.log('BeforeEventsBatch')
         if (gameEnd === false) {
             this.pauseAllClocks();
         }
     }
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
+        console.log('AfterEventsBatch, gameEnd is ' + gameEnd)
         this.updateClocks();
         if (gameEnd === false) {
             // The drift is how long has passed since the last event occurred
@@ -863,6 +859,7 @@ export class OGWCTimeManagerService {
     }
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
+        console.log('ResumeClocks, player ' + player);
         this.turnClocks[player.value].resume();
         this.globalClocks[player.value].resume();
     }

@@ -111,8 +111,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
         display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingMs + 'ms)');
         Utils.assert(this.started, 'Should only stop chrono that are started!');
 
-
-        this.pause();
+        if (this.isPaused === false) {
+            this.pause();
+        }
         this.started = false;
         this.isSet = false;
     }

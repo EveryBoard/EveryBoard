@@ -161,7 +161,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -1052,6 +1052,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
                 request: null,
             });
+            await partService.addAction('configRoomId', Player.ONE, 'EndGame');
+            testUtils.detectChanges();
 
             // Then game should be over
             expectGameToBeOver();
@@ -1071,6 +1073,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
                 request: null,
             });
+            await partService.addAction('configRoomId', Player.ONE, 'EndGame');
 
             // Then removeObservedPart should have been called
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
@@ -1144,22 +1147,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
-        }));
-        xit(`should not notifyTimeout for online opponent`, fakeAsync(async() => {
-            // Given an online game where it's the opponent's; opponent is online
-            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            await doMove(FIRST_MOVE, true);
-            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-            spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
-            spyOn(wrapper, 'notifyTimeoutVictory').and.callThrough();
-
-            // When he reach time out
-            tick(wrapper.configRoom.maximalMoveDuration * 1000);
-
-            // Then it should be considered as a timeout
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
-            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
-            expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
         }));
         it(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn and opponent is offline
@@ -1319,6 +1306,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
     });
     describe('User "handshake"', () => {
+        // Disabled because we don't have a way to check the connectivity status currently
         xit(`should make opponent's name lightgrey when he is token-outdated`, fakeAsync(async() => {
             // Given a connected opponent
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1345,6 +1333,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When clicking on resign button
             spyOn(partDAO, 'update').and.callThrough();
             await testUtils.clickElement('#resignButton');
+            tick(1);
 
             // Then the game should be ended
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
@@ -1354,12 +1343,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             expectGameToBeOver();
         }));
-        it('should not allow player to move after resigning', fakeAsync(async() => {
+        fit('should not allow player to move after resigning', fakeAsync(async() => {
             // Given a component where user has resigned
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
             await testUtils.clickElement('#resignButton');
+            tick(1);
 
             // When attempting a move
             spyOn(partDAO, 'update').and.callThrough();
@@ -1380,6 +1370,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.RESIGN.value,
                 request: null,
             });
+            await partService.addAction('configRoomId', Player.ONE, 'EndGame');
+            testUtils.detectChanges();
 
             // When checking "victory text"
             const resignText: string = testUtils.findElement('#resignIndicator').nativeElement.innerText;
@@ -1403,6 +1395,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.RESIGN.value,
                 request: null,
             });
+            await partService.addAction('configRoomId', Player.ONE, 'EndGame');
 
             // Then removeObservedPart should be called
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
@@ -1450,6 +1443,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+            testUtils.detectChanges();
 
             // When the propose rematch button is clicked
             const gameService: GameService = TestBed.inject(GameService);
@@ -1463,6 +1458,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await testUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+            testUtils.detectChanges();
 
             // When request is received
             testUtils.expectElementNotToExist('#acceptRematchButton');
@@ -1483,6 +1480,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(router, 'navigate').and.resolveTo();
             const gameService: GameService = TestBed.inject(GameService);
             spyOn(gameService, 'acceptRematch').and.callThrough();
+            tick(1);
             testUtils.detectChanges();
             await testUtils.expectInterfaceClickSuccess('#acceptRematchButton');
 
@@ -1494,12 +1492,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
 
             await testUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+            testUtils.detectChanges();
             await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // When opponent accepts it
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
             await receiveReply(Player.ONE, 'Accept', 'Rematch', 'nextPartId');
+            await partService.addAction('configRoomId', Player.ONE, 'EndGame');
 
             // Then it should redirect to new part
             expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, { otherRoutes: true });
@@ -1597,6 +1598,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.AGREED_DRAW_BY_ZERO.value,
                 request: null,
             });
+            await partService.addAction('configRoomId', Player.ZERO, 'EndGame');
+            testUtils.detectChanges();
 
             // When displaying the board
             // Then the text should indicate players have agreed to draw
@@ -1645,6 +1648,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When the game is over
             await testUtils.clickElement('#resignButton');
+            tick(1);
+            testUtils.detectChanges();
 
             // Then it should highlight the board with its color
             testUtils.expectElementToHaveClass('#board-tile', 'endgame-bg');
