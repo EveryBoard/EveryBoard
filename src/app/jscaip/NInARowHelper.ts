@@ -92,8 +92,8 @@ export class NInARowHelper<T> {
     public getVictoriousCoord(state: GameStateWithTable<T>): Coord[] {
         const coords: Coord[] = [];
         for (const coordAndContents of state.getCoordsAndContents()) {
-            if (this.getOwner(coordAndContents[1], state).isPlayer()) {
-                const coord: Coord = coordAndContents[0];
+            if (this.getOwner(coordAndContents.content, state).isPlayer()) {
+                const coord: Coord = coordAndContents.coord;
                 const squareScore: number = this.getSquareScore(state, coord);
                 if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
                     if (squareScore === Player.ZERO.getVictoryValue() ||
