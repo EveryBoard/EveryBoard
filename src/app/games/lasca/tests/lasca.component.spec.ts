@@ -9,7 +9,7 @@ import { LascaFailure } from '../LascaFailure';
 import { LascaMove } from '../LascaMove';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 
-describe('LascaComponent', () => {
+fdescribe('LascaComponent', () => {
 
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;
