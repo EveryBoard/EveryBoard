@@ -24,10 +24,8 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
  * (if a line contains a big and a small piece, for example).
  */
 class QuartoCriterion {
-
     private readonly subCriterion: MGPOptional<boolean>[] =
         [MGPOptional.empty(), MGPOptional.empty(), MGPOptional.empty(), MGPOptional.empty()];
-
     public constructor(piece: QuartoPiece) {
         // a criterion is initialized with a piece, it takes the piece's value
         this.subCriterion[0] = MGPOptional.of((piece.value & 8) === 8);
@@ -96,14 +94,10 @@ class QuartoCriterion {
             }).join(' ') + '}';
     }
 }
-
 export interface BoardStatus {
-
     score: SCORE;
-
     sensitiveSquares: MGPSet<Coord>;
 }
-
 class QuartoLine {
     public constructor(public readonly initialCoord: Coord,
                        public readonly direction: Direction) {}
@@ -111,18 +105,12 @@ class QuartoLine {
 export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
 
 interface LineInfos {
-
     commonCriterion: MGPOptional<QuartoCriterion>;
-
     sensitiveCoord: MGPOptional<Coord>;
-
     boardStatus: MGPOptional<BoardStatus>;
 }
-
 export class QuartoRules extends Rules<QuartoMove, QuartoState> {
-
     public static VERBOSE: boolean = false;
-
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Direction.DOWN),
@@ -182,7 +170,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return MGPValidation.SUCCESS;
     }
-
     public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
         return QuartoRules.isLegal(move, state).toFallible(undefined);
     }
@@ -245,7 +232,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         const commonCriterion: MGPOptional<QuartoCriterion> = lineInfos.commonCriterion;
         const sensitiveCoord: MGPOptional<Coord> = lineInfos.sensitiveCoord;
-
         // we now have looked through the entire line, we summarize everything
         if (commonCriterion.isPresent() && (commonCriterion.get().areAllAbsent() === false)) {
             // this line is not null and has a common criterion between all of its pieces
@@ -266,7 +252,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     private static getLineInfos(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): LineInfos {
         let sensitiveCoord: MGPOptional<Coord> = MGPOptional.empty(); // the first square is empty
         let commonCriterion: MGPOptional<QuartoCriterion> = MGPOptional.empty();
-
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
             const c: QuartoPiece = state.getPieceAt(coord);
