@@ -8,7 +8,7 @@ import { TaflComponent } from '../tafl.component';
 import { TaflMinimax } from '../TaflMinimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControl';
+import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 
 @Component({
     selector: 'app-tablut',
@@ -24,7 +24,7 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
             new TaflMinimax(this.rules, 'DummyBot'),
             new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
             new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'),
+            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
         ];
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;

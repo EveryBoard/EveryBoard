@@ -466,7 +466,7 @@ describe('PylosComponent', () => {
             const initialState: PylosState = new PylosState(initialBoard, 0);
             testUtils.setupState(initialState);
 
-            // When dropping a piece then clicking on two piece to capture
+            // When dropping a piece then clicking on two pieces to capture
             await testUtils.expectClickSuccess('#drop_2_2_0');
             await testUtils.expectClickSuccess('#piece_0_0_1');
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(1, 1, 0)];

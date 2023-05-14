@@ -187,7 +187,7 @@ describe('SixRules', () => {
     });
     describe('Deconnection', () => {
         it('should deconnect smaller group automatically', () => {
-            // Given a board where two piece could be disconnected
+            // Given a board where two pieces could be disconnected
             const board: NumberTable = [
                 [X, X, O, _, _],
                 [X, X, O, _, _],
@@ -225,7 +225,7 @@ describe('SixRules', () => {
             // When doing that move without choosing which half to keep
             const move: SixMove = SixMove.fromMovement(new Coord(2, 2), new Coord(4, 3));
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             const reason: string = SixFailure.MUST_CUT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -481,7 +481,7 @@ describe('SixRules', () => {
             });
         });
         describe('Disconnection Victories', () => {
-            it('should consider loser PLAYER.ZERO when he drop bellow 6 pieces on phase two', () => {
+            it('should consider loser PLAYER.ZERO when he drop below 6 pieces on phase two', () => {
                 // Given a board in phase two
                 const board: NumberTable = [
                     [O, O, X, _, _],
@@ -492,7 +492,7 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 43);
 
-                // When making the opponent pass bellow 6 pieces
+                // When making the opponent pass below 6 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
                 // Then the move should be a victory
@@ -508,7 +508,7 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
-            it('should consider loser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
+            it('should consider loser PLAYER.ONE when he drop below 6 pieces on phase two', () => {
                 // Given a board in phase 2
                 const board: NumberTable = [
                     [X, X, O, _, _],
@@ -519,7 +519,7 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 42);
 
-                // When making the opponent drop bellow 5 pieces
+                // When making the opponent drop below 5 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
                 // Then the move should be a victory
@@ -545,7 +545,7 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 40);
 
-                // When making both player drop bellow 6 pieces
+                // When making both player drop below 6 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(4, 1), new Coord(-1, 1));
 
                 // Then the one with the more pieces remaining win
@@ -567,7 +567,7 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 42);
 
-                // When dropping both player bellow 6 pieces
+                // When dropping both player below 6 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(4, 1), new Coord(6, 1));
 
                 // Then the player with the more piece win

@@ -1,11 +1,11 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -24,8 +24,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public static VERBOSE: boolean = false;
 
-    public displayAIMetrics: boolean = true;
-
     public aiDepths: [string, string] = ['0', '0'];
 
     public playerSelection: [string, string] = ['human', 'human'];
@@ -33,6 +31,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
     public botTimeOut: number = 1000;
+
+    public displayAIMetrics: boolean = false;
 
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,

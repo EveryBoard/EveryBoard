@@ -14,6 +14,7 @@ export class ConspirateursNode extends MGPNode<ConspirateursRules, Conspirateurs
 export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
 
     private static singleton: MGPOptional<ConspirateursRules> = MGPOptional.empty();
+
     public static get(): ConspirateursRules {
         if (ConspirateursRules.singleton.isAbsent()) {
             ConspirateursRules.singleton = MGPOptional.of(new ConspirateursRules());

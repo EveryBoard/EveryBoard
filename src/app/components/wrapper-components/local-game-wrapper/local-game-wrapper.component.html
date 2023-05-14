@@ -65,13 +65,6 @@
         </div>
         <div *ngIf="gameComponent"
              class="tile is-child box is-vcentered">
-            <ng-container *ngIf="gameComponent.rules.node.move && displayAIMetrics">
-                <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
-                    {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.rules.node) }} <br/>
-                </ng-container>
-                Created {{ getCreatedNodes() }} nodes.<br/>
-                Minimax time: {{ getMinimaxTime() }}ms.<br/>
-            </ng-container>
             <button id="passButton"
                     *ngIf="endGame === false && gameComponent.canPass"
                     class="button is-primary is-fullwidth mb-1"
@@ -89,6 +82,14 @@
                     (click)="restartGame()"
                     i18n
             >Start a new game</button>
+            <div *ngIf="gameComponent.rules.node.move.isPresent() && displayAIMetrics"
+                 id="AIMetrics">
+                <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
+                    {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.rules.node) }} <br/>
+                </ng-container>
+                Created {{ getCreatedNodes() }} nodes.<br/>
+                Minimax time: {{ getMinimaxTime() }}ms.<br/>
+            </div>
         </div>
     </div>
     <div class="tile is-parent is-9 is-vcentered"

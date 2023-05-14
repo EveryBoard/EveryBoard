@@ -448,4 +448,15 @@ describe('LocalGameWrapperComponent', () => {
             expect(component.showLastMove).not.toHaveBeenCalled();
         }));
     });
+    it('should display AI metrics when parameter is set to true', fakeAsync(async() => {
+        // Given a component where we want to show the AI metrics in the middle of a part
+        (testUtils.wrapper as LocalGameWrapperComponent).displayAIMetrics = true;
+        await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then the AI metrics are shown
+        testUtils.expectElementToExist('#AIMetrics');
+    }));
 });
