@@ -353,7 +353,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public async notifyDraw(scores?: [number, number]): Promise<void> {
         const player: Player = this.role as Player;
-        await this.gameService.endPart(this.currentPartId, player, scores, true);
+        await this.gameService.drawPart(this.currentPartId, player, scores);
     }
     public async notifyTimeoutVictory(victoriousPlayer: MinimalUser, loser: MinimalUser): Promise<void> {
         const player: Player = this.role as Player;
@@ -372,12 +372,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         const player: Player = this.role as Player;
 
-        await this.gameService.endPart(this.currentPartId,
-                                       player,
-                                       scores,
-                                       false,
-                                       this.currentPart.getWinner().get(),
-                                       this.currentPart.getLoser().get());
+        await this.gameService.endPartWithVictory(this.currentPartId,
+                                                  player,
+                                                  this.currentPart.getWinner().get(),
+                                                  this.currentPart.getLoser().get(),
+                                                  scores);
     }
     public canAskTakeBack(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
@@ -537,7 +536,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         } else {
             const player: Player = this.role as Player;
-            return this.gameService.endPart(this.currentPartId, player, scores);
+            return this.gameService.updatePart(this.currentPartId, scores);
         }
     }
     public async resign(): Promise<void> {

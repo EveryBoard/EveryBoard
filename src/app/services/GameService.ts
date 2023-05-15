@@ -53,7 +53,7 @@ export class GameService {
         }
     }
     private createUnstartedPart(typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, 'GameService.createPart(' + typeGame + ')');
+        display(GameService.VERBOSE, 'GameService.createUnstartedPart(' + typeGame + ')');
 
         const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
 
@@ -114,10 +114,8 @@ export class GameService {
 
         const accepter: Player = Player.ONE;
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        await Promise.all([
-            this.update(partId, update),
-            this.partService.startGame(partId, accepter),
-        ]);
+        await this.update(partId, update);
+        await this.partService.startGame(partId, accepter);
     }
     public getPart(partId: string): Promise<MGPOptional<Part>> {
         return this.partDAO.read(partId);
@@ -131,8 +129,8 @@ export class GameService {
             loser,
             result: MGPResult.RESIGN.value,
         };
-        await this.update(partId, update);
         await this.partService.addAction(partId, player, 'EndGame');
+        await this.update(partId, update);
     }
     public async notifyTimeout(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const update: Partial<Part> = {
@@ -140,8 +138,8 @@ export class GameService {
             loser,
             result: MGPResult.TIMEOUT.value,
         };
-        await this.update(partId, update);
         await this.partService.addAction(partId, player, 'EndGame');
+        await this.update(partId, update);
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {
         await this.partService.addRequest(partId, player, 'Draw');
@@ -153,8 +151,8 @@ export class GameService {
         const update: Partial<Part> = {
             result: result.value,
         };
-        await this.update(partId, update);
         await this.partService.addAction(partId, player, 'EndGame');
+        await this.update(partId, update);
     }
     public async refuseDraw(partId: string, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Reject', 'Draw');
@@ -224,43 +222,43 @@ export class GameService {
     public async addTurnTime(partId: string, player: Player): Promise<void> {
         await this.partService.addAction(partId, player, 'AddTurnTime');
     }
-    public async endPart(partId: string,
-                         player: Player,
-                         scores?: [number, number],
-                         notifyDraw?: boolean,
-                         winner?: MinimalUser,
-                         loser?: MinimalUser)
-    : Promise<void>
-    {
-
-        display(GameService.VERBOSE, { gameService_updateDBBoard: { partId, scores, notifyDraw, winner, loser } });
-
+    private async preparePartUpdate(partId: string, scores?: [number, number]): Promise<Partial<Part>> {
         const part: Part = (await this.partDAO.read(partId)).get();
         const turn: number = part.turn + 1;
         let update: Partial<Part> = {
             turn,
         };
         update = this.updateScore(update, scores);
-        let gameEnd: boolean = false;
-        if (winner != null) {
-            update = {
-                ...update,
-                winner,
-                loser,
-                result: MGPResult.VICTORY.value,
-            };
-            gameEnd = true;
-        } else if (notifyDraw === true) {
-            update = {
-                ...update,
-                result: MGPResult.HARD_DRAW.value,
-            };
-            gameEnd = true;
-        }
+        return update;
+    }
+    public async updatePart(partId: string, scores?: [number, number]): Promise<void> {
+        display(GameService.VERBOSE, { gameService_updatePart: { partId, scores } });
+        const update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         await this.update(partId, update);
-        if (gameEnd) {
-            await this.partService.addAction(partId, player, 'EndGame');
-        }
+    }
+    public async drawPart(partId: string, player: Player, scores?: [number, number]): Promise<void> {
+        let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
+        update = {
+            ...update,
+            result: MGPResult.HARD_DRAW.value,
+        };
+        await this.update(partId, update);
+        await this.partService.addAction(partId, player, 'EndGame');
+    }
+    public async endPartWithVictory(partId: string,
+                                    player: Player,
+                                    winner: MinimalUser,
+                                    loser: MinimalUser,
+                                    scores?: [number, number]): Promise<void> {
+        let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
+        update = {
+            ...update,
+            winner,
+            loser,
+            result: MGPResult.VICTORY.value,
+        };
+        await this.update(partId, update);
+        await this.partService.addAction(partId, player, 'EndGame');
     }
     public async addMove(partId: string, player: Player, encodedMove: JSONValue): Promise<void> {
         await this.partService.addMove(partId, player, encodedMove);

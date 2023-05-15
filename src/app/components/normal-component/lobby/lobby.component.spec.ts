@@ -128,7 +128,7 @@ describe('LobbyComponent', () => {
             // Started
             startedPartUserPlay = new PartDocument('I-play', PartMocks.STARTED);
             startedPartUserDoNotPlay = new PartDocument('I-do-not-play', PartMocks.OTHER_STARTED);
-            anotherStartedPartUserDoNotPlay = new PartDocument('me-no-play-either', PartMocks.ANOTHER_STARTED);
+            anotherStartedPartUserDoNotPlay = new PartDocument('me-no-play-either', PartMocks.OTHER_STARTED);
         }));
         describe('as a user participating to no games', () => {
             beforeEach(() => {
@@ -235,7 +235,7 @@ describe('LobbyComponent', () => {
             unstartedPartUserCreated = new PartDocument('the-part-I-create', PartMocks.INITIAL);
             startedPartUserPlay = new PartDocument('the-part-I-created', PartMocks.STARTED);
             unstartedPartUserDidNotCreate = new PartDocument('a-part-I-do-not-create', PartMocks.OTHER_STARTED);
-            anotherUnstartedPartUserDidNotCreate = new PartDocument('another-part-user-did-not-createru', PartMocks.ANOTHER_STARTED);
+            anotherUnstartedPartUserDidNotCreate = new PartDocument('another-part-user-did-not-createru', PartMocks.OTHER_STARTED);
         }));
         describe('as a user part of no games', () => {
             beforeEach(() => {

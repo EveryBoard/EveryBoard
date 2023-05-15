@@ -9,11 +9,13 @@ import { PartEvent, Reply, RequestType, Action, PartEventMove } from 'src/app/do
 import { JSONValue } from 'src/app/utils/utils';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
+import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 
 describe('PartService', () => {
 
     let partService: PartService;
     let partDAO: PartDAO;
+    let events: IFirestoreDAO<PartEvent>;
 
     const partId: string = 'id';
 
@@ -28,6 +30,7 @@ describe('PartService', () => {
 
         partDAO = TestBed.inject(PartDAO);
         partService = TestBed.inject(PartService);
+        events = partDAO.subCollectionDAO<PartEvent>(partId, 'events');
     }));
     it('should be created', () => {
         expect(partService).toBeTruthy();
@@ -35,7 +38,7 @@ describe('PartService', () => {
     describe('addMove', () => {
         it('should add a move event to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
-            spyOn(partDAO.subCollectionDAO<PartEvent>(partId, 'events'), 'create').and.callThrough();
+            spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const move: JSONValue = { x: 0, y: 0 };
             await partService.addMove(partId, Player.ZERO, move);
@@ -46,13 +49,13 @@ describe('PartService', () => {
                 player: 0,
                 move,
             };
-            expect(partDAO.subCollectionDAO<PartEvent>(partId, 'events').create).toHaveBeenCalledOnceWith(moveEvent);
+            expect(events.create).toHaveBeenCalledOnceWith(moveEvent);
         }));
     });
     describe('addRequest', () => {
         it('should add a request event to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
-            spyOn(partDAO.subCollectionDAO<PartEvent>(partId, 'events'), 'create').and.callThrough();
+            spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const requestType: RequestType = 'TakeBack';
             await partService.addRequest(partId, Player.ZERO, requestType);
@@ -63,13 +66,13 @@ describe('PartService', () => {
                 player: 0,
                 requestType,
             };
-            expect(partDAO.subCollectionDAO<PartEvent>(partId, 'events').create).toHaveBeenCalledOnceWith(event);
+            expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
     });
     describe('addReply', () => {
         it('should add a request event to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
-            spyOn(partDAO.subCollectionDAO<PartEvent>(partId, 'events'), 'create').and.callThrough();
+            spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const requestType: RequestType = 'TakeBack';
             const reply: Reply = 'Accept';
@@ -83,13 +86,13 @@ describe('PartService', () => {
                 reply,
                 data: null,
             };
-            expect(partDAO.subCollectionDAO<PartEvent>(partId, 'events').create).toHaveBeenCalledOnceWith(event);
+            expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
     });
     describe('startGame', () => {
         it('should add a start action to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
-            spyOn(partDAO.subCollectionDAO<PartEvent>(partId, 'events'), 'create').and.callThrough();
+            spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const action: Action = 'StartGame';
             await partService.startGame(partId, Player.ZERO);
@@ -100,13 +103,13 @@ describe('PartService', () => {
                 player: 0,
                 action,
             };
-            expect(partDAO.subCollectionDAO<PartEvent>(partId, 'events').create).toHaveBeenCalledOnceWith(event);
+            expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
     });
     describe('addAction', () => {
         it('should add an action to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
-            spyOn(partDAO.subCollectionDAO<PartEvent>(partId, 'events'), 'create').and.callThrough();
+            spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const action: Action = 'AddTurnTime';
             await partService.addAction(partId, Player.ZERO, action);
@@ -117,7 +120,7 @@ describe('PartService', () => {
                 player: 0,
                 action,
             };
-            expect(partDAO.subCollectionDAO<PartEvent>(partId, 'events').create).toHaveBeenCalledOnceWith(event);
+            expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
     });
     describe('getLastMoveDoc', () => {

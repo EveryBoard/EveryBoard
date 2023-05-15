@@ -37,5 +37,4 @@ export class PartMocks {
         beginning: serverTimestamp(),
     };
 
-    public static readonly ANOTHER_STARTED: Part = PartMocks.OTHER_STARTED;
 }

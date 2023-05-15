@@ -331,22 +331,22 @@ describe('GameService', () => {
             expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
         }));
     });
-    describe('endPart', () => {
-        const part: Part = {
-            typeGame: 'Quarto',
-            playerZero: UserMocks.CREATOR_MINIMAL_USER,
-            playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-            turn: 1,
-            result: MGPResult.UNACHIEVED.value,
-        };
+    describe('updatePart', () => {
         beforeEach(() => {
+            const part: Part = {
+                typeGame: 'Quarto',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                turn: 1,
+                result: MGPResult.UNACHIEVED.value,
+            };
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
             const scores: [number, number] = [5, 0];
-            await gameService.endPart('partId', Player.ONE, scores);
+            await gameService.updatePart('partId', scores);
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
                 turn: 2,
@@ -355,9 +355,21 @@ describe('GameService', () => {
             };
             expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
         }));
-        it('should include the draw notification if requested', fakeAsync(async() => {
+    });
+    describe('drawPart', () => {
+        it('should include the draw notification', fakeAsync(async() => {
+            // Given a part
+            const part: Part = {
+                typeGame: 'Quarto',
+                playerZero: UserMocks.CREATOR_MINIMAL_USER,
+                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
+                turn: 1,
+                result: MGPResult.UNACHIEVED.value,
+            };
+            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             // When updating the board to notify of a draw
-            await gameService.endPart('partId', Player.ONE, undefined, true);
+            spyOn(partDAO, 'update').and.resolveTo();
+            await gameService.drawPart('partId', Player.ONE);
             // Then the result is set to draw in the update
             const expectedUpdate: Partial<Part> = {
                 turn: 2,
