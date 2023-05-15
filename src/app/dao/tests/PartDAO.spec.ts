@@ -17,6 +17,8 @@ import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { FocusedPart } from 'src/app/domain/User';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { PartService } from '../../services/PartService';
+import { PartEvent } from '../../domain/Part';
 
 type PartInfo = {
     id: string,
@@ -28,6 +30,7 @@ type PartInfo = {
 fdescribe('PartDAO', () => {
 
     let partDAO: PartDAO;
+    let partService: PartService;
     let userDAO: UserDAO;
     let configRoomDAO: ConfigRoomDAO;
     let configRoomService: ConfigRoomService;
@@ -44,9 +47,46 @@ fdescribe('PartDAO', () => {
     const MALICIOUS_EMAIL: string = 'm@licio.us';
     const MALICIOUS_NAME: string = 'malicious';
 
+    async function addCandidate(partId: string, signOutUser: boolean = true): Promise<MinimalUser> {
+        const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+        await configRoomService.addCandidate(partId, candidate);
+        if (signOutUser) {
+            await signOut();
+        }
+        return candidate;
+    }
+    async function preparePart(): Promise<PartInfo> {
+        // Given a part, an accepted config, and a user who is the chosen opponent in the configRoom
+        // Creator creates the configRoom
+        const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+        const part: Part = { ...PartMocks.INITIAL, playerZero: creator };
+        const partId: string = await partDAO.create(part);
+        await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+        await signOut();
+
+        // A candidate adds themself to the candidates list
+        const candidate: MinimalUser = await addCandidate(partId);
+
+        // The creator then selects candidates as the chosen opponent and proposes the config
+        await reconnectUser(CREATOR_EMAIL);
+        const update: Partial<ConfigRoom> = {
+            chosenOpponent: candidate,
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
+        };
+        await expectAsync(configRoomDAO.update(partId, update)).toBeResolvedTo();
+        await signOut();
+
+        // And the candidate accepts the config
+        await reconnectUser(CANDIDATE_EMAIL);
+        await configRoomDAO.update(partId, { partStatus: PartStatus.PART_STARTED.value });
+
+        return { id: partId, part, creator, candidate };
+    }
+
     beforeEach(async() => {
         await setupEmulators();
         partDAO = TestBed.inject(PartDAO);
+        partService = TestBed.inject(PartService);
         userDAO = TestBed.inject(UserDAO);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         configRoomService = TestBed.inject(ConfigRoomService);
@@ -237,41 +277,6 @@ fdescribe('PartDAO', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
-        async function addCandidate(partId: string, signOutUser: boolean = true): Promise<MinimalUser> {
-            const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
-            await configRoomService.addCandidate(partId, candidate);
-            if (signOutUser) {
-                await signOut();
-            }
-            return candidate;
-        }
-        async function preparePart(): Promise<PartInfo> {
-            // Given a part, an accepted config, and a user who is the chosen opponent in the configRoom
-            // Creator creates the configRoom
-            const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const part: Part = { ...PartMocks.INITIAL, playerZero: creator };
-            const partId: string = await partDAO.create(part);
-            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
-            await signOut();
-
-            // A candidate adds themself to the candidates list
-            const candidate: MinimalUser = await addCandidate(partId);
-
-            // The creator then selects candidates as the chosen opponent and proposes the config
-            await reconnectUser(CREATOR_EMAIL);
-            const update: Partial<ConfigRoom> = {
-                chosenOpponent: candidate,
-                partStatus: PartStatus.CONFIG_PROPOSED.value,
-            };
-            await expectAsync(configRoomDAO.update(partId, update)).toBeResolvedTo();
-            await signOut();
-
-            // And the candidate accepts the config
-            await reconnectUser(CANDIDATE_EMAIL);
-            await configRoomDAO.update(partId, { partStatus: PartStatus.PART_STARTED.value });
-
-            return { id: partId, part, creator, candidate };
-        }
         it('should allow starting a part when chosen as opponent', async() => {
             // Given a part ready to be started
             const partInfo: PartInfo = await preparePart();
@@ -346,6 +351,31 @@ fdescribe('PartDAO', () => {
                 await expectPermissionToBeDenied(result);
             }
         });
+        it('should forbid non-player to create an event', async() => {
+            // Given a part and a verified user
+            const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+            const part: Part = { ...PartMocks.INITIAL, playerZero: creator };
+            const partId: string = await partDAO.create(part);
+            await signOut();
+
+            await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            // When creating an event (here, a 'StartGame' event)
+            const result: Promise<string> = partService.startGame(partId, Player.ZERO);
+            // Then it should fail
+            await expectPermissionToBeDenied(result);
+        });
+        fit('should forbid non-player to read events', async() => {
+            // Given a started part with events and a verified user
+            const partInfo: PartInfo = await preparePart();
+            const eventId: string = await partService.startGame(partInfo.id, Player.ZERO);
+            //await signOut();
+
+            // await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
+            // // When reading the event
+            // const result: Promise<MGPOptional<PartEvent>> = partDAO.subCollectionDAO<PartEvent>(partInfo.id, 'events').read(eventId);
+            // // Then it should succeed
+            // await expectPermissionToBeDenied(result);
+        });
     });
     describe('for unverified user', () => {
         it('should forbid creating a part', async() => {
@@ -367,6 +397,18 @@ fdescribe('PartDAO', () => {
             const result: Promise<MGPOptional<Part>> = partDAO.read(partId);
             // Then it should fail
             await expectPermissionToBeDenied(result);
+        });
+        it('should forbid creating an event', async() => {
+            // Given a part and a non-verified user
+            const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+            const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
+            await signOut();
+
+            await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
+            // TODO
+        });
+        it('should forbid reading an event', async() => {
+            // TODO
         });
     });
     describe('for creator', () => {
@@ -493,112 +535,6 @@ fdescribe('PartDAO', () => {
                 await reconnectUser(CREATOR_EMAIL);
             }
         });
-        // TODO: need to check security again
-        // it('should allow accepting a rematch when it was proposed by playerZero', async() => {
-        //     // Given a part where player zero proposes a rematch
-        //     const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-        //     const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-        //     const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-        //     const partId: string = await partDAO.create(part);
-
-        //     await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
-        //                              { request: Request.rematchProposed(Player.ZERO) });
-
-        //     await signOut();
-        //     await reconnectUser(OPPONENT_EMAIL);
-
-        //     // When the player one accepts the rematch
-        //     const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
-        //         request: Request.rematchAccepted('Quarto', 'newPartId'),
-        //     });
-
-        //     // Then it should succeed
-        //     await expectAsync(result).toBeResolvedTo();
-        // });
-        // it('should allow accepting a rematch when it was proposed by playerOne', async() => {
-        //     // Given a part where player one proposes a rematch
-        //     const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-        //     const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-        //     const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-        //     const partId: string = await partDAO.create(part);
-
-        //     await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
-        //                              { turn: 0, listMoves: [] });
-
-        //     await signOut();
-        //     await reconnectUser(OPPONENT_EMAIL);
-
-        //     await updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1,
-        //                              { request: Request.rematchProposed(Player.ONE) });
-
-        //     await signOut();
-        //     await reconnectUser(CREATOR_EMAIL);
-
-        //     // When the player zero accepts the rematch
-        //     const result: Promise<void> = updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+2, {
-        //         request: Request.rematchAccepted('Quarto', 'newPartId'),
-        //     });
-
-        //     // Then it should succeed
-        //     await expectAsync(result).toBeResolvedTo();
-        // });
-        // it('should allow accepting a rematch when it was proposed after a victory', async() => {
-        //     // Given a part where someone has won and proposed a rematch
-        //     const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-        //     const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-        //     const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-        //     const partId: string = await partDAO.create(part);
-
-        //     // Player zero wins
-        //     await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index, {
-        //         listMoves: [1],
-        //         turn: 1,
-        //         result: MGPResult.VICTORY.value,
-        //         winner: playerZero,
-        //         loser: playerOne,
-        //     });
-
-        //     // Player zero proposes a rematch
-        //     await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index+1,
-        //                              { request: Request.rematchProposed(Player.ZERO) });
-
-        //     await signOut();
-        //     await reconnectUser(OPPONENT_EMAIL);
-
-        //     // When the player one accepts the rematch
-        //     const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+2, {
-        //         request: Request.rematchAccepted('Quarto', 'newPartId'),
-        //     });
-
-        //     // Then it should succeed
-        //     await expectAsync(result).toBeResolvedTo();
-        // });
-        // it('should allow accepting a draw when it was proposed', async() => {
-        //     // Given a part where one player proposes a draw
-        //     const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-        //     const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-        //     const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-        //     const partId: string = await partDAO.create(part);
-
-        //     await updateAndBumpIndex(partId, Player.ZERO, part.lastUpdate.index,
-        //                              { request: Request.drawProposed(Player.ZERO) });
-
-        //     await signOut();
-        //     await reconnectUser(OPPONENT_EMAIL);
-
-        //     // When the other user accepts the draw
-        //     const result: Promise<void> = updateAndBumpIndex(partId, Player.ONE, part.lastUpdate.index+1, {
-        //         request: null,
-        //         result: MGPResult.AGREED_DRAW_BY_ONE.value,
-        //     });
-
-        //     // Then it should succeed
-        //     await expectAsync(result).toBeResolvedTo();
-        // });
         it('should forbid changing the status to draw if it was not proposed', async() => {
             // Given a part where one player did NOT propose a draw
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
@@ -762,6 +698,36 @@ fdescribe('PartDAO', () => {
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
+        });
+        describe('events', () => {
+            it('should forbid an invalid event type');
+            it('should forbid creating an event as the other player');
+            it('should forbid modifying an event');
+            it('should forbid deleting an event');
+            describe('moves', () => {
+                it('should allow creating a move on player turn');
+                it('should forbid creating a move on opponent turn');
+            });
+            describe('actions', () => {
+                it('should allow creating AddTurnTime action');
+                it('should allow creating AddGlobalTime action');
+                it('should allow creating StartGame action at turn 0');
+                it('should forbid creating StartGame action at non-0 turn');
+                it('should allow creating EndGame action upon end game');
+                it('should forbid creating EndGame action during game');
+            });
+            describe('requests', () => {
+                it('should allow requesting draw in in-progress game');
+                it('should forbid requesting draw in finished game');
+                it('should allow proposing rematch in finished game');
+                it('should forbid proposing rematch in in-progress game');
+                it('should allow requesting take back in in-progress game');
+                it('should forbid requesting take back in finished game');
+            });
+            describe('replys', () => {
+                it('should allow accepting a request');
+                it('should allow rejecting a request');
+            });
         });
     });
 });

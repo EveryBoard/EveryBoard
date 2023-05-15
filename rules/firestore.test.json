@@ -121,9 +121,8 @@ service cloud.firestore {
             allow read: if userIsVerified();
         }
         match /parts/{partId}/events/{eventId} {
-            allow read, write: if true; // TODO: tempoary
             allow read: if userIsVerified();
-            allow create: if playerAddsMove(partId, request.resource.data); // TODO: player is in the game and adds the move as expected
+            allow create: if playerAddsMove(partId, request.resource.data);
         }
         function verifiedUserCreatesPart(part) {
             // Any verified user can create a part with the proper fields set, and has to be the creator
@@ -153,15 +152,15 @@ service cloud.firestore {
                 hasTimedOut(creatorOf(id).id) &&
                 partHasStarted(part) == false;
         }
-        // REVIEW function playerPerformsMove(part, update) {
-        // REVIEW     // A player can perform a move
-        // REVIEW     let isUserTurn = (part.turn % 2 == 0 && userIsPlayerZero(part)) ||
-        // REVIEW         (part.turn % 2 == 1 && userIsPlayerOne(part));
-        // REVIEW     return isValidPartUpdateDuringGame(part) &&
-        // REVIEW            safeTurnIncrease(part.turn, update.turn) &&
-        // REVIEW            setsWinnerIfVictory(part, update) &&
-        // REVIEW            isUserTurn;
-        // REVIEW }
+        function playerAddsEvent(part) {
+            return userIsVerified() &&
+                partHasStarted(part) &&
+                userIsPlayer(part);
+        }
+        function playerAddsNonMove(partId, event) {
+            let part = get(/databases/$(database)/documents/part/$(partId));
+            return playerAddsEvent(part);
+        }
         function playerAddsMove(partId, moveEvent) {
             // Move addition is performed before updating the part turn
             // This way, if move addition fails, the part isn't corrupt
@@ -170,7 +169,8 @@ service cloud.firestore {
                 ((part.turn+1) % 2 == 1 && userIsPlayerOne(part));
             let validPlayerInEvent = moveEvent.player == (part.turn+1) % 2;
             let validMoveType = moveEvent.eventType == 'Move';
-            return true; // TODO isUserTurn && validMoveType && validPlayerInEvent;
+            return playerAddsEvent(part);
+            // return true; // TODO isUserTurn && validMoveType && validPlayerInEvent;
         }
         function setsWinnerIfVictory(part, update) {
             let isVictory = part.result == 5 && update.result == 3; // 3 = victory, 5 = unachieved
