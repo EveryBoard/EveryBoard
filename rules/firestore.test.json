@@ -153,16 +153,15 @@ service cloud.firestore {
                 hasTimedOut(creatorOf(id).id) &&
                 partHasStarted(part) == false;
         }
-        function playerPerformsMove(part, update) {
-            // A player can perform a move
-            let isUserTurn = (part.turn % 2 == 0 && userIsPlayerZero(part)) ||
-                (part.turn % 2 == 1 && userIsPlayerOne(part));
-            return isValidPartUpdateDuringGame(part) &&
-                safeTurnIncrease(part.turn, update.turn) &&
-                safeLastUpdate(part, update) &&
-                setsWinnerIfVictory(part, update) &&
-                isUserTurn;
-        }
+        // REVIEW function playerPerformsMove(part, update) {
+        // REVIEW     // A player can perform a move
+        // REVIEW     let isUserTurn = (part.turn % 2 == 0 && userIsPlayerZero(part)) ||
+        // REVIEW         (part.turn % 2 == 1 && userIsPlayerOne(part));
+        // REVIEW     return isValidPartUpdateDuringGame(part) &&
+        // REVIEW            safeTurnIncrease(part.turn, update.turn) &&
+        // REVIEW            setsWinnerIfVictory(part, update) &&
+        // REVIEW            isUserTurn;
+        // REVIEW }
         function playerAddsMove(partId, moveEvent) {
             // Move addition is performed before updating the part turn
             // This way, if move addition fails, the part isn't corrupt
@@ -181,20 +180,13 @@ service cloud.firestore {
         }
         function playerPerformsNonMoveUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
-            return isValidPartUpdateDuringGame(part) &&
-                (preservesField('turn') || safeTurnDecrease(part.turn, update.turn)) &&
-                preservesWinnerAndLoserUnlessResultChanges() &&
-                onlyAcceptsDrawIfProposed(part, update) &&
+            return debug(isValidPartUpdateDuringGame(part)) &&
+                debug(part.turn == update.turn || safeTurnIncrease(part.turn, update.turn) || safeTurnDecrease(part.turn, update.turn)) &&
+                debug(preservesWinnerAndLoserUnlessResultChanges()) &&
+                debug(onlyAcceptsDrawIfProposed(part, update)) &&
 //                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
-                onlyResignsInTheirName(part, update) &&
-                isNotSetToVictory(part, update) &&
-                safeLastUpdate(part, update);
-        }
-        function isNotSetToVictory(part, update) {
-            // 3 = victory
-            let partWasVictory = part.result == 3;
-            let newPartIsVictory = update.result == 3;
-            return partWasVictory || (newPartIsVictory == false);
+            debug(onlyResignsInTheirName(part, update)) &&
+                debug(setsWinnerIfVictory(part, update));
         }
         function onlyAcceptsDrawIfProposed(part, update) {
             // 6 = draw agreed by zero
@@ -250,7 +242,6 @@ service cloud.firestore {
                 preservesField('scorePlayerZero') &&
                 preservesField('scorePlayerOne') &&
                 update.turn == 0 &&
-                safeLastUpdate(part, update) &&
                 userIsChosenOpponentInConfigRoom(configRoom) &&
                 validPlayerSelection(configRoom, update);
         }
@@ -281,14 +272,6 @@ service cloud.firestore {
         }
         function safeTurnDecrease(oldTurn, newTurn) {
             return (newTurn == oldTurn - 1) || (newTurn == oldTurn - 2);
-        }
-        function safeLastUpdate(part, update) {
-            let legitimatePlayerZeroUpdate = update.lastUpdate.player == 0 && part.playerZero.id == request.auth.uid;
-            let legitimatePlayerOneUpdate = hasField(part, 'playerOne') &&
-                update.lastUpdate.player == 1 &&
-                part.playerOne.id == request.auth.uid;
-            let indexIncremented = update.lastUpdate.index == part.lastUpdate.index + 1;
-            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate || partHasStarted(part) == false) && indexIncremented;
         }
         function partHasStarted(part) {
             // A part is started when the beginning field is set

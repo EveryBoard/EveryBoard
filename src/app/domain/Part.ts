@@ -6,17 +6,17 @@ import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export interface Part extends FirestoreJSONObject {
-    readonly typeGame: string, // the type of game
-    readonly playerZero: MinimalUser, // the first player
-    readonly turn: number, // -1 means the part has not started, 0 is the initial turn
-    readonly result: IMGPResult,
+    readonly typeGame: string; // the type of game
+    readonly playerZero: MinimalUser; // the first player
+    readonly turn: number; // -1 means the part has not started, 0 is the initial turn
+    readonly result: IMGPResult;
 
-    readonly playerOne?: MinimalUser, // the second player
-    readonly beginning?: FirestoreTime, // beginning of the part
-    readonly winner?: MinimalUser,
-    readonly loser?: MinimalUser,
-    readonly scorePlayerZero?: number,
-    readonly scorePlayerOne?: number,
+    readonly playerOne?: MinimalUser; // the second player
+    readonly beginning?: FirestoreTime; // beginning of the part
+    readonly winner?: MinimalUser;
+    readonly loser?: MinimalUser;
+    readonly scorePlayerZero?: number;
+    readonly scorePlayerOne?: number;
 
     // Extra fields as sub-collections:
     // events: subcollection of PartEvent
@@ -25,36 +25,36 @@ export interface Part extends FirestoreJSONObject {
 type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
 
 export interface PartEvent extends FirestoreJSONObject {
-    readonly eventType: EventType
-    readonly time: FirestoreTime
-    readonly player: 0 | 1
+    readonly eventType: EventType;
+    readonly time: FirestoreTime;
+    readonly player: 0 | 1;
 }
 
 export interface PartEventMove extends PartEvent {
-    readonly eventType: 'Move'
-    readonly move: JSONValue
+    readonly eventType: 'Move';
+    readonly move: JSONValue;
 }
 
 // The StartGame action is a dummy action to ensure that at least one event occurs at game start.
 // This is required because the clock logic relies on at least one event happening at the start of the game.
-export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame' | 'EndGame'
+export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame' | 'EndGame';
 export interface PartEventAction extends PartEvent {
-    readonly eventType: 'Action'
-    readonly action: Action
+    readonly eventType: 'Action';
+    readonly action: Action;
 }
 
-export type RequestType = 'Draw' | 'Rematch' | 'TakeBack'
+export type RequestType = 'Draw' | 'Rematch' | 'TakeBack';
 export interface PartEventRequest extends PartEvent {
-    readonly eventType: 'Request'
-    readonly requestType: RequestType
+    readonly eventType: 'Request';
+    readonly requestType: RequestType;
 }
 
-export type Reply = 'Accept' | 'Reject'
+export type Reply = 'Accept' | 'Reject';
 export interface PartEventReply extends PartEvent {
-    readonly eventType: 'Reply'
-    readonly reply: Reply
-    readonly requestType: RequestType
-    readonly data: JSONValue,
+    readonly eventType: 'Reply';
+    readonly reply: Reply;
+    readonly requestType: RequestType;
+    readonly data: JSONValue;
 }
 
 export class MGPResult {

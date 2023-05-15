@@ -25,7 +25,7 @@ type PartInfo = {
     candidate: MinimalUser,
 }
 
-xdescribe('PartDAO', () => {
+fdescribe('PartDAO', () => {
 
     let partDAO: PartDAO;
     let userDAO: UserDAO;
@@ -137,7 +137,6 @@ xdescribe('PartDAO', () => {
                 { beginning: serverTimestamp() },
                 { turn: 42 },
                 { result: 3 },
-                { lastUpdateTime: serverTimestamp() },
                 { winner: creator },
                 { loser: user },
                 { scorePlayerZero: 42 },
@@ -677,10 +676,7 @@ xdescribe('PartDAO', () => {
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
-        xit('should forbid timeouting a part without timed out users', async() => {
-            // Not tested as the security rules do not ensure proper time management yet
-        });
-        it('should allow setting winner and loser with a move', async() => {
+        it('should allow setting winner and loser', async() => {
             // Given an ongoing part
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
@@ -750,24 +746,6 @@ xdescribe('PartDAO', () => {
             await expectPermissionToBeDenied(winnerResult);
             await expectPermissionToBeDenied(loserResult);
         });
-        it('should forbid setting winner and loser without move, resigning, or timeout', async() => {
-            // Given an ongoing part
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-            const partId: string = await partDAO.create(part);
-
-            // When setting the winner and loser without sending a move
-            const result: Promise<void> = partDAO.update(partId, {
-                result: MGPResult.VICTORY.value,
-                winner: playerZero,
-                loser: playerOne,
-            });
-
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
-        });
         it('should forbid setting winner and loser without changing result', async() => {
             // Given an ongoing part
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
@@ -784,16 +762,6 @@ xdescribe('PartDAO', () => {
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
-        });
-        describe('increasing time', () => {
-            it('should allow increasing the time of the opponent (as playerZero)', async() => {
-            });
-            xit('should forbid increasing its own time (as playerZero)', async() => {
-            });
-            it('should allow increasing the time of the opponent (as playerOne)', async() => {
-            });
-            xit('should forbid increasing its own time (as playerOne)', async() => {
-            });
         });
     });
 });
