@@ -9,7 +9,7 @@ import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { P4Failure } from './P4Failure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
@@ -94,12 +94,12 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const resultingState: P4State = new P4State(board, turn + 1);
         return resultingState;
     }
-    public isLegal(move: P4Move, state: P4State): MGPFallible<void> {
+    public isLegal(move: P4Move, state: P4State): MGPValidation {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
         if (state.getPieceAtXY(move.x, 0).isPlayer()) {
-            return MGPFallible.failure(P4Failure.COLUMN_IS_FULL());
+            return MGPValidation.failure(P4Failure.COLUMN_IS_FULL());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;

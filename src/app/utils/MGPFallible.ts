@@ -9,19 +9,19 @@ export abstract class MGPFallible<T> {
         return new MGPFallibleFailure(reason);
     }
 
-    protected constructor() {
-    }
-    public abstract isSuccess(): this is MGPFallibleSuccess<T>
+    protected constructor() {}
 
-    public abstract isFailure(): this is MGPFallibleFailure<T>
+    public abstract isSuccess(): this is MGPFallibleSuccess<T>;
 
-    public abstract get(): T
+    public abstract isFailure(): this is MGPFallibleFailure<T>;
 
-    public abstract getReason(): string
+    public abstract get(): T;
 
-    public abstract getReasonOr(value: string): string
+    public abstract getReason(): string;
 
-    public abstract toOptional(): MGPOptional<T>
+    public abstract getReasonOr(value: string): string;
+
+    public abstract toOptional(): MGPOptional<T>;
 
     public equals(other: MGPFallible<T>): boolean {
         if (this.isFailure()) {

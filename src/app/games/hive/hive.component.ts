@@ -431,7 +431,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
             return this.chooseMove(move, this.getState());
         }
-        const validity: MGPFallible<void> =
+        const validity: MGPValidation =
             HiveSpiderRules.get().prefixLegality(this.selectedSpiderCoords, this.getState());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());

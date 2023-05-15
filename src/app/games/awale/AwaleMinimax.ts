@@ -6,8 +6,8 @@ import { AwaleNode, AwaleRules } from './AwaleRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from '../../utils/MGPValidation';
 
 export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
 
@@ -24,7 +24,7 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
                 // if the house is not empty
                 newMove = AwaleMove.from(x);
                 // see if the move is legal
-                const legality: MGPFallible<void> = AwaleRules.isLegal(newMove, state);
+                const legality: MGPValidation = AwaleRules.isLegal(newMove, state);
 
                 if (legality.isSuccess()) {
                     // if the move is legal, we addPart it to the listMoves
