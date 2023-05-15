@@ -4,7 +4,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
@@ -124,53 +124,53 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return resultingState.incrementTurn();
     }
-    public isLegal(move: LascaMove, state: LascaState): MGPFallible<void> {
+    public isLegal(move: LascaMove, state: LascaState): MGPValidation {
         const moveStart: Coord = move.getStartingCoord();
         if (state.getPieceAt(moveStart).isEmpty()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         const movedStack: LascaStack = state.getPieceAt(moveStart);
         const opponent: Player = state.getCurrentOpponent();
         if (movedStack.isCommandedBy(opponent)) {
-            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const secondCoord: Coord = move.coords.get(1);
         if (movedStack.getCommander().isOfficer === false) {
             const moveDirection: number = moveStart.getDirectionToward(secondCoord).get().y;
             if (moveDirection === opponent.getScoreModifier()) {
-                return MGPFallible.failure(LascaFailure.CANNOT_GO_BACKWARD());
+                return MGPValidation.failure(LascaFailure.CANNOT_GO_BACKWARD());
             }
         }
         if (state.getPieceAt(secondCoord).isEmpty() === false) {
-            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const possibleCaptures: LascaMove[] = this.getCaptures(state);
         if (move.isStep) {
             if (possibleCaptures.length > 0) {
-                return MGPFallible.failure(LascaFailure.CANNOT_SKIP_CAPTURE());
+                return MGPValidation.failure(LascaFailure.CANNOT_SKIP_CAPTURE());
             } else {
-                return MGPFallible.success(undefined);
+                return MGPValidation.SUCCESS;
             }
         } else {
             return this.isLegalCapture(move, state, possibleCaptures);
         }
     }
-    public isLegalCapture(move: LascaMove, state: LascaState, possibleCaptures: LascaMove[]): MGPFallible<void> {
+    public isLegalCapture(move: LascaMove, state: LascaState, possibleCaptures: LascaMove[]): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const steppedOverCoords: MGPSet<Coord> = move.getCapturedCoords().get();
         for (const steppedOverCoord of steppedOverCoords) {
             const steppedOverSpace: LascaStack = state.getPieceAt(steppedOverCoord);
             if (steppedOverSpace.isCommandedBy(player)) {
-                return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
+                return MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE());
             }
             if (steppedOverSpace.isEmpty()) {
-                return MGPFallible.failure(LascaFailure.CANNOT_CAPTURE_EMPTY_SPACE());
+                return MGPValidation.failure(LascaFailure.CANNOT_CAPTURE_EMPTY_SPACE());
             }
         }
         if (possibleCaptures.some((m: LascaMove) => m.equals(move))) {
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         } else {
-            return MGPFallible.failure(LascaFailure.MUST_FINISH_CAPTURING());
+            return MGPValidation.failure(LascaFailure.MUST_FINISH_CAPTURING());
         }
     }
     public getGameStatus(node: LascaNode): GameStatus {

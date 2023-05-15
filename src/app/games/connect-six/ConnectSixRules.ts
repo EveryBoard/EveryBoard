@@ -1,7 +1,7 @@
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -53,22 +53,22 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         newBoard[move.coord.y][move.coord.x] = player;
         return new ConnectSixState(newBoard, state.turn + 1);
     }
-    public isLegal(move: ConnectSixMove, state: ConnectSixState): MGPFallible<void> {
+    public isLegal(move: ConnectSixMove, state: ConnectSixState): MGPValidation {
         if (state.turn === 0) {
             Utils.assert(move instanceof ConnectSixFirstMove, 'First move should be instance of ConnectSixFirstMove');
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         } else {
             Utils.assert(move instanceof ConnectSixDrops, 'non-firsts moves should be instance of ConnectSixDrops');
             return this.isLegalDrops(move as ConnectSixDrops, state);
         }
     }
-    public isLegalDrops(move: ConnectSixDrops, state: ConnectSixState): MGPFallible<void> {
+    public isLegalDrops(move: ConnectSixDrops, state: ConnectSixState): MGPValidation {
         if (state.getPieceAt(move.getFirst()).isPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         } else if (state.getPieceAt(move.getSecond()).isPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         } else {
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         }
     }
     public getGameStatus(node: ConnectSixNode): GameStatus {

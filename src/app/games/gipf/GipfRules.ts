@@ -157,19 +157,19 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     public isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
-            return initialCapturesValidity.toFailedFallible();
+            return initialCapturesValidity.toOtherFallible();
         }
         const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(move.initialCaptures, state);
 
         const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterInitialCaptures);
         if (noMoreCaptureAfterInitialValidity.isFailure()) {
-            return noMoreCaptureAfterInitialValidity.toFailedFallible();
+            return noMoreCaptureAfterInitialValidity.toOtherFallible();
         }
 
         const placementValidity: MGPValidation =
             this.placementValidity(stateAfterInitialCaptures, move.placement);
         if (placementValidity.isFailure()) {
-            return placementValidity.toFailedFallible();
+            return placementValidity.toOtherFallible();
         }
         const stateAfterPlacement: GipfState =
             GipfRules.applyPlacement(move.placement, stateAfterInitialCaptures);
@@ -177,7 +177,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         const finalCapturesValidity: MGPValidation =
             this.capturesValidity(stateAfterPlacement, move.finalCaptures);
         if (finalCapturesValidity.isFailure()) {
-            return finalCapturesValidity.toFailedFallible();
+            return finalCapturesValidity.toOtherFallible();
         }
 
         const stateAfterFinalCaptures: GipfState =
@@ -185,7 +185,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         const noMoreCaptureAfterFinalValidity: MGPValidation =
             this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCaptureAfterFinalValidity.isFailure()) {
-            return noMoreCaptureAfterFinalValidity.toFailedFallible();
+            return noMoreCaptureAfterFinalValidity.toOtherFallible();
         }
 
         return MGPFallible.success(stateAfterFinalCaptures);

@@ -14,7 +14,6 @@ import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TaflState } from './TaflState';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
@@ -28,15 +27,15 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     {
         super(stateType);
     }
-    public isLegal(move: TaflMove, state: S): MGPFallible<void> {
+    public isLegal(move: TaflMove, state: S): MGPValidation {
         display(TaflRules.VERBOSE, { tablutRules_isLegal: { move, state } });
 
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
         if (validity.isFailure()) {
-            return MGPFallible.failure(validity.getReason());
+            return MGPValidation.failure(validity.getReason());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     private getMoveValidity(player: Player, move: TaflMove, state: S): MGPValidation {
         const owner: RelativePlayer = state.getRelativeOwner(player, move.getStart());

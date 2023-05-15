@@ -209,7 +209,7 @@ export class ConspirateursComponent
             if (newJump.isFailure()) {
                 return this.cancelMove(newJump.getReason());
             }
-            const jumpLegality: MGPFallible<void> = this.rules.jumpLegality(newJump.get(), state);
+            const jumpLegality: MGPValidation = this.rules.jumpLegality(newJump.get(), state);
             if (jumpLegality.isFailure()) {
                 return this.cancelMove(jumpLegality.getReason());
             }

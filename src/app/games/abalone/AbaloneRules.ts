@@ -20,7 +20,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     public static isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {
-            return firstPieceValidity.toFailedFallible();
+            return firstPieceValidity.toOtherFallible();
         }
         if (move.isSingleCoord()) {
             return AbaloneRules.isLegalPush(move, state);

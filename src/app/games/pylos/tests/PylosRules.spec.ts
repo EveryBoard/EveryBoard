@@ -9,7 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
 
@@ -220,7 +220,7 @@ describe('PylosRules:', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0)]);
-        const status: MGPFallible<void> = rules.isLegal(move, state);
+        const status: MGPValidation = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });
     it('should forbid piece to climb over itself', () => {
@@ -292,7 +292,7 @@ describe('PylosRules:', () => {
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 3, 0),
                                                     new PylosCoord(0, 0, 1),
                                                     [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
-        const status: MGPFallible<void> = rules.isLegal(move, state);
+        const status: MGPValidation = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });
     it('should declare loser Player.ZERO when he put his 15th ball', () => {
