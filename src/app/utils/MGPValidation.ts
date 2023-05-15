@@ -2,6 +2,7 @@ import { MGPFallible } from './MGPFallible';
 
 export type MGPValidation = MGPFallible<void>
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace MGPValidation {
 
     export const SUCCESS: MGPValidation = MGPFallible.success(undefined);
