@@ -129,8 +129,8 @@ export class GameService {
             loser,
             result: MGPResult.RESIGN.value,
         };
-        await this.partService.addAction(partId, player, 'EndGame');
         await this.update(partId, update);
+        await this.partService.addAction(partId, player, 'EndGame');
     }
     public async notifyTimeout(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const update: Partial<Part> = {
@@ -138,8 +138,8 @@ export class GameService {
             loser,
             result: MGPResult.TIMEOUT.value,
         };
-        await this.partService.addAction(partId, player, 'EndGame');
         await this.update(partId, update);
+        await this.partService.addAction(partId, player, 'EndGame');
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {
         await this.partService.addRequest(partId, player, 'Draw');
@@ -151,8 +151,8 @@ export class GameService {
         const update: Partial<Part> = {
             result: result.value,
         };
-        await this.partService.addAction(partId, player, 'EndGame');
         await this.update(partId, update);
+        await this.partService.addAction(partId, player, 'EndGame');
     }
     public async refuseDraw(partId: string, player: Player): Promise<void> {
         await this.partService.addReply(partId, player, 'Reject', 'Draw');

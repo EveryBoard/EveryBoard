@@ -122,7 +122,8 @@ service cloud.firestore {
         }
         match /parts/{partId}/events/{eventId} {
             allow read: if userIsVerified();
-            allow create: if playerAddsMove(partId, request.resource.data);
+            allow create: if playerAddsMoveEvent(partId, request.resource.data);
+            allow create: if playerAddsNonMoveEvent(partId, request.resource.data);
         }
         function verifiedUserCreatesPart(part) {
             // Any verified user can create a part with the proper fields set, and has to be the creator
@@ -152,25 +153,54 @@ service cloud.firestore {
                 hasTimedOut(creatorOf(id).id) &&
                 partHasStarted(part) == false;
         }
-        function playerAddsEvent(part) {
+        function playerAddsEvent(part, event) {
             return userIsVerified() &&
-                partHasStarted(part) &&
-                userIsPlayer(part);
+                ((event.player == 0 && userIsPlayerZero(part)) ||
+                 (event.player == 1 && userIsPlayerOne(part)));
         }
-        function playerAddsNonMove(partId, event) {
-            let part = get(/databases/$(database)/documents/part/$(partId));
-            return playerAddsEvent(part);
+        function validEvent(event) {
+            return hasField(event, 'eventType') &&
+                   hasField(event, 'time') &&
+                   hasField(event, 'player') &&
+                   (event.player == 0 || event.player == 1);
         }
-        function playerAddsMove(partId, moveEvent) {
+        function validAction(part, event) {
+            let gameJustStarted = part.turn == 0;
+            let gameFinished = part.result != 5; // Unachieved
+            return hasField(event, 'action') &&
+                ((event.action == 'AddTurnTime') ||
+                 (event.action == 'AddGlobalTime') ||
+                 (event.action == 'StartGame' && gameJustStarted) ||
+                 (event.action == 'EndGame' && gameFinished));
+        }
+        function validRequest(part, event) {
+            let partFinished = part.result != 5;
+            return hasField(event, 'requestType') &&
+                ((debug(event.requestType) == 'Draw' && debug(!partFinished)) ||
+                 (event.requestType == 'Rematch' && debug(partFinished)) ||
+                 (event.requestType == 'TakeBack' && part.turn >= 1 && !partFinished));
+        }
+        function validReply(event) {
+            return hasField(event, 'reply') &&
+                ((event.reply == 'Accept') ||
+                 (event.reply == 'Reject'));
+        }
+        function playerAddsNonMoveEvent(partId, event) {
+            let part = get(/databases/$(database)/documents/parts/$(partId)).data;
+            return validEvent(event) &&
+                playerAddsEvent(part, event) &&
+                ((event.eventType == 'Request' && debug(validRequest(part, event))) ||
+                 (event.eventType == 'Reply' && validReply(event)) ||
+                 (event.eventType == 'Action' && validAction(part, event)));
+        }
+        function playerAddsMoveEvent(partId, moveEvent) {
             // Move addition is performed before updating the part turn
             // This way, if move addition fails, the part isn't corrupt
-            let part = get(/databases/$(database)/documents/part/$(partId));
-            let isUserTurn = ((part.turn+1) % 2 == 0 && userIsPlayerZero(part)) ||
-                ((part.turn+1) % 2 == 1 && userIsPlayerOne(part));
-            let validPlayerInEvent = moveEvent.player == (part.turn+1) % 2;
-            let validMoveType = moveEvent.eventType == 'Move';
-            return playerAddsEvent(part);
-            // return true; // TODO isUserTurn && validMoveType && validPlayerInEvent;
+            let part = get(/databases/$(database)/documents/parts/$(partId)).data;
+            let isPlayerTurn = part.turn % 2 == moveEvent.player;
+            return validEvent(moveEvent)  && moveEvent.eventType == 'Move' &&
+                playerAddsEvent(part, moveEvent) &&
+                isPlayerTurn;
         }
         function setsWinnerIfVictory(part, update) {
             let isVictory = part.result == 5 && update.result == 3; // 3 = victory, 5 = unachieved
@@ -180,13 +210,12 @@ service cloud.firestore {
         }
         function playerPerformsNonMoveUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
-            return debug(isValidPartUpdateDuringGame(part)) &&
-                debug(part.turn == update.turn || safeTurnIncrease(part.turn, update.turn) || safeTurnDecrease(part.turn, update.turn)) &&
-                debug(preservesWinnerAndLoserUnlessResultChanges()) &&
-                debug(onlyAcceptsDrawIfProposed(part, update)) &&
-//                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
-            debug(onlyResignsInTheirName(part, update)) &&
-                debug(setsWinnerIfVictory(part, update));
+            return isValidPartUpdateDuringGame(part) &&
+                (part.turn == update.turn || safeTurnIncrease(part.turn, update.turn) || safeTurnDecrease(part.turn, update.turn)) &&
+                preservesWinnerAndLoserUnlessResultChanges() &&
+                onlyAcceptsDrawIfProposed(part, update) &&
+                onlyResignsInTheirName(part, update) &&
+                setsWinnerIfVictory(part, update);
         }
         function onlyAcceptsDrawIfProposed(part, update) {
             // 6 = draw agreed by zero
@@ -262,7 +291,7 @@ service cloud.firestore {
             return userIsPlayerZero(part) || userIsPlayerOne(part);
         }
         function userIsPlayerZero(part) {
-            return part.playerZero.id == request.auth.uid;
+            return debug(part).playerZero.id == request.auth.uid;
         }
         function userIsPlayerOne(part) {
             return hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;

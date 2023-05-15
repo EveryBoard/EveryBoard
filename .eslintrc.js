@@ -32,7 +32,7 @@ module.exports = {
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],
             'no-warning-comments': [
-                'reror',
+                'error',
                 { 'terms': ['todo', 'fixme', 'xxx', 'review'], 'location': 'start' }
             ],
             'complexity': ['error', 20],
