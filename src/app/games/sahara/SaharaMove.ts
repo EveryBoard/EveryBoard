@@ -65,7 +65,7 @@ export class SaharaMove extends MoveCoordToCoord {
         }
         const validity: MGPValidation = SaharaMove.checkDistanceAndLocation(start, end);
         if (validity.isFailure()) {
-            return validity.toFailedFallible();
+            return validity.toOtherFallible();
         } else {
             return MGPFallible.success(new SaharaMove(start, end));
         }

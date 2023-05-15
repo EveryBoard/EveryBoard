@@ -155,7 +155,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 
         const pieceMovable: MGPValidation = this.isMovablePiece(state, move.getStart());
         if (pieceMovable.isFailure()) {
-            return pieceMovable.toFailedFallible();
+            return pieceMovable;
         }
 
         const stack: DvonnPieceStack = state.getPieceAt(move.getStart());

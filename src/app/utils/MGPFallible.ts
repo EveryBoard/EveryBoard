@@ -11,9 +11,9 @@ export abstract class MGPFallible<T> {
 
     protected constructor() {
     }
-    public abstract isSuccess(): boolean
+    public abstract isSuccess(): this is MGPFallibleSuccess<T>
 
-    public abstract isFailure(): boolean
+    public abstract isFailure(): this is MGPFallibleFailure<T>
 
     public abstract get(): T
 
@@ -41,10 +41,10 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public constructor(private readonly value: T) {
         super();
     }
-    public isSuccess(): boolean {
+    public isSuccess(): this is MGPFallibleSuccess<T> {
         return true;
     }
-    public isFailure(): boolean {
+    public isFailure(): this is MGPFallibleFailure<T> {
         return false;
     }
     public get(): T {
@@ -71,10 +71,10 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     public constructor(private readonly reason: string) {
         super();
     }
-    public isSuccess(): boolean {
+    public isSuccess(): this is MGPFallibleSuccess<T> {
         return false;
     }
-    public isFailure(): boolean {
+    public isFailure(): this is MGPFallibleFailure<T> {
         return true;
     }
     public get(): T {
@@ -91,5 +91,8 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     }
     public toString(): string {
         return `MGPFallible.failure(${this.reason})`;
+    }
+    public toOtherFallible<U>(): MGPFallible<U> {
+        return MGPFallible.failure(this.reason);
     }
 }

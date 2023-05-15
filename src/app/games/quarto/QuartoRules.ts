@@ -182,7 +182,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     }
 
     public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
-        return QuartoRules.isLegal(move, state).toFallible(undefined);
+        return QuartoRules.isLegal(move, state);
     }
     public applyLegalMove(move: QuartoMove, state: QuartoState): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
