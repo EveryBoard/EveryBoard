@@ -164,7 +164,6 @@ export class HiveSpiderRules extends HivePieceRules {
         const stateWithoutMovedSpider: HiveState = state.update()
             .setAt(coords[0], HivePieceStack.EMPTY)
             .increaseTurnAndFinalizeUpdate();
-        coords = coords.map((c: Coord) => c.getNext(stateWithoutMovedSpider.offset));
         for (let i: number = 1; i < coords.length; i++) {
             if (stateWithoutMovedSpider.getAt(coords[i]).hasPieces()) {
                 return MGPFallible.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
@@ -198,14 +197,12 @@ export class HiveSpiderRules extends HivePieceRules {
         const stateWithoutMovedSpider: HiveState = state.update()
             .setAt(coord, HivePieceStack.EMPTY)
             .increaseTurnAndFinalizeUpdate();
-        coord = coord.getNext(stateWithoutMovedSpider.offset);
 
         let movesSoFar: Coord[][] = [[coord]];
         for (let i: number = 0; i < 3; i++) {
             movesSoFar = movesSoFar.flatMap((move: Coord[]) => this.nextMoveStep(stateWithoutMovedSpider, move));
         }
         function makeMove(move: Coord[]): HiveMoveSpider {
-            move = move.map((c: Coord) => c.getPrevious(stateWithoutMovedSpider.offset));
             return HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]);
         }
         const uniqueMoves: MGPSet<HiveMoveCoordToCoord> = new MGPSet(movesSoFar.map(makeMove));

@@ -93,7 +93,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             // Cannot disconnect the hive, even in the middle of a move
             return MGPFallible.failure(HiveFailure.CANNOT_DISCONNECT_HIVE());
         }
-        const newEnd: Coord = move.getEnd().getNext(stateWithoutMovedPiece.offset);
+        const newEnd: Coord = move.getEnd();
         if (stateWithoutMovedPiece.numberOfNeighbors(newEnd) === 0) {
             // Cannot disconnect the hive after the move, i.e., the destination should have one occupied neighbor
             return MGPFallible.failure(HiveFailure.CANNOT_DISCONNECT_HIVE());

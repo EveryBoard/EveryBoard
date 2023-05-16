@@ -10,7 +10,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-describe('SixComponent', () => {
+fdescribe('SixComponent', () => {
 
     let testUtils: ComponentTestUtils<SixComponent>;
 
@@ -217,19 +217,52 @@ describe('SixComponent', () => {
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
     });
-    it('should highlight winning coords', fakeAsync(async() => {
-        const board: number[][] = [
-            [O, _, _, _, _, _, _, _, _, _],
-            [O, O, O, O, O, X, X, X, X, X],
-            [_, _, _, _, _, _, _, _, _, X],
-        ];
-        const state: SixState = SixState.fromRepresentation(board, 42);
-        testUtils.setupState(state);
+    describe('view', () => {
+        it('should highlight winning coords', fakeAsync(async() => {
+            const board: number[][] = [
+                [O, _, _, _, _, _, _, _, _, _],
+                [O, O, O, O, O, X, X, X, X, X],
+                [_, _, _, _, _, _, _, _, _, X],
+            ];
+            const state: SixState = SixState.fromRepresentation(board, 42);
+            testUtils.setupState(state);
 
-        await testUtils.expectClickSuccess('#piece_0_0');
-        const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(-1, 1));
-        await testUtils.expectMoveSuccess('#neighbor_-1_1', move);
-        testUtils.expectElementToHaveClass('#victoryCoord_0_0', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#victoryCoord_5_0', 'victory-stroke');
-    }));
+            await testUtils.expectClickSuccess('#piece_0_0');
+            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(-1, 1));
+            await testUtils.expectMoveSuccess('#neighbor_-1_1', move);
+            testUtils.expectElementToHaveClass('#victoryCoord_0_0', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#victoryCoord_5_0', 'victory-stroke');
+        }));
+        fit('should not mark as capturer the space that are emptied due to offset', fakeAsync(async() => {
+            // Given a board with a piece about to be removed and an offset
+            console.clear()
+            const state: SixState = SixState.fromRepresentation([
+                [_, _, _, _, X, O, O, O],
+                [_, _, _, _, X, _, _, _],
+                [_, _, _, _, X, _, _, _],
+                [_, _, _, _, X, _, _, _],
+                [_, _, _, _, X, _, _, _],
+                [_, _, _, _, X, _, _, _],
+                [X, X, O, O, _, _, _, _],
+                [X, X, O, O, _, _, _, _],
+                [X, X, O, O, _, _, _, _],
+                [X, X, O, O, _, _, _, _],
+                [X, X, O, O, _, _, _, _],
+                [X, X, O, O, _, _, _, _],
+            ], 40);
+            testUtils.setupState(state);
+
+            // When applying on it the offseting move
+            console.clear()
+            await testUtils.expectClickSuccess('#piece_3_6');
+            const move: SixMove = SixMove.fromMovement(new Coord(3, 6), new Coord(-1, 6));
+            await testUtils.expectMoveSuccess('#neighbor_-1_6', move);
+
+            // Then only one piece should be deemed disconnected
+            testUtils.expectElementToExist('#disconnected_2_-1');
+            // With a invalid calculation of the offset, the lefter neighbor could turn into fake disconnected
+            testUtils.expectElementNotToExist('#disconnected_0_0');
+            testUtils.expectElementNotToExist('#disconnected_-1_1');
+        }));
+    });
 });

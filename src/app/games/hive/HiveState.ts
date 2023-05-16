@@ -148,15 +148,14 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
                        turn: number,
                        offset?: Vector)
     {
-        super(pieces, turn, offset);
+        super(pieces, turn);
         this.queenBees = queenBees.getCopy();
         for (const player of queenBees.listKeys()) {
             // If the offset computed by the parent's constructor is not (0, 0),
             // We will need to adapt the position of the queen bees.
             // The position of the pieces has already been adapted by the parent's constructor
             const oldCoord: Coord = queenBees.get(player).get();
-            const newCoord: Coord = oldCoord.getNext(this.offset);
-            this.queenBees.replace(player, newCoord);
+            this.queenBees.replace(player, oldCoord);
         }
         this.queenBees.makeImmutable();
     }

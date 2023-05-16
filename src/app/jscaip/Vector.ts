@@ -27,4 +27,13 @@ export class Vector implements ComparableObject {
         return new Vector(this.x / greatestCommonDivider,
                           this.y / greatestCommonDivider);
     }
+    public combine(otherVector: Vector, times: number = 1): Vector {
+        // return the combined vectors
+        const newX: number = this.x + (times * otherVector.x);
+        const newY: number = this.y + (times * otherVector.y);
+        return new Vector(newX, newY);
+    }
+    public toString(): string {
+        return '(' + this.x + ', ' + this.y + ')';
+    }
 }
