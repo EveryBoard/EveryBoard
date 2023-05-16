@@ -374,7 +374,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             return;
         } else {
             const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
-            expect(clickValidity.reason).toBe(reason);
+            expect(clickValidity.getReason()).toBe(reason);
             this.canUserPlaySpy.calls.reset();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
@@ -382,7 +382,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
+            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.getReason());
             tick(3000); // needs to be > 2999
         }
     }

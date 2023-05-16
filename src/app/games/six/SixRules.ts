@@ -45,7 +45,7 @@ export class SixRules extends Rules<SixMove,
         display(this.VERBOSE, { called: 'SixRules.isLegal', move, state });
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {
-            return landingLegality.toFailedFallible();
+            return landingLegality.toOtherFallible();
         }
         if (state.turn < 40) {
             return this.isLegalDrop(move, state);

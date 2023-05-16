@@ -12,7 +12,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 
@@ -181,8 +180,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
-        return QuartoRules.isLegal(move, state).toFallible(undefined);
+    public isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
+        return QuartoRules.isLegal(move, state);
     }
     public applyLegalMove(move: QuartoMove, state: QuartoState): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();

@@ -6,7 +6,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -93,11 +93,11 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     public static applyLegalMove(move: QuixoMove, state: QuixoState, _status: void): QuixoState {
         return state.applyLegalMove(move);
     }
-    public isLegal(move: QuixoMove, state: QuixoState): MGPFallible<void> {
+    public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
-            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         }
     }
     public getGameStatus(node: QuixoNode): GameStatus {
