@@ -15,8 +15,10 @@ import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { Vector } from 'src/app/jscaip/Vector';
 
 describe('HiveRules', () => {
+
     let rules: HiveRules;
     let minimaxes: Minimax<HiveMove, HiveState>[];
 
@@ -904,7 +906,7 @@ describe('HiveRules', () => {
         const expectedBoard: Table<HivePiece[]> = [
             [[q], [Q]],
         ];
-        const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 2);
+        const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 2, new Vector(-1, 0));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should not have drop locations if all pieces are already on the board', () => {

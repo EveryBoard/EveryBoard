@@ -6,9 +6,9 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: number = PlayerOrNone.NONE.value;
-const O: number = Player.ZERO.value;
-const X: number = Player.ONE.value;
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = Player.ZERO;
+const X: PlayerOrNone = Player.ONE;
 
 export class SixTutorialMessages {
 
@@ -77,21 +77,16 @@ export class SixTutorial extends Tutorial {
         From now on, if after move, on or more pieces are disconnected from the largest group of pieces, these will be taken out of the game.<br/><br/>
         You're playing Dark. Make a move that disconnects one of your opponent's pieces.`,
             SixState.fromRepresentation([
-                [_, _, _, _, X, O, O, O],
-                [_, _, _, _, X, _, _, _],
-                [_, _, _, _, X, _, _, _],
-                [_, _, _, _, X, _, _, _],
-                [_, _, _, _, X, _, _, _],
-                [_, _, _, _, X, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
-                [X, X, O, O, _, _, _, _],
+                [_, _, _, _, _, _, _, X, _],
+                [_, _, _, _, _, _, O, _, _],
+                [_, _, _, _, O, O, O, _, _],
+                [_, _, _, _, X, X, _, X, O],
+                [_, O, X, X, O, O, X, _, _],
+                [O, O, O, O, X, X, X, O, _],
+                [X, X, O, _, X, X, O, _, _],
+                [_, O, _, O, O, _, _, _, _],
+                [X, X, X, X, _, _, _, _, _],
+                [_, O, _, X, _, _, _, _, _],
             ], 40),
             SixMove.fromMovement(new Coord(6, 1), new Coord(5, 1)),
             (_move: SixMove, _previousState: SixState, resultingState: SixState) => {

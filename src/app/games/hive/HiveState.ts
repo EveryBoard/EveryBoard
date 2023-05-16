@@ -121,18 +121,21 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         const board: Table<HivePiece[]> = [];
         return HiveState.fromRepresentation(board, 0);
     }
-    public static fromRepresentation(board: Table<HivePiece[]>, turn: number): HiveState {
+    public static fromRepresentation(board: Table<HivePiece[]>, turn: number, vector: Vector = new Vector(0, 0))
+    : HiveState
+    {
         const pieces: ReversibleMap<Coord, HivePieceStack> = new ReversibleMap<Coord, HivePieceStack>();
         let remainingPieces: HiveRemainingPieces = HiveRemainingPieces.getInitial();
         const queenBees: MGPMap<Player, Coord> = new MGPMap();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 if (board[y][x].length > 0) {
-                    pieces.set(new Coord(x, y), new HivePieceStack(board[y][x]));
+                    const adaptedCoord: Coord = new Coord(x, y).getNext(vector, 1);
+                    pieces.set(adaptedCoord, new HivePieceStack(board[y][x]));
                     const queenBee: MGPOptional<HivePiece> =
                         MGPOptional.ofNullable(board[y][x].find((piece: HivePiece) => piece.kind === 'QueenBee'));
                     if (queenBee.isPresent()) {
-                        queenBees.set(queenBee.get().owner, new Coord(x, y));
+                        queenBees.set(queenBee.get().owner, adaptedCoord);
                     }
                     for (const piece of board[y][x]) {
                         remainingPieces = remainingPieces.remove(piece);
@@ -145,8 +148,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     public constructor(pieces: ReversibleMap<Coord, HivePieceStack>,
                        public readonly remainingPieces: HiveRemainingPieces,
                        public readonly queenBees: MGPMap<Player, Coord>,
-                       turn: number,
-                       offset?: Vector)
+                       turn: number)
     {
         super(pieces, turn);
         this.queenBees = queenBees.getCopy();

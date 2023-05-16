@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -20,18 +20,18 @@ export class SixState extends OpenHexagonalGameState<Player> {
 
     public readonly height: number;
 
-    public readonly offset: Vector;
-
     public static getInitialState(): SixState {
-        const board: NumberTable = [[Player.ZERO.value], [Player.ONE.value]];
+        const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
         return SixState.fromRepresentation(board, 0);
     }
-    public static fromRepresentation(board: NumberTable, turn: number, offset?: Vector): SixState {
+    public static fromRepresentation(board: Table<PlayerOrNone>, turn: number, offset: Vector = new Vector(0, 0))
+    : SixState {
         const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
-                if (board[y][x] !== PlayerOrNone.NONE.value) {
-                    pieces.set(new Coord(x, y), Player.of(board[y][x]));
+                if (board[y][x] !== PlayerOrNone.NONE) {
+                    const adapted: Coord = new Coord(x, y).getNext(offset);
+                    pieces.set(adapted, board[y][x] as Player);
                 }
             }
         }
@@ -43,10 +43,10 @@ export class SixState extends OpenHexagonalGameState<Player> {
         pieces.set(move.landing, this.getCurrentPlayer());
         return new SixState(pieces, this.turn);
     }
-    public toRepresentation(): NumberTable {
-        const board: number[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE.value);
+    public toRepresentation(): Table<PlayerOrNone> {
+        const board: PlayerOrNone[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE);
         for (const piece of this.pieces.listKeys()) {
-            const pieceValue: number = this.getPieceAt(piece).value;
+            const pieceValue: PlayerOrNone = this.getPieceAt(piece);
             board[piece.y][piece.x] = pieceValue;
         }
         return board;
