@@ -26,7 +26,7 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { PartService } from 'src/app/services/PartService';
+import { GameEventService } from 'src/app/services/GameEventService';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Timestamp } from 'firebase/firestore';
 import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
@@ -93,7 +93,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly observedPartService: ObservedPartService,
                        private readonly userService: UserService,
                        private readonly gameService: GameService,
-                       private readonly partService: PartService,
+                       private readonly gameEventService: GameEventService,
                        private readonly timeManager: OGWCTimeManagerService)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
@@ -280,10 +280,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.afterEventsBatch();
             });
         };
-        this.eventsSubscription = this.partService.subscribeToEvents(this.currentPartId, callback);
+        this.eventsSubscription = this.gameEventService.subscribeToEvents(this.currentPartId, callback);
     }
     private async onGameEnd(): Promise<void> {
-        // this.currentPart = new PartDocument(this.currentPartId, (await this.gameService.getPart(this.currentPartId)).get());
         await this.observedPartService.removeObservedPart();
         this.endGame = true;
         this.timeManager.onGameEnd();
@@ -535,7 +534,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 return this.notifyVictory(winner, scores);
             }
         } else {
-            const player: Player = this.role as Player;
             return this.gameService.updatePart(this.currentPartId, scores);
         }
     }

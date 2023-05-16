@@ -176,8 +176,8 @@ service cloud.firestore {
         function validRequest(part, event) {
             let partFinished = part.result != 5;
             return hasField(event, 'requestType') &&
-                ((debug(event.requestType) == 'Draw' && debug(!partFinished)) ||
-                 (event.requestType == 'Rematch' && debug(partFinished)) ||
+                ((event.requestType == 'Draw' && !partFinished) ||
+                 (event.requestType == 'Rematch' && partFinished) ||
                  (event.requestType == 'TakeBack' && part.turn >= 1 && !partFinished));
         }
         function validReply(event) {
@@ -189,7 +189,7 @@ service cloud.firestore {
             let part = get(/databases/$(database)/documents/parts/$(partId)).data;
             return validEvent(event) &&
                 playerAddsEvent(part, event) &&
-                ((event.eventType == 'Request' && debug(validRequest(part, event))) ||
+                ((event.eventType == 'Request' && validRequest(part, event)) ||
                  (event.eventType == 'Reply' && validReply(event)) ||
                  (event.eventType == 'Action' && validAction(part, event)));
         }
@@ -291,7 +291,7 @@ service cloud.firestore {
             return userIsPlayerZero(part) || userIsPlayerOne(part);
         }
         function userIsPlayerZero(part) {
-            return debug(part).playerZero.id == request.auth.uid;
+            return part.playerZero.id == request.auth.uid;
         }
         function userIsPlayerOne(part) {
             return hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;

@@ -9,7 +9,7 @@ import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { PartService } from 'src/app/services/PartService';
+import { GameEventService } from 'src/app/services/GameEventService';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
@@ -178,7 +178,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let testUtils: ComponentTestUtils<QuartoComponent, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
     let partDAO: PartDAO;
-    let partService: PartService;
+    let partService: GameEventService;
     let gameService: GameService;
 
     const OBSERVER: User = {
@@ -270,7 +270,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils = preparationResult.testUtils;
         role = preparationResult.role;
         partDAO = TestBed.inject(PartDAO);
-        partService = TestBed.inject(PartService);
+        partService = TestBed.inject(GameEventService);
         gameService = TestBed.inject(GameService);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
     }

@@ -2,7 +2,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { serverTimestamp } from 'firebase/firestore';
-import { PartService } from '../PartService';
+import { GameEventService } from '../GameEventService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { Player } from 'src/app/jscaip/Player';
 import { PartEvent, Reply, RequestType, Action, PartEventMove } from 'src/app/domain/Part';
@@ -11,9 +11,9 @@ import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 
-describe('PartService', () => {
+describe('GameEventService', () => {
 
-    let partService: PartService;
+    let gameEventService: GameEventService;
     let partDAO: PartDAO;
     let events: IFirestoreDAO<PartEvent>;
 
@@ -29,11 +29,11 @@ describe('PartService', () => {
         }).compileComponents();
 
         partDAO = TestBed.inject(PartDAO);
-        partService = TestBed.inject(PartService);
+        gameEventService = TestBed.inject(GameEventService);
         events = partDAO.subCollectionDAO<PartEvent>(partId, 'events');
     }));
     it('should be created', () => {
-        expect(partService).toBeTruthy();
+        expect(gameEventService).toBeTruthy();
     });
     describe('addMove', () => {
         it('should add a move event to the DAO', fakeAsync(async() => {
@@ -41,7 +41,7 @@ describe('PartService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const move: JSONValue = { x: 0, y: 0 };
-            await partService.addMove(partId, Player.ZERO, move);
+            await gameEventService.addMove(partId, Player.ZERO, move);
             // Then it is added to the DAO events subcollection
             const moveEvent: PartEvent = {
                 eventType: 'Move',
@@ -58,7 +58,7 @@ describe('PartService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const requestType: RequestType = 'TakeBack';
-            await partService.addRequest(partId, Player.ZERO, requestType);
+            await gameEventService.addRequest(partId, Player.ZERO, requestType);
             // Then it is added to the DAO events subcollection
             const event: PartEvent = {
                 eventType: 'Request',
@@ -76,7 +76,7 @@ describe('PartService', () => {
             // When adding a move to the part
             const requestType: RequestType = 'TakeBack';
             const reply: Reply = 'Accept';
-            await partService.addReply(partId, Player.ZERO, reply, requestType);
+            await gameEventService.addReply(partId, Player.ZERO, reply, requestType);
             // Then it is added to the DAO events subcollection
             const event: PartEvent = {
                 eventType: 'Reply',
@@ -95,7 +95,7 @@ describe('PartService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const action: Action = 'StartGame';
-            await partService.startGame(partId, Player.ZERO);
+            await gameEventService.startGame(partId, Player.ZERO);
             // Then it is added to the DAO events subcollection
             const event: PartEvent = {
                 eventType: 'Action',
@@ -112,7 +112,7 @@ describe('PartService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const action: Action = 'AddTurnTime';
-            await partService.addAction(partId, Player.ZERO, action);
+            await gameEventService.addAction(partId, Player.ZERO, action);
             // Then it is added to the DAO events subcollection
             const event: PartEvent = {
                 eventType: 'Action',
@@ -127,10 +127,10 @@ describe('PartService', () => {
         it('should return the document of the last move', fakeAsync(async() => {
             // Given a part service already containing a move
             const move: JSONValue = { x: 0, y: 0 };
-            await partService.addMove(partId, Player.ZERO, move);
+            await gameEventService.addMove(partId, Player.ZERO, move);
 
             // When getting the document of the last move
-            const doc: FirestoreDocument<PartEventMove> = await partService.getLastMoveDoc(partId);
+            const doc: FirestoreDocument<PartEventMove> = await gameEventService.getLastMoveDoc(partId);
 
             // Then it should return the... document of the last move
             expect(doc.data.eventType).toBe('Move');
@@ -141,22 +141,22 @@ describe('PartService', () => {
         it('should receive newly added events', fakeAsync(async() => {
             // Given a part service with a part without event, and where we subscribed to the part's events
             let receivedEvents: number = 0;
-            partService.subscribeToEvents(partId, (events: PartEvent[]) => {
+            gameEventService.subscribeToEvents(partId, (events: PartEvent[]) => {
                 receivedEvents += events.length;
             });
             // When a new event is added
-            await partService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
+            await gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
             // Then we receive it
             tick(1);
             expect(receivedEvents).toBe(1);
         }));
         it('should receive already present events when subscribing', fakeAsync(async() => {
             // Given a part service with events already in the part
-            await partService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
-            await partService.addMove(partId, Player.ONE, { x: 0, y: 1 });
+            await gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
+            await gameEventService.addMove(partId, Player.ONE, { x: 0, y: 1 });
             // When we subscribed to the part events
             let receivedEvents: number = 0;
-            partService.subscribeToEvents(partId, (events: PartEvent[]) => {
+            gameEventService.subscribeToEvents(partId, (events: PartEvent[]) => {
                 receivedEvents += events.length;
             });
             // Then we receive the existing events

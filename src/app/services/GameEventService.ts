@@ -11,8 +11,7 @@ import { JSONValue, Utils } from '../utils/utils';
 @Injectable({
     providedIn: 'root',
 })
-// TODO: renommer en GameEventService
-export class PartService {
+export class GameEventService {
 
     public constructor(private readonly partDAO: PartDAO) {}
 

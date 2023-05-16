@@ -23,7 +23,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
-import { PartService } from '../PartService';
+import { GameEventService } from '../GameEventService';
 
 describe('GameService', () => {
 
@@ -31,7 +31,7 @@ describe('GameService', () => {
 
     let partDAO: PartDAO;
 
-    let partService: PartService;
+    let gameEventService: GameEventService;
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -49,7 +49,7 @@ describe('GameService', () => {
             ],
         }).compileComponents();
         gameService = TestBed.inject(GameService);
-        partService = TestBed.inject(PartService);
+        gameEventService = TestBed.inject(GameEventService);
         partDAO = TestBed.inject(PartDAO);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
@@ -184,11 +184,11 @@ describe('GameService', () => {
             partDAO = TestBed.inject(PartDAO);
         });
         it('should send request when proposing a rematch', fakeAsync(async() => {
-            spyOn(partService, 'addRequest').and.resolveTo();
+            spyOn(gameEventService, 'addRequest').and.resolveTo();
 
             await gameService.proposeRematch('partId', Player.ZERO);
 
-            expect(partService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
+            expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
         }));
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous match with creator starting

@@ -17,7 +17,7 @@ import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { FocusedPart } from 'src/app/domain/User';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { PartService } from '../../services/PartService';
+import { GameEventService } from '../../services/GameEventService';
 import { PartEvent, RequestType } from '../../domain/Part';
 import { IFirestoreDAO } from '../FirestoreDAO';
 
@@ -31,7 +31,7 @@ type PartInfo = {
 describe('PartDAO security', () => {
 
     let partDAO: PartDAO;
-    let partService: PartService;
+    let gameEventService: GameEventService;
     let userDAO: UserDAO;
     let configRoomDAO: ConfigRoomDAO;
     let configRoomService: ConfigRoomService;
@@ -87,7 +87,7 @@ describe('PartDAO security', () => {
     beforeEach(async() => {
         await setupEmulators();
         partDAO = TestBed.inject(PartDAO);
-        partService = TestBed.inject(PartService);
+        gameEventService = TestBed.inject(GameEventService);
         userDAO = TestBed.inject(UserDAO);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         configRoomService = TestBed.inject(ConfigRoomService);
@@ -364,7 +364,7 @@ describe('PartDAO security', () => {
 
             await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
             // When creating an event (here, a 'StartGame' event)
-            const result: Promise<string> = partService.startGame(partId, Player.ZERO);
+            const result: Promise<string> = gameEventService.startGame(partId, Player.ZERO);
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -374,7 +374,7 @@ describe('PartDAO security', () => {
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
-            const eventId: string = await partService.startGame(partId, Player.ZERO);
+            const eventId: string = await gameEventService.startGame(partId, Player.ZERO);
             await signOut();
 
             await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
@@ -416,7 +416,7 @@ describe('PartDAO security', () => {
             await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
             // When creating an event
-            const result: Promise<string> = partService.startGame(partId, Player.ZERO);
+            const result: Promise<string> = gameEventService.startGame(partId, Player.ZERO);
 
             // Then it should be forbidden
             await expectPermissionToBeDenied(result);
@@ -427,7 +427,7 @@ describe('PartDAO security', () => {
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
-            const eventId: string = await partService.startGame(partId, Player.ZERO);
+            const eventId: string = await gameEventService.startGame(partId, Player.ZERO);
             await signOut();
 
             await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
@@ -790,7 +790,7 @@ describe('PartDAO security', () => {
                     eventType: 'Action',
                     time: serverTimestamp(),
                     player: 0,
-                    action: 'StartGame'
+                    action: 'StartGame',
                 };
                 const eventId: string = await events(partId).create(event);
 
@@ -804,7 +804,7 @@ describe('PartDAO security', () => {
                 // Given an ongoing part with an event
                 const partId: string = await setupStartedPartAsPlayerZero();
 
-                const eventId: string = await partService.startGame(partId, Player.ZERO);
+                const eventId: string = await gameEventService.startGame(partId, Player.ZERO);
 
                 // When trying to delete the event
                 const result: Promise<void> = events(partId).delete(eventId);
@@ -818,7 +818,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating a move
-                    const result: Promise<string> = partService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
+                    const result: Promise<string> = gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -826,11 +826,11 @@ describe('PartDAO security', () => {
                 it('should forbid creating a move on opponent turn', async() => {
                     // Given an ongoing part where it is the opponent's turn
                     const partId: string = await setupStartedPartAsPlayerZero();
-                    await partService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
+                    await gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
                     await partDAO.update(partId, { turn: 1 });
 
                     // When creating a move during the opponent's turn
-                    const result: Promise<string> = partService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
+                    const result: Promise<string> = gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -842,7 +842,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an AddTurnTime action
-                    const result: Promise<string> = partService.addAction(partId, Player.ZERO, 'AddTurnTime');
+                    const result: Promise<string> = gameEventService.addAction(partId, Player.ZERO, 'AddTurnTime');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -852,7 +852,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an AddGlobalTime action
-                    const result: Promise<string> = partService.addAction(partId, Player.ZERO, 'AddGlobalTime');
+                    const result: Promise<string> = gameEventService.addAction(partId, Player.ZERO, 'AddGlobalTime');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -862,7 +862,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an StartGame action at turn 0
-                    const result: Promise<string> = partService.startGame(partId, Player.ZERO);
+                    const result: Promise<string> = gameEventService.startGame(partId, Player.ZERO);
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -873,7 +873,7 @@ describe('PartDAO security', () => {
                     await expectAsync(partDAO.update(partId, { turn: 1 }));
 
                     // When creating a StartGame action at turn > 0
-                    const result: Promise<string> = partService.startGame(partId, Player.ZERO);
+                    const result: Promise<string> = gameEventService.startGame(partId, Player.ZERO);
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -883,7 +883,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupFinishedPartAsPlayerZero();
 
                     // When creating an EndGame action at the end
-                    const result: Promise<string> = partService.addAction(partId, Player.ZERO, 'EndGame');
+                    const result: Promise<string> = gameEventService.addAction(partId, Player.ZERO, 'EndGame');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -893,7 +893,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an EndGame action when the part is not finished
-                    const result: Promise<string> = partService.addAction(partId, Player.ZERO, 'EndGame');
+                    const result: Promise<string> = gameEventService.addAction(partId, Player.ZERO, 'EndGame');
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -903,7 +903,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an invalid action
-                    const result: Promise<string> = partService.addAction(partId, Player.ZERO, 'Invalid' as 'StartGame');
+                    const result: Promise<string> = gameEventService.addAction(partId, Player.ZERO, 'Invalid' as 'StartGame');
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -915,7 +915,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When requesting a draw in-game
-                    const result: Promise<string> = partService.addRequest(partId, Player.ZERO, 'Draw');
+                    const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'Draw');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -925,7 +925,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupFinishedPartAsPlayerZero();
 
                     // When requesting a draw
-                    const result: Promise<string> = partService.addRequest(partId, Player.ZERO, 'Draw');
+                    const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'Draw');
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -936,7 +936,7 @@ describe('PartDAO security', () => {
                     await expectAsync(partDAO.update(partId, { turn: 1 }));
 
                     // When requesting a take back in-game
-                    const result: Promise<string> = partService.addRequest(partId, Player.ZERO, 'TakeBack');
+                    const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'TakeBack');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -946,7 +946,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupFinishedPartAsPlayerZero();
 
                     // When requesting a take back
-                    const result: Promise<string> = partService.addRequest(partId, Player.ZERO, 'TakeBack');
+                    const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'TakeBack');
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -956,7 +956,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupFinishedPartAsPlayerZero();
 
                     // When requesting a rematch
-                    const result: Promise<string> = partService.addRequest(partId, Player.ZERO, 'Rematch');
+                    const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'Rematch');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -966,7 +966,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When requesting a rematch in-game
-                    const result: Promise<string> = partService.addRequest(partId, Player.ZERO, 'Rematch');
+                    const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'Rematch');
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -976,7 +976,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an invalid request
-                    const result: Promise<string> = partService.addRequest(partId, Player.ZERO, 'Invalid' as 'TakeBack');
+                    const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'Invalid' as 'TakeBack');
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
@@ -988,8 +988,8 @@ describe('PartDAO security', () => {
                     const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
                     const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
                     const partId: string = await partDAO.create(part);
-                    await partDAO.update(partId, {turn: 1});
-                    await partService.addRequest(partId, Player.ZERO, requestType);
+                    await partDAO.update(partId, { turn: 1 });
+                    await gameEventService.addRequest(partId, Player.ZERO, requestType);
                     await signOut();
                     await reconnectUser(OPPONENT_EMAIL);
                     return partId;
@@ -999,7 +999,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
 
                     // When accepting the request
-                    const result: Promise<string> = partService.addReply(partId, Player.ONE, 'Accept', 'TakeBack');
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'TakeBack');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -1009,7 +1009,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
 
                     // When rejecting the request
-                    const result: Promise<string> = partService.addReply(partId, Player.ONE, 'Reject', 'TakeBack');
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'TakeBack');
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
@@ -1019,7 +1019,7 @@ describe('PartDAO security', () => {
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an invalid reply
-                    const result: Promise<string> = partService.addReply(partId, Player.ZERO, 'Maybe' as 'Accept', 'TakeBack');
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ZERO, 'Maybe' as 'Accept', 'TakeBack');
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
