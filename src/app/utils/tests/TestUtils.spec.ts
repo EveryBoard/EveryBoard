@@ -340,8 +340,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             .toHaveBeenCalledWith();
     }
     public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
-                                                       nameInFunction: string,
-                                                       reason?: string)
+                                                        nameInFunction: string,
+                                                        reason?: string)
     : Promise<void>
     {
         const element: DebugElement = this.findElement(nameInHtml);
