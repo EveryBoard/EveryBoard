@@ -32,7 +32,12 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public captures: Coord[]= [];
 
+    public hoshis: Coord[] = [];
+
     public GoPiece: typeof GoPiece = GoPiece;
+
+    public boardHeight: number = GoState.HEIGHT;
+    public boardWidth: number = GoState.WIDTH;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -45,6 +50,31 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
         this.updateBoard();
+    }
+    private createHoshis(): void {
+        const height: number = this.getState().board.length;
+        const width: number = this.getState().board[0].length;
+        this.boardWidth = width;
+        this.boardHeight = height;
+        const middle: number = Math.floor(height / 2);
+        this.hoshis = [];
+        const begin: number = height < 12 ? 2: 3;
+        const end: number = height - (begin + 1);
+        if (18 < height) {
+            this.hoshis.push(
+                new Coord(begin, middle),
+                new Coord(middle, begin),
+                new Coord(middle, end),
+                new Coord(end, middle),
+            );
+        }
+        this.hoshis.push(
+            new Coord(middle, middle),
+            new Coord(begin, begin),
+            new Coord(begin, end),
+            new Coord(end, begin),
+            new Coord(end, end),
+        );
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -74,6 +104,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         }
         this.last = move.map((move: GoMove) => move.coord);
         this.canPass = phase !== Phase.FINISHED;
+        this.createHoshis();
     }
     private showCaptures(): void {
         const previousState: GoState = this.rules.node.mother.get().gameState;
