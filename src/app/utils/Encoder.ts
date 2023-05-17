@@ -12,15 +12,26 @@ export abstract class Encoder<T> {
 type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
 
 export abstract class MoveEncoder<T> extends Encoder<T> {
-    public static identity<U extends JSONValueWithoutArray>(): MoveEncoder<U> {
+    public static fromFunctions<U>(toJSON: (value: U) => JSONValueWithoutArray,
+                                   fromJSON: (json: JSONValueWithoutArray) => U)
+    : MoveEncoder<U> {
         return new class extends MoveEncoder<U> {
             public encodeMove(value: U): JSONValueWithoutArray {
-                return value;
+                const encoded = toJSON(value);
+                console.log({value, encoded})
+                return encoded;
             }
             public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): U {
-                return encoded as U;
+                console.log({encoded})
+                return fromJSON(encoded);
             }
         }
+    }
+    public static identity<U extends JSONValueWithoutArray>(): MoveEncoder<U> {
+        function identity(x: U): U {
+            return x;
+        }
+        return MoveEncoder.fromFunctions(identity, identity);
     }
     public static constant<U>(constant: JSONValueWithoutArray, onlyValue: U): MoveEncoder<U> {
         return new class extends MoveEncoder<U> {

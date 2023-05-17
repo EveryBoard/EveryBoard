@@ -1,6 +1,7 @@
-import { Encoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { assert } from 'src/app/utils/assert';
+import { JSONValueWithoutArray } from 'src/app/utils/utils';
 
 export class AwaleMove extends Move {
 
@@ -16,11 +17,11 @@ export class AwaleMove extends Move {
 
     public static readonly FIVE: AwaleMove = new AwaleMove(5);
 
-    public static encoder: Encoder<AwaleMove> = new class extends Encoder<AwaleMove> {
-        public encodeNumber(move: AwaleMove): JSONValueWithoutArray {
+    public static encoder: MoveEncoder<AwaleMove> = new class extends MoveEncoder<AwaleMove> {
+        public encodeMove(move: AwaleMove): JSONValueWithoutArray {
             return move.x;
         }
-        public decodeNumber(encoded: JSONValueWithoutArray): AwaleMove {
+        public decodeMove(encoded: JSONValueWithoutArray): AwaleMove {
             return AwaleMove.from(encoded as number);
         }
     };
