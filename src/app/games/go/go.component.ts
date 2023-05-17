@@ -49,15 +49,14 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
-        this.boardWidth = this.getState().board.length;
-        this.boardHeight = this.getState().board[0].length;
+        this.boardHeight = this.getState().board.length;
+        this.boardWidth = this.getState().board[0].length;
         this.updateBoard();
     }
-    private createHoshis(): void {
-        const height: number = this.getState().board.length;
+    private createHoshis(height: number): void {
         const middle: number = Math.floor(height / 2);
         this.hoshis = [];
-        const begin: number = height < 12 ? 2: 3;
+        const begin: number = height < 12 ? 2 : 3;
         const end: number = height - (begin + 1);
         if (18 < height) {
             this.hoshis.push(
@@ -103,7 +102,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         }
         this.last = move.map((move: GoMove) => move.coord);
         this.canPass = phase !== Phase.FINISHED;
-        this.createHoshis();
+        this.createHoshis(state.board.length);
     }
     private showCaptures(): void {
         const previousState: GoState = this.rules.node.mother.get().gameState;
