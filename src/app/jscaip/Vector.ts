@@ -30,10 +30,9 @@ export class Vector implements ComparableObject {
     /**
       * @param otherVector the other vector to add to this
       * @param times the number of time you want to add it
-      * @returns the vector that is the sum of this vector and otherVector
+      * @returns the vector that is the sum of this vector and otherVector * times
      */
     public combine(otherVector: Vector, times: number = 1): Vector {
-        // return the combined vectors
         const newX: number = this.x + (times * otherVector.x);
         const newY: number = this.y + (times * otherVector.y);
         return new Vector(newX, newY);
