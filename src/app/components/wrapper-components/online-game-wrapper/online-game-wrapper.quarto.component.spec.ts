@@ -3,8 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
-
-import { OnlineGameWrapperComponent, OGWCTimeManagerService } from './online-game-wrapper.component';
+import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -42,6 +41,7 @@ import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
