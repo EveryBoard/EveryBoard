@@ -1,8 +1,8 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder, MoveEncoder, NumberEncoder } from '../utils/Encoder';
+import { MoveEncoder, NumberEncoder } from '../utils/Encoder';
 import { Vector } from './Vector';
 
 export class CoordFailure {
@@ -11,11 +11,11 @@ export class CoordFailure {
 
 export class Coord extends Vector {
 
-    public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
-        public encode(coord: Coord): JSONValueWithoutArray {
+    public static encoder: MoveEncoder<Coord> = new class extends MoveEncoder<Coord> {
+        public encodeMove(coord: Coord): JSONValueWithoutArray {
             return { x: coord.x, y: coord.y };
         }
-        public decode(encoded: JSONValueWithoutArray): Coord {
+        public decodeMove(encoded: JSONValueWithoutArray): Coord {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.x != null && typeof casted.x === 'number' &&
                    casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');

@@ -98,11 +98,9 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
 export class ConspirateursMoveJump extends Move {
     public static encoder: MoveEncoder<ConspirateursMoveJump> = new class extends MoveEncoder<ConspirateursMoveJump> {
-        private readonly coordEncoder: NumberEncoder<Coord> =
-            Coord.numberEncoder(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
         public encodeMove(move: ConspirateursMoveJump): JSONValueWithoutArray {
             return {
-                coords: move.coords.map(this.coordEncoder.encodeNumber),
+                coords: move.coords.map(Coord.encoder.encodeMove),
             };
         }
         public decodeMove(encoded: JSONValue): ConspirateursMoveJump {
@@ -110,7 +108,7 @@ export class ConspirateursMoveJump extends Move {
             assert(Utils.getNonNullable(encoded)['coords'] != null, 'Encoded ConspirateursMoveJump should contain coords');
             // eslint-disable-next-line dot-notation
             const coords: number[] = Utils.getNonNullable(encoded)['coords'] as number[];
-            const decoded: Coord[] = coords.map(this.coordEncoder.decodeNumber);
+            const decoded: Coord[] = coords.map(Coord.encoder.decodeMove);
             return ConspirateursMoveJump.of(decoded).get();
         }
     };
