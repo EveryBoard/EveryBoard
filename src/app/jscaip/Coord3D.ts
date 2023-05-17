@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { assert } from '../utils/assert';
-import { Encoder } from '../utils/Encoder';
+import { Encoder, MoveEncoder } from '../utils/Encoder';
 import { MGPOptional } from '../utils/MGPOptional';
 import { JSONObject, JSONValue, JSONValueWithoutArray } from '../utils/utils';
 
@@ -26,9 +26,6 @@ export class Coord3D extends Coord {
             }
         };
     }
-    public static encoder: Encoder<Coord3D> = Coord3D.getEncoder(Coord3D.of);
-
-    public static optionalEncoder: Encoder<MGPOptional<Coord3D>> = MGPOptional.getEncoder(Coord3D.encoder);
 
     public static of(x: number, y: number, z: number): Coord3D {
         return new Coord3D(x, y, z);

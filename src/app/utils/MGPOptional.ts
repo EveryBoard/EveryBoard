@@ -1,6 +1,6 @@
 import { comparableEquals } from './Comparable';
 import { Encoder, NumberEncoder } from './Encoder';
-import { JSONValue } from './utils';
+import { JSONValue, Utils } from './utils';
 
 export class MGPOptional<T> {
 
@@ -22,16 +22,16 @@ export class MGPOptional<T> {
         return new class extends Encoder<MGPOptional<T>> {
             public encode(opt: MGPOptional<T>): JSONValue {
                 if (opt.isPresent()) {
-                    return encoderT.encode(opt.get());
+                    return encoderT.encode(opt.get())
                 } else {
                     return null;
                 }
             }
             public decode(encoded: JSONValue): MGPOptional<T> {
-                if (encoded === null) {
+                if (encoded === null) { // Utils.getNonNullable(encoded)['novalue'] != undefined) {
                     return MGPOptional.empty();
                 } else {
-                    return MGPOptional.of(encoderT.decode(encoded));
+                    return MGPOptional.of(encoderT.decode(encoded)); // Utils.getNonNullable(encoded)['value']));
                 }
             }
         };

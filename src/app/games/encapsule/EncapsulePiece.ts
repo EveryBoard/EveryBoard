@@ -1,6 +1,7 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { Utils } from 'src/app/utils/utils';
+import { Encoder } from 'src/app/utils/Encoder';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 
 export enum Size {
     NONE = 0,
@@ -10,6 +11,15 @@ export enum Size {
 }
 
 export class EncapsulePiece implements ComparableObject {
+
+    public static encoder: Encoder<EncapsulePiece> = new class extends Encoder<EncapsulePiece> {
+        public encode(piece: EncapsulePiece): JSONValue {
+            return piece.value;
+        }
+        public decode(v: JSONValue): EncapsulePiece {
+            return EncapsulePiece.of(v as number);
+        }
+    }
 
     public static readonly SMALL_DARK: EncapsulePiece = new EncapsulePiece(0);
     public static readonly SMALL_LIGHT: EncapsulePiece = new EncapsulePiece(1);

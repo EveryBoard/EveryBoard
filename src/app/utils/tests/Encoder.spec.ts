@@ -11,7 +11,7 @@ export class EncoderTestUtils {
     public static expectToBeBijective<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
         const encoded: JSONValue = encoder.encode(value);
         const decoded: T = encoder.decode(encoded);
-        expect(decoded.equals(value)).toBeTrue();
+        expect(decoded.equals(value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
     }
 }
 

@@ -12,6 +12,16 @@ export abstract class Encoder<T> {
 type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
 
 export abstract class MoveEncoder<T> extends Encoder<T> {
+    public static identity<U extends JSONValueWithoutArray>(): MoveEncoder<U> {
+        return new class extends MoveEncoder<U> {
+            public encodeMove(value: U): JSONValueWithoutArray {
+                return value;
+            }
+            public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): U {
+                return encoded as U;
+            }
+        }
+    }
     public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
                                                   encode: (t: T) => Fields,
                                                   decode: (fields: Fields) => T): MoveEncoder<T> {
@@ -27,7 +37,6 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
             public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): T {
                 const fields: Record<string, unknown> = {};
                 Object.keys(encoders).reverse().forEach((key: string): void => {
-                    assert(encoded[key] != null, 'Invalid encoded value');
                     const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
                     fields[key] = encoders[key].decode(field);
                 });

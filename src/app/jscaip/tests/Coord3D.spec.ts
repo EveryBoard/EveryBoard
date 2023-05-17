@@ -2,17 +2,19 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord3D } from '../Coord3D';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { Encoder } from 'src/app/utils/Encoder';
 
 describe('Coord3D:', () => {
 
-    it('should have a bijective encoder', () => {
+    it('should have a bijective optional encoder', () => {
         const values: MGPOptional<Coord3D>[] = [
             MGPOptional.of(new Coord3D(2, 1, 0)),
             MGPOptional.empty(),
             MGPOptional.of(new Coord3D(0, 0, 0)),
         ];
+        const encoder: Encoder<MGPOptional<Coord3D>> = MGPOptional.getEncoder(Coord3D.getEncoder(Coord3D.of));
         for (const value of values) {
-            EncoderTestUtils.expectToBeBijective(Coord3D.optionalEncoder, value);
+            EncoderTestUtils.expectToBeBijective(encoder, value);
         }
     });
 
