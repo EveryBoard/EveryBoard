@@ -4,7 +4,7 @@ import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaState } from '../SaharaState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { SaharaFailure } from '../SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -18,7 +18,7 @@ describe('SaharaMoves', () => {
         const moves: SaharaMove[] = minimax.getListMoves(rules.node);
         expect(moves.length).toEqual(12);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);
         }
     });
     it('should throw error when starting coord is outside the board', () => {
