@@ -95,6 +95,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
     }
     private showLastDrop(lastMove: PentagoMove, localCoord: Coord): void {
+        // This half will calculate the new coordinate of last turn dropped coord
+        // (which is encoded in its pre-rotation coord)
+        // Note, this is a local coord for each 3x3 block, so a coord between (0, 0) and (2, 2)
         let postRotation: Coord;
         if (lastMove.turnedClockwise) {
             postRotation = Utils.getNonNullable(PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
@@ -105,10 +108,13 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                 return value[1].equals(localCoord);
             }))[0];
         }
-        const b: number = lastMove.blockTurned.get();
-        const bx: number = b % 2 === 0 ? 1 : 4;
-        const by: number = b < 2 ? 1 : 4;
-        postRotation = postRotation.getNext(new Vector(bx, by), 1);
+        // This half translate this local coord to its final coord
+        // so the central coord (1, 1) of the low-right block is moved in (1 + 4, 1 + 4)
+        const turnedBlockIndex: number = lastMove.blockTurned.get();
+        const cx: number = turnedBlockIndex % 2 === 0 ? 1 : 4;
+        const cy: number = turnedBlockIndex < 2 ? 1 : 4;
+        const turnedBlockCenterCoord: Coord = new Coord(cx, cy);
+        postRotation = postRotation.getNext(turnedBlockCenterCoord, 1);
         this.lastDrop = MGPOptional.of(postRotation);
     }
     private coordBelongToBlock(lastMove: PentagoMove): boolean {
