@@ -433,7 +433,7 @@ describe('GameService', () => {
         it('should decrease turn by 1 when accepting during our turn', fakeAsync(async() => {
             spyOn(partDAO, 'update').and.resolveTo();
             // Given a part during our turn
-            const part = { ...PartMocks.STARTED, turn: 2 };
+            const part: Part = { ...PartMocks.STARTED, turn: 2 };
             // When accepting the take back
             await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
             // Then it should decrease the turn by one
@@ -442,10 +442,10 @@ describe('GameService', () => {
         it(`should decrease turn by 2 when accepting during the opponent's turn`, fakeAsync(async() => {
             spyOn(partDAO, 'update').and.resolveTo();
             // Given a part during the opponent's turn
-            const part = { ...PartMocks.STARTED, turn: 3 };
+            const part: Part = { ...PartMocks.STARTED, turn: 3 };
             // When accepting the take back
             await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
-            // Then it should decrease the turn by two
+            // Then it should decrease the turn by 2
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
                 turn: 1,
             });

@@ -1,3 +1,4 @@
+
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -5,10 +6,9 @@ import { serverTimestamp } from 'firebase/firestore';
 import { GameEventService } from '../GameEventService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { Player } from 'src/app/jscaip/Player';
-import { PartEvent, Reply, RequestType, Action, PartEventMove } from 'src/app/domain/Part';
+import { PartEvent, Reply, RequestType, Action } from 'src/app/domain/Part';
 import { JSONValue } from 'src/app/utils/utils';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
-import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 
 describe('GameEventService', () => {

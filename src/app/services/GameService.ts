@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
-import { MGPResult, Part, PartDocument, PartEventMove } from '../domain/Part';
+import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirstPlayer, ConfigRoom, PartStatus } from '../domain/ConfigRoom';
 import { ConfigRoomService } from './ConfigRoomService';
 import { ChatService } from './ChatService';
@@ -14,7 +14,6 @@ import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
 import { GameEventService } from './GameEventService';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
