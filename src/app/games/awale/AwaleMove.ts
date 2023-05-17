@@ -1,4 +1,4 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { assert } from 'src/app/utils/assert';
 
@@ -16,6 +16,15 @@ export class AwaleMove extends Move {
 
     public static readonly FIVE: AwaleMove = new AwaleMove(5);
 
+    public static encoder: Encoder<AwaleMove> = new class extends Encoder<AwaleMove> {
+        public encodeNumber(move: AwaleMove): JSONValueWithoutArray {
+            return move.x;
+        }
+        public decodeNumber(encoded: JSONValueWithoutArray): AwaleMove {
+            return AwaleMove.from(encoded as number);
+        }
+    };
+
     public static from(x: number): AwaleMove {
         switch (x) {
             case 0: return AwaleMove.ZERO;
@@ -31,17 +40,6 @@ export class AwaleMove extends Move {
     private constructor(public readonly x: number) {
         super();
     }
-    public static encoder: NumberEncoder<AwaleMove> = new class extends NumberEncoder<AwaleMove> {
-        public maxValue(): number {
-            return 5;
-        }
-        public encodeNumber(move: AwaleMove): number {
-            return move.x;
-        }
-        public decodeNumber(encoded: number): AwaleMove {
-            return AwaleMove.from(encoded);
-        }
-    };
     public equals(other: AwaleMove): boolean {
         if (other === this) return true;
         return other.x === this.x;

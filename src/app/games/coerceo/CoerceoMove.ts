@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';
-import { MoveEncoder, NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
