@@ -35,7 +35,7 @@ export class HiveMoveDrop extends MoveCoord {
 
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
-    public static encoder: Encoder<HiveMoveCoordToCoord> = MoveWithTwoCoords.getEncoder(HiveMoveCoordToCoord.from);
+    public static encoder: Encoder<HiveMoveCoordToCoord> = MoveWithTwoCoords.getFallibleEncoder(HiveMoveCoordToCoord.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
         if (start.equals(end)) {

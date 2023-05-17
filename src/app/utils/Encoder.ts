@@ -22,6 +22,16 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
             }
         }
     }
+    public static constant<U>(constant: JSONValueWithoutArray, onlyValue: U): MoveEncoder<U> {
+        return new class extends MoveEncoder<U> {
+            public encodeMove(_value: U): JSONValueWithoutArray {
+                return constant;
+            }
+            public decodeMove(_encoded: NonNullable<JSONValueWithoutArray>): U {
+                return onlyValue;
+            }
+        }
+    }
     public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
                                                   encode: (t: T) => Fields,
                                                   decode: (fields: Fields) => T): MoveEncoder<T> {

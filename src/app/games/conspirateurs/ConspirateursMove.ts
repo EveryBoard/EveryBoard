@@ -54,7 +54,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
     public static encoder: MoveEncoder<ConspirateursMoveSimple> =
-        MoveWithTwoCoords.getEncoder(ConspirateursMoveSimple.from);
+        MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
         if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&

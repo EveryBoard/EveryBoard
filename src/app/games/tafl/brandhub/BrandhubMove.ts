@@ -6,7 +6,7 @@ import { TaflMove } from '../TaflMove';
 
 export class BrandhubMove extends TaflMove {
 
-    public static encoder: MoveEncoder<BrandhubMove> = MoveWithTwoCoords.getEncoder<BrandhubMove>(BrandhubMove.from);
+    public static encoder: MoveEncoder<BrandhubMove> = MoveWithTwoCoords.getFallibleEncoder<BrandhubMove>(BrandhubMove.from);
 
     public static of(start: Coord, end: Coord): BrandhubMove {
         return new BrandhubMove(start, end);

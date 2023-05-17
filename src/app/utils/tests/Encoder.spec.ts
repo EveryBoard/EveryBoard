@@ -3,15 +3,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComparableObject } from 'src/app/utils/Comparable';
+import { comparableEquals, ComparableObject } from 'src/app/utils/Comparable';
 import { JSONValue, Utils } from 'src/app/utils/utils';
 import { Encoder, MoveEncoder, NumberEncoder } from '../Encoder';
 
 export class EncoderTestUtils {
-    public static expectToBeBijective<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
+    public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
         const encoded: JSONValue = encoder.encode(value);
         const decoded: T = encoder.decode(encoded);
-        expect(decoded.equals(value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
+        expect(comparableEquals(decoded, value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
     }
 }
 

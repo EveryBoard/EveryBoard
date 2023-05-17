@@ -29,7 +29,7 @@ export class ConnectSixFirstMove extends MoveCoord {
 }
 export class ConnectSixDrops extends MoveWithTwoCoords {
 
-    public static encoder: MoveEncoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.from);
+    public static encoder: MoveEncoder<ConnectSixDrops> = MoveWithTwoCoords.getFallibleEncoder(ConnectSixDrops.from);
 
     public static from(first: Coord, second: Coord): MGPFallible<ConnectSixDrops> {
         Utils.assert(first.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'FIRST_COORD_IS_OUT_OF_RANGE');
