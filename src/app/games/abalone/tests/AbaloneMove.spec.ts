@@ -14,7 +14,7 @@ describe('AbaloneMove', () => {
         expect(AbaloneMove.fromDoubleCoord(new Coord(0, 0),
                                            new Coord(3, 0),
                                            HexaDirection.DOWN))
-            .toEqual(MGPFallible.failure('Distance between first coord and last coord is too great'));
+            .toEqual(MGPFallible.failure('Distance between first coord and last coord is too big'));
     });
     it('should not construct when created with an out of range coord', () => {
         const coord: Coord = new Coord(9, 9);

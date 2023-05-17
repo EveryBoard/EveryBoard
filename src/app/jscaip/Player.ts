@@ -1,6 +1,6 @@
-import { Utils } from 'src/app/utils/utils';
+import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { NumberEncoder } from '../utils/Encoder';
+import { MoveEncoder, NumberEncoder } from '../utils/Encoder';
 
 class PlayerNone implements ComparableObject {
 
@@ -29,6 +29,15 @@ export class Player implements ComparableObject {
         if (encoded === 2) return PlayerOrNone.NONE;
         return Player.of(encoded);
     });
+    public static encoder: MoveEncoder<Player> = new class extends MoveEncoder<Player> {
+        public encodeMove(player: Player): JSONValueWithoutArray {
+            return player.value;
+        }
+        public decodeMove(encoded: JSONValueWithoutArray): Player {
+            Utils.assert(encoded == 0 || encoded == 1, 'Invalid encoded player: ' + encoded);
+            return Player.of(encoded as 0|1);
+        }
+    }
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
     public static readonly PLAYERS: Player[] = [Player.ZERO, Player.ONE];

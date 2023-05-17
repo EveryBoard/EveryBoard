@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ApagosCoord } from '../ApagosCoord';
 import { ApagosFailure } from '../ApagosFailure';
@@ -23,7 +23,7 @@ describe('ApagosMove', () => {
     it('should have a bijective encoder', () => {
         const moves: ApagosMove[] = ApagosMove.ALL_MOVES;
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(ApagosMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(ApagosMove.encoder, move);
         }
     });
     it('should override equals correctly', () => {
