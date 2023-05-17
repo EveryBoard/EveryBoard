@@ -262,7 +262,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         } else if (move instanceof HiveMoveCoordToCoord) {
             lastMove = [move.getStart(), move.getEnd()];
         }
-        // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
         return lastMove;
     }
     public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {

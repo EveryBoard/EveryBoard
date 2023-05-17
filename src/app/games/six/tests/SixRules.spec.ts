@@ -13,7 +13,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Vector } from 'src/app/jscaip/Vector';
 
-describe('SixRules', () => {
+fdescribe('SixRules', () => {
 
     let rules: SixRules;
     let minimaxes: Minimax<SixMove, SixState, SixLegalityInformation>[];
@@ -80,21 +80,20 @@ describe('SixRules', () => {
         it('should allow drop outside the current range', () => {
             // Given a board in a certain range (2 by 2 when put in a square)
             const board: Table<PlayerOrNone> = [
-                [O, X],
-                [X, _],
+                [O],
+                [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 0);
 
             // When playing on a coord that is outside of the representation board
-            const move: SixMove = SixMove.fromDrop(new Coord(2, -1));
+            const move: SixMove = SixMove.fromDrop(new Coord(-1, 1));
 
             // Then the move should be legal
             const expectedBoard: Table<PlayerOrNone> = [
-                [_, _, O],
-                [O, X, _],
-                [X, _, _],
+                [_, O],
+                [O, X],
             ];
-            const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 1, new Vector(0, -1));
+            const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 1, new Vector(-1, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid dropping coord to be not connected to any piece', () => {

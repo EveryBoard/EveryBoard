@@ -24,6 +24,13 @@ export class SixState extends OpenHexagonalGameState<Player> {
         const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
         return SixState.fromRepresentation(board, 0);
     }
+    /**
+      * @param board the representation of the board
+      * @param turn the turn of the board
+      * @param offset the coord of the board[0][0] space
+      * (usefull if the upper left coord is in (-5, -9) or (512, 129) or so one)
+      * @returns the state created from that
+     */
     public static fromRepresentation(board: Table<PlayerOrNone>, turn: number, offset: Vector = new Vector(0, 0))
     : SixState {
         const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
