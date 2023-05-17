@@ -13,7 +13,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Vector } from 'src/app/jscaip/Vector';
 
-fdescribe('SixRules', () => {
+describe('SixRules', () => {
 
     let rules: SixRules;
     let minimaxes: Minimax<SixMove, SixState, SixLegalityInformation>[];
