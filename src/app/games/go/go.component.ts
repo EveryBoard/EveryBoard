@@ -49,13 +49,12 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
+        this.boardWidth = this.getState().board.length;
+        this.boardHeight = this.getState().board[0].length;
         this.updateBoard();
     }
     private createHoshis(): void {
         const height: number = this.getState().board.length;
-        const width: number = this.getState().board[0].length;
-        this.boardWidth = width;
-        this.boardHeight = height;
         const middle: number = Math.floor(height / 2);
         this.hoshis = [];
         const begin: number = height < 12 ? 2: 3;

@@ -52,7 +52,7 @@ describe('GoComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_2', secondMove, undefined, [0, 0]);
     }));
     describe('hoshi', () => {
-        it('shoud be in (3, 3) and other centraly symetrical coords fo 19x19 board', fakeAsync(async() => {
+        it('shoud be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             GoState.HEIGHT = 19;
             GoState.WIDTH = 19;
@@ -64,7 +64,7 @@ describe('GoComponent', () => {
 
             // Then it should have hoshi in the middle (9, 9)
             testUtils.expectElementToExist('#hoshi_9_9'); // Middle Middle
-            // Then it should have hoshi in (3, 3) and (cx, 3) and the 4 central symetric ones
+            // Then it should have hoshi in (3, 3) and (cx, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
             testUtils.expectElementToExist('#hoshi_9_3'); // Middle Up
             testUtils.expectElementToExist('#hoshi_15_3'); // Right Up
@@ -74,7 +74,7 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('#hoshi_3_15'); // Left Down
             testUtils.expectElementToExist('#hoshi_3_9'); // Left Middle
         }));
-        it('shoud be in (3, 3) and other centraly symetrical coords for 13x13 board', fakeAsync(async() => {
+        it('shoud be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
             GoState.HEIGHT = 13;
             GoState.WIDTH = 13;
@@ -86,7 +86,7 @@ describe('GoComponent', () => {
             // Then it should have hoshi in the middle (6, 6)
             testUtils.expectElementToExist('#hoshi_6_6'); // Middle Middle
 
-            // Then it should have hoshi in (3, 3) and the 4 central symetric ones
+            // Then it should have hoshi in (3, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
             testUtils.expectElementToExist('#hoshi_9_3'); // Right Up
             testUtils.expectElementToExist('#hoshi_9_9'); // Right Down
@@ -97,7 +97,7 @@ describe('GoComponent', () => {
             testUtils.expectElementNotToExist('#hoshi_6_9'); // Middle Down
             testUtils.expectElementNotToExist('#hoshi_3_6'); // Left Middle
         }));
-        it('shoud be in (2, 2) and other centraly symetrical coords for 9x9 board', fakeAsync(async() => {
+        it('shoud be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
             GoState.HEIGHT = 9;
             GoState.WIDTH = 9;
@@ -110,7 +110,7 @@ describe('GoComponent', () => {
             // Then it should have hoshi in the middle (4, 4)
             testUtils.expectElementToExist('#blank_board');
             testUtils.expectElementToExist('#hoshi_4_4'); // Middle Middle
-            // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symetric ones
+            // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_2_2'); // Left Up
             testUtils.expectElementToExist('#hoshi_6_2'); // Right Up
             testUtils.expectElementToExist('#hoshi_6_6'); // Right Down

@@ -150,7 +150,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new MartianChessRules(MartianChessState);
         this.availableMinimaxes = [
             new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),
