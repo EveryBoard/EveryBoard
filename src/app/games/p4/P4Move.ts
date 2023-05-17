@@ -1,5 +1,6 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
+import { JSONValueWithoutArray } from 'src/app/utils/utils';
 
 export class P4Move extends Move {
     public static ZERO: P4Move = new P4Move(0);
@@ -10,15 +11,12 @@ export class P4Move extends Move {
     public static FIVE: P4Move = new P4Move(5);
     public static SIX: P4Move = new P4Move(6);
 
-    public static encoder: NumberEncoder<P4Move> = new class extends NumberEncoder<P4Move> {
-        public maxValue(): number {
-            return 6;
-        }
-        public encodeNumber(move: P4Move): number {
+    public static encoder: MoveEncoder<P4Move> = new class extends MoveEncoder<P4Move> {
+        public encodeMove(move: P4Move): JSONValueWithoutArray {
             return move.x;
         }
-        public decodeNumber(encodedMove: number): P4Move {
-            return P4Move.of(encodedMove);
+        public decodeMove(encodedMove: JSONValueWithoutArray): P4Move {
+            return P4Move.of(encodedMove as number);
         }
     };
     public static of(n: number): P4Move {
