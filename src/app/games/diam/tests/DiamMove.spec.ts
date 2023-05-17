@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '../../../utils/tests/Encoder.spec';
 import { DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 
@@ -49,8 +50,8 @@ describe('DiamMove', () => {
         });
     });
     it('should have a bijective encoder', () => {
-        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
-        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
-        NumberEncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'counterclockwise'));
+        EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
+        EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
+        EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'counterclockwise'));
     });
 });

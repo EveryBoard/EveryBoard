@@ -2,9 +2,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { DiamPiece } from './DiamPiece';
+import { MoveEncoder } from '../../utils/Encoder';
 
 export class DiamMoveDrop extends Move {
-    public static encoder: NumberEncoder<DiamMoveDrop> = NumberEncoder.tuple(
+    public static encoder: MoveEncoder<DiamMoveDrop> = MoveEncoder.tuple(
         [NumberEncoder.numberEncoder(7), DiamPiece.encoder],
         (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
         (fields: [number, DiamPiece]): DiamMoveDrop => new DiamMoveDrop(fields[0], fields[1]),
@@ -78,9 +79,9 @@ export class DiamMoveShift extends Move {
 
 export type DiamMove = DiamMoveDrop | DiamMoveShift
 
-export const DiamMoveEncoder: NumberEncoder<DiamMove> =
-    NumberEncoder.disjunction(DiamMoveDrop.encoder,
-                              DiamMoveShift.encoder,
-                              (value: DiamMove): value is DiamMoveDrop => {
-                                  return value.isDrop();
-                              });
+export const DiamMoveEncoder: MoveEncoder<DiamMove> =
+    MoveEncoder.disjunction(DiamMoveDrop.encoder,
+                            DiamMoveShift.encoder,
+                            (value: DiamMove): value is DiamMoveDrop => {
+                                return value.isDrop();
+                            });
