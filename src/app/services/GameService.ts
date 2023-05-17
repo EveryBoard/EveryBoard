@@ -112,9 +112,14 @@ export class GameService {
 
         await this.configRoomService.acceptConfig(partId);
 
-        const accepter: Player = Player.ONE;
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        await this.update(partId, update);
+        let accepter: Player;
+        if (update.playerZero === configRoom.creator) {
+            accepter = Player.ONE;
+        } else {
+            accepter = Player.ZERO;
+        }
+        await this.partDAO.update(partId, update);
         await this.gameEventService.startGame(partId, accepter);
     }
     public getPart(partId: string): Promise<MGPOptional<Part>> {
@@ -129,7 +134,7 @@ export class GameService {
             loser,
             result: MGPResult.RESIGN.value,
         };
-        await this.update(partId, update);
+        await this.partDAO.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
     public async notifyTimeout(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
@@ -138,7 +143,7 @@ export class GameService {
             loser,
             result: MGPResult.TIMEOUT.value,
         };
-        await this.update(partId, update);
+        await this.partDAO.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {
@@ -151,7 +156,7 @@ export class GameService {
         const update: Partial<Part> = {
             result: result.value,
         };
-        await this.update(partId, update);
+        await this.partDAO.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
     public async refuseDraw(partId: string, player: Player): Promise<void> {
@@ -194,16 +199,15 @@ export class GameService {
         await this.configRoomService.createConfigRoom(rematchId, newConfigRoom);
         await this.createChat(rematchId);
         await this.gameEventService.addReply(partDocument.id, player, 'Accept', 'Rematch', rematchId);
-        await this.gameEventService.startGame(rematchId, player);
+        await this.gameEventService.startGame(rematchId, player.getOpponent());
     }
     public async askTakeBack(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'TakeBack');
     }
-    public async acceptTakeBack(partId: string, part: PartDocument, player: Player): Promise<void> {
-        const lastMove: FirestoreDocument<PartEventMove> = await this.gameEventService.getLastMoveDoc(partId);
-        let turn: number = part.data.turn;
+    public async acceptTakeBack(partId: string, part: Part, player: Player): Promise<void> {
+        let turn: number = part.turn;
         turn--;
-        if (lastMove.data.player === player.value) {
+        if (turn % 2 === player.value) {
             // We need to take back a second time to let the requester take back their move
             turn--;
         }
@@ -211,7 +215,7 @@ export class GameService {
             turn,
         };
         await this.gameEventService.addReply(partId, player, 'Accept', 'TakeBack' );
-        return await this.update(partId, update);
+        return await this.partDAO.update(partId, update);
     }
     public async refuseTakeBack(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addReply(partId, player, 'Reject', 'TakeBack');

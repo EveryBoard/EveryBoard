@@ -94,16 +94,54 @@ describe('GameService', () => {
         // Then it should delegate to the DAO
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     }));
-    it('acceptConfig should delegate to ConfigRoomService and call startGameWithConfig', fakeAsync(async() => {
-        const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-        const configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
-        spyOn(configRoomService, 'acceptConfig').and.resolveTo();
-        spyOn(partDAO, 'update').and.resolveTo();
+    describe('acceptConfig', () => {
+        it('should delegate to ConfigRoomService.acceptConfig', fakeAsync(async() => {
+            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
+            spyOn(configRoomService, 'acceptConfig').and.resolveTo();
+            spyOn(partDAO, 'update').and.resolveTo();
 
-        await gameService.acceptConfig('partId', configRoom);
+            // Given a config
+            const configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
+            // When accepting it
+            await gameService.acceptConfig('partId', configRoom);
+            // Then acceptConfig should be called
+            expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
+        }));
+        it('should can startGame with the accepter player as argument (Player.ZERO)', fakeAsync(async() => {
+            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
+            const gameEventService: GameEventService = TestBed.inject(GameEventService);
+            spyOn(configRoomService, 'acceptConfig').and.resolveTo();
+            spyOn(partDAO, 'update').and.resolveTo();
+            spyOn(gameEventService, 'startGame').and.resolveTo();
 
-        expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
-    }));
+            // Given a config where we will start as player 0
+            const configRoom: ConfigRoom = {
+                ...ConfigRoomMocks.WITH_PROPOSED_CONFIG,
+                firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
+            };
+            // When accepting it
+            await gameService.acceptConfig('partId', configRoom);
+            // Then startGame is called with Player.ZERO
+            expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ZERO);
+        }));
+        it('should can startGame with the accepter player as argument (Player.ONE)', fakeAsync(async() => {
+            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
+            const gameEventService: GameEventService = TestBed.inject(GameEventService);
+            spyOn(configRoomService, 'acceptConfig').and.resolveTo();
+            spyOn(partDAO, 'update').and.resolveTo();
+            spyOn(gameEventService, 'startGame').and.resolveTo();
+
+            // Given a config where we will start as player 0
+            const configRoom: ConfigRoom = {
+                ...ConfigRoomMocks.WITH_PROPOSED_CONFIG,
+                firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
+            };
+            // When accepting it
+            await gameService.acceptConfig('partId', configRoom);
+            // Then startGame is called with Player.ZERO
+            expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ZERO);
+        }));
+    });
     it('createPartConfigRoomAndChat should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
         const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
         const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
@@ -359,13 +397,7 @@ describe('GameService', () => {
     describe('drawPart', () => {
         it('should include the draw notification', fakeAsync(async() => {
             // Given a part
-            const part: Part = {
-                typeGame: 'Quarto',
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                turn: 1,
-                result: MGPResult.UNACHIEVED.value,
-            };
+            const part: Part = { ...PartMocks.STARTED, turn: 1 };
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             // When updating the board to notify of a draw
             spyOn(partDAO, 'update').and.resolveTo();
@@ -396,5 +428,27 @@ describe('GameService', () => {
                 });
             });
         }
+    });
+    describe('acceptTakeBack', () => {
+        it('should decrease turn by 1 when accepting during our turn', fakeAsync(async() => {
+            spyOn(partDAO, 'update').and.resolveTo();
+            // Given a part during our turn
+            const part = { ...PartMocks.STARTED, turn: 2 };
+            // When accepting the take back
+            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            // Then it should decrease the turn by one
+            expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
+        }));
+        it(`should decrease turn by 2 when accepting during the opponent's turn`, fakeAsync(async() => {
+            spyOn(partDAO, 'update').and.resolveTo();
+            // Given a part during the opponent's turn
+            const part = { ...PartMocks.STARTED, turn: 3 };
+            // When accepting the take back
+            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            // Then it should decrease the turn by two
+            expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
+                turn: 1,
+            });
+        }));
     });
 });

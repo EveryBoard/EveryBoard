@@ -123,20 +123,6 @@ describe('GameEventService', () => {
             expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
     });
-    describe('getLastMoveDoc', () => {
-        it('should return the document of the last move', fakeAsync(async() => {
-            // Given a part service already containing a move
-            const move: JSONValue = { x: 0, y: 0 };
-            await gameEventService.addMove(partId, Player.ZERO, move);
-
-            // When getting the document of the last move
-            const doc: FirestoreDocument<PartEventMove> = await gameEventService.getLastMoveDoc(partId);
-
-            // Then it should return the... document of the last move
-            expect(doc.data.eventType).toBe('Move');
-            expect(doc.data.move).toBe(move);
-        }));
-    });
     describe('subscribeToEvents', () => {
         it('should receive newly added events', fakeAsync(async() => {
             // Given a part service with a part without event, and where we subscribed to the part's events

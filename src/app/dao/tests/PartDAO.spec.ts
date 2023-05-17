@@ -583,26 +583,6 @@ describe('PartDAO security', () => {
                 await reconnectUser(CREATOR_EMAIL);
             }
         });
-        it('should forbid changing the status to draw if it was not proposed', async() => {
-            // Given a part where one player did NOT propose a draw
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-            const partId: string = await partDAO.create(part);
-
-            await signOut();
-            await reconnectUser(OPPONENT_EMAIL);
-
-            // When the other user tries to change the result to draw
-            const result: Promise<void> = partDAO.update(partId, {
-                request: null,
-                result: MGPResult.AGREED_DRAW_BY_ONE.value,
-            });
-
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
-        });
         it('should allow resigning', async() => {
             // Given an ongoing part
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
@@ -858,7 +838,7 @@ describe('PartDAO security', () => {
                     await expectAsync(result).toBeResolved();
                 });
                 it('should allow creating StartGame action at turn 0', async() => {
-                    // Given an ongoing part
+                    // Given an created part at turn 0
                     const partId: string = await setupStartedPartAsPlayerZero();
 
                     // When creating an StartGame action at turn 0

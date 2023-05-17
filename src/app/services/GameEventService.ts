@@ -68,12 +68,6 @@ export class GameEventService {
             action,
         });
     }
-    public async getLastMoveDoc(partId: string): Promise<FirestoreDocument<PartEventMove>> {
-        const results: FirestoreDocument<PartEvent>[] =
-            await this.eventsCollection(partId).findWhere([['eventType', '==', 'Move']], 'time', 1);
-        Utils.assert(results.length === 1, `There should be exactly one last move, found ${results.length}`);
-        return results[0] as FirestoreDocument<PartEventMove>;
-    }
     public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<PartEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<PartEvent>[]) => {

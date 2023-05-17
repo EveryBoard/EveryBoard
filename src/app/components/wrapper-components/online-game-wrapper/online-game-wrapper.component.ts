@@ -464,12 +464,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async initializePlayersDatas(updatedICurrentPart: PartDocument): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_initializePlayersDatas: updatedICurrentPart });
         this.players = [
             MGPOptional.of(updatedICurrentPart.data.playerZero),
             MGPOptional.ofNullable(updatedICurrentPart.data.playerOne),
         ];
-        assert(updatedICurrentPart.data.playerOne != null, 'should not setPlayersDatas when players data is not received');
+        assert(updatedICurrentPart.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();
         const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
         if (opponent.isPresent()) {
@@ -588,7 +588,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         assert(this.isPlaying(), 'Non playing should not call acceptTakeBack');
         const player: Player = this.role as Player;
         await this.gameService.acceptTakeBack(this.currentPartId,
-                                              Utils.getNonNullable(this.currentPart),
+                                              Utils.getNonNullable(this.currentPart).data,
                                               player);
     }
     public refuseTakeBack(): Promise<void> {
