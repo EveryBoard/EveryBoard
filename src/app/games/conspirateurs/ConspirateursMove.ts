@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder, NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { MoveCoord, MoveCoordEncoder } from 'src/app/jscaip/MoveCoord';
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -16,11 +16,9 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class ConspirateursMoveDrop extends MoveCoord {
     public static encoder: MoveEncoder<ConspirateursMoveDrop> =
-        MoveCoordEncoder.getEncoder(ConspirateursState.WIDTH,
-                                    ConspirateursState.HEIGHT,
-                                    (coord: Coord) => ConspirateursMoveDrop.of(coord).get());
+        MoveCoord.getFallibleEncoder(ConspirateursMoveDrop.from);
 
-    public static of(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
+    public static from(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
         if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
             return MGPFallible.success(new ConspirateursMoveDrop(coord));
         } else {
@@ -54,7 +52,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
     public static encoder: MoveEncoder<ConspirateursMoveSimple> =
-        MoveWithTwoCoords.getEncoder(ConspirateursMoveSimple.from);
+        MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
         if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&
@@ -98,11 +96,9 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
 export class ConspirateursMoveJump extends Move {
     public static encoder: MoveEncoder<ConspirateursMoveJump> = new class extends MoveEncoder<ConspirateursMoveJump> {
-        private readonly coordEncoder: NumberEncoder<Coord> =
-            Coord.numberEncoder(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
         public encodeMove(move: ConspirateursMoveJump): JSONValueWithoutArray {
             return {
-                coords: move.coords.map(this.coordEncoder.encodeNumber),
+                coords: move.coords.map(Coord.encoder.encodeMove),
             };
         }
         public decodeMove(encoded: JSONValue): ConspirateursMoveJump {
@@ -110,11 +106,11 @@ export class ConspirateursMoveJump extends Move {
             assert(Utils.getNonNullable(encoded)['coords'] != null, 'Encoded ConspirateursMoveJump should contain coords');
             // eslint-disable-next-line dot-notation
             const coords: number[] = Utils.getNonNullable(encoded)['coords'] as number[];
-            const decoded: Coord[] = coords.map(this.coordEncoder.decodeNumber);
-            return ConspirateursMoveJump.of(decoded).get();
+            const decoded: Coord[] = coords.map(Coord.encoder.decodeMove);
+            return ConspirateursMoveJump.from(decoded).get();
         }
     };
-    public static of(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
+    public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
@@ -146,7 +142,7 @@ export class ConspirateursMoveJump extends Move {
     public addJump(target: Coord): MGPFallible<ConspirateursMoveJump> {
         const coords: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
         coords.push(target);
-        return ConspirateursMoveJump.of(coords);
+        return ConspirateursMoveJump.from(coords);
     }
     public getStartingCoord(): Coord {
         return this.coords[0];

@@ -191,7 +191,7 @@ export class ConspirateursComponent
         } else if (this.selected.isPresent()) {
             return this.selectNextCoord(coord);
         } else if (state.isDropPhase()) {
-            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.of(coord);
+            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.from(coord);
             assert(move.isSuccess(), 'ConspirateursMove should be valid by construction');
             return this.chooseMove(move.get(), state);
         } else {
@@ -232,7 +232,7 @@ export class ConspirateursComponent
         if (move.isSuccess()) {
             return this.chooseMove(move.get(), this.getState());
         } else {
-            const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([selected, coord]);
+            const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([selected, coord]);
             if (jump.isFailure()) {
                 return this.cancelMove(jump.getReason());
             }

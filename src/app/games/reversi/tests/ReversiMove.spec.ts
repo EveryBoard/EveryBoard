@@ -3,7 +3,7 @@ import { ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('ReversiMove', () => {
 
@@ -13,7 +13,7 @@ describe('ReversiMove', () => {
         const moves: ReversiMove[] = minimax.getListMoves(rules.node);
         moves.push(ReversiMove.PASS);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(ReversiMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(ReversiMove.encoder, move);
         }
     });
 });

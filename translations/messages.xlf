@@ -485,8 +485,8 @@
       <trans-unit id="1041065984971815594" datatype="html">
         <source>You lost</source>
       </trans-unit>
-      <trans-unit id="7295646331303360714" datatype="html">
-        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (<x id="PH_1" equiv-text="winner"/>) won</source>
+      <trans-unit id="1836885699974320953" datatype="html">
+        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>

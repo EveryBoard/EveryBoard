@@ -21,7 +21,7 @@ export class ConspirateursTutorial extends Tutorial {
             $localize`Initial phase`,
             $localize`In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.<br/><br/>You're playing Dark, drop one of your piece in the central zone.`,
             ConspirateursState.getInitialState(),
-            ConspirateursMoveDrop.of(new Coord(7, 7)).get(),
+            ConspirateursMoveDrop.from(new Coord(7, 7)).get(),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromPredicate(
@@ -79,7 +79,7 @@ export class ConspirateursTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
-            ConspirateursMoveJump.of([new Coord(6, 7), new Coord(6, 5)]).get(),
+            ConspirateursMoveJump.from([new Coord(6, 7), new Coord(6, 5)]).get(),
             (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
                 if (move.isJump()) {
                     return MGPValidation.SUCCESS;
@@ -111,7 +111,7 @@ export class ConspirateursTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
-            [ConspirateursMoveJump.of([new Coord(8, 6), new Coord(6, 4), new Coord(6, 2), new Coord(6, 0)]).get()],
+            [ConspirateursMoveJump.from([new Coord(8, 6), new Coord(6, 4), new Coord(6, 2), new Coord(6, 0)]).get()],
             $localize`Congratulations! You now know everything to play the game. Remember: to win, you have to place all of your pieces in shelters before your opponent does.`,
             $localize`You have not performed a triple jump. Try again!`,
         ),

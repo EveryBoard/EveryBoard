@@ -141,7 +141,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     ConspirateursRules.get(),
                     conspirateursTutorial[2],
-                    ConspirateursMoveJump.of([new Coord(4, 7), new Coord(4, 5)]).get(),
+                    ConspirateursMoveJump.from([new Coord(4, 7), new Coord(4, 5)]).get(),
                     MGPValidation.failure(`You have made a jump, not a simple move. Try again!`),
                 ], [
                     ConspirateursRules.get(),

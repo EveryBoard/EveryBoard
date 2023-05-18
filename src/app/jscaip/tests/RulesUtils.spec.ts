@@ -26,7 +26,7 @@ export class RulesUtils {
             const resultingState: S = rules.applyLegalMove(move, state, legality.get());
             if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
-                expect(equals).withContext('states should be equal').toBeTrue();
+                expect(equals).withContext('comparable states should be equal').toBeTrue();
             } else {
                 expect(resultingState).withContext('states should be equal').toEqual(expectedState);
             }

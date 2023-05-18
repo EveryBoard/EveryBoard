@@ -1,8 +1,8 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder, NumberEncoder } from '../utils/Encoder';
+import { MoveEncoder } from '../utils/Encoder';
 import { Vector } from './Vector';
 
 export class CoordFailure {
@@ -11,35 +11,25 @@ export class CoordFailure {
 
 export class Coord extends Vector {
 
-    public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
-        public encode(coord: Coord): JSONValueWithoutArray {
+    public static encoder: MoveEncoder<Coord> = new class extends MoveEncoder<Coord> {
+        public encodeMove(coord: Coord): JSONValueWithoutArray {
             return { x: coord.x, y: coord.y };
         }
-        public decode(encoded: JSONValue): Coord {
+        public decodeMove(encoded: JSONValueWithoutArray): Coord {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.x != null && typeof casted.x === 'number' &&
-                casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
+                   casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
             return new Coord(casted.x as number, casted.y as number);
         }
     };
-    public static numberEncoder(width: number, height: number): NumberEncoder<Coord> {
-        return NumberEncoder.tuple(
-            [NumberEncoder.numberEncoder(width), NumberEncoder.numberEncoder(height)],
-            (coord: Coord): [number, number] => [coord.x, coord.y],
-            (fields: [number, number]): Coord => new Coord(fields[0], fields[1]),
-        );
-    }
     public constructor(public readonly x: number,
                        public readonly y: number)
     {
         super(x, y);
     }
     public getNext(dir: Vector, distance?: number): Coord {
-        // return the next coord in the direction 'dir'
-        distance = distance == null ? 1 : distance;
-        const newX: number = this.x + (distance * dir.x);
-        const newY: number = this.y + (distance * dir.y);
-        return new Coord(newX, newY);
+        const combinedVector: Vector = this.combine(dir, distance);
+        return new Coord(combinedVector.x, combinedVector.y);
     }
     public getPrevious(dir: Vector, distance?: number): Coord {
         distance = distance == null ? 1 : distance;
@@ -175,9 +165,6 @@ export class Coord extends Vector {
             return this.x < c.x ? -1 : 1;
         }
         return this.y < c.y ? -1 : 1;
-    }
-    public toString(): string {
-        return '(' + this.x + ', ' + this.y + ')';
     }
     public toSVGPoint(): string {
         return this.x + ',' + this.y;

@@ -10,7 +10,7 @@ export class DvonnMove extends MoveCoordToCoord {
 
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
 
-    public static encoder: MoveEncoder<DvonnMove> = MoveWithTwoCoords.getEncoder(DvonnMove.from);
+    public static encoder: MoveEncoder<DvonnMove> = MoveWithTwoCoords.getFallibleEncoder(DvonnMove.from);
 
     private constructor(start: Coord, end: Coord) {
         super(start, end);
