@@ -1,12 +1,10 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 
 export class DvonnPieceStack {
 
-    public static sizeEncoder: NumberEncoder<number> = NumberEncoder.numberEncoder(49);
-
-    public static encoder: NumberEncoder<DvonnPieceStack> = NumberEncoder.tuple(
-        [NumberEncoder.booleanEncoder, Player.numberEncoder, DvonnPieceStack.sizeEncoder],
+    public static encoder: MoveEncoder<DvonnPieceStack> = MoveEncoder.tuple(
+        [MoveEncoder.identity<boolean>(), Player.encoder, MoveEncoder.identity<number>()],
         (stack: DvonnPieceStack): [boolean, PlayerOrNone, number] => [stack.source, stack.owner, stack.size],
         (fields: [boolean, Player, number]): DvonnPieceStack => {
             return new DvonnPieceStack(fields[1], fields[2], fields[0]);
@@ -26,9 +24,6 @@ export class DvonnPieceStack {
                        public readonly size: number,
                        public readonly source: boolean)
     {
-    }
-    public getValue(): number {
-        return DvonnPieceStack.encoder.encodeNumber(this);
     }
     public getOwner(): PlayerOrNone {
         return this.owner;
