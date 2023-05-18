@@ -15,8 +15,7 @@ import { ConspirateursState } from './ConspirateursState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class ConspirateursMoveDrop extends MoveCoord {
-    public static encoder: MoveEncoder<ConspirateursMoveDrop> =
-        MoveCoord.getEncoder((coord: Coord) => ConspirateursMoveDrop.from(coord).get());
+    public static encoder: MoveEncoder<ConspirateursMoveDrop> = MoveCoord.getFallibleEncoder(ConspirateursMoveDrop.from);
 
     public static from(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
         if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
