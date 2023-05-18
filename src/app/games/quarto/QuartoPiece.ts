@@ -1,4 +1,5 @@
 import { ComparableObject } from 'src/app/utils/Comparable';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 
 export class QuartoPiece implements ComparableObject {
 
@@ -39,6 +40,11 @@ export class QuartoPiece implements ComparableObject {
         QuartoPiece.BBBA,
         QuartoPiece.BBBB,
     ];
+
+    public static encoder: MoveEncoder<QuartoPiece> = MoveEncoder.fromFunctions(
+        (p: QuartoPiece) => p.value,
+        QuartoPiece.fromInt);
+
     public static fromInt(piece: number): QuartoPiece {
         if (0 <= piece && piece <= 15) {
             return QuartoPiece.pieces[piece];
