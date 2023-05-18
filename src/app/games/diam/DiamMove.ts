@@ -1,12 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { DiamPiece } from './DiamPiece';
 import { MoveEncoder } from '../../utils/Encoder';
 
 export class DiamMoveDrop extends Move {
     public static encoder: MoveEncoder<DiamMoveDrop> = MoveEncoder.tuple(
-        [NumberEncoder.numberEncoder(7), DiamPiece.encoder],
+        [MoveEncoder.identity<number>(), DiamPiece.encoder],
         (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
         (fields: [number, DiamPiece]): DiamMoveDrop => new DiamMoveDrop(fields[0], fields[1]),
     );
@@ -40,8 +39,8 @@ export class DiamMoveDrop extends Move {
 type DiamShiftDirection = 'clockwise' | 'counterclockwise';
 
 export class DiamMoveShift extends Move {
-    public static encoder: NumberEncoder<DiamMoveShift> = NumberEncoder.tuple(
-        [Coord.numberEncoder(8, 4), NumberEncoder.booleanEncoder],
+    public static encoder: MoveEncoder<DiamMoveShift> = MoveEncoder.tuple(
+        [Coord.encoder, MoveEncoder.identity<boolean>()],
         (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'clockwise'],
         (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'clockwise' : 'counterclockwise'),
     );
