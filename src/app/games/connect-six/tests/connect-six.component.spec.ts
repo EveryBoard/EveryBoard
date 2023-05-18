@@ -118,7 +118,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.expectClickSuccess('#click_8_8');
 
             // When clicking again on this piece
-            await testUtils.expectClickSuccessWithAsymetricNaming('#dropped', '#click_8_8');
+            await testUtils.expectClickSuccessWithAsymmetricNaming('#dropped', '#click_8_8');
 
             // Then it should deselect it without popup
             testUtils.expectElementNotToExist('#dropped');

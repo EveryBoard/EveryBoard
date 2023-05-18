@@ -97,7 +97,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (${ winner }) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`);
                     }
                 }
             }

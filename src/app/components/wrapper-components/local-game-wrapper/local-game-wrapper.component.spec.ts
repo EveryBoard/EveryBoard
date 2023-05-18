@@ -197,7 +197,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should rotate the board when selecting AI as player zero', async() => {
             // Given a board of a reversible component
-            testUtils.getComponent().hasAsymetricBoard = true;
+            testUtils.getComponent().hasAsymmetricBoard = true;
 
             // When chosing the AI as player zero
             await selectAIPlayer(Player.ZERO);
@@ -208,7 +208,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should de-rotate the board when selecting human as player zero again', async() => {
             // Given a board of a reversible component, where AI is player zero
-            testUtils.getComponent().hasAsymetricBoard = true;
+            testUtils.getComponent().hasAsymmetricBoard = true;
             await selectAIPlayer(Player.ZERO);
 
             // When chosing the human as player zero again

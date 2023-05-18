@@ -35,11 +35,8 @@ export class Coord extends Vector {
         super(x, y);
     }
     public getNext(dir: Vector, distance?: number): Coord {
-        // return the next coord in the direction 'dir'
-        distance = distance == null ? 1 : distance;
-        const newX: number = this.x + (distance * dir.x);
-        const newY: number = this.y + (distance * dir.y);
-        return new Coord(newX, newY);
+        const combinedVector: Vector = this.combine(dir, distance);
+        return new Coord(combinedVector.x, combinedVector.y);
     }
     public getPrevious(dir: Vector, distance?: number): Coord {
         distance = distance == null ? 1 : distance;
@@ -174,9 +171,6 @@ export class Coord extends Vector {
             return this.x < c.x ? -1 : 1;
         }
         return this.y < c.y ? -1 : 1;
-    }
-    public override toString(): string {
-        return '(' + this.x + ', ' + this.y + ')';
     }
     public toSVGPoint(): string {
         return this.x + ',' + this.y;

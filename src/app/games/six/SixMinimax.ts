@@ -236,7 +236,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return this.currentVictorySource;
     }
     public searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixState): BoardInfo {
-        const lastDrop: Coord = move.landing.getNext(state.offset, 1);
+        const lastDrop: Coord = move.landing;
         display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
         switch (victorySource.typeSource) {
             case 'LINE':
@@ -385,7 +385,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     {
         display(this.VERBOSE,
                 { called: 'SixRules.getBoardInfo', victorySource, move, state, boardInfo });
-        const lastDrop: Coord = move.landing.getNext(state.offset, 1);
+        const lastDrop: Coord = move.landing;
         switch (victorySource.typeSource) {
             case 'CIRCLE':
                 return this.getBoardInfoForCircle(victorySource.index, lastDrop, state, boardInfo);

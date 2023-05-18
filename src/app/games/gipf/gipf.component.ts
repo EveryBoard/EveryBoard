@@ -60,7 +60,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [

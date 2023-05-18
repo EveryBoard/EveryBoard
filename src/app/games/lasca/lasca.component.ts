@@ -65,7 +65,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = LascaRules.get();
         this.availableMinimaxes = [
             new LascaControlMinimax('Lasca Control Minimax'),
@@ -159,7 +159,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private getSpaceInfoAt(unadapedCoord: Coord): SpaceInfo {
-        // Adapt the coord if needed so we don't affect the "centrally symetrical" coord to this one
+        // Adapt the coord if needed so we don't affect the "centrally symmetrical" coord to this one
         if (this.role === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
             const max: number = LascaState.SIZE - 1;
             const adaptedCoord: Coord = new Coord(max - unadapedCoord.x, max - unadapedCoord.y);
