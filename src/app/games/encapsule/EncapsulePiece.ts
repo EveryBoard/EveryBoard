@@ -19,7 +19,7 @@ export class EncapsulePiece implements ComparableObject {
         public decode(v: JSONValue): EncapsulePiece {
             return EncapsulePiece.of(v as number);
         }
-    }
+    };
 
     public static readonly SMALL_DARK: EncapsulePiece = new EncapsulePiece(0);
     public static readonly SMALL_LIGHT: EncapsulePiece = new EncapsulePiece(1);

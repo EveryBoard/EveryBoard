@@ -93,7 +93,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
 
         let newRemainingPiece: EncapsulePiece[] = state.getRemainingPieces();
         const newTurn: number = state.turn + 1;
-        newBoard[move.landingCoord.y][move.landingCoord.x] = EncapsuleSpace.decode(newLandingSpace.encode());
+        newBoard[move.landingCoord.y][move.landingCoord.x] = newLandingSpace;
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
@@ -102,11 +102,10 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
                 .concat(newRemainingPiece.slice(indexBiggest + 1));
         } else {
             const startingCoord: Coord = move.startingCoord.get();
-            const oldStartingNumber: number = newBoard[startingCoord.y][startingCoord.x].encode();
-            const oldStartingSpace: EncapsuleSpace = EncapsuleSpace.decode(oldStartingNumber);
+            const oldStartingSpace: EncapsuleSpace = newBoard[startingCoord.y][startingCoord.x];
             const removalResult: {removedSpace: EncapsuleSpace, removedPiece: EncapsulePiece} =
                 oldStartingSpace.removeBiggest();
-            newBoard[startingCoord.y][startingCoord.x] = EncapsuleSpace.decode(removalResult.removedSpace.encode());
+            newBoard[startingCoord.y][startingCoord.x] = removalResult.removedSpace;
             movingPiece = removalResult.removedPiece;
         }
         const resultingState: EncapsuleState = new EncapsuleState(newBoard, newTurn, newRemainingPiece);

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { HexaDirection } from '../HexaDirection';
 
 describe('HexaDirection', () => {
@@ -28,9 +28,7 @@ describe('HexaDirection', () => {
     it('should have a bijective encoder', () => {
         for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
-            const encoded: number = HexaDirection.encoder.encodeNumber(dir);
-            expect(encoded).toBe(i);
-            NumberEncoderTestUtils.expectToBeBijective(HexaDirection.encoder, dir);
+            EncoderTestUtils.expectToBeBijective(HexaDirection.encoder, dir);
         }
     });
     it('should map to angle correctly', () => {

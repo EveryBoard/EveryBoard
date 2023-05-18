@@ -8,7 +8,6 @@ describe('YinshPiece', () => {
 
     it('should have a bijective encoder', () => {
         for (const piece of [
-            YinshPiece.UNREACHABLE,
             YinshPiece.EMPTY,
             YinshPiece.MARKER_ZERO,
             YinshPiece.MARKER_ONE,

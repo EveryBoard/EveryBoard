@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -22,9 +22,9 @@ export class MartianChessMoveFailure {
 export class MartianChessMove extends MoveCoordToCoord {
 
     public static encoder: MoveEncoder<MartianChessMove> = MoveEncoder.tuple(
-        [Coord.numberEncoder(4, 8), Coord.numberEncoder(4, 8), MoveEncoder.identity<boolean>()],
+        [Coord.encoder, Coord.encoder, MoveEncoder.identity<boolean>()],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
-        (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
+        (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get()
     );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
         if (start.isNotInRange(4, 8)) {

@@ -1,4 +1,4 @@
-import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { JSONValueWithoutArray } from 'src/app/utils/utils';
 

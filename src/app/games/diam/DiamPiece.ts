@@ -3,9 +3,9 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class DiamPiece {
     public static encoder: MoveEncoder<DiamPiece> = MoveEncoder.tuple(
-        [Player.numberEncoder, MoveEncoder.identity<boolean>()],
+        [PlayerOrNone.encoder, MoveEncoder.identity<boolean>()],
         (piece: DiamPiece): [PlayerOrNone, boolean] => [piece.owner, piece.otherPieceType],
-        (fields: [Player, boolean]): DiamPiece => DiamPiece.of(fields[0], fields[1]),
+        (fields: [PlayerOrNone, boolean]): DiamPiece => DiamPiece.of(fields[0], fields[1]),
     );
 
     public static EMPTY: DiamPiece = new DiamPiece(PlayerOrNone.NONE, false);

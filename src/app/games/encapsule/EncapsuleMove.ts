@@ -9,7 +9,7 @@ export class EncapsuleMove extends Move {
     public static encoder: MoveEncoder<EncapsuleMove> = MoveEncoder.tuple(
         [MGPOptional.getEncoder(Coord.encoder), Coord.encoder, MGPOptional.getEncoder(EncapsulePiece.encoder)],
         (move: EncapsuleMove): EncapsuleMoveFields => [move.startingCoord, move.landingCoord, move.piece],
-        (fields: EncapsuleMoveFields): EncapsuleMove => new EncapsuleMove(fields[0], fields[1], fields[2]))
+        (fields: EncapsuleMoveFields): EncapsuleMove => new EncapsuleMove(fields[0], fields[1], fields[2]));
 
     private constructor(public readonly startingCoord: MGPOptional<Coord>,
                         public readonly landingCoord: Coord,

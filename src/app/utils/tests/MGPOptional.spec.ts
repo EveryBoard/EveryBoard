@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { ComparableObject } from '../Comparable';
 import { Encoder, MoveEncoder } from '../Encoder';
 import { MGPOptional } from '../MGPOptional';
-import { JSONValue } from '../utils';
 import { EncoderTestUtils } from './Encoder.spec';
 
 describe('MGPOptional', () => {

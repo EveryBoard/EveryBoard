@@ -1,6 +1,6 @@
 import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { MoveEncoder, NumberEncoder } from '../utils/Encoder';
+import { MoveEncoder } from '../utils/Encoder';
 
 class PlayerNone implements ComparableObject {
 
@@ -23,21 +23,15 @@ class PlayerNone implements ComparableObject {
 
 export class Player implements ComparableObject {
 
-    public static numberEncoder: NumberEncoder<PlayerOrNone> = NumberEncoder.ofN(2, (player: PlayerOrNone) => {
-        return player.value;
-    }, (encoded: number) => {
-        if (encoded === 2) return PlayerOrNone.NONE;
-        return Player.of(encoded);
-    });
     public static encoder: MoveEncoder<Player> = new class extends MoveEncoder<Player> {
         public encodeMove(player: Player): JSONValueWithoutArray {
             return player.value;
         }
         public decodeMove(encoded: JSONValueWithoutArray): Player {
-            Utils.assert(encoded == 0 || encoded == 1, 'Invalid encoded player: ' + encoded);
+            Utils.assert(encoded === 0 || encoded === 1, 'Invalid encoded player: ' + encoded);
             return Player.of(encoded as 0|1);
         }
-    }
+    };
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
     public static readonly PLAYERS: Player[] = [Player.ZERO, Player.ONE];
@@ -107,4 +101,15 @@ export namespace PlayerOrNone {
     export const ZERO: Player = Player.ZERO;
     export const ONE: Player = Player.ONE;
     export const NONE: PlayerNone = PlayerNone.NONE;
+
+    export const encoder: MoveEncoder<PlayerOrNone> = new class extends MoveEncoder<PlayerOrNone> {
+        public encodeMove(player: PlayerOrNone): JSONValueWithoutArray {
+            return player.value;
+        }
+        public decodeMove(encoded: JSONValueWithoutArray): PlayerOrNone {
+            if (encoded === 2) return PlayerOrNone.NONE;
+            Utils.assert(encoded === 0 || encoded === 1, 'Invalid encoded player: ' + encoded);
+            return Player.of(encoded as 0|1);
+        }
+    };
 }

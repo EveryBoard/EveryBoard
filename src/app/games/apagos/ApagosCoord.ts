@@ -12,7 +12,7 @@ export class ApagosCoord {
             Utils.assert(encoded != null, 'Invalid encoded ApagosCoord: ' + encoded);
             return ApagosCoord.from(encoded as number);
         }
-    }
+    };
     public static ZERO: ApagosCoord = new ApagosCoord(0);
 
     public static ONE: ApagosCoord = new ApagosCoord(1);

@@ -8,12 +8,11 @@ export class YinshPiece implements ComparableObject {
 
     public static encoder: MoveEncoder<YinshPiece> =
         MoveEncoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
-            [Player.encoder, MoveEncoder.identity<boolean>()],
+            [PlayerOrNone.encoder, MoveEncoder.identity<boolean>()],
             (piece: YinshPiece): [PlayerOrNone, boolean] => [piece.player, piece.isRing],
-            (fields: [Player, boolean]): YinshPiece => YinshPiece.of(fields[0], fields[1]));
+            (fields: [PlayerOrNone, boolean]): YinshPiece => YinshPiece.of(fields[0], fields[1]));
 
     public static UNREACHABLE: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
-
     public static EMPTY: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
 
     public static MARKER_ZERO: YinshPiece = new YinshPiece(Player.ZERO, false);
@@ -24,7 +23,7 @@ export class YinshPiece implements ComparableObject {
     public static RING_ONE: YinshPiece = new YinshPiece(Player.ONE, true);
     public static RINGS: [YinshPiece, YinshPiece] = [YinshPiece.RING_ZERO, YinshPiece.RING_ONE];
 
-    public static of(player: Player, isRing: boolean): YinshPiece {
+    public static of(player: PlayerOrNone, isRing: boolean): YinshPiece {
         if (player === PlayerOrNone.NONE) {
             return YinshPiece.EMPTY;
         } else {

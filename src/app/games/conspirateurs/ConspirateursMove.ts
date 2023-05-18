@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { MoveCoord, MoveCoordEncoder } from 'src/app/jscaip/MoveCoord';
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -16,9 +16,7 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class ConspirateursMoveDrop extends MoveCoord {
     public static encoder: MoveEncoder<ConspirateursMoveDrop> =
-        MoveCoordEncoder.getEncoder(ConspirateursState.WIDTH,
-                                    ConspirateursState.HEIGHT,
-                                    (coord: Coord) => ConspirateursMoveDrop.of(coord).get());
+        MoveCoord.getEncoder((coord: Coord) => ConspirateursMoveDrop.of(coord).get());
 
     public static of(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
         if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {

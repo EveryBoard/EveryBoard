@@ -2,7 +2,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
-import { MoveEncoder, NumberEncoder } from '../utils/Encoder';
+import { MoveEncoder } from '../utils/Encoder';
 import { Vector } from './Vector';
 
 export class CoordFailure {
@@ -22,13 +22,6 @@ export class Coord extends Vector {
             return new Coord(casted.x as number, casted.y as number);
         }
     };
-    public static numberEncoder(width: number, height: number): NumberEncoder<Coord> {
-        return NumberEncoder.tuple(
-            [NumberEncoder.numberEncoder(width), NumberEncoder.numberEncoder(height)],
-            (coord: Coord): [number, number] => [coord.x, coord.y],
-            (fields: [number, number]): Coord => new Coord(fields[0], fields[1]),
-        );
-    }
     public constructor(public readonly x: number,
                        public readonly y: number)
     {

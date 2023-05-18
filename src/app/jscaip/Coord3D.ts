@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { assert } from '../utils/assert';
-import { Encoder, MoveEncoder } from '../utils/Encoder';
-import { MGPOptional } from '../utils/MGPOptional';
+import { Encoder } from '../utils/Encoder';
 import { JSONObject, JSONValue, JSONValueWithoutArray } from '../utils/utils';
 
 export class Coord3D extends Coord {
@@ -19,10 +18,10 @@ export class Coord3D extends Coord {
             public decode(encoded: JSONValue): T {
                 const casted: JSONObject = encoded as JSONObject;
                 assert(casted.x != null && typeof casted.x === 'number' &&
-                       casted.y != null && typeof casted.y === 'number', 'Invalid encoded Coord3D');
-                return generateMove(casted.x as number,
-                                    casted.y as number,
-                                    casted.z as number);
+                       casted.y != null && typeof casted.y === 'number' &&
+                       casted.z != null && typeof casted.z === 'number',
+                       'Invalid encoded Coord3D');
+                return generateMove(casted.x as number, casted.y as number, casted.z as number);
             }
         };
     }
