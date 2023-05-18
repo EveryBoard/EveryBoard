@@ -22,9 +22,7 @@ export class Coord extends Vector {
             return new Coord(casted.x as number, casted.y as number);
         }
     };
-    public constructor(public readonly x: number,
-                       public readonly y: number)
-    {
+    public constructor(x: number, y: number) {
         super(x, y);
     }
     public getNext(dir: Vector, distance?: number): Coord {

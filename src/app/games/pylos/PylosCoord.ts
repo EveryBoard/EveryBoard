@@ -6,9 +6,9 @@ import { Encoder } from 'src/app/utils/Encoder';
 
 export class PylosCoord extends Coord3D {
 
-    public static override coordEncoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
+    public static coordEncoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
 
-    public static override optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.coordEncoder);
+    public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.coordEncoder);
 
     public static from(x: number, y: number, z: number): PylosCoord {
         return new PylosCoord(x, y, z);
