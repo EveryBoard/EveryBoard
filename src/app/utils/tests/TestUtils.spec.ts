@@ -310,13 +310,13 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code
      */
-    public async expectClickSuccessWithAsymetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
+    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
         await this.expectInterfaceClickSuccess(nameInHtml);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
     }
     public async expectClickSuccess(elementName: string): Promise<void> {
-        return this.expectClickSuccessWithAsymetricNaming(elementName, elementName);
+        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
     }
     public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
@@ -339,9 +339,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             .withContext(context)
             .toHaveBeenCalledWith();
     }
-    public async expectClickFailureWithAsymetricNaming(nameInHtml: string,
-                                                       nameInFunction: string,
-                                                       reason?: string)
+    public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
+                                                        nameInFunction: string,
+                                                        reason?: string)
     : Promise<void>
     {
         const element: DebugElement = this.findElement(nameInHtml);
@@ -365,7 +365,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
     }
     public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
-        return this.expectClickFailureWithAsymetricNaming(elementName, elementName, reason);
+        return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
