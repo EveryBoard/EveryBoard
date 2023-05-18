@@ -147,7 +147,7 @@ export class ConspirateursComponent
             }
         }
     }
-    public showLastMove(): void {
+    public override showLastMove(): void {
         const lastMove: ConspirateursMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
             this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');
@@ -165,7 +165,7 @@ export class ConspirateursComponent
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
         this.updateBoard();

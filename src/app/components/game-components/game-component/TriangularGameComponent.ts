@@ -14,7 +14,7 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
                                               L = void>
     extends GameComponent<R, M, S, L>
 {
-    public SPACE_SIZE: number = 50;
+    public override SPACE_SIZE: number = 50;
 
     public board: Table<P>;
 

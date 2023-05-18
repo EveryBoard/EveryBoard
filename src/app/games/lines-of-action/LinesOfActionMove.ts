@@ -33,7 +33,7 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         if (!other.getStart().equals(this.getStart())) return false;
         return other.getEnd().equals(this.getEnd());
     }
-    public toString(): string {
+    public override toString(): string {
         return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
     public encode(): JSONValue {

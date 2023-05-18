@@ -128,7 +128,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
             biggestZero * Player.ZERO.getScoreModifier() +
             biggestOne * Player.ONE.getScoreModifier()) * this.MOBILITY_FACTOR;
     }
-    public getBoardValue(node: EpaminondasNode): BoardValue {
+    public override getBoardValue(node: EpaminondasNode): BoardValue {
         const state: EpaminondasState = node.gameState;
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {

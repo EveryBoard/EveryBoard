@@ -14,7 +14,7 @@ type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>
 
 export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     private static configRoomDB: MGPMap<string, ConfigRoomOS>;
 

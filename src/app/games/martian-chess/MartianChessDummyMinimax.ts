@@ -13,7 +13,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
-    public constructor(public ruler: MartianChessRules, name: string) {
+    public constructor(ruler: MartianChessRules, name: string) {
         super(ruler, name);
     }
     public getListMoves(node: MartianChessNode): MartianChessMove[] {

@@ -95,7 +95,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selected = MGPOptional.empty();
         this.targets = [];
     }

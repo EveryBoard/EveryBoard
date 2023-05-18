@@ -21,7 +21,7 @@ export class PylosCoord extends Coord3D {
         const floorSize: number = 4 - z;
         if (this.isNotInRange(floorSize, floorSize)) throw new Error(this.toString() + ' is not in range.');
     }
-    public toString(): string {
+    public override toString(): string {
         return 'PylosCoord' + this.toShortString();
     }
     public getLowerPieces(): PylosCoord[] {

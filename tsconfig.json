@@ -19,6 +19,7 @@
         "noImplicitAny": false, // some fixes to do before enabling this one
         "strictFunctionTypes": false, // requires improving genericity
         "strictPropertyInitialization": false, // requires strictNullChecks
+        "noImplicitOverride": true,
         "module": "es2020",
         "moduleResolution": "node",
         "experimentalDecorators": true,

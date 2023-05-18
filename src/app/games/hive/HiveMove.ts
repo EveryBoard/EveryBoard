@@ -22,10 +22,10 @@ export class HiveMoveDrop extends MoveCoord {
     private constructor(public readonly piece: HivePiece, x: number, y: number) {
         super(x, y);
     }
-    public toString(): string {
+    public override toString(): string {
         return `HiveDrop(${this.piece.toString()}, ${this.coord.toString()})`;
     }
-    public equals(other: HiveMove): boolean {
+    public override equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveDrop) {
             return this.piece.equals(other.piece) && this.coord.equals(other.coord);
         }
@@ -50,7 +50,7 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
     public toString(): string {
         return `HiveMoveCoordToCoord(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
-    public equals(other: HiveMove): boolean {
+    public override equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveSpider) {
             // Spider moves are coord to coord but the intermediate coords matter, so we can't compare them here
             return false;
@@ -64,7 +64,7 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
 export class HiveMoveSpider extends HiveMoveCoordToCoord {
 
-    public static encoder: Encoder<HiveMoveSpider> = MoveEncoder.tuple(
+    public static override encoder: Encoder<HiveMoveSpider> = MoveEncoder.tuple(
         [Coord.encoder, Coord.encoder, Coord.encoder, Coord.encoder],
         (move: HiveMoveSpider): [Coord, Coord, Coord, Coord] => move.coords,
         (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
@@ -75,11 +75,11 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
     private constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
         super(coords[0], coords[3]);
     }
-    public toString(): string {
+    public override toString(): string {
         const coords: string = this.coords.map((coord: Coord) => coord.toString()).join(', ');
         return `HiveMoveSpider(${coords})`;
     }
-    public equals(other: HiveMove): boolean {
+    public override equals(other: HiveMove): boolean {
         if (other instanceof HiveMoveSpider) {
             return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
         }
@@ -92,7 +92,7 @@ export class HiveMovePass extends Move {
     public toString(): string {
         return 'HiveMovePass';
     }
-    public equals(other: this): boolean {
+    public override equals(other: this): boolean {
         return other instanceof HiveMovePass;
     }
 }

@@ -154,7 +154,7 @@ export class LascaState extends GameStateWithTable<LascaStack> {
             return LascaState.SIZE - 1;
         }
     }
-    public toString(): string {
+    public override toString(): string {
         let biggerStack: number = 1;
         for (let y: number = 0; y < LascaState.SIZE; y++) {
             for (let x: number = 0; x < LascaState.SIZE; x++) {

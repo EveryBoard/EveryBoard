@@ -58,7 +58,7 @@ export class SixComponent
                                          FlatHexaOrientation.INSTANCE);
         this.updateBoard();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
@@ -86,7 +86,7 @@ export class SixComponent
         const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
         return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH).toSVGString();
     }
-    public showLastMove(): void {
+    public override showLastMove(): void {
         const lastMove: SixMove = this.rules.node.move.get();
         this.lastDrop = MGPOptional.of(lastMove.landing);
         if (lastMove.isDrop() === false) {

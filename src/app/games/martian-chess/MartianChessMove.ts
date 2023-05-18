@@ -45,7 +45,7 @@ export class MartianChessMove extends MoveCoordToCoord {
     private constructor(start: Coord, end: Coord, public readonly calledTheClock: boolean) {
         super(start, end);
     }
-    public toString(): string {
+    public override toString(): string {
         const ending: string = this.calledTheClock ? ', CALL_THE_CLOCK' : '';
         return 'MartianChessMove((' + this.getStart().x + ', ' + this.getStart().y + ') -> (' +
                                       this.getEnd().x + ', ' + this.getEnd().y + ')' +

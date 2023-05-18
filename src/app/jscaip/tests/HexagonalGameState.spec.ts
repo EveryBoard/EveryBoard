@@ -42,11 +42,11 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
         return new TestingHexagonalState(turn, table, width, height, excludedSpaces, empty);
     }
     public constructor(turn: number,
-                       public readonly board: NumberTable,
-                       public readonly width: number,
-                       public readonly height: number,
-                       public readonly excludedSpaces: ReadonlyArray<number>,
-                       public readonly empty: number)
+                       board: NumberTable,
+                       width: number,
+                       height: number,
+                       excludedSpaces: ReadonlyArray<number>,
+                       empty: number)
     {
         super(turn, board, width, height, excludedSpaces, empty);
         if (this.excludedSpaces.length >= (this.height / 2) + 1) {
@@ -63,7 +63,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
                                          this.excludedSpaces,
                                          this.empty) as this;
     }
-    public isOnBoard(coord: Coord): boolean {
+    public override isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }

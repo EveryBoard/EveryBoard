@@ -64,7 +64,7 @@ export class UpdateType {
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;

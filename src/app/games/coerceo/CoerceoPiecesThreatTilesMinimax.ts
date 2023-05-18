@@ -21,7 +21,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
     public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
 
-    public getBoardValue(node: CoerceoNode): BoardValue {
+    public override getBoardValue(node: CoerceoNode): BoardValue {
         const gameStatus: GameStatus = CoerceoRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return BoardValue.fromWinner(gameStatus.winner);
