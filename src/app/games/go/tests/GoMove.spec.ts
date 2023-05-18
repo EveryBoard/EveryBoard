@@ -3,7 +3,7 @@ import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoState } from '../GoState';
 import { GoMove } from '../GoMove';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('GoMove', () => {
 
@@ -14,7 +14,7 @@ describe('GoMove', () => {
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeBijective(GoMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(GoMove.encoder, move);
         }
     });
     it('should stringify nicely', () => {

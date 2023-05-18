@@ -30,9 +30,6 @@ describe('EpaminondasMove: ', () => {
             EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
         }
     });
-    it('should forbid non integer number to decode', () => {
-        expect(() => EpaminondasMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
-    });
     it('should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
         const neighbor: EpaminondasMove = new EpaminondasMove(0, 0, 2, 1, Direction.UP);
