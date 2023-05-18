@@ -16,8 +16,7 @@ export class PieceThreat implements ComparableObject {
 
 export class SandwichThreat extends PieceThreat {
 
-    public constructor(public readonly directThreat: Coord,
-                       mover: MGPSet<Coord>) {
+    public constructor(public readonly directThreat: Coord, mover: MGPSet<Coord>) {
         super(new MGPSet([directThreat]), mover);
     }
 }
