@@ -1,5 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { Encoder, MoveEncoder } from '../Encoder';
 import { MGPOptional } from '../MGPOptional';
+import { EncoderTestUtils } from './Encoder.spec';
 
 describe('MGPOptional', () => {
 
@@ -13,6 +15,13 @@ describe('MGPOptional', () => {
         });
         it('should rely include value for non-empty values', () => {
             expect(MGPOptional.of('foo').toString()).toBe('MGPOptional.of(foo)');
+        });
+    });
+    describe('getEncoder', () => {
+        it('should give a bijective encoder', () => {
+            const encoder: Encoder<MGPOptional<number>> = MGPOptional.getEncoder(MoveEncoder.identity());
+            EncoderTestUtils.expectToBeBijective(encoder, MGPOptional.empty());
+            EncoderTestUtils.expectToBeBijective(encoder, MGPOptional.of(5));
         });
     });
 });

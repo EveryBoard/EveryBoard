@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
 import { AbaloneState } from '../AbaloneState';
@@ -14,7 +14,7 @@ describe('AbaloneMove', () => {
         expect(AbaloneMove.fromDoubleCoord(new Coord(0, 0),
                                            new Coord(3, 0),
                                            HexaDirection.DOWN))
-            .toEqual(MGPFallible.failure('Distance between first coord and last coord is too great'));
+            .toEqual(MGPFallible.failure('Distance between first coord and last coord is too big'));
     });
     it('should not construct when created with an out of range coord', () => {
         const coord: Coord = new Coord(9, 9);
@@ -63,7 +63,7 @@ describe('AbaloneMove', () => {
         const minimax: AbaloneDummyMinimax = new AbaloneDummyMinimax(rules, 'dummy');
         const firstTurnMoves: AbaloneMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeBijective(AbaloneMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(AbaloneMove.encoder, move);
         }
     });
 });

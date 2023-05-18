@@ -17,7 +17,7 @@ export class PylosMove extends Move {
         public encodeMove(move: PylosMove): JSONValueWithoutArray {
             return {
                 firstCapture: PylosCoord.optionalEncoder.encode(move.firstCapture),
-                landingCoord: PylosCoord.encoder.encode(move.landingCoord),
+                landingCoord: PylosCoord.coordEncoder.encode(move.landingCoord),
                 secondCapture: PylosCoord.optionalEncoder.encode(move.secondCapture),
                 startingCoord: PylosCoord.optionalEncoder.encode(move.startingCoord),
             };
@@ -33,7 +33,7 @@ export class PylosMove extends Move {
             // eslint-disable-next-line dot-notation
             const startingCoord: JSONValue = casted['startingCoord'];
             return new PylosMove(PylosCoord.optionalEncoder.decode(startingCoord),
-                                 PylosCoord.encoder.decode(landingCoord),
+                                 PylosCoord.coordEncoder.decode(landingCoord),
                                  PylosCoord.optionalEncoder.decode(firstCapture),
                                  PylosCoord.optionalEncoder.decode(secondCapture));
         }

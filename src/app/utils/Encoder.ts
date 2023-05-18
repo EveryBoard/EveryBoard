@@ -12,6 +12,34 @@ export abstract class Encoder<T> {
 type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
 
 export abstract class MoveEncoder<T> extends Encoder<T> {
+    public static fromFunctions<U>(toJSON: (value: U) => JSONValueWithoutArray,
+                                   fromJSON: (json: JSONValueWithoutArray) => U)
+    : MoveEncoder<U> {
+        return new class extends MoveEncoder<U> {
+            public encodeMove(value: U): JSONValueWithoutArray {
+                return toJSON(value);
+            }
+            public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): U {
+                return fromJSON(encoded);
+            }
+        };
+    }
+    public static identity<U extends JSONValueWithoutArray>(): MoveEncoder<U> {
+        function identity(x: U): U {
+            return x;
+        }
+        return MoveEncoder.fromFunctions(identity, identity);
+    }
+    public static constant<U>(constant: JSONValueWithoutArray, onlyValue: U): MoveEncoder<U> {
+        return new class extends MoveEncoder<U> {
+            public encodeMove(_value: U): JSONValueWithoutArray {
+                return constant;
+            }
+            public decodeMove(_encoded: NonNullable<JSONValueWithoutArray>): U {
+                return onlyValue;
+            }
+        };
+    }
     public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
                                                   encode: (t: T) => Fields,
                                                   decode: (fields: Fields) => T): MoveEncoder<T> {
@@ -27,7 +55,6 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
             public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): T {
                 const fields: Record<string, unknown> = {};
                 Object.keys(encoders).reverse().forEach((key: string): void => {
-                    assert(encoded[key] != null, 'Invalid encoded value');
                     const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
                     fields[key] = encoders[key].decode(field);
                 });
@@ -123,148 +150,3 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
     }
     public abstract decodeMove(encodedMove: JSONValueWithoutArray): T;
 }
-
-// Used internally. If T = [A, B, C], then
-// NumberEncoderArray<T> = [NumberEncoder<A>, NumberEncoder<B>, NumberEncoder<C>]
-type NumberEncoderArray<T> = { [P in keyof T]: NumberEncoder<T[P]> };
-
-export abstract class NumberEncoder<T> extends MoveEncoder<T> {
-
-    public static ofN<T>(max: number,
-                         encodeNumber: (t: T) => number,
-                         decodeNumber: (n: number) => T)
-    : NumberEncoder<T>
-    {
-        return new class extends NumberEncoder<T> {
-            public maxValue(): number {
-                return max;
-            }
-            public encodeNumber(t: T): number {
-                return encodeNumber(t);
-            }
-            public decodeNumber(n: number): T {
-                return decodeNumber(n);
-            }
-        };
-    }
-    public static booleanEncoder: NumberEncoder<boolean> = new class extends NumberEncoder<boolean> {
-        public maxValue(): number {
-            return 1;
-        }
-        public encodeNumber(b: boolean): number {
-            if (b) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-        public decodeNumber(n: number): boolean {
-            if (n === 0) return false;
-            if (n === 1) return true;
-            throw new Error('Invalid encoded boolean');
-        }
-    };
-
-    /**
-     * This creates a "product" encoder that encodes a type T as all of its fields
-     * i.e., if T = (a, b), then it does encode(a) << shiftForA + encode(b)
-     */
-    public static override tuple<T, Fields extends object>(encoders: NumberEncoderArray<Fields>,
-                                                           encode: (t: T) => Fields,
-                                                           decode: (fields: Fields) => T): NumberEncoder<T> {
-        return new class extends NumberEncoder<T> {
-            public maxValue(): number {
-                let max: number = 0;
-                Object.keys(encoders).forEach((key: string): void => {
-                    max = max * encoders[key].shift() + encoders[key].maxValue();
-                });
-                return max;
-            }
-            public encodeNumber(t: T): number {
-                const fields: Fields = encode(t);
-                let n: number = 0;
-                Object.keys(fields).forEach((key: string): void => {
-                    n = n * encoders[key].shift() + encoders[key].encode(fields[key]);
-                });
-                return n;
-            }
-            public decodeNumber(n: number): T {
-                const fields: Record<string, unknown> = {};
-                let encoded: number = n;
-                Object.keys(encoders).reverse().forEach((key: string): void => {
-                    const fieldN: number = encoded % encoders[key].shift();
-                    encoded = (encoded - fieldN) / encoders[key].shift();
-                    fields[key] = encoders[key].decode(fieldN);
-                });
-                return decode(Object.values(fields) as Fields);
-            }
-        };
-    }
-    /**
-     * This creates a "sum" encoder, i.e., it encodes values of either type T and U
-     */
-    public static override disjunction<T, U>(encoderT: NumberEncoder<T>,
-                                             encoderU: NumberEncoder<U>,
-                                             isT: (v: T | U) => v is T)
-    : NumberEncoder<T | U> {
-        return new class extends NumberEncoder<T | U> {
-            public maxValue(): number {
-                return Math.max(encoderT.maxValue() * 2,
-                                (encoderU.maxValue() * 2) + 1);
-            }
-            public encodeNumber(value: T | U): number {
-                if (isT(value)) {
-                    return encoderT.encodeNumber(value) * 2;
-                } else {
-                    return (encoderU.encodeNumber(value) * 2) + 1;
-                }
-            }
-            public decodeNumber(encoded: number): T | U {
-                if (encoded % 2 === 0) {
-                    return encoderT.decodeNumber(encoded / 2);
-                } else {
-                    return encoderU.decodeNumber((encoded - 1) / 2);
-                }
-            }
-        };
-    }
-
-    public static numberEncoder(max: number): NumberEncoder<number> {
-        return new class extends NumberEncoder<number> {
-
-            public maxValue(): number {
-                return max;
-            }
-            public encodeNumber(n: number): number {
-                if (n > max) {
-                    throw new Error('Cannot encode number bigger than the max with numberEncoder');
-                }
-                return n;
-            }
-            public decodeNumber(encoded: number): number {
-                if (encoded > max) {
-                    throw new Error('Cannot decode number bigger than the max with numberEncoder');
-                }
-                return encoded;
-            }
-        };
-    }
-
-    public abstract maxValue(): number
-
-    public shift(): number {
-        return this.maxValue() + 1;
-    }
-    public abstract encodeNumber(t: T): number
-
-    public encodeMove(t: T): JSONValueWithoutArray {
-        return this.encodeNumber(t);
-    }
-    public abstract decodeNumber(n: number): T
-
-    public decodeMove(n: JSONValueWithoutArray): T {
-        assert(typeof n === 'number', 'Invalid encoded number');
-        return this.decodeNumber(n as number);
-    }
-}
-

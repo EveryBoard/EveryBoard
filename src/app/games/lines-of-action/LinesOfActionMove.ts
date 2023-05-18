@@ -9,7 +9,7 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class LinesOfActionMove extends MoveCoordToCoord {
     public static encoder: MoveEncoder<LinesOfActionMove> =
-        MoveWithTwoCoords.getEncoder<LinesOfActionMove>(LinesOfActionMove.from);
+        MoveWithTwoCoords.getFallibleEncoder<LinesOfActionMove>(LinesOfActionMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
         const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
