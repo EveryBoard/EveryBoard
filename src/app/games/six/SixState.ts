@@ -16,11 +16,11 @@ import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
-    public readonly width: number;
+    public override readonly width: number;
 
-    public readonly height: number;
+    public override readonly height: number;
 
-    public readonly offset: Vector;
+    public override readonly offset: Vector;
 
     public static getInitialState(): SixState {
         const board: NumberTable = [[Player.ZERO.value], [Player.ONE.value]];

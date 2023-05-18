@@ -212,7 +212,7 @@ export class YinshComponent
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.constructedState = this.getState();
         this.possibleCaptures = [];
         this.initialCaptures = [];
@@ -224,7 +224,7 @@ export class YinshComponent
         this.currentlyMoved = [];
         this.moveToInitialCaptureOrMovePhase();
     }
-    public showLastMove(): void {
+    public override showLastMove(): void {
         const moveOptional: MGPOptional<YinshMove> = this.rules.node.move;
         if (moveOptional.isPresent()) {
             const move: YinshMove = moveOptional.get();

@@ -31,7 +31,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
-    public getBoardValue(node: TaflNode): BoardValue {
+    public override getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();

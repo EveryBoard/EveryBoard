@@ -24,7 +24,7 @@ export abstract class TaflMove extends MoveCoordToCoord {
         if (other.getStart().equals(this.getStart()) === false) return false;
         return other.getEnd().equals(this.getEnd());
     }
-    public toString(): string {
+    public override toString(): string {
         return 'TaflMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
     public abstract getMaximalDistance(): number;

@@ -169,9 +169,9 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
      * This creates a "product" encoder that encodes a type T as all of its fields
      * i.e., if T = (a, b), then it does encode(a) << shiftForA + encode(b)
      */
-    public static tuple<T, Fields extends object>(encoders: NumberEncoderArray<Fields>,
-                                                  encode: (t: T) => Fields,
-                                                  decode: (fields: Fields) => T): NumberEncoder<T> {
+    public static override tuple<T, Fields extends object>(encoders: NumberEncoderArray<Fields>,
+                                                           encode: (t: T) => Fields,
+                                                           decode: (fields: Fields) => T): NumberEncoder<T> {
         return new class extends NumberEncoder<T> {
             public maxValue(): number {
                 let max: number = 0;
@@ -203,9 +203,9 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
     /**
      * This creates a "sum" encoder, i.e., it encodes values of either type T and U
      */
-    public static disjunction<T, U>(encoderT: NumberEncoder<T>,
-                                    encoderU: NumberEncoder<U>,
-                                    isT: (v: T | U) => v is T)
+    public static override disjunction<T, U>(encoderT: NumberEncoder<T>,
+                                             encoderU: NumberEncoder<U>,
+                                             isT: (v: T | U) => v is T)
     : NumberEncoder<T | U> {
         return new class extends NumberEncoder<T | U> {
             public maxValue(): number {

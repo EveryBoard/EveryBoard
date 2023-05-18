@@ -83,10 +83,10 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosen = MGPOptional.empty();
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(DvonnMove.PASS, this.getState());
     }

@@ -26,7 +26,7 @@ export class Coord3D extends Coord {
             }
         };
     }
-    public static encoder: Encoder<Coord3D> = Coord3D.getEncoder(Coord3D.of);
+    public static override encoder: Encoder<Coord3D> = Coord3D.getEncoder(Coord3D.of);
 
     public static optionalEncoder: Encoder<MGPOptional<Coord3D>> = MGPOptional.getEncoder(Coord3D.encoder);
 
@@ -36,13 +36,13 @@ export class Coord3D extends Coord {
     public constructor(x: number, y: number, public readonly z: number) {
         super(x, y);
     }
-    public toString(): string {
+    public override toString(): string {
         return 'Coord3D' + this.toShortString();
     }
     public toShortString(): string {
         return '(' + this.x + ', ' + this.y + ', ' + this.z + ')';
     }
-    public equals(other: Coord3D): boolean {
+    public override equals(other: Coord3D): boolean {
         if (this === other) return true;
         if (other.x !== this.x) return false;
         if (other.y !== this.y) return false;

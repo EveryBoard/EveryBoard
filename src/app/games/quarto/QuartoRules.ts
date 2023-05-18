@@ -143,7 +143,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new QuartoLine(new Coord(0, 0), Direction.DOWN_RIGHT),
         new QuartoLine(new Coord(0, 3), Direction.UP_RIGHT),
     ];
-    public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);

@@ -16,7 +16,7 @@ import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class SixBoardValue extends BoardValue {
 
-    public constructor(public readonly value: number,
+    public constructor(value: number,
                        public readonly preVictory: MGPOptional<Coord>) {
         super(value);
     }

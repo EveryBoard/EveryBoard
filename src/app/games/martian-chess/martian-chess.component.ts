@@ -314,7 +314,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return this.state.getPieceAt(coord) !== MartianChessPiece.EMPTY &&
                this.state.isInPlayerTerritory(coord);
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPieceInfo = MGPOptional.empty();
         this.callTheClock = false;
     }

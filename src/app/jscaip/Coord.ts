@@ -29,8 +29,8 @@ export class Coord extends Vector {
             (fields: [number, number]): Coord => new Coord(fields[0], fields[1]),
         );
     }
-    public constructor(public readonly x: number,
-                       public readonly y: number)
+    public constructor(x: number,
+                       y: number)
     {
         super(x, y);
     }
@@ -160,9 +160,8 @@ export class Coord extends Vector {
         }
         return coords;
     }
-    // Override
 
-    public equals(obj: Coord): boolean {
+    public override equals(obj: Coord): boolean {
         if (this === obj) return true;
         if (obj.x !== this.x) return false;
         return obj.y === this.y;
@@ -176,7 +175,7 @@ export class Coord extends Vector {
         }
         return this.y < c.y ? -1 : 1;
     }
-    public toString(): string {
+    public override toString(): string {
         return '(' + this.x + ', ' + this.y + ')';
     }
     public toSVGPoint(): string {

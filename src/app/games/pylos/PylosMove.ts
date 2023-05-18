@@ -107,7 +107,7 @@ export class PylosMove extends Move {
     public isClimb(): boolean {
         return this.startingCoord.isPresent();
     }
-    public toString(): string {
+    public override toString(): string {
         const startingCoord: string = this.startingCoord.isAbsent() ? '-' : this.startingCoord.get().toShortString();
         const firstCapture: string = this.firstCapture.isAbsent() ? '-' : this.firstCapture.get().toShortString();
         const secondCapture: string = this.secondCapture.isAbsent() ? '-' : this.secondCapture.get().toShortString();

@@ -9,10 +9,10 @@ export abstract class HexaOrientation {
 
 export class PointyHexaOrientation extends HexaOrientation {
     public static INSTANCE: HexaOrientation = new PointyHexaOrientation();
-    public readonly startAngle: number = 0.5;
-    public readonly conversionMatrix: [number, number, number, number] =
+    public override readonly startAngle: number = 0.5;
+    public override readonly conversionMatrix: [number, number, number, number] =
         [Math.sqrt(3), Math.sqrt(3)/2, 0, 3/2];
-    public readonly inverseConversionMatrix: [number, number, number, number] =
+    public override readonly inverseConversionMatrix: [number, number, number, number] =
         [Math.sqrt(3)/3, -1/3, 0, 2/3];
     private constructor() {
         super();
@@ -23,12 +23,12 @@ export class FlatHexaOrientation extends HexaOrientation {
 
     public static INSTANCE: FlatHexaOrientation = new FlatHexaOrientation();
 
-    public readonly startAngle: number = 0;
+    public override readonly startAngle: number = 0;
 
-    public readonly conversionMatrix: [number, number, number, number] =
+    public override readonly conversionMatrix: [number, number, number, number] =
         [3/2, 0, Math.sqrt(3) / 2, Math.sqrt(3)];
 
-    public readonly inverseConversionMatrix: [number, number, number, number] =
+    public override readonly inverseConversionMatrix: [number, number, number, number] =
         [2/3, 0, -1/3, Math.sqrt(3)/3];
     private constructor() {
         super();

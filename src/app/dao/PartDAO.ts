@@ -9,7 +9,7 @@ import { Firestore } from '@angular/fire/firestore';
 })
 export class PartDAO extends FirestoreDAO<Part> {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     public constructor(firestore: Firestore) {
         super('parts', firestore);

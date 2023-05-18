@@ -12,7 +12,7 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class MaxStacksDvonnMinimax extends DvonnMinimax {
 
-    public getListMoves(node: DvonnNode): DvonnMove[] {
+    public override getListMoves(node: DvonnNode): DvonnMove[] {
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = super.getListMoves(node);
 
@@ -28,7 +28,7 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
         });
         return moves;
     }
-    public getBoardValue(node: DvonnNode): BoardValue {
+    public override getBoardValue(node: DvonnNode): BoardValue {
         const gameStatus: GameStatus = DvonnRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();

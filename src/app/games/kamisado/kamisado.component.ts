@@ -79,7 +79,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.chosen = state.coordToPlay;
         }
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
         return this.chooseMove(KamisadoMove.PASS, this.getState());
     }
@@ -129,7 +129,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.getState());
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {
             this.chosen = MGPOptional.empty();
         }

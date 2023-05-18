@@ -34,7 +34,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     {
         super(messageDisplayer);
     }
-    public getViewBox(): string {
+    public override getViewBox(): string {
         const begin: number = - this.STROKE_WIDTH;
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         return begin + ' ' + begin + ' ' + width + ' ' + width;
@@ -133,7 +133,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const player: Player = state.getCurrentPlayer();
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosen = MGPOptional.empty();
         this.updateViewInfo();
     }

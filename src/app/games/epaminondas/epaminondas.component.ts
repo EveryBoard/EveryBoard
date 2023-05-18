@@ -215,7 +215,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return length;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.firstPiece = MGPOptional.empty();
         this.validExtensions = [];
         this.phalanxValidLandings = [];

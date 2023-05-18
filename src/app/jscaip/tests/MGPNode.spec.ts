@@ -14,7 +14,7 @@ class GameStateMock extends GameState {
 }
 class MoveMock extends Move {
 
-    public toString(): string {
+    public override toString(): string {
         throw new Error('MoveMock.toString method not implemented.');
     }
     public equals(other: this): boolean {

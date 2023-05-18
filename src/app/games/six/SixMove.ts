@@ -59,7 +59,7 @@ export class SixMove extends Move {
     public isCut(): boolean {
         return this.keep.isPresent();
     }
-    public toString(): string {
+    public override toString(): string {
         if (this.isDrop()) {
             return 'SixMove(' + this.landing.toString() + ')';
         } else if (this.isCut()) {

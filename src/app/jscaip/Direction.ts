@@ -8,9 +8,9 @@ import { Vector } from './Vector';
 
 export abstract class BaseDirection extends Vector {
 
-    public readonly x: 0|1|-1;
+    public override readonly x: 0|1|-1;
 
-    public readonly y: 0|1|-1;
+    public override readonly y: 0|1|-1;
 
     public isDown(): boolean {
         return this.y === 1;
@@ -34,7 +34,7 @@ export abstract class BaseDirection extends Vector {
         if (this.x === -1 && this.y === 1) return 6;
         else return 7;
     }
-    public toString(): string {
+    public override toString(): string {
         if (this.x === 0 && this.y === -1) return 'UP';
         if (this.x === 1 && this.y === 0) return 'RIGHT';
         if (this.x === 0 && this.y === 1) return 'DOWN';
@@ -187,7 +187,7 @@ export class Orthogonal extends BaseDirection {
                 Orthogonal.LEFT,
             ];
 
-            public of(x: number, y: number): MGPFallible<Orthogonal> {
+            public override of(x: number, y: number): MGPFallible<Orthogonal> {
                 if (x === 0 && y === -1) return MGPFallible.success(Orthogonal.UP);
                 if (x === 1 && y === 0) return MGPFallible.success(Orthogonal.RIGHT);
                 if (x === 0 && y === 1) return MGPFallible.success(Orthogonal.DOWN);
