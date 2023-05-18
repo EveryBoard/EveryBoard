@@ -46,4 +46,9 @@ export class DvonnPieceStack {
     public toString(): string {
         return 'DvonnPieceStack(' + this.owner.toString() + ', ' + this.size + ', ' + this.source + ')';
     }
+    public equals(other: DvonnPieceStack): boolean {
+        return this.owner === other.owner &&
+               this.size === other.size &&
+               this.source === other.source;
+    }
 }

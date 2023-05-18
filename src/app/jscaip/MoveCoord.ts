@@ -1,8 +1,17 @@
 import { Move } from './Move';
 import { Coord } from './Coord';
-import { NumberEncoder } from '../utils/Encoder';
+import { MoveEncoder, NumberEncoder } from '../utils/Encoder';
 
 export abstract class MoveCoord extends Move {
+
+    public static getEncoder<T extends MoveCoord>(generate: (coord: Coord) => T)
+    : MoveEncoder<T>
+    {
+        return MoveEncoder.tuple(
+            [Coord.encoder],
+            (m: T): [Coord] => [m.coord],
+            (fields: [Coord]): T => generate(fields[0]));
+    }
 
     public readonly coord: Coord;
 
