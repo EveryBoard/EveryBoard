@@ -30,7 +30,9 @@ describe('ApagosMove', () => {
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
         const sameMove: ApagosMove = ApagosMove.drop(ApagosCoord.from(1), Player.fromTurn(0));
         const differentMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ONE).get();
+        const otherDifferentMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get();
         expect(move.equals(sameMove)).toBeTrue();
         expect(move.equals(differentMove)).toBeFalse();
+        expect(differentMove.equals(otherDifferentMove)).toBeFalse();
     });
 });

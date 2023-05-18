@@ -5,7 +5,8 @@ import { MGPFallible } from '../utils/MGPFallible';
 
 export abstract class MoveWithTwoCoords extends Move {
 
-    public static getFallibleEncoder<M extends MoveWithTwoCoords>(generator: (first: Coord, second: Coord) => MGPFallible<M>)
+    public static getFallibleEncoder<M extends MoveWithTwoCoords>(
+        generator: (first: Coord, second: Coord) => MGPFallible<M>)
     : MoveEncoder<M>
     {
         return MoveWithTwoCoords.getEncoder((first: Coord, second: Coord): M => generator(first, second).get());

@@ -24,7 +24,7 @@ export class MartianChessMove extends MoveCoordToCoord {
     public static encoder: MoveEncoder<MartianChessMove> = MoveEncoder.tuple(
         [Coord.encoder, Coord.encoder, MoveEncoder.identity<boolean>()],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
-        (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get()
+        (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
         if (start.isNotInRange(4, 8)) {
