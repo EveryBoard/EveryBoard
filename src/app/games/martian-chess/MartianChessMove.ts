@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -21,8 +21,8 @@ export class MartianChessMoveFailure {
 
 export class MartianChessMove extends MoveCoordToCoord {
 
-    public static encoder: NumberEncoder<MartianChessMove> = NumberEncoder.tuple(
-        [Coord.numberEncoder(4, 8), Coord.numberEncoder(4, 8), NumberEncoder.booleanEncoder],
+    public static encoder: MoveEncoder<MartianChessMove> = MoveEncoder.tuple(
+        [Coord.numberEncoder(4, 8), Coord.numberEncoder(4, 8), MoveEncoder.identity<boolean>()],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );

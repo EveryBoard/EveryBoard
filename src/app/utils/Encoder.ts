@@ -17,12 +17,9 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
     : MoveEncoder<U> {
         return new class extends MoveEncoder<U> {
             public encodeMove(value: U): JSONValueWithoutArray {
-                const encoded = toJSON(value);
-                console.log({value, encoded})
-                return encoded;
+                return toJSON(value);
             }
             public decodeMove(encoded: NonNullable<JSONValueWithoutArray>): U {
-                console.log({encoded})
                 return fromJSON(encoded);
             }
         }
