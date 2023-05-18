@@ -57,8 +57,7 @@ describe('PylosComponent', () => {
         testUtils = await ComponentTestUtils.forGame<PylosComponent>('Pylos');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should allow dropping piece on occupable space', fakeAsync(async() => {

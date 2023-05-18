@@ -91,12 +91,12 @@ describe('DvonnRules:', () => {
         for (const coord of movablePieces2) {
             expect(state2.getPieceAt(coord).belongsTo(Player.ONE)).toBeTrue();
         }
-        const move: DvonnMove = DvonnMove.of(new Coord(1, 1), new Coord(1, 2));
+        const move: DvonnMove = DvonnMove.from(new Coord(1, 1), new Coord(1, 2)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.NOT_PLAYER_PIECE());
     });
     it('should forbid moves for pieces with more than 6 neighbors', () => {
         const state: DvonnState = DvonnState.getInitialState();
-        const move: DvonnMove = DvonnMove.of(new Coord(1, 3), new Coord(1, 2));
+        const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 2)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.TOO_MANY_NEIGHBORS());
     });
     it('should forbid moves from an empty stack', () => {
@@ -108,7 +108,7 @@ describe('DvonnRules:', () => {
             [O, S, O, X, X, O, O, O, X, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
+        const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.EMPTY_STACK());
     });
     it('should forbid moves with pieces that cannot reach any target', () => {
@@ -120,7 +120,7 @@ describe('DvonnRules:', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(4, 0));
+        const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(4, 0)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.CANT_REACH_TARGET());
     });
     it('should forbid moves with a different length than the stack size', () => {
@@ -132,7 +132,7 @@ describe('DvonnRules:', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
+        const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.INVALID_MOVE_LENGTH());
     });
     it('should have the target stack owned by the owner of the source stack after the move', () => {
@@ -144,7 +144,7 @@ describe('DvonnRules:', () => {
             [O, S, O, X, X, O, O, O, X, N, N],
         ];
         const state: DvonnState = DvonnState.getInitialState();
-        const move: DvonnMove = DvonnMove.of(new Coord(0, 3), new Coord(0, 2));
+        const move: DvonnMove = DvonnMove.from(new Coord(0, 3), new Coord(0, 2)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const stack: DvonnPieceStack = expectedState.getPieceAt(new Coord(0, 2));
@@ -163,7 +163,7 @@ describe('DvonnRules:', () => {
         for (const move of moves) {
             expect(state.getPieceAt(move.getEnd()).isEmpty()).toBeFalse();
         }
-        const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(3, 2));
+        const move: DvonnMove = DvonnMove.from(new Coord(3, 1), new Coord(3, 2)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.EMPTY_TARGET_STACK());
     });
     it('should move stacks as a whole, by as many spaces as there are pieces in the stack', () => {
@@ -179,7 +179,7 @@ describe('DvonnRules:', () => {
         for (const move of moves) {
             expect(move.length()).toEqual(state.getPieceAt(move.getStart()).getSize());
         }
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
+        const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.INVALID_MOVE_LENGTH());
     });
     it('should not allow moves that end on an empty space', () => {
@@ -211,7 +211,7 @@ describe('DvonnRules:', () => {
             // every movable piece should belong to the current player
             expect(stack.belongsTo(state.getCurrentPlayer())).toBeTrue();
         }
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 4));
+        const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 4)).get();
         RulesUtils.expectMoveFailure(rules, state, move, DvonnFailure.INVALID_MOVE_LENGTH());
     });
     it('should not allow to pass turns if moves are possible', () => {
@@ -232,7 +232,7 @@ describe('DvonnRules:', () => {
         expect(moves.length).toEqual(1);
         expect(moves[0]).toEqual(DvonnMove.PASS);
         expect(rules.isLegal(DvonnMove.PASS, state).isSuccess()).toBeTrue();
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
+        const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_PASS());
     });
     it('should remove of the board any portion disconnected from a source', () => {
@@ -251,7 +251,7 @@ describe('DvonnRules:', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(2, 1));
+        const move: DvonnMove = DvonnMove.from(new Coord(3, 1), new Coord(2, 1)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -276,7 +276,7 @@ describe('DvonnRules:', () => {
             [_, OS6, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 11, true);
-        const move: DvonnMove = DvonnMove.of(new Coord(1, 3), new Coord(1, 4));
+        const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 4)).get();
         const node: DvonnNode = new DvonnNode(state,
                                               MGPOptional.empty(),
                                               MGPOptional.of(move));

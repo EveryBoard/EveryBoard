@@ -35,8 +35,7 @@ describe('CoerceoComponent', () => {
         testUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('CoerceoComponent should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('visual features', () => {
         it('should show tile when more than zero', fakeAsync(async() => {

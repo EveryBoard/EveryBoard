@@ -47,8 +47,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
         }));
         it('should create', () => {
-            expect(testUtils.wrapper).withContext('Wrapper should be created').toBeDefined();
-            expect(testUtils.getComponent()).withContext('Component should be created').toBeDefined();
+            testUtils.expectToBeCreated();
         });
         describe('First click', () => {
             it('should cancel move when clicking on opponent piece', fakeAsync( async() => {
