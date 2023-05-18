@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { HiveMinimax } from '../HiveMinimax';

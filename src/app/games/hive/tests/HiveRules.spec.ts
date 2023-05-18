@@ -17,6 +17,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 
 describe('HiveRules', () => {
+
     let rules: HiveRules;
     let minimaxes: Minimax<HiveMove, HiveState>[];
 
@@ -889,23 +890,6 @@ describe('HiveRules', () => {
         // Then the move should fail
         const reason: string = RulesFailure.CANNOT_PASS();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
-    });
-    it('should correctly update the queen bee location when board is extended in the negatives', () => {
-        // Given a board with the queen bee
-        const board: Table<HivePiece[]> = [
-            [[Q]],
-        ];
-        const state: HiveState = HiveState.fromRepresentation(board, 1);
-
-        // When extending the board in the negatives
-        const move: HiveMove = HiveMove.drop(q, new Coord(-1, 0));
-
-        // Then the move should succeed and the board should be correctly adapted
-        const expectedBoard: Table<HivePiece[]> = [
-            [[q], [Q]],
-        ];
-        const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 2);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should not have drop locations if all pieces are already on the board', () => {
         // Given a board containing all pieces

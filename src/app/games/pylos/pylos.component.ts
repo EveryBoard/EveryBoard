@@ -49,7 +49,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new PylosRules(PylosState);
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
