@@ -59,4 +59,21 @@ describe('MoveEncoder', () => {
                 [new Coord(0, 0), new Coord(2, 3), new Coord(3, 4)]));
         });
     });
+    describe('disjunction', () => {
+        const encoder1: Encoder<number> = MoveEncoder.identity<number>();
+        const encoder2: Encoder<boolean> = MoveEncoder.identity<boolean>();
+        const encoder: MoveEncoder<number | boolean> =
+            MoveEncoder.disjunction(encoder1,
+                                    encoder2,
+                                    (value : number | boolean): value is number => {
+                                        return typeof(value) === 'number';
+                                    });
+        it('should have a bijective encoder', () => {
+            EncoderTestUtils.expectToBeBijective(encoder, 0 as number | boolean);
+            EncoderTestUtils.expectToBeBijective(encoder, 1 as number | boolean);
+            EncoderTestUtils.expectToBeBijective(encoder, 3 as number | boolean);
+            EncoderTestUtils.expectToBeBijective(encoder, true as number | boolean);
+            EncoderTestUtils.expectToBeBijective(encoder, false as number | boolean);
+        });
+    });
 });

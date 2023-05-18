@@ -28,10 +28,10 @@ export class MGPOptional<T> {
                 }
             }
             public decode(encoded: JSONValue): MGPOptional<T> {
-                if (encoded === null) { // Utils.getNonNullable(encoded)['novalue'] != undefined) {
+                if (encoded === null) {
                     return MGPOptional.empty();
                 } else {
-                    return MGPOptional.of(encoderT.decode(encoded)); // Utils.getNonNullable(encoded)['value']));
+                    return MGPOptional.of(encoderT.decode(encoded));
                 }
             }
         };

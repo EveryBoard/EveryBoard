@@ -16,9 +16,9 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class ConspirateursMoveDrop extends MoveCoord {
     public static encoder: MoveEncoder<ConspirateursMoveDrop> =
-        MoveCoord.getEncoder((coord: Coord) => ConspirateursMoveDrop.of(coord).get());
+        MoveCoord.getEncoder((coord: Coord) => ConspirateursMoveDrop.from(coord).get());
 
-    public static of(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
+    public static from(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
         if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
             return MGPFallible.success(new ConspirateursMoveDrop(coord));
         } else {
@@ -107,10 +107,10 @@ export class ConspirateursMoveJump extends Move {
             // eslint-disable-next-line dot-notation
             const coords: number[] = Utils.getNonNullable(encoded)['coords'] as number[];
             const decoded: Coord[] = coords.map(Coord.encoder.decodeMove);
-            return ConspirateursMoveJump.of(decoded).get();
+            return ConspirateursMoveJump.from(decoded).get();
         }
     };
-    public static of(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
+    public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
@@ -142,7 +142,7 @@ export class ConspirateursMoveJump extends Move {
     public addJump(target: Coord): MGPFallible<ConspirateursMoveJump> {
         const coords: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
         coords.push(target);
-        return ConspirateursMoveJump.of(coords);
+        return ConspirateursMoveJump.from(coords);
     }
     public getStartingCoord(): Coord {
         return this.coords[0];

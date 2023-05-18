@@ -31,7 +31,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         for (let y: number = start.y; y <= end.y; y++) {
             for (let x: number = start.x; x <= end.x; x++) {
                 if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
-                    moves.push(ConspirateursMoveDrop.of(new Coord(x, y)).get());
+                    moves.push(ConspirateursMoveDrop.from(new Coord(x, y)).get());
                 }
             }
         }
@@ -74,7 +74,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
     private getListJumps(state: ConspirateursState, start: Coord): ConspirateursMoveJump[] {
         const moves: MGPSet<ConspirateursMoveJump> = new MGPSet();
         for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(start)) {
-            const jump: ConspirateursMoveJump = ConspirateursMoveJump.of([start, firstTarget]).get();
+            const jump: ConspirateursMoveJump = ConspirateursMoveJump.from([start, firstTarget]).get();
             if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
                 moves.add(jump);
                 moves.addAll(this.getListJumpStartingFrom(state, jump));

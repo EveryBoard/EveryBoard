@@ -106,7 +106,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         ];
         const validTargets: Coord[] = [];
         for (const target of targets) {
-            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([start, target]);
+            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([start, target]);
             if (move.isSuccess()) {
                 validTargets.push(target);
             }
