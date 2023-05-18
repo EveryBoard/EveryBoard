@@ -20,8 +20,7 @@ describe('PentagoComponent', () => {
         testUtils = await ComponentTestUtils.forGame<PentagoComponent>('Pentago');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(testUtils.getComponent()).toBeTruthy('PentagoComponent should be created');
+        testUtils.expectToBeCreated();
     });
     it('should do move in one click when click make all block are neutral', fakeAsync(async() => {
         const move: PentagoMove = PentagoMove.rotationless(1, 1);

@@ -15,7 +15,7 @@ export class DvonnMinimax extends Minimax<DvonnMove, DvonnState> {
         // For each movable piece, look at its possible targets
         DvonnRules.getMovablePieces(state).forEach((start: Coord) => {
             return DvonnRules.pieceTargets(state, start).forEach((end: Coord) => {
-                const move: DvonnMove = DvonnMove.of(start, end);
+                const move: DvonnMove = DvonnMove.from(start, end).get();
                 // the move should be legal by construction, hence we don't check it
                 moves.push(move);
             });

@@ -4,6 +4,7 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { DvonnState } from './DvonnState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { DvonnFailure } from './DvonnFailure';
 
 export class DvonnMove extends MoveCoordToCoord {
 
@@ -37,15 +38,7 @@ export class DvonnMove extends MoveCoordToCoord {
             // diagonal move, allowed
             return MGPFallible.success(new DvonnMove(start, end));
         } else {
-            return MGPFallible.failure('Invalid move');
-        }
-    }
-    public static of(start: Coord, end: Coord): DvonnMove {
-        const result: MGPFallible<DvonnMove> = DvonnMove.from(start, end);
-        if (result.isSuccess()) {
-            return result.get();
-        } else {
-            throw new Error(result.getReason());
+            return MGPFallible.failure(DvonnFailure.MUST_MOVE_IN_STRAIGHT_LINE());
         }
     }
     public toString(): string {

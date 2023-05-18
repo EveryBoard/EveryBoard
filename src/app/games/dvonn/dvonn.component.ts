@@ -15,6 +15,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({
     selector: 'app-dvonn',
@@ -118,9 +119,12 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
-        // By construction, only valid moves can be created
-        const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.getState());
+        const move: MGPFallible<DvonnMove> = DvonnMove.from(chosenPiece, chosenDestination);
+        if (move.isFailure()) {
+            return this.cancelMove(move.getReason());
+        } else {
+            return this.chooseMove(move.get(), this.getState());
+        }
     }
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {

@@ -34,8 +34,7 @@ describe('GipfComponent', () => {
         testUtils = await ComponentTestUtils.forGame<GipfComponent>('Gipf');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('GipfComponent should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
