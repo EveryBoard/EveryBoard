@@ -1,4 +1,4 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { Utils } from 'src/app/utils/utils';
@@ -6,14 +6,12 @@ import { assert } from 'src/app/utils/assert';
 
 export class YinshPiece implements ComparableObject {
 
-    public static encoder: NumberEncoder<YinshPiece> =
-        NumberEncoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
-            [Player.numberEncoder, NumberEncoder.booleanEncoder],
+    public static encoder: MoveEncoder<YinshPiece> =
+        MoveEncoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
+            [Player.encoder, MoveEncoder.identity<boolean>()],
             (piece: YinshPiece): [PlayerOrNone, boolean] => [piece.player, piece.isRing],
-            (fields: [Player, boolean]): YinshPiece => {
-                return YinshPiece.of(fields[0], fields[1]);
-            },
-        );
+            (fields: [Player, boolean]): YinshPiece => YinshPiece.of(fields[0], fields[1]));
+
     public static UNREACHABLE: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
 
     public static EMPTY: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);

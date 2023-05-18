@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { YinshPiece } from '../YinshPiece';
@@ -14,7 +14,7 @@ describe('YinshPiece', () => {
             YinshPiece.MARKER_ONE,
             YinshPiece.RING_ZERO,
             YinshPiece.RING_ONE]) {
-            NumberEncoderTestUtils.expectToBeBijective(YinshPiece.encoder, piece);
+            EncoderTestUtils.expectToBeBijective(YinshPiece.encoder, piece);
         }
     });
     it('should have redefined toString', () => {
