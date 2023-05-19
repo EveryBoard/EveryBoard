@@ -6,6 +6,7 @@ To create a new game named `foo`:
   - Rename the classes accordingly.
   - Implement the game (see [recommended order](#recommended-order-of-definition) below)
     while at the same time developing tests for it.
+    The source files in this directory should contain enough documentation to implement most games.
 
 
 # Recommended order of definition
@@ -16,3 +17,4 @@ Recommended order to define your game:
   - Rules
   - Component
   - Tutorial
+  - Optional: minimax(es)
