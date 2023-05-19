@@ -47,8 +47,8 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
 
     private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};
 
-    public constructor(public readonly collectionName: string,
-                       protected readonly firestore: Firestore.Firestore)
+    constructor(public readonly collectionName: string,
+                protected readonly firestore: Firestore.Firestore)
     {
         const genericConverter: Firestore.FirestoreDataConverter<T> = {
             fromFirestore(snapshot: Firestore.QueryDocumentSnapshot): T {

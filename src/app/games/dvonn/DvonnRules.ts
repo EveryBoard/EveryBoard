@@ -140,22 +140,22 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return resultingState;
         }
     }
-    public isLegal(move: DvonnMove, state: DvonnState): MGPFallible<void> {
+    public isLegal(move: DvonnMove, state: DvonnState): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
             if (move === DvonnMove.PASS && !state.alreadyPassed) {
-                return MGPFallible.success(undefined);
+                return MGPValidation.SUCCESS;
             } else {
-                return MGPFallible.failure(RulesFailure.MUST_PASS());
+                return MGPValidation.failure(RulesFailure.MUST_PASS());
             }
         } else if (move === DvonnMove.PASS) {
-            return MGPFallible.failure(RulesFailure.CANNOT_PASS());
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
 
         const pieceMovable: MGPValidation = this.isMovablePiece(state, move.getStart());
         if (pieceMovable.isFailure()) {
-            return pieceMovable.toFailedFallible();
+            return pieceMovable;
         }
 
         const stack: DvonnPieceStack = state.getPieceAt(move.getStart());

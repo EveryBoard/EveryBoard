@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { HiveMinimax } from '../HiveMinimax';
 import { HiveMove } from '../HiveMove';
@@ -70,5 +72,16 @@ describe('HiveMinimax', () => {
 
         // Then there should be 5 moves (one per position where the queen bee can be dropped)
         expect(moves.length).toBe(5);
+    });
+    it('should assign a 0 value if the queen is not on the board', () => {
+        // Given a state without the queen
+        const state: HiveState = HiveState.getInitialState();
+        const node: HiveNode = new HiveNode(state);
+
+        // When computing its value
+        const boardValue: BoardValue = minimax.getBoardValue(node);
+
+        // Then it should be zero
+        expect(boardValue.value).toEqual(0);
     });
 });

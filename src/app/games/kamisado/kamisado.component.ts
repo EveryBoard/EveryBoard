@@ -22,7 +22,6 @@ import { GameStatus } from 'src/app/jscaip/Rules';
     templateUrl: './kamisado.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-
 export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoMove,
                                                                 KamisadoState,
@@ -36,7 +35,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new KamisadoRules(KamisadoState);
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
@@ -80,7 +79,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.chosen = state.coordToPlay;
         }
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
         return this.chooseMove(KamisadoMove.PASS, this.getState());
     }
@@ -130,7 +129,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.getState());
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {
             this.chosen = MGPOptional.empty();
         }

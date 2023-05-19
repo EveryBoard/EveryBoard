@@ -1,67 +1,97 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="'0 -3 ' + (board.length * 50) + ' ' + (6 + (board.length * 50))"
+     [attr.viewBox]="'0 -3 ' + (boardWidth * (SPACE_SIZE * 0.5)) + ' ' + (6 + (boardHeight * (SPACE_SIZE * 0.5)))"
      preserveAspectRatio="xMidYMid meet">
     <rect x="0" y="0"
-          [attr.width]="board.length * 50"
-          [attr.height]="board.length * 50"
+          [attr.width]="boardWidth * SPACE_SIZE * 0.5"
+          [attr.height]="boardHeight * SPACE_SIZE * 0.5"
           class="base mid-small-stroke"
     />
-    <g *ngFor="let line of board; index as y">
-        <g *ngFor="let spaceContent of line; index as x">
-            <g *ngIf="spaceIsFull(x, y) else empty">
-                <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
-                        [attr.r]="22"
-                        (click)="onClick(x, y)"
-                        [ngClass]="getSpaceClass(x, y)"
-                        class="base mid-stroke"
-                />
-                <circle *ngIf="isLastSpace(x, y)"
-                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
-                        [attr.r]="22"
-                        class="base no-fill mid-stroke last-move-stroke"
-                />
-                <line *ngIf="isDead(x, y)"
-                      (click)="onClick(x, y)"
-                      [attr.x1]="50*x"      [attr.y1]="50*y"
-                      [attr.x2]="50 + 50*x" [attr.y2]="50 + 50*y"
-                      class="base no-fill captured-stroke"
-                />
-            </g>
-            <ng-template #empty>
+    <g id="blank_board">
+        <g *ngFor="let line of board; index as y">
+            <g *ngFor="let spaceContent of line; index as x">
                 <rect id="click_{{ x }}_{{ y }}"
-                      width="50" height="50"
-                      [attr.x]="50*x" [attr.y]="50*y"
+                      [attr.width]="SPACE_SIZE * 0.5"
+                      [attr.height]="SPACE_SIZE * 0.5"
+                      [attr.x]="SPACE_SIZE * 0.5 * x"
+                      [attr.y]="SPACE_SIZE * 0.5 * y"
                       (click)="onClick(x, y)"
                       class="base no-stroke"
                       fill-opacity="0"
                 />
-                <line [attr.x1]="50*x"      [attr.y1]="25 + 50*y"
-                      [attr.x2]="50 + 50*x" [attr.y2]="25 + 50*y"
+                <line [attr.x1]="SPACE_SIZE * 0.5 * x"
+                      [attr.y1]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
+                      [attr.x2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * x)"
+                      [attr.y2]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
                       (click)="onClick(x, y)"
                       class="base mid-stroke"/>
-                <line [attr.x1]="25 + 50*x" [attr.y1]="50*y"
-                      [attr.x2]="25 + 50*x" [attr.y2]="50 + 50*y"
+                <line [attr.x1]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
+                      [attr.y1]="SPACE_SIZE * 0.5 * y"
+                      [attr.x2]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
+                      [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * y)"
                       (click)="onClick(x, y)"
                       class="base mid-stroke"/>
-                <circle *ngIf="isTerritory(x, y)"
-                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
-                        [attr.r]="10"
-                        [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
-                        (click)="onClick(x, y)"
-                />
-            </ng-template>
+            </g>
+        </g>
+        <circle *ngFor="let hoshi of hoshis"
+                id="hoshi_{{ hoshi.x }}_{{ hoshi.y }}"
+                class="base-no-stroke"
+                [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * hoshi.x)"
+                [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * hoshi.y)"
+                [attr.r]="SPACE_SIZE * 0.1"
+                (click)="onClick(hoshi.x, hoshi.y)"
+        />
+    </g>
+    <g id="piece_ko_territory_markers_and_dead_stones">
+        <g *ngFor="let line of board; index as y">
+            <g *ngFor="let spaceContent of line; index as x">
+                <g *ngIf="spaceIsFull(x, y) else empty">
+                    <circle [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
+                            [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
+                            [attr.r]="SPACE_SIZE * 0.22"
+                            (click)="onClick(x, y)"
+                            [ngClass]="getSpaceClass(x, y)"
+                            class="base mid-stroke"
+                    />
+                    <circle *ngIf="isLastSpace(x, y)"
+                            [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
+                            [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
+                            [attr.r]="SPACE_SIZE * 0.22"
+                            class="base no-fill mid-stroke last-move-stroke"
+                    />
+                    <line *ngIf="isDead(x, y)"
+                          (click)="onClick(x, y)"
+                          [attr.x1]="SPACE_SIZE * 0.5 * x"
+                          [attr.y1]="SPACE_SIZE * 0.5 * y"
+                          [attr.x2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * x)"
+                          [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * y)"
+                          class="base no-fill captured-stroke"
+                    />
+                </g>
+                <ng-template #empty>
+                    <circle *ngIf="isTerritory(x, y)"
+                            [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
+                            [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
+                            [attr.r]="SPACE_SIZE * 0.1"
+                            [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
+                            (click)="onClick(x, y)"
+                    />
+                </ng-template>
+            </g>
         </g>
     </g>
     <rect *ngIf="ko.isPresent()"
-          width="25" height="25"
-          [attr.x]="12.5 + 50 * ko.get().x" [attr.y]="12.5 + 50 * ko.get().y"
+          [attr.width]="SPACE_SIZE * 0.25"
+          [attr.height]="SPACE_SIZE * 0.25"
+          [attr.x]="(SPACE_SIZE * 0.125) + (SPACE_SIZE * 0.5) * ko.get().x"
+          [attr.y]="(SPACE_SIZE * 0.125) + (SPACE_SIZE * 0.5) * ko.get().y"
           class="captured-stroke mid-stroke no-fill"
     />
     <circle *ngFor="let capture of captures"
             (click)="onClick(capture.x, capture.y)"
-            [attr.cx]="25 + 50 * capture.x" [attr.cy]="25 + 50 * capture.y"
-            [attr.r]="7"
+            [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.x"
+            [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.y"
+            [attr.r]="SPACE_SIZE * 0.07"
             class="captured-fill"
     />
 </svg>

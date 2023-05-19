@@ -4,7 +4,7 @@ import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from '../../utils/MGPValidation';
 
 
 class MyAbstractState extends GameStateWithTable<number> {
@@ -22,8 +22,8 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         const board: readonly number[] = state.board[0];
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);
     }
-    public isLegal(move: P4Move, state: MyAbstractState): MGPFallible<void> {
-        return MGPFallible.success(undefined);
+    public isLegal(move: P4Move, state: MyAbstractState): MGPValidation {
+        return MGPValidation.SUCCESS;
     }
     public getGameStatus(node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;
@@ -55,7 +55,7 @@ describe('Rules', () => {
         const encodedMoveList: number[] = [0, 1, 2, 3];
 
         // When calling applyMoves
-        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeNumber);
+        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeMove);
 
         // Then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([encodedMoveList]);

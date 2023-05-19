@@ -11,7 +11,7 @@ import { assert } from 'src/app/utils/assert';
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4, and it contains a ring taken
 export class YinshCapture extends GipfCapture {
-    public static encoder: Encoder<YinshCapture> = new class extends Encoder<YinshCapture> {
+    public static override encoder: Encoder<YinshCapture> = new class extends Encoder<YinshCapture> {
         public encode(capture: YinshCapture): JSONValue {
             return {
                 captured: capture.capturedSpaces.map((coord: Coord): JSONValueWithoutArray => {
@@ -52,7 +52,7 @@ export class YinshCapture extends GipfCapture {
     public setRingTaken(ringTaken: Coord): YinshCapture {
         return new YinshCapture(this.capturedSpaces, ringTaken);
     }
-    public equals(other: YinshCapture): boolean {
+    public override equals(other: YinshCapture): boolean {
         if (super.equals(other) === false) return false;
         if (this.ringTaken.equals(other.ringTaken) === false) return false;
         return true;
@@ -110,7 +110,7 @@ export class YinshMove extends Move {
         if (ArrayUtils.compareArray(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
-    public toString(): string {
+    public override toString(): string {
         return 'YinshMove([' +
             this.capturesToString(this.initialCaptures) + '], ' +
             this.start.toString() + ', ' +

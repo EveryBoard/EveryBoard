@@ -31,10 +31,10 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
-    public getBoardValue(node: TaflNode): BoardValue {
+    public override getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -166,8 +166,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
             return false;
         }
     }
-    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>,
-                           state: TaflState)
+    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: TaflState)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();

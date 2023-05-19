@@ -11,6 +11,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 describe('QuixoRules:', () => {
 
@@ -192,8 +193,10 @@ describe('QuixoRules:', () => {
                 [O, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 1);
-            expect(QuixoRules.getVictoriousCoords(state))
-                .toEqual([new Coord(0, 4), new Coord(1, 3), new Coord(2, 2), new Coord(3, 1), new Coord(4, 0)]);
+            const victoriousCoord: MGPSet<Coord> = new MGPSet(QuixoRules.getVictoriousCoords(state));
+            const expectedVictoriousCoord: MGPSet<Coord> =
+                new MGPSet([new Coord(0, 4), new Coord(1, 3), new Coord(2, 2), new Coord(3, 1), new Coord(4, 0)]);
+            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
         });
     });
 });

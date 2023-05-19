@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="LEFT + ' ' + UP + ' ' + WIDTH + ' ' + HEIGHT"
+     preserveAspectRatio="xMidYMid meet">
+
+    <defs>
+        <g id="piece">
+            <path d="M 0 25 v 15 a 40 25, 0, 0, 0, 80 0 v -15 a 40 25, 0, 0, 0, -80 0 Z"/>
+            <ellipse cx="40" cy="25" rx="40" ry="25"/>
+        </g>
+    </defs>
+
+    <g *ngFor="let line of adaptedBoard.spaceInfo; index as y">
+        <g *ngFor="let squareInfo of line; index as x">
+            <g id="coord_{{ x }}_{{ y }}"
+               [attr.transform]="getTranslate(x, y, 0)"
+               (click)="onClick(x, y)">
+                <polygon id="square_{{ x }}_{{ y }}"
+                         [attr.points]="getParallelogramPoints()"
+                         [ngClass]="squareInfo.squareClasses"
+                         class="base"/>
+                <g *ngFor="let pieceInfo of squareInfo.pieceInfos; index as z"
+                   pointer-events="fill"
+                   [attr.transform]="getPieceTranslate(z)"
+                   class="base mid-small-stroke">
+                    <use id="square_{{ x }}_{{ y }}_piece_{{ z }}"
+                         xlink:href="#piece"
+                         [ngClass]="pieceInfo.classes"
+                         class="base mid-stroke"/>
+                    <circle id="square_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
+                            *ngIf="pieceInfo.isOfficer"
+                            [attr.cx]="SPACE_SIZE * 0.4"
+                            [attr.cy]="SPACE_SIZE *  0.575"
+                            [attr.r]="SPACE_SIZE * 0.045"
+                            [ngClass]="pieceInfo.classes"/>
+                </g>
+            </g>
+        </g>
+    </g>
+
+    <rect x="0"
+          [attr.y]="basicWidth"
+          [attr.width]="basicWidth * mode.horizontalWidthRatio"
+          [attr.height]="THICKNESS"
+          class="base"/>
+
+    <polygon [attr.points]="getRightEdge()"
+             class="base"/>
+</svg>

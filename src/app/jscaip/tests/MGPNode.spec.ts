@@ -1,4 +1,4 @@
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from '../GameState';
 import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
@@ -14,7 +14,7 @@ class GameStateMock extends GameState {
 }
 class MoveMock extends Move {
 
-    public toString(): string {
+    public override toString(): string {
         throw new Error('MoveMock.toString method not implemented.');
     }
     public equals(other: this): boolean {
@@ -26,7 +26,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
     public applyLegalMove(move: MoveMock, state: GameStateMock, info: void): GameStateMock {
         throw new Error('RulesMock.applyLegalMove method not implemented.');
     }
-    public isLegal(move: MoveMock, state: GameStateMock): MGPFallible<void> {
+    public isLegal(move: MoveMock, state: GameStateMock): MGPValidation {
         throw new Error('RulesMock.isLegal method not implemented.');
     }
     public getGameStatus(node: MGPNode<RulesMock, MoveMock, GameStateMock>): GameStatus {

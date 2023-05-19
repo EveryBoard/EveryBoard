@@ -46,7 +46,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.tutorial = new SaharaTutorial().tutorial;
         this.updateBoard();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.possibleLandings = [];
         this.chosenCoord = MGPOptional.empty();
     }

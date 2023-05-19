@@ -69,7 +69,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
     public getBoardValue(node: AbaloneNode): BoardValue {
         const gameStatus: GameStatus = AbaloneRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const scores: [number, number] = node.gameState.getScores();
         return new BoardValue(scores[1] - scores[0]);

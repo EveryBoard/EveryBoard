@@ -38,7 +38,7 @@ export class PylosMinimax extends Minimax<PylosMove, PylosState> {
     public getBoardValue(node: PylosNode): BoardValue {
         const gameStatus: GameStatus = PylosRules.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         } else {
             const ownershipMap: { [owner: number]: number; } = node.gameState.getPiecesRepartition();
             return new BoardValue(ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value]);

@@ -8,7 +8,8 @@ import { Firestore } from '@angular/fire/firestore';
     providedIn: 'root',
 })
 export class ChatDAO extends FirestoreDAO<Chat> {
-    public static VERBOSE: boolean = false;
+
+    public static override VERBOSE: boolean = false;
 
     public constructor(firestore: Firestore) {
         super('chats', firestore);

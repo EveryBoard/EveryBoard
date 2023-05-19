@@ -1,12 +1,12 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -23,7 +23,7 @@ import { Player } from 'src/app/jscaip/Player';
 })
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     public aiDepths: [string, string] = ['0', '0'];
 
@@ -32,6 +32,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
     public botTimeOut: number = 1000;
+
+    public displayAIMetrics: boolean = false;
 
     public constructor(componentFactoryResolver: ComponentFactoryResolver,
                        actRoute: ActivatedRoute,
@@ -95,7 +97,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (${ winner }) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`);
                     }
                 }
             }
@@ -167,5 +169,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public getPlayer(): string {
         return 'human';
+    }
+    public onCancelMove(reason?: string): void {
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            this.gameComponent.showLastMove();
+        }
     }
 }

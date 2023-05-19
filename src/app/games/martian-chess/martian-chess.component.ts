@@ -149,7 +149,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new MartianChessRules(MartianChessState);
         this.availableMinimaxes = [
             new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),
@@ -313,7 +313,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return this.state.getPieceAt(coord) !== MartianChessPiece.EMPTY &&
                this.state.isInPlayerTerritory(coord);
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPieceInfo = MGPOptional.empty();
         this.callTheClock = false;
     }
@@ -373,7 +373,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.displayModePanel = false;
     }
     public getPieceTranslation(y: number): string {
-        return 'translate(0,  ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
+        return 'translate(0, ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
     }
     public getBoardTransformation(): string {
         const translation: string = 'translate(' + this.SPACE_SIZE + ', 0)';

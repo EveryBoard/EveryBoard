@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -147,7 +147,7 @@ export class ConspirateursComponent
             }
         }
     }
-    private showLastMove(): void {
+    public override showLastMove(): void {
         const lastMove: ConspirateursMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
             this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');
@@ -165,7 +165,7 @@ export class ConspirateursComponent
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
         this.updateBoard();
@@ -191,7 +191,7 @@ export class ConspirateursComponent
         } else if (this.selected.isPresent()) {
             return this.selectNextCoord(coord);
         } else if (state.isDropPhase()) {
-            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.of(coord);
+            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.from(coord);
             assert(move.isSuccess(), 'ConspirateursMove should be valid by construction');
             return this.chooseMove(move.get(), state);
         } else {
@@ -209,7 +209,7 @@ export class ConspirateursComponent
             if (newJump.isFailure()) {
                 return this.cancelMove(newJump.getReason());
             }
-            const jumpLegality: MGPFallible<void> = this.rules.jumpLegality(newJump.get(), state);
+            const jumpLegality: MGPValidation = this.rules.jumpLegality(newJump.get(), state);
             if (jumpLegality.isFailure()) {
                 return this.cancelMove(jumpLegality.getReason());
             }
@@ -232,7 +232,7 @@ export class ConspirateursComponent
         if (move.isSuccess()) {
             return this.chooseMove(move.get(), this.getState());
         } else {
-            const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([selected, coord]);
+            const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([selected, coord]);
             if (jump.isFailure()) {
                 return this.cancelMove(jump.getReason());
             }

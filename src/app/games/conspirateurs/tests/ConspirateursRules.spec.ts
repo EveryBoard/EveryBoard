@@ -27,13 +27,13 @@ describe('ConspirateursRules', () => {
     });
 
     function drop(coord: Coord): ConspirateursMove {
-        return ConspirateursMoveDrop.of(coord).get();
+        return ConspirateursMoveDrop.from(coord).get();
     }
     function simpleMove(start: Coord, end: Coord): ConspirateursMove {
         return ConspirateursMoveSimple.from(start, end).get();
     }
     function jump(coords: Coord[]): ConspirateursMove {
-        return ConspirateursMoveJump.of(coords).get();
+        return ConspirateursMoveJump.from(coords).get();
     }
     describe('drop moves', () => {
         it('should allow drops within the center zone', () => {

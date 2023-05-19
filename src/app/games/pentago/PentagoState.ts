@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Vector } from 'src/app/jscaip/Vector';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { PentagoMove } from './PentagoMove';
 
@@ -68,17 +69,18 @@ export class PentagoState extends GameStateWithTable<PlayerOrNone> {
         const newBoard: PlayerOrNone[][] = postDropState.getCopiedBoard();
         if (move.blockTurned.isPresent()) {
             const blockCenter: Coord = PentagoState.getBlockCenter(move.blockTurned.get());
+            const blockVector: Vector = blockCenter.toVector();
             if (move.turnedClockwise) {
                 for (const translation of PentagoState.ROTATION_MAP) {
-                    const oldCoord: Coord = translation[0].getNext(blockCenter);
-                    const newCoord: Coord = translation[1].getNext(blockCenter);
+                    const oldCoord: Coord = translation[0].getNext(blockVector);
+                    const newCoord: Coord = translation[1].getNext(blockVector);
                     const oldValue: PlayerOrNone = postDropState.getPieceAt(oldCoord);
                     newBoard[newCoord.y][newCoord.x] = oldValue;
                 }
             } else {
                 for (const translation of PentagoState.ROTATION_MAP) {
-                    const oldCoord: Coord = translation[1].getNext(blockCenter);
-                    const newCoord: Coord = translation[0].getNext(blockCenter);
+                    const oldCoord: Coord = translation[1].getNext(blockVector);
+                    const newCoord: Coord = translation[0].getNext(blockVector);
                     const oldValue: PlayerOrNone = postDropState.getPieceAt(oldCoord);
                     newBoard[newCoord.y][newCoord.x] = oldValue;
                 }

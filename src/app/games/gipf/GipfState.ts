@@ -48,7 +48,7 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         newBoard[coord.y][coord.x] = v;
         return new GipfState(newBoard, this.turn, this.sidePieces, this.capturedPieces) as this;
     }
-    public isOnBoard(coord: Coord): boolean {
+    public override isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }

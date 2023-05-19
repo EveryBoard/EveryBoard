@@ -75,7 +75,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private hidePreviousMove(): void {
         this.moveds = [];
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.directions = [];
         this.selecteds = [];
     }

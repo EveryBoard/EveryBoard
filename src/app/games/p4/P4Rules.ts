@@ -3,13 +3,13 @@ import { GameStatus, Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { P4State } from './P4State';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Utils, display } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { P4Failure } from './P4Failure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
@@ -18,28 +18,13 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
     public static VERBOSE: boolean = false;
 
-    public static getOwner(piece: PlayerOrNone): PlayerOrNone {
-        return piece;
-    }
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(7, 6);
     }
-    public static P4_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(P4Rules.isInRange, P4Rules.getOwner, 4);
+    public static P4_HELPER: NInARowHelper<PlayerOrNone> = new NInARowHelper(P4Rules.isInRange, Utils.identity, 4);
 
     public static getVictoriousCoords(state: P4State): Coord[] {
-        const coords: Coord[] = [];
-        for (let x: number = 0; x < 7; x++) {
-            for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
-                const spaceScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
-                if (spaceScore === Player.ZERO.getVictoryValue() ||
-                    spaceScore === Player.ONE.getVictoryValue())
-                {
-                    coords.push(new Coord(x, y));
-                }
-            }
-        }
-        return coords;
+        return P4Rules.P4_HELPER.getVictoriousCoord(state);
     }
     private static getBoardValueFromScratch(state: P4State): BoardValue {
         display(P4Rules.VERBOSE, { P4Rules_getBoardValueFromScratch: { state } });
@@ -109,24 +94,18 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const resultingState: P4State = new P4State(board, turn + 1);
         return resultingState;
     }
-    public isLegal(move: P4Move, state: P4State): MGPFallible<void> {
+    public isLegal(move: P4Move, state: P4State): MGPValidation {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
         if (state.getPieceAtXY(move.x, 0).isPlayer()) {
-            return MGPFallible.failure(P4Failure.COLUMN_IS_FULL());
+            return MGPValidation.failure(P4Failure.COLUMN_IS_FULL());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
-        for (let x: number = 0; x < 7; x++) {
-            // for every column, starting from the bottom of each column
-            for (let y: number = 5; y >= 0 && state.board[y][x].isPlayer(); y--) {
-                // while we haven't reached the top or an empty space
-                const squareScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                    return GameStatus.getVictory(state.getCurrentOpponent());
-                }
-            }
+        const victoriousCoord: Coord[] = P4Rules.P4_HELPER.getVictoriousCoord(state);
+        if (victoriousCoord.length > 0) {
+            return GameStatus.getVictory(state.getCurrentOpponent());
         }
         return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
     }

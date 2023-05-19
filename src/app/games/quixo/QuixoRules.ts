@@ -6,11 +6,17 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
+import { Utils } from 'src/app/utils/utils';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
+
+    public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
+        new NInARowHelper(QuixoMove.isInRange, Utils.identity, 5);
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
@@ -73,33 +79,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return sums;
     }
     public static getVictoriousCoords(state: QuixoState): Coord[] {
-        const lineSums: {[player: number]: {[lineType: string]: number[]}} = QuixoRules.getLinesSums(state);
-        const coords: Coord[] = [];
-        for (let player: number = 0; player < 2; player++) {
-            for (let i: number = 0; i < 5; i++) {
-                if (lineSums[player].columns[i] === 5) {
-                    for (let j: number = 0; j < 5; j++) {
-                        coords.push(new Coord(i, j));
-                    }
-                }
-                if (lineSums[player].rows[i] === 5) {
-                    for (let j: number = 0; j < 5; j++) {
-                        coords.push(new Coord(j, i));
-                    }
-                }
-            }
-            if (lineSums[player].diagonals[0] === 5) {
-                for (let i: number = 0; i < 5; i++) {
-                    coords.push(new Coord(i, i));
-                }
-            }
-            if (lineSums[player].diagonals[1] === 5) {
-                for (let i: number = 0; i < 5; i++) {
-                    coords.push(new Coord(i, 4-i));
-                }
-            }
-        }
-        return coords;
+        return QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
     }
     public static getFullestLine(playersLinesInfo: {[lineType: string]: number[]}): number {
         const linesScores: number[] = playersLinesInfo.columns.concat(
@@ -113,28 +93,24 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     public static applyLegalMove(move: QuixoMove, state: QuixoState, _status: void): QuixoState {
         return state.applyLegalMove(move);
     }
-    public isLegal(move: QuixoMove, state: QuixoState): MGPFallible<void> {
+    public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
-            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         }
     }
     public getGameStatus(node: QuixoNode): GameStatus {
         const state: QuixoState = node.gameState;
-        const linesSums: {[key: string]: {[key: number]: number[]}} =
-            QuixoRules.getLinesSums(state);
-        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
-        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = state.getCurrentPlayer();
-        if (zerosFullestLine === 5) {
-            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                return GameStatus.ZERO_WON;
-            }
+        const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+        const unreducedWinners: PlayerOrNone[] = victoriousCoord.map((coord: Coord) => state.getPieceAt(coord));
+        const winners: MGPSet<PlayerOrNone> = new MGPSet(unreducedWinners);
+        if (winners.size() === 0) {
+            return GameStatus.ONGOING;
+        } else if (winners.size() === 1) {
+            return GameStatus.getVictory(winners.getAnyElement().get() as Player);
+        } else {
+            return GameStatus.getVictory(state.getCurrentPlayer());
         }
-        if (onesFullestLine === 5) {
-            return GameStatus.ONE_WON;
-        }
-        return GameStatus.ONGOING;
     }
 }

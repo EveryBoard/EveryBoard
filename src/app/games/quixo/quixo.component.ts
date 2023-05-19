@@ -49,7 +49,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.lastMoveCoord = this.rules.node.move.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
     }
     public getPieceClasses(x: number, y: number): string[] {

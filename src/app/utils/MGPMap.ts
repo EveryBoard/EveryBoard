@@ -30,13 +30,17 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
         return MGPOptional.empty();
     }
-    public forEach(callback: (item: {key: K, value: V}) => void): void {
-        for (let i: number = 0; i < this.map.length; i++) {
-            callback(this.getByIndex(i));
+    public getAnyPair(): MGPOptional<{key: K, value: V}> {
+        if (this.size() > 0) {
+            return MGPOptional.of(this.map[0]);
+        } else {
+            return MGPOptional.empty();
         }
     }
-    public getByIndex(index: number): {key: K, value: V} {
-        return this.map[index];
+    public forEach(callback: (item: {key: K, value: V}) => void): void {
+        for (const element of this.map) {
+            callback(element);
+        }
     }
     public putAll(m: MGPMap<K, V>): void {
         this.checkImmutability('putAll');
@@ -141,6 +145,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
 }
 
 export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
+
     public reverse(): ReversibleMap<V, MGPSet<K>> {
         const reversedMap: ReversibleMap<V, MGPSet<K>> = new ReversibleMap<V, MGPSet<K>>();
         for (const key of this.listKeys()) {

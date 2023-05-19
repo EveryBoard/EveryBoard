@@ -13,7 +13,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
-    public constructor(public ruler: MartianChessRules, name: string) {
+    public constructor(ruler: MartianChessRules, name: string) {
         super(ruler, name);
     }
     public getListMoves(node: MartianChessNode): MartianChessMove[] {
@@ -133,7 +133,7 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         let score: number;
         if (gameStatus.isEndGame) {
-            score = gameStatus.toBoardValue();
+            score = gameStatus.toBoardValue().value;
         } else {
             const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);
             const oneScore: number = node.gameState.getScoreOf(Player.ONE);

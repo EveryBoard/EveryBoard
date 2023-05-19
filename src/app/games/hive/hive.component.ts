@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
@@ -168,7 +167,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (stackSize-1 in this.layers === false) return;
         this.layers[stackSize-1].highlight(coord, stroke);
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(HiveMove.PASS, this.getState());
     }
@@ -237,7 +236,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.ground.clearHighlights();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.clearHighlights();
         this.selectedStart = MGPOptional.empty();
         this.selectedRemaining = MGPOptional.empty();
@@ -248,7 +247,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.computeViewBox();
     }
-    private showLastMove(): void {
+    public override showLastMove(): void {
         for (const coord of this.getLastMoveCoords()) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');
@@ -263,9 +262,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         } else if (move instanceof HiveMoveCoordToCoord) {
             lastMove = [move.getStart(), move.getEnd()];
         }
-        // We need to offset the coordinates of the last move, in case the board has been extended in the negatives
-        const offset: Vector = this.getState().offset;
-        return lastMove.map((coord: Coord) => coord.getNext(offset));
+        return lastMove;
     }
     public getRemainingPieceTransformAsCoord(piece: HivePiece): Coord {
         const shift: number = this.getRemainingPieceShift(piece);
@@ -431,7 +428,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
             return this.chooseMove(move, this.getState());
         }
-        const validity: MGPFallible<void> =
+        const validity: MGPValidation =
             HiveSpiderRules.get().prefixLegality(this.selectedSpiderCoords, this.getState());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());

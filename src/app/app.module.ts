@@ -45,6 +45,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -55,6 +56,7 @@ import { GoComponent } from './games/go/go.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
+import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
@@ -124,6 +126,7 @@ export const routes: Route[] = [
 ];
 
 export class FirebaseProviders {
+
     public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
         return Firebase.provideFirebaseApp(() => {
             return Firebase.initializeApp(environment.firebaseConfig);
@@ -183,6 +186,7 @@ export class FirebaseProviders {
         AwaleComponent,
         BrandhubComponent,
         CoerceoComponent,
+        ConnectSixComponent,
         ConspirateursComponent,
         DiamComponent,
         DvonnComponent,
@@ -193,6 +197,7 @@ export class FirebaseProviders {
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
         KamisadoComponent,
+        LascaComponent,
         LinesOfActionComponent,
         LodestoneComponent,
         MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,

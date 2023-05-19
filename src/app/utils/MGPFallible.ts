@@ -9,19 +9,19 @@ export abstract class MGPFallible<T> {
         return new MGPFallibleFailure(reason);
     }
 
-    protected constructor() {
-    }
-    public abstract isSuccess(): boolean
+    protected constructor() {}
 
-    public abstract isFailure(): boolean
+    public abstract isSuccess(): this is MGPFallibleSuccess<T>;
 
-    public abstract get(): T
+    public abstract isFailure(): this is MGPFallibleFailure<T>;
 
-    public abstract getReason(): string
+    public abstract get(): T;
 
-    public abstract getReasonOr(value: string): string
+    public abstract getReason(): string;
 
-    public abstract toOptional(): MGPOptional<T>
+    public abstract getReasonOr(value: string): string;
+
+    public abstract toOptional(): MGPOptional<T>;
 
     public equals(other: MGPFallible<T>): boolean {
         if (this.isFailure()) {
@@ -41,10 +41,10 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public constructor(private readonly value: T) {
         super();
     }
-    public isSuccess(): boolean {
+    public isSuccess(): this is MGPFallibleSuccess<T> {
         return true;
     }
-    public isFailure(): boolean {
+    public isFailure(): this is MGPFallibleFailure<T> {
         return false;
     }
     public get(): T {
@@ -59,7 +59,7 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
     }
-    public toString(): string {
+    public override toString(): string {
         return `MGPFallible.success(${this.value})`;
     }
 }
@@ -71,10 +71,10 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     public constructor(private readonly reason: string) {
         super();
     }
-    public isSuccess(): boolean {
+    public isSuccess(): this is MGPFallibleSuccess<T> {
         return false;
     }
-    public isFailure(): boolean {
+    public isFailure(): this is MGPFallibleFailure<T> {
         return true;
     }
     public get(): T {
@@ -89,7 +89,10 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     public toOptional(): MGPOptional<T> {
         return MGPOptional.empty();
     }
-    public toString(): string {
+    public override toString(): string {
         return `MGPFallible.failure(${this.reason})`;
+    }
+    public toOtherFallible<U>(): MGPFallible<U> {
+        return MGPFallible.failure(this.reason);
     }
 }

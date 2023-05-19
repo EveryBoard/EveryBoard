@@ -11,38 +11,54 @@ import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflNode } from './TaflMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { assert } from 'src/app/utils/assert';
+
+export type TaflPieceAndControlMinimaxMetrics = {
+    controlScore: number,
+    threatenedScore: number,
+    safeScore: number,
+};
 
 export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
 
-    public static SCORE_BY_THREATENED_PIECE: number = 530;
-
-    public static SCORE_BY_SAFE_PIECE: number = (16 * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE) + 1;
-
-    public getBoardValue(node: TaflNode): BoardValue {
+    public override getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const state: TaflState = node.gameState;
         const width: number = this.ruler.config.WIDTH;
-        const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
-        let score: number = 0;
+        const metrics: TaflPieceAndControlMinimaxMetrics =
+            this.getControlScoreAndPieceScores(width, state);
+        let scoreValue: number = metrics.controlScore;
+        scoreValue += metrics.safeScore * this.getScoreBySafePiece(state);
+        const maxControl: number = this.getScoreByThreatenedPiece(state);
+        scoreValue += metrics.threatenedScore * maxControl;
+        assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
+        assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
+        assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
+        return new BoardValue(scoreValue);
+    }
+    protected getControlScoreAndPieceScores(width: number,
+                                            state: TaflState)
+    : TaflPieceAndControlMinimaxMetrics
+    {
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
+        const metrics: TaflPieceAndControlMinimaxMetrics = { safeScore: 0, threatenedScore: 0, controlScore: 0 };
         for (const owner of Player.PLAYERS) {
             const controlledSquares: MGPSet<Coord> = new CoordSet();
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE;
+                    metrics.threatenedScore += owner.getScoreModifier();
                 } else {
-                    score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_SAFE_PIECE;
+                    metrics.safeScore += owner.getScoreModifier();
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
                         while (testedCoord.isInRange(width, width) &&
-                               state.getPieceAt(testedCoord) === empty)
-                        {
+                            state.getPieceAt(testedCoord) === TaflPawn.UNOCCUPIED) {
                             controlledSquares.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
@@ -51,10 +67,10 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
             }
             for (const controlled of controlledSquares) {
                 const controlledValue: number = this.getControlledPieceValue(controlled.x, controlled.y, width);
-                score += owner.getScoreModifier() * controlledValue;
+                metrics.controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
-        return new BoardValue(score);
+        return metrics;
     }
     public getControlledPieceValue(x: number, y: number, width: number): number {
         let value: number = 1;
@@ -64,6 +80,22 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
         if (y === 0 || y === width - 1) {
             value *= width;
         }
+        /** 1 for center
+          * width for border
+          * width*width for corners
+          */
         return value;
+    }
+    public getScoreByThreatenedPiece(state: TaflState): number {
+        const width: number = state.board.length;
+        // The value of the four corners (each being "width" * "width")
+        // + the value of what remains of the four edges (each border square being worth "width")
+        // + the value of what remains of the board (each square being worth one point)
+        const reducedWidth: number = width - 2;
+        return (4 * width * width) + (4 * reducedWidth * width) + (reducedWidth * reducedWidth);
+    }
+    public getScoreBySafePiece(state: TaflState): number {
+        const scoreByThreatenedPiece: number = this.getScoreByThreatenedPiece(state);
+        return (16 * scoreByThreatenedPiece) + 1;
     }
 }

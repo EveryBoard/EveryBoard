@@ -75,7 +75,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = ApagosRules.get();
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.availableMinimaxes = [
             new ApagosDummyMinimax(this.rules, 'ApagosDummyMinimax'),
         ];
@@ -84,7 +84,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
         this.updateBoard();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
@@ -106,7 +106,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    private showLastMove(): void {
+    public override showLastMove(): void {
         const lastMove: ApagosMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
             this.showLastDrop(lastMove);

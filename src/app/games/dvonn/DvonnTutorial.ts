@@ -34,7 +34,7 @@ export class DvonnTutorial extends Tutorial {
         The player with dark pieces starts.<br/><br/>
         You're playing Dark, click on a stack and move it by one space.`,
             DvonnState.getInitialState(),
-            DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
+            DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get(),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromPredicate(
@@ -49,7 +49,7 @@ export class DvonnTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __, __, __, NN],
                 [__, __, __, __, __, __, __, __, __, NN, NN],
             ], 0, false),
-            DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
+            DvonnMove.from(new Coord(2, 1), new Coord(2, 0)).get(),
             (move: DvonnMove, _previous: DvonnState, _result: DvonnState) => {
                 if (move.getEnd().equals(new Coord(3, 0))) {
                     return MGPValidation.failure($localize`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`);
@@ -75,7 +75,7 @@ export class DvonnTutorial extends Tutorial {
                 [__, __, X1, __, __, __, __, __, __, __, NN],
                 [__, __, __, __, __, __, __, __, __, NN, NN],
             ], 0, false),
-            DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
+            DvonnMove.from(new Coord(2, 1), new Coord(2, 0)).get(),
             (move: DvonnMove, _previous: DvonnState, _result: DvonnState) => {
                 if (move.getEnd().equals(new Coord(2, 0))) {
                     return MGPValidation.SUCCESS;
@@ -108,7 +108,7 @@ export class DvonnTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __, __, __, NN],
                 [__, __, __, __, __, __, __, __, __, NN, NN],
             ], 0, false),
-            [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
+            [DvonnMove.from(new Coord(2, 1), new Coord(2, 0)).get()],
             $localize`Congratulations, you won 6 - 0!`,
             $localize`Bad idea, by moving on the source you would have won a point.`,
         ),

@@ -84,27 +84,27 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
 
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
-            return initialCapturesValidity.toFailedFallible();
+            return initialCapturesValidity.toOtherFallible();
         }
         const stateAfterInitialCaptures: YinshState = this.applyCaptures(move.initialCaptures, state);
 
         const moveValidity: MGPValidation =
             this.moveValidity(stateAfterInitialCaptures, move.start, move.end.get());
         if (moveValidity.isFailure()) {
-            return moveValidity.toFailedFallible();
+            return moveValidity.toOtherFallible();
         }
         const stateAfterRingMove: YinshState =
             this.applyRingMoveAndFlip(move.start, move.end.get(), stateAfterInitialCaptures);
 
         const finalCapturesValidity: MGPValidation = this.capturesValidity(stateAfterRingMove, move.finalCaptures);
         if (finalCapturesValidity.isFailure()) {
-            return finalCapturesValidity.toFailedFallible();
+            return finalCapturesValidity.toOtherFallible();
         }
         const stateAfterFinalCaptures: YinshState = this.applyCaptures(move.finalCaptures, stateAfterRingMove);
 
         const noMoreCapturesValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCapturesValidity.isFailure()) {
-            return noMoreCapturesValidity.toFailedFallible();
+            return noMoreCapturesValidity.toOtherFallible();
         }
 
         return MGPFallible.success(stateAfterFinalCaptures);

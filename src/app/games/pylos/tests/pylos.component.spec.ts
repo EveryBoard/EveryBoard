@@ -57,8 +57,7 @@ describe('PylosComponent', () => {
         testUtils = await ComponentTestUtils.forGame<PylosComponent>('Pylos');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should allow dropping piece on occupable space', fakeAsync(async() => {
@@ -90,7 +89,7 @@ describe('PylosComponent', () => {
             const initialState: PylosState = new PylosState(initialBoard, 0);
             testUtils.setupState(initialState);
 
-            //  When clicking on one
+            // When clicking on one
             // Then the move should be illegal
             await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
@@ -466,7 +465,7 @@ describe('PylosComponent', () => {
             const initialState: PylosState = new PylosState(initialBoard, 0);
             testUtils.setupState(initialState);
 
-            // When dropping a piece then clicking on two piece to capture
+            // When dropping a piece then clicking on two pieces to capture
             await testUtils.expectClickSuccess('#drop_2_2_0');
             await testUtils.expectClickSuccess('#piece_0_0_1');
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(1, 1, 0)];

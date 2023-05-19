@@ -22,8 +22,7 @@ describe('LinesOfActionComponent', () => {
         testUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('LinesOfActionComponent should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {

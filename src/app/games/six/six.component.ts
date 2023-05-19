@@ -58,7 +58,7 @@ export class SixComponent
                                          FlatHexaOrientation.INSTANCE);
         this.updateBoard();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
@@ -86,11 +86,11 @@ export class SixComponent
         const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
         return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH).toSVGString();
     }
-    public showLastMove(): void {
+    public override showLastMove(): void {
         const lastMove: SixMove = this.rules.node.move.get();
-        this.lastDrop = MGPOptional.of(lastMove.landing.getNext(this.state.offset));
+        this.lastDrop = MGPOptional.of(lastMove.landing);
         if (lastMove.isDrop() === false) {
-            this.leftCoord = MGPOptional.of(lastMove.start.get().getNext(this.state.offset, 1));
+            this.leftCoord = MGPOptional.of(lastMove.start.get());
         } else {
             this.leftCoord = MGPOptional.empty();
         }
@@ -107,9 +107,9 @@ export class SixComponent
         for (const oldPiece of oldPieces) {
             const start: MGPOptional<Coord> = this.rules.node.move.get().start;
             if (start.equalsValue(oldPiece) === false &&
-                newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece.getNext(this.state.offset, 1))) === false)
+                newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece)) === false)
             {
-                disconnecteds.push(oldPiece.getNext(this.state.offset, 1));
+                disconnecteds.push(oldPiece);
             }
         }
         const lastDrop: Coord = this.lastDrop.get();

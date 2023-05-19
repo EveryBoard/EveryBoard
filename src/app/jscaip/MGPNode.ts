@@ -87,7 +87,6 @@ export class MGPNode<R extends Rules<M, S, L>,
          * mother: null for initial board
          * board: should already be a clone
          */
-        const LOCAL_VERBOSE: boolean = false;
         this.ownValue = new MGPMap<string, U>();
         if (minimaxCreator != null) {
             const firstValue: U = minimaxCreator.getBoardValue(this);
@@ -95,7 +94,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             this.hopedValue.set(minimaxCreator.name, firstValue.value);
         }
         MGPNodeStats.createdNodes++;
-        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'creating ' + this.myToString());
+        display(MGPNode.VERBOSE, 'creating ' + this.myToString());
     }
     public findBestMove(readingDepth: number,
                         minimax: Minimax<M, S, L, U>,

@@ -70,7 +70,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             this.movedPieces = [];
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.insertingPiece = false;
         this.selectedPiece = MGPOptional.empty();
         this.selectedLanding = MGPOptional.empty();

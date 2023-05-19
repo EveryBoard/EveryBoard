@@ -198,12 +198,11 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
         this.callbacks.push([conditions, callback]);
         const matchingDocs: FirestoreDocument<T>[] = [];
-        for (let entryId: number = 0; entryId < db.size(); entryId++) {
-            const entry: DocumentSubject<T> = db.getByIndex(entryId).value;
-            if (this.conditionsHold(conditions, entry.subject.value.get().data)) {
-                matchingDocs.push(entry.subject.value.get());
+        db.forEach((item: {key: string, value: DocumentSubject<T> }) => {
+            if (this.conditionsHold(conditions, item.value.subject.value.get().data)) {
+                matchingDocs.push(item.value.subject.value.get());
             }
-        }
+        });
         callback.onDocumentCreated(matchingDocs);
         return new Subscription(() => {
             // Upon unsubscription, remove this callback from the callbacks
