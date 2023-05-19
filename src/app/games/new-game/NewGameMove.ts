@@ -1,4 +1,5 @@
 import { Move } from "src/app/jscaip/Move";
+import { MoveEncoder } from "src/app/utils/Encoder";
 
 /**
   * This class represents the moves of your game.
@@ -9,6 +10,15 @@ import { Move } from "src/app/jscaip/Move";
   * All move must extends the `Move` parent class
   */
 export class NewGameMove extends Move {
+    /*
+     * A move needs an Encoder to be able to play online.
+     * There are multiple helpers to create encoders.
+     * You'll likely be interested in:
+     *   - `MoveCoord.getEncoder` and `MoveWithTwoCoords` to get an encoder for a move of the corresponding type.
+     *   - `MoveEncoder.tuple` to get an encoder for a move that has multiple fields
+     *   - `MoveEncoder.disjunction` to get an encoder for a move that may be of different types
+     */
+    public static encoder: MoveEncoder<NewGameMove> = null;
 
     public toString(): string {
         throw new Error('This method is really more debug oriented');
