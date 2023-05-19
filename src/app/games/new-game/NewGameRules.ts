@@ -8,6 +8,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 /**
  * This class is optional.
+ * If you don't use it, you can remove it everywhere it is mentionned.
+ *
  * It provides extra information that is returned by the `isLegal` method of the rules.
  * This information is then provided to the `applyLegalMove` method of the rules.
  * That way, we can avoid duplicating some computations already made in `isLegal`.
@@ -18,6 +20,9 @@ export class NewGameLegalityInfo {
 }
 
 /**
+ * This class is optional and rarely used.
+ * If you don't use it, you can remove it everywhere it is mentioned, including in types.
+ *
  * The `BoardValue` denotes the value of a state, for the sake of IA computations.
  * In most cases, the default `BoardValue`, a number wrapper, is enough.
  */
@@ -69,7 +74,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      *   a failure containing the reason for the illegality of the move.
      */
     public isLegal(move: NewGameMove, state: NewGameState): MGPFallible<NewGameLegalityInfo> {
-        throw new Error('Method not implemented.');
+        return MGPFallible.success(new NewGameLegalityInfo());
     }
     /**
      * This is the methods that applies the move to a state.
@@ -80,7 +85,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @returns the resulting state, i.e., the state on which move has been applied
      */
     public applyLegalMove(move: NewGameMove, state: NewGameState, info: NewGameLegalityInfo): NewGameState {
-        throw new Error('Method not implemented.');
+        return new NewGameState(state.turn + 1);
     }
     /**
      * This method checks whether the game is in progress or finished.
@@ -88,6 +93,6 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
      */
     public getGameStatus(node: NewGameNode): GameStatus {
-        throw new Error('Method not implemented.');
+        return GameStatus.DRAW;
     }
 }
