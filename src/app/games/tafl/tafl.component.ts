@@ -45,7 +45,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.capturedCoords = [];
         this.updateViewInfo();
     }
-    public showLastMove(move: M): void {
+    public override showLastMove(move: M): void {
         this.lastMove = MGPOptional.of(move);
         const previousState: S = this.rules.node.mother.get().gameState;
         const opponent: Player = this.getState().getCurrentOpponent();

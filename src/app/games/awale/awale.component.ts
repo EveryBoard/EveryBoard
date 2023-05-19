@@ -61,7 +61,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         ];
         this.filledCoords = [];
     }
-    public showLastMove(move: AwaleMove): void {
+    public override showLastMove(move: AwaleMove): void {
         const lastPlayer: number = this.getState().getCurrentPlayer().value;
         this.last = MGPOptional.of(new Coord(move.x, lastPlayer));
         const previousState: AwaleState = this.rules.node.mother.get().gameState;

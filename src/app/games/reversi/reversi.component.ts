@@ -63,7 +63,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
-    public showLastMove(move: ReversiMove): void {
+    public override showLastMove(move: ReversiMove): void {
         this.lastMove = move.coord;
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();

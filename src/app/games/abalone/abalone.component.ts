@@ -79,7 +79,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.directions = [];
         this.selecteds = [];
     }
-    public showLastMove(move: AbaloneMove): void {
+    public override showLastMove(move: AbaloneMove): void {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {
