@@ -7,22 +7,26 @@ import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 /**
-  * This optional class is the type of info that get return by rules.isLegal.
-  * This is then automatically provided to applyLegalMove, it can so avoid duplicated calculation if needed.
-  * It is optional and has no mandatory structure nor use outside the use you'll make of it.
-  */
+ * This class is optional.
+ * It provides extra information that is returned by the `isLegal` method of the rules.
+ * This information is then provided to the `applyLegalMove` method of the rules.
+ * That way, we can avoid duplicating some computations already made in `isLegal`.
+ * By default, `void` is used if you don't provide one.
+ * There are no restrictions to this definition.
+ */
 export class NewGameLegalityInfo {
 }
 
 /**
-  * The default BoardValue is just a number wrapper, but you could add more info about it.
-  */
+ * The `BoardValue` denotes the value of a state, for the sake of IA computations.
+ * In most cases, the default `BoardValue`, a number wrapper, is enough.
+ */
 export class NewGameBoardValue extends BoardValue {
 }
 
 /**
-  * TODO: TODOTODO: give best use of its uses !
-  */
+ * Defining the game node class is only for cosmetic purposes. It reduces the length of the argument to `getGameStatus`.
+ */
 export class NewGameNode extends MGPNode<Rules<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue>,
                                          NewGameMove,
                                          NewGameState,
@@ -30,43 +34,59 @@ export class NewGameNode extends MGPNode<Rules<NewGameMove, NewGameState, NewGam
                                          NewGameBoardValue> {}
 
 /**
-  * This class will have a singleton instance and will be used by the wrappers to test if the move is legal
-  * Then this class will apply the moves on the states
-  */
+ * This is where you define the rules of the game.
+ * It should be a singleton class.
+ * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
+ */
 export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue> {
 
+    /**
+     * This is the singleton instance. You should keep this as is, except for adapting the class name.
+     */
     private static singleton: MGPOptional<NewGameRules> = MGPOptional.empty();
 
+    /**
+     * This gets the singleton instance. Similarly, keep this as is.
+     */
     public static get(): NewGameRules {
         if (NewGameRules.singleton.isAbsent()) {
             NewGameRules.singleton = MGPOptional.of(new NewGameRules());
         }
         return NewGameRules.singleton.get();
     }
+    /**
+     * The constructor is made private to avoid creating other instances of this class.
+     */
     private constructor() {
         super(NewGameState);
     }
+
     /**
-      * @param move the move to apply to the state
-      * @param state the state on which to apply the move
-      * @param info the eventual info that had been returned by "isLegal"
-      * @Returns the state on which move has been applied, the resulting state
-     */
-    public applyLegalMove(move: NewGameMove, state: NewGameState, info: NewGameLegalityInfo): NewGameState {
-        throw new Error('Method not implemented.');
-    }
-    /**
-      * @param move the move to test on state
-      * @param state the state on which to teest the move
-      * @retuns a MGPFallible of the GameLegalityInfo
+     * This methods checks whether it is legal to apply a move to a state.
+     * @param move the move
+     * @param state the state on which to check the move legality
+     * @returns a MGPFallible of the GameLegalityInfo, being a success if the move is legal,
+     *   a failure containing the reason for the illegality of the move.
      */
     public isLegal(move: NewGameMove, state: NewGameState): MGPFallible<NewGameLegalityInfo> {
         throw new Error('Method not implemented.');
     }
     /**
-      * @param node the node of which we'll test the state
-      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
-      */
+     * This is the methods that applies the move to a state.
+     * We know the move is legal because it has been checked with `isLegal`.
+     * @param move the move to apply to the state
+     * @param state the state on which to apply the move
+     * @param info the info that had been returned by `isLegal`
+     * @returns the resulting state, i.e., the state on which move has been applied
+     */
+    public applyLegalMove(move: NewGameMove, state: NewGameState, info: NewGameLegalityInfo): NewGameState {
+        throw new Error('Method not implemented.');
+    }
+    /**
+     * This method checks whether the game is in progress or finished.
+     * @param node the node for which we check the game status
+     * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
+     */
     public getGameStatus(node: NewGameNode): GameStatus {
         throw new Error('Method not implemented.');
     }
