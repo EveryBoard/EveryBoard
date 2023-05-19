@@ -7,15 +7,18 @@ import { PenteState } from "./PenteState";
 export class PenteMove extends MoveCoord {
     public static encoder: MoveEncoder<PenteMove> = MoveCoord.getEncoder(PenteMove.of);
 
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(PenteState.SIZE, PenteState.SIZE);
+    }
     public static of(coord: Coord): PenteMove {
-        Utils.assert(coord.isInRange(PenteState.SIZE, PenteState.SIZE), 'PenteMove: coord is out of the board');
+        Utils.assert(PenteMove.isOnBoard(coord), 'PenteMove: coord is out of the board');
         return new PenteMove(coord.x, coord.y);
     }
     private constructor(x: number, y: number) {
         super(x, y);
     }
     public toString(): string {
-        return `PenteMove(${this.coord.toString()})`;
+        return `PenteMove(${this.coord.x}, ${this.coord.y})`;
     }
     public equals(other: this): boolean {
         return this.coord.equals(other.coord);

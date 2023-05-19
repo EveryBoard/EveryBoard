@@ -59,7 +59,7 @@ fdescribe('PenteRules', () => {
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
     });
     it('should capture pieces when two opponent pieces are sandwiched', () => {
         // Given a state almost at a sandwich point
@@ -83,7 +83,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 2);
+        ], 3);
 
         // When doing a drop to make a sandwich
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -109,7 +109,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 3);
+        ], 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should support multiple captures', () => {
@@ -134,7 +134,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 2);
+        ], 3);
 
         // When doing a drop to sandwich twice
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -160,7 +160,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 3);
+        ], 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should be ongoing if there are still available spaces and no victory', () => {
