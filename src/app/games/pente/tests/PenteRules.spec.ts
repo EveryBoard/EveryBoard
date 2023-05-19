@@ -8,6 +8,7 @@ import { PenteNode, PenteRules } from "../PenteRules";
 import { PenteState } from "../PenteState";
 
 fdescribe('PenteRules', () => {
+
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -48,7 +49,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 1);
+        ], [0, 0], 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid a drop on an occupied space', () => {
@@ -83,7 +84,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 3);
+        ], [0, 0], 3);
 
         // When doing a drop to make a sandwich
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -109,7 +110,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 4);
+        ], [0, 2], 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should support multiple captures', () => {
@@ -134,7 +135,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 3);
+        ], [0, 0], 3);
 
         // When doing a drop to sandwich twice
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -160,7 +161,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 4);
+        ], [0, 4], 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should be ongoing if there are still available spaces and no victory', () => {
@@ -192,12 +193,39 @@ fdescribe('PenteRules', () => {
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
-        ], 1337);
+        ], [8, 8], 1337);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, minimaxes);
     });
-    it('should detect victory', () => {
+    it('should detect 10 captures victory', () => {
+        // Given a state with 10 captures from a player
+        const state: PenteState = new PenteState([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, X, _, O, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, X, _, _, X, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], [10, 0], 3);
+        const node: PenteNode = new PenteNode(state);
+        // Then it should be a victory for this player
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+    });
+    it('should detect alignment victory', () => {
         // Given a state where zero has aligned 5
         const state: PenteState = new PenteState([
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -219,7 +247,7 @@ fdescribe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 3);
+        ], [0, 0], 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for zero
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);

@@ -44,28 +44,39 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;
-        this.captureIfNeeded(move.coord, newBoard, player);
-        return new PenteState(newBoard, state.turn+1);
+        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, player);
+        for (const captured of capturedPieces) {
+            newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
+        }
+        const captures: [number, number] = [state.captures[0], state.captures[1]];
+        captures[player.value] += capturedPieces.length;
+        return new PenteState(newBoard, captures, state.turn+1);
     }
-    private captureIfNeeded(coord: Coord, board: PlayerOrNone[][], player: Player): void {
+    public getCaptures(coord: Coord, state: PenteState, player: Player): Coord[] {
         const opponent: Player = player.getOpponent();
+        let captures: Coord[] = [];
         for (const direction of Direction.factory.all) {
             const firstCapture: Coord = coord.getNext(direction, 1);
             const secondCapture: Coord = coord.getNext(direction, 2);
             const sandwicher: Coord = coord.getNext(direction, 3);
-            if (PenteMove.isOnBoard(firstCapture) && board[firstCapture.y][firstCapture.x] === opponent &&
-                PenteMove.isOnBoard(secondCapture) && board[secondCapture.y][secondCapture.x] === opponent &&
-                PenteMove.isOnBoard(sandwicher) && board[sandwicher.y][sandwicher.x] === player) {
-                board[firstCapture.y][firstCapture.x] = PlayerOrNone.NONE;
-                board[secondCapture.y][secondCapture.x] = PlayerOrNone.NONE;
+            if (PenteMove.isOnBoard(firstCapture) && state.getPieceAt(firstCapture) === opponent &&
+                PenteMove.isOnBoard(secondCapture) && state.getPieceAt(secondCapture) === opponent &&
+                PenteMove.isOnBoard(sandwicher) && state.getPieceAt(sandwicher) === player) {
+                captures.push(firstCapture);
+                captures.push(secondCapture);
             }
         }
+        return captures;
     }
     public getGameStatus(node: PenteNode): GameStatus {
         const state: PenteState = node.gameState;
+        const opponent: Player = state.getCurrentOpponent();
+        if (state.captures[opponent.value] >= 10) {
+            return GameStatus.getVictory(opponent);
+        }
         const victoriousCoord: Coord[] = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
-            return GameStatus.getVictory(state.getCurrentOpponent());
+            return GameStatus.getVictory(opponent);
         }
         if (this.stillHaveEmptySquare(state)) {
             return GameStatus.ONGOING;
