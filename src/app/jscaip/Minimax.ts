@@ -36,7 +36,7 @@ export abstract class PlayerMetricsMinimax<M extends Move,
                                            S extends GameState,
                                            L = void,
                                            R extends Rules<M, S, L> = Rules<M, S, L>>
-  extends Minimax<M, S, L, BoardValue, R>
+    extends Minimax<M, S, L, BoardValue, R>
 {
   public abstract getMetrics(node: MGPNode<R, M, S, L>): [number, number];
 
@@ -45,8 +45,8 @@ export abstract class PlayerMetricsMinimax<M extends Move,
       if (gameStatus.isEndGame) {
           return BoardValue.fromWinner(gameStatus.winner);
       } else {
-        const metrics: [number, number] = this.getMetrics(node);
-        return BoardValue.from(metrics[0], metrics[1]);
+          const metrics: [number, number] = this.getMetrics(node);
+          return BoardValue.from(metrics[0], metrics[1]);
       }
   }
 }

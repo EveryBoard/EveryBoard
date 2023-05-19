@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { DvonnMinimax } from './DvonnMinimax';
 import { DvonnState } from './DvonnState';
 import { DvonnNode, DvonnRules } from './DvonnRules';
@@ -8,7 +7,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
 import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class MaxStacksDvonnMinimax extends DvonnMinimax {
 

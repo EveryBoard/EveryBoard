@@ -66,7 +66,8 @@ export class GipfMinimax extends PlayerMetricsMinimax<GipfMove, GipfState, GipfL
     }
     public getMetrics(node: GipfNode): [number, number] {
         const state: GipfState = node.gameState;
-        return Player.PLAYERS.map((p: Player) => GipfRules.getPlayerScore(state, p).get()) as [number, number];
+        return [GipfRules.getPlayerScore(state, Player.ZERO).get(),
+                GipfRules.getPlayerScore(state, Player.ONE).get()];
     }
     public getListMoves(node: GipfNode): GipfMove[] {
         return this.getListMoveFromState(node.gameState);

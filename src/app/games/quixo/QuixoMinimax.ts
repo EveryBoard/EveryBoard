@@ -27,6 +27,6 @@ export class QuixoMinimax extends PlayerMetricsMinimax<QuixoMove, QuixoState> {
         const linesSums: { [key: string]: { [key: number]: number[]; }; } = QuixoRules.getLinesSums(state);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        return [zerosFullestLine, onesFullestLine]
+        return [zerosFullestLine, onesFullestLine];
     }
 }

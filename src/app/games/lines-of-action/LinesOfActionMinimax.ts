@@ -1,5 +1,4 @@
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
-import { Player } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';

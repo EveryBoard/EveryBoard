@@ -9,7 +9,8 @@ import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class EncapsuleMinimax extends PlayerMetricsMinimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
+export class EncapsuleMinimax
+    extends PlayerMetricsMinimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
     public getMetrics(_node: EncapsuleNode): [number, number] {
         return [0, 0];

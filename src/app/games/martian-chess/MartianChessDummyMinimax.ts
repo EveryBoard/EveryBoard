@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -131,7 +130,6 @@ export class MartianChessDummyMinimax
         return this.getLandingCoordsForLinearMove(startingCoord, state, 8);
     }
     public getMetrics(node: MartianChessNode): [number, number] {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);
         const oneScore: number = node.gameState.getScoreOf(Player.ONE);
         return [zeroScore, oneScore];
