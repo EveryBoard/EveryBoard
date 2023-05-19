@@ -304,17 +304,16 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.highCapture = MGPOptional.empty();
         this.cancelMoveAttempt();
         if (this.lastMove.isPresent()) {
-            this.showLastMove();
+            this.showLastMove(this.rules.node.move.get());
         } else {
             this.hideLastMove();
         }
     }
-    public showLastMove(): void {
-        const lastMove: PylosMove = this.lastMove.get();
-        this.lastLandingCoord = MGPOptional.of(lastMove.landingCoord);
-        this.lastStartingCoord = lastMove.startingCoord;
-        this.lastFirstCapture = lastMove.firstCapture;
-        this.lastSecondCapture = lastMove.secondCapture;
+    public showLastMove(move: PylosMove): void {
+        this.lastLandingCoord = MGPOptional.of(move.landingCoord);
+        this.lastStartingCoord = move.startingCoord;
+        this.lastFirstCapture = move.firstCapture;
+        this.lastSecondCapture = move.secondCapture;
         if (this.lastFirstCapture.isPresent() &&
             this.mustDrawCoord(this.lastFirstCapture.get()) === false)
         {

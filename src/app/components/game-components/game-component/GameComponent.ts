@@ -134,7 +134,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getPreviousState(): S {
         return this.rules.node.mother.get().gameState;
     }
-    public showLastMove(): void {
+    public showLastMove(move: M): void {
         // Not needed by default
     }
 }

@@ -2296,8 +2296,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('onCancelMove', () => {
-        it('should delegate to gameComponent.showLastMove', fakeAsync(async() => {
-            // Given a any component
+        it('should call gameComponent.showLastMove when there is a move', fakeAsync(async() => {
+            // Given a any component with a previous move
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
+            const component: QuartoComponent = testUtils.getComponent();
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should have been called
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
+            // Given a any component with a previous move
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             const component: QuartoComponent = testUtils.getComponent();
             spyOn(component, 'showLastMove').and.callThrough();
@@ -2306,7 +2320,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+            expect(component.showLastMove).not.toHaveBeenCalled();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });

@@ -76,14 +76,12 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                          FlatHexaOrientation.INSTANCE);
     }
     public updateBoard(): void {
-        this.showLastMove();
         this.cancelMoveAttempt();
     }
-    public showLastMove(): void {
+    public showLastMove(move: GipfMove): void {
         this.inserted = MGPOptional.empty();
-        const lastMove: MGPOptional<GipfMove> = this.rules.node.move;
-        if (lastMove.isPresent() && lastMove.get().placement.direction.isPresent()) {
-            const lastPlacement: GipfPlacement = lastMove.get().placement;
+        if (move.placement.direction.isPresent()) {
+            const lastPlacement: GipfPlacement = move.placement;
             this.inserted = MGPOptional.of(this.arrowTowards(lastPlacement.coord, lastPlacement.direction.get()));
         }
         this.cancelMoveAttempt();

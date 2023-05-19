@@ -66,9 +66,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.hidePreviousMove();
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        }
+        // if (this.rules.node.move.isPresent()) {
+        //     this.showPreviousMove(); // TODO: check if still needed
+        // }
         this.hexaBoard = this.getState().getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
     }
@@ -79,8 +79,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.directions = [];
         this.selecteds = [];
     }
-    private showPreviousMove(): void {
-        const move: AbaloneMove = this.rules.node.move.get();
+    public showLastMove(move: AbaloneMove): void {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {

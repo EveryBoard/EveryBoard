@@ -70,7 +70,7 @@ export class SixComponent
         this.state = node.gameState;
         const lastMove: MGPOptional<SixMove> = this.rules.node.move;
         if (lastMove.isPresent()) {
-            this.showLastMove();
+            this.showLastMove(this.rules.node.move.get());
         } else {
             // For tutorial
             this.leftCoord = MGPOptional.empty();
@@ -86,17 +86,16 @@ export class SixComponent
         const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
         return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH).toSVGString();
     }
-    public showLastMove(): void {
-        const lastMove: SixMove = this.rules.node.move.get();
-        this.lastDrop = MGPOptional.of(lastMove.landing);
-        if (lastMove.isDrop() === false) {
-            this.leftCoord = MGPOptional.of(lastMove.start.get());
+    public showLastMove(move: SixMove): void {
+        this.lastDrop = MGPOptional.of(move.landing);
+        if (move.isDrop() === false) {
+            this.leftCoord = MGPOptional.of(move.start.get());
         } else {
             this.leftCoord = MGPOptional.empty();
         }
         const state: SixState = this.getState();
         if (this.rules.getGameStatus(this.rules.node).isEndGame) {
-            this.victoryCoords = this.rules.getShapeVictory(lastMove, state);
+            this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
         this.disconnecteds = this.getDisconnected();
     }

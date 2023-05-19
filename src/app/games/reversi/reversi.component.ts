@@ -56,17 +56,15 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.board = state.getCopiedBoard();
         this.capturedCoords = [];
 
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        } else {
+        if (this.rules.node.move.isAbsent()) {
             this.lastMove = new Coord(-2, -2);
         }
 
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
-    private showPreviousMove(): void {
-        this.lastMove = this.rules.node.move.get().coord;
+    public showLastMove(move: ReversiMove): void {
+        this.lastMove = move.coord;
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {

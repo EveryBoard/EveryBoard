@@ -48,14 +48,9 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         const state: AwaleState = this.getState();
         this.scores = MGPOptional.of(state.getCapturedCopy());
         this.hidePreviousMove();
-        const lastMove: MGPOptional<AwaleMove> = this.rules.node.move;
 
         this.board = state.getCopiedBoard();
-        if (lastMove.isPresent()) {
-            const lastPlayer: number = state.getCurrentPlayer().value;
-            this.last = MGPOptional.of(new Coord(lastMove.get().x, lastPlayer));
-            this.showPreviousMove();
-        } else {
+        if (this.rules.node.move.isAbsent()) {
             this.last = MGPOptional.empty();
         }
     }
@@ -66,12 +61,13 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         ];
         this.filledCoords = [];
     }
-    private showPreviousMove(): void {
-        const previousMove: AwaleMove = this.rules.node.move.get();
+    public showLastMove(move: AwaleMove): void {
+        const lastPlayer: number = this.getState().getCurrentPlayer().value;
+        this.last = MGPOptional.of(new Coord(move.x, lastPlayer));
         const previousState: AwaleState = this.rules.node.mother.get().gameState;
         const previousBoard: number[][] = ArrayUtils.copyBiArray(previousState.board);
         const previousY: number = previousState.getCurrentOpponent().value;
-        this.filledCoords = AwaleRules.distribute(previousMove.x,
+        this.filledCoords = AwaleRules.distribute(move.x,
                                                   previousY,
                                                   previousBoard);
         const landingCoord: Coord = this.filledCoords[this.filledCoords.length - 1];

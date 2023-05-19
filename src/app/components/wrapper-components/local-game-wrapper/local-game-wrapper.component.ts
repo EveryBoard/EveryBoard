@@ -79,7 +79,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.proposeAIToPlay();
     }
     public updateBoard(): void {
-        this.gameComponent.updateBoard();
+        this.updateBoardAndShowLastMove();
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
@@ -155,7 +155,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (this.isAITurn()) {
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         }
+        this.updateBoardAndShowLastMove();
+    }
+    private updateBoardAndShowLastMove(): void {
         this.gameComponent.updateBoard();
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            const move: Move = this.gameComponent.rules.node.move.get();
+            this.gameComponent.showLastMove(move);
+        }
     }
     private isAITurn(): boolean {
         return this.getPlayingAI().isPresent();
@@ -172,7 +179,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public onCancelMove(reason?: string): void {
         if (this.gameComponent.rules.node.move.isPresent()) {
-            this.gameComponent.showLastMove();
+            const move: Move = this.gameComponent.rules.node.move.get();
+            this.gameComponent.showLastMove(move);
         }
     }
 }

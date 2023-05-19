@@ -140,7 +140,9 @@ export class YinshComponent
             this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
         }
         this.showCurrentMoveCaptures();
-        this.showLastMove();
+        if (this.rules.node.move.isPresent()) {
+            this.showLastMove(this.rules.node.move.get());
+        }
 
         this.viewInfo.targets = [];
         this.viewInfo.selectableCoords = [];
@@ -224,23 +226,19 @@ export class YinshComponent
         this.currentlyMoved = [];
         this.moveToInitialCaptureOrMovePhase();
     }
-    public showLastMove(): void {
-        const moveOptional: MGPOptional<YinshMove> = this.rules.node.move;
-        if (moveOptional.isPresent()) {
-            const move: YinshMove = moveOptional.get();
-            if (move.isInitialPlacement()) {
-                this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
-            } else {
-                for (const coord of this.coordsBetween(move.start, move.end.get())) {
-                    this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['moved-fill'];
-                }
-                const nothingSelectedThisTurn: boolean =
-                    this.currentCapture.isAbsent() &&
-                    this.initialCaptures.length === 0 &&
-                    this.moveStart.isAbsent();
-                move.initialCaptures.forEach((c: YinshCapture) => this.showLastMoveCapture(c, nothingSelectedThisTurn));
-                move.finalCaptures.forEach((c: YinshCapture) => this.showLastMoveCapture(c, nothingSelectedThisTurn));
+    public showLastMove(move: YinshMove): void {
+        if (move.isInitialPlacement()) {
+            this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
+        } else {
+            for (const coord of this.coordsBetween(move.start, move.end.get())) {
+                this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['moved-fill'];
             }
+            const nothingSelectedThisTurn: boolean =
+                this.currentCapture.isAbsent() &&
+                this.initialCaptures.length === 0 &&
+                this.moveStart.isAbsent();
+            move.initialCaptures.forEach((c: YinshCapture) => this.showLastMoveCapture(c, nothingSelectedThisTurn));
+            move.finalCaptures.forEach((c: YinshCapture) => this.showLastMoveCapture(c, nothingSelectedThisTurn));
         }
     }
     private coordsBetween(start: Coord, end: Coord): Coord[] {

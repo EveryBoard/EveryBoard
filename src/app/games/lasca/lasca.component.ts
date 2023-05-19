@@ -82,7 +82,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.board = state.getCopiedBoard();
         this.legalMoves = LascaControlMinimax.getListMoves(this.rules.node);
         this.createAdaptedBoardFrom(state);
-        this.showLastMove();
+        this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();
     }
     private createAdaptedBoardFrom(state: LascaState): void {
@@ -130,25 +130,21 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             squareClasses: [],
         };
     }
-    public showLastMove(): void {
-        if (this.lastMove.isPresent()) {
-            this.showLastCapture();
-            this.showSteppedOnCoord();
-        }
-        this.showPossibleMoves();
+    public showLastMove(move: LascaMove): void {
+        this.showLastCapture(move);
+        this.showSteppedOnCoord(move);
     }
-    private showLastCapture(): void {
-        if (this.lastMove.get().isStep === false) {
-            const jumpedOverCoord: MGPFallible<MGPSet<Coord>> = this.lastMove.get().getCapturedCoords();
+    private showLastCapture(move: LascaMove): void {
+        if (move.isStep === false) {
+            const jumpedOverCoord: MGPFallible<MGPSet<Coord>> = move.getCapturedCoords();
             Utils.assert(jumpedOverCoord.isSuccess(), 'Last move is a capture yet has illegal jumps !?');
             for (const coord of jumpedOverCoord.get()) {
                 this.getSpaceInfoAt(coord).squareClasses.push('captured-fill');
             }
         }
     }
-    private showSteppedOnCoord(): void {
-        const lastMove: LascaMove = this.lastMove.get();
-        for (const steppedCoord of lastMove.coords) {
+    private showSteppedOnCoord(move: LascaMove): void {
+        for (const steppedCoord of move.coords) {
             this.getSpaceInfoAt(steppedCoord).squareClasses.push('moved-fill');
         }
     }
@@ -214,7 +210,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.currentMoveClicks = [];
         this.capturedCoords = [];
         this.createAdaptedBoardFrom(this.getState());
-        this.showLastMove();
+        this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();
     }
     public async moveClick(clicked: Coord): Promise<MGPValidation> {

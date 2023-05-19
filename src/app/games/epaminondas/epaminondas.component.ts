@@ -63,13 +63,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.firstPiece = MGPOptional.empty();
         this.lastPiece = MGPOptional.empty();
         this.hidePreviousMove();
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        }
         this.board = this.getState().getCopiedBoard();
     }
-    private showPreviousMove(): void {
-        const move: EpaminondasMove = this.rules.node.move.get();
+    public showLastMove(move: EpaminondasMove): void {
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {

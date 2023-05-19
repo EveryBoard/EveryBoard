@@ -41,15 +41,12 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');
-        this.lastMove = this.rules.node.move;
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
-        if (this.lastMove.isPresent()) {
-            this.showPreviousMove();
-        }
         this.updateViewInfo();
     }
-    private showPreviousMove(): void {
+    public showLastMove(move: M): void {
+        this.lastMove = MGPOptional.of(move);
         const previousState: S = this.rules.node.mother.get().gameState;
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
