@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';

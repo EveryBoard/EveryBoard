@@ -1,16 +1,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoerceoMinimax } from './CoerceoMinimax';
 import { CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-import { CoerceoNode, CoerceoRules } from './CoerceoRules';
+import { CoerceoNode } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -26,7 +24,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
-        let scores: [number, number] = [0, 0];
+        const scores: [number, number] = [0, 0];
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {

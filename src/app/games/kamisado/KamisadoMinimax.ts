@@ -1,8 +1,6 @@
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoState } from './KamisadoState';
-import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { KamisadoNode, KamisadoRules } from './KamisadoRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 

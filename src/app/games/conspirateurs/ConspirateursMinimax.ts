@@ -92,7 +92,7 @@ export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove
     }
     public getMetrics(node: ConspirateursNode): [number, number] {
         const state: ConspirateursState = node.gameState;
-        let scores: [number, number] = [0, 0];
+        const scores: [number, number] = [0, 0];
         for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);

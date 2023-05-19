@@ -123,8 +123,10 @@ export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityI
         const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
         const goScore: number[] = goState.getCapturedCopy();
         const goKilled: number[] = this.getDeadStones(goState);
-        return [goScore[0] + (2 * goKilled[1]),
-                goScore[1] + (2 * goKilled[0])];
+        return [
+            goScore[0] + (2 * goKilled[1]),
+            goScore[1] + (2 * goKilled[0]),
+        ];
     }
     public getDeadStones(state: GoState): number[] {
         const killed: number[] = [0, 0];
