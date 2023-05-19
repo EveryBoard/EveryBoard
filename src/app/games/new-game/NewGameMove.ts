@@ -1,18 +1,19 @@
 import { Move } from "src/app/jscaip/Move";
 
 /**
-  * This class will describe the moves of your game
-  * If your game's moves simply consist of dropping some piece on some coordinate and nothing else: use MoveCoord
-  * If your game's moves simply consist of moving one coord from one place to another: use MoveCoordToCoord
-  * If your game's moves affect two coordss but don't move one to the other, extends MoveWithTwoCoords
-  * All move must extends the Move mother class
+  * This class represents the moves of your game.
+  * In most cases, your moves into one of the following categories, already implemented by the class of the same name:
+  *   - `MoveCoord`: for moves that consist of selecting only a single space (e.g., dropping a piece on a board)
+  *   - `MoveCoordToCoord`: for moves that consist of moving from one space to another
+  *   - `MoveWithTwoCoords`: for moves that affect two spaces, but are not moves from one to the other.
+  * All move must extends the `Move` parent class
   */
 export class NewGameMove extends Move {
 
     public toString(): string {
-        throw new Error("This method is really more debug oriented");
+        throw new Error('This method is really more debug oriented');
     }
     public equals(other: this): boolean {
-        throw new Error("This method help the minimaxes avoid creating two time the same move, which would slow its calculations");
+        throw new Error('This method helps the minimaxes avoid creating two times the same move, which would slow its calculations');
     }
 }
