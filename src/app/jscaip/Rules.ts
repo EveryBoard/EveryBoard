@@ -3,7 +3,6 @@ import { Move } from './Move';
 import { Type } from '@angular/core';
 import { display } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { Player, PlayerOrNone } from './Player';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';

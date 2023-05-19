@@ -5,8 +5,6 @@ import { GameStatus, Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
-import { Player } from '../Player';
-
 
 class MyAbstractState extends GameStateWithTable<number> {
 
