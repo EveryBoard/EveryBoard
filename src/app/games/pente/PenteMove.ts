@@ -1,0 +1,23 @@
+import { Coord } from "src/app/jscaip/Coord";
+import { MoveCoord } from "src/app/jscaip/MoveCoord";
+import { MoveEncoder } from "src/app/utils/Encoder";
+import { Utils } from "src/app/utils/utils";
+import { PenteState } from "./PenteState";
+
+export class PenteMove extends MoveCoord {
+    public static encoder: MoveEncoder<PenteMove> = MoveCoord.getEncoder(PenteMove.of);
+
+    public static of(coord: Coord): PenteMove {
+        Utils.assert(coord.isInRange(PenteState.SIZE, PenteState.SIZE), 'PenteMove: coord is out of the board');
+        return new PenteMove(coord.x, coord.y);
+    }
+    private constructor(x: number, y: number) {
+        super(x, y);
+    }
+    public toString(): string {
+        return `PenteMove(${this.coord.toString()})`;
+    }
+    public equals(other: this): boolean {
+        return this.coord.equals(other.coord);
+    }
+}
