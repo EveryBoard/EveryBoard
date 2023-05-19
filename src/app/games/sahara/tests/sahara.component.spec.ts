@@ -22,8 +22,7 @@ describe('SaharaComponent', () => {
         testUtils = await ComponentTestUtils.forGame<SaharaComponent>('Sahara');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {

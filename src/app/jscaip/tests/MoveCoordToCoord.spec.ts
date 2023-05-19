@@ -4,6 +4,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
+import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
 
 class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
     public toString(): string {
@@ -14,8 +15,8 @@ class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
     }
 }
 describe('MoveCoordToCoord', () => {
-    function myMoveConstructor(start: Coord, end: Coord): MGPFallible<ConcreteMoveCoordToCoord> {
-        return MGPFallible.success(new ConcreteMoveCoordToCoord(start, end));
+    function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
+        return new ConcreteMoveCoordToCoord(start, end);
     }
 
     describe('getDirection', () => {
@@ -46,7 +47,7 @@ describe('MoveCoordToCoord', () => {
     describe('encoder', () => {
         it('should have a bijective encoder', () => {
             EncoderTestUtils.expectToBeBijective(
-                ConcreteMoveCoordToCoord.getEncoder(myMoveConstructor),
+                MoveWithTwoCoords.getEncoder(myMoveConstructor),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });

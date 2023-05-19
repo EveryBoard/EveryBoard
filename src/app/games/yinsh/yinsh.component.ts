@@ -214,7 +214,7 @@ export class YinshComponent
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.constructedState = this.getState();
         this.possibleCaptures = [];
         this.initialCaptures = [];
@@ -226,7 +226,7 @@ export class YinshComponent
         this.currentlyMoved = [];
         this.moveToInitialCaptureOrMovePhase();
     }
-    public showLastMove(move: YinshMove): void {
+    public override showLastMove(move: YinshMove): void {
         if (move.isInitialPlacement()) {
             this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
         } else {

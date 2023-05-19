@@ -12,7 +12,7 @@ import { assert } from 'src/app/utils/assert';
 
 export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMinimax {
 
-    public getBoardValue(node: TaflNode): BoardValue {
+    public override getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();

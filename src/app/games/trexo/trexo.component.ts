@@ -266,7 +266,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         });
         return potentiallyStartedMove.map((move: TrexoMove) => move.getOne());
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.droppedPiece = MGPOptional.empty();
         this.possibleNextClicks = [];
         this.updateBoard();

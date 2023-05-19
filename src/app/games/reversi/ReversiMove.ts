@@ -1,25 +1,12 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { ReversiState } from './ReversiState';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 
 export class ReversiMove extends MoveCoord {
-    public static encoder: NumberEncoder<ReversiMove> = new class extends NumberEncoder<ReversiMove> {
-        public maxValue(): number {
-            return (ReversiState.BOARD_HEIGHT-1)*ReversiState.BOARD_WIDTH +
-                (ReversiState.BOARD_WIDTH-1);
-        }
-        public encodeNumber(move: ReversiMove): number {
-            return (move.coord.y*ReversiState.BOARD_WIDTH) + move.coord.x;
-        }
-        public decodeNumber(encodedMove: number): ReversiMove {
-            const x: number = encodedMove % ReversiState.BOARD_WIDTH;
-            const y: number = (encodedMove - x) / ReversiState.BOARD_WIDTH;
-            return new ReversiMove(x, y);
-        }
-    };
-    public static readonly PASS: ReversiMove = new ReversiMove(-1, -1);
+    public static encoder: MoveEncoder<ReversiMove> =
+        MoveCoord.getEncoder((c: Coord) => new ReversiMove(c.x, c.y));
 
-    public static readonly PASS_NUMBER: number = ReversiMove.encoder.encodeNumber(ReversiMove.PASS);
+    public static readonly PASS: ReversiMove = new ReversiMove(-1, -1);
 
     public equals(other: ReversiMove): boolean {
         if (other === this) return true;

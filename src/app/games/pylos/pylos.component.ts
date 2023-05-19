@@ -191,7 +191,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.cancelMove();
         return this.chooseMove(move, state);
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.constructedState = this.state;
         this.chosenStartingCoord = MGPOptional.empty();
         this.chosenLandingCoord = MGPOptional.empty();
@@ -309,7 +309,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.hideLastMove();
         }
     }
-    public showLastMove(move: PylosMove): void {
+    public override showLastMove(move: PylosMove): void {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastStartingCoord = move.startingCoord;
         this.lastFirstCapture = move.firstCapture;

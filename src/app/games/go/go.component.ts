@@ -28,8 +28,6 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
-    public canPass: boolean;
-
     public captures: Coord[]= [];
 
     public hoshis: Coord[] = [];
@@ -119,7 +117,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
             }
         }
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         const phase: Phase = this.getState().phase;
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);

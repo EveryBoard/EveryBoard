@@ -18,7 +18,7 @@ export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
             }
         }
     }
-    public add(element: T): boolean {
+    public override add(element: T): boolean {
         const fields: [[number], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let indirection: any = this.valueMap;
@@ -37,7 +37,7 @@ export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
             return false;
         }
     }
-    public contains(element: T): boolean {
+    public override contains(element: T): boolean {
         const fields: [[number], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let indirection: any = this.valueMap;

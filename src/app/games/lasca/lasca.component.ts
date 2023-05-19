@@ -130,7 +130,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             squareClasses: [],
         };
     }
-    public showLastMove(move: LascaMove): void {
+    public override showLastMove(move: LascaMove): void {
         this.showLastCapture(move);
         this.showSteppedOnCoord(move);
     }
@@ -206,7 +206,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.moveClick(clickedCoord);
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.currentMoveClicks = [];
         this.capturedCoords = [];
         this.createAdaptedBoardFrom(this.getState());

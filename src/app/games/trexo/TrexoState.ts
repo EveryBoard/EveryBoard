@@ -100,7 +100,7 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
     public incrementTurn(): TrexoState {
         return new TrexoState(this.getCopiedBoard(), this.turn + 1);
     }
-    public toString(): string {
+    public override toString(): string {
         return this.board.map((list: TrexoPieceStack[]) => {
             return '[' + list.map((space: TrexoPieceStack) => {
                 return 'TrexoPieceStack.from(' + space.toString() + ')';

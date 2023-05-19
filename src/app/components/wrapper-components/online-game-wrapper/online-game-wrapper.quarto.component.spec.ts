@@ -27,7 +27,7 @@ import { FirestoreTime } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Utils } from 'src/app/utils/utils';
+import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
@@ -193,11 +193,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
 
-    const FIRST_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(FIRST_MOVE);
+    const FIRST_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(FIRST_MOVE);
 
-    const SECOND_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(SECOND_MOVE);
+    const SECOND_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(SECOND_MOVE);
 
-    const THIRD_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(THIRD_MOVE);
+    const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
@@ -231,7 +231,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function refuseTakeBack(): Promise<void> {
         return await testUtils.clickElement('#refuseTakeBackButton');
     }
-    async function receiveNewMoves(moves: number[],
+    async function receiveNewMoves(moves: JSONValueWithoutArray[],
                                    lastIndex: number,
                                    remainingMsForZero: number,
                                    remainingMsForOne: number,
@@ -271,21 +271,21 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             authUser = UserMocks.CREATOR_AUTH_USER;
         }
         await prepareTestUtilsFor(authUser);
-        const receivedMoves: number[] = [];
+        const receivedMoves: JSONValueWithoutArray[] = [];
         let remainingMsForZero: number = 1800 * 1000;
         let remainingMsForOne: number = 1800 * 1000;
         let offset: number = 0;
         if (player === Player.ONE) {
             offset = 1;
             const firstMove: QuartoMove = moves[0];
-            const encodedMove: number = QuartoMove.encoder.encodeNumber(firstMove);
+            const encodedMove: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(firstMove);
             receivedMoves.push(encodedMove);
             await receiveNewMoves(receivedMoves, 1, remainingMsForZero, remainingMsForOne);
         }
         for (let i: number = offset; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
-            receivedMoves.push(QuartoMove.encoder.encodeNumber(move), QuartoMove.encoder.encodeNumber(moves[i + 1]));
+            receivedMoves.push(QuartoMove.encoder.encodeMove(move), QuartoMove.encoder.encodeMove(moves[i + 1]));
             if (i > 1) {
                 if (i % 2 === 0) {
                     remainingMsForOne -= 1;
@@ -303,7 +303,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.chronoOneTurn.isIdle()).withContext('chrono one turn should be idle').toBeTrue();
         expect(wrapper.endGame).toBeTrue();
     }
-    async function prepareStartedGameWithMoves(encodedMoves: number[]): Promise<void> {
+    async function prepareStartedGameWithMoves(encodedMoves: JSONValueWithoutArray[]): Promise<void> {
         // 1. Creating the mocks and testUtils but NOT component
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
@@ -341,10 +341,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         let offset: number = 0;
         let remainingMsForZero: number = Utils.getNonNullable(update.remainingMsForZero);
         let remainingMsForOne: number = Utils.getNonNullable(update.remainingMsForOne);
-        const receivedMoves: number[] = [];
+        const receivedMoves: JSONValueWithoutArray[] = [];
         if (role === Player.ONE) {
             offset = 1;
-            const encodedMove: number = encodedMoves[0];
+            const encodedMove: JSONValueWithoutArray = encodedMoves[0];
             receivedMoves.push(encodedMove);
             await receiveNewMoves(receivedMoves, 1, remainingMsForZero, remainingMsForOne, false);
         }
@@ -426,10 +426,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Receive second move
         const remainingMsForZero: number = Utils.getNonNullable(wrapper.currentPart?.data.remainingMsForZero);
         const remainingMsForOne: number = Utils.getNonNullable(wrapper.currentPart?.data.remainingMsForOne);
-        await receiveNewMoves([FIRST_MOVE_ENCODED, 166], 2, remainingMsForZero, remainingMsForOne);
+        await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, remainingMsForZero, remainingMsForOne);
 
         expect(wrapper.currentPart?.data.turn).toEqual(2);
-        expect(wrapper.currentPart?.data.listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
+        expect(wrapper.currentPart?.data.listMoves).toEqual([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED]);
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
     describe('Late Arrival', () => {
@@ -527,7 +527,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Do second move
         const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBA);
         await doMove(move, true);
-        const expectedListMove: number[] = [FIRST_MOVE_ENCODED, QuartoMove.encoder.encodeNumber(move)];
+        const expectedListMove: JSONValueWithoutArray[] = [FIRST_MOVE_ENCODED, QuartoMove.encoder.encodeMove(move)];
         expect(wrapper.currentPart?.data.listMoves).toEqual(expectedListMove);
         expect(wrapper.currentPart?.data.turn).toEqual(2);
 
@@ -537,13 +537,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         spyOn(partDAO, 'update').and.callThrough();
         await doMove(FIRST_MOVE, true);
-        expect(wrapper.currentPart?.data.listMoves).toEqual([QuartoMove.encoder.encodeNumber(FIRST_MOVE)]);
+        expect(wrapper.currentPart?.data.listMoves).toEqual([QuartoMove.encoder.encodeMove(FIRST_MOVE)]);
         const expectedUpdate: Partial<Part> = {
             lastUpdate: {
                 index: 2,
                 player: role.value,
             },
-            listMoves: [QuartoMove.encoder.encodeNumber(FIRST_MOVE)],
+            listMoves: [QuartoMove.encoder.encodeMove(FIRST_MOVE)],
             turn: 1,
             // remaining times not updated on first turn of the component
             request: null,
@@ -1107,7 +1107,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When playing alernative move
                 spyOn(partDAO, 'update').and.callThrough();
                 const ALTERNATIVE_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
+                const ALTERNATIVE_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(ALTERNATIVE_MOVE);
                 await doMove(ALTERNATIVE_MOVE, true);
 
                 // Then partDAO should be updated without including remainingMsFor(any)
@@ -1169,7 +1169,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When playing alernative move
                 spyOn(partDAO, 'update').and.callThrough();
                 const ALTERNATIVE_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
+                const ALTERNATIVE_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(ALTERNATIVE_MOVE);
                 await doMove(ALTERNATIVE_MOVE, true);
 
                 // Then partDAO should be updated without including remainingMsFor(any)

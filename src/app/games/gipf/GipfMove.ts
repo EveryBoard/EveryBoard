@@ -12,12 +12,12 @@ export class GipfCapture {
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
         public encode(capture: GipfCapture): JSONValue {
             return capture.capturedSpaces.map((coord: Coord): JSONValueWithoutArray => {
-                return Coord.encoder.encode(coord) as JSONValueWithoutArray;
+                return Coord.encoder.encodeMove(coord);
             });
         }
         public decode(encoded: JSONValue): GipfCapture {
             const casted: Array<JSONValue> = encoded as Array<JSONValue>;
-            return new GipfCapture(casted.map(Coord.encoder.decode));
+            return new GipfCapture(casted.map(Coord.encoder.decodeMove));
         }
     };
 

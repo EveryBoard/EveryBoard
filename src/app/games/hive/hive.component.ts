@@ -167,7 +167,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (stackSize-1 in this.layers === false) return;
         this.layers[stackSize-1].highlight(coord, stroke);
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(HiveMove.PASS, this.getState());
     }
@@ -236,7 +236,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.ground.clearHighlights();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.clearHighlights();
         this.selectedStart = MGPOptional.empty();
         this.selectedRemaining = MGPOptional.empty();
@@ -247,7 +247,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.computeViewBox();
     }
-    public showLastMove(move: HiveMove): void {
+    public override showLastMove(move: HiveMove): void {
         for (const coord of this.getLastMoveCoords(move)) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');

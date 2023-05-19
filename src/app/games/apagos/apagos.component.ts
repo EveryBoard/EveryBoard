@@ -84,7 +84,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
         this.updateBoard();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
@@ -106,7 +106,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    public showLastMove(move: ApagosMove): void {
+    public override showLastMove(move: ApagosMove): void {
         if (move.isDrop()) {
             this.showLastDrop(move);
         } else {

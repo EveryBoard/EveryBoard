@@ -23,7 +23,7 @@ import { Player } from 'src/app/jscaip/Player';
 })
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     public aiDepths: [string, string] = ['0', '0'];
 

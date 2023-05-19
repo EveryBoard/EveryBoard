@@ -24,7 +24,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
 
     @ViewChild('board', { read: ViewContainerRef })
 
-    public boardRef: ViewContainerRef | null = null;
+    public override boardRef: ViewContainerRef | null = null;
 
     public constructor(componentFactoryResolver: ComponentFactoryResolver,
                        actRoute: ActivatedRoute,

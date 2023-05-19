@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 
 describe('DvonnPieceStack', () => {
@@ -8,17 +9,13 @@ describe('DvonnPieceStack', () => {
     const stack2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
     const stack4: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 4, true);
     const stack8: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 8, true);
+    const bigStack: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 49, true);
 
     describe('encoder', () => {
-        it('should properly encode and decode stacks of various lengths', () => {
-            expect(DvonnPieceStack.encoder.decode(stack1.getValue())).toEqual(stack1);
-            expect(DvonnPieceStack.encoder.decode(stack2.getValue())).toEqual(stack2);
-            expect(DvonnPieceStack.encoder.decode(stack4.getValue())).toEqual(stack4);
-            expect(DvonnPieceStack.encoder.decode(stack8.getValue())).toEqual(stack8);
-        });
-        it('should encode big piece smaller than maxValue', () => {
-            const bigStack: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 49, true);
-            expect(bigStack.getValue()).toBeLessThan(DvonnPieceStack.encoder.maxValue());
+        it('should be bijective', () => {
+            for (const stack of [stack1, stack2, stack4, stack8, bigStack]) {
+                EncoderTestUtils.expectToBeBijective(DvonnPieceStack.encoder, stack);
+            }
         });
     });
     describe('append', () => {

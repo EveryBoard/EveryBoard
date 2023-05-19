@@ -6,7 +6,7 @@ import { TaflMove } from '../TaflMove';
 
 export class TablutMove extends TaflMove {
 
-    public static encoder: MoveEncoder<TablutMove> = MoveWithTwoCoords.getEncoder<TablutMove>(TablutMove.from);
+    public static encoder: MoveEncoder<TablutMove> = MoveWithTwoCoords.getFallibleEncoder<TablutMove>(TablutMove.from);
 
     public static of(start: Coord, end: Coord): TablutMove {
         return new TablutMove(start, end);

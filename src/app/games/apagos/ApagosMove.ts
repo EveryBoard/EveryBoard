@@ -1,12 +1,13 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
+
+type ApagosMoveFields = [ApagosCoord, MGPOptional<Player>, MGPOptional<ApagosCoord>]
 
 export class ApagosMove extends Move {
 
@@ -26,22 +27,11 @@ export class ApagosMove extends Move {
         new ApagosMove(ApagosCoord.ZERO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.TWO)),
         new ApagosMove(ApagosCoord.ZERO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.ONE)),
     ];
-    public static encoder: NumberEncoder<ApagosMove> = new class extends NumberEncoder<ApagosMove> {
+    public static encoder: MoveEncoder<ApagosMove> = MoveEncoder.tuple(
+        [ApagosCoord.encoder, MGPOptional.getEncoder(Player.encoder), MGPOptional.getEncoder(ApagosCoord.encoder)],
+        (m: ApagosMove): ApagosMoveFields => [m.landing, m.piece, m.starting],
+        (fields: ApagosMoveFields): ApagosMove => new ApagosMove(fields[0], fields[1], fields[2]));
 
-        public maxValue(): number {
-            return ApagosMove.ALL_MOVES.length;
-        }
-        public encodeNumber(move: ApagosMove): number {
-            const moveIndex: number = ApagosMove.ALL_MOVES.findIndex((m: ApagosMove) => m.equals(move));
-            assert(moveIndex >= 0, move.toString() + ' is not part of possibles moves of Apagos!');
-            return moveIndex;
-        }
-        public decodeNumber(encodedMove: number): ApagosMove {
-            assert(encodedMove < ApagosMove.ALL_MOVES.length, encodedMove + ' is not a valid encoded number for ApagosMove decoder');
-            const move: ApagosMove = ApagosMove.ALL_MOVES[encodedMove];
-            return move;
-        }
-    };
     public static drop(coord: ApagosCoord, piece: Player): ApagosMove {
         const drop: ApagosMove = Utils.getNonNullable(
             ApagosMove.ALL_MOVES.find((move: ApagosMove) => {

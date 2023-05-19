@@ -43,7 +43,7 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
             this.showLastMove(this.rules.node.move.get()); // TODO: check if still needed
         }
     }
-    public showLastMove(move: ConnectSixMove): void {
+    public override showLastMove(move: ConnectSixMove): void {
         if (move instanceof ConnectSixFirstMove) {
             this.lastMoved = [move.coord];
         } else {
@@ -93,7 +93,7 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
         }
         return classes;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.droppedCoord = MGPOptional.empty();
     }
 }

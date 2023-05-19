@@ -78,7 +78,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     public updateBoard(): void {
         this.cancelMoveAttempt();
     }
-    public showLastMove(move: GipfMove): void {
+    public override showLastMove(move: GipfMove): void {
         this.inserted = MGPOptional.empty();
         if (move.placement.direction.isPresent()) {
             const lastPlacement: GipfPlacement = move.placement;
@@ -253,7 +253,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
         return validity;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.constructedState = this.getState();
         this.captured = [];
         this.moved = [];

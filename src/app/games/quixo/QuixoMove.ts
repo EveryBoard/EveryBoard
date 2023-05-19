@@ -1,29 +1,17 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { QuixoFailure } from './QuixoFailure';
 
 export class QuixoMove extends MoveCoord {
-    public static encoder: NumberEncoder<QuixoMove> = new class extends NumberEncoder<QuixoMove> {
-        public maxValue(): number {
-            return 8 + 5 * 4 + 5 * 20;
-        }
-        public encodeNumber(move: QuixoMove): number {
-            const dir: number = move.direction.toInt();
-            const y: number = move.coord.y * 4;
-            const x: number = move.coord.x * 20;
-            return x + y + dir;
-        }
-        public decodeNumber(encodedMove: number): QuixoMove {
-            const direction: Orthogonal = Orthogonal.factory.fromInt(encodedMove % 4).get();
-            encodedMove -= encodedMove % 4; encodedMove /= 4;
-            const y: number = encodedMove % 5;
-            encodedMove -= encodedMove % 5; encodedMove /= 5;
-            return new QuixoMove(encodedMove, y, direction);
-        }
-    };
+
+    public static encoder: MoveEncoder<QuixoMove> = MoveEncoder.tuple(
+        [Coord.encoder, Orthogonal.encoder],
+        (m: QuixoMove): [Coord, Orthogonal] => [m.coord, m.direction],
+        (fields: [Coord, Orthogonal]): QuixoMove => new QuixoMove(fields[0].x, fields[0].y, fields[1]));
+
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(5, 5);
     }

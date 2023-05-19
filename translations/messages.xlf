@@ -1158,6 +1158,9 @@
       <trans-unit id="8101145555087657570" datatype="html">
         <source>The stack must land on an occupied space.</source>
       </trans-unit>
+      <trans-unit id="9221962864929282978" datatype="html">
+        <source>A stack must move in a straight line.</source>
+      </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
       </trans-unit>

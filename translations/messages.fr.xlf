@@ -1549,6 +1549,10 @@
         <source>The stack must land on an occupied space.</source>
         <target>Le déplacement doit se terminer sur une case occupée.</target>
       </trans-unit>
+      <trans-unit id="9221962864929282978" datatype="html">
+        <source>A stack must move in a straight line.</source>
+        <target>Une pile doit se déplacer en ligne droite.</target>
+      </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
         <target>Déplacement</target>

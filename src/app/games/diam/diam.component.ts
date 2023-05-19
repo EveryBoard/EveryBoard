@@ -239,7 +239,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             };
         }
     }
-    public showLastMove(move: DiamMove): void {
+    public override showLastMove(move: DiamMove): void {
         this.showLastMoveOnSpaces(move);
         this.showLastMoveOnPieces(move);
     }
@@ -382,7 +382,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     private getDrawPositionOnBoard(x: number, y: number): Coord {
         return DiamComponent.CENTER[x].getNext(new Vector(0, -y * DiamComponent.PIECE_HEIGHT));
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selected = MGPOptional.empty();
         this.updateBoard();
     }

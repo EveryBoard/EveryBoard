@@ -67,7 +67,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             this.hidePreviousMove();
         }
     }
-    public showLastMove(move: PentagoMove): void {
+    public override showLastMove(move: PentagoMove): void {
         this.cancelMoveAttempt();
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
@@ -150,7 +150,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             { path: path7, blockIndex: 3, clockwise: false },
         ];
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.arrows = [];
         this.currentDrop = MGPOptional.empty();
         this.canSkipRotation = false;
