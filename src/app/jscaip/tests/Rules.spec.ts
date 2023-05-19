@@ -5,6 +5,7 @@ import { GameStatus, Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
+import { Player } from '../Player';
 
 
 class MyAbstractState extends GameStateWithTable<number> {
@@ -29,6 +30,15 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         return GameStatus.ONGOING;
     }
 }
+
+describe('GameStatus', () => {
+    it('should be convertible to BoardValue', () => {
+        expect(GameStatus.ZERO_WON.toBoardValue().value).toBe(Player.ZERO.getVictoryValue());
+        expect(GameStatus.ONE_WON.toBoardValue().value).toBe(Player.ONE.getVictoryValue());
+        expect(GameStatus.DRAW.toBoardValue().value).toBe(0);
+        expect(GameStatus.ONGOING.toBoardValue().value).toBe(0);
+    });
+});
 
 describe('Rules', () => {
 

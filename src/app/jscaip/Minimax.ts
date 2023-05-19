@@ -38,6 +38,12 @@ export abstract class PlayerMetricsMinimax<M extends Move,
                                            R extends Rules<M, S, L> = Rules<M, S, L>>
     extends Minimax<M, S, L, BoardValue, R>
 {
+
+  /**
+   * Assigns a metric for each player, as [player0, player1].
+   * A metric is just a number that the minimax will try to maximize.
+   * It can be positive, negative, or zero.
+   */
   public abstract getMetrics(node: MGPNode<R, M, S, L>): [number, number];
 
   public getBoardValue(node: MGPNode<R, M, S, L>): BoardValue {
