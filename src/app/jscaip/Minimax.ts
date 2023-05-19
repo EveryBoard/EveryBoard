@@ -15,6 +15,7 @@ export abstract class Minimax<M extends Move,
                        public readonly name: string) {
     }
     /**
+     * Gives the list of all the possible moves.
      * Has to be implemented for each rule so that the AI can choose among theses moves.
      * This function could give an incomplete set of data if some of them are redundant
      * or if some of them are too bad to be interesting to count, as a matter of performance.
@@ -22,6 +23,7 @@ export abstract class Minimax<M extends Move,
     public abstract getListMoves(node: MGPNode<R, M, S, L>): M[];
 
     /**
+     * Assigns a value to a game state.
      * Used to give a comparable data type linked to the current GameState
      * so that the AI can know which state is better
      */
@@ -41,8 +43,8 @@ export abstract class PlayerMetricsMinimax<M extends Move,
 
   /**
    * Assigns a metric for each player, as [player0, player1].
-   * A metric is just a number that the minimax will try to maximize.
-   * It can be positive, negative, or zero.
+   * A metric is just a number that the minimax will try to maximize for each player.
+   * It can be positive, negative, or zero. In general, both numbers will be positive.
    */
   public abstract getMetrics(node: MGPNode<R, M, S, L>): [number, number];
 
