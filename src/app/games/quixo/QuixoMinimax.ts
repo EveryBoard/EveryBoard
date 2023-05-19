@@ -3,11 +3,10 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { QuixoNode, QuixoRules } from './QuixoRules';
 
-export class QuixoMinimax extends Minimax<QuixoMove, QuixoState> {
+export class QuixoMinimax extends PlayerMetricsMinimax<QuixoMove, QuixoState> {
 
     public getListMoves(node: QuixoNode): QuixoMove[] {
         const moves: QuixoMove[] = [];
@@ -23,20 +22,11 @@ export class QuixoMinimax extends Minimax<QuixoMove, QuixoState> {
         }
         return moves;
     }
-    public getBoardValue(node: QuixoNode): BoardValue {
+    public getMetrics(node: QuixoNode): [number, number] {
         const state: QuixoState = node.gameState;
         const linesSums: { [key: string]: { [key: number]: number[]; }; } = QuixoRules.getLinesSums(state);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = state.getCurrentPlayer();
-        if (zerosFullestLine === 5) {
-            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                return new BoardValue(Player.ZERO.getVictoryValue());
-            }
-        }
-        if (onesFullestLine === 5) {
-            return new BoardValue(Player.ONE.getVictoryValue());
-        }
-        return new BoardValue(onesFullestLine - zerosFullestLine);
+        return [zerosFullestLine, onesFullestLine]
     }
 }

@@ -1,12 +1,10 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { ApagosMove } from './ApagosMove';
 import { ApagosNode, ApagosRules } from './ApagosRules';
 import { ApagosState } from './ApagosState';
 
-export class ApagosDummyMinimax extends Minimax<ApagosMove, ApagosState> {
+export class ApagosDummyMinimax extends PlayerMetricsMinimax<ApagosMove, ApagosState> {
 
     public getListMoves(node: ApagosNode): ApagosMove[] {
         const state: ApagosState = node.gameState;
@@ -15,16 +13,12 @@ export class ApagosDummyMinimax extends Minimax<ApagosMove, ApagosState> {
         }
         return ApagosMove.ALL_MOVES.filter(isLegal);
     }
-    public getBoardValue(node: ApagosNode): BoardValue {
-        const gameStatus: GameStatus = ApagosRules.get().getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return BoardValue.fromWinner(gameStatus.winner);
-        }
+    public getMetrics(node: ApagosNode): [number, number] {
         const levelThreeDominant: PlayerOrNone = node.gameState.board[3].getDominatingPlayer();
+        const metrics: [number, number] = [0, 0];
         if (levelThreeDominant.isPlayer()) {
-            return new BoardValue(levelThreeDominant.getScoreModifier());
-        } else {
-            return new BoardValue(0);
+            metrics[levelThreeDominant.value] = 1;
         }
+        return metrics;
     }
 }

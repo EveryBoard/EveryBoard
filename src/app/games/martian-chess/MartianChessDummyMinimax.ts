@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
@@ -11,7 +11,8 @@ import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
-export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
+export class MartianChessDummyMinimax
+    extends PlayerMetricsMinimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
     public constructor(ruler: MartianChessRules, name: string) {
         super(ruler, name);
@@ -129,16 +130,10 @@ export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianC
     private getLandingCoordsForQueen(startingCoord: Coord, state: MartianChessState): Coord[] {
         return this.getLandingCoordsForLinearMove(startingCoord, state, 8);
     }
-    public getBoardValue(node: MartianChessNode): BoardValue {
+    public getMetrics(node: MartianChessNode): [number, number] {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
-        let score: number;
-        if (gameStatus.isEndGame) {
-            score = gameStatus.toBoardValue().value;
-        } else {
-            const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);
-            const oneScore: number = node.gameState.getScoreOf(Player.ONE);
-            score = oneScore - zeroScore;
-        }
-        return new BoardValue(score);
+        const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);
+        const oneScore: number = node.gameState.getScoreOf(Player.ONE);
+        return [zeroScore, oneScore];
     }
 }

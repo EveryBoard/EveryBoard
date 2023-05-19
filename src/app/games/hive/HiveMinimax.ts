@@ -1,8 +1,6 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveMove, HiveMoveCoordToCoord } from './HiveMove';
@@ -10,7 +8,7 @@ import { HivePiece } from './HivePiece';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 
-export class HiveMinimax extends Minimax<HiveMove, HiveState> {
+export class HiveMinimax extends PlayerMetricsMinimax<HiveMove, HiveState> {
 
     public getListMoves(node: HiveNode): HiveMove[] {
         const dropMoves: HiveMove[] = this.getListDrops(node.gameState);
@@ -39,15 +37,11 @@ export class HiveMinimax extends Minimax<HiveMove, HiveState> {
         }
         return drops;
     }
-    public getBoardValue(node: HiveNode): BoardValue {
+    public getMetrics(node: HiveNode): [number, number] {
         // The board value is based on the number of neighbors to the queen
-        const status: GameStatus = HiveRules.get().getGameStatus(node);
-        if (status !== GameStatus.ONGOING) {
-            return status.toBoardValue();
-        }
         const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
         const scoreOne: number = this.queenBeeMobility(node.gameState, Player.ONE);
-        return BoardValue.from(scoreZero, scoreOne);
+        return [scoreZero, scoreOne];
     }
     private queenBeeMobility(state: HiveState, player: Player): number {
         const queenBee: MGPOptional<Coord> = state.queenBeeLocation(player);

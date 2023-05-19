@@ -21,27 +21,23 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
     public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
 
-    public override getBoardValue(node: CoerceoNode): BoardValue {
-        const gameStatus: GameStatus = CoerceoRules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return BoardValue.fromWinner(gameStatus.winner);
-        }
+    public override getMetrics(node: CoerceoNode): [number, number] {
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
-        let score: number = 0;
+        let scores: [number, number] = [0, 0];
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    score += owner.getScoreModifier() * CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE;
+                    scores[owner.value] += CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE;
                 } else {
-                    score += owner.getScoreModifier() * CoerceoPiecesThreatTilesMinimax.SCORE_BY_SAFE_PIECE;
+                    scores[owner.value] += CoerceoPiecesThreatTilesMinimax.SCORE_BY_SAFE_PIECE;
                 }
             }
+            scores[owner.value] += state.tiles[owner.value];
         }
-        score += state.tiles[1] - state.tiles[0];
-        return new BoardValue(score);
+        return scores;
     }
     public getPiecesMap(state: CoerceoState): MGPMap<Player, MGPSet<Coord>> {
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();

@@ -1,13 +1,11 @@
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { GipfRules, GipfNode, GipfLegalityInformation } from './GipfRules';
 
-export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInformation> {
+export class GipfMinimax extends PlayerMetricsMinimax<GipfMove, GipfState, GipfLegalityInformation> {
     public static getPossibleCaptureCombinationsFromPossibleCaptures(
         possibleCaptures: GipfCapture[],
     ): Table<GipfCapture> {
@@ -66,18 +64,9 @@ export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInform
         });
         return intersections;
     }
-
-    public getBoardValue(node: GipfNode): BoardValue {
+    public getMetrics(node: GipfNode): [number, number] {
         const state: GipfState = node.gameState;
-        const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
-        const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
-        if (score0.isAbsent()) {
-            return new BoardValue(Player.ONE.getVictoryValue());
-        } else if (score1.isAbsent()) {
-            return new BoardValue(Player.ZERO.getVictoryValue());
-        } else {
-            return new BoardValue(score0.get() - score1.get());
-        }
+        return Player.PLAYERS.map((p: Player) => GipfRules.getPlayerScore(state, p).get()) as [number, number];
     }
     public getListMoves(node: GipfNode): GipfMove[] {
         return this.getListMoveFromState(node.gameState);

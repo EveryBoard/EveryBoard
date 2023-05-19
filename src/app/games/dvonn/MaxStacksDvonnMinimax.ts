@@ -28,22 +28,17 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
         });
         return moves;
     }
-    public override getBoardValue(node: DvonnNode): BoardValue {
-        const gameStatus: GameStatus = DvonnRules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
+    public override getMetrics(node: DvonnNode): [number, number] {
         const state: DvonnState = node.gameState;
-        // Board value is percentage of the stacks controlled by the player
-        const scores: number[] = DvonnRules.getScores(state);
+        // The metric is percentage of the stacks controlled by the player
+        const scores: [number, number] = DvonnRules.getScores(state);
         const pieces: Coord[] = state.getAllPieces();
         const numberOfStacks: number = pieces.length;
-        const player0Stacks: number = pieces.filter((c: Coord): boolean =>
-            state.getPieceAt(c).belongsTo(Player.ZERO)).length;
-        const player1Stacks: number = pieces.filter((c: Coord): boolean =>
-            state.getPieceAt(c).belongsTo(Player.ONE)).length;
-        const zeroControlled: number = player0Stacks * scores[0];
-        const oneControlled: number = player1Stacks * scores[1];
-        return new BoardValue((oneControlled - zeroControlled) / numberOfStacks);
+        for (const player of Player.PLAYERS) {
+            const playerStacks: number = pieces.filter((c: Coord): boolean =>
+                state.getPieceAt(c).belongsTo(player)).length;
+            scores[player.value] = scores[player.value] * playerStacks / numberOfStacks;
+        }
+        return scores;
     }
 }

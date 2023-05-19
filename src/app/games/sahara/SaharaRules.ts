@@ -21,7 +21,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public static VERBOSE: boolean = false;
 
-    public static getStartingCoords(board: FourStatePiece[][], player: Player): Coord[] {
+    public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
         for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
             for (let x: number = 0; x < SaharaState.WIDTH; x++) {
@@ -32,7 +32,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return startingCoords;
     }
-    public static getBoardValuesFor(board: FourStatePiece[][], player: Player): number[] {
+    public static getBoardValuesFor(board: Table<FourStatePiece>, player: Player): number[] {
         const playersPiece: Coord[] = SaharaRules.getStartingCoords(board, player);
         const playerFreedoms: number[] = [];
         for (const piece of playersPiece) {

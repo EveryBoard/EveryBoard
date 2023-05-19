@@ -28,9 +28,9 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
             return new BoardValue(defender.getOpponent().getPreVictory());
         }
         const maxControl: number = this.getScoreByThreatenedPiece(state);
-        assert(metrics.controlScore <= maxControl, 'Control Score should be bellow ' + maxControl + ', got ' + metrics.controlScore);
-        assert(metrics.threatenedScore <= 16, 'Threatened Score should be bellow 16, got ' + metrics.threatenedScore);
-        assert(metrics.safeScore <= 16, 'Safe Score should be bellow 16, got ' + metrics.threatenedScore);
+        assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
+        assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
+        assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
         return new BoardValue((-1 * stepForEscape * (maxControl + 1) * 17 * 17) +
                               (metrics.safeScore * (maxControl + 1) * 17) +
                               (metrics.threatenedScore * (maxControl + 1)) +
