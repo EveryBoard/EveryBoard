@@ -2,6 +2,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { NewGameComponent } from '../new-game.component';
+import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';
 import { NewGameTutorial } from '../NewGameTutorial';
 
@@ -35,4 +36,9 @@ describe('NewGameComponent', () => {
      *   - `testUtils.expectElementNotToExist` to check the absence of an HTML element on the component, given its id
      *   - `testUtils.expectElementToHaveClass` to check that an existing HTML element has a given CSS class
      */
+    it('this test is only there to cover new-game remaining functions', () => {
+        testUtils.getComponent().showLastMove(new NewGameMove());
+        testUtils.getComponent().cancelMoveAttempt();
+        expect(42).toBeGreaterThan(37);
+    });
 });

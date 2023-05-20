@@ -1,10 +1,11 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 /**
  * This class is optional.
