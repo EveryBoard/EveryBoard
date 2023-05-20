@@ -19,7 +19,7 @@ export abstract class GobanGameComponent<R extends Rules<M, S, L>,
                                          L = void>
     extends RectangularGameComponent<R, M, S, P, L>
 {
-    public hoshis: Coord[] = []
+    public hoshis: Coord[] = [];
     /**
      * Creates the hoshis, filling in the `hoshis` field with the hoshis based on the board size.
      * Must be called after `this.board` has been set, usually in `updateBoard`.

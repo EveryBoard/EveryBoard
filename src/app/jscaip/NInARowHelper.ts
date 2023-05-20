@@ -17,7 +17,6 @@ export class NInARowHelper<T> {
     }
     public getBoardValue(state: GameStateWithTable<T>): BoardValue {
         let score: number = 0;
-        let coord: Coord = new Coord(0, 0);
         state.forEachCoord((coord: Coord, piece: T) => {
             if (this.getOwner(piece, state).isPlayer()) {
                 score += this.getSquareScore(state, coord);
