@@ -18,16 +18,11 @@ export class NInARowHelper<T> {
     public getBoardValue(state: GameStateWithTable<T>): BoardValue {
         let score: number = 0;
         let coord: Coord = new Coord(0, 0);
-        while (this.isInRange(coord)) {
-            while (this.isInRange(coord)) {
-                const piece: T = state.getPieceAt(coord);
-                if (this.getOwner(piece, state).isPlayer()) {
-                    score += this.getSquareScore(state, coord);
-                }
-                coord = new Coord(coord.x+1, coord.y);
+        state.forEachCoord((coord: Coord, piece: T) => {
+            if (this.getOwner(piece, state).isPlayer()) {
+                score += this.getSquareScore(state, coord);
             }
-            coord = new Coord(0, coord.y+1);
-        }
+        });
         return new BoardValue(score);
     }
     public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {

@@ -234,9 +234,9 @@
         <source>Drop a piece, then rotate a quadrant. The first player to align 5 pieces wins!</source>
         <target>Posez une pièces, ensuite tournez un quadrant. Le premier à aligner 5 pièces gagne !</target>
       </trans-unit>
-      <trans-unit id="2111585733242709344" datatype="html">
-        <source>You can align 5 pieces to win, but you can instead capture 10 pieces of your opponent to win!</source>
-        <target>Vous pouvez aligner 5 pièces pour gagner, mais vous pouvez aussi gagner en capturant 10 pièces de votre adversaire !</target>
+      <trans-unit id="3362876946788995618" datatype="html">
+        <source>You can align 5 pieces to win, or you can capture 10 pieces of your opponent to win!</source>
+        <target>Vous pouvez aligner 5 pièces pour gagner, ou vous pouvez aussi gagner en capturant 10 pièces de votre adversaire !</target>
       </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
@@ -3099,6 +3099,14 @@
       <trans-unit id="6622643035593861381" datatype="html">
         <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
         <target>Vous pouvez capturer exactement deux pièces de votre adversaire en les prenant en sandwich entre deux de vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair et pouvez capturer, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="5697357351132552791" datatype="html">
+        <source>Placing in a sandwich position</source>
+        <target>Placer en position de sandwich</target>
+      </trans-unit>
+      <trans-unit id="4745154919636452326" datatype="html">
+        <source>You can safely place a piece next to another of your piece in what would look like a sandwich from the opponent&apos;s pieces. This is a safe move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and have the opportunity to do such a move here, do it!</source>
+        <target>Vous pouvez placer une de vos pièces à côté d'une autre de vos pièces, là où elle serait en sandwich entre deux pièces adverses. C'est un mouvement sûr.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair et avez la possibilité de faire un tel mouvement, faites-le !</target>
       </trans-unit>
       <trans-unit id="2207130182560822950" datatype="html">
         <source>Winning</source>

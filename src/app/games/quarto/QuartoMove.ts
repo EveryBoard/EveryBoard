@@ -21,9 +21,9 @@ export class QuartoMove extends MoveCoord {
                              this.piece.value +
                 ')';
     }
-    public equals(other: QuartoMove): boolean {
+    public override equals(other: QuartoMove): boolean {
         if (this === other) return true;
-        if (!other.coord.equals(this.coord)) return false;
+        if (other.coord.equals(this.coord) === false) return false;
         return this.piece === other.piece;
     }
 }

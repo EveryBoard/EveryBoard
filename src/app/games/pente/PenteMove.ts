@@ -20,7 +20,4 @@ export class PenteMove extends MoveCoord {
     public toString(): string {
         return `PenteMove(${this.coord.x}, ${this.coord.y})`;
     }
-    public equals(other: this): boolean {
-        return this.coord.equals(other.coord);
-    }
 }

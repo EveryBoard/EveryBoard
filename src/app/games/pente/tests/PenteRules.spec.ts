@@ -6,6 +6,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
+import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 
 describe('PenteRules', () => {
 
@@ -19,6 +20,7 @@ describe('PenteRules', () => {
     beforeEach(() => {
         rules = PenteRules.get();
         minimaxes = [
+            new PenteAlignmentMinimax(this.rules, 'Alignment'),
         ];
     });
     it('should allow a drop on an empty space', () => {

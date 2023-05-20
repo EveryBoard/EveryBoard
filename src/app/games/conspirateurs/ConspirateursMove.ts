@@ -31,7 +31,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
     public toString(): string {
         return `ConspirateursMoveDrop(${this.coord.toString()})`;
     }
-    public equals(other: ConspirateursMove): boolean {
+    public override equals(other: ConspirateursMove): boolean {
         if (other.isDrop()) {
             return this.coord.equals(other.coord);
         } else {

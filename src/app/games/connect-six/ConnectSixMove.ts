@@ -21,9 +21,6 @@ export class ConnectSixFirstMove extends MoveCoord {
         super(x, y);
     }
 
-    public equals(other: ConnectSixFirstMove): boolean {
-        return this.coord.equals(other.coord);
-    }
     public toString(): string {
         return 'ConnectSixFirstMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }

@@ -65,6 +65,7 @@ import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
+import { PenteComponent } from './games/pente/pente.component';
 import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
@@ -101,7 +102,6 @@ import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibil
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
-import { PenteComponent } from './games/pente/pente.component';
 
 registerLocaleData(localeFr);
 

@@ -44,7 +44,7 @@ export class LodestoneMove extends MoveCoord {
     public override toString(): string {
         return `LodestoneMove(${this.coord.toString()}, ${this.direction}, ${this.orientation}, { top: ${this.captures.top}, bottom: ${this.captures.bottom}, left: ${this.captures.left}, right: ${this.captures.right} })`;
     }
-    public equals(other: LodestoneMove): boolean {
+    public override equals(other: LodestoneMove): boolean {
         if (this === other) return true;
         if (this.coord.equals(other.coord) === false) return false;
         if (this.orientation !== other.orientation) return false;

@@ -66,7 +66,7 @@ export class AbaloneMove extends MoveCoord {
     public isSingleCoord(): boolean {
         return this.lastPiece.isAbsent();
     }
-    public equals(other: AbaloneMove): boolean {
+    public override equals(other: AbaloneMove): boolean {
         return other.coord.equals(this.coord) &&
                other.dir.equals(this.dir) &&
                other.lastPiece.equals(this.lastPiece);

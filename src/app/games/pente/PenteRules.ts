@@ -61,7 +61,8 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
             const sandwicher: Coord = coord.getNext(direction, 3);
             if (PenteMove.isOnBoard(firstCapture) && state.getPieceAt(firstCapture) === opponent &&
                 PenteMove.isOnBoard(secondCapture) && state.getPieceAt(secondCapture) === opponent &&
-                PenteMove.isOnBoard(sandwicher) && state.getPieceAt(sandwicher) === player) {
+                PenteMove.isOnBoard(sandwicher) && state.getPieceAt(sandwicher) === player)
+            {
                 captures.push(firstCapture);
                 captures.push(secondCapture);
             }
