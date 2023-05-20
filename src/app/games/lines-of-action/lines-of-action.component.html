@@ -8,7 +8,8 @@
             <g id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)">
                 <!-- Background -->
-                <rect [attr.x]="x * SPACE_SIZE"
+                <rect id="space_{{ x }}_{{ y }}"
+                      [attr.x]="x * SPACE_SIZE"
                       [attr.y]="y * SPACE_SIZE"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"

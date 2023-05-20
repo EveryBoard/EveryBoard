@@ -268,7 +268,7 @@ describe('AbaloneComponent', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
         await testUtils.expectMoveSuccess('#space_1_6', move, state, [0, 0]);
     }));
-    it('should allow clicking on arrow landing coord as if it was bellow an arrow (opponent)', fakeAsync(async() => {
+    it('should allow clicking on arrow landing coord as if it was below an arrow (opponent)', fakeAsync(async() => {
         // Given a board with a possible push
         const board: Table<FourStatePiece> = [
             [N, N, N, N, X, X, X, X, X],

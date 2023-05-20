@@ -208,8 +208,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         if (this.rules.node.move.isPresent()) {
             const move: MartianChessMove = this.rules.node.move.get();
             if (move.getEnd().equals(clickedCoord)) {
-                const previousPiece: MartianChessPiece =
-                    this.rules.node.mother.get().gameState.getPieceAt(clickedCoord);
+                const previousPiece: MartianChessPiece = this.getPreviousState().getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
                 if (wasOccupied) {
                     const landingHome: boolean = this.getState().isInOpponentTerritory(new Coord(0, y));

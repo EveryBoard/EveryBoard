@@ -1,20 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfMinimax } from '../GipfMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('GipfMinimax', () => {
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const _: FourStatePiece = FourStatePiece.EMPTY;
-    const A: FourStatePiece = FourStatePiece.ZERO;
-    const B: FourStatePiece = FourStatePiece.ONE;
+    const O: FourStatePiece = FourStatePiece.ZERO;
+    const X: FourStatePiece = FourStatePiece.ONE;
     const P0Turn: number = 6;
 
     let rules: GipfRules;
@@ -32,13 +31,13 @@ describe('GipfMinimax', () => {
         });
         it('should have 0 moves on a victory state', () => {
             const board: Table<FourStatePiece> = [
-                [N, N, N, _, A, _, _],
-                [N, N, _, _, A, _, _],
-                [N, _, _, _, _, A, _],
-                [A, B, A, _, B, _, _],
-                [A, _, _, A, B, B, N],
-                [B, _, B, _, _, N, N],
-                [_, B, _, _, N, N, N],
+                [N, N, N, _, O, _, _],
+                [N, N, _, _, O, _, _],
+                [N, _, _, _, _, O, _],
+                [O, X, O, _, X, _, _],
+                [O, _, _, O, X, X, N],
+                [X, _, X, _, _, N, N],
+                [_, X, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
             const node: GipfNode = new GipfNode(state);
@@ -47,11 +46,11 @@ describe('GipfMinimax', () => {
         it('should have 19 moves on an example state with non-intersecting capture', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, _, _, _],
-                [N, N, A, A, A, A, _],
-                [N, _, _, _, _, A, _],
-                [_, A, A, A, A, _, _],
-                [_, _, _, A, B, B, N],
-                [_, _, B, A, _, N, N],
+                [N, N, O, O, O, O, _],
+                [N, _, _, _, _, O, _],
+                [_, O, O, O, O, _, _],
+                [_, _, _, O, X, X, N],
+                [_, _, X, O, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
@@ -61,13 +60,13 @@ describe('GipfMinimax', () => {
         it('should have 20 moves on an example state with a complete line', () => {
             // 16 simple moves and 4 diagonal ones on the occupied borders
             const board: Table<FourStatePiece> = [
-                [N, N, N, A, _, _, _],
-                [N, N, _, B, _, _, _],
-                [N, _, _, A, _, _, _],
-                [_, _, _, B, _, _, _],
-                [_, _, _, A, _, _, N],
-                [_, _, _, B, _, N, N],
-                [_, _, _, A, N, N, N],
+                [N, N, N, O, _, _, _],
+                [N, N, _, X, _, _, _],
+                [N, _, _, O, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, _, _, O, _, _, N],
+                [_, _, _, X, _, N, N],
+                [_, _, _, O, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
             const node: GipfNode = new GipfNode(state);
@@ -76,13 +75,13 @@ describe('GipfMinimax', () => {
         it('should have 30 moves on an example state with all borders occupied', () => {
             // 16 simple moves and 4 diagonal ones on the occupied borders
             const board: Table<FourStatePiece> = [
-                [N, N, N, A, B, A, B],
-                [N, N, B, _, _, _, A],
-                [N, A, _, _, _, _, B],
-                [B, _, _, _, _, _, A],
-                [A, _, _, _, _, B, N],
-                [B, _, _, _, A, N, N],
-                [A, B, A, B, N, N, N],
+                [N, N, N, O, X, O, X],
+                [N, N, X, _, _, _, O],
+                [N, O, _, _, _, _, X],
+                [X, _, _, _, _, _, O],
+                [O, _, _, _, _, X, N],
+                [X, _, _, _, O, N, N],
+                [O, X, O, X, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
             const node: GipfNode = new GipfNode(state);
@@ -92,11 +91,11 @@ describe('GipfMinimax', () => {
             // There are 19 valid placements, each can be played with one of 2 captures
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, _, _, _],
-                [N, N, _, _, A, _, _],
-                [N, _, _, A, _, A, _],
-                [_, A, A, A, A, _, _],
-                [_, _, _, A, B, B, N],
-                [_, _, B, A, _, N, N],
+                [N, N, _, _, O, _, _],
+                [N, _, _, O, _, O, _],
+                [_, O, O, O, O, _, _],
+                [_, _, _, O, X, X, N],
+                [_, _, X, O, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
@@ -105,37 +104,49 @@ describe('GipfMinimax', () => {
         });
     });
     describe('getBoardValue', () => {
-        const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
-                                                           MGPOptional.of(HexaDirection.UP_RIGHT));
-        const dummyMove: GipfMove = new GipfMove(placement, [], []);
-
         it('should favor having captured pieces', () => {
+            // Given a state with more captured pieces than another
             const board: Table<FourStatePiece> = [
-                [N, N, N, _, A, _, _],
-                [N, N, _, _, A, _, _],
-                [N, _, _, _, _, A, _],
-                [A, B, A, _, B, _, _],
-                [A, _, _, A, B, B, N],
-                [B, _, B, _, _, N, N],
-                [_, B, _, _, N, N, N],
+                [N, N, N, _, O, _, _],
+                [N, N, _, _, O, _, _],
+                [N, _, _, _, _, O, _],
+                [O, X, O, _, X, _, _],
+                [O, _, _, O, X, X, N],
+                [X, _, X, _, _, N, N],
+                [_, X, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 7]);
-            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
-            expect(minimax.getBoardValue(node)).toBeLessThan(0);
+            const capturedPieces: [number, number] = [0, 3];
+            const moreCapturedPieces: [number, number] = [0, 7];
+            const weakState: GipfState = new GipfState(board, P0Turn, [5, 5], capturedPieces);
+            const strongState: GipfState = new GipfState(board, P0Turn, [5, 5], moreCapturedPieces);
+            // When computing their minimax values
+            // Then it should prefer having more captured pieces
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
         });
         it('should favor having pieces to play pieces', () => {
+            // Given two states differing only in available pieces to place
             const board: Table<FourStatePiece> = [
-                [N, N, N, _, A, _, _],
-                [N, N, _, _, A, _, _],
-                [N, _, _, _, _, A, _],
-                [A, B, A, _, B, _, _],
-                [A, _, _, A, B, B, N],
-                [B, _, B, _, _, N, N],
-                [_, B, _, _, N, N, N],
+                [N, N, N, _, O, _, _],
+                [N, N, _, _, O, _, _],
+                [N, _, _, _, _, O, _],
+                [O, X, O, _, X, _, _],
+                [O, _, _, O, X, X, N],
+                [X, _, X, _, _, N, N],
+                [_, X, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 7], [0, 0]);
-            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
-            expect(minimax.getBoardValue(node)).toBeLessThan(0);
+            const piecesToPlay: [number, number] = [5, 5];
+            const morePiecesToPlay: [number, number] = [5, 7];
+            const weakState: GipfState = new GipfState(board, P0Turn, piecesToPlay, [0, 0]);
+            const strongState: GipfState = new GipfState(board, P0Turn, morePiecesToPlay, [0, 0]);
+            // When computing their minimax values
+            // Then it should prefer having more pieces to place
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
         });
     });
 });

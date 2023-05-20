@@ -4,7 +4,8 @@ import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
 import { Move } from '../Move';
 import { BoardValue } from '../BoardValue';
-import { GameStatus, Rules } from '../Rules';
+import { Rules } from '../Rules';
+import { GameStatus } from '../GameStatus';
 
 class GameStateMock extends GameState {
 

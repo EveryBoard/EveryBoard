@@ -196,7 +196,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (this.rules.node.mother.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.rules.node.mother.get().gameState.tiles[player];
+        const previousTiles: number = this.getPreviousState().tiles[player];
         return previousTiles > this.tiles[player];
     }
 }

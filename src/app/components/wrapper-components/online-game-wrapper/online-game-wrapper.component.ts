@@ -18,7 +18,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { ObjectDifference } from 'src/app/utils/ObjectUtils';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -30,6 +30,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { Timestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class OnlineGameWrapperMessages {
 
@@ -915,7 +916,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public onCancelMove(reason?: string): void {
-        this.gameComponent.showLastMove();
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            const move: Move = this.gameComponent.rules.node.move.get();
+            this.gameComponent.showLastMove(move);
+        }
     }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');

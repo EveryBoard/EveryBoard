@@ -301,6 +301,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             MGPOptional.ofNullable(previousMove),
         );
         this.gameComponent.updateBoard();
+        if (previousMove !== undefined) {
+            this.gameComponent.showLastMove(previousMove);
+        }
         this.forceChangeDetection();
     }
     public getComponent(): T {

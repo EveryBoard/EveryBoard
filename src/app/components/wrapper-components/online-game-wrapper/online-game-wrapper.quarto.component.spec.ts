@@ -34,7 +34,6 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
@@ -45,6 +44,7 @@ import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
@@ -2296,9 +2296,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('onCancelMove', () => {
-        it('should delegate to gameComponent.showLastMove', fakeAsync(async() => {
-            // Given a any component
+        it('should call gameComponent.showLastMove when there is a move', fakeAsync(async() => {
+            // Given a component with a previous move
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
             const component: QuartoComponent = testUtils.getComponent();
             spyOn(component, 'showLastMove').and.callThrough();
 
@@ -2306,7 +2307,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
+            // Given a component without previous move
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            const component: QuartoComponent = testUtils.getComponent();
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should not have been called
+            expect(component.showLastMove).not.toHaveBeenCalled();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
