@@ -79,7 +79,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private userSubscription!: Subscription; // Initialized in ngOnInit
     private opponentSubscription: Subscription = new Subscription();
     private partSubscription: Subscription = new Subscription();
-    private eventsSubscription: Subscription = new Subscription();
+    private gameEventsSubscription: Subscription = new Subscription();
     private observedPartSubscription: Subscription = new Subscription();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
@@ -107,13 +107,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return new Promise((resolve: (result: Timestamp) => void) => {
             let updateSent: boolean = false;
             const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>): void => {
-                if (updateSent && user.get().lastUpdateTime != null) {
-                    subscription.unsubscribe();
-                    resolve(user.get().lastUpdateTime as Timestamp);
-                }
                 if (user.get().lastUpdateTime == null) {
                     // We know that the update has been sent when we actually see a null here
                     updateSent = true;
+                } else if (updateSent) {
+                    subscription.unsubscribe();
+                    resolve(user.get().lastUpdateTime as Timestamp);
                 }
             };
             const subscription: Subscription = this.userService.observeUser(userId, callback);
@@ -242,7 +241,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async onGameStart(): Promise<void> {
         await this.initializePlayersDatas(this.currentPart as PartDocument);
         const turn: number = this.gameComponent.getTurn();
-        assert(turn === 0, 'turn is always 0');
+        assert(turn === 0, 'turn should always be 0 upon game start');
         this.timeManager.onGameStart(this.configRoom);
     }
     private subscribeToEvents(): void {
@@ -272,21 +271,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                         default:
                             Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
                             const actionEvent: PartEventAction = event as PartEventAction;
+                            this.timeManager.onReceivedAction(actionEvent);
+
                             if (actionEvent.action === 'EndGame') await this.onGameEnd();
-                            if (actionEvent.action === 'StartGame') await this.onGameStart();
-                            this.onReceivedAction(actionEvent);
+                            else if (actionEvent.action === 'StartGame') await this.onGameStart();
                             break;
                     }
                 }
                 await this.afterEventsBatch();
             });
         };
-        this.eventsSubscription = this.gameEventService.subscribeToEvents(this.currentPartId, callback);
+        this.gameEventsSubscription = this.gameEventService.subscribeToEvents(this.currentPartId, callback);
     }
     private async onGameEnd(): Promise<void> {
         await this.observedPartService.removeObservedPart();
         this.endGame = true;
-        this.timeManager.onGameEnd();
     }
     private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
@@ -296,7 +295,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
-        assert(legality.isSuccess(), message);
+        assert(legality.isSuccess(), message, chosenMove);
         const success: boolean = rules.choose(chosenMove);
         assert(success, 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.updateBoard();
@@ -340,9 +339,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 // Nothing to do as the part will be updated with the draw
                 break;
         }
-    }
-    private onReceivedAction(action: PartEventAction): void {
-        this.timeManager.onReceivedAction(action);
     }
     private beforeEventsBatch(): void {
         this.timeManager.beforeEventsBatch(this.endGame);
@@ -648,7 +644,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.gameStarted === true) {
             this.opponentSubscription.unsubscribe();
             this.partSubscription.unsubscribe();
-            this.eventsSubscription.unsubscribe();
+            this.gameEventsSubscription.unsubscribe();
         }
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
     }

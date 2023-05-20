@@ -161,8 +161,7 @@ service cloud.firestore {
         function validEvent(event) {
             return hasField(event, 'eventType') &&
                    hasField(event, 'time') &&
-                   hasField(event, 'player') &&
-                   (event.player == 0 || event.player == 1);
+                   hasField(event, 'player');
         }
         function validAction(part, event) {
             let gameJustStarted = part.turn == 0;

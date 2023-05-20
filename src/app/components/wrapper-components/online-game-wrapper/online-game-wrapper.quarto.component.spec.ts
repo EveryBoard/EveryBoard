@@ -112,10 +112,9 @@ export namespace PreparationOptions {
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
     component: string,
-    preparationOptions?: PreparationOptions)
+    preparationOptions: PreparationOptions = PreparationOptions.def)
 : Promise<PreparationResult<T>>
 {
-    if (preparationOptions == null) preparationOptions = PreparationOptions.def;
     const testUtils: ComponentTestUtils<T, MinimalUser> = await prepareWrapper<T>(user, component);
     testUtils.prepareFixture(OnlineGameWrapperComponent);
     if (preparationOptions.runClocks === false) {
@@ -843,6 +842,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // Then opponents chrono should have continued to decrease
                 const globalTimeAfterTakeBack: number = wrapper.chronoZeroGlobal.remainingMs;
                 const turnTimeAfterTakeBack: number = wrapper.chronoZeroTurn.remainingMs;
+                tick(100);
                 expect(globalTimeAfterTakeBack).toBeLessThanOrEqual(globalTimeBeforeTakeBack);
                 expect(turnTimeAfterTakeBack).toBeLessThanOrEqual(turnTimeBeforeTakeBack);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);

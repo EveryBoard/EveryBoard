@@ -84,6 +84,7 @@ export class OGWCTimeManagerService {
                 this.lastMoveStartTimestamp = MGPOptional.of(action.time as Timestamp);
                 break;
             case 'EndGame':
+                this.onGameEnd();
                 break;
         }
     }

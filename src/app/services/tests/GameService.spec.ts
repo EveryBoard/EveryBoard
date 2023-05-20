@@ -107,14 +107,14 @@ describe('GameService', () => {
             // Then acceptConfig should be called
             expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
         }));
-        it('should can startGame with the accepter player as argument (Player.ZERO)', fakeAsync(async() => {
+        it('should call startGame with the accepter player as argument (Player.ZERO)', fakeAsync(async() => {
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
             const gameEventService: GameEventService = TestBed.inject(GameEventService);
             spyOn(configRoomService, 'acceptConfig').and.resolveTo();
             spyOn(partDAO, 'update').and.resolveTo();
             spyOn(gameEventService, 'startGame').and.resolveTo();
 
-            // Given a config where we will start as player 0
+            // Given a config that we want to accept, where we will start
             const configRoom: ConfigRoom = {
                 ...ConfigRoomMocks.WITH_PROPOSED_CONFIG,
                 firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
@@ -131,15 +131,15 @@ describe('GameService', () => {
             spyOn(partDAO, 'update').and.resolveTo();
             spyOn(gameEventService, 'startGame').and.resolveTo();
 
-            // Given a config where we will start as player 0
+            // Given a config that we want to accept, where creator will start
             const configRoom: ConfigRoom = {
                 ...ConfigRoomMocks.WITH_PROPOSED_CONFIG,
-                firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
+                firstPlayer: FirstPlayer.CREATOR.value,
             };
             // When accepting it
             await gameService.acceptConfig('partId', configRoom);
             // Then startGame is called with Player.ZERO
-            expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ZERO);
+            expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ONE);
         }));
     });
     it('createPartConfigRoomAndChat should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
@@ -229,7 +229,7 @@ describe('GameService', () => {
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
         }));
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
-            // Given a previous match with creator starting
+            // Given a previous match with creator starting, and creator proposes a rematch
             const lastPart: PartDocument = new PartDocument('partId', {
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
@@ -258,14 +258,14 @@ describe('GameService', () => {
                 called = true;
             });
 
-            // When accepting rematch
+            // When accepting rematch as Player.ONE
             await gameService.acceptRematch(lastPart, Player.ONE);
 
             // Then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
         }));
         it('should start with the other player when first player was random', fakeAsync(async() => {
-            // Given a previous match with creator starting
+            // Given a previous match with creator starting, and creator proposes a rematch
             const lastPart: PartDocument = new PartDocument('partId', {
                 playerZero: UserMocks.OPPONENT_MINIMAL_USER,
                 playerOne: UserMocks.CREATOR_MINIMAL_USER,
@@ -294,7 +294,7 @@ describe('GameService', () => {
                 called = true;
             });
 
-            // When accepting rematch
+            // When accepting rematch as Player.ONE
             await gameService.acceptRematch(lastPart, Player.ONE);
 
             // Then we should have a part created with playerOne and playerZero switched
@@ -303,7 +303,7 @@ describe('GameService', () => {
         it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
             const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
             const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
-            // Given a part that will be replayed
+            // Given a part that will be replayed upon request of Player.ZERO
             const lastPart: PartDocument = new PartDocument('partId', {
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
@@ -343,7 +343,7 @@ describe('GameService', () => {
                 return 'partId';
             });
 
-            // When creator accepts the rematch
+            // When Player.ONE accepts the rematch
             await gameService.acceptRematch(lastPart, Player.ONE);
             // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
             // Moreover, everything needs to have been called eventually

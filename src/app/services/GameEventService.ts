@@ -23,7 +23,6 @@ export class GameEventService {
         return this.eventsCollection(partId).create(event);
     }
     public addMove(partId: string, player: Player, move: JSONValue): Promise<string> {
-        Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
         return this.addEvent(partId, {
             eventType: 'Move',
             time: serverTimestamp(),
@@ -32,7 +31,6 @@ export class GameEventService {
         });
     }
     public addRequest(partId: string, player: Player, requestType: RequestType): Promise<string> {
-        Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
         return this.addEvent(partId, {
             eventType: 'Request',
             time: serverTimestamp(),
@@ -47,7 +45,6 @@ export class GameEventService {
                     data: JSONValue = null)
     : Promise<string>
     {
-        Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
         return this.addEvent(partId, {
             eventType: 'Reply',
             time: serverTimestamp(),
@@ -61,7 +58,6 @@ export class GameEventService {
         return this.addAction(partId, player, 'StartGame');
     }
     public addAction(partId: string, player: Player, action: Action): Promise<string> {
-        Utils.assert(player.value === 0 || player.value === 1, 'player should be player 0 or 1');
         return this.addEvent(partId, {
             eventType: 'Action',
             time: serverTimestamp(),
@@ -72,15 +68,12 @@ export class GameEventService {
     public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<PartEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<PartEvent>[]) => {
-                const realEvents: PartEvent[] = [];
-                for (const eventDoc of events) {
-                    if (eventDoc.data.time == null) {
-                        // When we add an event, firebase will initially have a null timestamp for the document creator
-                        // When the event is really written, we receive a modification with the real timestamp
-                        continue;
-                    }
-                    realEvents.push(eventDoc.data);
-                }
+                // When the client adds an event, firebase will initially have a null timestamp for the document creator
+                // When the event is really written, all the clients receive a modification with the real timestamp
+                // We want to keep only the latter.
+                const realEvents: PartEvent[] = events
+                    .map((event: FirestoreDocument<PartEvent>) => event.data)
+                    .filter((event: PartEvent) => event.time != null);
                 if (realEvents.length > 0) {
                     callback(realEvents);
                 }
