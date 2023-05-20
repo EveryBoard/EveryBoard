@@ -281,7 +281,7 @@ export class LodestoneComponent
         return MGPValidation.SUCCESS;
     }
     public updateBoard(): void {
-        this.cancelMoveAttempt(); // TODO: checker qu'on a besoin des cancelMoveAttempt avant un updateBoard ?
+        this.cancelMoveAttempt();
         this.scores = MGPOptional.of(this.getState().getScores());
     }
     public override cancelMoveAttempt(): void {
