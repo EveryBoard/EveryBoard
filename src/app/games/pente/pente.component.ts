@@ -48,7 +48,6 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
     }
     public override cancelMoveAttempt(): void {
         this.lastMoved = MGPOptional.empty();
-        this.victoryCoords = [];
         this.captured = [];
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

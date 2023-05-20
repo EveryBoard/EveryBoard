@@ -1,18 +1,35 @@
 import { assert } from '../utils/assert';
 import { MGPMap } from '../utils/MGPMap';
+import { BoardValue } from './BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';
 import { MGPNode } from './MGPNode';
 import { Player, PlayerOrNone } from './Player';
 import { SCORE } from './SCORE';
+import { Vector } from './Vector';
 
 export class NInARowHelper<T> {
 
-    public constructor(public isInRange: (coord: Coord) => boolean,
-                       public getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
-                       public N: number)
+    public constructor(private readonly isInRange: (coord: Coord) => boolean,
+                       private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
+                       private readonly N: number)
     {
+    }
+    public getBoardValue(state: GameStateWithTable<T>): BoardValue {
+        let score: number = 0;
+        let coord: Coord = new Coord(0, 0);
+        while (this.isInRange(coord)) {
+            while (this.isInRange(coord)) {
+                const piece: T = state.getPieceAt(coord);
+                if (this.getOwner(piece, state).isPlayer()) {
+                    score += this.getSquareScore(state, coord);
+                }
+                coord = coord.getNext(new Vector(1, 0));
+            }
+            coord = coord.getNext(new Vector(0, 1));
+        }
+        return new BoardValue(score);
     }
     public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {
         const piece: T = state.getPieceAt(coord);
