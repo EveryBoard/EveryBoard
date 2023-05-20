@@ -2221,9 +2221,6 @@
       <trans-unit id="4745154919636452326" datatype="html">
         <source>You can safely place a piece next to another of your piece in what would look like a sandwich from the opponent&apos;s pieces. This is a safe move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and have the opportunity to do such a move here, do it!</source>
       </trans-unit>
-      <trans-unit id="2207130182560822950" datatype="html">
-        <source>Winning</source>
-      </trans-unit>
       <trans-unit id="5109014320867695717" datatype="html">
         <source>Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, you can win in two ways. Win!</source>
       </trans-unit>
