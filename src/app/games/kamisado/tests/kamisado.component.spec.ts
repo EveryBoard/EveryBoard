@@ -12,7 +12,7 @@ import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-fdescribe('KamisadoComponent', () => {
+describe('KamisadoComponent', () => {
 
     let testUtils: ComponentTestUtils<KamisadoComponent>;
 
