@@ -1,6 +1,7 @@
 import { PenteRules } from './PenteRules';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
+import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { PenteTutorial } from './PenteTutorial';
@@ -28,6 +29,7 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
         this.encoder = PenteMove.encoder;
         this.tutorial = new PenteTutorial().tutorial;
         this.availableMinimaxes = [
+            new PenteAlignmentMinimax(this.rules, 'Alignment'),
         ];
     }
     public updateBoard(): void {
