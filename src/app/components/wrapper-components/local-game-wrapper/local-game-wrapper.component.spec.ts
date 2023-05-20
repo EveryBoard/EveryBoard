@@ -17,7 +17,6 @@ import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -29,6 +28,7 @@ import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {

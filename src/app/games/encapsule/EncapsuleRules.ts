@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -10,6 +10,7 @@ import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 

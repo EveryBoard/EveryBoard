@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,6 +12,7 @@ import { HiveMoveDrop, HiveMove, HiveMoveCoordToCoord } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class HiveNode extends MGPNode<HiveRules, HiveMove, HiveState> {}
 

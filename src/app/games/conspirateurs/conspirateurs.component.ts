@@ -3,7 +3,6 @@ import { GameComponent } from 'src/app/components/game-components/game-component
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -15,6 +14,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveEncoder, Con
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursTutorial } from './ConspirateursTutorial';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],

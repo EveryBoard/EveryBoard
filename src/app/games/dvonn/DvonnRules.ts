@@ -2,7 +2,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 

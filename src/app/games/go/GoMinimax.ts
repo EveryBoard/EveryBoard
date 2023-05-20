@@ -1,15 +1,13 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
 import { display } from 'src/app/utils/utils';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
+export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityInformation> {
 
     public getListMoves(node: GoNode): GoMove[] {
         const LOCAL_VERBOSE: boolean = false;
@@ -121,21 +119,14 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
         }
         return resultingState;
     }
-    public getBoardValue(node: GoNode): BoardValue {
-        const state: GoState = node.gameState;
-        const gameStatus: GameStatus = GoRules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
-        const LOCAL_VERBOSE: boolean = false;
-
-        display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getBoardValue');
-
-        const goState: GoState = GoRules.markTerritoryAndCount(state);
-
+    public getMetrics(node: GoNode): [number, number] {
+        const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
         const goScore: number[] = goState.getCapturedCopy();
         const goKilled: number[] = this.getDeadStones(goState);
-        return new BoardValue((goScore[1] + (2 * goKilled[0])) - (goScore[0] + (2 * goKilled[1])));
+        return [
+            goScore[0] + (2 * goKilled[1]),
+            goScore[1] + (2 * goKilled[0]),
+        ];
     }
     public getDeadStones(state: GoState): number[] {
         const killed: number[] = [0, 0];
