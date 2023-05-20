@@ -8,12 +8,13 @@ import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -22,7 +23,7 @@ import { Player } from 'src/app/jscaip/Player';
 })
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     public aiDepths: [string, string] = ['0', '0'];
 
@@ -77,7 +78,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.proposeAIToPlay();
     }
     public updateBoard(): void {
-        this.gameComponent.updateBoard();
+        this.updateBoardAndShowLastMove();
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
@@ -95,7 +96,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (${ winner }) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`);
                     }
                 }
             }
@@ -153,7 +154,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (this.isAITurn()) {
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         }
+        this.updateBoardAndShowLastMove();
+    }
+    private updateBoardAndShowLastMove(): void {
         this.gameComponent.updateBoard();
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            const move: Move = this.gameComponent.rules.node.move.get();
+            this.gameComponent.showLastMove(move);
+        }
     }
     private isAITurn(): boolean {
         return this.getPlayingAI().isPresent();
@@ -170,7 +178,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public onCancelMove(reason?: string): void {
         if (this.gameComponent.rules.node.move.isPresent()) {
-            this.gameComponent.showLastMove();
+            const move: Move = this.gameComponent.rules.node.move.get();
+            this.gameComponent.showLastMove(move);
         }
     }
 }

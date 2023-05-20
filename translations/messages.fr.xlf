@@ -626,7 +626,7 @@
         <source>You lost</source>
         <target>Vous avez perdu</target>
       </trans-unit>
-      <trans-unit id="7295646331303360714" datatype="html">
+      <trans-unit id="1836885699974320953" datatype="html">
         <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
         <target><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Joueur <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) a gagné</target>
       </trans-unit>
@@ -1548,6 +1548,10 @@
       <trans-unit id="8101145555087657570" datatype="html">
         <source>The stack must land on an occupied space.</source>
         <target>Le déplacement doit se terminer sur une case occupée.</target>
+      </trans-unit>
+      <trans-unit id="9221962864929282978" datatype="html">
+        <source>A stack must move in a straight line.</source>
+        <target>Une pile doit se déplacer en ligne droite.</target>
       </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>

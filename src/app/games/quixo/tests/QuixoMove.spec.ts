@@ -6,7 +6,7 @@ import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -48,7 +48,7 @@ describe('QuixoMove:', () => {
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(QuixoMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(QuixoMove.encoder, move);
         }
     });
     it('should override correctly equals and toString', () => {

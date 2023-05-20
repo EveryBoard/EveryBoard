@@ -1,8 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { GameStatus } from 'src/app/jscaip/Rules';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
@@ -10,7 +8,7 @@ import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './Abalone
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
+export class AbaloneDummyMinimax extends PlayerMetricsMinimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
 
     public getListMoves(node: AbaloneNode): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
@@ -66,12 +64,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
             return false;
         }
     }
-    public getBoardValue(node: AbaloneNode): BoardValue {
-        const gameStatus: GameStatus = AbaloneRules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
-        const scores: [number, number] = node.gameState.getScores();
-        return new BoardValue(scores[1] - scores[0]);
+    public getMetrics(node: AbaloneNode): [number, number] {
+        return node.gameState.getScores();
     }
 }

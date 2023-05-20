@@ -58,7 +58,7 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
         });
         return rings;
     }
-    public isOnBoard(coord: Coord): boolean {
+    public override isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }

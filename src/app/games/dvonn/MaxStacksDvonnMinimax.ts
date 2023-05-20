@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { DvonnMinimax } from './DvonnMinimax';
 import { DvonnState } from './DvonnState';
 import { DvonnNode, DvonnRules } from './DvonnRules';
@@ -8,11 +7,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
 import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class MaxStacksDvonnMinimax extends DvonnMinimax {
 
-    public getListMoves(node: DvonnNode): DvonnMove[] {
+    public override getListMoves(node: DvonnNode): DvonnMove[] {
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = super.getListMoves(node);
 
@@ -28,22 +26,17 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
         });
         return moves;
     }
-    public getBoardValue(node: DvonnNode): BoardValue {
-        const gameStatus: GameStatus = DvonnRules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
+    public override getMetrics(node: DvonnNode): [number, number] {
         const state: DvonnState = node.gameState;
-        // Board value is percentage of the stacks controlled by the player
-        const scores: number[] = DvonnRules.getScores(state);
+        // The metric is percentage of the stacks controlled by the player
+        const scores: [number, number] = DvonnRules.getScores(state);
         const pieces: Coord[] = state.getAllPieces();
         const numberOfStacks: number = pieces.length;
-        const player0Stacks: number = pieces.filter((c: Coord): boolean =>
-            state.getPieceAt(c).belongsTo(Player.ZERO)).length;
-        const player1Stacks: number = pieces.filter((c: Coord): boolean =>
-            state.getPieceAt(c).belongsTo(Player.ONE)).length;
-        const zeroControlled: number = player0Stacks * scores[0];
-        const oneControlled: number = player1Stacks * scores[1];
-        return new BoardValue((oneControlled - zeroControlled) / numberOfStacks);
+        for (const player of Player.PLAYERS) {
+            const playerStacks: number = pieces.filter((c: Coord): boolean =>
+                state.getPieceAt(c).belongsTo(player)).length;
+            scores[player.value] = scores[player.value] * playerStacks / numberOfStacks;
+        }
+        return scores;
     }
 }

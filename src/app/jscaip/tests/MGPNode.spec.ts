@@ -4,7 +4,8 @@ import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
 import { Move } from '../Move';
 import { BoardValue } from '../BoardValue';
-import { GameStatus, Rules } from '../Rules';
+import { Rules } from '../Rules';
+import { GameStatus } from '../GameStatus';
 
 class GameStateMock extends GameState {
 
@@ -14,7 +15,7 @@ class GameStateMock extends GameState {
 }
 class MoveMock extends Move {
 
-    public toString(): string {
+    public override toString(): string {
         throw new Error('MoveMock.toString method not implemented.');
     }
     public equals(other: this): boolean {

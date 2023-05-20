@@ -24,8 +24,7 @@ describe('DvonnComponent', () => {
         testUtils = await ComponentTestUtils.forGame<DvonnComponent>('Dvonn');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeDefined();
-        expect(testUtils.getComponent()).withContext('DvonnComponent should be created').toBeDefined();
+        testUtils.expectToBeCreated();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
         // Given the initial state
@@ -37,7 +36,7 @@ describe('DvonnComponent', () => {
         await testUtils.expectClickSuccess('#click_2_0');
         // When the user selects a valid destination
         // Then the move should be made
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
+        const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         await testUtils.expectMoveSuccess('#click_2_1', move);
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
@@ -73,7 +72,7 @@ describe('DvonnComponent', () => {
 
         // When doing that disconnection
         await testUtils.expectClickSuccess('#click_3_1');
-        const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(2, 1));
+        const move: DvonnMove = DvonnMove.from(new Coord(3, 1), new Coord(2, 1)).get();
         await testUtils.expectMoveSuccess('#click_2_1', move);
 
         const gameComponent: DvonnComponent = testUtils.getComponent();
@@ -87,5 +86,11 @@ describe('DvonnComponent', () => {
         await testUtils.expectClickSuccess('#click_2_0');
         expect(testUtils.getComponent().chosen).toEqual(MGPOptional.empty());
     }));
+    it('should forbid making non-straight-line move', fakeAsync(async() => {
+        // Given that the user has selected a
+        await testUtils.expectClickSuccess('#click_2_0');
+        // When the user selects a invalid destination that is not in a straight line
+        // Then it should fail
+        await testUtils.expectClickFailure('#click_3_3', DvonnFailure.MUST_MOVE_IN_STRAIGHT_LINE());
+    }));
 });
-

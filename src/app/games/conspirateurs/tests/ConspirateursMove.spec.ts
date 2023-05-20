@@ -7,13 +7,13 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveEncoder, Con
 
 describe('ConspirateursMove', () => {
     function drop(target: Coord): ConspirateursMoveDrop {
-        return ConspirateursMoveDrop.of(target).get();
+        return ConspirateursMoveDrop.from(target).get();
     }
     function simpleMove(start: Coord, end: Coord): ConspirateursMoveSimple {
         return ConspirateursMoveSimple.from(start, end).get();
     }
     function jump(coords: Coord[]): ConspirateursMoveJump {
-        return ConspirateursMoveJump.of(coords).get();
+        return ConspirateursMoveJump.from(coords).get();
     }
     describe('drop', () => {
         const move: ConspirateursMoveDrop = drop(new Coord(7, 7));
@@ -33,7 +33,7 @@ describe('ConspirateursMove', () => {
             expect(move.isJump()).toBeFalse();
         });
         it('should forbid creating a drop out of the board', () => {
-            expect(ConspirateursMoveDrop.of(new Coord(-1, -1)).isFailure()).toBeTrue();
+            expect(ConspirateursMoveDrop.from(new Coord(-1, -1)).isFailure()).toBeTrue();
         });
     });
     describe('simple', () => {
@@ -91,24 +91,24 @@ describe('ConspirateursMove', () => {
             expect(move.isJump()).toBeTrue();
         });
         it('should forbid creating a jump with less than two coordinates', () => {
-            expect(ConspirateursMoveJump.of([new Coord(1, 1)]).isFailure()).toBeTrue();
+            expect(ConspirateursMoveJump.from([new Coord(1, 1)]).isFailure()).toBeTrue();
         });
         it('should forbid creating a jump with more than two spaces between coordinates', () => {
-            expect(ConspirateursMoveJump.of([new Coord(1, 1), new Coord(1, 5)]).isFailure()).toBeTrue();
+            expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(1, 5)]).isFailure()).toBeTrue();
         });
         it('should forbid creating a jump with an invalid direction', () => {
-            expect(ConspirateursMoveJump.of([new Coord(1, 1), new Coord(3, 5)]).isFailure()).toBeTrue();
+            expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(3, 5)]).isFailure()).toBeTrue();
         });
         it('should forbid creating a jump out of the board', () => {
-            expect(ConspirateursMoveJump.of([new Coord(1, 1), new Coord(-1, 1)]).isFailure()).toBeTrue();
+            expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(-1, 1)]).isFailure()).toBeTrue();
         });
     });
     it('should have a bijective encoder', () => {
         EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
-                                             ConspirateursMoveDrop.of(new Coord(7, 7)).get());
+                                             ConspirateursMoveDrop.from(new Coord(7, 7)).get());
         EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
                                              ConspirateursMoveSimple.from(new Coord(7, 7), new Coord(7, 8)).get());
         EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
-                                             ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9)]).get());
+                                             ConspirateursMoveJump.from([new Coord(7, 7), new Coord(7, 9)]).get());
     });
 });

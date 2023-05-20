@@ -2,39 +2,16 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { SaharaFailure } from './SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class SaharaMove extends MoveCoordToCoord {
-    public static encoder: NumberEncoder<SaharaMove> = new class extends NumberEncoder<SaharaMove> {
-        public maxValue(): number {
-            return (6*11*6*SaharaState.WIDTH) + (11*6*SaharaState.HEIGHT) +
-                (6*SaharaState.WIDTH) + SaharaState.HEIGHT;
-        }
-        public encodeNumber(move: SaharaMove): number {
-            const ey: number = move.getEnd().y;
-            const ex: number = move.getEnd().x;
-            const sy: number = move.getStart().y;
-            const sx: number = move.getStart().x;
-            return (6*11*6*sx) + (11*6*sy) + (6*ex) + ey;
-        }
-        public decodeNumber(encodedMove: number): SaharaMove {
-            const ey: number = encodedMove%6;
-            encodedMove -= ey;
-            encodedMove /= 6;
-            const ex: number = encodedMove%11;
-            encodedMove -= ex;
-            encodedMove /=11;
-            const sy: number = encodedMove%6;
-            encodedMove -= sy;
-            encodedMove /= 6;
-            const sx: number = encodedMove;
-            return SaharaMove.from(new Coord(sx, sy), new Coord(ex, ey)).get();
-        }
-    };
+    public static encoder: MoveEncoder<SaharaMove> = MoveWithTwoCoords.getFallibleEncoder(SaharaMove.from);
+
     public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
         const distance: number = start.getOrthogonalDistance(end);
         if (distance === 0) {

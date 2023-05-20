@@ -34,23 +34,20 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     {
         super(messageDisplayer);
     }
-    public getViewBox(): string {
+    public override getViewBox(): string {
         const begin: number = - this.STROKE_WIDTH;
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');
-        this.lastMove = this.rules.node.move;
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
-        if (this.lastMove.isPresent()) {
-            this.showPreviousMove();
-        }
         this.updateViewInfo();
+        this.lastMove = this.rules.node.move;
     }
-    private showPreviousMove(): void {
-        const previousState: S = this.rules.node.mother.get().gameState;
+    public override showLastMove(move: M): void {
+        const previousState: S = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.get().getEnd().getNext(orthogonal, 1);
@@ -133,7 +130,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const player: Player = state.getCurrentPlayer();
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosen = MGPOptional.empty();
         this.updateViewInfo();
     }

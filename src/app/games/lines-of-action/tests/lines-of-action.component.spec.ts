@@ -22,8 +22,7 @@ describe('LinesOfActionComponent', () => {
         testUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('LinesOfActionComponent should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
@@ -117,4 +116,27 @@ describe('LinesOfActionComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
         }));
     });
+    it('should hide first move when taking back', fakeAsync(async() => {
+        // Given a state with a first move done
+        const board: Table<PlayerOrNone> = [
+            [_, O, _, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, O, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
+        ];
+        const state: LinesOfActionState = new LinesOfActionState(board, 1);
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
+        testUtils.setupState(state, LinesOfActionState.getInitialState(), move);
+
+        // When taking it back
+        await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+        // Then no highlight should be found
+        testUtils.expectElementNotToHaveClass('#space_2_0', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#space_2_2', 'moved-fill');
+    }));
 });

@@ -15,10 +15,8 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
         this.remainingPieces = remainingPieces;
     }
     public static getInitialState(): EncapsuleState {
-        const emptySpace: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-        const emptyNumber: number = emptySpace.encode();
-        const startingNumberBoard: number[][] = ArrayUtils.createTable(3, 3, emptyNumber);
-        const startingBoard: EncapsuleSpace[][] = ArrayUtils.mapBiArray(startingNumberBoard, EncapsuleSpace.decode);
+        const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+        const startingBoard: EncapsuleSpace[][] = ArrayUtils.createTable(3, 3, _);
         const initialPieces: EncapsulePiece[] = [
             EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
             EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
@@ -52,19 +50,6 @@ export class EncapsuleSpace {
     public static readonly EMPTY: EncapsuleSpace =
         new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 
-    public static decode(encapsuleSpace: number): EncapsuleSpace {
-        assert(encapsuleSpace % 1 === 0, 'EncapsuleSpace must be encoded as integer: ' + encapsuleSpace);
-        assert(encapsuleSpace >= 0, 'To small representation for EncapsuleSpace: ' + encapsuleSpace);
-        assert(encapsuleSpace <= 26, 'To big representation for EncapsuleSpace: ' + encapsuleSpace);
-        const small: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleSpace%3);
-        encapsuleSpace -= small.value;
-        encapsuleSpace/=3;
-        const medium: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleSpace%3);
-        encapsuleSpace -= medium.value;
-        encapsuleSpace/=3;
-        const big: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleSpace);
-        return new EncapsuleSpace(small, medium, big);
-    }
     public constructor(public readonly small: PlayerOrNone,
                        public readonly medium: PlayerOrNone,
                        public readonly big: PlayerOrNone)

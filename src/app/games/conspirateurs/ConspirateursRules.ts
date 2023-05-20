@@ -1,7 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -106,7 +107,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         ];
         const validTargets: Coord[] = [];
         for (const target of targets) {
-            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([start, target]);
+            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([start, target]);
             if (move.isSuccess()) {
                 validTargets.push(target);
             }

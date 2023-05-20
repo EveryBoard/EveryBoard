@@ -4,7 +4,7 @@ import { KamisadoState } from '../KamisadoState';
 import { KamisadoRules } from '../KamisadoRules';
 import { KamisadoMinimax } from '../KamisadoMinimax';
 import { KamisadoMove } from '../KamisadoMove';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('KamisadoMove', () => {
 
@@ -18,7 +18,7 @@ describe('KamisadoMove', () => {
         const moves: KamisadoMove[] = minimax.getListMoves(rules.node);
         moves.push(KamisadoMove.PASS);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, move);
         }
     });
     it('should force move to start and end inside the board', () => {

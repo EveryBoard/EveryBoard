@@ -1,59 +1,21 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
+type AbaloneMoveFields = [Coord, HexaDirection, MGPOptional<Coord>];
+
 export class AbaloneMove extends MoveCoord {
 
-    public static encoder: NumberEncoder<AbaloneMove> = new class extends NumberEncoder<AbaloneMove> {
-        public maxValue(): number {
-            return (8*9*2*9*9*8 + 8*2*9*9*8 + 9*9*8) + (8*9*6 + 8*8) + 7;
-        }
-        public encodeNumber(move: AbaloneMove): number {
-            const base: number = (move.coord.x * 9 * 8) + (move.coord.y * 8) + move.dir.toInt();
-            if (move.isSingleCoord()) {
-                return base;
-            } else {
-                const lastPiece: Coord = move.lastPiece.get();
-                return (lastPiece.x * 9 * 2 * 9 * 9 * 8) + (lastPiece.y * 2 * 9 * 9 * 8) + (9 * 9 * 8) + base;
-            }
-        }
-        public decodeNumber(encodedMove: number): AbaloneMove {
-            const dir: number = encodedMove % 8;
-            encodedMove = (encodedMove - dir) / 8;
-            const directionOptional: MGPFallible<HexaDirection> = HexaDirection.factory.fromInt(dir);
-            const direction: HexaDirection = directionOptional.get();
+    public static encoder: MoveEncoder<AbaloneMove> = MoveEncoder.tuple(
+        [Coord.encoder, HexaDirection.encoder, MGPOptional.getEncoder(Coord.encoder)],
+        (m: AbaloneMove): AbaloneMoveFields => [m.coord, m.dir, m.lastPiece],
+        (fields: AbaloneMoveFields): AbaloneMove => new AbaloneMove(fields[0], fields[1], fields[2]));
 
-            const y: number = encodedMove % 9;
-            encodedMove = (encodedMove - y) / 9;
-
-            const x: number = encodedMove % 9;
-            encodedMove = (encodedMove - x) / 9;
-
-            const first: Coord = new Coord(x, y);
-            if (encodedMove === 0) {
-                const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromSingleCoord(first, direction);
-                return moveOptional.get();
-            } else {
-                encodedMove = (encodedMove - 1) / 2;
-
-                const ly: number = encodedMove % 9;
-                encodedMove = (encodedMove - ly) / 9;
-
-                const lx: number = encodedMove % 9;
-                encodedMove = (encodedMove - lx) / 9;
-
-                const last: Coord = new Coord(lx, ly);
-
-                const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromDoubleCoord(first, last, direction);
-                return moveOptional.get();
-            }
-        }
-    };
     public static fromSingleCoord(coord: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
         try {
             return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
@@ -73,7 +35,7 @@ export class AbaloneMove extends MoveCoord {
         const hexaDirection: HexaDirection = hexaDirectionOptional.get();
         const distance: number = coords[1].getDistance(coords[0]);
         if (distance > 2) {
-            return MGPFallible.failure('Distance between first coord and last coord is too great');
+            return MGPFallible.failure('Distance between first coord and last coord is too big');
         }
         if (hexaDirection.equals(dir)) {
             return AbaloneMove.fromSingleCoord(coords[1], dir);

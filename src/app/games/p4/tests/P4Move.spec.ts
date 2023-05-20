@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { P4Move } from '../P4Move';
 
 describe('P4Move', () => {
@@ -32,7 +32,7 @@ describe('P4Move', () => {
     it('should have a bijective encoder', () => {
         for (let i: number = 0; i < 7; i++) {
             const move: P4Move = P4Move.of(i);
-            NumberEncoderTestUtils.expectToBeBijective(P4Move.encoder, move);
+            EncoderTestUtils.expectToBeBijective(P4Move.encoder, move);
         }
     });
     describe('toString', () => {

@@ -25,7 +25,7 @@ type TutorialPlayer = 'tutorial-player';
 })
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
@@ -42,7 +42,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 router: Router,
                 messageDisplayer: MessageDisplayer,
                 public cdr: ChangeDetectorRef,
-                protected connectedUserService: ConnectedUserService)
+                connectedUserService: ConnectedUserService)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
@@ -152,7 +152,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
-    public onUserClick(elementName: string): MGPValidation {
+    public override onUserClick(elementName: string): MGPValidation {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {

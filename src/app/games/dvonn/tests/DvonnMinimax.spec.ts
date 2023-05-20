@@ -35,7 +35,7 @@ describe('DvonnMinimax', () => {
         // When computing the board value
         const value: number = minimax.getBoardValue(new DvonnNode(state)).value;
 
-        // Then it should be 1 - 2 = -1
-        expect(value).toBe(-1);
+        // Then it should be 2 - 1 = 1
+        expect(value).toBe(1);
     });
 });

@@ -282,13 +282,9 @@ export class LodestoneComponent
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
-        const lastMove: MGPOptional<LodestoneMove> = this.rules.node.move;
-        if (lastMove.isPresent()) {
-            this.showLastMove();
-        }
         this.scores = MGPOptional.of(this.getState().getScores());
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.displayedState = this.getState();
         this.stateAfterPlacingLodestone = MGPOptional.empty();
         this.lastInfos = MGPOptional.empty();
@@ -449,11 +445,10 @@ export class LodestoneComponent
             this.viewInfo.pressurePlates.push({ position: pressurePlate, coords: plateCoordInfos });
         }
     }
-    public showLastMove(): void {
-        const lastState: LodestoneState = this.rules.node.mother.get().gameState;
-        const lastMove: LodestoneMove = this.rules.node.move.get();
+    public override showLastMove(move: LodestoneMove): void {
+        const lastState: LodestoneState = this.getPreviousState();
         this.lastInfos = MGPOptional.of(
-            LodestoneRules.get().applyMoveWithoutPlacingCaptures(lastState, lastMove.coord, lastMove));
+            LodestoneRules.get().applyMoveWithoutPlacingCaptures(lastState, move.coord, move));
         this.updateViewInfo();
         const currentState: LodestoneState = this.getState();
         this.showPressurePlateDifferences(lastState, currentState, false);

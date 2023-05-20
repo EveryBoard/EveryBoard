@@ -56,24 +56,21 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.board = state.getCopiedBoard();
         this.capturedCoords = [];
 
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        } else {
-            this.lastMove = new Coord(-2, -2);
-        }
+        // Will be set to the real value in showLastMove if there is a last move
+        this.lastMove = new Coord(-2, -2);
 
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
-    private showPreviousMove(): void {
-        this.lastMove = this.rules.node.move.get().coord;
+    public override showLastMove(move: ReversiMove): void {
+        this.lastMove = move.coord;
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
             while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
                    this.getState().getPieceAt(captured) === opponent &&
-                   this.rules.node.mother.get().gameState.getPieceAt(captured) === player)
+                   this.getPreviousState().getPieceAt(captured) === player)
             {
                 this.capturedCoords.push(captured);
                 captured = captured.getNext(dir, 1);
@@ -93,7 +90,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     public getPieceClass(x: number, y: number): string {
         return this.getPlayerClass(this.board[y][x]);
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'ReversiComponent: pass() can only be called if canPass is true');
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }

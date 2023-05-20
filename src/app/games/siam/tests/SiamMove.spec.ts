@@ -6,7 +6,7 @@ import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
@@ -32,7 +32,7 @@ describe('SiamMove', () => {
         const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
         const moves: SiamMove[] = minimax.getListMoves(node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
         }
     });
     it('should ensure move ends inside the board', () => {

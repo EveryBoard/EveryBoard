@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -16,26 +16,33 @@ import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
-    public readonly width: number;
+    public override readonly width: number;
 
-    public readonly height: number;
-
-    public readonly offset: Vector;
+    public override readonly height: number;
 
     public static getInitialState(): SixState {
-        const board: NumberTable = [[Player.ZERO.value], [Player.ONE.value]];
+        const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
         return SixState.fromRepresentation(board, 0);
     }
-    public static fromRepresentation(board: NumberTable, turn: number, offset?: Vector): SixState {
+    /**
+      * @param board the representation of the board
+      * @param turn the turn of the board
+      * @param origin the coord of the board[0][0] space
+      * (useful if the upper left coord is in (-5, -9) or (512, 129))
+      * @returns the state created from that board
+     */
+    public static fromRepresentation(board: Table<PlayerOrNone>, turn: number, origin: Vector = new Vector(0, 0))
+    : SixState {
         const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
-                if (board[y][x] !== PlayerOrNone.NONE.value) {
-                    pieces.set(new Coord(x, y), Player.of(board[y][x]));
+                if (board[y][x] !== PlayerOrNone.NONE) {
+                    const adapted: Coord = new Coord(x, y).getNext(origin);
+                    pieces.set(adapted, board[y][x] as Player);
                 }
             }
         }
-        return new SixState(pieces, turn, offset);
+        return new SixState(pieces, turn);
     }
     public movePiece(move: SixMove): SixState {
         const pieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
@@ -43,10 +50,10 @@ export class SixState extends OpenHexagonalGameState<Player> {
         pieces.set(move.landing, this.getCurrentPlayer());
         return new SixState(pieces, this.turn);
     }
-    public toRepresentation(): NumberTable {
-        const board: number[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE.value);
+    public toRepresentation(): Table<PlayerOrNone> {
+        const board: PlayerOrNone[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE);
         for (const piece of this.pieces.listKeys()) {
-            const pieceValue: number = this.getPieceAt(piece).value;
+            const pieceValue: PlayerOrNone = this.getPieceAt(piece);
             board[piece.y][piece.x] = pieceValue;
         }
         return board;
@@ -94,7 +101,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
             }
             return new SixState(newPieces, this.turn + 1);
         } else {
-            return new SixState(stateAfterMove.pieces, this.turn + 1, stateAfterMove.offset);
+            return new SixState(stateAfterMove.pieces, this.turn + 1);
         }
 
     }
@@ -109,7 +116,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         const oldPiece: PlayerOrNone = this.getPieceAt(coord);
         if (oldPiece.isPlayer()) {
             newPieces.replace(coord, oldPiece.getOpponent());
-            return new SixState(newPieces, this.turn, this.offset);
+            return new SixState(newPieces, this.turn);
         } else {
             ErrorLoggerService.logErrorAndFail('SixState', 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
         }

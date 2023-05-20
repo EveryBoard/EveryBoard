@@ -114,7 +114,7 @@ export abstract class GameWrapper<P extends Comparable> {
     public setRole(role: PlayerOrNone): void {
         this.role = role;
         this.gameComponent.role = this.role;
-        if (this.gameComponent.hasAsymetricBoard) {
+        if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
         this.gameComponent.updateBoard(); // Trigger redrawing of the board (might need to be rotated 180°)

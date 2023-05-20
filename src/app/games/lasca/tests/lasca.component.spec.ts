@@ -265,7 +265,7 @@ describe('LascaComponent', () => {
 
             // When clicking on one of your piece
             // Then the board should be reversed
-            await testUtils.expectClickSuccessWithAsymetricNaming('#coord_4_4', '#coord_2_2');
+            await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_4_4', '#coord_2_2');
         }));
     });
     describe('multiple capture', () => {
@@ -302,7 +302,7 @@ describe('LascaComponent', () => {
 
             // When clicking on (2, 2)
             // Then it should have selected square (4, 4)
-            await testUtils.expectClickSuccessWithAsymetricNaming('#coord_2_2', '#coord_4_4');
+            await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_2_2', '#coord_4_4');
         }));
         it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
             // Given a board where you are player two and a moving piece has been selected
@@ -310,12 +310,12 @@ describe('LascaComponent', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(1, 3)).get();
             await testUtils.expectMoveSuccess('#coord_1_3', move); // First move is set
             testUtils.wrapper.setRole(Player.ONE); // changing role
-            await testUtils.expectClickSuccessWithAsymetricNaming('#coord_6_4', '#coord_0_2'); // Making the first click
+            await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_6_4', '#coord_0_2'); // Making the first click
 
             // When clicking on a invalid landing piece
-            await testUtils.expectClickFailureWithAsymetricNaming('#coord_6_5', '#coord_0_1', LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
+            await testUtils.expectClickFailureWithAsymmetricNaming('#coord_6_5', '#coord_0_1', LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
 
-            // Then the highlight should be at the good place only, not at their symetric point
+            // Then the highlight should be at the good place only, not at their symmetric point
             testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
             testUtils.expectElementNotToHaveClass('#square_0_2', 'selectable-fill');
         }));

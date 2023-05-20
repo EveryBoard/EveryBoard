@@ -3,7 +3,7 @@ import { AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('AwaleMove', () => {
 
@@ -12,7 +12,7 @@ describe('AwaleMove', () => {
         const minimax: AwaleMinimax = new AwaleMinimax(rules, 'AwaleMinimax');
         const firstTurnMoves: AwaleMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeBijective(AwaleMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(AwaleMove.encoder, move);
         }
     });
     it('should override equals correctly', () => {

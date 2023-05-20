@@ -24,13 +24,12 @@ import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/Test
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { JSONValue, Utils } from 'src/app/utils/utils';
+import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
@@ -42,6 +41,7 @@ import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
@@ -200,11 +200,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
 
-    const FIRST_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(FIRST_MOVE);
+    const FIRST_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(FIRST_MOVE);
 
-    const SECOND_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(SECOND_MOVE);
+    const SECOND_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(SECOND_MOVE);
 
-    const THIRD_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(THIRD_MOVE);
+    const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
@@ -244,7 +244,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return await testUtils.clickElement('#refuseTakeBackButton');
     }
     async function receiveNewMoves(initialTurn: number,
-                                   newMoves: number[],
+                                   newMoves: JSONValueWithoutArray[],
                                    detectChanges: boolean = true)
     : Promise<void>
     {
@@ -287,16 +287,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         if (player === Player.ONE) {
             offset = 1;
             const firstMove: QuartoMove = moves[0];
-            const encodedMove: number = QuartoMove.encoder.encodeNumber(firstMove);
+            const encodedMove: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(firstMove);
             await receiveNewMoves(turn, [encodedMove]);
             turn += 1;
         }
         for (let i: number = offset; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
-            const newMoves: number[] = [
-                QuartoMove.encoder.encodeNumber(move),
-                QuartoMove.encoder.encodeNumber(moves[i+1]),
+            const newMoves: JSONValueWithoutArray[] = [
+                QuartoMove.encoder.encodeMove(move),
+                QuartoMove.encoder.encodeMove(moves[i+1]),
             ];
             await receiveNewMoves(turn, newMoves);
             turn += 2;
@@ -309,7 +309,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.chronoOneTurn.isIdle()).withContext('chrono one turn should be idle').toBeTrue();
         expect(wrapper.endGame).toBeTrue();
     }
-    async function prepareStartedGameWithMoves(encodedMoves: number[]): Promise<void> {
+    async function prepareStartedGameWithMoves(encodedMoves: JSONValueWithoutArray[]): Promise<void> {
         // 1. Creating the mocks and testUtils but NOT component
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
@@ -320,7 +320,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         let turn: number = 0;
         if (role === Player.ONE) {
             offset = 1;
-            const encodedMove: number = encodedMoves[0];
+            const encodedMove: JSONValueWithoutArray = encodedMoves[0];
             await receiveNewMoves(turn, [encodedMove], false);
             turn += 1;
         }
@@ -919,7 +919,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(partService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: number = QuartoMove.encoder.encodeNumber(alternativeMove);
+                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent
@@ -971,7 +971,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(partService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: number = QuartoMove.encoder.encodeNumber(alternativeMove);
+                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent
@@ -1641,6 +1641,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should delegate to gameComponent.showLastMove', fakeAsync(async() => {
             // Given a any component
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
+            await doMove(FIRST_MOVE, true);
             const component: QuartoComponent = testUtils.getComponent();
             spyOn(component, 'showLastMove').and.callThrough();
 
@@ -1648,7 +1649,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
+        }));
+        it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
+            // Given a component without previous move
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            const component: QuartoComponent = testUtils.getComponent();
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should not have been called
+            expect(component.showLastMove).not.toHaveBeenCalled();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
 });

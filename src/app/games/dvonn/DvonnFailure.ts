@@ -13,4 +13,6 @@ export class DvonnFailure {
     public static readonly INVALID_MOVE_LENGTH: Localized = () => $localize`A stack must always be moved by as many spaces as there are pieces in the stack.`;
 
     public static readonly EMPTY_TARGET_STACK: Localized = () => $localize`The stack must land on an occupied space.`;
+
+    public static readonly MUST_MOVE_IN_STRAIGHT_LINE: Localized = () => $localize`A stack must move in a straight line.`;
 }

@@ -1,11 +1,11 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class DiamPiece {
-    public static encoder: NumberEncoder<DiamPiece> = NumberEncoder.tuple(
-        [Player.numberEncoder, NumberEncoder.booleanEncoder],
+    public static encoder: MoveEncoder<DiamPiece> = MoveEncoder.tuple(
+        [PlayerOrNone.encoder, MoveEncoder.identity<boolean>()],
         (piece: DiamPiece): [PlayerOrNone, boolean] => [piece.owner, piece.otherPieceType],
-        (fields: [Player, boolean]): DiamPiece => DiamPiece.of(fields[0], fields[1]),
+        (fields: [PlayerOrNone, boolean]): DiamPiece => DiamPiece.of(fields[0], fields[1]),
     );
 
     public static EMPTY: DiamPiece = new DiamPiece(PlayerOrNone.NONE, false);
@@ -34,9 +34,10 @@ export class DiamPiece {
     private constructor(public readonly owner: PlayerOrNone,
                         public readonly otherPieceType: boolean) {
     }
-
     public toString(): string {
         return `DiamPiece(${this.owner}, ${this.otherPieceType})`;
     }
+    public equals(other: DiamPiece): boolean {
+        return this === other;
+    }
 }
-

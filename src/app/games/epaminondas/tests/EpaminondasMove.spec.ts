@@ -4,7 +4,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('EpaminondasMove: ', () => {
 
@@ -27,11 +27,8 @@ describe('EpaminondasMove: ', () => {
         const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
         const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
         }
-    });
-    it('should forbid non integer number to decode', () => {
-        expect(() => EpaminondasMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
     });
     it('should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);

@@ -1,5 +1,5 @@
 import { Orthogonal, Direction } from '../../jscaip/Direction';
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -14,6 +14,7 @@ import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TaflState } from './TaflState';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 

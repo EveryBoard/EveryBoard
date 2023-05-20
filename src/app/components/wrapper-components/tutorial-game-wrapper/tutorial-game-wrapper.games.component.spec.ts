@@ -141,7 +141,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     ConspirateursRules.get(),
                     conspirateursTutorial[2],
-                    ConspirateursMoveJump.of([new Coord(4, 7), new Coord(4, 5)]).get(),
+                    ConspirateursMoveJump.from([new Coord(4, 7), new Coord(4, 5)]).get(),
                     MGPValidation.failure(`You have made a jump, not a simple move. Try again!`),
                 ], [
                     ConspirateursRules.get(),
@@ -151,12 +151,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     new DvonnRules(DvonnState),
                     dvonnTutorial[1],
-                    DvonnMove.of(new Coord(2, 1), new Coord(3, 0)),
+                    DvonnMove.from(new Coord(2, 1), new Coord(3, 0)).get(),
                     MGPValidation.failure(`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`),
                 ], [
                     new DvonnRules(DvonnState),
                     dvonnTutorial[2],
-                    DvonnMove.of(new Coord(2, 1), new Coord(1, 1)),
+                    DvonnMove.from(new Coord(2, 1), new Coord(1, 1)).get(),
                     MGPValidation.failure(`You have not taken possession of a source, try again.`),
                 ], [
                     new EncapsuleRules(EncapsuleState),

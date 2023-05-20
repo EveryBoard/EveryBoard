@@ -1,5 +1,5 @@
 import { Coord } from '../../jscaip/Coord';
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { P4State } from './P4State';
@@ -11,6 +11,7 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { P4Failure } from './P4Failure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 

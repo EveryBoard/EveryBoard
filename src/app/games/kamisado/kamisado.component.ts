@@ -15,7 +15,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
-import { GameStatus } from 'src/app/jscaip/Rules';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 @Component({
     selector: 'app-kamisado',
@@ -35,7 +35,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new KamisadoRules(KamisadoState);
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
@@ -60,14 +60,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public updateBoard(): void {
         const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
-        this.lastMove = this.rules.node.move;
         this.lastPieceMove = MGPOptional.empty();
-        if (this.lastMove.isPresent()) {
-            const lastMove: KamisadoMove = this.lastMove.get();
-            if (lastMove.isPieceMove()) {
-                this.lastPieceMove = MGPOptional.of(lastMove);
-            }
-        }
 
         this.canPass = KamisadoRules.mustPass(state);
         const isFinished: boolean = this.rules.getGameStatus(this.rules.node) !== GameStatus.ONGOING;
@@ -79,7 +72,12 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.chosen = state.coordToPlay;
         }
     }
-    public async pass(): Promise<MGPValidation> {
+    public override showLastMove(move: KamisadoMove): void {
+        if (move.isPieceMove()) {
+            this.lastPieceMove = MGPOptional.of(move);
+        }
+    }
+    public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
         return this.chooseMove(KamisadoMove.PASS, this.getState());
     }
@@ -129,7 +127,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.getState());
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {
             this.chosen = MGPOptional.empty();
         }

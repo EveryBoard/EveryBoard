@@ -150,7 +150,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new MartianChessRules(MartianChessState);
         this.availableMinimaxes = [
             new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),
@@ -209,8 +209,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         if (this.rules.node.move.isPresent()) {
             const move: MartianChessMove = this.rules.node.move.get();
             if (move.getEnd().equals(clickedCoord)) {
-                const previousPiece: MartianChessPiece =
-                    this.rules.node.mother.get().gameState.getPieceAt(clickedCoord);
+                const previousPiece: MartianChessPiece = this.getPreviousState().getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
                 if (wasOccupied) {
                     const landingHome: boolean = this.getState().isInOpponentTerritory(new Coord(0, y));
@@ -314,7 +313,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return this.state.getPieceAt(coord) !== MartianChessPiece.EMPTY &&
                this.state.isInPlayerTerritory(coord);
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPieceInfo = MGPOptional.empty();
         this.callTheClock = false;
     }

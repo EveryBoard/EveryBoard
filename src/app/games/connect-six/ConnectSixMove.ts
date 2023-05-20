@@ -1,5 +1,5 @@
 import { MoveEncoder } from 'src/app/utils/Encoder';
-import { MoveCoord, MoveCoordEncoder } from 'src/app/jscaip/MoveCoord';
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -15,11 +15,12 @@ export class ConnectSixFirstMove extends MoveCoord {
         Utils.assert(ConnectSixFirstMove.isInRange(coord), 'FIRST_COORD_IS_OUT_OF_RANGE');
         return new ConnectSixFirstMove(coord.x, coord.y);
     }
+    public static encoder: MoveEncoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.from);
+
     private constructor(x: number, y: number) {
         super(x, y);
     }
-    public static encoder: MoveEncoder<ConnectSixFirstMove> =
-        MoveCoordEncoder.getEncoder(ConnectSixState.WIDTH, ConnectSixState.WIDTH, ConnectSixFirstMove.from);
+
     public equals(other: ConnectSixFirstMove): boolean {
         return this.coord.equals(other.coord);
     }
@@ -29,7 +30,7 @@ export class ConnectSixFirstMove extends MoveCoord {
 }
 export class ConnectSixDrops extends MoveWithTwoCoords {
 
-    public static encoder: MoveEncoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.from);
+    public static encoder: MoveEncoder<ConnectSixDrops> = MoveWithTwoCoords.getFallibleEncoder(ConnectSixDrops.from);
 
     public static from(first: Coord, second: Coord): MGPFallible<ConnectSixDrops> {
         Utils.assert(first.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'FIRST_COORD_IS_OUT_OF_RANGE');

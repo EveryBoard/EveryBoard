@@ -69,7 +69,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         newBoard[coord.y][coord.x] = value;
         return new DvonnState(newBoard, this.turn, this.alreadyPassed) as this;
     }
-    public isOnBoard(coord: Coord): boolean {
+    public override isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }

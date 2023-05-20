@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { MGPNode } from '../MGPNode';
-import { GameStatus, Rules } from '../Rules';
+import { Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
-
+import { GameStatus } from '../GameStatus';
 
 class MyAbstractState extends GameStateWithTable<number> {
 
@@ -55,7 +55,7 @@ describe('Rules', () => {
         const encodedMoveList: number[] = [0, 1, 2, 3];
 
         // When calling applyMoves
-        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeNumber);
+        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeMove);
 
         // Then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([encodedMoveList]);

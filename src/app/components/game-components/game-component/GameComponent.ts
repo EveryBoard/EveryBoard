@@ -71,7 +71,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public imagesLocation: string = 'assets/images/';
 
-    public hasAsymetricBoard: boolean = false;
+    public hasAsymmetricBoard: boolean = false;
 
     // Will contain, once the wrapper change the userRole, the valid orientation (180° when you play Player.ONE)
     public rotation: string = '';
@@ -134,7 +134,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getPreviousState(): S {
         return this.rules.node.mother.get().gameState;
     }
-    public showLastMove(): void {
+    public showLastMove(move: M): void {
         // Not needed by default
     }
 }

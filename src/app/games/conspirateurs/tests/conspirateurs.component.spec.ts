@@ -27,14 +27,14 @@ describe('ConspirateursComponent', () => {
             // Given the initial state
             // When clicking in the central zone
             // Then a drop should be made
-            const move: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(7, 7)).get();
+            const move: ConspirateursMove = ConspirateursMoveDrop.from(new Coord(7, 7)).get();
             await testUtils.expectMoveSuccess('#click_7_7', move);
         }));
         it('should forbid dropping outside of the central zone', fakeAsync(async() => {
             // Given the initial state
             // When clicking out of the central zone
             // Then an error should be shown
-            const move: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(0, 0)).get();
+            const move: ConspirateursMove = ConspirateursMoveDrop.from(new Coord(0, 0)).get();
             await testUtils.expectMoveFailure('#click_0_0', ConspirateursFailure.MUST_DROP_IN_CENTRAL_ZONE(), move);
         }));
         it('should display the number of remaining pieces (even turn)', fakeAsync(async() => {
@@ -135,7 +135,7 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_5_4');
 
             // Then the jump should be directly performed
-            const move: ConspirateursMoveJump = ConspirateursMoveJump.of([new Coord(5, 4), new Coord(5, 6)]).get();
+            const move: ConspirateursMoveJump = ConspirateursMoveJump.from([new Coord(5, 4), new Coord(5, 6)]).get();
             await testUtils.expectMoveSuccess('#click_5_6', move);
         }));
         it('should allow performing multiple jumps', fakeAsync(async() => {
@@ -145,7 +145,7 @@ describe('ConspirateursComponent', () => {
 
             // Then the jump should be performed
             const move: ConspirateursMoveJump =
-                ConspirateursMoveJump.of([new Coord(5, 4), new Coord(5, 2), new Coord(7, 2)]).get();
+                ConspirateursMoveJump.from([new Coord(5, 4), new Coord(5, 2), new Coord(7, 2)]).get();
             await testUtils.expectMoveSuccess('#click_7_2', move);
         }));
         it('should allow stopping a jump early by clicking twice on the destination', fakeAsync(async() => {
@@ -154,7 +154,7 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_5_2');
 
             // Then the jump should be performed
-            const move: ConspirateursMoveJump = ConspirateursMoveJump.of([new Coord(5, 4), new Coord(5, 2)]).get();
+            const move: ConspirateursMoveJump = ConspirateursMoveJump.from([new Coord(5, 4), new Coord(5, 2)]).get();
             await testUtils.expectMoveSuccess('#click_5_2', move);
         }));
         it('should forbid creation of invalid jumps', fakeAsync(async() => {

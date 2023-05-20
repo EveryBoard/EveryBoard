@@ -48,7 +48,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new EpaminondasRules(EpaminondasState);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
@@ -63,13 +63,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.firstPiece = MGPOptional.empty();
         this.lastPiece = MGPOptional.empty();
         this.hidePreviousMove();
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        }
         this.board = this.getState().getCopiedBoard();
     }
-    private showPreviousMove(): void {
-        const move: EpaminondasMove = this.rules.node.move.get();
+    public override showLastMove(move: EpaminondasMove): void {
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {
@@ -215,7 +211,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return length;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.firstPiece = MGPOptional.empty();
         this.validExtensions = [];
         this.phalanxValidLandings = [];

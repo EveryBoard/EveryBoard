@@ -17,7 +17,6 @@ import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -29,6 +28,7 @@ import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -197,7 +197,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should rotate the board when selecting AI as player zero', async() => {
             // Given a board of a reversible component
-            testUtils.getComponent().hasAsymetricBoard = true;
+            testUtils.getComponent().hasAsymmetricBoard = true;
 
             // When chosing the AI as player zero
             await selectAIPlayer(Player.ZERO);
@@ -208,7 +208,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should de-rotate the board when selecting human as player zero again', async() => {
             // Given a board of a reversible component, where AI is player zero
-            testUtils.getComponent().hasAsymetricBoard = true;
+            testUtils.getComponent().hasAsymmetricBoard = true;
             await selectAIPlayer(Player.ZERO);
 
             // When chosing the human as player zero again
@@ -434,7 +434,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.FOUR);
         }));
         it('should not showLastMove when there is none', fakeAsync(async() => {
             // Given a component with a last move
@@ -444,7 +444,7 @@ describe('LocalGameWrapperComponent', () => {
             // When calling onCancelMove
             testUtils.wrapper.onCancelMove();
 
-            // Then showLastMove should have been called
+            // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
         }));
     });
