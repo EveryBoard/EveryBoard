@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { display } from 'src/app/utils/utils';
 import { CoerceoMove } from './CoerceoMove';
@@ -8,6 +8,7 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
 

@@ -3,7 +3,6 @@ import { RectangularGameComponent }
     from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMinimax } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
@@ -14,6 +13,7 @@ import { PentagoTutorial } from './PentagoTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 interface ArrowInfo {
     path: string;

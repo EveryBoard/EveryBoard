@@ -15,7 +15,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
-import { GameStatus } from 'src/app/jscaip/Rules';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 @Component({
     selector: 'app-kamisado',

@@ -1,12 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
-import { PentagoNode, PentagoRules } from './PentagoRules';
+import { PentagoNode } from './PentagoRules';
 import { PentagoState } from './PentagoState';
 
-export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
+export class PentagoMinimax extends PlayerMetricsMinimax<PentagoMove, PentagoState> {
 
     public static readonly FIRST_TURN_MOVES: PentagoMove[] = [
         PentagoMove.rotationless(0, 0),
@@ -58,7 +57,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
         const legalRotations: [number, boolean][] = [];
         for (let blockIndex: number = 0; blockIndex < 4; blockIndex++) {
             if (stateAfterDrop.blockIsNeutral(blockIndex) === false) {
-                if (blockNeutralBeforeDrop.includes(blockIndex)) { // just deneutralised
+                if (blockNeutralBeforeDrop.includes(blockIndex)) { // just deneutralized
                     if (mustRotate) {
                         legalRotations.push([blockIndex, true]);
                     }
@@ -69,7 +68,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
         }
         return legalRotations;
     }
-    public getBoardValue(node: PentagoNode): BoardValue {
-        return PentagoRules.get().getGameStatus(node).toBoardValue();
+    public getMetrics(_node: PentagoNode): [number, number] {
+        return [0, 0];
     }
 }

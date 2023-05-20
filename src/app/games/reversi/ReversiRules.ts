@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
@@ -10,6 +10,7 @@ import { assert } from 'src/app/utils/assert';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 
 export type ReversiLegalityInformation = Coord[];
