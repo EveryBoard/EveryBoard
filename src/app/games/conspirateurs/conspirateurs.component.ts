@@ -76,10 +76,6 @@ export class ConspirateursComponent
     }
     public updateBoard(): void {
         this.updateViewInfo();
-        const lastMove: MGPOptional<ConspirateursMove> = this.rules.node.move;
-        if (lastMove.isPresent()) {
-            this.showLastMove(this.rules.node.move.get());
-        }
     }
     private updateViewInfo(): void {
         const state: ConspirateursState = this.getState();

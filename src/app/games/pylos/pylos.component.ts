@@ -303,11 +303,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         this.highCapture = MGPOptional.empty();
         this.cancelMoveAttempt();
-        if (this.lastMove.isPresent()) {
-            this.showLastMove(this.rules.node.move.get());
-        } else {
-            this.hideLastMove();
-        }
+        this.hideLastMove();
     }
     public override showLastMove(move: PylosMove): void {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);

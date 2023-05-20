@@ -48,10 +48,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
         this.board = state.board;
-        if (lastMove.isPresent()) {
-            this.showLastMove(this.rules.node.move.get());
-        } else {
-            this.hideLastMove();
+        if (lastMove.isAbsent()) {
+            this.hideLastMove(); // TODO: ceux là aussi me laissent dubitateuf
         }
     }
     public override showLastMove(move: P4Move): void {

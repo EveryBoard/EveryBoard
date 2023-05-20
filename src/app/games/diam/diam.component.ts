@@ -190,10 +190,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
     public updateBoard(): void {
         this.updateViewInfo();
-        const lastMove: MGPOptional<DiamMove> = this.rules.node.move;
-        if (lastMove.isPresent()) {
-            this.showLastMove(this.rules.node.move.get());
-        }
     }
     private getLastMovedFromDrop(drop: DiamMoveDrop, stateBefore: DiamState): LastMoved[] {
         const startDrawPosition: Coord =

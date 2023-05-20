@@ -39,9 +39,6 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
-        if (this.rules.node.move.isPresent()) {
-            this.showLastMove(this.rules.node.move.get()); // TODO: check if still needed
-        }
     }
     public override showLastMove(move: ConnectSixMove): void {
         if (move instanceof ConnectSixFirstMove) {

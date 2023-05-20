@@ -281,11 +281,7 @@ export class LodestoneComponent
         return MGPValidation.SUCCESS;
     }
     public updateBoard(): void {
-        this.cancelMoveAttempt();
-        const lastMove: MGPOptional<LodestoneMove> = this.rules.node.move;
-        if (lastMove.isPresent()) {
-            this.showLastMove(this.rules.node.move.get());
-        }
+        this.cancelMoveAttempt(); // TODO: checker qu'on a besoin des cancelMoveAttempt avant un updateBoard ?
         this.scores = MGPOptional.of(this.getState().getScores());
     }
     public override cancelMoveAttempt(): void {
@@ -450,7 +446,7 @@ export class LodestoneComponent
         }
     }
     public override showLastMove(move: LodestoneMove): void {
-        const lastState: LodestoneState = this.rules.node.mother.get().gameState;
+        const lastState: LodestoneState = this.getPreviousState();
         this.lastInfos = MGPOptional.of(
             LodestoneRules.get().applyMoveWithoutPlacingCaptures(lastState, move.coord, move));
         this.updateViewInfo();

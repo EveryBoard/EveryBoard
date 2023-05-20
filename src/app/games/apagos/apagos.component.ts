@@ -95,9 +95,6 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.remainingOne = state.remaining.get(Player.ONE).get();
 
         this.hideLastMove();
-        if (this.rules.node.move.isPresent()) {// TODO: check if still needed
-            this.showLastMove(this.rules.node.move.get());
-        }
         this.showPossibleDrops();
     }
     public hideLastMove(): void {
@@ -138,7 +135,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         }
     }
     public showLastTransfer(lastMove: ApagosMove): void {
-        const previousState: ApagosState = this.rules.node.mother.get().gameState;
+        const previousState: ApagosState = this.getPreviousState();
         const previousPlayer: Player = previousState.getCurrentPlayer();
         const leftSquare: number = lastMove.starting.get().x;
         const previousSquare: ApagosSquare = previousState.board[leftSquare];

@@ -63,9 +63,6 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public updateBoard(): void {
         this.board = this.getState().getCopiedBoard();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
-        if (this.rules.node.move.isAbsent()) {
-            this.hidePreviousMove();
-        }
     }
     public override showLastMove(move: PentagoMove): void {
         this.cancelMoveAttempt();

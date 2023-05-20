@@ -50,9 +50,8 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.hidePreviousMove();
 
         this.board = state.getCopiedBoard();
-        if (this.rules.node.move.isAbsent()) {
-            this.last = MGPOptional.empty();
-        }
+        // Will be set in showLastMove if there is one
+        this.last = MGPOptional.empty();
     }
     private hidePreviousMove(): void {
         this.captured = [
@@ -64,7 +63,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
     public override showLastMove(move: AwaleMove): void {
         const lastPlayer: number = this.getState().getCurrentPlayer().value;
         this.last = MGPOptional.of(new Coord(move.x, lastPlayer));
-        const previousState: AwaleState = this.rules.node.mother.get().gameState;
+        const previousState: AwaleState = this.getPreviousState();
         const previousBoard: number[][] = ArrayUtils.copyBiArray(previousState.board);
         const previousY: number = previousState.getCurrentOpponent().value;
         this.filledCoords = AwaleRules.distribute(move.x,

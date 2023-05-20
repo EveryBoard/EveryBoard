@@ -140,9 +140,6 @@ export class YinshComponent
             this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
         }
         this.showCurrentMoveCaptures();
-        if (this.rules.node.move.isPresent()) {
-            this.showLastMove(this.rules.node.move.get());
-        }
 
         this.viewInfo.targets = [];
         this.viewInfo.selectableCoords = [];

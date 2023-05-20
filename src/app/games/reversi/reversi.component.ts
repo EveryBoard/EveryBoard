@@ -56,9 +56,8 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.board = state.getCopiedBoard();
         this.capturedCoords = [];
 
-        if (this.rules.node.move.isAbsent()) {
-            this.lastMove = new Coord(-2, -2);
-        }
+        // Will be set to the real value in showLastMove if there is a last move
+        this.lastMove = new Coord(-2, -2);
 
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = ReversiRules.playerCanOnlyPass(state);
@@ -71,7 +70,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             let captured: Coord = this.lastMove.getNext(dir, 1);
             while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
                    this.getState().getPieceAt(captured) === opponent &&
-                   this.rules.node.mother.get().gameState.getPieceAt(captured) === player)
+                   this.getPreviousState().getPieceAt(captured) === player)
             {
                 this.capturedCoords.push(captured);
                 captured = captured.getNext(dir, 1);

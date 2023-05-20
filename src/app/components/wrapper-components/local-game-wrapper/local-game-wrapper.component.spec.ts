@@ -444,7 +444,7 @@ describe('LocalGameWrapperComponent', () => {
             // When calling onCancelMove
             testUtils.wrapper.onCancelMove();
 
-            // Then showLastMove should have been called
+            // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
         }));
     });

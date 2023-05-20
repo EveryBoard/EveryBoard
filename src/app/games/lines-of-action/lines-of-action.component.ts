@@ -85,14 +85,13 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
-        this.lastMove = this.rules.node.move;
-        if (this.lastMove.isPresent()) {
-            const lastMove: LinesOfActionMove = this.lastMove.get();
-            if (this.getPreviousState().getPieceAt(lastMove.getEnd()).isPlayer()) {
-                this.captured = MGPOptional.of(lastMove.getEnd());
-            } else {
-                this.captured = MGPOptional.empty();
-            }
+    }
+    public override showLastMove(move: LinesOfActionMove): void {
+        this.lastMove = MGPOptional.of(move);
+        if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {
+            this.captured = MGPOptional.of(move.getEnd());
+        } else {
+            this.captured = MGPOptional.empty();
         }
     }
     public override cancelMoveAttempt(): void {
