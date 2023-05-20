@@ -1,11 +1,11 @@
-import { Coord } from "src/app/jscaip/Coord";
-import { Minimax } from "src/app/jscaip/Minimax";
-import { Player, PlayerOrNone } from "src/app/jscaip/Player";
-import { RulesFailure } from "src/app/jscaip/RulesFailure";
-import { RulesUtils } from "src/app/jscaip/tests/RulesUtils.spec";
-import { PenteMove } from "../PenteMove";
-import { PenteNode, PenteRules } from "../PenteRules";
-import { PenteState } from "../PenteState";
+import { Coord } from 'src/app/jscaip/Coord';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { PenteMove } from '../PenteMove';
+import { PenteNode, PenteRules } from '../PenteRules';
+import { PenteState } from '../PenteState';
 
 describe('PenteRules', () => {
 

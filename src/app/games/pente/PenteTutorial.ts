@@ -48,7 +48,7 @@ export class PenteTutorial extends Tutorial {
             ], [0, 0], 3),
             [PenteMove.of(new Coord(9, 6))],
             $localize`Congratulations!`,
-            $localize`Failed, try again!`,
+            $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
             $localize`Winning`,
@@ -76,7 +76,7 @@ export class PenteTutorial extends Tutorial {
             ], [8, 8], 7),
             [PenteMove.of(new Coord(9, 6)), PenteMove.of(new Coord(8, 9)), PenteMove.of(new Coord(13, 9))],
             $localize`Congratulations!`,
-            $localize`Failed, try again!`,
+            $localize`Failed. Try again.`,
         ),
     ];
 }

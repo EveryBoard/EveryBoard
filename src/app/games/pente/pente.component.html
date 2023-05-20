@@ -5,8 +5,7 @@
     <rect x="0" y="0"
           [attr.width]="board.length * SPACE_SIZE * 0.5"
           [attr.height]="board.length * SPACE_SIZE * 0.5"
-          class="base mid-small-stroke"
-    />
+          class="base mid-small-stroke" />
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let spaceContent of line; index as x"
             id="click_{{ x }}_{{ y }}"
@@ -35,6 +34,12 @@
                       [attr.x2]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
                       [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * y)"
                       class="base mid-stroke"/>
+                <circle *ngIf="isHoshi(x, y)"
+                        id="hoshi_{{ x }}_{{ y }}"
+                        class="base-no-stroke"
+                        [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
+                        [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
+                        [attr.r]="SPACE_SIZE * 0.1" />
             </ng-template>
         </g>
     </g>
@@ -44,6 +49,5 @@
             [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.x"
             [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.y"
             [attr.r]="SPACE_SIZE * 0.07"
-            class="captured-fill"
-    />
+            class="captured-fill" />
 </svg>
