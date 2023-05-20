@@ -2,7 +2,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
@@ -11,6 +11,7 @@ import { PylosFailure } from './PylosFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPFallible } from '../../utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class PylosNode extends MGPNode<PylosRules, PylosMove, PylosState> {}
 

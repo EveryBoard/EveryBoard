@@ -76,14 +76,12 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                          FlatHexaOrientation.INSTANCE);
     }
     public updateBoard(): void {
-        this.showLastMove();
         this.cancelMoveAttempt();
     }
-    public override showLastMove(): void {
+    public override showLastMove(move: GipfMove): void {
         this.inserted = MGPOptional.empty();
-        const lastMove: MGPOptional<GipfMove> = this.rules.node.move;
-        if (lastMove.isPresent() && lastMove.get().placement.direction.isPresent()) {
-            const lastPlacement: GipfPlacement = lastMove.get().placement;
+        if (move.placement.direction.isPresent()) {
+            const lastPlacement: GipfPlacement = move.placement;
             this.inserted = MGPOptional.of(this.arrowTowards(lastPlacement.coord, lastPlacement.direction.get()));
         }
         this.cancelMoveAttempt();
@@ -263,7 +261,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         const moveOptional: MGPOptional<GipfMove> = this.rules.node.move;
         if (moveOptional.isPresent()) {
             const move: GipfMove = moveOptional.get();
-            const previousState: GipfState = this.rules.node.mother.get().gameState;
+            const previousState: GipfState = this.getPreviousState();
             move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             this.moved = this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement);

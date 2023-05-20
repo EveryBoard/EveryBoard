@@ -54,18 +54,14 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.state = this.getState();
-        this.lastMove = this.rules.node.move;
         this.disconnecteds = [];
-        if (this.lastMove.isPresent()) {
-            this.calculateDisconnecteds();
-        } else {
-            this.hideLastMove();
-        }
+        this.hideLastMove();
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
-    private calculateDisconnecteds(): void {
-        const previousState: DvonnState = this.rules.node.mother.get().gameState;
+    public override showLastMove(move: DvonnMove): void {
+        this.lastMove = MGPOptional.of(move);
+        const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.getState();
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {

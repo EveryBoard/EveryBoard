@@ -9,11 +9,12 @@ import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
 import { display } from 'src/app/utils/utils';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 

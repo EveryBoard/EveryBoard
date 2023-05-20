@@ -146,4 +146,24 @@ describe('PentagoComponent', () => {
             expect(component.getSquareClasses(0, 1)).toEqual(['player1-fill', 'last-move-stroke']);
         }));
     });
+    it('should hide first move when taking back', fakeAsync(async() => {
+        // Given a state with a first move done
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, O],
+        ];
+        const state: PentagoState = new PentagoState(board, 1);
+        const move: PentagoMove = PentagoMove.rotationless(5, 5);
+        testUtils.setupState(state, PentagoState.getInitialState(), move);
+
+        // When taking it back
+        await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+        // Then no highlight should be found
+        testUtils.expectElementNotToHaveClass('#click_5_5', 'last-move-stroke');
+    }));
 });

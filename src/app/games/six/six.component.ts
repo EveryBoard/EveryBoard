@@ -69,39 +69,39 @@ export class SixComponent
         const node: SixNode = this.rules.node;
         this.state = node.gameState;
         const lastMove: MGPOptional<SixMove> = this.rules.node.move;
-        if (lastMove.isPresent()) {
-            this.showLastMove();
-        } else {
+        if (lastMove.isAbsent()) {
             // For tutorial
-            this.leftCoord = MGPOptional.empty();
-            this.lastDrop = MGPOptional.empty();
-            this.victoryCoords = [];
-            this.disconnecteds = [];
+            this.hideLastMove();
         }
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
         this.viewBox = this.getViewBox();
     }
+    public hideLastMove(): void {
+        this.leftCoord = MGPOptional.empty();
+        this.lastDrop = MGPOptional.empty();
+        this.victoryCoords = [];
+        this.disconnecteds = [];
+    }
     private getViewBox(): string {
         const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
         return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH).toSVGString();
     }
-    public override showLastMove(): void {
-        const lastMove: SixMove = this.rules.node.move.get();
-        this.lastDrop = MGPOptional.of(lastMove.landing);
-        if (lastMove.isDrop() === false) {
-            this.leftCoord = MGPOptional.of(lastMove.start.get());
+    public override showLastMove(move: SixMove): void {
+        this.lastDrop = MGPOptional.of(move.landing);
+        if (move.isDrop() === false) {
+            this.leftCoord = MGPOptional.of(move.start.get());
         } else {
             this.leftCoord = MGPOptional.empty();
         }
         const state: SixState = this.getState();
         if (this.rules.getGameStatus(this.rules.node).isEndGame) {
-            this.victoryCoords = this.rules.getShapeVictory(lastMove, state);
+            this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
         this.disconnecteds = this.getDisconnected();
     }
     private getDisconnected(): Coord[] {
-        const oldPieces: Coord[] = this.rules.node.mother.get().gameState.getPieceCoords();
+        const oldPieces: Coord[] = this.getPreviousState().getPieceCoords();
         const newPieces: Coord[] = this.getState().getPieceCoords();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {

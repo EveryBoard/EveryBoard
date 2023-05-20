@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -9,6 +9,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class ConnectSixNode extends MGPNode<ConnectSixRules, ConnectSixMove, ConnectSixState> {}
 

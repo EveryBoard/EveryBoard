@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Coord } from 'src/app/jscaip/Coord';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils, Table2DWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
@@ -158,9 +158,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 const loser: Player = winner.getOpponent();
                 this.highlight(this.getState().queenBeeLocation(loser).get(), 'victory-stroke');
         }
-        if (this.rules.node.move.isPresent()) {
-            this.showLastMove();
-        }
     }
     private highlight(coord: Coord, stroke: string): void {
         const stackSize: number = this.getState().getAt(coord).size();
@@ -242,20 +239,16 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.selectedRemaining = MGPOptional.empty();
         this.selectedSpiderCoords = [];
         this.inspectedStack = MGPOptional.empty();
-        if (this.rules.node.move.isPresent()) {
-            this.showLastMove();
-        }
         this.computeViewBox();
     }
-    public override showLastMove(): void {
-        for (const coord of this.getLastMoveCoords()) {
+    public override showLastMove(move: HiveMove): void {
+        for (const coord of this.getLastMoveCoords(move)) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');
             this.ground.highlightFill(coord, 'moved-fill');
         }
     }
-    private getLastMoveCoords(): Coord[] {
-        const move: HiveMove = this.rules.node.move.get();
+    private getLastMoveCoords(move: HiveMove): Coord[] {
         let lastMove: Coord[] = [];
         if (move instanceof HiveMoveDrop) {
             lastMove = [move.coord];

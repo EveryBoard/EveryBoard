@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
@@ -13,6 +12,7 @@ import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert } from 'src/app/utils/assert';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 

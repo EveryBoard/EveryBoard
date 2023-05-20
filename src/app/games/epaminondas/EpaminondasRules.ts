@@ -2,13 +2,14 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 

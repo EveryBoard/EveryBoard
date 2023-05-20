@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { YinshFailure } from '../YinshFailure';
@@ -12,6 +11,7 @@ import { YinshPiece } from '../YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('YinshRules', () => {
 

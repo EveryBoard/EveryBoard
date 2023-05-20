@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneFailure } from './AbaloneFailure';
@@ -10,6 +10,7 @@ import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>
 

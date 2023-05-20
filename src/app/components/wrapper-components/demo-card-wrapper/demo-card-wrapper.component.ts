@@ -43,9 +43,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         setTimeout(async() => {
             await this.afterViewInit();
             this.gameComponent.rules.node = this.demoNodeInfo.node;
+            // The board needs to be updated to render the changed node, setRole will do it
             this.setRole(this.gameComponent.getCurrentPlayer());
-            // The board needs to be updated to render the changed node
-            this.gameComponent.updateBoard();
             // Need to detect changes before potentially clicking,
             // and otherwise we'll get an angular exception in our tests
             this.cdr.detectChanges();
