@@ -20,7 +20,7 @@ fdescribe('PenteComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<PenteComponent>('Pente');
     }));
-    it('should create', () => {
+    fit('should create', () => {
         testUtils.expectToBeCreated();
     });
     it('should do the move when clicking on an empty square', fakeAsync(async() => {

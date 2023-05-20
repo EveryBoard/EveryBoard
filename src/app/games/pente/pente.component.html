@@ -7,42 +7,38 @@
           [attr.height]="board.length * SPACE_SIZE * 0.5"
           class="base mid-small-stroke"
     />
-    <g id="blank_board">
-        <g *ngFor="let line of board; index as y">
-            <g *ngFor="let spaceContent of line; index as x">
-                <rect id="click_{{ x }}_{{ y }}"
-                      [attr.width]="SPACE_SIZE * 0.5"
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let spaceContent of line; index as x"
+            id="click_{{ x }}_{{ y }}"
+            (click)="onClick(x, y)" >
+            <circle *ngIf="spaceContent.isPlayer() else empty"
+                    id="piece_{{ x }}_{{ y }}"
+                    [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * x"
+                    [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * y"
+                    [attr.r]="SPACE_SIZE * 0.22"
+                    [ngClass]="getSpaceClass(x, y)"
+                    class="base mid-stroke" />
+            <ng-template #empty>
+                <rect [attr.width]="SPACE_SIZE * 0.5"
                       [attr.height]="SPACE_SIZE * 0.5"
                       [attr.x]="SPACE_SIZE * 0.5 * x"
                       [attr.y]="SPACE_SIZE * 0.5 * y"
-                      (click)="onClick(x, y)"
                       class="base no-stroke"
-                      fill-opacity="0"
-                />
+                      fill-opacity="0" />
                 <line [attr.x1]="SPACE_SIZE * 0.5 * x"
                       [attr.y1]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
                       [attr.x2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * x)"
                       [attr.y2]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
-                      (click)="onClick(x, y)"
                       class="base mid-stroke"/>
                 <line [attr.x1]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
                       [attr.y1]="SPACE_SIZE * 0.5 * y"
                       [attr.x2]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
                       [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * y)"
-                      (click)="onClick(x, y)"
                       class="base mid-stroke"/>
-            </g>
+            </ng-template>
         </g>
-        <circle *ngFor="let hoshi of hoshis"
-                id="hoshi_{{ hoshi.x }}_{{ hoshi.y }}"
-                class="base-no-stroke"
-                [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * hoshi.x)"
-                [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * hoshi.y)"
-                [attr.r]="SPACE_SIZE * 0.1"
-                (click)="onClick(hoshi.x, hoshi.y)"
-        />
     </g>
-    <circle *ngFor="let capture of captures"
+    <circle *ngFor="let capture of captured"
             (click)="onClick(capture.x, capture.y)"
             [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.x"
             [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.y"

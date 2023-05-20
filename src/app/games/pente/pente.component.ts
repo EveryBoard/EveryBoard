@@ -1,4 +1,3 @@
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { PenteRules } from './PenteRules';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
@@ -21,7 +20,10 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
     public captured: Coord[] = [];
-
+    public hoshis: Coord[] = [
+            new Coord(3, 9), new Coord(9, 3), new Coord(9, 15), new Coord(15, 9), new Coord(9, 9),
+            new Coord(3, 3), new Coord(3, 15), new Coord(15, 3), new Coord(15, 15),
+    ];
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
@@ -53,6 +55,19 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
         }
         const clickedCoord: Coord = new Coord(x, y);
         return this.chooseMove(PenteMove.of(clickedCoord), this.getState());
+    }
+    public getSpaceClass(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
+        const owner: PlayerOrNone = this.getState().getPieceAt(coord);
+        const classes: string[] = [];
+        classes.push(this.getPlayerClass(owner));
+        if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
+            classes.push('victory-stroke');
+        }
+        if (this.lastMoved.equalsValue(coord)) {
+            classes.push('last-move-stroke');
+        }
+        return classes;
     }
     public override cancelMoveAttempt(): void {
     }
