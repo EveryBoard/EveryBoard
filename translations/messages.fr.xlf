@@ -3094,7 +3094,7 @@
       </trans-unit>
       <trans-unit id="254985125186363895" datatype="html">
         <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
-        <target>Lors de votre tour, vous devez déposer une pierre sur votre plateau. Il n'y a pas de restriction : vous pouvez la placer sur n'importe quel emplacement libre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pierre sur le plateau.</target>
+        <target>Lors de votre tour, vous devez déposer une pierre sur le plateau. Il n'y a pas de restriction : vous pouvez la placer sur n'importe quel emplacement libre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pierre sur le plateau.</target>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
         <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
@@ -3108,13 +3108,9 @@
         <source>You can safely place a piece next to another of your piece in what would look like a sandwich from the opponent&apos;s pieces. This is a safe move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and have the opportunity to do such a move here, do it!</source>
         <target>Vous pouvez placer une de vos pièces à côté d'une autre de vos pièces, là où elle serait en sandwich entre deux pièces adverses. C'est un mouvement sûr.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair et avez la possibilité de faire un tel mouvement, faites-le !</target>
       </trans-unit>
-      <trans-unit id="2207130182560822950" datatype="html">
-        <source>Winning</source>
-        <target>Victoire</target>
-      </trans-unit>
       <trans-unit id="5109014320867695717" datatype="html">
         <source>Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, you can win in two ways. Win!</source>
-        <target>Souvenez-vous, vous pouver soit en alignant 5 de vos pièces, soit en capturant 10 pièces de votre adversaire. Ici, en tant que Clair, vous avez déjà capturé 8 pièces adverses et vous n'avez besoin que de deux pièces supplémentaires pour gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, vous pouvez gagner de deux façon différentes. Gagnez !</target>
+        <target>Souvenez-vous, vous pouver gagner soit en alignant 5 de vos pièces, soit en capturant 10 pièces de votre adversaire. Ici, en tant que Clair, vous avez déjà capturé 8 pièces adverses et vous n'avez besoin que de deux pièces supplémentaires pour gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, vous pouvez gagner de deux façon différentes. Gagnez !</target>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>

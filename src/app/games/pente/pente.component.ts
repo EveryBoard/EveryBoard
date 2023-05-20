@@ -9,14 +9,14 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 
 @Component({
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone> {
+export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone> {
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
@@ -37,6 +37,7 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
         this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
+        this.createHoshis();
         this.cancelMoveAttempt();
     }
     public override showLastMove(): void {
@@ -69,9 +70,5 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
             classes.push('last-move-stroke');
         }
         return classes;
-    }
-    public isHoshi(x: number, y: number): boolean {
-        return (x === 3 || x === 9 || x === 15) &&
-               (y === 3 || y === 9 || y === 15);
     }
 }

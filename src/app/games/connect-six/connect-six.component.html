@@ -39,6 +39,12 @@
                       [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * 0.5 * y)"
                       class="base mid-stroke"
                 />
+                <circle *ngIf="isHoshi(x, y)"
+                        id="hoshi_{{ x }}_{{ y }}"
+                        class="base-no-stroke"
+                        [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
+                        [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
+                        [attr.r]="SPACE_SIZE * 0.1" />
             </ng-template>
         </g>
     </g>

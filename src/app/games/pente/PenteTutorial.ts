@@ -79,7 +79,7 @@ export class PenteTutorial extends Tutorial {
             $localize`Failed. Try again.`,
         ),
         TutorialStep.fromMove(
-            $localize`Winning`,
+            $localize`Victory`,
             $localize`Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.<br/><br/>You're playing Light, you can win in two ways. Win!`,
             new PenteState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
