@@ -434,7 +434,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith();
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.FOUR);
         }));
         it('should not showLastMove when there is none', fakeAsync(async() => {
             // Given a component with a last move
@@ -444,7 +444,7 @@ describe('LocalGameWrapperComponent', () => {
             // When calling onCancelMove
             testUtils.wrapper.onCancelMove();
 
-            // Then showLastMove should have been called
+            // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
         }));
     });

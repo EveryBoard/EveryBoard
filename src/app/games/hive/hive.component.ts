@@ -158,9 +158,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 const loser: Player = winner.getOpponent();
                 this.highlight(this.getState().queenBeeLocation(loser).get(), 'victory-stroke');
         }
-        if (this.rules.node.move.isPresent()) {
-            this.showLastMove();
-        }
     }
     private highlight(coord: Coord, stroke: string): void {
         const stackSize: number = this.getState().getAt(coord).size();
@@ -242,20 +239,16 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.selectedRemaining = MGPOptional.empty();
         this.selectedSpiderCoords = [];
         this.inspectedStack = MGPOptional.empty();
-        if (this.rules.node.move.isPresent()) {
-            this.showLastMove();
-        }
         this.computeViewBox();
     }
-    public override showLastMove(): void {
-        for (const coord of this.getLastMoveCoords()) {
+    public override showLastMove(move: HiveMove): void {
+        for (const coord of this.getLastMoveCoords(move)) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');
             this.ground.highlightFill(coord, 'moved-fill');
         }
     }
-    private getLastMoveCoords(): Coord[] {
-        const move: HiveMove = this.rules.node.move.get();
+    private getLastMoveCoords(move: HiveMove): Coord[] {
         let lastMove: Coord[] = [];
         if (move instanceof HiveMoveDrop) {
             lastMove = [move.coord];

@@ -103,7 +103,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.createHoshis(state.board.length);
     }
     private showCaptures(): void {
-        const previousState: GoState = this.rules.node.mother.get().gameState;
+        const previousState: GoState = this.getPreviousState();
         this.captures = [];
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {

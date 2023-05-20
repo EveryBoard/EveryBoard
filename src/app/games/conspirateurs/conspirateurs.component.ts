@@ -76,10 +76,6 @@ export class ConspirateursComponent
     }
     public updateBoard(): void {
         this.updateViewInfo();
-        const lastMove: MGPOptional<ConspirateursMove> = this.rules.node.move;
-        if (lastMove.isPresent()) {
-            this.showLastMove();
-        }
     }
     private updateViewInfo(): void {
         const state: ConspirateursState = this.getState();
@@ -147,16 +143,15 @@ export class ConspirateursComponent
             }
         }
     }
-    public override showLastMove(): void {
-        const lastMove: ConspirateursMove = this.rules.node.move.get();
-        if (lastMove.isDrop()) {
-            this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved-fill');
-        } else if (lastMove.isSimple()) {
-            this.viewInfo.boardInfo[lastMove.getStart().y][lastMove.getStart().x].squareClasses.push('moved-fill');
-            this.viewInfo.boardInfo[lastMove.getEnd().y][lastMove.getEnd().x].squareClasses.push('moved-fill');
+    public override showLastMove(move: ConspirateursMove): void {
+        if (move.isDrop()) {
+            this.viewInfo.boardInfo[move.coord.y][move.coord.x].squareClasses.push('moved-fill');
+        } else if (move.isSimple()) {
+            this.viewInfo.boardInfo[move.getStart().y][move.getStart().x].squareClasses.push('moved-fill');
+            this.viewInfo.boardInfo[move.getEnd().y][move.getEnd().x].squareClasses.push('moved-fill');
         } else {
             this.viewInfo.lastMoveArrow = '';
-            for (const coord of lastMove.coords) {
+            for (const coord of move.coords) {
                 this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 this.viewInfo.lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
                 this.viewInfo.lastMoveArrow += ' ';

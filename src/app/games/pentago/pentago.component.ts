@@ -38,10 +38,10 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public arrows: ArrowInfo[] = [];
     public victoryCoords: Coord[] = [];
     public canSkipRotation: boolean;
-    public currentDrop: MGPOptional<Coord>;
+    public currentDrop: MGPOptional<Coord> = MGPOptional.empty();
 
-    public movedBlock: MGPOptional<number>;
-    public lastDrop: MGPOptional<Coord>;
+    public movedBlock: MGPOptional<number> = MGPOptional.empty();
+    public lastDrop: MGPOptional<Coord> = MGPOptional.empty();
     public lastRotation: MGPOptional<ArrowInfo> = MGPOptional.empty();
 
     public ARROWS: ArrowInfo[];
@@ -63,25 +63,20 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public updateBoard(): void {
         this.board = this.getState().getCopiedBoard();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
-        this.showLastMove();
+        this.lastDrop = MGPOptional.empty();
+        this.lastRotation = MGPOptional.empty();
     }
-    public override showLastMove(): void {
-        const lastMoveOptional: MGPOptional<PentagoMove> = this.rules.node.move;
+    public override showLastMove(move: PentagoMove): void {
         this.cancelMoveAttempt();
-        if (lastMoveOptional.isAbsent()) {
-            this.hidePreviousMove();
-        } else {
-            const lastMove: PentagoMove = lastMoveOptional.get();
-            this.movedBlock = lastMove.blockTurned;
-            const localCoord: Coord = new Coord(lastMove.coord.x % 3 - 1, lastMove.coord.y % 3 - 1);
-            if (lastMove.blockTurned.isPresent()) {
-                this.showLastRotation(lastMove);
-                if (localCoord.equals(new Coord(0, 0)) === false && this.coordBelongToBlock(lastMove)) {
-                    return this.showLastDrop(lastMove, localCoord);
-                }
+        this.movedBlock = move.blockTurned;
+        const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
+        if (move.blockTurned.isPresent()) {
+            this.showLastRotation(move);
+            if (localCoord.equals(new Coord(0, 0)) === false && this.coordBelongToBlock(move)) {
+                return this.showLastDrop(move, localCoord);
             }
-            this.lastDrop = MGPOptional.of(lastMove.coord);
         }
+        this.lastDrop = MGPOptional.of(move.coord);
     }
     private showLastRotation(lastMove: PentagoMove): void {
         if (lastMove.blockTurned.isPresent()) {

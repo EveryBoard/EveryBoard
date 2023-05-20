@@ -87,8 +87,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     }
     public isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece)
     : MGPFallible<SiamLegalityInformation> {
-        display(SiamRules.VERBOSE, { isLegalForwarding: { move: move.toString(), state, firstPiece } });
-
         assert(firstPiece !== SiamPiece.MOUNTAIN && firstPiece !== SiamPiece.EMPTY, 'forwarding must be done with player piece');
 
         const movedPieces: Coord[] = [];
@@ -99,8 +97,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             state.getPieceAt(landingCoord) !== SiamPiece.EMPTY &&
             this.isStraight(firstPiece, move) === false
         ) {
-            display(SiamRules.VERBOSE,
-                    'Illegal push because not straight or not pushing anything or leaving the board');
             return MGPFallible.failure(SiamFailure.ILLEGAL_PUSH());
         }
         let currentDirection: MGPOptional<Orthogonal> = MGPOptional.of(pushingDir);
@@ -113,14 +109,9 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         let pushingPossible: boolean = landingCoord.isInRange(5, 5) &&
                                        movingPiece !== SiamPiece.EMPTY;
-
         while (pushingPossible) {
-            if (currentDirection.equalsValue(pushingDir)) {
-                totalForce++;
-            } else if (currentDirection.equalsValue(resistingDir)) {
-                totalForce--;
-            }
-            display(SiamRules.VERBOSE, { totalForce, movingPiece, landingCoord });
+            if (currentDirection.equalsValue(pushingDir)) totalForce++;
+            else if (currentDirection.equalsValue(resistingDir)) totalForce--;
             const tmpPiece: SiamPiece = resultingBoard[landingCoord.y][landingCoord.x];
             if (tmpPiece === SiamPiece.MOUNTAIN) totalForce -= 0.9;
             resultingBoard[landingCoord.y][landingCoord.x] = movingPiece;
@@ -133,20 +124,13 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                               totalForce > 0;
         }
         if (landingCoord.isNotInRange(5, 5)) {
-            display(SiamRules.VERBOSE, 'This movement would push ' + movingPiece + ' outside the board');
-
-            if (currentDirection.equalsValue(pushingDir)) {
-                totalForce++;
-            } else if (currentDirection.equalsValue(resistingDir)) {
-                totalForce--;
-            }
+            if (currentDirection.equalsValue(pushingDir)) totalForce++;
+            else if (currentDirection.equalsValue(resistingDir)) totalForce--;
         }
         if (totalForce <= 0) {
-            display(SiamRules.VERBOSE, 'This move is an illegal push: ' + resultingBoard);
             return MGPFallible.failure(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
         }
 
-        display(SiamRules.VERBOSE, 'This move is a legal push: '+resultingBoard);
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, movedPieces));
     }
     public isStraight(piece: SiamPiece, move: SiamMove): boolean {

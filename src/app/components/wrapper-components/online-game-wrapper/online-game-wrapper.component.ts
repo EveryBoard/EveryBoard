@@ -916,7 +916,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public onCancelMove(reason?: string): void {
-        this.gameComponent.showLastMove();
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            const move: Move = this.gameComponent.rules.node.move.get();
+            this.gameComponent.showLastMove(move);
+        }
     }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');
