@@ -38,6 +38,7 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
         this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
+        this.cancelMoveAttempt();
         if (this.rules.node.move.isPresent()) {
             this.showLastMove();
         }
@@ -70,5 +71,8 @@ export class PenteComponent extends RectangularGameComponent<PenteRules, PenteMo
         return classes;
     }
     public override cancelMoveAttempt(): void {
+        this.lastMoved = MGPOptional.empty();
+        this.victoryCoords = [];
+        this.captured = [];
     }
 }

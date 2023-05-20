@@ -7,7 +7,7 @@ import { PenteMove } from "../PenteMove";
 import { PenteNode, PenteRules } from "../PenteRules";
 import { PenteState } from "../PenteState";
 
-fdescribe('PenteRules', () => {
+describe('PenteRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

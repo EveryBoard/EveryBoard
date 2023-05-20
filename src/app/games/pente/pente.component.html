@@ -39,6 +39,7 @@
         </g>
     </g>
     <circle *ngFor="let capture of captured"
+            id="capture_{{ capture.x }}_{{ capture.y }}"
             (click)="onClick(capture.x, capture.y)"
             [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.x"
             [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5) * capture.y"

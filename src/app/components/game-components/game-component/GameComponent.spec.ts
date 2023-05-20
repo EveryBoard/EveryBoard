@@ -104,6 +104,9 @@ describe('GameComponent', () => {
                 rotate: [['not relevant', 0, true]],
                 skipRotation: [],
             },
+            Pente: {
+                onClick: [0, 0],
+            },
             Pylos: {
                 onPieceClick: [0, 0, 0],
                 onDrop: [0, 0, 0],

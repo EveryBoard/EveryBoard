@@ -1,15 +1,13 @@
 import { fakeAsync } from '@angular/core/testing';
-import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PenteComponent } from '../pente.component';
 import { PenteMove } from '../PenteMove';
-import { PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
 
-fdescribe('PenteComponent', () => {
+describe('PenteComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -20,7 +18,7 @@ fdescribe('PenteComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<PenteComponent>('Pente');
     }));
-    fit('should create', () => {
+    it('should create', () => {
         testUtils.expectToBeCreated();
     });
     it('should do the move when clicking on an empty square', fakeAsync(async() => {
@@ -35,7 +33,7 @@ fdescribe('PenteComponent', () => {
         // When clicking on square with a piece
         // Then the move should fail
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
-        await testUtils.expectMoveFailure('#click_4_2', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
+        await testUtils.expectMoveFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
     }));
     it('should show last move', fakeAsync(async() => {
         // Given a state
@@ -43,7 +41,7 @@ fdescribe('PenteComponent', () => {
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
         await testUtils.expectMoveSuccess('#click_4_2', move);
         // Then it should show the last move
-        testUtils.expectElementToHaveClass('#piece_4_2', 'last-move');
+        testUtils.expectElementToHaveClass('#piece_4_2', 'last-move-stroke');
     }));
     it('should show captures along with last move', fakeAsync(async() => {
         // Given a board where a capture is possible
@@ -78,6 +76,38 @@ fdescribe('PenteComponent', () => {
         testUtils.expectElementToExist('#capture_9_8');
         testUtils.expectElementToExist('#capture_9_7');
         testUtils.expectElementNotToExist('#capture_9_6');
-        testUtils.expectElementToHaveClass('#piece_9_6', 'last-move');
+        testUtils.expectElementToHaveClass('#piece_9_6', 'last-move-stroke');
+    }));
+    it('should show victory', fakeAsync(async() => {
+        // Given a victory
+        const state: PenteState = new PenteState([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, X, X, X, X, O, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, X, O, O, O, O, O, X, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], [0, 0], 6);
+        // When displaying it
+        testUtils.setupState(state);
+        // Then it should show the victory
+        testUtils.expectElementToHaveClass('#piece_9_9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece_10_9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece_11_9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece_12_9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece_13_9', 'victory-stroke');
     }));
 });

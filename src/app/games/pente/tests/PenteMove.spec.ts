@@ -3,7 +3,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { PenteMove } from '../PenteMove';
 
-fdescribe('PenteMove', () => {
+describe('PenteMove', () => {
     describe('from', () => {
         it('should not create move when it is not on the board', () => {
             RulesUtils.expectToThrowAndLog(() => PenteMove.of(new Coord(-1, 0)), 'PenteMove: coord is out of the board');
