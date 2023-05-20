@@ -44,9 +44,9 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
         this.updateViewInfo();
+        this.lastMove = this.rules.node.move;
     }
     public override showLastMove(move: M): void {
-        this.lastMove = MGPOptional.of(move);
         const previousState: S = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
