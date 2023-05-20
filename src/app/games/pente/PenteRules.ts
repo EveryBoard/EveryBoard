@@ -54,7 +54,7 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
     }
     public getCaptures(coord: Coord, state: PenteState, player: Player): Coord[] {
         const opponent: Player = player.getOpponent();
-        let captures: Coord[] = [];
+        const captures: Coord[] = [];
         for (const direction of Direction.factory.all) {
             const firstCapture: Coord = coord.getNext(direction, 1);
             const secondCapture: Coord = coord.getNext(direction, 2);

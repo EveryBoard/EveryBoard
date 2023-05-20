@@ -7,7 +7,6 @@ import { GameStateWithTable } from './GameStateWithTable';
 import { MGPNode } from './MGPNode';
 import { Player, PlayerOrNone } from './Player';
 import { SCORE } from './SCORE';
-import { Vector } from './Vector';
 
 export class NInARowHelper<T> {
 
@@ -25,9 +24,9 @@ export class NInARowHelper<T> {
                 if (this.getOwner(piece, state).isPlayer()) {
                     score += this.getSquareScore(state, coord);
                 }
-                coord = coord.getNext(new Vector(1, 0));
+                coord = new Coord(coord.x+1, coord.y);
             }
-            coord = coord.getNext(new Vector(0, 1));
+            coord = new Coord(0, coord.y+1);
         }
         return new BoardValue(score);
     }
