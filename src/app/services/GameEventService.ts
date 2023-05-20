@@ -1,11 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { serverTimestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { PartDAO } from '../dao/PartDAO';
-import { Action, PartEvent, Reply, RequestType } from '../domain/Part';
+import { Action, GameEvent, Reply, RequestType } from '../domain/Part';
 import { Player } from '../jscaip/Player';
 import { JSONValue } from '../utils/utils';
 
@@ -16,10 +15,10 @@ export class GameEventService {
 
     public constructor(private readonly partDAO: PartDAO) {}
 
-    private eventsCollection(partId: string): IFirestoreDAO<PartEvent> {
-        return this.partDAO.subCollectionDAO<PartEvent>(partId, 'events');
+    private eventsCollection(partId: string): IFirestoreDAO<GameEvent> {
+        return this.partDAO.subCollectionDAO<GameEvent>(partId, 'events');
     }
-    private addEvent(partId: string, event: PartEvent): Promise<string> {
+    private addEvent(partId: string, event: GameEvent): Promise<string> {
         return this.eventsCollection(partId).create(event);
     }
     public addMove(partId: string, player: Player, move: JSONValue): Promise<string> {
@@ -65,24 +64,24 @@ export class GameEventService {
             action,
         });
     }
-    public subscribeToEvents(partId: string, callback: (events: PartEvent[]) => void): Subscription {
-        const internalCallback: FirestoreCollectionObserver<PartEvent> = new FirestoreCollectionObserver(
-            (events: FirestoreDocument<PartEvent>[]) => {
+    public subscribeToEvents(partId: string, callback: (events: GameEvent[]) => void): Subscription {
+        const internalCallback: FirestoreCollectionObserver<GameEvent> = new FirestoreCollectionObserver(
+            (events: FirestoreDocument<GameEvent>[]) => {
                 // When the client adds an event, firebase will initially have a null timestamp for the document creator
                 // When the event is really written, all the clients receive a modification with the real timestamp
                 // We want to keep only the latter.
-                const realEvents: PartEvent[] = events
-                    .map((event: FirestoreDocument<PartEvent>) => event.data)
-                    .filter((event: PartEvent) => event.time != null);
+                const realEvents: GameEvent[] = events
+                    .map((event: FirestoreDocument<GameEvent>) => event.data)
+                    .filter((event: GameEvent) => event.time != null);
                 if (realEvents.length > 0) {
                     callback(realEvents);
                 }
             },
-            (events: FirestoreDocument<PartEvent>[]) => {
+            (events: FirestoreDocument<GameEvent>[]) => {
                 // Events can't be modified
                 // The only modification is when firebase adds the timestamp.
                 // So all modifications are actually treated as creations, as we ignore creations with empty timestamps
-                callback(events.map((event: FirestoreDocument<PartEvent>) => event.data));
+                callback(events.map((event: FirestoreDocument<GameEvent>) => event.data));
             },
             /* istanbul ignore next */
             () => {

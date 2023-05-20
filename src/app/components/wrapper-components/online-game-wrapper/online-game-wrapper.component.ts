@@ -6,7 +6,7 @@ import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserSe
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
-import { Part, PartDocument, PartEvent, PartEventMove, PartEventRequest, PartEventReply, PartEventAction } from '../../../domain/Part';
+import { Part, PartDocument, GameEvent, GameEventMove, GameEventRequest, GameEventReply, GameEventAction } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { FocusedPart, User } from '../../../domain/User';
@@ -70,7 +70,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public opponentProposedRematch: boolean = false;
     private userLinkedToThisPart: boolean = true;
 
-    private lastRequestOrReply: MGPOptional<PartEventRequest | PartEventReply> = MGPOptional.empty();
+    private lastRequestOrReply: MGPOptional<GameEventRequest | GameEventReply> = MGPOptional.empty();
 
     public configRoom: ConfigRoom;
     public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
@@ -251,26 +251,26 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // This is in particular used to deal with joining a game in the middle:
         // we don't want to apply all clock actions then
         const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
-        const callback: (events: PartEvent[]) => Promise<void> = async(events: PartEvent[]): Promise<void> => {
+        const callback: (events: GameEvent[]) => Promise<void> = async(events: GameEvent[]): Promise<void> => {
             await mutex.runExclusive(async() => {
                 this.beforeEventsBatch();
                 for (const event of events) {
                     switch (event.eventType) {
                         case 'Move':
-                            const moveEvent: PartEventMove = event as PartEventMove;
+                            const moveEvent: GameEventMove = event as GameEventMove;
                             await this.onReceivedMove(moveEvent);
                             break;
                         case 'Request':
-                            const requestEvent: PartEventRequest = event as PartEventRequest;
+                            const requestEvent: GameEventRequest = event as GameEventRequest;
                             this.onReceivedRequest(requestEvent);
                             break;
                         case 'Reply':
-                            const replyEvent: PartEventReply = event as PartEventReply;
+                            const replyEvent: GameEventReply = event as GameEventReply;
                             await this.onReceivedReply(replyEvent);
                             break;
                         default:
                             Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
-                            const actionEvent: PartEventAction = event as PartEventAction;
+                            const actionEvent: GameEventAction = event as GameEventAction;
                             this.timeManager.onReceivedAction(actionEvent);
 
                             if (actionEvent.action === 'EndGame') await this.onGameEnd();
@@ -287,7 +287,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.observedPartService.removeObservedPart();
         this.endGame = true;
     }
-    private async onReceivedMove(moveEvent: PartEventMove): Promise<void> {
+    private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
@@ -295,13 +295,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
-        assert(legality.isSuccess(), message, chosenMove);
+        assert(legality.isSuccess(), message);
         const success: boolean = rules.choose(chosenMove);
         assert(success, 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.updateBoard();
         this.timeManager.onReceivedMove(moveEvent);
     }
-    private onReceivedRequest(request: PartEventRequest): void {
+    private onReceivedRequest(request: GameEventRequest): void {
         this.lastRequestOrReply = MGPOptional.of(request);
         switch (request.requestType) {
             case 'TakeBack':
@@ -318,7 +318,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 break;
         }
     }
-    private async onReceivedReply(reply: PartEventReply): Promise<void> {
+    private async onReceivedReply(reply: GameEventReply): Promise<void> {
         this.lastRequestOrReply = MGPOptional.of(reply);
         if (reply.reply === 'Reject') {
             // Nothing to do when a request is rejected
@@ -390,7 +390,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private takeBackHasJustBeenRefusedByOpponent(): boolean {
         if (this.lastRequestOrReply.isAbsent()) return false;
-        const requestOrReply: PartEventRequest | PartEventReply = this.lastRequestOrReply.get();
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
         return requestOrReply.eventType === 'Reply' &&
                requestOrReply.requestType === 'TakeBack' &&
                requestOrReply.player === (this.role as Player).getOpponent().value &&
@@ -406,7 +406,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private getTakeBackRequester(): PlayerOrNone {
         if (this.lastRequestOrReply.isAbsent()) return PlayerOrNone.NONE;
-        const requestOrReply: PartEventRequest | PartEventReply = this.lastRequestOrReply.get();
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
         if (requestOrReply.eventType === 'Request' && requestOrReply.requestType === 'TakeBack') {
             return Player.of(requestOrReply.player);
         } else {
@@ -440,7 +440,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private drawHasBeenRefusedByOpponent(): boolean {
         if (this.lastRequestOrReply.isAbsent()) return false;
-        const requestOrReply: PartEventRequest | PartEventReply = this.lastRequestOrReply.get();
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
         return requestOrReply.eventType === 'Reply' &&
                requestOrReply.requestType === 'Draw' &&
                requestOrReply.player === (this.role as Player).getOpponent().value &&
@@ -453,7 +453,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private getDrawRequester(): PlayerOrNone {
         if (this.lastRequestOrReply.isAbsent()) return PlayerOrNone.NONE;
-        const requestOrReply: PartEventRequest | PartEventReply = this.lastRequestOrReply.get();
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
         if (requestOrReply.eventType === 'Request' && requestOrReply.requestType === 'Draw') {
             return Player.of(requestOrReply.player);
         } else {

@@ -1164,8 +1164,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
             expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, loser);
         }));
-        it('when resigning, lastUpdateTime must be upToDate then remainingMs');
-        it('when winning move is done, remainingMs at last turn of opponent must be');
     });
     describe('Add time feature', () => {
         describe('from creator', () => {

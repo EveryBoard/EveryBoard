@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { Part, MGPResult } from 'src/app/domain/Part';
+import { GameEvent, RequestType, Reply, Part, MGPResult } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, createDisconnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -18,7 +18,6 @@ import { FocusedPart } from 'src/app/domain/User';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
-import { PartEvent, RequestType } from '../../domain/Part';
 import { IFirestoreDAO } from '../FirestoreDAO';
 
 type PartInfo = {
@@ -112,8 +111,8 @@ describe('PartDAO security', () => {
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         configRoomService = TestBed.inject(ConfigRoomService);
     });
-    function events(partId: string): IFirestoreDAO<PartEvent> {
-        return partDAO.subCollectionDAO<PartEvent>(partId, 'events');
+    function events(partId: string): IFirestoreDAO<GameEvent> {
+        return partDAO.subCollectionDAO<GameEvent>(partId, 'events');
     }
     it('should be created', () => {
         expect(partDAO).toBeTruthy();
@@ -394,7 +393,7 @@ describe('PartDAO security', () => {
 
             await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
             // When reading the event
-            const result: Promise<MGPOptional<PartEvent>> = events(partId).read(eventId);
+            const result: Promise<MGPOptional<GameEvent>> = events(partId).read(eventId);
             // Then it should succeed
             await expectAsync(result).toBeResolved();
         });
@@ -448,7 +447,7 @@ describe('PartDAO security', () => {
             await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
             // When reading an event
-            const result: Promise<MGPOptional<PartEvent>> = events(partId).read(eventId);
+            const result: Promise<MGPOptional<GameEvent>> = events(partId).read(eventId);
             // Then it should be forbidden
             await expectPermissionToBeDenied(result);
         });
@@ -727,7 +726,7 @@ describe('PartDAO security', () => {
                 const partId: string = await setupStartedPartAsPlayerZero();
 
                 // When creating an invalid event type
-                const event: PartEvent = {
+                const event: GameEvent = {
                     // We can't represent such invalid types properly with our typing
                     // but malicious clients could, so we need to make an ugly cast
                     eventType: 'Invalid' as 'Move',
@@ -744,7 +743,7 @@ describe('PartDAO security', () => {
                 const partId: string = await setupStartedPartAsPlayerZero();
 
                 // When creating an event as another player
-                const event: PartEvent = {
+                const event: GameEvent = {
                     // We can't represent such invalid types properly with our typing
                     // but malicious clients could, so we need to make an ugly cast
                     eventType: 'Action',
@@ -760,7 +759,7 @@ describe('PartDAO security', () => {
                 // Given an ongoing part with an event
                 const partId: string = await setupStartedPartAsPlayerZero();
 
-                const event: PartEvent = {
+                const event: GameEvent = {
                     eventType: 'Action',
                     time: serverTimestamp(),
                     player: 0,
@@ -977,13 +976,15 @@ describe('PartDAO security', () => {
                 });
             });
             describe('replys', () => {
-                async function setupPartWithRequestFromZeroAsOne(requestType: RequestType, finished: boolean = false): Promise<string> {
+                async function setupPartWithRequestFromZeroAsOne(requestType: RequestType, finished: boolean = false)
+                : Promise<string>
+                {
                     const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
                     const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
                     const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
                     const partId: string = await partDAO.create(part);
                     if (finished) {
-                        partDAO.update(partId, {
+                        await partDAO.update(partId, {
                             turn: 1,
                             result: MGPResult.VICTORY.value,
                             winner: playerZero,
@@ -991,7 +992,7 @@ describe('PartDAO security', () => {
                         });
                         await gameEventService.addAction(partId, Player.ZERO, 'EndGame');
                     } else {
-                        partDAO.update(partId, { turn: 1 });
+                        await partDAO.update(partId, { turn: 1 });
                     }
                     await gameEventService.addRequest(partId, Player.ZERO, requestType);
                     await signOut();
@@ -1008,66 +1009,23 @@ describe('PartDAO security', () => {
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
                 });
-                it('should allow accepting a take back request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
+                const requests: RequestType[] = ['TakeBack', 'Draw', 'Draw'];
+                const replies: Reply[] = ['Accept', 'Reject'];
+                for (const request of requests) {
+                    for (const reply of replies) {
+                        it('should allow to reply with ' + reply + ' to a ' + request + ' request', async() => {
+                            // Given a part with a request
+                            const partId: string = await setupPartWithRequestFromZeroAsOne(request);
 
-                    // When accepting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'TakeBack');
+                            // When accepting/rejecting the request
+                            const result: Promise<string> =
+                                gameEventService.addReply(partId, Player.ONE, reply, request);
 
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
-                it('should allow rejecting a take back request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
-
-                    // When rejecting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'TakeBack');
-
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
-                it('should allow accepting a rematch request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('Rematch', true);
-
-                    // When accepting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'Rematch');
-
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
-                it('should allow rejecting a rematch request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
-
-                    // When rejecting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'Rematch');
-
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
-                it('should allow accepting a draw request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('Draw');
-
-                    // When accepting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'Draw');
-
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
-                it('should allow rejecting a draw request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('Draw');
-
-                    // When rejecting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'Draw');
-
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
+                            // Then it should succeed
+                            await expectAsync(result).toBeResolved();
+                        });
+                    }
+                }
             });
         });
     });

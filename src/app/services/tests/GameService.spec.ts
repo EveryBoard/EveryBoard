@@ -217,6 +217,9 @@ describe('GameService', () => {
     describe('rematch', () => {
         let configRoomService: ConfigRoomService;
         let partDAO: PartDAO;
+        function receiveRematchProposal(from: Player): Promise<void> {
+            return gameService.proposeRematch('partId', Player.ZERO);
+        }
         beforeEach(() => {
             configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
@@ -249,7 +252,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            await gameService.proposeRematch('partId', Player.ZERO);
+            await receiveRematchProposal(Player.ZERO);
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
@@ -285,7 +288,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            await gameService.proposeRematch('partId', Player.ZERO);
+            await receiveRematchProposal(Player.ZERO);
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
@@ -323,7 +326,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            await gameService.proposeRematch('partId', Player.ZERO);
+            await receiveRematchProposal(Player.ZERO);
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
 
             // Install some mocks to check what we need
@@ -343,7 +346,7 @@ describe('GameService', () => {
                 return 'partId';
             });
 
-            // When Player.ONE accepts the rematch
+            // When Player.ONE (use) accepts the rematch
             await gameService.acceptRematch(lastPart, Player.ONE);
             // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
             // Moreover, everything needs to have been called eventually

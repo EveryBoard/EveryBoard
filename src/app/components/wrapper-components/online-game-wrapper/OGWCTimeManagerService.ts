@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PartEventMove, PartEventAction } from '../../../domain/Part';
+import { GameEventMove, GameEventAction } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player } from 'src/app/jscaip/Player';
@@ -72,7 +72,7 @@ export class OGWCTimeManagerService {
     private getMoveDurationInMs(): number {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
-    public onReceivedAction(action: PartEventAction): void {
+    public onReceivedAction(action: GameEventAction): void {
         switch (action.action) {
             case 'AddTurnTime':
                 this.addTurnTime(Player.of(action.player));
@@ -88,7 +88,7 @@ export class OGWCTimeManagerService {
                 break;
         }
     }
-    public onReceivedMove(move: PartEventMove): void {
+    public onReceivedMove(move: GameEventMove): void {
         const player: Player = Player.of(move.player);
 
         const moveTimestamp: Timestamp = move.time as Timestamp;

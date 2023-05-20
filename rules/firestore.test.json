@@ -29,11 +29,15 @@ service cloud.firestore {
         }
         match /chats/lobby {
             allow create: if userIsVerified();
+            allow update, delete: if false;
+            allow read: if false;
         }
         match /chats/{id} {
             allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
             // Anyone can delete the chat in case the creator timed out
             allow delete: if userIsVerified() && hasTimedOut(creatorOf(id).id);
+            allow update: if false;
+            allow read: if false
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
@@ -74,6 +78,7 @@ service cloud.firestore {
                 isValidMessage(update);
         }
         match /users/{userId} {
+            allow delete: if false;
             allow create: if authenticatedUserCreatesUnverifiedUser(userId, request.resource.data);
             allow update: if authenticatedUserUpdatesUser(userId, resource.data, request.resource.data);
             // Anybody can read the fields of a user.
@@ -124,6 +129,8 @@ service cloud.firestore {
             allow read: if userIsVerified();
             allow create: if playerAddsMoveEvent(partId, request.resource.data);
             allow create: if playerAddsNonMoveEvent(partId, request.resource.data);
+            allow update: if false; // Events cannot be modified
+            allow delete: if false; // Events cannot be deleted
         }
         function verifiedUserCreatesPart(part) {
             // Any verified user can create a part with the proper fields set, and has to be the creator

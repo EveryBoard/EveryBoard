@@ -19,18 +19,18 @@ export interface Part extends FirestoreJSONObject {
     readonly scorePlayerOne?: number;
 
     // Extra fields as sub-collections:
-    // events: subcollection of PartEvent
+    // events: subcollection of GameEvent
 }
 
 type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
 
-export interface PartEvent extends FirestoreJSONObject {
+export interface GameEvent extends FirestoreJSONObject {
     readonly eventType: EventType;
     readonly time: FirestoreTime;
     readonly player: 0 | 1;
 }
 
-export interface PartEventMove extends PartEvent {
+export interface GameEventMove extends GameEvent {
     readonly eventType: 'Move';
     readonly move: JSONValue;
 }
@@ -38,19 +38,19 @@ export interface PartEventMove extends PartEvent {
 // The StartGame action is a dummy action to ensure that at least one event occurs at game start.
 // This is required because the clock logic relies on at least one event happening at the start of the game.
 export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame' | 'EndGame';
-export interface PartEventAction extends PartEvent {
+export interface GameEventAction extends GameEvent {
     readonly eventType: 'Action';
     readonly action: Action;
 }
 
 export type RequestType = 'Draw' | 'Rematch' | 'TakeBack';
-export interface PartEventRequest extends PartEvent {
+export interface GameEventRequest extends GameEvent {
     readonly eventType: 'Request';
     readonly requestType: RequestType;
 }
 
 export type Reply = 'Accept' | 'Reject';
-export interface PartEventReply extends PartEvent {
+export interface GameEventReply extends GameEvent {
     readonly eventType: 'Reply';
     readonly reply: Reply;
     readonly requestType: RequestType;
