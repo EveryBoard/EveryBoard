@@ -7,7 +7,7 @@ import { NewGameState } from "../NewGameState";
 /**
  * This is the test suite for the rules
  */
-fdescribe('NewGameRules', () => {
+describe('NewGameRules', () => {
 
     let rules: NewGameRules;
     let minimaxes: Minimax<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue>[];

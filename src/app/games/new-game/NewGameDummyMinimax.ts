@@ -4,35 +4,45 @@ import { NewGameState } from './NewGameState';
 import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from './NewGameRules';
 
 /**
-  * Minimax are the class that will help the LocalGameWrapperComponent to make the AI play your game
-  * It will be drawing a tree of a given depth (choosable on the component by the user)
-  */
+ * What is called "minimaxes" here are heuristic calculators.
+ * They assign a score to a state so that the `LocalGameWrappercomponent` can
+ * use it within the AI system to know which move to play.
+ *
+ * By convention, we call such a class a "dummy minimax" if:
+ *   - it doesn't filter any move in `getListMoves`
+ *   - it has a simplistic `getBoardValue`, only relying the score stored in the state
+ */
 export class NewGameDummyMinimax extends Minimax<NewGameMove,
                                                  NewGameState,
                                                  NewGameLegalityInfo,
                                                  NewGameBoardValue,
                                                  NewGameRules>
 {
-    /** This method has to list all the usefull move.
-     * It is an option to exclude some move of the list if:
-     *     - they have no way to be needed for the good continuation (hence, there should always be one move returned)
+    /**
+     * This method lists all useful moves to consider in the move exploration.
+     * In general, you can list all possible moves.
+     * It is however an option to exclude some move of the list if:
+     *     - they have no way to be needed in any interesting part
      *     - the can only lead to defeat
-     * Note that, by convention, we call "Dummy" minimax that:
-     *      - don't do any filter on the move list
-     *      - don't use intelligence in getBoardValue
      */
     public getListMoves(node: NewGameNode): NewGameMove[] {
-        throw new Error('Method not implemented.');
+        return [];
     }
     /**
-      * If score is 0: it means no player has an advantage
-      * If score is positive: it means Player.ONE has an advantage
-      * If score is negative: it means Player.ZERO has an advantage
-      * If score is Number.MAX_SAFE_INTEGER: it means Player.ONE won
-      * If score is Number.MIN_SAFE_INTEGER: it means Player.ZERO won
-      */
+     * This function assigns a score to a state, in the form of a `BoardValue`.
+     * Most of the time, you want to use `BoardValue` directly. It is simply a number wrapper.
+     * The meaning of this score is:
+     *   - a score of 0: no player has the advantage
+     *   - a positive score: Player.ONE has the advantage
+     *   - a negative score: Player.ZERO has the advantage
+     *   - Number.MAX_SAFE_INTEGER: Player.ONE won
+     *   - Number.MIN_SAFE_INTEGER: Player.ZERO won
+     *
+     * You want want to use `PlayerMetricsMinimax` to define a score for each player instead, which
+     * is often what you want.
+     */
     public getBoardValue(node: NewGameNode): NewGameBoardValue {
-        throw new Error('Method not implemented.');
+        return new NewGameBoardValue(0);
     }
 
 }

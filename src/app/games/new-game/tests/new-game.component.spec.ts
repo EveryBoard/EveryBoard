@@ -5,7 +5,7 @@ import { NewGameComponent } from '../new-game.component';
 import { NewGameRules } from '../NewGameRules';
 import { NewGameTutorial } from '../NewGameTutorial';
 
-fdescribe('NewGameComponent', () => {
+describe('NewGameComponent', () => {
     let testUtils: ComponentTestUtils<NewGameComponent>;
 
     beforeEach(fakeAsync(async() => {

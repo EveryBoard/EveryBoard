@@ -1,7 +1,7 @@
 import { EncoderTestUtils } from "src/app/utils/tests/Encoder.spec";
 import { NewGameMove } from "../NewGameMove";
 
-fdescribe('NewGameMove', () => {
+describe('NewGameMove', () => {
     describe('toString', () => {
         it('should be defined', () => {
             const move: NewGameMove = new NewGameMove();
