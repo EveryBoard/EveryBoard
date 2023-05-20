@@ -83,7 +83,27 @@ describe('PartDAO security', () => {
 
         return { id: partId, part, creator, candidate };
     }
+    async function setupStartedPartAsPlayerZero(): Promise<string> {
+        const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+        const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
+        const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
+        const partId: string = await partDAO.create(part);
+        return partId;
+    }
+    async function setupFinishedPartAsPlayerZero(): Promise<string> {
+        const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+        const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+        const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
+        const partId: string = await partDAO.create(part);
+        await expectAsync(partDAO.update(partId, {
+            turn: 1,
+            result: MGPResult.VICTORY.value,
+            winner: playerZero,
+            loser: playerOne,
+        })).toBeResolved();
+        return partId;
+    }
     beforeEach(async() => {
         await setupEmulators();
         partDAO = TestBed.inject(PartDAO);
@@ -357,9 +377,7 @@ describe('PartDAO security', () => {
         });
         it('should forbid non-player to create an event', async() => {
             // Given a part and a verified user
-            const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const part: Part = { ...PartMocks.INITIAL, playerZero: creator };
-            const partId: string = await partDAO.create(part);
+            const partId: string = await setupStartedPartAsPlayerZero();
             await signOut();
 
             await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
@@ -370,10 +388,7 @@ describe('PartDAO security', () => {
         });
         it('should allow non-player to read events', async() => {
             // Given a started part with events and a verified user
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
-            const partId: string = await partDAO.create(part);
+            const partId: string = await setupStartedPartAsPlayerZero();
             const eventId: string = await gameEventService.startGame(partId, Player.ZERO);
             await signOut();
 
@@ -492,27 +507,6 @@ describe('PartDAO security', () => {
         });
     });
     describe('for player', () => {
-        async function setupStartedPartAsPlayerZero(): Promise<string> {
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
-            const partId: string = await partDAO.create(part);
-            return partId;
-        }
-        async function setupFinishedPartAsPlayerZero(): Promise<string> {
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
-            const partId: string = await partDAO.create(part);
-            await expectAsync(partDAO.update(partId, {
-                turn: 1,
-                result: MGPResult.VICTORY.value,
-                winner: playerZero,
-                loser: playerOne,
-            })).toBeResolved();
-            return partId;
-        }
         it('should forbid player to change typeGame', async() => {
             // Given a part and a player (here, creator)
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
@@ -827,6 +821,16 @@ describe('PartDAO security', () => {
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
                 });
+                it('should forbid creating AddTurnTime action for ourselves', async() => {
+                    // Given an ongoing part
+                    const partId: string = await setupStartedPartAsPlayerZero();
+
+                    // When creating an AddGlobalTime action as Player.ONE to increase our time
+                    const result: Promise<string> = gameEventService.addAction(partId, Player.ONE, 'AddTurnTime');
+
+                    // Then it should fail
+                    await expectPermissionToBeDenied(result);
+                });
                 it('should allow creating AddGlobalTime action', async() => {
                     // Given an ongoing part
                     const partId: string = await setupStartedPartAsPlayerZero();
@@ -836,6 +840,16 @@ describe('PartDAO security', () => {
 
                     // Then it should succeed
                     await expectAsync(result).toBeResolved();
+                });
+                it('should forbid creating AddGlobalTime action for ourselves', async() => {
+                    // Given an ongoing part
+                    const partId: string = await setupStartedPartAsPlayerZero();
+
+                    // When creating an AddGlobalTime action as Player.ONE to increase our time
+                    const result: Promise<string> = gameEventService.addAction(partId, Player.ONE, 'AddGlobalTime');
+
+                    // Then it should fail
+                    await expectPermissionToBeDenied(result);
                 });
                 it('should allow creating StartGame action at turn 0', async() => {
                     // Given an created part at turn 0
@@ -963,37 +977,27 @@ describe('PartDAO security', () => {
                 });
             });
             describe('replys', () => {
-                async function setupPartWithRequestFromZeroAsOne(requestType: RequestType): Promise<string> {
+                async function setupPartWithRequestFromZeroAsOne(requestType: RequestType, finished: boolean = false): Promise<string> {
                     const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
                     const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
                     const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
                     const partId: string = await partDAO.create(part);
-                    await partDAO.update(partId, { turn: 1 });
+                    if (finished) {
+                        partDAO.update(partId, {
+                            turn: 1,
+                            result: MGPResult.VICTORY.value,
+                            winner: playerZero,
+                            loser: playerOne,
+                        });
+                        await gameEventService.addAction(partId, Player.ZERO, 'EndGame');
+                    } else {
+                        partDAO.update(partId, { turn: 1 });
+                    }
                     await gameEventService.addRequest(partId, Player.ZERO, requestType);
                     await signOut();
                     await reconnectUser(OPPONENT_EMAIL);
                     return partId;
                 }
-                it('should allow accepting a request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
-
-                    // When accepting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'TakeBack');
-
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
-                it('should allow rejecting a request', async() => {
-                    // Given a part with a request
-                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
-
-                    // When rejecting the request
-                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'TakeBack');
-
-                    // Then it should succeed
-                    await expectAsync(result).toBeResolved();
-                });
                 it('should forbid creating an invalid reply', async() => {
                     // Given a part
                     const partId: string = await setupStartedPartAsPlayerZero();
@@ -1003,6 +1007,66 @@ describe('PartDAO security', () => {
 
                     // Then it should fail
                     await expectPermissionToBeDenied(result);
+                });
+                it('should allow accepting a take back request', async() => {
+                    // Given a part with a request
+                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
+
+                    // When accepting the request
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'TakeBack');
+
+                    // Then it should succeed
+                    await expectAsync(result).toBeResolved();
+                });
+                it('should allow rejecting a take back request', async() => {
+                    // Given a part with a request
+                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
+
+                    // When rejecting the request
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'TakeBack');
+
+                    // Then it should succeed
+                    await expectAsync(result).toBeResolved();
+                });
+                it('should allow accepting a rematch request', async() => {
+                    // Given a part with a request
+                    const partId: string = await setupPartWithRequestFromZeroAsOne('Rematch', true);
+
+                    // When accepting the request
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'Rematch');
+
+                    // Then it should succeed
+                    await expectAsync(result).toBeResolved();
+                });
+                it('should allow rejecting a rematch request', async() => {
+                    // Given a part with a request
+                    const partId: string = await setupPartWithRequestFromZeroAsOne('TakeBack');
+
+                    // When rejecting the request
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'Rematch');
+
+                    // Then it should succeed
+                    await expectAsync(result).toBeResolved();
+                });
+                it('should allow accepting a draw request', async() => {
+                    // Given a part with a request
+                    const partId: string = await setupPartWithRequestFromZeroAsOne('Draw');
+
+                    // When accepting the request
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Accept', 'Draw');
+
+                    // Then it should succeed
+                    await expectAsync(result).toBeResolved();
+                });
+                it('should allow rejecting a draw request', async() => {
+                    // Given a part with a request
+                    const partId: string = await setupPartWithRequestFromZeroAsOne('Draw');
+
+                    // When rejecting the request
+                    const result: Promise<string> = gameEventService.addReply(partId, Player.ONE, 'Reject', 'Draw');
+
+                    // Then it should succeed
+                    await expectAsync(result).toBeResolved();
                 });
             });
         });

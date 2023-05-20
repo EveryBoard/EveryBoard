@@ -116,7 +116,7 @@ service cloud.firestore {
             allow delete: if creatorDeletesUnstartedPart(id, resource.data);
             allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);
             allow update: if chosenOpponentStartsPart(id, resource.data, request.resource.data);
-            allow update: if playerPerformsNonMoveUpdate(resource.data, request.resource.data);
+            allow update: if playerPerformsUpdate(resource.data, request.resource.data);
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
         }
@@ -207,7 +207,7 @@ service cloud.firestore {
             let playerOneWinsAndZeroLoses =  update.loser.id == part.playerOne.id && update.winner.id == part.playerZero.id;
             return isVictory == false || playerZeroWinsAndOneLoses || playerOneWinsAndZeroLoses;
         }
-        function playerPerformsNonMoveUpdate(part, update) {
+        function playerPerformsUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
             return isValidPartUpdateDuringGame(part) &&
                    (part.turn == update.turn || safeTurnIncrease(part.turn, update.turn) || safeTurnDecrease(part.turn, update.turn)) &&
