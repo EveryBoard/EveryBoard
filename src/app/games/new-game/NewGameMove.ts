@@ -1,5 +1,5 @@
-import { Move } from "src/app/jscaip/Move";
-import { MoveEncoder } from "src/app/utils/Encoder";
+import { Move } from 'src/app/jscaip/Move';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 
 /**
   * This class represents the moves of your game.

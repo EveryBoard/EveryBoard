@@ -1,6 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NewGameDummyMinimax } from '../NewGameDummyMinimax';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameNode, NewGameRules } from '../NewGameRules';

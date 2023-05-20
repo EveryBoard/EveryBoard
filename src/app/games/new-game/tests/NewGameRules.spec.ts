@@ -1,8 +1,9 @@
-import { Minimax } from "src/app/jscaip/Minimax";
-import { RulesUtils } from "src/app/jscaip/tests/RulesUtils.spec";
-import { NewGameMove } from "../NewGameMove";
-import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from "../NewGameRules";
-import { NewGameState } from "../NewGameState";
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { NewGameMove } from '../NewGameMove';
+import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
+import { NewGameState } from '../NewGameState';
+import { NewGameDummyMinimax } from '../NewGameDummyMinimax';
 
 /**
  * This is the test suite for the rules
@@ -15,8 +16,9 @@ describe('NewGameRules', () => {
     beforeEach(() => {
         // This is the rules instance that we will test
         rules = NewGameRules.get();
-        // These are the minimaxes. They will be tested at the same tim.
+        // These are the minimaxes. They will be tested at the same time.
         minimaxes = [
+            new NewGameDummyMinimax(rules, 'NewGameDummyMinimax'),
         ];
     });
     it('should adhere to some rule', () => {

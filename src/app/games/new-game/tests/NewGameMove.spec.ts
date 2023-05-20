@@ -1,5 +1,5 @@
-import { EncoderTestUtils } from "src/app/utils/tests/Encoder.spec";
-import { NewGameMove } from "../NewGameMove";
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { NewGameMove } from '../NewGameMove';
 
 describe('NewGameMove', () => {
     describe('toString', () => {
