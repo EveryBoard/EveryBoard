@@ -10,5 +10,5 @@
         /domain: the data transfer object and data models
         /games: the games
         /guard: the guards
-        /jsacip: the game related classes common to each games (used all over the project)
+        /jscaip: the game related classes common to each games (used all over the project)
 /transations: the translations file

@@ -49,6 +49,17 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      */
     public updateBoard(): void {
     }
+    /**
+     * This method should display the last move in the component
+     */
+    public override showLastMove(move: NewGameMove): void {
+    }
+    /**
+     * This method should clear out any data coming from a move attempt
+     */
+    public override cancelMoveAttempt(): void {
+    }
+
 
     /**
      * In the component's HTML, you will likely set onClick elements.
@@ -56,4 +67,5 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * In case you want to cancel a move, you can call `this.cancelMove`.
      * It takes an optional parameter, being a toast to show to the user upon the move cancellation.
      */
+
 }
