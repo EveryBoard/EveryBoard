@@ -2,13 +2,13 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { TaflPieceAndControlMinimax, TaflPieceAndControlMinimaxMetrics } from './TaflPieceAndControlMinimax';
 import { TaflNode } from './TaflMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMinimax {
 

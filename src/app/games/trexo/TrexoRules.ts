@@ -1,8 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';

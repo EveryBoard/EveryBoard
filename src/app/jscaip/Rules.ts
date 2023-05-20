@@ -7,6 +7,7 @@ import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
+import { GameStatus } from './GameStatus';
 
 export abstract class Rules<M extends Move,
                             S extends GameState,

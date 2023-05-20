@@ -1,8 +1,9 @@
 import { MGPNode } from './MGPNode';
 import { Move } from './Move';
 import { BoardValue } from './BoardValue';
-import { GameStatus, Rules } from './Rules';
+import { Rules } from './Rules';
 import { GameState } from './GameState';
+import { GameStatus } from './GameStatus';
 
 export abstract class Minimax<M extends Move,
                               S extends GameState,

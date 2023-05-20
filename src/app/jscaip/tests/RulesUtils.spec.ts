@@ -3,7 +3,7 @@ import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
 import { Move } from '../Move';
 import { Player } from '../Player';
-import { GameStatus, Rules } from '../Rules';
+import { Rules } from '../Rules';
 import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -11,6 +11,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SCORE } from '../SCORE';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { GameStatus } from '../GameStatus';
 
 export class RulesUtils {
 

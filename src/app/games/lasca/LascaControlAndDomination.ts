@@ -1,7 +1,7 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { LascaControlMinimax } from './LascaControlMinimax';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';

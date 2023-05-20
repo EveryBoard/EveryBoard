@@ -9,12 +9,13 @@ import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 @Component({
     selector: 'app-local-game-wrapper',

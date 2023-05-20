@@ -2,10 +2,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasNode } from './EpaminondasRules';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class AttackEpaminondasMinimax extends EpaminondasMinimax {
 

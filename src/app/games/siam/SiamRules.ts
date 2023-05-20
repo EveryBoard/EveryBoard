@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -14,6 +14,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class SiamLegalityInformation {
     public constructor(public readonly resultingBoard: Table<SiamPiece>,

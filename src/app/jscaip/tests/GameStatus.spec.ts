@@ -1,5 +1,5 @@
+import { GameStatus } from '../GameStatus';
 import { Player } from '../Player';
-import { GameStatus } from '../Rules';
 
 describe('GameStatus', () => {
     it('should be convertible to BoardValue', () => {

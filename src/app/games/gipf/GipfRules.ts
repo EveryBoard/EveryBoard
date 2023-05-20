@@ -4,7 +4,7 @@ import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -13,6 +13,7 @@ import { GipfState } from './GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type GipfLegalityInformation = GipfState
 

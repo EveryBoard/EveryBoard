@@ -34,7 +34,6 @@ import { NextGameLoadingComponent } from '../../normal-component/next-game-loadi
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
@@ -45,6 +44,7 @@ import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
