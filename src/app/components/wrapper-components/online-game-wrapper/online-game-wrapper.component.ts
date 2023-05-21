@@ -306,6 +306,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.lastRequestOrReply = MGPOptional.of(request);
         switch (request.requestType) {
             case 'TakeBack':
+                // We don't do anything here at the moment.
+                // This is because the component checks take backs in getTakeBackRequester
                 break;
             case 'Rematch':
                 this.rematchProposed = true;
