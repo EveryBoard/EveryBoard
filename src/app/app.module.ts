@@ -20,6 +20,7 @@ import { WelcomeComponent } from './components/normal-component/welcome/welcome.
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
+import { AccountComponent } from './components/normal-component/account/account.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
@@ -108,9 +109,10 @@ registerLocaleData(localeFr);
 export const routes: Route[] = [
     { path: 'login', component: LoginComponent },
     { path: 'lobby', component: LobbyComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'account', component: AccountComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'settings', component: SettingsComponent },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
-    { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
+    { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
@@ -179,6 +181,7 @@ export class FirebaseProviders {
         VerifyAccountComponent,
         ResetPasswordComponent,
         SettingsComponent,
+        AccountComponent,
         DemoCardWrapperComponent,
         DemoPageComponent,
 
