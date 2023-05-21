@@ -11,6 +11,7 @@
                      class="base mid-stroke"/>
             <!-- Piece -->
             <circle *ngIf="spaceContent.getSize() > 0"
+                    id="piece_{{ coord.x }}_{{ coord.y }}"
                     [attr.cx]="getCenterAt(coord).x"
                     [attr.cy]="getCenterAt(coord).y"
                     [attr.r]="SPACE_SIZE"

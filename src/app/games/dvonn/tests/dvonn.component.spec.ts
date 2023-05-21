@@ -114,21 +114,37 @@ describe('DvonnComponent', () => {
         await testUtils.expectClickFailure('#click_3_3', DvonnFailure.MUST_MOVE_IN_STRAIGHT_LINE());
     }));
     it('should allow selecting another piece when one is already selected (invalid move)', fakeAsync(async() => {
-        // Given that the user has selected a piece
-        await testUtils.expectClickSuccess('#click_0_4');
+        // Given a board where the user has selected a piece
+        const board: Table<DvonnPieceStack> = [
+            [__, __, W_, __, __, __, __, __, __, __, __],
+            [__, __, D_, W_, W_, __, __, __, __, __, __],
+            [__, __, W_, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ];
+        testUtils.setupState(new DvonnState(board, 0, false));
+        await testUtils.expectClickSuccess('#click_2_0');
         // When the user selects a invalid destination, which is a valid selection for another piece
-        await testUtils.expectClickSuccess('#click_2_4');
+        await testUtils.expectClickSuccess('#click_4_1');
         // Then it should have change the selection
-        testUtils.expectElementNotToExist('#chosen_0_4');
-        testUtils.expectElementToExist('#chosen_2_4');
+        testUtils.expectElementNotToExist('#chosen_2_0');
+        testUtils.expectElementToExist('#chosen_4_1');
     }));
     it('should allow selecting another piece when one is already selected (illegal move)', fakeAsync(async() => {
-        // Given that the user has selected a piece
-        await testUtils.expectClickSuccess('#click_0_4');
-        // When the user selects an illegal destination, which is a valid selection for another piece
+        // Given a board where the user has selected a piece
+        const board: Table<DvonnPieceStack> = [
+            [__, __, W_, __, __, __, __, __, __, __, __],
+            [__, __, D_, W_, W_, __, __, __, __, __, __],
+            [__, __, W_, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ];
+        testUtils.setupState(new DvonnState(board, 0, false));
         await testUtils.expectClickSuccess('#click_2_0');
+        // When the user selects an illegal destination, which is a valid selection for another piece
+        await testUtils.expectClickSuccess('#click_2_2');
         // Then it should have change the selection
-        testUtils.expectElementNotToExist('#chosen_0_4');
-        testUtils.expectElementToExist('#chosen_2_0');
+        testUtils.expectElementNotToExist('#chosen_2_0');
+        testUtils.expectElementToExist('#chosen_2_2');
     }));
 });
