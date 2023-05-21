@@ -183,7 +183,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     public isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         return QuartoRules.isLegal(move, state);
     }
-    public applyLegalMove(move: QuartoMove, state: QuartoState): QuartoState {
+    public applyLegalMove(move: QuartoMove, state: QuartoState, _info: void): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);

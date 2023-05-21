@@ -268,7 +268,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         const centralThrone: Coord = state.getCentralThrone();
         return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
-    public applyLegalMove(move: TaflMove, state: S): S {
+    public applyLegalMove(move: TaflMove, state: S, _info: void): S {
         display(TaflRules.VERBOSE, { TablutRules_applyLegalMove: { move, state } });
         const turn: number = state.turn;
 
