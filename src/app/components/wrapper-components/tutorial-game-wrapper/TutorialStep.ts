@@ -57,8 +57,6 @@ export abstract class TutorialStep {
     }
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
 
-    public previousState: MGPOptional<GameState> = MGPOptional.empty();
-
     protected constructor(public title: string,
                           public instruction: string,
                           public state: GameState) {

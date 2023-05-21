@@ -98,15 +98,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
         let motherOpt: MGPOptional<MGPNode<Rules<Move, GameState>, Move, GameState>>;
-        if (currentStep.previousState.isPresent()) {
-            const mother: MGPNode<Rules<Move, GameState>, Move, GameState> =
-                new MGPNode(currentStep.previousState.get());
-            motherOpt = MGPOptional.of(mother);
-        } else {
-            motherOpt = MGPOptional.empty();
-        }
         this.gameComponent.rules.node = new MGPNode(currentStep.state,
-                                                    motherOpt,
+                                                    MGPOptional.empty(),
                                                     currentStep.previousMove);
         this.gameComponent.updateBoard();
         this.setRole(this.gameComponent.getCurrentPlayer());
