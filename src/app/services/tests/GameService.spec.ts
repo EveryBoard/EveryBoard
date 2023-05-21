@@ -218,6 +218,8 @@ describe('GameService', () => {
         let configRoomService: ConfigRoomService;
         let partDAO: PartDAO;
         function receiveRematchProposal(from: Player): Promise<void> {
+            // As we are mocking the DAO, we can directly propose the rematch ourselves as Player.ZERO
+            // In practice, we should receive this from the opponent.
             return gameService.proposeRematch('partId', Player.ZERO);
         }
         beforeEach(() => {
@@ -346,7 +348,7 @@ describe('GameService', () => {
                 return 'partId';
             });
 
-            // When Player.ONE (use) accepts the rematch
+            // When Player.ONE (us) accepts the rematch
             await gameService.acceptRematch(lastPart, Player.ONE);
             // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
             // Moreover, everything needs to have been called eventually

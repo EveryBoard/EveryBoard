@@ -215,18 +215,26 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return result;
     }
     async function receiveRequest(player: Player, request: RequestType): Promise<void> {
+        // As we are mocking the DAO, we can directly add the request ourselves
+        // In practice, we should receive this from the other player.
         await gameEventService.addRequest('configRoomId', player, request);
         testUtils.detectChanges();
     }
     async function receiveReply(player: Player, reply: Reply, request: RequestType, data?: JSONValue): Promise<void> {
+        // As we are mocking the DAO, we can directly add the reply ourselves
+        // In practice, we should receive this from the other player.
         await gameEventService.addReply('configRoomId', player, reply, request, data);
         testUtils.detectChanges();
     }
     async function receiveAction(player: Player, action: Action): Promise<void> {
+        // As we are mocking the DAO, we can directly add the action ourselves
+        // In practice, we should receive this from the other player.
         await gameEventService.addAction('configRoomId', player, action);
         testUtils.detectChanges();
     }
     async function receivePartDAOUpdate(update: Partial<Part>, detectChanges: boolean = true): Promise<void> {
+        // As we are mocking the DAO, we can directly change the part ourselves
+        // In practice, we should receive this from the other player.
         await partDAO.update('configRoomId', update);
         if (detectChanges) {
             testUtils.detectChanges();

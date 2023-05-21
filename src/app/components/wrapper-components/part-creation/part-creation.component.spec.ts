@@ -61,6 +61,8 @@ describe('PartCreationComponent', () => {
         return configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     }
     async function receiveConfigRoomUpdate(update: Partial<ConfigRoom>): Promise<void> {
+        // As we are mocking the DAO, we can directly change the config room ourselves
+        // In practice, we should receive this from the other player.
         await configRoomDAO.update('configRoomId', update);
         tick();
     }
