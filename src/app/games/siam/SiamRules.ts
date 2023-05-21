@@ -151,8 +151,8 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         resultingBoard[coord.y][coord.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
-    public applyLegalMove(_move: SiamMove, state: SiamState, status: SiamLegalityInformation): SiamState {
-        const newBoard: Table<SiamPiece> = ArrayUtils.copyBiArray(status.resultingBoard);
+    public applyLegalMove(_move: SiamMove, state: SiamState, info: SiamLegalityInformation): SiamState {
+        const newBoard: Table<SiamPiece> = ArrayUtils.copyBiArray(info.resultingBoard);
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;

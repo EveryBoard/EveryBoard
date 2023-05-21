@@ -32,7 +32,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
     private constructor() {
         super(ConnectSixState);
     }
-    public applyLegalMove(move: ConnectSixMove, state: ConnectSixState): ConnectSixState {
+    public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {
         if (move instanceof ConnectSixDrops) {
             return this.applyLegalDrops(move, state);
         } else {

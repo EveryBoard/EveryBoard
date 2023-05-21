@@ -16,8 +16,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState
-    {
+    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState {
         if (move.isTileExchange()) {
             return this.applyLegalTileExchange(move, state);
         } else {

@@ -7,9 +7,6 @@ class MyMoveCoord extends MoveCoord {
     public toString(): string {
         return 'MyMoveCoord';
     }
-    public equals(other: MyMoveCoord): boolean {
-        return this.coord.equals(other.coord);
-    }
 }
 
 describe('MoveCoord', () => {

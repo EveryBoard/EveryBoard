@@ -65,6 +65,7 @@ import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
+import { PenteComponent } from './games/pente/pente.component';
 import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
@@ -203,6 +204,7 @@ export class FirebaseProviders {
         MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,
         P4Component,
         PentagoComponent,
+        PenteComponent,
         PylosComponent,
         QuartoComponent,
         QuixoComponent,

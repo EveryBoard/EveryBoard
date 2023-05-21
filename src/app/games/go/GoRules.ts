@@ -400,8 +400,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
     public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
-    public applyLegalMove(legalMove: GoMove, state: GoState, status: GoLegalityInformation): GoState
-    {
+    public applyLegalMove(legalMove: GoMove, state: GoState, infos: GoLegalityInformation): GoState {
         display(GoRules.VERBOSE, { applyLegalMove: { legalMove, state, status } });
         if (GoRules.isPass(legalMove)) {
             display(GoRules.VERBOSE, 'GoRules.applyLegalMove: isPass');
@@ -414,7 +413,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return GoRules.applyDeadMarkingMove(legalMove, state);
         } else {
             display(GoRules.VERBOSE, 'GoRules.applyLegalMove: else it is normal move');
-            return GoRules.applyNormalLegalMove(legalMove, state, status);
+            return GoRules.applyNormalLegalMove(legalMove, state, infos);
         }
     }
     public getGameStatus(node: GoNode): GameStatus {

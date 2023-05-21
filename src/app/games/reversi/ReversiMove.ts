@@ -8,10 +8,6 @@ export class ReversiMove extends MoveCoord {
 
     public static readonly PASS: ReversiMove = new ReversiMove(-1, -1);
 
-    public equals(other: ReversiMove): boolean {
-        if (other === this) return true;
-        return other.coord.equals(this.coord);
-    }
     public toString(): string {
         return 'ReversiMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }
