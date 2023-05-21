@@ -299,6 +299,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: boolean = rules.choose(chosenMove);
         assert(success, 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.updateBoard();
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.timeManager.onReceivedMove(moveEvent);
     }
     private onReceivedRequest(request: GameEventRequest): void {
@@ -460,22 +461,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return PlayerOrNone.NONE;
         }
     }
-    public async initializePlayersDatas(updatedICurrentPart: PartDocument): Promise<void> {
+    public async initializePlayersDatas(part: PartDocument): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_initializePlayersDatas: updatedICurrentPart });
         this.players = [
             MGPOptional.of(updatedICurrentPart.data.playerZero),
             MGPOptional.ofNullable(updatedICurrentPart.data.playerOne),
         ];
-        assert(updatedICurrentPart.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
-        this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();
+        assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
+        this.currentPlayer = this.players[part.data.turn % 2].get();
         const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
         if (opponent.isPresent()) {
             const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>) => {
                 assert(user.isPresent(), 'opponent was deleted, what sorcery is this');
                 this.opponent = opponent.get();
             };
-            this.opponentSubscription =
-                this.userService.observeUser(opponent.get().id, callback);
+            this.opponentSubscription = this.userService.observeUser(opponent.get().id, callback);
         }
     }
     public async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {
