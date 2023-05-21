@@ -124,7 +124,7 @@ describe('DvonnComponent', () => {
         ];
         testUtils.setupState(new DvonnState(board, 0, false));
         await testUtils.expectClickSuccess('#click_2_0');
-        // When the user selects a invalid destination, which is a valid selection for another piece
+        // When the user clicks on an invalid destination for this move, that is a valid piece for another move
         await testUtils.expectClickSuccess('#click_4_1');
         // Then it should have change the selection
         testUtils.expectElementNotToExist('#chosen_2_0');
@@ -141,7 +141,7 @@ describe('DvonnComponent', () => {
         ];
         testUtils.setupState(new DvonnState(board, 0, false));
         await testUtils.expectClickSuccess('#click_2_0');
-        // When the user selects an illegal destination, which is a valid selection for another piece
+        // When the user click on a valid yet illegal destination, that is a valid for another move
         await testUtils.expectClickSuccess('#click_2_2');
         // Then it should have change the selection
         testUtils.expectElementNotToExist('#chosen_2_0');
