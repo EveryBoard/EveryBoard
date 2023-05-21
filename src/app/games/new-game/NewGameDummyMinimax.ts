@@ -23,7 +23,7 @@ export class NewGameDummyMinimax extends Minimax<NewGameMove,
      * In general, you can list all possible moves.
      * It is however an option to exclude some move of the list if:
      *     - they have no way to be needed in any interesting part
-     *     - the can only lead to unavoidable defeat
+     *     - the can only lead to avoidable defeat
      */
     public getListMoves(node: NewGameNode): NewGameMove[] {
         return [];
