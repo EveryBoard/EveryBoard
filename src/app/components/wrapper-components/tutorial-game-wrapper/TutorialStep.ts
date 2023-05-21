@@ -85,10 +85,6 @@ export abstract class TutorialStep {
         this.previousMove = MGPOptional.of(previousMove);
         return this;
     }
-    public withPreviousState(previousState: GameState): this {
-        this.previousState = MGPOptional.of(previousState);
-        return this;
-    }
 }
 
 export abstract class TutorialStepWithSolution extends TutorialStep {
