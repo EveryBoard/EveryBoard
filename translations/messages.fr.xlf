@@ -6,6 +6,18 @@
         <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
         <target>Si vous aimez <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, suivez-nous !</target>
       </trans-unit>
+      <trans-unit id="6153797048311741939" datatype="html">
+        <source>User settings</source>
+        <target>Paramètres utilisateurs</target>
+      </trans-unit>
+      <trans-unit id="6838770899052870929" datatype="html">
+        <source>If you forgot your password or want to change it, click on the following button:</source>
+        <target>Si vous avez oublié votre mot de passe ou souhaitez le changer, cliquez sur le bouton suivant :</target>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+        <target>Réinitialiser le mot de passe</target>
+      </trans-unit>
       <trans-unit id="8403075591877274055" datatype="html">
         <source>Type your message here</source>
         <target>Entrez votre message ici</target>
@@ -85,6 +97,10 @@
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
         <target>Paramètres</target>
+      </trans-unit>
+      <trans-unit id="4086606389696938932" datatype="html">
+        <source>Account</source>
+        <target>Compte</target>
       </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
@@ -446,10 +462,6 @@
         <source>The email has been sent, please follow the instructions from that email.</source>
         <target>L'email a été envoyé, veuillez suivre les instructions qui s'y trouvent.</target>
       </trans-unit>
-      <trans-unit id="1636934520301910285" datatype="html">
-        <source>Reset password</source>
-        <target>Réinitialiser le mot de passe</target>
-      </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
         <target>Erreur</target>
@@ -497,10 +509,6 @@
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
         <target>Utilisateurs connectés :</target>
-      </trans-unit>
-      <trans-unit id="6153797048311741939" datatype="html">
-        <source>User settings</source>
-        <target>Paramètres utilisateur</target>
       </trans-unit>
       <trans-unit id="7103588127254721505" datatype="html">
         <source>Theme</source>

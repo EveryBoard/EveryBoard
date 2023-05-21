@@ -562,7 +562,7 @@ function getComponentClassName(component: Type<any>): string {
 }
 
 /**
- * Tests that we routes are used as expected. The router.navigate method should
+ * Tests that the routes are used as expected. The router.navigate method should
  * be spyed on. This function will match the route that is navigated to with
  * the declared routes of the application, and ensure that the component that is
  * routed to matches `component`. In case multiple router.navigate calls happen,
