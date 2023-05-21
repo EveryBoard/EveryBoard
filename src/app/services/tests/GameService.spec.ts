@@ -20,7 +20,6 @@ import { Utils } from 'src/app/utils/utils';
 import { ConfigRoomService } from '../ConfigRoomService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { Timestamp } from 'firebase/firestore';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
@@ -217,11 +216,6 @@ describe('GameService', () => {
     describe('rematch', () => {
         let configRoomService: ConfigRoomService;
         let partDAO: PartDAO;
-        function receiveRematchProposal(from: Player): Promise<void> {
-            // As we are mocking the DAO, we can directly propose the rematch ourselves as Player.ZERO
-            // In practice, we should receive this from the opponent.
-            return gameService.proposeRematch('partId', Player.ZERO);
-        }
         beforeEach(() => {
             configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
@@ -234,61 +228,43 @@ describe('GameService', () => {
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
         }));
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
-            // Given a previous match with creator starting, and creator proposes a rematch
-            const lastPart: PartDocument = new PartDocument('partId', {
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                result: MGPResult.VICTORY.value,
-                turn: 2,
-                typeGame: 'laMarelle',
-                beginning: new Timestamp(1700102, 680000000),
-                loser: UserMocks.CREATOR_MINIMAL_USER,
-                winner: UserMocks.OPPONENT_MINIMAL_USER,
-            });
-            const lastGameConfigRoom: ConfigRoom = {
-                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
-                creator: UserMocks.CREATOR_MINIMAL_USER,
-                firstPlayer: 'CREATOR',
-                maximalMoveDuration: 10,
-                partStatus: 3,
-                partType: PartType.BLITZ.value,
-                totalPartDuration: 25,
-            };
-            await receiveRematchProposal(Player.ZERO);
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
-            let called: boolean = false;
-            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
-                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.data.playerOne));
-                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.data.playerZero));
-                called = true;
-            });
-
-            // When accepting rematch as Player.ONE
-            await gameService.acceptRematch(lastPart, Player.ONE);
-
-            // Then we should have a part created with playerOne and playerZero switched
-            expect(called).toBeTrue();
-        }));
-        it('should start with the other player when first player was random', fakeAsync(async() => {
-            // Given a previous match where creator started
+            // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
             const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
-            let called: boolean = false;
-            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
-                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.data.playerOne));
-                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.data.playerZero));
-                called = true;
-            });
+            spyOn(partDAO, 'create').and.resolveTo('rematchId');
 
-            // When accepting rematch as Player.ONE
+            // When calling acceptRematch
+            await gameService.acceptRematch(lastPart, Player.ONE);
+
+            // Then it should create a new part with the players reversed
+            const part: Part = {
+                ...PartMocks.STARTED,
+                playerZero: Utils.getNonNullable(lastPart.data.playerOne),
+                playerOne: lastPart.data.playerZero,
+            };
+            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
+        }));
+        it('should start with the other player when first player was random', fakeAsync(async() => {
+            // Given a previous game
+            const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
+            const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
+            spyOn(partDAO, 'create').and.resolveTo('rematchId');
+
+            // When calling acceptRematch
             await gameService.acceptRematch(lastPart, Player.ONE);
 
             // Then we should have a part created with playerOne and playerZero switched
-            expect(called).toBeTrue();
+            const part: Part = {
+                ...PartMocks.STARTED,
+                playerZero: Utils.getNonNullable(lastPart.data.playerOne),
+                playerOne: lastPart.data.playerZero,
+            };
+            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
         }));
         it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
-            // Given a finished part
+            // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
             const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
             spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
@@ -312,11 +288,11 @@ describe('GameService', () => {
                 return 'partId';
             });
 
-            // When accepting a rematch
+            // When calling acceptRematch
             await gameService.acceptRematch(lastPart, Player.ONE);
+
             // Then, the order of the creations must be: part, configRoom, chat (as checked by the mocks)
             // Moreover, everything needs to have been called eventually
-            // And the playerZero/playerOne must be switched
             const part: Part = {
                 ...PartMocks.STARTED,
                 playerZero: Utils.getNonNullable(lastPart.data.playerOne),
