@@ -37,4 +37,14 @@ export class PartMocks {
         beginning: serverTimestamp(),
     };
 
+    public static readonly FINISHED: Part = {
+        typeGame: 'Quarto',
+        playerZero: UserMocks.OPPONENT_MINIMAL_USER,
+        playerOne: UserMocks.CREATOR_MINIMAL_USER,
+        result: MGPResult.VICTORY.value,
+        turn: 2,
+        beginning: serverTimestamp(),
+        loser: UserMocks.CREATOR_MINIMAL_USER,
+        winner: UserMocks.OPPONENT_MINIMAL_USER,
+    };
 }
