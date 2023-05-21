@@ -61,6 +61,7 @@
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a id="connectedUserName" class="navbar-link">{{ username.get() }}</a>
                             <div class="navbar-dropdown">
+                                <a class="navbar-item" id="logout" [routerLink]="['/account']" i18n>Account</a>
                                 <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
                             </div>
                         </div>
