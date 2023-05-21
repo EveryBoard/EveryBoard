@@ -21,4 +21,7 @@ export abstract class MoveCoord extends Move {
         super();
         this.coord = new Coord(x, y);
     }
+    public equals(other: this): boolean {
+        return this === other || this.coord.equals(other.coord);
+    }
 }

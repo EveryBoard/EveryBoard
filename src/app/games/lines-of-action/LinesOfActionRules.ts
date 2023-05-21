@@ -77,11 +77,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove,
-                          state: LinesOfActionState,
-                          _status: void)
-    : LinesOfActionState
-    {
+    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _info: void): LinesOfActionState {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         board[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();

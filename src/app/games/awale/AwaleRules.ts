@@ -26,7 +26,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: AwaleMove, state: AwaleState, infos: void): AwaleState {
+    public applyLegalMove(move: AwaleMove, state: AwaleState, _info: void): AwaleState {
         display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state });
         const x: number = move.x;
         const player: Player = state.getCurrentPlayer();

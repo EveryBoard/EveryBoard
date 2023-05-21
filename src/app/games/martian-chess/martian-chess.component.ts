@@ -53,7 +53,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                                                                     MartianChessPiece,
                                                                     MartianChessMoveResult>
 {
-
     public static SPACE_SIZE: number = 100;
     public static STROKE_WIDTH: number = 8;
     public INDICATOR_SIZE: number = 20;

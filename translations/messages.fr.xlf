@@ -234,6 +234,10 @@
         <source>Drop a piece, then rotate a quadrant. The first player to align 5 pieces wins!</source>
         <target>Posez une pièces, ensuite tournez un quadrant. Le premier à aligner 5 pièces gagne !</target>
       </trans-unit>
+      <trans-unit id="3362876946788995618" datatype="html">
+        <source>You can align 5 pieces to win, or you can capture 10 pieces of your opponent to win!</source>
+        <target>Vous pouvez aligner 5 pièces pour gagner, ou vous pouvez aussi gagner en capturant 10 pièces de votre adversaire !</target>
+      </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
         <target>Superposez vos pièces et utilisez deux mécaniques de jeux pour conserver vos pièces. Le premier joueur qui n'a plus de pièce perd !</target>
@@ -389,6 +393,10 @@
       <trans-unit id="8745205959337703089" datatype="html">
         <source>Connect Six</source>
         <target>Connect Six</target>
+      </trans-unit>
+      <trans-unit id="7128132932954450153" datatype="html">
+        <source>Pente</source>
+        <target>Pente</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -3075,6 +3083,34 @@
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
         <target>Bravo ! Note : si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation !</target>
+      </trans-unit>
+      <trans-unit id="1301553003354246210" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+        <target>Pente se joue sur un plateau 19x19, sur lequel on dépose les pierres aux intersections des cases. Le but du jeu est d'aligner 5 de vos pièces, ou de capturer 10 pièces de votre adversaire. Initialement, une pièce du joueur clair est placée au centre du plateau.</target>
+      </trans-unit>
+      <trans-unit id="730381467241225928" datatype="html">
+        <source>Dropping a stone</source>
+        <target>Déposer une pierre</target>
+      </trans-unit>
+      <trans-unit id="254985125186363895" datatype="html">
+        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
+        <target>Lors de votre tour, vous devez déposer une pierre sur le plateau. Il n'y a pas de restriction : vous pouvez la placer sur n'importe quel emplacement libre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pierre sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="6622643035593861381" datatype="html">
+        <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
+        <target>Vous pouvez capturer exactement deux pièces de votre adversaire en les prenant en sandwich entre deux de vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair et pouvez capturer, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="5697357351132552791" datatype="html">
+        <source>Placing in a sandwich position</source>
+        <target>Placer en position de sandwich</target>
+      </trans-unit>
+      <trans-unit id="4745154919636452326" datatype="html">
+        <source>You can safely place a piece next to another of your piece in what would look like a sandwich from the opponent&apos;s pieces. This is a safe move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and have the opportunity to do such a move here, do it!</source>
+        <target>Vous pouvez placer une de vos pièces à côté d'une autre de vos pièces, là où elle serait en sandwich entre deux pièces adverses. C'est un mouvement sûr.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair et avez la possibilité de faire un tel mouvement, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="5109014320867695717" datatype="html">
+        <source>Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, you can win in two ways. Win!</source>
+        <target>Souvenez-vous, vous pouver gagner soit en alignant 5 de vos pièces, soit en capturant 10 pièces de votre adversaire. Ici, en tant que Clair, vous avez déjà capturé 8 pièces adverses et vous n'avez besoin que de deux pièces supplémentaires pour gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, vous pouvez gagner de deux façon différentes. Gagnez !</target>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>

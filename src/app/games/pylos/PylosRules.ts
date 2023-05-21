@@ -95,7 +95,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return possiblesCapturesSet;
     }
-    public static applyLegalMove(move: PylosMove, state: PylosState, _status: void): PylosState {
+    public static applyLegalMove(move: PylosMove, state: PylosState, _info: void): PylosState {
         return state.applyLegalMove(move);
     }
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {

@@ -38,7 +38,7 @@ export class EpaminondasMove extends MoveCoord {
                                   this.stepSize + ', ' +
                                   this.direction.toString() + ')';
     }
-    public equals(other: EpaminondasMove): boolean {
+    public override equals(other: EpaminondasMove): boolean {
         if (this === other) return true;
         if (!this.coord.equals(other.coord)) return false;
         if (this.movedPieces !== other.movedPieces) return false;
