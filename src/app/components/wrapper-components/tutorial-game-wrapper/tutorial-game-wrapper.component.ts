@@ -15,7 +15,6 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 
 type TutorialPlayer = 'tutorial-player';
 @Component({
