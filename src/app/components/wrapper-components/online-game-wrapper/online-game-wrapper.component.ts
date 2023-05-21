@@ -462,10 +462,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async initializePlayersDatas(part: PartDocument): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_initializePlayersDatas: updatedICurrentPart });
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_initializePlayersDatas: part });
         this.players = [
-            MGPOptional.of(updatedICurrentPart.data.playerZero),
-            MGPOptional.ofNullable(updatedICurrentPart.data.playerOne),
+            MGPOptional.of(part.data.playerZero),
+            MGPOptional.ofNullable(part.data.playerOne),
         ];
         assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
         this.currentPlayer = this.players[part.data.turn % 2].get();
