@@ -11,7 +11,6 @@ describe('PylosMinimax', () => {
 
     let rules: PylosRules;
     let minimax: PylosMinimax;
-    let node: PylosNode;
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -20,9 +19,9 @@ describe('PylosMinimax', () => {
     beforeEach(() => {
         rules = PylosRules.get();
         minimax = new PylosMinimax(rules, 'PylosMinimax');
-        node = rules.getInitialNode();
     });
     it('should provide 16 drops at first turn', () => {
+        const node: PylosNode = rules.getInitialNode();
         expect(minimax.getListMoves(node).length).toBe(16);
     });
     it('should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {

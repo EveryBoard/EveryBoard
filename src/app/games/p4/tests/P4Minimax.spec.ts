@@ -12,7 +12,6 @@ describe('P4Minimax', () => {
 
     let minimax: P4Minimax;
     let rules: P4Rules;
-    let node: P4Node;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -20,7 +19,6 @@ describe('P4Minimax', () => {
     beforeEach(() => {
         rules = P4Rules.get();
         minimax = new P4Minimax(rules, 'P4Minimax');
-        node = rules.getInitialNode();
     });
     it('should know when a column is full or not', () => {
         const board: Table<PlayerOrNone> = [
@@ -74,6 +72,7 @@ describe('P4Minimax', () => {
         const getListMovesSpy: jasmine.Spy = spyOn(minimax, 'getListMoves').and.callThrough();
 
         // Given the number of moves of a minimax without alpha-beta pruning
+        let node: P4Node = rules.getInitialNode();
         node.findBestMove(3, minimax, false, false);
         const callsToGetBoardValueWithoutPruning: number = getBoardValueSpy.calls.count();
         getBoardValueSpy.calls.reset();

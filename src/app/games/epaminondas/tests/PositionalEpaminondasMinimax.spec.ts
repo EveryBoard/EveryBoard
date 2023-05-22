@@ -13,7 +13,6 @@ describe('PositionalEpaminondasMinimax', () => {
 
     let rules: EpaminondasRules;
     let minimax: PositionalEpaminondasMinimax;
-    let node: EpaminondasNode;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -21,9 +20,9 @@ describe('PositionalEpaminondasMinimax', () => {
     beforeEach(() => {
         rules = EpaminondasRules.get();
         minimax = new PositionalEpaminondasMinimax(rules, 'EpaminondasMinimax');
-        node = rules.getInitialNode();
     });
     it('should filter number of choices', () => {
+        const node: EpaminondasNode = rules.getInitialNode();
         expect(minimax.getListMoves(node).length).toBeLessThan(114);
     });
     it('should not filter number of choices if it is below 40', () => {
@@ -43,7 +42,7 @@ describe('PositionalEpaminondasMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        node = new EpaminondasNode(state);
+        const node: EpaminondasNode = new EpaminondasNode(state);
 
         // When getting the list of move
         const moves: EpaminondasMove[] = minimax.getListMoves(node);
@@ -67,7 +66,7 @@ describe('PositionalEpaminondasMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        node = new EpaminondasNode(state);
+        const node: EpaminondasNode = new EpaminondasNode(state);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = node.findBestMove(1, minimax);
 

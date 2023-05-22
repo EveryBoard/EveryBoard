@@ -11,7 +11,6 @@ describe('PentagoMinimax', () => {
 
     let rules: PentagoRules;
     let minimax: PentagoMinimax;
-    let node: PentagoNode;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -19,9 +18,9 @@ describe('PentagoMinimax', () => {
     beforeEach(() => {
         rules = PentagoRules.get();
         minimax = new PentagoMinimax(rules, 'PentagoMinimax');
-        node = rules.getInitialNode();
     });
     it('should propose 6 moves at first turn', () => {
+        const node: PentagoNode = rules.getInitialNode();
         expect(minimax.getListMoves(node).length).toBe(6);
     });
     it('should propose to click on empty square afterward', () => {
@@ -35,11 +34,10 @@ describe('PentagoMinimax', () => {
             [_, _, _, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 1);
-        node = new PentagoNode(state,
-                               MGPOptional.of(node),
-                               MGPOptional.of(PentagoMove.rotationless(0, 0)),
-                               minimax);
-
+        const node: PentagoNode = new PentagoNode(state,
+                                                  MGPOptional.of(rules.getInitialNode()),
+                                                  MGPOptional.of(PentagoMove.rotationless(0, 0)),
+                                                  minimax);
         /*
          * when calculating the list of moves, then there should be 105
          * so: 35 without any rotation
@@ -63,8 +61,10 @@ describe('PentagoMinimax', () => {
             [_, _, X, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 8);
-        node = new PentagoNode(state, MGPOptional.of(node), MGPOptional.empty(), minimax);
-
+        const node: PentagoNode = new PentagoNode(state,
+                                                  MGPOptional.of(rules.getInitialNode()),
+                                                  MGPOptional.empty(),
+                                                  minimax);
         /*
          * when calculating the list of moves
          * there should be 28 drop tilmes 8 rotations
@@ -86,7 +86,10 @@ describe('PentagoMinimax', () => {
             [_, _, O, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 4);
-        node = new PentagoNode(state, MGPOptional.of(node), MGPOptional.empty(), minimax);
+        const node: PentagoNode = new PentagoNode(state,
+                                                  MGPOptional.of(rules.getInitialNode()),
+                                                  MGPOptional.empty(),
+                                                  minimax);
 
         /*
          * when calculating the list of moves

@@ -11,14 +11,12 @@ describe('AwaleMinimax', () => {
 
     let minimax: AwaleMinimax;
 
-    let node: AwaleNode;
-
     beforeEach(() => {
         rules = AwaleRules.get();
         minimax = new AwaleMinimax(rules, 'AwaleMinimax');
-        node = rules.getInitialNode();
     });
     it('should not throw at first choice', () => {
+        const node: AwaleNode = rules.getInitialNode();
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
         expect(rules.isLegal(bestMove, AwaleState.getInitialState()).isSuccess()).toBeTrue();
     });

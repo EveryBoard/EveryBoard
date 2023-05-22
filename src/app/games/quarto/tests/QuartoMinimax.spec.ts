@@ -12,7 +12,6 @@ describe('QuartoMinimax', () => {
 
     let rules: QuartoRules;
     let minimaxes: QuartoMinimax[];
-    let node: QuartoNode;
 
     const NULL: QuartoPiece = QuartoPiece.EMPTY;
     const AAAA: QuartoPiece = QuartoPiece.AAAA;
@@ -25,7 +24,6 @@ describe('QuartoMinimax', () => {
         minimaxes = [
             new QuartoMinimax(rules, 'QuartoMinimax'),
         ];
-        node = rules.getInitialNode();
     });
     it('should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
         // Given a state with a pre-victory
@@ -49,7 +47,7 @@ describe('QuartoMinimax', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
-        node = new QuartoNode(state);
+        const node: QuartoNode = new QuartoNode(state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
         for (const minimax of minimaxes) {
             // When getting the list of moves

@@ -13,7 +13,6 @@ describe('EpaminondasMinimax', () => {
 
     let rules: EpaminondasRules;
     let minimax: EpaminondasMinimax;
-    let node: EpaminondasNode;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -21,9 +20,9 @@ describe('EpaminondasMinimax', () => {
     beforeEach(() => {
         rules = EpaminondasRules.get();
         minimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
-        node = rules.getInitialNode();
     });
     it('should propose 114 moves at first turn', () => {
+        const node: EpaminondasNode = rules.getInitialNode();
         expect(minimax.getListMoves(node).length).toBe(114);
     });
     it('should consider possible capture the best move', () => {
@@ -42,7 +41,7 @@ describe('EpaminondasMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        node = new EpaminondasNode(state);
+        const node: EpaminondasNode = new EpaminondasNode(state);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
         const bestMove: EpaminondasMove = node.findBestMove(1, minimax);
         expect(bestMove).toEqual(capture);

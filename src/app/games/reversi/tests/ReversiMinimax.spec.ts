@@ -14,18 +14,18 @@ describe('ReversiMinimax', () => {
 
     let rules: ReversiRules;
     let minimax: ReversiMinimax;
-    let node: ReversiNode;
 
     beforeEach(() => {
         rules = ReversiRules.get();
         minimax = new ReversiMinimax(rules, 'ReversiMinimax');
-        node = rules.getInitialNode();
     });
     it('should have 4 choices at first turn', () => {
+        const node: ReversiNode = rules.getInitialNode();
         const moves: ReversiMove[] = minimax.getListMoves(node);
         expect(moves.length).toBe(4);
     });
     it('should not throw at first choice', () => {
+        const node: ReversiNode = rules.getInitialNode();
         const bestMove: ReversiMove = node.findBestMove(2, minimax);
         expect(rules.isLegal(bestMove, ReversiState.getInitialState()).isSuccess()).toBeTrue();
     });
@@ -41,7 +41,7 @@ describe('ReversiMinimax', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 2);
-        node = new ReversiNode(state);
+        const node: ReversiNode = new ReversiNode(state);
         const bestMove: ReversiMove = node.findBestMove(2, minimax);
         expect(bestMove.equals(new ReversiMove(0, 0))).toBeTrue();
     });
@@ -57,7 +57,7 @@ describe('ReversiMinimax', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        node = new ReversiNode(state);
+        const node: ReversiNode = new ReversiNode(state);
         const moves: ReversiMove[] = minimax.getListMoves(node);
         expect(moves.length).toBe(1);
         expect(moves[0]).toBe(ReversiMove.PASS);

@@ -8,7 +8,6 @@ describe('DiamMinimax', () => {
 
     let rules: DiamRules;
     let minimax: DiamDummyMinimax;
-    let node: DiamNode;
 
     const __: DiamPiece = DiamPiece.EMPTY;
     const A1: DiamPiece = DiamPiece.ZERO_FIRST;
@@ -19,10 +18,9 @@ describe('DiamMinimax', () => {
     beforeEach(() => {
         rules = DiamRules.get();
         minimax = new DiamDummyMinimax(rules, 'DiamDummyMinimax');
-        node = rules.getInitialNode();
     });
     it('should propose 16 moves at first turn', () => {
-        node = new DiamNode(DiamState.getInitialState());
+        const node: DiamNode = new DiamNode(DiamState.getInitialState());
         expect(minimax.getListMoves(node).length).toBe(16);
     });
     it('should detect shift moves', () => {
@@ -33,7 +31,7 @@ describe('DiamMinimax', () => {
             [B1, __, __, __, __, __, __, B2],
             [A1, __, __, __, __, __, __, A2],
         ], 4);
-        node = new DiamNode(state);
+        const node: DiamNode = new DiamNode(state);
         // Then there are 16 + 4 move
         expect(minimax.getListMoves(node).length).toBe(20);
     });
@@ -45,7 +43,7 @@ describe('DiamMinimax', () => {
             [__, __, __, __, __, __, __, A2],
             [__, __, __, __, __, __, __, B2],
         ], 4);
-        node = new DiamNode( state);
+        const node: DiamNode = new DiamNode( state);
         // Then there are 14 + 4 move
         expect(minimax.getListMoves(node).length).toBe(18);
     });

@@ -8,7 +8,6 @@ import { DvonnState } from '../DvonnState';
 describe('DvonnMinimax', () => {
     let rules: DvonnRules;
     let minimax: DvonnMinimax;
-    let node: DvonnNode;
 
     const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
     const D1: DvonnPieceStack = DvonnPieceStack.SOURCE;
@@ -18,9 +17,9 @@ describe('DvonnMinimax', () => {
     beforeEach(() => {
         rules = DvonnRules.get();
         minimax = new DvonnMinimax(rules, 'DvonnMinimax');
-        node = rules.getInitialNode();
     });
     it('should propose 41 moves at first turn', () => {
+        const node: DvonnNode = rules.getInitialNode();
         expect(minimax.getListMoves(node).length).toBe(41);
     });
     it('should compute board value as the score difference', () => {

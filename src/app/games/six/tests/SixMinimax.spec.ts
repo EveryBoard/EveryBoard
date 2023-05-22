@@ -13,7 +13,6 @@ describe('SixMinimax', () => {
 
     let rules: SixRules;
     let minimax: SixMinimax;
-    let node: SixNode;
 
     const O: PlayerOrNone = Player.ZERO;
     const X: PlayerOrNone = Player.ONE;
@@ -22,7 +21,6 @@ describe('SixMinimax', () => {
     beforeEach(() => {
         rules = SixRules.get();
         minimax = new SixMinimax(rules, 'SixMinimax');
-        node = SixRules.get().getInitialNode();
     });
     describe('pre-victories', () => {
         it('should pass forcing move to children node to minimise calculations', () => {
@@ -37,7 +35,7 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 10);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            node = new SixNode(state);
+            let node: SixNode = new SixNode(state);
             node = rules.choose(node, move).get();
             const chosenMove: SixMove = node.findBestMove(1, minimax);
             expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
@@ -159,7 +157,7 @@ describe('SixMinimax', () => {
                 [_, X, _, _, _, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            node = new SixNode(state);
+            const node: SixNode = new SixNode(state);
 
             // When asking the minimax the best choice
             const bestMove: SixMove = node.findBestMove(1, minimax);
@@ -174,7 +172,7 @@ describe('SixMinimax', () => {
                 [_, O, O, O, _, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            node = new SixNode(state);
+            const node: SixNode = new SixNode(state);
 
             // When listing the choices
             const choices: SixMove[] = minimax.getListMoves(node);
