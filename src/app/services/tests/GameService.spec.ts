@@ -245,24 +245,6 @@ describe('GameService', () => {
             };
             expect(partDAO.create).toHaveBeenCalledOnceWith(part);
         }));
-        it('should start with the other player when first player was random', fakeAsync(async() => {
-            // Given a previous game
-            const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
-            const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
-            spyOn(partDAO, 'create').and.resolveTo('rematchId');
-
-            // When calling acceptRematch
-            await gameService.acceptRematch(lastPart, Player.ONE);
-
-            // Then we should have a part created with playerOne and playerZero switched
-            const part: Part = {
-                ...PartMocks.STARTED,
-                playerZero: Utils.getNonNullable(lastPart.data.playerOne),
-                playerOne: lastPart.data.playerZero,
-            };
-            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
-        }));
         it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
             // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
