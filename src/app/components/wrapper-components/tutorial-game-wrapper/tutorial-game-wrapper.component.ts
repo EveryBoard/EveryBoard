@@ -98,8 +98,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new MGPNode(currentStep.state,
                                               MGPOptional.empty(),
                                               currentStep.previousMove);
-        this.setRole(this.gameComponent.getCurrentPlayer());
         // Set role will update view with updateBoardAndShowLastMove
+        this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {

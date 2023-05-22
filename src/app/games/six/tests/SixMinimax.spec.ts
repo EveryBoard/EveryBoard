@@ -35,9 +35,9 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 10);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            let node: SixNode = new SixNode(state);
-            node = rules.choose(node, move).get();
-            const chosenMove: SixMove = node.findBestMove(1, minimax);
+            const parentNode: SixNode = new SixNode(state);
+            const node: SixNode = rules.choose(parentNode, move).get();
+            const chosenMove: SixMove = parentNode.findBestMove(1, minimax);
             expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
             expect(node.countDescendants()).toBe(1);
         });
@@ -147,7 +147,7 @@ describe('SixMinimax', () => {
     });
     describe('Phase 2', () => {
         it('should not consider moving piece that are blocking an opponent victory', () => {
-            // Given a board with only one non loosing move
+            // Given a board with only one non losing move
             const board: Table<PlayerOrNone> = [
                 [O, O, _, _, _, _, O],
                 [X, _, _, _, _, X, _],

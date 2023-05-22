@@ -46,7 +46,7 @@ describe('EncapsuleRules', () => {
         expect(rules).toBeTruthy();
     });
     it('should detect victory', () => {
-        // Given a board with three piece owner by player zero in a row
+        // Given a board with three pieces owned by player zero in a row
         const board: EncapsuleSpace[][] = [
             [O__, ___, ___],
             [___, _O_, ___],
@@ -62,6 +62,7 @@ describe('EncapsuleRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should not consider a non-victory as a victory', () => {
+        // Given a board that is an ongoing part
         const board: EncapsuleSpace[][] = [
             [O__, ___, ___],
             [___, _X_, ___],
@@ -72,6 +73,9 @@ describe('EncapsuleRules', () => {
             X0, X0, X1, X2,
         ]);
         node = new EncapsuleNode(state);
+
+        // When evaluating it
+        // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('should know winner even when he was not playing', () => {

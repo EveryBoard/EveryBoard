@@ -189,7 +189,7 @@ describe('QuartoRules', () => {
         const node: QuartoNode = new MGPNode(state);
 
         // When evaluating board value
-        // Then it should be evaluated as Ongoing
+        // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     describe('updateBoardStatus', () => {

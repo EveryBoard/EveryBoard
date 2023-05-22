@@ -973,7 +973,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then the game is ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
     });

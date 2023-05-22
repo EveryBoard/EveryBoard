@@ -460,7 +460,7 @@ describe('ConspirateursRules', () => {
             // Given a state with no victory
             const state: ConspirateursState = ConspirateursState.getInitialState();
             const node: ConspirateursNode = new ConspirateursNode(state);
-            // Then no victory should be detected
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should consider game won if a player has put all its pieces in shelters (Player.ZERO)', () => {

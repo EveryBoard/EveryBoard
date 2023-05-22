@@ -19,7 +19,6 @@ describe('TaflPieceAndControlMinimax', () => {
 
     beforeEach(() => {
         rules = BrandhubRules.get();
-        rules.getInitialNode();
         minimax = new TaflPieceAndControlMinimax(rules, 'Piece > Control');
     });
     it('should prefer to be threatened by false threat than by real one', () => {

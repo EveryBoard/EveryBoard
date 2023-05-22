@@ -16,8 +16,19 @@ class MyAbstractState extends GameStateWithTable<number> {
 
 class AbstractNode extends MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> {}
 
-class AbstractRules extends Rules<P4Move, MyAbstractState> { // TODO: je le met en singleton aussi lui ?
+class AbstractRules extends Rules<P4Move, MyAbstractState> {
 
+    private static singleton: MGPOptional<AbstractRules> = MGPOptional.empty();
+
+    public static get(): AbstractRules {
+        if (AbstractRules.singleton.isAbsent()) {
+            AbstractRules.singleton = MGPOptional.of(new AbstractRules());
+        }
+        return AbstractRules.singleton.get();
+    }
+    private constructor() {
+        super(MyAbstractState);
+    }
     public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
         const board: readonly number[] = state.board[0];
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);
@@ -35,17 +46,16 @@ describe('Rules', () => {
     let rules: AbstractRules;
 
     beforeEach(() => {
-        rules = new AbstractRules(MyAbstractState);
+        rules = AbstractRules.get();
     });
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with sons
-        const node: MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> = rules.getInitialNode();
+        const node: AbstractNode = rules.getInitialNode();
         spyOn(node, 'hasMoves').and.returnValue(true);
         spyOn(node, 'getSonByMove').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
-        const resultingNode: MGPOptional<MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState>> =
-            rules.choose(node, P4Move.ZERO);
+        const resultingNode: MGPOptional<AbstractNode> = rules.choose(node, P4Move.ZERO);
 
         // he should be created and chosen
         expect(resultingNode.isPresent()).toBeTrue();
@@ -66,13 +76,12 @@ describe('Rules', () => {
     describe('choose', () => {
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
-            const node: MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> = rules.getInitialNode();
+            const node: AbstractNode = rules.getInitialNode();
             const illegalMove: P4Move = P4Move.FIVE;
             spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure(''));
 
             // When checking if the move is legal
-            const legality: MGPOptional<MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState>> =
-                rules.choose(node, illegalMove);
+            const legality: MGPOptional<AbstractNode> = rules.choose(node, illegalMove);
             // Then it should be an empty optional
             expect(legality).toEqual(MGPOptional.empty());
         });

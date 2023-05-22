@@ -20,14 +20,12 @@ describe('SaharaRules', () => {
 
     let rules: SaharaRules;
     let minimaxes: SaharaMinimax[];
-    let node: SaharaNode;
 
     beforeEach(() => {
         rules = SaharaRules.get();
         minimaxes = [
             new SaharaMinimax(rules, 'SaharaMinimax'),
         ];
-        node = rules.getInitialNode();
     });
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();

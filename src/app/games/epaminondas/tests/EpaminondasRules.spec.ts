@@ -366,7 +366,7 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should not be a win for anyone
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should declare player zero winner when last soldier of opponent has been captured', () => {

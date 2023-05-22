@@ -97,7 +97,7 @@ export class SixRules extends Rules<SixMove,
         const stateAfterMove: SixState = state.movePiece(move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
         if (SixRules.isSplit(groupsAfterMove)) {
-            const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
+            const biggerGroups: MGPSet<MGPSet<Coord>> = this.getLargestGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return MGPFallible.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP());
@@ -114,7 +114,7 @@ export class SixRules extends Rules<SixMove,
     public static isSplit(groups: MGPSet<MGPSet<Coord>>): boolean {
         return groups.size() > 1;
     }
-    public static getBiggerGroups(groups: MGPSet<MGPSet<Coord>>): MGPSet<MGPSet<Coord>> {
+    public static getLargestGroups(groups: MGPSet<MGPSet<Coord>>): MGPSet<MGPSet<Coord>> {
         let biggerSize: number = 0;
         let biggerGroups: MGPSet<MGPSet<Coord>> = new MGPSet();
         for (const group of groups) {

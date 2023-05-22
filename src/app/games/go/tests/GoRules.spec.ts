@@ -44,7 +44,7 @@ describe('GoRules', () => {
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
-            // Then it should be ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should allow simple capture', () => {
@@ -368,7 +368,7 @@ describe('GoRules', () => {
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
-            // Then it should be ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should attribute shared territory to surviving group', () => {

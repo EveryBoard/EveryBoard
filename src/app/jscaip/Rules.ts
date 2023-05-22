@@ -16,7 +16,6 @@ export abstract class Rules<M extends Move,
 {
 
     public constructor(public readonly stateType: Type<S>) {
-        this.getInitialNode(); // TODOTODO: c'est utile ça ?
     }
     /* The data that represent the status of the game at the current moment, including:
      * the board

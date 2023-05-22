@@ -336,7 +336,7 @@ describe('GipfRules', () => {
             const reason: string = GipfFailure.INVALID_CAPTURED_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('should not allow invalid initial capture not in a line', () => {
+        it('should unaligned captures', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, _, _, A],
                 [N, N, _, _, _, B, B],
@@ -352,7 +352,7 @@ describe('GipfRules', () => {
                                                                MGPOptional.of(HexaDirection.RIGHT));
 
             const capture: GipfCapture = new GipfCapture([
-                new Coord(1, 6), new Coord(1, 5), new Coord(1, 3), new Coord(1, 4),
+                new Coord(1, 6), new Coord(1, 5), new Coord(1, 4), new Coord(0, 0),
             ]);
             const move: GipfMove = new GipfMove(placement, [capture], []);
             const reason: string = GipfFailure.CAPTURE_MUST_BE_ALIGNED();
@@ -459,6 +459,7 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
     });

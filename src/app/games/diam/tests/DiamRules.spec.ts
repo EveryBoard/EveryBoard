@@ -201,7 +201,7 @@ describe('DiamRules', () => {
                 [B1, __, __, __, B1, __, __, __],
             ], 3);
             const node: DiamNode = new DiamNode(state);
-            // Then the game is still ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should not consider non-facing alignment as win', () => {
@@ -213,7 +213,7 @@ describe('DiamRules', () => {
                 [B1, B2, __, __, __, __, __, __],
             ], 4);
             const node: DiamNode = new DiamNode(state);
-            // Then the game is still ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should detect player 0 win with face-to-face alignment', () => {
