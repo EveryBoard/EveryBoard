@@ -10,7 +10,7 @@ import { BrandhubState } from '../brandhub/BrandhubState';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 
-describe('TaflMinimax:', () => {
+describe('TaflMinimax', () => {
 
     let rules: TablutRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -20,7 +20,7 @@ describe('TaflMinimax:', () => {
 
     beforeEach(() => {
         rules = TablutRules.get();
-        rules.setInitialBoard();
+        rules.getInitialNode();
     });
     it('should try to make the king escape when it can', () => {
         const board: Table<TaflPawn> = [
@@ -35,11 +35,11 @@ describe('TaflMinimax:', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 1);
-        rules.node = new TablutNode(state);
+        const node: TablutNode = new TablutNode(state);
         const winnerMove: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(8, 0));
 
         const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
-        const bestMove: TablutMove = rules.node.findBestMove(1, minimax);
+        const bestMove: TablutMove = node.findBestMove(1, minimax);
         expect(bestMove).toEqual(winnerMove);
     });
     it('should not propose to King to go back on the throne when its forbidden', () => {

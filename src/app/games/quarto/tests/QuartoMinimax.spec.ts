@@ -8,10 +8,11 @@ import { QuartoMove } from '../QuartoMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('QuartoMinimax:', () => {
+describe('QuartoMinimax', () => {
 
     let rules: QuartoRules;
     let minimaxes: QuartoMinimax[];
+    let node: QuartoNode;
 
     const NULL: QuartoPiece = QuartoPiece.EMPTY;
     const AAAA: QuartoPiece = QuartoPiece.AAAA;
@@ -20,10 +21,11 @@ describe('QuartoMinimax:', () => {
     const ABBB: QuartoPiece = QuartoPiece.ABBB;
 
     beforeEach(() => {
-        rules = new QuartoRules(QuartoState);
+        rules = QuartoRules.get();
         minimaxes = [
             new QuartoMinimax(rules, 'QuartoMinimax'),
         ];
+        node = rules.getInitialNode();
     });
     it('should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
         // Given a state with a pre-victory
@@ -47,11 +49,11 @@ describe('QuartoMinimax:', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
-        rules.node = new QuartoNode(state);
+        node = new QuartoNode(state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
         for (const minimax of minimaxes) {
             // When getting the list of moves
-            const possibleMoves: QuartoMove[] = minimax.getListMoves(rules.node);
+            const possibleMoves: QuartoMove[] = minimax.getListMoves(node);
             // Then only one move should be listed
             expect(possibleMoves.length).toBe(1);
             expect(possibleMoves[0]).toEqual(move);

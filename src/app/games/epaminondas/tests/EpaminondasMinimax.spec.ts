@@ -9,20 +9,22 @@ import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
-describe('EpaminondasMinimax:', () => {
+describe('EpaminondasMinimax', () => {
 
     let rules: EpaminondasRules;
     let minimax: EpaminondasMinimax;
+    let node: EpaminondasNode;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new EpaminondasRules(EpaminondasState);
+        rules = EpaminondasRules.get();
         minimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
+        node = rules.getInitialNode();
     });
     it('should propose 114 moves at first turn', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(114);
+        expect(minimax.getListMoves(node).length).toBe(114);
     });
     it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [
@@ -40,9 +42,9 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        rules.node = new EpaminondasNode(state);
+        node = new EpaminondasNode(state);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
-        const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
+        const bestMove: EpaminondasMove = node.findBestMove(1, minimax);
         expect(bestMove).toEqual(capture);
     });
     it('should consider two neighbor piece better than two separated piece', () => {

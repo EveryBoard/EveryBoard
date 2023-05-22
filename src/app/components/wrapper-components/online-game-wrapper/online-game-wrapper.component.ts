@@ -31,6 +31,7 @@ import { Timestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { AbstractNode } from 'src/app/jscaip/MGPNode';
 
 export class OnlineGameWrapperMessages {
 
@@ -239,7 +240,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             before: this.currentPart,
             then: update,
             before_part_turn: part.data.turn,
-            before_state_turn: this.gameComponent.rules.node.gameState.turn,
+            before_state_turn: this.gameComponent.node.gameState.turn,
             nbPlayedMoves: part.data.listMoves.length,
         } });
         if (this.onCurrentUpdateOngoing) {
@@ -430,10 +431,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                                     ' in ' + stringListMoves + ' at turn ' + currentPartTurn +
                                     'because "' + legality.getReasonOr('') + '"';
             assert(legality.isSuccess(), message, listMoves);
-            rules.choose(chosenMove);
+            const node: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
+            this.gameComponent.node = node.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.gameComponent.updateBoard();
+
     }
     public switchPlayer(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
@@ -500,7 +503,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const playerZero: MinimalUser = this.players[0].get();
         const playerOne: MinimalUser = this.players[1].get();
@@ -634,12 +637,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     public takeBackTo(turn: number): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackTo');
-        this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
+        this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.gameComponent.getTurn() === turn) {
             this.switchPlayer();
         } else {
             // Second time to make sure it end up on player's turn
-            this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
+            this.gameComponent.node = this.gameComponent.node.mother.get();
             const player: Player = Player.fromTurn(turn);
             this.resetChronoFor(player);
         }
@@ -696,8 +699,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scores + ')');
-        this.gameComponent.rules.choose(move);
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
+        this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
                 return this.notifyDraw(encodedMove, scores);
@@ -916,8 +919,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public onCancelMove(reason?: string): void {
-        if (this.gameComponent.rules.node.move.isPresent()) {
-            const move: Move = this.gameComponent.rules.node.move.get();
+        if (this.gameComponent.node.move.isPresent()) {
+            const move: Move = this.gameComponent.node.move.get();
             this.gameComponent.showLastMove(move);
         }
     }

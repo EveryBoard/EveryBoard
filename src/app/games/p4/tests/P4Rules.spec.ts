@@ -18,7 +18,7 @@ describe('P4Rules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new P4Rules(P4State);
+        rules = P4Rules.get();
         minimaxes = [
             new P4Minimax(rules, 'P4Minimax'),
         ];
@@ -148,7 +148,8 @@ describe('P4Rules', () => {
         const move: P4Move = P4Move.of(0);
 
         // Then the move should be deemed illegal
-        RulesUtils.expectMoveFailure(rules, state, move, P4Failure.COLUMN_IS_FULL());
+        const reason: string = P4Failure.COLUMN_IS_FULL();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should know where the lowest space is', () => {
         const board: Table<PlayerOrNone> = [

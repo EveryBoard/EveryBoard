@@ -12,6 +12,7 @@ import { P4Failure } from './P4Failure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 
@@ -19,6 +20,17 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
     public static VERBOSE: boolean = false;
 
+    private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
+
+    public static get(): P4Rules {
+        if (P4Rules.singleton.isAbsent()) {
+            P4Rules.singleton = MGPOptional.of(new P4Rules());
+        }
+        return P4Rules.singleton.get();
+    }
+    private constructor() {
+        super(P4State);
+    }
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(7, 6);
     }

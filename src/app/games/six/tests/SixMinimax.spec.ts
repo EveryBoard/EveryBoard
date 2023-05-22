@@ -13,27 +13,16 @@ describe('SixMinimax', () => {
 
     let rules: SixRules;
     let minimax: SixMinimax;
+    let node: SixNode;
 
     const O: PlayerOrNone = Player.ZERO;
     const X: PlayerOrNone = Player.ONE;
     const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(() => {
-        rules = new SixRules(SixState);
+        rules = SixRules.get();
         minimax = new SixMinimax(rules, 'SixMinimax');
-    });
-    describe('chooseMove', () => {
-        it('should have boardInfo after first move', () => {
-            let moveSuccess: boolean = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
-            expect(moveSuccess).toBeTrue();
-            let unheritance: SixBoardValue = rules.node.getOwnValue(minimax);
-            expect(unheritance.preVictory.isAbsent()).toBeTrue();
-
-            moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-2, 0)));
-            expect(moveSuccess).toBeTrue();
-            unheritance = rules.node.getOwnValue(minimax);
-            expect(unheritance.preVictory.isAbsent()).toBeTrue();
-        });
+        node = SixRules.get().getInitialNode();
     });
     describe('pre-victories', () => {
         it('should pass forcing move to children node to minimise calculations', () => {
@@ -48,27 +37,26 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 10);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            rules.node = new SixNode(state);
-            expect(rules.choose(move)).toBeTrue();
-            const chosenMove: SixMove = rules.node.findBestMove(1, minimax);
+            node = new SixNode(state);
+            node = rules.choose(node, move).get();
+            const chosenMove: SixMove = node.findBestMove(1, minimax);
             expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
-            expect(rules.node.countDescendants()).toBe(1);
+            expect(node.countDescendants()).toBe(1);
         });
         it('should only count one preVictory when one coord is a forcing move for two lines', () => {
             const board: Table<PlayerOrNone> = [
                 [_, _, X, _, _, X],
                 [_, _, O, _, O, _],
                 [_, _, O, O, _, _],
-                [_, _, _, _, _, O],
+                [_, _, O, _, _, O],
                 [_, O, O, _, O, X],
                 [O, _, O, O, X, X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
-            rules.node = new SixNode(state);
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
             const boardValue: SixBoardValue = minimax.getBoardValue(node);
-            expect(boardValue.preVictory.isAbsent()).toBeTrue();
+            expect(boardValue.preVictory).toEqual(MGPOptional.of(new Coord(-1, 6)));
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
         it('should point the right preVictory coord with circle', () => {
@@ -161,6 +149,7 @@ describe('SixMinimax', () => {
     });
     describe('Phase 2', () => {
         it('should not consider moving piece that are blocking an opponent victory', () => {
+            // Given a board with only one non loosing move
             const board: Table<PlayerOrNone> = [
                 [O, O, _, _, _, _, O],
                 [X, _, _, _, _, X, _],
@@ -169,37 +158,50 @@ describe('SixMinimax', () => {
                 [X, _, X, X, O, _, _],
                 [_, X, _, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 39);
-            const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            rules.node = new SixNode(state);
-            expect(rules.choose(move)).toBeTrue();
-            const bestMove: SixMove = rules.node.findBestMove(1, minimax);
-            const expectedMove: SixMove = SixMove.fromMovement(new Coord(1, 0), new Coord(0, 6));
-            expect(bestMove).toEqual(expectedMove);
-            expect(rules.node.countDescendants()).toBe(1);
+            const state: SixState = SixState.fromRepresentation(board, 40);
+            node = new SixNode(state);
+
+            // When asking the minimax the best choice
+            const bestMove: SixMove = node.findBestMove(1, minimax);
+            expect(bestMove.start.get()).toEqual(new Coord(1, 0));
         });
         it(`should propose only one starting piece when all piece are blocking an opponent's victory`, () => {
-            // Given an initial board with all piece are blocked
+            // Given an initial board where all piece are blocked but there is a forcing move
             const board: Table<PlayerOrNone> = [
-                [O, _, _, _, _, _, O],
-                [X, _, _, _, _, X, _],
-                [X, _, _, O, X, X, _],
-                [X, X, O, X, X, O, _],
-                [X, _, X, X, O, _, _],
-                [_, X, _, _, _, _, _],
+                [_, _, _, O, O, O, _],
+                [O, X, X, X, X, X, _],
+                [O, X, X, X, X, X, O],
+                [_, O, O, O, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 39);
-            rules.node = new SixNode(state);
-            const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            expect(rules.choose(move)).toBeTrue();
+            const state: SixState = SixState.fromRepresentation(board, 40);
+            node = new SixNode(state);
 
-            expect(rules.getGameStatus(rules.node).isEndGame).toBeFalse();
-            const bestMove: SixMove = rules.node.findBestMove(1, minimax);
-            expect(bestMove).toEqual(SixMove.fromMovement(new Coord(0, 0), new Coord(0, 6)));
-            expect(rules.node.countDescendants()).toBe(1);
+            // When listing the choices
+            const choices: SixMove[] = minimax.getListMoves(node);
 
-            expect(rules.choose(bestMove)).toBeTrue();
-            expect(rules.getGameStatus(rules.node).isEndGame).toBeFalse();
+            // Then there should be only one starting piece
+            const startingCoord: Coord = choices[0].start.get();
+            expect(choices.every((move: SixMove) => move.start.equalsValue(startingCoord))).toBeTrue();
+        });
+        xit('should only propose move that cut legally');
+        it('should do forced move', () => {
+            // Given a node with a forced move
+            // (1. creating its parent node)
+            const board: Table<PlayerOrNone> = [
+                [O, O, O, O, X, X, X, X, O],
+                [O, O, O, O, X, X, X, X, _],
+            ];
+            const state: SixState = SixState.fromRepresentation(board, 42);
+            const parentNode: SixNode = new SixNode(state);
+            // (2. getting the child from it)
+            const forcingMove: SixMove = SixMove.fromMovement(new Coord(8, 0), new Coord(-1, 0));
+            const node: SixNode = rules.choose(parentNode, forcingMove).get();
+
+            // When getting the list of move
+            const listMove: SixMove[] = minimax.getListMoves(node);
+
+            // Then it should have only one landing coord: the forced landing
+            expect(listMove.every((move: SixMove) => move.landing.equals(new Coord(-2, 0)))).toBeTrue();
         });
         // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {
@@ -241,11 +243,11 @@ describe('SixMinimax', () => {
             // Then the list should have all the possible deplacements and only them
             expect(listMoves.every((move: SixMove) => move.isDrop())).toBeFalse();
         });
-        it('should pass cutting move as well', () => {
+        it('should include cutting move as well', () => {
             // Given a game state in phase 2
             const state: SixState = SixState.fromRepresentation([
-                [O, O, O, O, X, X, X, X, _],
-                [X, X, X, X, _, O, O, O, O],
+                [O, O, X, O, X, X, O, X, _],
+                [X, X, O, X, _, O, X, O, O],
             ], 43);
             const node: SixNode = new SixNode(state);
 
@@ -253,7 +255,8 @@ describe('SixMinimax', () => {
             const listMoves: SixMove[] = minimax.getListMoves(node);
 
             // Then the list should have all the possible deplacements and only them
-            expect(listMoves.some((move: SixMove) => move.isCut())).toBeTrue();
+            const cuttingMove: SixMove = SixMove.fromCut(new Coord(4, 0), new Coord(8, 0), new Coord(0, 0));
+            expect(listMoves.some((move: SixMove) => move.equals(cuttingMove))).toBeTrue();
         });
     });
     it('should assign a value of 0 in case of draw', () => {

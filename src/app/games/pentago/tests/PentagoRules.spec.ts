@@ -20,7 +20,7 @@ describe('PentagoRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new PentagoRules(PentagoState);
+        rules = PentagoRules.get();
         minimaxes = [
             new PentagoMinimax(rules, 'PentagoMinimax'),
         ];
@@ -36,7 +36,8 @@ describe('PentagoRules', () => {
         ];
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+        const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('it should prevent redundancy by refusing rotating neutral block', () => {
         const board: Table<PlayerOrNone> = [
@@ -49,7 +50,8 @@ describe('PentagoRules', () => {
         ];
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.withRotation(4, 1, 3, true);
-        RulesUtils.expectMoveFailure(rules, state, move, PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
+        const reason: string = PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('it should refuse rotation less move when there is no neutral block', () => {
         const board: Table<PlayerOrNone> = [
@@ -62,7 +64,8 @@ describe('PentagoRules', () => {
         ];
         const state: PentagoState = new PentagoState(board, 3);
         const move: PentagoMove = PentagoMove.rotationless(0, 0);
-        RulesUtils.expectMoveFailure(rules, state, move, PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
+        const reason: string = PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('it should allow rotation-free move when there is neutral block', () => {
         const board: Table<PlayerOrNone> = [

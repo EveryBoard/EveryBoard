@@ -114,6 +114,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = HiveRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new HiveMinimax(this.rules, 'HiveMinimax'),
         ];
@@ -144,7 +145,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.computeViewBox();
         this.remainingStacks = this.getState().remainingPieces.toListOfStacks();
         this.canPass = HiveRules.get().shouldPass(this.getState());
-        const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.rules.node);
+        const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.node);
         switch (gameStatus) {
             case GameStatus.ONGOING:
                 break;

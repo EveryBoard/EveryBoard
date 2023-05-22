@@ -16,7 +16,7 @@ class MyAbstractState extends GameStateWithTable<number> {
 
 class AbstractNode extends MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> {}
 
-class AbstractRules extends Rules<P4Move, MyAbstractState> {
+class AbstractRules extends Rules<P4Move, MyAbstractState> { // TODO: je le met en singleton aussi lui ?
 
     public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
         const board: readonly number[] = state.board[0];
@@ -39,15 +39,17 @@ describe('Rules', () => {
     });
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with sons
-        spyOn(rules.node, 'hasMoves').and.returnValue(true);
-        spyOn(rules.node, 'getSonByMove').and.returnValue(MGPOptional.empty());
+        const node: MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> = rules.getInitialNode();
+        spyOn(node, 'hasMoves').and.returnValue(true);
+        spyOn(node, 'getSonByMove').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
-        const wasLegal: boolean = rules.choose(P4Move.ZERO);
+        const resultingNode: MGPOptional<MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState>> =
+            rules.choose(node, P4Move.ZERO);
 
         // he should be created and chosen
-        expect(wasLegal).toBeTrue();
-        expect(rules.node.gameState.turn).toBe(1);
+        expect(resultingNode.isPresent()).toBeTrue();
+        expect(resultingNode.get().gameState.turn).toBe(1);
     });
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
@@ -60,5 +62,19 @@ describe('Rules', () => {
         // Then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([encodedMoveList]);
         expect(state.turn).toBe(4);
+    });
+    describe('choose', () => {
+        it('should return MGPOptional.empty() when the move was illegal', () => {
+            // Given a node and a move that will be deemed illegal
+            const node: MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> = rules.getInitialNode();
+            const illegalMove: P4Move = P4Move.FIVE;
+            spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure(''));
+
+            // When checking if the move is legal
+            const legality: MGPOptional<MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState>> =
+                rules.choose(node, illegalMove);
+            // Then it should be an empty optional
+            expect(legality).toEqual(MGPOptional.empty());
+        });
     });
 });

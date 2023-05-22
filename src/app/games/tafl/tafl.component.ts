@@ -44,7 +44,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
         this.updateViewInfo();
-        this.lastMove = this.rules.node.move;
+        this.lastMove = this.node.move;
     }
     public override showLastMove(move: M): void {
         const previousState: S = this.getPreviousState();

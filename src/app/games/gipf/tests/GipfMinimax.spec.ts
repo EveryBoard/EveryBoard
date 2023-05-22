@@ -20,14 +20,17 @@ describe('GipfMinimax', () => {
 
     let minimax: GipfMinimax;
 
+    let node: GipfNode;
+
     beforeEach(() => {
-        rules = new GipfRules(GipfState);
+        rules = GipfRules.get();
         minimax = new GipfMinimax(rules, 'GipfMinimax');
+        node = rules.getInitialNode();
     });
     describe('getListMoves', () => {
 
         it('should have 30 moves on the initial state', () => {
-            expect(minimax.getListMoves(rules.node).length).toBe(30);
+            expect(minimax.getListMoves(node).length).toBe(30);
         });
         it('should have 0 moves on a victory state', () => {
             const board: Table<FourStatePiece> = [

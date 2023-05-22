@@ -20,7 +20,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
 
     beforeEach(() => {
         rules = BrandhubRules.get();
-        rules.setInitialBoard();
+        rules.getInitialNode();
         minimax = new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control');
     });
     it('should be better when king can escape than when he cannot', () => {

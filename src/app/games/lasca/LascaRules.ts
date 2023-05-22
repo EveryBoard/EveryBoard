@@ -19,10 +19,13 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
     private static singleton: MGPOptional<LascaRules> = MGPOptional.empty();
 
     public static get(): LascaRules {
-        if (this.singleton.isAbsent()) {
-            this.singleton = MGPOptional.of(new LascaRules(LascaState));
+        if (LascaRules.singleton.isAbsent()) {
+            LascaRules.singleton = MGPOptional.of(new LascaRules());
         }
-        return this.singleton.get();
+        return LascaRules.singleton.get();
+    }
+    private constructor() {
+        super(LascaState);
     }
     public getCaptures(state: LascaState): LascaMove[] {
         const player: Player = state.getCurrentPlayer();

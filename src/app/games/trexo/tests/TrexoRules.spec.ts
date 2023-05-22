@@ -81,7 +81,8 @@ describe('TrexoRules', () => {
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(4, 3)).get();
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
+        const reason: string = TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should accept to drop piece on two other piece', () => {
         // Given a board with two pieces that are neighbor on it
@@ -145,7 +146,8 @@ describe('TrexoRules', () => {
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get();
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
+        const reason: string = TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should declare as winner player who has a line of 5', () => {
         // Given a board where a player has a line of 4

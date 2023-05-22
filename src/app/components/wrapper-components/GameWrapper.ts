@@ -66,7 +66,7 @@ export abstract class GameWrapper<P extends Comparable> {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
-            this.gameComponent.rules.setInitialBoard();
+            this.gameComponent.node = this.gameComponent.rules.getInitialNode();
             this.gameComponent.updateBoard();
         }
         return gameCreatedSuccessfully;

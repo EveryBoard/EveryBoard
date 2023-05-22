@@ -17,6 +17,12 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
     private static instance: MGPOptional<TrexoRules> = MGPOptional.empty();
 
+    public static get(): TrexoRules {
+        if (TrexoRules.instance.isAbsent()) {
+            TrexoRules.instance = MGPOptional.of(new TrexoRules());
+        }
+        return TrexoRules.instance.get();
+    }
     private static getOwner(piece: TrexoPieceStack): PlayerOrNone {
         return piece.getOwner();
     }
@@ -26,12 +32,6 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
         new NInARowHelper(TrexoRules.isInRange, TrexoRules.getOwner, 5);
 
-    public static get(): TrexoRules {
-        if (TrexoRules.instance.isAbsent()) {
-            TrexoRules.instance = MGPOptional.of(new TrexoRules());
-        }
-        return TrexoRules.instance.get();
-    }
     private constructor() {
         super(TrexoState);
     }

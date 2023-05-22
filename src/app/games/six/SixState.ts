@@ -21,7 +21,14 @@ export class SixState extends OpenHexagonalGameState<Player> {
     public override readonly height: number;
 
     public static getInitialState(): SixState {
-        const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
+        // const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
+        const _: PlayerOrNone = PlayerOrNone.NONE;
+        const board: Table<PlayerOrNone> = [
+            [O, O, O, O, X, X, X, X, _],
+            [X, X, X, X, _, O, O, O, O],
+        ];
         return SixState.fromRepresentation(board, 0);
     }
     /**

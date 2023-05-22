@@ -151,7 +151,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
-        this.rules = new MartianChessRules(MartianChessState);
+        this.rules = MartianChessRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),
         ];
@@ -206,8 +207,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
             classes.push('selected-stroke');
         }
-        if (this.rules.node.move.isPresent()) {
-            const move: MartianChessMove = this.rules.node.move.get();
+        if (this.node.move.isPresent()) {
+            const move: MartianChessMove = this.node.move.get();
             if (move.getEnd().equals(clickedCoord)) {
                 const previousPiece: MartianChessPiece = this.getPreviousState().getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
@@ -343,8 +344,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getSquareClasses(x: number, y: number): string[] {
         const square: Coord = new Coord(x, y);
         const classes: string[] = ['base'];
-        if (this.rules.node.move.isPresent()) {
-            const node: MartianChessNode = this.rules.node;
+        if (this.node.move.isPresent()) {
+            const node: MartianChessNode = this.node;
             const move: MartianChessMove = node.move.get();
             if (move.getStart().equals(square)) {
                 classes.push('moved-fill');

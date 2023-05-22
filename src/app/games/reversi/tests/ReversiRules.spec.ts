@@ -8,6 +8,8 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ReversiFailure } from '../ReversiFailure';
 
 describe('ReversiRules', () => {
 
@@ -17,39 +19,77 @@ describe('ReversiRules', () => {
 
     let rules: ReversiRules;
     let minimaxes: Minimax<ReversiMove, ReversiState, ReversiLegalityInformation>[];
+    let node: ReversiNode;
 
     beforeEach(() => {
-        rules = new ReversiRules(ReversiState);
+        rules = ReversiRules.get();
         minimaxes = [
             new ReversiMinimax(rules, 'ReversiMinimax'),
         ];
+        node = rules.getInitialNode();
     });
-    it('ReversiRules should be created', () => {
+    it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
+        expect(node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
     });
     it('First move should be legal and change score', () => {
-        const isLegal: boolean = rules.choose(new ReversiMove(2, 4));
+        // Given the initial state
+        const state: ReversiState = ReversiState.getInitialState();
 
-        expect(isLegal).toBeTrue();
-        expect(rules.node.gameState.countScore()).toEqual([4, 1]);
+        // When doing a legal move
+        const move: ReversiMove = new ReversiMove(2, 4);
+
+        // Then the move should be accepted and the score changed
+        const expectedBoard: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, O, X, _, _, _],
+            [_, _, O, O, O, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const expectedState: ReversiState = new ReversiState(expectedBoard, 1);
+        node = new ReversiNode(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        expect(node.gameState.countScore()).toEqual([4, 1]);
     });
     it('Passing at first turn should be illegal', () => {
-        const isLegal: boolean = rules.choose(ReversiMove.PASS);
+        // Given the initial state
+        const state: ReversiState = ReversiState.getInitialState();
 
-        expect(isLegal).toBeFalse();
+        // When passing
+        const move: ReversiMove = ReversiMove.PASS;
+
+        // Then the move should be refused
+        const reason: string = RulesFailure.CANNOT_PASS();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid non capturing move', () => {
-        const moveLegality: boolean = rules.choose(new ReversiMove(0, 0));
+        // Given the initial state
+        const state: ReversiState = ReversiState.getInitialState();
 
-        expect(moveLegality).toBeFalse();
+        // When doing a non capturing move
+        const move: ReversiMove = new ReversiMove(0, 0);
+
+        // Then the move should be refused
+        const reason: string = ReversiFailure.NO_ELEMENT_SWITCHED();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid choosing occupied space', () => {
-        const moveLegality: boolean = rules.choose(new ReversiMove(3, 3));
+        // Given the initial state
+        const state: ReversiState = ReversiState.getInitialState();
 
-        expect(moveLegality).toBeFalse();
+        // When playing on an occupied square
+        const move: ReversiMove = new ReversiMove(3, 3);
+
+        // Then the move should be refused
+        const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SPACE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow player to pass when no other moves are possible', () => {
+        // Given a board where current player must pass
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -61,8 +101,13 @@ describe('ReversiRules', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        rules.node = new ReversiNode(state);
-        expect(rules.choose(ReversiMove.PASS)).toBeTrue();
+
+        // When passing
+        const move: ReversiMove = ReversiMove.PASS;
+
+        // Then it should be legal
+        const expectedState: ReversiState = new ReversiState(board, 2);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     describe('Endgames', () => {
         it('should consider the player with the more point the winner at the end', () => {

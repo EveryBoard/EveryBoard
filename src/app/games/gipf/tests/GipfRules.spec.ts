@@ -14,7 +14,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-describe('GipfRules:', () => {
+describe('GipfRules', () => {
 
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -28,15 +28,18 @@ describe('GipfRules:', () => {
 
     let minimaxes: Minimax<GipfMove, GipfState, GipfLegalityInformation>[];
 
+    let node: GipfNode;
+
     beforeEach(() => {
-        rules = new GipfRules(GipfState);
+        rules = GipfRules.get();
         minimaxes = [
             new GipfMinimax(rules, 'GipfMinimax'),
         ];
+        node = rules.getInitialNode();
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).withContext('Game should start at turn 0').toBe(0);
+        expect(node.gameState.turn).withContext('Game should start at turn 0').toBe(0);
     });
     it('should start with the expected board for the basic variant', () => {
         const state: GipfState = GipfState.getInitialState();
@@ -59,14 +62,16 @@ describe('GipfRules:', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
-            RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.PLACEMENT_NOT_ON_BORDER());
+            const reason: string = GipfFailure.PLACEMENT_NOT_ON_BORDER();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should require a direction when placing a piece on an occupied space', () => {
             const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
-            RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.PLACEMENT_WITHOUT_DIRECTION());
+            const reason: string = GipfFailure.PLACEMENT_WITHOUT_DIRECTION();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should allow simple move without direction when target coord is empty', () => {
             const state: GipfState = GipfState.getInitialState();
@@ -138,7 +143,8 @@ describe('GipfRules:', () => {
             ];
             for (const placement of invalidPlacements) {
                 const move: GipfMove = new GipfMove(placement, [], []);
-                RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.PLACEMENT_ON_COMPLETE_LINE());
+                const reason: string = GipfFailure.PLACEMENT_ON_COMPLETE_LINE();
+                RulesUtils.expectMoveFailure(rules, state, move, reason);
             }
         });
         it('should refuse moves with invalid direction', () => {
@@ -154,7 +160,8 @@ describe('GipfRules:', () => {
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
             const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.LEFT));
             const move: GipfMove = new GipfMove(placement, [], []);
-            RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.INVALID_PLACEMENT_DIRECTION());
+            const reason: string = GipfFailure.INVALID_PLACEMENT_DIRECTION();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should force to capture consecutive pieces', () => {
             // This is diagram 4 in the rules of Gipf
@@ -308,7 +315,7 @@ describe('GipfRules:', () => {
             const legalityB: MGPFallible<GipfLegalityInformation> = rules.isLegal(moveB, resultingState);
             expect(legalityB.isSuccess()).toBeTrue();
         });
-        it('should not allow invalid initial captures', () => {
+        it('should not allow invalid initial captures (too short)', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, _, _, A],
                 [N, N, _, _, _, B, B],
@@ -322,17 +329,34 @@ describe('GipfRules:', () => {
 
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
                                                                MGPOptional.of(HexaDirection.RIGHT));
-            const capture1: GipfCapture = new GipfCapture([
+            const capture: GipfCapture = new GipfCapture([
                 new Coord(2, 6), new Coord(2, 5), new Coord(2, 3), new Coord(2, 4),
             ]);
-            const move1: GipfMove = new GipfMove(placement, [capture1], []);
-            RulesUtils.expectMoveFailure(rules, state, move1, GipfFailure.INVALID_CAPTURED_PIECES());
+            const move: GipfMove = new GipfMove(placement, [capture], []);
+            const reason: string = GipfFailure.INVALID_CAPTURED_PIECES();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+        it('should not allow invalid initial capture not in a line', () => {
+            const board: Table<FourStatePiece> = [
+                [N, N, N, _, _, _, A],
+                [N, N, _, _, _, B, B],
+                [N, _, B, _, _, B, _],
+                [_, _, A, _, B, _, _],
+                [B, A, A, _, _, _, N],
+                [_, _, A, _, _, N, N],
+                [_, A, A, _, N, N, N],
+            ];
+            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
 
-            const capture2: GipfCapture = new GipfCapture([
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
+                                                               MGPOptional.of(HexaDirection.RIGHT));
+
+            const capture: GipfCapture = new GipfCapture([
                 new Coord(1, 6), new Coord(1, 5), new Coord(1, 3), new Coord(1, 4),
             ]);
-            const move2: GipfMove = new GipfMove(placement, [capture2], []);
-            RulesUtils.expectMoveFailure(rules, state, move2, GipfFailure.CAPTURE_MUST_BE_ALIGNED());
+            const move: GipfMove = new GipfMove(placement, [capture], []);
+            const reason: string = GipfFailure.CAPTURE_MUST_BE_ALIGNED();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should not allow invalid final captures', () => {
             const board: Table<FourStatePiece> = [
@@ -352,7 +376,8 @@ describe('GipfRules:', () => {
                 new Coord(2, 6), new Coord(2, 5), new Coord(2, 3), new Coord(2, 4),
             ]);
             const move: GipfMove = new GipfMove(placement, [], [capture]);
-            RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.INVALID_CAPTURED_PIECES());
+            const reason: string = GipfFailure.INVALID_CAPTURED_PIECES();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should correctly apply move even if the results are not cached in the legality status', () => {
             const board: Table<FourStatePiece> = [

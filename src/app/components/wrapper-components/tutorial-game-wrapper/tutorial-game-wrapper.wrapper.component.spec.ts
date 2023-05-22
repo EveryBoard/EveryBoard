@@ -105,9 +105,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // expect to see setted previous move but no mother to the node
-            const componentPreviousMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
+            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.move.get() as QuartoMove;
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
-            expect(wrapper.gameComponent.rules.node.mother.isAbsent()).toBeTrue();
+            expect(wrapper.gameComponent.node.mother.isAbsent()).toBeTrue();
         }));
         it('should show previousState when set', fakeAsync(async() => {
             // Given a certain TutorialStep with previousState but no previousMove
@@ -133,8 +133,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // expect to see setted previous state but no previous move
             const componentPreviousState: QuartoState =
-                wrapper.gameComponent.rules.node.mother.get().gameState as QuartoState;
-            expect(wrapper.gameComponent.rules.node.move.isAbsent()).toBeTrue();
+                wrapper.gameComponent.node.mother.get().gameState as QuartoState;
+            expect(wrapper.gameComponent.node.move.isAbsent()).toBeTrue();
             expect(componentPreviousState).toEqual(tutorialPreviousState);
         }));
         it('should show previousState and previousMove when both are set', fakeAsync(async() => {
@@ -162,9 +162,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // Then there should be a previous move
-            const componentPreviousMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
+            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.move.get() as QuartoMove;
             const componentPreviousState: QuartoState =
-                wrapper.gameComponent.rules.node.mother.get().gameState as QuartoState;
+                wrapper.gameComponent.node.mother.get().gameState as QuartoState;
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
             expect(componentPreviousState).toEqual(tutorialPreviousState);
         }));
@@ -805,7 +805,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#showSolutionButton');
 
             // Expect the first awaited move to have been done
-            expect(testUtils.getComponent().rules.node.move.get()).toEqual(awaitedMove);
+            expect(testUtils.getComponent().node.move.get()).toEqual(awaitedMove);
             expect(testUtils.getComponent().getTurn()).toEqual(stepInitialTurn + 1);
             // expect 'solution' message to be shown
             const currentMessage: string =
@@ -1089,7 +1089,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#showSolutionButton');
 
             // Expect the step proposed move to have been done
-            expect(testUtils.getComponent().rules.node.move.get()).toEqual(solutionMove);
+            expect(testUtils.getComponent().node.move.get()).toEqual(solutionMove);
             expect(testUtils.getComponent().getTurn()).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string =

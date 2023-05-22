@@ -50,7 +50,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
-        this.rules = new PylosRules(PylosState);
+        this.rules = PylosRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
@@ -298,7 +299,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public updateBoard(): void {
         this.state = this.getState();
         this.constructedState = this.state;
-        this.lastMove = this.rules.node.move;
+        this.lastMove = this.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         this.highCapture = MGPOptional.empty();

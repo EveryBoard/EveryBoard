@@ -11,6 +11,7 @@ describe('MaxStacksDvonnMinimax', () => {
 
     let rules: DvonnRules;
     let minimax: MaxStacksDvonnMinimax;
+    let node: DvonnNode;
 
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
     const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
@@ -19,11 +20,12 @@ describe('MaxStacksDvonnMinimax', () => {
     const WW: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 
     beforeEach(() => {
-        rules = new DvonnRules(DvonnState);
+        rules = DvonnRules.get();
         minimax = new MaxStacksDvonnMinimax(rules, 'MaxStacksDvonnMinimax');
+        node = rules.getInitialNode();
     });
     it('should propose 41 moves at first turn', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(41);
+        expect(minimax.getListMoves(node).length).toBe(41);
     });
     it('should consider owning a new stack the best move', () => {
         // B can choose between doubling one of its stack or owning an opponent's stack
@@ -36,9 +38,9 @@ describe('MaxStacksDvonnMinimax', () => {
         ];
 
         const state: DvonnState = new DvonnState(board, 0, false);
-        rules.node = new DvonnNode(state);
-        const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
-        expect(minimax.getListMoves(rules.node).length).toBe(3); // There are three possible moves
+        node = new DvonnNode(state);
+        const bestMove: DvonnMove = node.findBestMove(1, minimax);
+        expect(minimax.getListMoves(node).length).toBe(3); // There are three possible moves
         // The best is the one that finishes on WW
         expect(state.getPieceAt(bestMove.getEnd())).toBe(WW);
     });
@@ -53,9 +55,9 @@ describe('MaxStacksDvonnMinimax', () => {
         ];
 
         const state: DvonnState = new DvonnState(board, 0, false);
-        rules.node = new DvonnNode(state);
-        const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
-        expect(minimax.getListMoves(rules.node).length).toBe(2);
+        node = new DvonnNode(state);
+        const bestMove: DvonnMove = node.findBestMove(1, minimax);
+        expect(minimax.getListMoves(node).length).toBe(2);
         // The best move is the one that finishes on W
         const bestMoveEnd: DvonnPieceStack = state.getPieceAt(bestMove.getEnd());
         expect(bestMoveEnd).toBe(W);

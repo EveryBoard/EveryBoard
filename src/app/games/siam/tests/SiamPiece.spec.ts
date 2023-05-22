@@ -2,7 +2,7 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SiamPiece, SiamPieceValue } from '../SiamPiece';
 
-describe('SiamPiece:', () => {
+describe('SiamPiece', () => {
     it('should give string version of each pieces', () => {
         const values: SiamPieceValue[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         const pieces: SiamPiece[] = values.map(SiamPiece.decode);

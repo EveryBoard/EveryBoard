@@ -17,6 +17,17 @@ export class PylosNode extends MGPNode<PylosRules, PylosMove, PylosState> {}
 
 export class PylosRules extends Rules<PylosMove, PylosState> {
 
+    private static singleton: MGPOptional<PylosRules> = MGPOptional.empty();
+
+    public static get(): PylosRules {
+        if (PylosRules.singleton.isAbsent()) {
+            PylosRules.singleton = MGPOptional.of(new PylosRules());
+        }
+        return PylosRules.singleton.get();
+    }
+    private constructor() {
+        super(PylosState);
+    }
     public static getStateInfo(state: PylosState): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];

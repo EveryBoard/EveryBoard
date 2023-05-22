@@ -5,18 +5,21 @@ import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('AwaleMinimax:', () => {
+describe('AwaleMinimax', () => {
 
     let rules: AwaleRules;
 
     let minimax: AwaleMinimax;
 
+    let node: AwaleNode;
+
     beforeEach(() => {
-        rules = new AwaleRules(AwaleState);
+        rules = AwaleRules.get();
         minimax = new AwaleMinimax(rules, 'AwaleMinimax');
+        node = rules.getInitialNode();
     });
     it('should not throw at first choice', () => {
-        const bestMove: AwaleMove = rules.node.findBestMove(2, minimax);
+        const bestMove: AwaleMove = node.findBestMove(2, minimax);
         expect(rules.isLegal(bestMove, AwaleState.getInitialState()).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {

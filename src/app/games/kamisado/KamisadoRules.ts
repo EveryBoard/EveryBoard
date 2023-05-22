@@ -20,6 +20,17 @@ export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoS
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
+    private static singleton: MGPOptional<KamisadoRules> = MGPOptional.empty();
+
+    public static get(): KamisadoRules {
+        if (KamisadoRules.singleton.isAbsent()) {
+            KamisadoRules.singleton = MGPOptional.of(new KamisadoRules());
+        }
+        return KamisadoRules.singleton.get();
+    }
+    private constructor() {
+        super(KamisadoState);
+    }
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {
         if (state.coordToPlay.isPresent()) {
             // Only one piece can move, and its coord is stored in state.coordToPlay

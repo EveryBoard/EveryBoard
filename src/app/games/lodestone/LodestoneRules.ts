@@ -64,7 +64,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return LodestoneRules.singleton.get();
     }
-
     private constructor() {
         super(LodestoneState);
     }

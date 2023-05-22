@@ -3,7 +3,7 @@ import {
     Component, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { display, Utils } from 'src/app/utils/utils';
@@ -105,9 +105,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         } else {
             motherOpt = MGPOptional.empty();
         }
-        this.gameComponent.rules.node = new MGPNode(currentStep.state,
-                                                    motherOpt,
-                                                    currentStep.previousMove);
+        this.gameComponent.node = new MGPNode(currentStep.state,
+                                              motherOpt,
+                                              currentStep.previousMove);
         this.gameComponent.updateBoard();
         this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();
@@ -115,8 +115,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public async onLegalUserMove(move: Move): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, { tutorialGameWrapper_onLegalUserMove: { move } });
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const isLegalMove: boolean = this.gameComponent.rules.choose(move);
-        assert(isLegalMove, 'It should be impossible to call onLegalUserMove with an illegal move');
+        const node: MGPOptional<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
+        assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
+        this.gameComponent.node = node.get();
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: legal move');
         this.gameComponent.updateBoard();
         this.moveAttemptMade = true;
@@ -226,7 +227,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const solution: Move | Click = solutionStep.getSolution();
         if (solution instanceof Move) {
             this.showStep(this.stepIndex);
-            this.gameComponent.rules.choose(solution);
+            this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
             this.gameComponent.updateBoard();
         } else {
             this.showStep(this.stepIndex);

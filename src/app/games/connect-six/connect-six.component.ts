@@ -30,6 +30,7 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = ConnectSixRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
         ];
         this.encoder = ConnectSixMoveEncoder;

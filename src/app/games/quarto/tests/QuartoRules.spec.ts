@@ -19,7 +19,7 @@ describe('QuartoRules', () => {
     let minimaxes: Minimax<QuartoMove, QuartoState>[];
 
     beforeEach(() => {
-        rules = new QuartoRules(QuartoState);
+        rules = QuartoRules.get();
         minimaxes = [
             new QuartoMinimax(rules, 'QuartoMinimax'),
         ];

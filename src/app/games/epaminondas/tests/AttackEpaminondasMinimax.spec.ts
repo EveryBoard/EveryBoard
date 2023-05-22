@@ -9,20 +9,22 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('AttackEpaminondasMinimax:', () => {
+describe('AttackEpaminondasMinimax', () => {
 
     let rules: EpaminondasRules;
     let minimax: AttackEpaminondasMinimax;
+    let node: EpaminondasNode;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new EpaminondasRules(EpaminondasState);
+        rules = EpaminondasRules.get();
         minimax = new AttackEpaminondasMinimax(rules, 'AttackEpaminondasMinimax');
+        node = rules.getInitialNode();
     });
     it('should propose 114 moves at first turn', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(114);
+        expect(minimax.getListMoves(node).length).toBe(114);
     });
     it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [
@@ -40,9 +42,9 @@ describe('AttackEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        rules.node = new EpaminondasNode(state);
+        node = new EpaminondasNode(state);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
-        const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
+        const bestMove: EpaminondasMove = node.findBestMove(1, minimax);
         expect(bestMove).toEqual(expectedMove);
     });
     it('should go forward', () => {

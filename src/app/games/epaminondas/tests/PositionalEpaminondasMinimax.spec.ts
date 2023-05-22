@@ -9,20 +9,22 @@ import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
-describe('PositionalEpaminondasMinimax:', () => {
+describe('PositionalEpaminondasMinimax', () => {
 
     let rules: EpaminondasRules;
     let minimax: PositionalEpaminondasMinimax;
+    let node: EpaminondasNode;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new EpaminondasRules(EpaminondasState);
+        rules = EpaminondasRules.get();
         minimax = new PositionalEpaminondasMinimax(rules, 'EpaminondasMinimax');
+        node = rules.getInitialNode();
     });
     it('should filter number of choices', () => {
-        expect(minimax.getListMoves(rules.node).length).toBeLessThan(114);
+        expect(minimax.getListMoves(node).length).toBeLessThan(114);
     });
     it('should not filter number of choices if it is below 40', () => {
         // Given a board with less than 40 choice in total
@@ -41,10 +43,10 @@ describe('PositionalEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        rules.node = new EpaminondasNode(state);
+        node = new EpaminondasNode(state);
 
         // When getting the list of move
-        const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
+        const moves: EpaminondasMove[] = minimax.getListMoves(node);
 
         // Then we should have all of them (8)
         expect(moves.length).toBe(8);
@@ -65,9 +67,9 @@ describe('PositionalEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        rules.node = new EpaminondasNode(state);
+        node = new EpaminondasNode(state);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
-        const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
+        const bestMove: EpaminondasMove = node.findBestMove(1, minimax);
 
         expect(bestMove).toEqual(expectedMove);
     });

@@ -10,6 +10,7 @@ import { AwaleFailure } from './AwaleFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState> {}
 
@@ -26,6 +27,17 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
 
     public static VERBOSE: boolean = false;
 
+    private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
+
+    public static get(): AwaleRules {
+        if (AwaleRules.singleton.isAbsent()) {
+            AwaleRules.singleton = MGPOptional.of(new AwaleRules());
+        }
+        return AwaleRules.singleton.get();
+    }
+    private constructor() {
+        super(AwaleState);
+    }
     public applyLegalMove(move: AwaleMove, state: AwaleState, infos: void): AwaleState {
         display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state });
         const x: number = move.x;

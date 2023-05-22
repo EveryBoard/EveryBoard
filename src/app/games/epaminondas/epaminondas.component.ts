@@ -49,7 +49,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
-        this.rules = new EpaminondasRules(EpaminondasState);
+        this.rules = EpaminondasRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
             new PositionalEpaminondasMinimax(this.rules, 'Positional'),
@@ -72,7 +73,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-        const previousNode: EpaminondasNode = this.rules.node.mother.get();
+        const previousNode: EpaminondasNode = this.node.mother.get();
         const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
         while (moved.isInRange(14, 12) &&
                previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT) {
@@ -313,7 +314,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                     phalanxSize,
                                                                     1,
                                                                     phalanxDirection);
-        const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.rules.node.gameState,
+        const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.node.gameState,
                                                                                    incompleteMove);
         if (phalanxValidity.isFailure()) {
             return this.cancelMove(phalanxValidity.getReason());
