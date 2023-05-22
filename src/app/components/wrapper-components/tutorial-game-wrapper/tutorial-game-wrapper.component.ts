@@ -98,8 +98,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new MGPNode(currentStep.state,
                                               MGPOptional.empty(),
                                               currentStep.previousMove);
-        this.gameComponent.updateBoard();
         this.setRole(this.gameComponent.getCurrentPlayer());
+        // Set role will update view with updateBoardAndShowLastMove
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
@@ -109,7 +109,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
         this.gameComponent.node = node.get();
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: legal move');
-        this.gameComponent.updateBoard();
+        this.updateBoardAndShowLastMove();
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
@@ -152,7 +152,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
-            this.gameComponent.updateBoard();
+            this.updateBoardAndShowLastMove();
             this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
@@ -218,7 +218,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         if (solution instanceof Move) {
             this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
-            this.gameComponent.updateBoard();
+            this.updateBoardAndShowLastMove();
         } else {
             this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;

@@ -300,7 +300,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
         assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.node = success.get();
-        this.gameComponent.updateBoard();
+        this.updateBoardAndShowLastMove();
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.timeManager.onReceivedMove(moveEvent);
     }
@@ -427,7 +427,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        this.gameComponent.updateBoard();
+        this.updateBoardAndShowLastMove();
     }
     public canProposeDraw(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canProposeDraw');

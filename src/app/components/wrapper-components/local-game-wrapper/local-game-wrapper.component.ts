@@ -158,13 +158,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
         this.updateBoardAndShowLastMove();
     }
-    private updateBoardAndShowLastMove(): void {
-        this.gameComponent.updateBoard();
-        if (this.gameComponent.node.move.isPresent()) {
-            const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move);
-        }
-    }
     private isAITurn(): boolean {
         return this.getPlayingAI().isPresent();
     }

@@ -117,7 +117,7 @@ export abstract class GameWrapper<P extends Comparable> {
         if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
-        this.gameComponent.updateBoard(); // Trigger redrawing of the board (might need to be rotated 180°)
+        this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
@@ -195,5 +195,12 @@ export abstract class GameWrapper<P extends Comparable> {
             return ['player' + (turn % 2) + '-bg'];
         }
         return [];
+    }
+    protected updateBoardAndShowLastMove(): void {
+        this.gameComponent.updateBoard();
+        if (this.gameComponent.node.move.isPresent()) {
+            const move: Move = this.gameComponent.node.move.get();
+            this.gameComponent.showLastMove(move);
+        }
     }
 }
