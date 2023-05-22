@@ -94,8 +94,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         });
         return P4Rules.getBoardValueFromScratch(state);
     }
-    public applyLegalMove(move: P4Move, state: P4State, _status: void): P4State
-    {
+    public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         const y: number = P4Rules.getLowestUnoccupiedSpace(board, x);

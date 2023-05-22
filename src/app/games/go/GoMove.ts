@@ -9,10 +9,6 @@ export class GoMove extends MoveCoord {
     public static encoder: MoveEncoder<GoMove> =
         MoveCoord.getEncoder((c: Coord) => new GoMove(c.x, c.y));
 
-    public equals(other: GoMove): boolean {
-        if (this === other) return true;
-        return this.coord.equals(other.coord);
-    }
     public toString(): string {
         if (this === GoMove.PASS) {
             return 'GoMove.PASS';

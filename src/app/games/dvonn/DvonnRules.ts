@@ -137,7 +137,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         });
         return newState;
     }
-    public applyLegalMove(move: DvonnMove, state: DvonnState, _status: void): DvonnState {
+    public applyLegalMove(move: DvonnMove, state: DvonnState, _info: void): DvonnState {
         if (move === DvonnMove.PASS) {
             return new DvonnState(state.board, state.turn + 1, true);
         } else {

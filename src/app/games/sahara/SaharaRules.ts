@@ -57,7 +57,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
-    public applyLegalMove(move: SaharaMove, state: SaharaState, _status: void): SaharaState {
+    public applyLegalMove(move: SaharaMove, state: SaharaState, _info: void): SaharaState {
         display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];

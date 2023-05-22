@@ -10,7 +10,6 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
 
 export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
 

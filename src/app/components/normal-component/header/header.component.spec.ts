@@ -11,8 +11,9 @@ import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Utils } from 'src/app/utils/utils';
+import { AccountComponent } from '../account/account.component';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -28,6 +29,15 @@ describe('HeaderComponent', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
+    }));
+    it('should bring to account settings when clicking on the account button', fakeAsync(async() => {
+        // Given a connected user
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        // When displaying the component
+        testUtils.detectChanges();
+        // Then the account link should point to the account component
+        const button: DebugElement = testUtils.findElement('#account');
+        expectValidRoutingLink(button, '/account', AccountComponent);
     }));
     describe('disconnection', () => {
         it('should disconnect when connected user clicks on the logout button', fakeAsync(async() => {

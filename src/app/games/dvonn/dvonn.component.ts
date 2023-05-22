@@ -114,13 +114,25 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         }
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
+        const state: DvonnState = this.getState();
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<DvonnMove> = DvonnMove.from(chosenPiece, chosenDestination);
         if (move.isFailure()) {
-            return this.cancelMove(move.getReason());
+            if (this.rules.isMovablePiece(state, chosenDestination).isSuccess()) {
+                // Change piece selection
+                return this.choosePiece(x, y);
+            } else {
+                return this.cancelMove(move.getReason());
+            }
         } else {
-            return this.chooseMove(move.get(), this.getState());
+            // The only way to know whether we can select the other piece is to check the move legality
+            const legality: MGPValidation = this.rules.isLegal(move.get(), state);
+            if (legality.isFailure() && this.rules.isMovablePiece(state, chosenDestination).isSuccess()) {
+                return this.choosePiece(x, y);
+            } else {
+                return this.chooseMove(move.get(), state);
+            }
         }
     }
     public getPieceClasses(stack: DvonnPieceStack): string[] {

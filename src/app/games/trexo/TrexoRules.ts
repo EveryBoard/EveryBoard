@@ -35,7 +35,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     private constructor() {
         super(TrexoState);
     }
-    public applyLegalMove(move: TrexoMove, state: TrexoState): TrexoState {
+    public applyLegalMove(move: TrexoMove, state: TrexoState, _info: void): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
             .drop(move.getOne(), Player.ONE)

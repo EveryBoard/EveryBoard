@@ -5,6 +5,15 @@
       <trans-unit id="4894728399261164928" datatype="html">
         <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
       </trans-unit>
+      <trans-unit id="6153797048311741939" datatype="html">
+        <source>User settings</source>
+      </trans-unit>
+      <trans-unit id="6838770899052870929" datatype="html">
+        <source>If you forgot your password or want to change it, click on the following button:</source>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+      </trans-unit>
       <trans-unit id="8447591012079458095" datatype="html">
         <source>Hide chat</source>
       </trans-unit>
@@ -64,6 +73,9 @@
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="4086606389696938932" datatype="html">
+        <source>Account</source>
       </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
@@ -206,6 +218,9 @@
       <trans-unit id="7007940005713233193" datatype="html">
         <source>Drop a piece, then rotate a quadrant. The first player to align 5 pieces wins!</source>
       </trans-unit>
+      <trans-unit id="3362876946788995618" datatype="html">
+        <source>You can align 5 pieces to win, or you can capture 10 pieces of your opponent to win!</source>
+      </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
       </trans-unit>
@@ -332,6 +347,9 @@
       <trans-unit id="8745205959337703089" datatype="html">
         <source>Connect Six</source>
       </trans-unit>
+      <trans-unit id="7128132932954450153" datatype="html">
+        <source>Pente</source>
+      </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
       </trans-unit>
@@ -365,14 +383,8 @@
       <trans-unit id="6808826847039952270" datatype="html">
         <source>The email has been sent, please follow the instructions from that email.</source>
       </trans-unit>
-      <trans-unit id="1636934520301910285" datatype="html">
-        <source>Reset password</source>
-      </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
-      </trans-unit>
-      <trans-unit id="6153797048311741939" datatype="html">
-        <source>User settings</source>
       </trans-unit>
       <trans-unit id="7103588127254721505" datatype="html">
         <source>Theme</source>
@@ -2196,6 +2208,27 @@
       </trans-unit>
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
+      </trans-unit>
+      <trans-unit id="1301553003354246210" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+      </trans-unit>
+      <trans-unit id="730381467241225928" datatype="html">
+        <source>Dropping a stone</source>
+      </trans-unit>
+      <trans-unit id="254985125186363895" datatype="html">
+        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
+      </trans-unit>
+      <trans-unit id="6622643035593861381" datatype="html">
+        <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
+      </trans-unit>
+      <trans-unit id="5697357351132552791" datatype="html">
+        <source>Placing in a sandwich position</source>
+      </trans-unit>
+      <trans-unit id="4745154919636452326" datatype="html">
+        <source>You can safely place a piece next to another of your piece in what would look like a sandwich from the opponent&apos;s pieces. This is a safe move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and have the opportunity to do such a move here, do it!</source>
+      </trans-unit>
+      <trans-unit id="5109014320867695717" datatype="html">
+        <source>Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, you can win in two ways. Win!</source>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>

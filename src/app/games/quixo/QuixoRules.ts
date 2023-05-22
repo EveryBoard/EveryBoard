@@ -100,10 +100,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
                 playersLinesInfo.diagonals));
         return Math.max(...linesScores);
     }
-    public applyLegalMove(move: QuixoMove, state: QuixoState, status: void): QuixoState {
-        return QuixoRules.applyLegalMove(move, state, status);
-    }
-    public static applyLegalMove(move: QuixoMove, state: QuixoState, _status: void): QuixoState {
+    public applyLegalMove(move: QuixoMove, state: QuixoState, _info: void): QuixoState {
         return state.applyLegalMove(move);
     }
     public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {

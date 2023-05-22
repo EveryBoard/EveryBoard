@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ConnectSixRules } from './ConnectSixRules';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove, ConnectSixMoveEncoder } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';
@@ -10,16 +9,17 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 
 @Component({
     selector: 'app-connect-six',
     templateUrl: './connect-six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRules,
-                                                                  ConnectSixMove,
-                                                                  ConnectSixState,
-                                                                  PlayerOrNone>
+export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
+                                                            ConnectSixMove,
+                                                            ConnectSixState,
+                                                            PlayerOrNone>
 {
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -40,6 +40,7 @@ export class ConnectSixComponent extends RectangularGameComponent<ConnectSixRule
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
+        this.createHoshis();
     }
     public override showLastMove(move: ConnectSixMove): void {
         if (move instanceof ConnectSixFirstMove) {
