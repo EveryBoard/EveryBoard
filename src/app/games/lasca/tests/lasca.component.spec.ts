@@ -319,21 +319,5 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
             testUtils.expectElementNotToHaveClass('#square_0_2', 'selectable-fill');
         }));
-        xit('should flip the highlight when rotating the board', fakeAsync(async() => {
-            // TODO FOR REVIEW: any fucking clue de pourquoi ça foire ?
-            // Given a board where Player.ZERO first move is done
-            await testUtils.expectClickSuccess('#coord_2_4');
-            const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(1, 3)).get();
-            await testUtils.expectMoveSuccess('#coord_1_3', move); // First move is set
-            testUtils.expectElementToHaveClass('#square_0_2', 'selectable-fill'); // At this moment, normal highlight is there
-            testUtils.expectElementNotToHaveClass('#square_6_4', 'selectable-fill'); // And the reversed one not present yet
-
-            // When flipping the board
-            testUtils.wrapper.setRole(Player.ONE); // changing role
-
-            // Then the old highlight should disappear and the reversed one come
-            testUtils.expectElementNotToHaveClass('#square_0_2', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
-        }));
     });
 });

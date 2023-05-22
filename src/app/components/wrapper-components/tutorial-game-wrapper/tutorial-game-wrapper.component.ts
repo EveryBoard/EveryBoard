@@ -1,6 +1,6 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ComponentFactoryResolver } from '@angular/core';
+    Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -37,14 +37,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
+    constructor(actRoute: ActivatedRoute,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
                 public cdr: ChangeDetectorRef,
                 connectedUserService: ConnectedUserService)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
+        super(actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
         this.role = Player.ZERO; // The user is playing, not observing
     }

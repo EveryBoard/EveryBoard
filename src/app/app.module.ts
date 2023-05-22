@@ -102,6 +102,7 @@ import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { GameEventService } from './services/GameEventService';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
 
 registerLocaleData(localeFr);
@@ -239,6 +240,7 @@ export class FirebaseProviders {
     providers: [
         ConnectedUserService,
         GameService,
+        GameEventService,
         ConfigRoomService,
         UserService,
         ChatService,

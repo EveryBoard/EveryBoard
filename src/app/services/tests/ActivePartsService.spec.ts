@@ -18,11 +18,6 @@ describe('ActivePartsService', () => {
     let partDAO: PartDAO;
 
     const part: Part = {
-        lastUpdate: {
-            index: 0,
-            player: 0,
-        },
-        listMoves: [],
         playerZero: UserMocks.CREATOR_MINIMAL_USER,
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
         result: 5,

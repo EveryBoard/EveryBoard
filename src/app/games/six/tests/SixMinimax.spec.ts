@@ -201,7 +201,6 @@ describe('SixMinimax', () => {
             expect(rules.choose(bestMove)).toBeTrue();
             expect(rules.getGameStatus(rules.node).isEndGame).toBeFalse();
         });
-        // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {
             const state: SixState = SixState.fromRepresentation([
                 [X, X, X, X, O, O, O, O, O],

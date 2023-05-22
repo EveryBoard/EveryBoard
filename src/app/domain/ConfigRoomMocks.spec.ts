@@ -7,11 +7,17 @@ export class ConfigRoomMocks {
     public static readonly INITIAL: ConfigRoom = {
         creator: UserMocks.CREATOR_MINIMAL_USER,
         chosenOpponent: null,
-        firstPlayer: FirstPlayer.RANDOM.value,
+        // We don't want the first player to be random here, to minimize non-deterministic tests
+        firstPlayer: FirstPlayer.CREATOR.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
+    };
+
+    public static readonly INITIAL_RANDOM: ConfigRoom = {
+        ...ConfigRoomMocks.INITIAL,
+        firstPlayer: FirstPlayer.RANDOM.value,
     };
 
     public static readonly WITH_CHOSEN_OPPONENT: ConfigRoom = {

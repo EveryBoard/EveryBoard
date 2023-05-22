@@ -61,6 +61,8 @@ describe('PartCreationComponent', () => {
         return configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     }
     async function receiveConfigRoomUpdate(update: Partial<ConfigRoom>): Promise<void> {
+        // As we are mocking the DAO, we can directly change the config room ourselves
+        // In practice, we should receive this from the other player.
         await configRoomDAO.update('configRoomId', update);
         tick();
     }
@@ -409,7 +411,12 @@ describe('PartCreationComponent', () => {
                 await proposeConfig();
 
                 // Then currentConfigRoom should be updated with the proposed config
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.WITH_PROPOSED_CONFIG);
+                const proposedConfig: ConfigRoom = {
+                    ...ConfigRoomMocks.INITIAL_RANDOM,
+                    chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                    partStatus: PartStatus.CONFIG_PROPOSED.value,
+                };
+                expect(component.currentConfigRoom).toEqual(proposedConfig);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
