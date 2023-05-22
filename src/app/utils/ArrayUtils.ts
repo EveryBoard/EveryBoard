@@ -2,6 +2,7 @@ import { Coord } from '../jscaip/Coord';
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPMap } from './MGPMap';
 import { MGPOptional } from './MGPOptional';
+import { Utils } from './utils';
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
@@ -109,6 +110,32 @@ export class ArrayUtils {
      */
     public static smallerFirst(a: number, b: number): number {
         return a-b;
+    }
+    /**
+     * Gets a random element from an array.
+     * Throws if the array is empty.
+     */
+    public static getRandomElement<T>(array: T[]): T {
+        Utils.assert(array.length > 0, 'ArrayUtils.getRandomElement must be called on an array containing elements');
+        const randomIndex: number = Math.floor(Math.random() * array.length);
+        return array[randomIndex];
+    }
+    /**
+     * Gets the maximum element of an array, according to a given metric.
+     * Throws if the array is empty.
+     */
+    public static maximumBy<T>(array: T[], metric: (value: T) => number): T {
+        Utils.assert(array.length > 0, 'ArrayUtils.maximumBy must be called on an array containing elements');
+        let maxIndex: number = -1;
+        let max: number = Number.MIN_SAFE_INTEGER;
+        for (let i: number = 0; i < array.length; i++) {
+            const current: number = metric(array[i]);
+            if (current > max) {
+                max = current;
+                maxIndex = i;
+            }
+        }
+        return array[maxIndex];
     }
 }
 

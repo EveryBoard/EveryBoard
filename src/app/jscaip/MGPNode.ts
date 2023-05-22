@@ -11,6 +11,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPFallible } from '../utils/MGPFallible';
+import { MCTS } from './MCTS';
 
 export class MGPNodeStats {
     public static createdNodes: number = 0;
@@ -99,9 +100,14 @@ export class MGPNode<R extends Rules<M, S, L>,
     public findBestMove(readingDepth: number,
                         minimax: Minimax<M, S, L, U>,
                         random: boolean = false,
-                        prune: boolean = true)
+                        prune: boolean = true,
+                       useMCTS: boolean = false)
     : M
     {
+        if (useMCTS) {
+            const mcts = new MCTS(minimax, minimax.ruler);
+            return mcts.search(this);
+        }
         const startTime: number = new Date().getTime();
         let bestDescendant: MGPNode<R, M, S, L, U> = this.alphaBeta(readingDepth,
                                                                     Number.MIN_SAFE_INTEGER,
