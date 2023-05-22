@@ -201,7 +201,6 @@ describe('SixMinimax', () => {
             // Then it should have only one landing coord: the forced landing
             expect(listMove.every((move: SixMove) => move.landing.equals(new Coord(-2, 0)))).toBeTrue();
         });
-        // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {
             const state: SixState = SixState.fromRepresentation([
                 [X, X, X, X, O, O, O, O, O],

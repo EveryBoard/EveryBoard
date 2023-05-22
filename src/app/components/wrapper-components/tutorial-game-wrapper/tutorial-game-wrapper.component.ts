@@ -1,6 +1,6 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ComponentFactoryResolver } from '@angular/core';
+    Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
@@ -15,7 +15,6 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 
 type TutorialPlayer = 'tutorial-player';
 @Component({
@@ -38,14 +37,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
+    constructor(actRoute: ActivatedRoute,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
                 public cdr: ChangeDetectorRef,
                 connectedUserService: ConnectedUserService)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
+        super(actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
         this.role = Player.ZERO; // The user is playing, not observing
     }
@@ -97,16 +95,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        let motherOpt: MGPOptional<MGPNode<Rules<Move, GameState>, Move, GameState>>;
-        if (currentStep.previousState.isPresent()) {
-            const mother: MGPNode<Rules<Move, GameState>, Move, GameState> =
-                new MGPNode(currentStep.previousState.get());
-            motherOpt = MGPOptional.of(mother);
-        } else {
-            motherOpt = MGPOptional.empty();
-        }
         this.gameComponent.node = new MGPNode(currentStep.state,
-                                              motherOpt,
+                                              MGPOptional.empty(),
                                               currentStep.previousMove);
         this.gameComponent.updateBoard();
         this.setRole(this.gameComponent.getCurrentPlayer());

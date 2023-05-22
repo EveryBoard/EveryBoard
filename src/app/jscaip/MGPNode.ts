@@ -22,9 +22,6 @@ export class MGPNode<R extends Rules<M, S, L>,
                      S extends GameState,
                      L = void,
                      B extends BoardValue = BoardValue> {
-    // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
-    // TODO: check for the proper use of LinkedList to optimise the stuff
-    // TODO: when AI has all choice at bestHopedValue equality, she must split by average?
 
     public static VERBOSE: boolean = false;
 
