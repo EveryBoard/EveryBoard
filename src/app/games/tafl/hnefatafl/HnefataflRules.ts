@@ -3,19 +3,19 @@ import { hnefataflConfig } from './hnefataflConfig';
 import { HnefataflState } from './HnefataflState';
 import { TaflRules } from '../TaflRules';
 import { HnefataflMove } from './HnefataflMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class HnefataflNode extends MGPNode<HnefataflRules, HnefataflMove, HnefataflState> {}
 
 export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
 
-    private static singleton: HnefataflRules;
+    private static singleton: MGPOptional<HnefataflRules> = MGPOptional.empty();
 
     public static get(): HnefataflRules {
-        if (HnefataflRules.singleton == null) {
-            HnefataflRules.singleton = new HnefataflRules();
+        if (HnefataflRules.singleton.isAbsent()) {
+            HnefataflRules.singleton = MGPOptional.of(new HnefataflRules());
         }
-        MGPNode.ruler = this.singleton;
-        return HnefataflRules.singleton;
+        return HnefataflRules.singleton.get();
     }
     private constructor() {
         super(HnefataflState, hnefataflConfig, HnefataflMove.of);

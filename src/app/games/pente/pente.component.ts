@@ -26,6 +26,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = PenteRules.get();
+        this.node = this.rules.getInitialNode();
         this.encoder = PenteMove.encoder;
         this.tutorial = new PenteTutorial().tutorial;
         this.availableMinimaxes = [
@@ -41,7 +42,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.cancelMoveAttempt();
     }
     public override showLastMove(): void {
-        const move: PenteMove = this.rules.node.move.get();
+        const move: PenteMove = this.node.move.get();
         this.lastMoved = MGPOptional.of(move.coord);
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);

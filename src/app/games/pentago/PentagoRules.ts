@@ -19,9 +19,12 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
     public static get(): PentagoRules {
         if (PentagoRules.singleton.isAbsent()) {
-            PentagoRules.singleton = MGPOptional.of(new PentagoRules(PentagoState));
+            PentagoRules.singleton = MGPOptional.of(new PentagoRules());
         }
         return PentagoRules.singleton.get();
+    }
+    private constructor() {
+        super(PentagoState);
     }
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheSpaceBeforeAsWellAsSpaceAfter]

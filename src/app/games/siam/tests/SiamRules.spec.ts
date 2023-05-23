@@ -14,7 +14,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 
-describe('SiamRules:', () => {
+describe('SiamRules', () => {
 
     let rules: SiamRules;
 
@@ -88,10 +88,13 @@ describe('SiamRules:', () => {
             [_, _, u, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When trying to move a piece of the opponent
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow pushing', () => {
         // Given a board with pieces next to each other
@@ -195,10 +198,13 @@ describe('SiamRules:', () => {
             [_, _, U, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When trying to perform a rotation that does not change the orientation
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.empty(), Orthogonal.UP).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.MUST_MOVE_OR_ROTATE());
+        const reason: string = SiamFailure.MUST_MOVE_OR_ROTATE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow moving in a direction different from the orientation of the piece', () => {
         // Given a board with a piece
@@ -233,10 +239,13 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When trying to push the other piece
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid pushing one against one, next to a border', () => {
         // Given a board with head-to-head pieces, with one next to the border
@@ -248,10 +257,13 @@ describe('SiamRules:', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When trying to push the other piece over the border
         const move: SiamMove = SiamMove.of(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow to push two against one', () => {
         // Given a board with two pieces against one
@@ -286,10 +298,13 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When tryig to push the one piece
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid to push while changing direction', () => {
         // Given a board with two pieces head-to-head
@@ -301,10 +316,13 @@ describe('SiamRules:', () => {
             [U, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When trying to push and change direction at the same time
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.ILLEGAL_PUSH());
+        const reason: string = SiamFailure.ILLEGAL_PUSH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be forbidden to insert a sixth peice', () => {
         // Given a board with 5 pieces of the player
@@ -316,10 +334,13 @@ describe('SiamRules:', () => {
             [U, U, U, U, U],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When trying to insert a 6th piece
         const move: SiamMove = SiamMove.of(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NO_REMAINING_PIECE_TO_INSERT());
+        const reason: string = SiamFailure.NO_REMAINING_PIECE_TO_INSERT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be forbidden to push several mountains with a single piece', () => {
         // Given a board with a piece next to aligned mountains
@@ -331,10 +352,13 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When trying to push more than one mountain
         const move: SiamMove = SiamMove.of(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+        const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be allowed to push two montains with two pushers', () => {
         // Given a board with two pushers next to the mountains

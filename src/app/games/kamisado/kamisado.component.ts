@@ -36,7 +36,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
-        this.rules = new KamisadoRules(KamisadoState);
+        this.rules = KamisadoRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
         ];
@@ -63,7 +64,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         this.lastPieceMove = MGPOptional.empty();
 
         this.canPass = KamisadoRules.mustPass(state);
-        const isFinished: boolean = this.rules.getGameStatus(this.rules.node) !== GameStatus.ONGOING;
+        const isFinished: boolean = this.rules.getGameStatus(this.node) !== GameStatus.ONGOING;
         if (this.canPass || state.coordToPlay.isAbsent() || isFinished) {
             this.chosenAutomatically = false;
             this.chosen = MGPOptional.empty();

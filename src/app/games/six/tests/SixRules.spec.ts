@@ -23,7 +23,7 @@ describe('SixRules', () => {
     const X: PlayerOrNone = Player.ONE;
 
     beforeEach(() => {
-        rules = new SixRules(SixState);
+        rules = SixRules.get();
         minimaxes = [
             new SixMinimax(rules, 'SixMinimax'),
         ];

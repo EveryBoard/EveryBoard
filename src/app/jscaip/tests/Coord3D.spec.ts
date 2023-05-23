@@ -4,7 +4,7 @@ import { Coord3D } from '../Coord3D';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Encoder } from 'src/app/utils/Encoder';
 
-describe('Coord3D:', () => {
+describe('Coord3D', () => {
 
     it('should have a bijective optional encoder', () => {
         const values: MGPOptional<Coord3D>[] = [

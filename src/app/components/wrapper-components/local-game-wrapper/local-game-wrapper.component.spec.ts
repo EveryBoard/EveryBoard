@@ -291,11 +291,11 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
-            spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(false);
-            spyOn(testUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
+            spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
+            spyOn(testUtils.getComponent().node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
             // When it is the turn of the bugged AI (that performs an illegal move)
-            const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
+            const minimax: P4Minimax = new P4Minimax(P4Rules.get(), 'P4');
             const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
 
             // Then it should fail and an error should be logged

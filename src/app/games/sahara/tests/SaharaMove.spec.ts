@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { SaharaRules } from '../SaharaRules';
+import { SaharaNode, SaharaRules } from '../SaharaRules';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
-import { SaharaState } from '../SaharaState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { SaharaFailure } from '../SaharaFailure';
@@ -12,10 +11,11 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 describe('SaharaMoves', () => {
 
     it('should have a bijective encoder', () => {
-        const rules: SaharaRules = new SaharaRules(SaharaState);
-        expect(rules).toBeTruthy();
+        const rules: SaharaRules = SaharaRules.get();
         const minimax: SaharaMinimax = new SaharaMinimax(rules, 'SaharaMinimax');
-        const moves: SaharaMove[] = minimax.getListMoves(rules.node);
+        const node: SaharaNode = rules.getInitialNode();
+        expect(rules).toBeTruthy();
+        const moves: SaharaMove[] = minimax.getListMoves(node);
         expect(moves.length).toEqual(12);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);
@@ -66,8 +66,15 @@ describe('SaharaMoves', () => {
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(error);
         expect(SaharaMove.from(new Coord(0, 0), new Coord(0, 0))).toEqual(failure);
     });
-    it('should be equal to itself', () => {
-        const move: SaharaMove = SaharaMove.from(new Coord(0, 0), new Coord(1, 0)).get();
-        expect(move.equals(move)).toBeTrue();
+    describe('equals', () => {
+        it('should be equal to itself', () => {
+            const move: SaharaMove = SaharaMove.from(new Coord(0, 0), new Coord(1, 0)).get();
+            expect(move.equals(move)).toBeTrue();
+        });
+        it('should be different if start is different', () => {
+            const move: SaharaMove = SaharaMove.from(new Coord(0, 0), new Coord(1, 0)).get();
+            const otherStart: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(1, 0)).get();
+            expect(move.equals(otherStart)).toBeFalse();
+        });
     });
 });

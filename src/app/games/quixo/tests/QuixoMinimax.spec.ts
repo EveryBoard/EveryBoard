@@ -8,7 +8,7 @@ import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('QuixoMinimax:', () => {
+describe('QuixoMinimax', () => {
 
     let minimax: QuixoMinimax;
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -16,7 +16,7 @@ describe('QuixoMinimax:', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        const rules: QuixoRules = new QuixoRules(QuixoState);
+        const rules: QuixoRules = QuixoRules.get();
         minimax = new QuixoMinimax(rules, 'QuixoMinimax');
     });
 

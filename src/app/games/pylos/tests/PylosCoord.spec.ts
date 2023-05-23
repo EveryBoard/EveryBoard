@@ -4,7 +4,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PylosCoord } from '../PylosCoord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
-describe('PylosCoord:', () => {
+describe('PylosCoord', () => {
 
     it('should have a bijective encoder', () => {
         const values: MGPOptional<PylosCoord>[] = [

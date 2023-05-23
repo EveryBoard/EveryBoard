@@ -21,6 +21,17 @@ export class YinshNode extends MGPNode<YinshRules, YinshMove, YinshState, YinshL
 
 export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInformation> {
 
+    private static singleton: MGPOptional<YinshRules> = MGPOptional.empty();
+
+    public static get(): YinshRules {
+        if (YinshRules.singleton.isAbsent()) {
+            YinshRules.singleton = MGPOptional.of(new YinshRules());
+        }
+        return YinshRules.singleton.get();
+    }
+    private constructor() {
+        super(YinshState);
+    }
     public applyLegalMove(_move: YinshMove, _state: YinshState, info: YinshState): YinshState {
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn + 1);

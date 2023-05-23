@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
-import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
@@ -23,9 +22,10 @@ describe('EpaminondasMove: ', () => {
             .toThrowError('Step size must be minimum one (got 0).');
     });
     it('should have a bijective encoder', () => {
-        const rules: EpaminondasRules = new EpaminondasRules(EpaminondasState);
+        const rules: EpaminondasRules = EpaminondasRules.get();
         const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
-        const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
+        const node: EpaminondasNode = rules.getInitialNode();
+        const moves: EpaminondasMove[] = minimax.getListMoves(node);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
         }

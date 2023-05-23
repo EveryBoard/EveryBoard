@@ -41,7 +41,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public async ngAfterViewInit(): Promise<void> {
         setTimeout(async() => {
             await this.afterViewInit();
-            this.gameComponent.rules.node = this.demoNodeInfo.node;
+            this.gameComponent.node = this.demoNodeInfo.node;
             // The board needs to be updated to render the changed node, setRole will do it
             this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,

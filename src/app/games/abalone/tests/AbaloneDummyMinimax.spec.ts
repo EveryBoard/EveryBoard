@@ -17,7 +17,7 @@ describe('AbaloneDummyMinimax', () => {
     let minimax: AbaloneDummyMinimax;
 
     beforeEach(() => {
-        minimax = new AbaloneDummyMinimax(new AbaloneRules(AbaloneState), 'dummy');
+        minimax = new AbaloneDummyMinimax(AbaloneRules.get(), 'dummy');
     });
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
         // Given initial node

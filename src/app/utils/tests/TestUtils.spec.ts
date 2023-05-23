@@ -294,7 +294,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                       previousMove?: Move)
     : void
     {
-        this.gameComponent.rules.node = new MGPNode(
+        this.gameComponent.node = new MGPNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
                 new MGPNode(previousState)),

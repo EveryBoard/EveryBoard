@@ -35,7 +35,8 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
-        this.rules = new AwaleRules(AwaleState);
+        this.rules = AwaleRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new AwaleMinimax(this.rules, 'AwaleMinimax'),
         ];

@@ -38,6 +38,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         // If your game has scores in-game, enable the following:
         // this.scores = MGPOptional.of([0, 0]);
         this.rules = NewGameRules.get();
+        this.node = this.rules.getInitialNode();
         this.encoder = NewGameMove.encoder;
         this.tutorial = new NewGameTutorial().tutorial;
         this.availableMinimaxes = [
