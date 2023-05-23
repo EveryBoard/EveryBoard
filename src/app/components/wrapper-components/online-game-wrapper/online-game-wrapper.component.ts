@@ -30,6 +30,7 @@ import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService } from './OGWCRequestManagerService';
+import { AbstractNode } from 'src/app/jscaip/MGPNode';
 
 export class OnlineGameWrapperMessages {
 
@@ -303,9 +304,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
         assert(legality.isSuccess(), message);
-        const success: boolean = rules.choose(chosenMove);
-        assert(success, 'Chosen move should be legal after all checks, but it is not!');
-        this.gameComponent.updateBoard();
+        const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
+        assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
+        this.gameComponent.node = success.get();
+        this.updateBoardAndShowLastMove();
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
@@ -320,13 +322,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private takeBackToPreviousPlayerTurn(player: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackToPreviousPlayerTurn');
         // Take back once, in any case
-        this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
+        this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.gameComponent.getCurrentPlayer() !== player) {
             // Take back a second time to make sure it end up on player's turn
-            this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
+            this.gameComponent.node = this.gameComponent.node.mother.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        this.gameComponent.updateBoard();
+        this.updateBoardAndShowLastMove();
     }
     public canResign(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canResign');
@@ -409,12 +411,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // We have to compute the game status before adding the move to avoid
             // risking receiving the move before computing the game status (thereby adding twice the same move)
             const legality: MGPFallible<unknown> =
-                this.gameComponent.rules.isLegal(move, this.gameComponent.rules.node.gameState);
+                this.gameComponent.rules.isLegal(move, this.gameComponent.node.gameState);
             assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState =
-                this.gameComponent.rules.applyLegalMove(move, this.gameComponent.rules.node.gameState, legality.get());
+                this.gameComponent.rules.applyLegalMove(move, this.gameComponent.node.gameState, legality.get());
             const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
-                new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.rules.node), MGPOptional.of(move));
+                new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.node), MGPOptional.of(move));
             const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
 
             // To adhere to security rules, we must add the move before updating the part
@@ -554,8 +556,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.gameService.addTurnTime(this.currentPartId, giver);
     }
     public onCancelMove(reason?: string): void {
-        if (this.gameComponent.rules.node.move.isPresent()) {
-            const move: Move = this.gameComponent.rules.node.move.get();
+        if (this.gameComponent.node.move.isPresent()) {
+            const move: Move = this.gameComponent.node.move.get();
             this.gameComponent.showLastMove(move);
         }
     }

@@ -78,6 +78,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = TrexoRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new TrexoMinimax(this.rules, 'TrexoMinimax'),
         ];
@@ -282,8 +283,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
                 break;
             }
         }
-        if (this.rules.node.move.isPresent()) {
-            const lastMove: TrexoMove = this.rules.node.move.get();
+        if (this.node.move.isPresent()) {
+            const lastMove: TrexoMove = this.node.move.get();
             if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
                 classes.push('last-move-stroke');
             }

@@ -34,7 +34,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return SiamRules.singleton.get();
     }
-
     private constructor() {
         super(SiamState);
     }

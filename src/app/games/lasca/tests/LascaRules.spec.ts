@@ -31,7 +31,7 @@ describe('LascaRules', () => {
     let minimaxes: Minimax<LascaMove, LascaState>[];
 
     beforeEach(() => {
-        rules = new LascaRules(LascaState);
+        rules = LascaRules.get();
         minimaxes = [
             new LascaControlMinimax('Lasca Control Minimax'),
             new LascaControlAndDominationMinimax(),

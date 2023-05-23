@@ -22,6 +22,17 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public static VERBOSE: boolean = false;
 
+    private static singleton: MGPOptional<SaharaRules> = MGPOptional.empty();
+
+    public static get(): SaharaRules {
+        if (SaharaRules.singleton.isAbsent()) {
+            SaharaRules.singleton = MGPOptional.of(new SaharaRules());
+        }
+        return SaharaRules.singleton.get();
+    }
+    private constructor() {
+        super(SaharaState);
+    }
     public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
         for (let y: number = 0; y < SaharaState.HEIGHT; y++) {

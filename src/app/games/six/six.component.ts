@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
-import { SixLegalityInformation, SixNode, SixRules } from 'src/app/games/six/SixRules';
-import { SixMinimax } from 'src/app/games/six/SixMinimax';
+import { SixLegalityInformation, SixRules } from 'src/app/games/six/SixRules';
+import { SixBoardValue, SixMinimax } from 'src/app/games/six/SixMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
@@ -25,8 +25,8 @@ import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class SixComponent
-    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation> {
-
+    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation, SixBoardValue>
+{
     public state: SixState;
 
     public pieces: Coord[];
@@ -46,7 +46,8 @@ export class SixComponent
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new SixRules(SixState);
+        this.rules = SixRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new SixMinimax(this.rules, 'SixMinimax'),
         ];
@@ -66,9 +67,8 @@ export class SixComponent
         this.updateBoard(); // Need to refresh the board in case we showed virtual moves for cuts
     }
     public updateBoard(): void {
-        const node: SixNode = this.rules.node;
-        this.state = node.gameState;
-        const lastMove: MGPOptional<SixMove> = this.rules.node.move;
+        this.state = this.node.gameState;
+        const lastMove: MGPOptional<SixMove> = this.node.move;
         if (lastMove.isAbsent()) {
             // For tutorial
             this.hideLastMove();
@@ -95,7 +95,7 @@ export class SixComponent
             this.leftCoord = MGPOptional.empty();
         }
         const state: SixState = this.getState();
-        if (this.rules.getGameStatus(this.rules.node).isEndGame) {
+        if (this.rules.getGameStatus(this.node).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
         this.disconnecteds = this.getDisconnected();
@@ -105,7 +105,7 @@ export class SixComponent
         const newPieces: Coord[] = this.getState().getPieceCoords();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
-            const start: MGPOptional<Coord> = this.rules.node.move.get().start;
+            const start: MGPOptional<Coord> = this.node.move.get().start;
             if (start.equalsValue(oldPiece) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece)) === false)
             {
@@ -196,7 +196,7 @@ export class SixComponent
         const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), this.chosenLanding.get());
         const stateAfterMove: SixState = this.state.movePiece(movement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
-        const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
+        const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getLargestGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (const cuttableGroup of biggerGroups) {
             this.cuttableGroups.push(cuttableGroup.toList());

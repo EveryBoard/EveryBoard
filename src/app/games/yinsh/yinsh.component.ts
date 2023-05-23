@@ -96,7 +96,8 @@ export class YinshComponent
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
-        this.rules = new YinshRules(YinshState);
+        this.rules = YinshRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new YinshMinimax(this.rules, 'YinshMinimax'),
         ];

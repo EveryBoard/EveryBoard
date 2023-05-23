@@ -8,7 +8,7 @@ import { GameStatus } from './GameStatus';
 export abstract class Minimax<M extends Move,
                               S extends GameState,
                               L = void,
-                              U extends BoardValue = BoardValue,
+                              B extends BoardValue = BoardValue,
                               R extends Rules<M, S, L> = Rules<M, S, L>>
 {
 
@@ -28,7 +28,7 @@ export abstract class Minimax<M extends Move,
      * Used to give a comparable data type linked to the current GameState
      * so that the AI can know which state is better
      */
-    public abstract getBoardValue(node: MGPNode<R, M, S, L>): U;
+    public abstract getBoardValue(node: MGPNode<R, M, S, L>): B;
 
     public toString(): string {
         return this.name;

@@ -19,7 +19,7 @@ describe('QuartoRules', () => {
     let minimaxes: Minimax<QuartoMove, QuartoState>[];
 
     beforeEach(() => {
-        rules = new QuartoRules(QuartoState);
+        rules = QuartoRules.get();
         minimaxes = [
             new QuartoMinimax(rules, 'QuartoMinimax'),
         ];
@@ -189,7 +189,7 @@ describe('QuartoRules', () => {
         const node: QuartoNode = new MGPNode(state);
 
         // When evaluating board value
-        // Then it should be evaluated as Ongoing
+        // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     describe('updateBoardStatus', () => {

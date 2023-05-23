@@ -17,6 +17,17 @@ export class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfAction
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
+    private static singleton: MGPOptional<LinesOfActionRules> = MGPOptional.empty();
+
+    public static get(): LinesOfActionRules {
+        if (LinesOfActionRules.singleton.isAbsent()) {
+            LinesOfActionRules.singleton = MGPOptional.of(new LinesOfActionRules());
+        }
+        return LinesOfActionRules.singleton.get();
+    }
+    private constructor() {
+        super(LinesOfActionState);
+    }
     public static getListMovesFromState(state: LinesOfActionState): LinesOfActionMove[] {
         const moves: LinesOfActionMove[] = [];
 

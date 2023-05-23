@@ -180,6 +180,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('Sandwiching king against a throne should not work', () => {
@@ -200,7 +201,7 @@ describe('TablutRules', () => {
         // When trying to sandwich
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
 
-        // Then the move should be legal but the king alive
+        // Then the move should be legal but the king alive, and the game ongoing
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -235,7 +236,7 @@ describe('TablutRules', () => {
         // When attempting to surround him
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
 
-        // Then the move should be legal but the king not captured, hence the part ongoing
+        // Then the move should be legal but the king not captured, and the part ongoing
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],

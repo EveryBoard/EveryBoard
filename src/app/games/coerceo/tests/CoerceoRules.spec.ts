@@ -24,7 +24,7 @@ describe('CoerceoRules', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     beforeEach(() => {
-        rules = new CoerceoRules(CoerceoState);
+        rules = CoerceoRules.get();
         minimaxes = [
             new CoerceoMinimax(rules, 'CoerceoMinimax'),
             new CoerceoPiecesThreatTilesMinimax(rules, 'CoerceoPiecesThreatTilesMinimax'),
@@ -46,7 +46,10 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(0, 0), CoerceoStep.RIGHT);
-            RulesUtils.expectMoveFailure(rules, state, move, 'Cannot start with a coord outside the board (0, 0).');
+            function tryAStartingCoordOutOfRange(): void {
+                rules.isLegal(move, state);
+            }
+            RulesUtils.expectToThrowAndLog(tryAStartingCoordOutOfRange, 'Cannot start with a coord outside the board (0, 0).');
         });
         it('should forbid to end move outside the board', () => {
             const board: FourStatePiece[][] = [
@@ -63,7 +66,10 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(6, 6), CoerceoStep.LEFT);
-            RulesUtils.expectMoveFailure(rules, state, move, 'Cannot end with a coord outside the board (4, 6).');
+            function tryALandingingCoordOutOfRange(): void {
+                rules.isLegal(move, state);
+            }
+            RulesUtils.expectToThrowAndLog(tryALandingingCoordOutOfRange, 'Cannot end with a coord outside the board (4, 6).');
         });
         it('should forbid to move ppponent pieces', () => {
             const board: FourStatePiece[][] = [
@@ -80,7 +86,8 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(6, 6), CoerceoStep.RIGHT);
-            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid to move empty pieces', () => {
             const board: FourStatePiece[][] = [
@@ -97,7 +104,8 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(7, 7), CoerceoStep.UP_RIGHT);
-            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid to land on occupied piece', () => {
             const board: FourStatePiece[][] = [
@@ -114,7 +122,8 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
-            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should remove pieces captured by movement', () => {
             const board: FourStatePiece[][] = [
@@ -223,7 +232,8 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
-            RulesUtils.expectMoveFailure(rules, state, move, CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
+            const reason: string = CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid capturing one own piece', () => {
             const board: FourStatePiece[][] = [
@@ -240,7 +250,8 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
-            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_SELF_CAPTURE());
+            const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid capturing empty space', () => {
             const board: FourStatePiece[][] = [
@@ -257,7 +268,8 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(7, 7));
-            RulesUtils.expectMoveFailure(rules, state, move, CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
+            const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid capturing coord of removed tile', () => {
             const board: FourStatePiece[][] = [
@@ -274,7 +286,8 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(0, 0));
-            RulesUtils.expectMoveFailure(rules, state, move, CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
+            const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should remove piece captured by tiles exchange, removing tile but no one win it', () => {
             const board: FourStatePiece[][] = [

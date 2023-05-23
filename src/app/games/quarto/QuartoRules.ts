@@ -129,6 +129,17 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
     public static VERBOSE: boolean = false;
 
+    private static singleton: MGPOptional<QuartoRules> = MGPOptional.empty();
+
+    public static get(): QuartoRules {
+        if (QuartoRules.singleton.isAbsent()) {
+            QuartoRules.singleton = MGPOptional.of(new QuartoRules());
+        }
+        return QuartoRules.singleton.get();
+    }
+    private constructor() {
+        super(QuartoState);
+    }
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Direction.DOWN),

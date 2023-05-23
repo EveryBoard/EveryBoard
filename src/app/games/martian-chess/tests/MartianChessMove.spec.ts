@@ -5,8 +5,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
-import { MartianChessRules } from '../MartianChessRules';
-import { MartianChessState } from '../MartianChessState';
+import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 
 describe('MartianChessMove', () => {
 
@@ -48,9 +47,10 @@ describe('MartianChessMove', () => {
         expect(move.equals(moveWithClockCall)).toBeFalse();
     });
     it('should have a bijective encoder', () => {
-        const rules: MartianChessRules = new MartianChessRules(MartianChessState);
+        const rules: MartianChessRules = MartianChessRules.get();
         const minimax: MartianChessDummyMinimax = new MartianChessDummyMinimax(rules, 'dummy');
-        const firstTurnMoves: MartianChessMove[] = minimax.getListMoves(rules.node);
+        const node: MartianChessNode = rules.getInitialNode();
+        const firstTurnMoves: MartianChessMove[] = minimax.getListMoves(node);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(MartianChessMove.encoder, move);
         }

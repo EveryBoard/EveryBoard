@@ -19,7 +19,7 @@ describe('GoMinimax', () => {
     const _: GoPiece = GoPiece.EMPTY;
 
     beforeEach(() => {
-        const rules: GoRules = new GoRules(GoState);
+        const rules: GoRules = GoRules.get();
         minimax = new GoMinimax(rules, 'Dummy');
     });
     describe('getListMove', () => {

@@ -57,7 +57,7 @@ export class SaharaMove extends MoveCoordToCoord {
     }
     public equals(other: SaharaMove): boolean {
         if (other === this) return true;
-        if (!other.getStart().equals(this.getStart())) return false;
+        if (other.getStart().equals(this.getStart()) === false) return false;
         return other.getEnd().equals(this.getEnd());
     }
     public toString(): string {

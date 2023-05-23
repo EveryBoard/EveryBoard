@@ -18,17 +18,16 @@ export class DiamNode extends MGPNode<DiamRules, DiamMove, DiamState> {}
 export class DiamRules extends Rules<DiamMove, DiamState> {
 
     private static singleton: MGPOptional<DiamRules> = MGPOptional.empty();
+
     public static get(): DiamRules {
         if (DiamRules.singleton.isAbsent()) {
             DiamRules.singleton = MGPOptional.of(new DiamRules());
         }
         return DiamRules.singleton.get();
     }
-
     private constructor() {
         super(DiamState);
     }
-
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);

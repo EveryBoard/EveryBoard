@@ -29,6 +29,17 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
 
     public static readonly STARTING_COUNT_DOWN: MGPOptional<number> = MGPOptional.of(7);
 
+    private static singleton: MGPOptional<MartianChessRules> = MGPOptional.empty();
+
+    public static get(): MartianChessRules {
+        if (MartianChessRules.singleton.isAbsent()) {
+            MartianChessRules.singleton = MGPOptional.of(new MartianChessRules());
+        }
+        return MartianChessRules.singleton.get();
+    }
+    private constructor() {
+        super(MartianChessState);
+    }
     public applyLegalMove(move: MartianChessMove,
                           state: MartianChessState,
                           info: MartianChessMoveResult)

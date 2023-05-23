@@ -67,6 +67,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
         this.rules = LascaRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new LascaControlMinimax('Lasca Control Minimax'),
             new LascaControlAndDominationMinimax(),
@@ -77,10 +78,10 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        this.lastMove = this.rules.node.move;
+        this.lastMove = this.node.move;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
-        this.legalMoves = LascaControlMinimax.getListMoves(this.rules.node);
+        this.legalMoves = LascaControlMinimax.getListMoves(this.node);
         this.createAdaptedBoardFrom(state);
         this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();

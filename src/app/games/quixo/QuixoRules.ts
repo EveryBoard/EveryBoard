@@ -11,11 +11,23 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 
+    private static singleton: MGPOptional<QuixoRules> = MGPOptional.empty();
+
+    public static get(): QuixoRules {
+        if (QuixoRules.singleton.isAbsent()) {
+            QuixoRules.singleton = MGPOptional.of(new QuixoRules());
+        }
+        return QuixoRules.singleton.get();
+    }
+    private constructor() {
+        super(QuixoState);
+    }
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(QuixoMove.isInRange, Utils.identity, 5);
 

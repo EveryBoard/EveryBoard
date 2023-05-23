@@ -65,6 +65,7 @@ export class ConspirateursComponent
         super(messageDisplayer);
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
         this.rules = ConspirateursRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),
         ];
@@ -134,7 +135,7 @@ export class ConspirateursComponent
     }
     private updateVictory(): void {
         const state: ConspirateursState = this.getState();
-        const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.rules.node);
+        const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node);
         if (gameStatus.isEndGame === true) {
             for (const shelter of ConspirateursState.ALL_SHELTERS) {
                 if (state.getPieceAt(shelter) === gameStatus.winner) {

@@ -38,7 +38,8 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
-        this.rules = new GoRules(GoState);
+        this.rules = GoRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
@@ -63,7 +64,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         display(GoComponent.VERBOSE, 'updateBoard');
 
         const state: GoState = this.getState();
-        const move: MGPOptional<GoMove> = this.rules.node.move;
+        const move: MGPOptional<GoMove> = this.node.move;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();

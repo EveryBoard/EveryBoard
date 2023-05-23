@@ -51,6 +51,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = SiamRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),
         ];

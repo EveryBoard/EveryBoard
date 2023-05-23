@@ -14,7 +14,7 @@ describe('PylosOrderedMinimax', () => {
     const coord2: PylosCoord = new PylosCoord(0, 0, 2);
 
     beforeEach(() => {
-        const rules: PylosRules = new PylosRules(PylosState);
+        const rules: PylosRules = PylosRules.get();
         minimax = new PylosOrderedMinimax(rules, 'PylosOrderMinimax');
     });
     it('should delegate getListMoves to PylosMinimax', () => {

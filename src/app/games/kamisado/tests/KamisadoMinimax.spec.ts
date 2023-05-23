@@ -19,7 +19,7 @@ describe('KamisadoMinimax', () => {
     const b: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 
     beforeEach(() => {
-        rules = new KamisadoRules(KamisadoState);
+        rules = KamisadoRules.get();
         minimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
     });
     it('should provide 102 possible moves at turn 0', () => {
@@ -29,7 +29,8 @@ describe('KamisadoMinimax', () => {
 
         // Given the initial board
         // When computing all moves
-        const firstTurnMoves: KamisadoMove[] = minimax.getListMoves(rules.node);
+        const node: KamisadoNode = rules.getInitialNode();
+        const firstTurnMoves: KamisadoMove[] = minimax.getListMoves(node);
         // Then there should be exactly 102 moves
         expect(firstTurnMoves.length).toEqual(102);
     });

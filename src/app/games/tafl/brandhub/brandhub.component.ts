@@ -20,6 +20,7 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer, false, BrandhubMove.from);
         this.rules = BrandhubRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new TaflMinimax(this.rules, 'DummyBot'),
             new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),

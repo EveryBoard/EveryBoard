@@ -602,7 +602,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1000);
 
             // Then the game should be a victory
-            expect(wrapper.gameComponent.rules.node.move.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
             testUtils.fixture.detectChanges();
             testUtils.expectElementToExist('#youWonIndicator');
@@ -630,7 +630,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1000);
 
             // Then the game should be a victory
-            expect(wrapper.gameComponent.rules.node.move.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
             testUtils.fixture.detectChanges();
             testUtils.expectElementToExist('#youLostIndicator');
@@ -674,7 +674,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.fixture.detectChanges();
 
             // Then the game should be a draw
-            expect(wrapper.gameComponent.rules.node.move.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
             testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();

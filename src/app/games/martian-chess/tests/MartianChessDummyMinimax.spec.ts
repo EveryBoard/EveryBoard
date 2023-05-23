@@ -28,7 +28,7 @@ describe('MartianChessDummyMinimax', () => {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.DRONE;
     }
     beforeEach(() => {
-        rules = new MartianChessRules(MartianChessState);
+        rules = MartianChessRules.get();
         minimax = new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax');
     });
     it('should includes all moves at first turn (but no call the clock)', () => {

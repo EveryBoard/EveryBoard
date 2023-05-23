@@ -12,7 +12,7 @@ describe('LinesOfActionMinimax', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        const rules: LinesOfActionRules = new LinesOfActionRules(LinesOfActionState);
+        const rules: LinesOfActionRules = LinesOfActionRules.get();
         minimax = new LinesOfActionMinimax(rules, 'Lines Of Action Minimax');
     });
     it('should have 36 moves on the initial state', () => {
