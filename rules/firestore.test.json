@@ -9,11 +9,23 @@ service cloud.firestore {
         }
         // -----------[ cut until here ]--------------->8---------------------
         // From here, the rest of the file matches with firestore.rules
+        function hasField(data, field) {
+            return field in data && data[field] != null;
+        }
+        function preservesField(fieldName) {
+            // A field is preserved if it is not part of the update
+            // or if the same value is given in the update
+            return !(fieldName in request.resource.data) || (fieldName in resource.data && request.resource.data[fieldName] == resource.data[fieldName]);
+        }
         match /{document=**} {
-            allow read, write: if true;
+            // by default, nothing can be read or written unless explicitly authorized
+            allow read, write: if false;
         }
         match /errors/{errorId} {
-            allow create, update, read: if true;
+            // Anybody can read, create and update errors
+            allow create: if true;
+            allow update: if true;
+            allow read: if true;
         }
         match /chats/lobby {
             allow create: if userIsVerified();
@@ -32,7 +44,38 @@ service cloud.firestore {
             return configRoom != null && configRoom.creator.id == request.auth.uid;
         }
         match /chats/{chatId}/messages/{messageId} {
-            allow create, delete, update, read: if true;
+            allow create: if verifiedUserPostsValidMessage(request.resource.data);
+            allow delete: if verifiedUserIsMessageAuthor(resource.data);
+            allow update: if verifiedUserUpdatesMessage(resource.data, request.resource.data);
+            allow read: if userIsVerified();
+        }
+        function verifiedUserPostsValidMessage(message) {
+            return userIsVerified() && isValidMessage(message);
+        }
+        function isValidMessage(message) {
+            return hasField(message, 'content') &&
+                   hasField(message, 'sender') &&
+                   isMessageAuthorWithCorrectUsername(message) &&
+                   hasField(message, 'postedTime');
+        }
+        function isMessageAuthorWithCorrectUsername(message) {
+            return isMessageAuthor(message) &&
+                   usernameOf(message.sender.id) == message.sender.name;
+        }
+        function isMessageAuthor(message) {
+            return request.auth.uid == message.sender.id
+        }
+        function verifiedUserIsMessageAuthor(message) {
+            return userIsVerified() && isMessageAuthor(message)
+        }
+        function usernameOf(uid) {
+            return get(/databases/$(database)/documents/users/$(uid)).data.username
+        }
+        function verifiedUserUpdatesMessage(message, update) {
+            return userIsVerified() &&
+                isMessageAuthor(message) &&
+                preservesField('sender') &&
+                isValidMessage(update);
         }
         match /users/{userId} {
             allow delete: if false;
@@ -49,7 +92,6 @@ service cloud.firestore {
         function isAuthenticated() {
             return request != null && request.auth != null;
         }
-
         function authenticatedUserUpdatesUser(userId, user, update) {
             // Only the user can change its fields
             // Moreover, the username cannot be changed once set
@@ -97,7 +139,6 @@ service cloud.firestore {
             let creatorIsPlayerZero = request.auth.uid == part.playerZero.id;
             let creatorIsPlayerOne = hasField(part, 'playerOne') && request.auth.uid == part.playerOne.id;
             let creatorIsPlayer = creatorIsPlayerZero || creatorIsPlayerOne;
-
             return userIsVerified() &&
                    turnForNewPartOrRematch &&
                    hasField(part, 'typeGame') &&
@@ -255,10 +296,120 @@ service cloud.firestore {
             return timedOut;
         }
         match /config-room/{partId} {
-            allow create, delete, update, read: if true;
+            allow create: if creatorCreatesConfigRoom(partId, request.resource.data);
+            allow delete: if creatorDeletesConfigRoom(resource.data);
+            allow delete: if verifiedUserDeletesConfigRoom(partId, resource.data);
+            allow update: if creatorUpdatesPartInCreation(resource.data, request.resource.data);
+            allow update: if chosenOpponentAcceptsConfig(resource.data, request.resource.data);
+            allow update: if chosenOpponentLeaves(resource.data, request.resource.data)
+            // Any verified user can read a config room
+            allow read: if userIsVerified();
+        }
+        function creatorCreatesConfigRoom(partId, configRoom) {
+            // Any verified user can create a configRoom as long as they are themselves creator and a corresponding part exists
+            return userIsVerified() &&
+                userIsCreatorWithValidName(configRoom) &&
+                exists(/databases/$(database)/documents/parts/$(partId));
+        }
+        function creatorDeletesConfigRoom(configRoom) {
+            // The creator can delete a config room if the part has not started
+            return userIsVerified() && userIsCreator(configRoom) && configStillOngoing(configRoom);
+        }
+        function verifiedUserDeletesConfigRoom(partId, configRoom) {
+            // Anybody else can delete a config room only if the creator has timed out and the part has not started
+            return userIsVerified() && hasTimedOut(creatorOf(partId).id) && configStillOngoing(configRoom);
+        }
+        function creatorUpdatesPartInCreation(configRoom, update) {
+            // The creator can change all fields except 'creator', or changing partStatus to STARTED (3) or FINISHED (4), until the part starts
+            return userIsVerified() && userIsCreator(configRoom) &&
+                preservesField('creator') &&
+                configRoom.partStatus < 3 && update.partStatus != 3;
+        }
+        function chosenOpponentAcceptsConfig(configRoom, update) {
+            //  The chosen opponent can change the config from PROPOSED to STARTED
+            return validChosenOpponentConfigRoomUpdate(configRoom) &&
+                preservesField('chosenOpponent') &&
+                acceptsConfig(configRoom, update);
+        }
+        function chosenOpponentLeaves(configRoom, update) {
+            // The chosen opponent can remove itself from the corresponding field
+            return validChosenOpponentConfigRoomUpdate(configRoom) &&
+                preservesField('partStatus') &&
+                removesOneSelfFromChosenOpponent(configRoom, update);
+        }
+        function validChosenOpponentConfigRoomUpdate(configRoom) {
+            return userIsVerified() &&
+                userIsChosenOpponentInConfigRoom(configRoom) &&
+                preservesCreatorOnlyFields();
+        }
+        function preservesCreatorOnlyFields() {
+            return preservesField('creator') &&
+                preservesField('firstPlayer') &&
+                preservesField('partType') &&
+                preservesField('maximalMoveDuration') &&
+                preservesField('totalPartDuration');
+        }
+        function configStillOngoing(configRoom) {
+            return configRoom.partStatus < 3;
         }
         match /config-room/{partId}/candidates/{userId} {
-            allow create, update, delete, read: if true;
+            allow create, update: if candidateJoins(partId, userId, request.resource.data);
+            allow delete: if candidateLeaves(userId);
+            allow delete: if creatorKicksCandidate(partId);
+            allow delete: if verifiedUserDeletesCandidateOfTimedOutPart(partId);
+            // Any verified user can read the candidate list
+            allow read: if userIsVerified();
+        }
+        function candidateJoins(partId, userId, candidate) {
+            // Users can only add themselves to the candidate list if they are not the creator and if they use the right username
+            // We also allow updates in this way, in case someone tries to join the part twice
+            return userIsVerified() &&
+                userId == request.auth.uid &&
+                request.auth.uid != creatorOf(partId).id &&
+                candidate.name == usernameOf(request.auth.uid) &&
+                candidate.id == request.auth.uid;
+        }
+        function candidateLeaves(userId) {
+            // Users can only delete themselves
+            return userIsVerified() && userId == request.auth.uid;
+        }
+        function creatorKicksCandidate(partId) {
+            // Creator can remove any candidate
+            return userIsVerified() &&
+                request.auth.uid == creatorOf(partId).id;
+        }
+        function verifiedUserDeletesCandidateOfTimedOutPart(partId) {
+            // A verified user can delete a candidate only if the creator has timed out
+            let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
+            return userIsVerified() &&
+                hasTimedOut(creatorOf(partId).id) &&
+                configStillOngoing(configRoom);
+        }
+        function creatorOf(partId) {
+            return get(/databases/$(database)/documents/config-room/$(partId)).data.creator;
+        }
+        function userIsVerified() {
+            return request != null &&
+                   request.auth != null &&
+                   request.auth.uid != null &&
+                   request.auth.token.email_verified == true;
+        }
+        function userIsCreator(configRoom) {
+            return configRoom.creator.id == request.auth.uid;
+        }
+        function userIsCreatorWithValidName(configRoom) {
+            return userIsCreator(configRoom) &&
+                   configRoom.creator.name == usernameOf(request.auth.uid);
+        }
+        function acceptsConfig(configRoom, update) {
+            return configRoom.partStatus == 2 && // CONFIG_PROPOSED
+                   update.partStatus == 3; // PART_STARTED
+        }
+        function removesOneSelfFromChosenOpponent(configRoom, update) {
+            let uid = request.auth.uid;
+            return hasField(configRoom, 'chosenOpponent') &&
+                configRoom.chosenOpponent.id == uid &&
+                update.chosenOpponent == null;
         }
     }
 }
