@@ -23,25 +23,54 @@ describe('SixMinimax', () => {
         minimax = new SixMinimax(rules, 'SixMinimax');
     });
     describe('pre-victories', () => {
-        it('should pass forcing move to children node to minimise calculations', () => {
+        it('should created pre-victory when evaluating board value', () => {
+            // Given a node with one pre-victory and the node having a last move
             const board: Table<PlayerOrNone> = [
                 [X, _, _, _, _, _, X],
                 [O, _, _, _, _, O, _],
                 [O, _, _, _, O, _, _],
-                [O, _, _, O, X, _, _],
+                [O, X, X, O, X, _, _],
                 [O, _, O, X, _, _, _],
                 [_, O, X, X, _, _, _],
                 [_, X, _, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 10);
-            const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            const parentNode: SixNode = new SixNode(state);
-            const node: SixNode = rules.choose(parentNode, move).get();
-            const chosenMove: SixMove = parentNode.findBestMove(1, minimax);
+            const state: SixState = SixState.fromRepresentation(board, 11);
+            const lastMove: SixMove = SixMove.fromDrop(new Coord(1, 5));
+            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(lastMove));
+
+            // When evaluation board value
+            const boardValue: SixBoardValue = minimax.getBoardValue(node);
+
+            // Then it should have a pre-victory
+            expect(boardValue.preVictory).toEqual(MGPOptional.of(new Coord(0, 6)));
+        });
+        it('should pass forcing move to children node to minimise calculations', () => {
+            // Given a node with one pre-victory and the node having a last move
+            const board: Table<PlayerOrNone> = [
+                [X, _, _, _, _, _, X],
+                [O, _, _, _, _, O, _],
+                [O, _, _, _, O, _, _],
+                [O, X, X, O, X, _, _],
+                [O, _, O, X, _, _, _],
+                [_, O, X, X, _, _, _],
+                [_, X, _, _, _, _, _],
+            ];
+            const state: SixState = SixState.fromRepresentation(board, 11);
+            const lastMove: SixMove = SixMove.fromDrop(new Coord(1, 5));
+            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(lastMove));
+            minimax.getBoardValue(node);
+
+            // When calculating its children, there should only be one
+            console.log('>>>>>>>>> let us chooseMove')
+            // const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
+            // const childNode: SixNode = rules.choose(parentNode, move).get();
+            console.log('>>>>>>>>> let us findBestMove')
+            const chosenMove: SixMove = node.findBestMove(1, minimax);
             expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
             expect(node.countDescendants()).toBe(1);
         });
         it('should only count one preVictory when one coord is a forcing move for two lines', () => {
+            // Given a node with two pre-victories
             const board: Table<PlayerOrNone> = [
                 [_, _, X, _, _, X],
                 [_, _, O, _, O, _],
@@ -53,7 +82,11 @@ describe('SixMinimax', () => {
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+
+            // When evaluation its value
             const boardValue: SixBoardValue = minimax.getBoardValue(node);
+
+            // Then that value should countain a pre-victory
             expect(boardValue.preVictory).toEqual(MGPOptional.of(new Coord(-1, 6)));
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });

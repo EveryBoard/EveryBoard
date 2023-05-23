@@ -336,14 +336,14 @@ describe('GipfRules', () => {
             const reason: string = GipfFailure.INVALID_CAPTURED_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('should unaligned captures', () => {
+        it('should not allow capture with holes', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, _, _, A],
                 [N, N, _, _, _, B, B],
                 [N, _, B, _, _, B, _],
                 [_, _, A, _, B, _, _],
                 [B, A, A, _, _, _, N],
-                [_, _, A, _, _, N, N],
+                [_, _, _, _, _, N, N],
                 [_, A, A, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
@@ -352,7 +352,7 @@ describe('GipfRules', () => {
                                                                MGPOptional.of(HexaDirection.RIGHT));
 
             const capture: GipfCapture = new GipfCapture([
-                new Coord(1, 6), new Coord(1, 5), new Coord(1, 4), new Coord(0, 0),
+                new Coord(2, 3), new Coord(2, 4), new Coord(2, 5), new Coord(2, 6),
             ]);
             const move: GipfMove = new GipfMove(placement, [capture], []);
             const reason: string = GipfFailure.CAPTURE_MUST_BE_ALIGNED();

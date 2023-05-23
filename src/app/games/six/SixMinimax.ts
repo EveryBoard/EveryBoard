@@ -47,6 +47,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const unheritance: SixBoardValue = node.getOwnValue(minimax);
         if (unheritance.preVictory.isPresent()) {
             if (node.gameState.turn < 40) {
+                console.log('creating forced drop')
                 return this.createForcedDrop(unheritance);
             } else {
                 return this.createForcedMovement(node, unheritance);
@@ -160,6 +161,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             shapeInfo = this.calculateBoardValue(move.get(), state);
         }
         if (shapeInfo.status === SCORE.VICTORY) {
+            console.log('victoire at', node.gameState.turn)
             return new SixBoardValue(victoryValue, MGPOptional.empty());
         }
         if (state.turn > 39) {
@@ -183,8 +185,10 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             }
         }
         if (shapeInfo.status === SCORE.PRE_VICTORY) {
+            console.log('pre-victoire at', node.gameState.turn)
             return new SixBoardValue(LAST_PLAYER.getPreVictory(), shapeInfo.preVictory);
         }
+        console.log('neutre at', node.gameState.turn)
         return new SixBoardValue(shapeInfo.sum * LAST_PLAYER.getScoreModifier(), shapeInfo.preVictory);
     }
     public startSearchingVictorySources(): void {
