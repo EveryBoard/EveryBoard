@@ -29,14 +29,13 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { OGWCRequestManagerService } from './OGWCRequestManagerService';
+import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
 
 export class OnlineGameWrapperMessages {
 
     public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
 }
-
 
 @Component({
     selector: 'app-online-game-wrapper',
@@ -337,35 +336,38 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         return this.opponent != null;
     }
-    public requestsAvailable(): RequestType[] {
+    public requestsAvailable(): RequestInfo[] {
         const requests: RequestType[] = [];
         if (this.canAskTakeBack()) requests.push('TakeBack');
         if (this.canProposeDraw()) requests.push('Draw');
-        return requests;
+        if (this.endGame) requests.push('Rematch');
+        return requests.map((r: RequestType) =>OGWCRequestManagerService.requestInfos[r]);
     }
     public mustReply(): boolean {
         return this.requestAwaitingReply().isPresent();
     }
-    public requestAwaitingReply(): MGPOptional<GameEventRequest> {
+    public requestAwaitingReply(): MGPOptional<RequestInfo> {
         return this.requestManager.mustReply(this.role as Player);
     }
-    public requestHasBeenDenied(): boolean {
-        return this.requestManager.hasBeenDeniedRequest();
+    public deniedRequest(): MGPOptional<RequestInfo> {
+        return this.requestManager.deniedRequest();
     }
-    public canAskTakeBack(): boolean {
-        assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
-        assert(this.currentPart != null, 'should not call canAskTakeBack when currentPart is not defined yet');
+    private canAskTakeBack(): boolean {
+        Utils.assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
+        Utils.assert(this.currentPart != null, 'should not call canAskTakeBack when currentPart is not defined yet');
+        // Cannot do a request in end game
+        if (this.endGame === true) return false;
+        // Cannot do a take back request before we played
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        if (currentPart.data.turn <= this.role.value) {
-            return false;
-        }
+        if (currentPart.data.turn <= this.role.value) return false;
+        // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('TakeBack');
     }
-    public canProposeDraw(): boolean {
-        assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
-        if (this.endGame) {
-            return false;
-        }
+    private canProposeDraw(): boolean {
+        Utils.assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
+        // Cannot propose draw in end game
+        if (this.endGame) return false;
+        // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('Draw');
     }
     private async initializePlayersDatas(part: PartDocument): Promise<void> {

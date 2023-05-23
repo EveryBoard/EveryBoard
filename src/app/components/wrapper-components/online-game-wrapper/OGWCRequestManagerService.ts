@@ -1,9 +1,19 @@
 import { Injectable } from '@angular/core';
+import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { GameEventReply, GameEventRequest, RequestType } from 'src/app/domain/Part';
 import { Player } from 'src/app/jscaip/Player';
+import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { Utils } from 'src/app/utils/utils';
+
+export interface RequestInfo {
+    requestType: RequestType,
+    textForRequest: Localized,
+    textForReply: Localized,
+    name: Localized,
+    icon: IconDefinition,
+};
 
 /**
  * The request manager manages the requests and replies.
@@ -14,16 +24,43 @@ import { Utils } from 'src/app/utils/utils';
 })
 export class OGWCRequestManagerService {
 
+    public static requestInfos: Record<RequestType, RequestInfo> = {
+        'TakeBack': {
+            requestType: 'TakeBack',
+            textForRequest: () => $localize`Ask take back`,
+            textForReply: () => $localize`Your opponent is asking for a`,
+            name: () => $localize`take back`,
+            icon: faBackwardStep,
+        },
+        'Draw': {
+            requestType: 'Draw',
+            textForRequest: () => $localize`Propose a`,
+            textForReply: () => $localize`Your opponent is proposing a`,
+            name: () => $localize`draw`,
+            icon: faFlag,
+        },
+        'Rematch': {
+            requestType: `Rematch`,
+            textForRequest: () => $localize`Propose a`,
+            textForReply: () => $localize`Your opponent is proposing a`,
+            name: () => $localize`rematch`,
+            icon: faRepeat,
+        },
+    };
+
     private requestAwaitingReply: MGPOptional<GameEventRequest> = MGPOptional.empty();
+    private lastDeniedRequest: MGPOptional<RequestType> = MGPOptional.empty();
     private forbiddenRequests: MGPSet<RequestType> = new MGPSet();
 
     public onGameStart(): void {
         // Upon game start, clear out requests
         this.requestAwaitingReply = MGPOptional.empty();
+        this.lastDeniedRequest = MGPOptional.empty();
         this.forbiddenRequests = new MGPSet();
     }
     public onReceivedMove(): void {
         // Upon a new turn, the player can again request anything
+        this.forbiddenRequests = new MGPSet();
         this.forbiddenRequests = new MGPSet();
     }
     public onReceivedRequest(request: GameEventRequest): void {
@@ -44,6 +81,7 @@ export class OGWCRequestManagerService {
                 // When one of our requests is rejected, we cannot make this request until the next turn
                 if (reply.player === currentPlayer.getOpponent().value) {
                     // Opponent denied our request
+                    this.lastDeniedRequest = MGPOptional.of(reply.requestType);
                     this.forbiddenRequests.add(reply.requestType);
                 }
                 return false;
@@ -56,12 +94,12 @@ export class OGWCRequestManagerService {
         if (this.forbiddenRequests.contains(request)) return false;
         return true;
     }
-    public mustReply(player: Player): MGPOptional<GameEventRequest> {
+    public mustReply(player: Player): MGPOptional<RequestInfo> {
         // Different from canMakeRequest, as we can play if our requests have not been answered for example.
         if (this.requestAwaitingReply.isPresent() &&
             this.requestAwaitingReply.get().player === player.getOpponent().value)
         {
-            return this.requestAwaitingReply;
+            return MGPOptional.of(OGWCRequestManagerService.requestInfos[this.requestAwaitingReply.get().requestType]);
         } else {
             return MGPOptional.empty();
         }
@@ -69,7 +107,7 @@ export class OGWCRequestManagerService {
     public getCurrentRequest(): MGPOptional<GameEventRequest> {
         return this.requestAwaitingReply;
     }
-    public hasBeenDeniedRequest(): boolean {
-        return this.forbiddenRequests.isEmpty() === false;
+    public deniedRequest(): MGPOptional<RequestInfo> {
+        return this.lastDeniedRequest.map((r: RequestType) => OGWCRequestManagerService.requestInfos[r]);
     }
 }

@@ -126,7 +126,6 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
 
     const partCreationId: DebugElement = testUtils.findElement('#partCreation');
     expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
-    expect(wrapper.partCreation).withContext('partCreation field should also be present').toBeTruthy();
     const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
     await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
@@ -354,9 +353,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(quartoTag)
             .withContext('quarto tag should be absent before config accepted and async ms finished')
             .toBeFalsy();
-        expect(wrapper.partCreation)
-            .withContext('partCreation field should be absent after config accepted')
-            .toBeFalsy();
+
+        testUtils.expectElementNotToExist('#partCreation');
         expect(testUtils.getComponent())
             .withContext('gameComponent field should be absent after config accepted and async ms finished')
             .toBeFalsy();
@@ -1159,7 +1157,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
-            spyOn(wrapper, 'notifyTimeoutVictory').and.callThrough();
+            // TODO spyOn(wrapper, 'notifyTimeoutVictory').and.callThrough();
             spyOn(wrapper, 'opponentIsOffline').and.returnValue(true);
 
             // When opponent reach time out locally
@@ -1170,7 +1168,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
             const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
             const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
-            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, loser);
+            // expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, loser);
+            expect('Must check DAO for timeout victory').toBe(false);
         }));
     });
     describe('Add time feature', () => {
