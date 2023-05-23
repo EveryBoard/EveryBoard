@@ -14,6 +14,7 @@ class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
         return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
     }
 }
+
 describe('MoveCoordToCoord', () => {
     function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
         return new ConcreteMoveCoordToCoord(start, end);

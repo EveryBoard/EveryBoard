@@ -49,6 +49,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = PentagoRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new PentagoMinimax(this.rules, 'PentagoMinimax'),
         ];
@@ -169,7 +170,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop, state);
         }
-        const gameStatus: GameStatus = this.rules.getGameStatus(this.rules.node);
+        const gameStatus: GameStatus = this.rules.getGameStatus(this.node);
         this.canSkipRotation = postDropState.neutralBlocks.length > 0 && gameStatus.isEndGame === false;
         this.currentDrop = MGPOptional.of(new Coord(x, y));
         this.displayArrows(postDropState.neutralBlocks);

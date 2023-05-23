@@ -19,6 +19,17 @@ export class EncapsuleNode
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
+    private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
+
+    public static get(): EncapsuleRules {
+        if (EncapsuleRules.singleton.isAbsent()) {
+            EncapsuleRules.singleton = MGPOptional.of(new EncapsuleRules());
+        }
+        return EncapsuleRules.singleton.get();
+    }
+    private constructor() {
+        super(EncapsuleState);
+    }
     public static readonly LINES: Coord[][] = [
         [new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],
         [new Coord(1, 0), new Coord(1, 1), new Coord(1, 2)],

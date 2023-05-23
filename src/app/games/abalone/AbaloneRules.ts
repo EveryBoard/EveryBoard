@@ -11,6 +11,7 @@ import { AbaloneMove } from './AbaloneMove';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>
 
@@ -18,6 +19,17 @@ export class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState
 
 export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
 
+    private static singleton: MGPOptional<AbaloneRules> = MGPOptional.empty();
+
+    public static get(): AbaloneRules {
+        if (AbaloneRules.singleton.isAbsent()) {
+            AbaloneRules.singleton = MGPOptional.of(new AbaloneRules());
+        }
+        return AbaloneRules.singleton.get();
+    }
+    private constructor() {
+        super(AbaloneState);
+    }
     public static isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {

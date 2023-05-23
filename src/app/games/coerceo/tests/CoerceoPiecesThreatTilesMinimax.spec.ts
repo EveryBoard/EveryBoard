@@ -22,7 +22,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     beforeEach(() => {
-        const rules: CoerceoRules = new CoerceoRules(CoerceoState);
+        const rules: CoerceoRules = CoerceoRules.get();
         minimax = new CoerceoPiecesThreatTilesMinimax(rules, 'Pieces > Threats > Tiles');
     });
     it('should prefer board with more pieces', () => {

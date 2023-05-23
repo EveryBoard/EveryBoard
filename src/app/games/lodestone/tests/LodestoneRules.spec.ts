@@ -930,7 +930,7 @@ describe('LodestoneRules', () => {
         // Given a state with pieces of both players
         const state: LodestoneState = LodestoneState.getInitialState();
         const node: LodestoneNode = new LodestoneNode(state);
-        // Then no victory should be detected
+        // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('should consider player victory when they have no more piece', () => {

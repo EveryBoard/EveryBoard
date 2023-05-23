@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoState } from '../CoerceoState';
-import { CoerceoRules } from '../CoerceoRules';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
@@ -62,9 +61,10 @@ describe('CoerceoMove', () => {
         });
         describe('encoder', () => {
             it('should be bijective with first turn moves', () => {
-                const rules: CoerceoRules = new CoerceoRules(CoerceoState);
+                const rules: CoerceoRules = CoerceoRules.get();
                 const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
-                const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
+                const node: CoerceoNode = rules.getInitialNode();
+                const moves: CoerceoMove[] = minimax.getListMoves(node);
                 for (const move of moves) {
                     EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
                 }

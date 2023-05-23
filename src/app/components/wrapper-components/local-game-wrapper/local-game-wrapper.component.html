@@ -82,10 +82,10 @@
                     (click)="restartGame()"
                     i18n
             >Start a new game</button>
-            <div *ngIf="gameComponent.rules.node.move.isPresent() && displayAIMetrics"
+            <div *ngIf="gameComponent.node.move.isPresent() && displayAIMetrics"
                  id="AIMetrics">
                 <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
-                    {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.rules.node) }} <br/>
+                    {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.node) }} <br/>
                 </ng-container>
                 Created {{ getCreatedNodes() }} nodes.<br/>
                 Minimax time: {{ getMinimaxTime() }}ms.<br/>

@@ -13,11 +13,23 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 
+    private static singleton: MGPOptional<DvonnRules> = MGPOptional.empty();
+
+    public static get(): DvonnRules {
+        if (DvonnRules.singleton.isAbsent()) {
+            DvonnRules.singleton = MGPOptional.of(new DvonnRules());
+        }
+        return DvonnRules.singleton.get();
+    }
+    private constructor() {
+        super(DvonnState);
+    }
     public static getGameStatus(node: DvonnNode): GameStatus {
         const state: DvonnState = node.gameState;
         const scores: number[] = DvonnRules.getScores(state);

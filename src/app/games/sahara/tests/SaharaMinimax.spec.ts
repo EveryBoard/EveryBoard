@@ -18,7 +18,7 @@ describe('SaharaMinimax', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     beforeEach(() => {
-        rules = new SaharaRules(SaharaState);
+        rules = SaharaRules.get();
         minimax = new SaharaMinimax(rules, 'SaharaMinimax');
     });
     it('should prefer having more freedoms', () => {

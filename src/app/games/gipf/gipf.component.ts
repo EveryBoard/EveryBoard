@@ -62,7 +62,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
-        this.rules = new GipfRules(GipfState);
+        this.rules = GipfRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new GipfMinimax(this.rules, 'GipfMinimax'),
         ];
@@ -258,7 +259,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.captured = [];
         this.moved = [];
 
-        const moveOptional: MGPOptional<GipfMove> = this.rules.node.move;
+        const moveOptional: MGPOptional<GipfMove> = this.node.move;
         if (moveOptional.isPresent()) {
             const move: GipfMove = moveOptional.get();
             const previousState: GipfState = this.getPreviousState();

@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleMinimax } from '../EncapsuleMinimax';
-import { EncapsuleState } from '../EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
@@ -18,9 +17,10 @@ describe('EncapsuleMove', () => {
     });
     describe('encoder', () => {
         it('should be bijective for first turn moves', () => {
-            const rules: EncapsuleRules = new EncapsuleRules(EncapsuleState);
+            const rules: EncapsuleRules = EncapsuleRules.get();
             const minimax: EncapsuleMinimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
-            const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(rules.node);
+            const node: EncapsuleNode = rules.getInitialNode();
+            const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(node);
             for (const move of firstTurnMoves) {
                 EncoderTestUtils.expectToBeBijective(EncapsuleMove.encoder, move);
             }

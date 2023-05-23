@@ -26,7 +26,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new P4Rules(P4State);
+        this.rules = P4Rules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];

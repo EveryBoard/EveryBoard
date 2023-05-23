@@ -27,7 +27,6 @@ describe('BrandhubRules', () => {
 
     beforeEach(() => {
         rules = BrandhubRules.get();
-        rules.setInitialBoard();
         minimaxes = [
             new TaflMinimax(rules, 'DummyBot'),
             new TaflPieceAndInfluenceMinimax(rules, 'Piece > Influence'),

@@ -128,6 +128,7 @@ export class LodestoneComponent
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = LodestoneRules.get();
+        this.node = this.rules.getInitialNode();
         this.tutorial = new LodestoneTutorial().tutorial;
         this.availableMinimaxes = [
             new LodestoneDummyMinimax(this.rules, 'LodestoneDummyMinimax'),

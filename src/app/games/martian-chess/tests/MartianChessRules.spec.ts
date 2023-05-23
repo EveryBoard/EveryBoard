@@ -52,7 +52,7 @@ describe('MartianChessRules', () => {
     ];
 
     beforeEach(() => {
-        rules = new MartianChessRules(MartianChessState);
+        rules = MartianChessRules.get();
         minimaxes = [
             new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax'),
         ];

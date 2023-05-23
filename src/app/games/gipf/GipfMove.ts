@@ -4,7 +4,7 @@ import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONObject, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -24,17 +24,11 @@ export class GipfCapture {
     public readonly capturedSpaces: ReadonlyArray<Coord>;
 
     public constructor(captured: ReadonlyArray<Coord>) {
-        if (captured.length < 4) {
-            throw new Error('Cannot create a GipfCapture with less than 4 captured pieces');
-        }
-        if (HexaLine.areOnSameLine(captured) === false) {
-            throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
-        }
+        Utils.assert(captured.length >= 4, 'Cannot create a GipfCapture with less than 4 captured pieces');
+        Utils.assert(HexaLine.areOnSameLine(captured), 'Cannot create a GipfCapture with pieces that are not on the same line');
         this.capturedSpaces = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
             if (coord1.x === coord2.x) {
-                if (coord1.y === coord2.y) {
-                    throw new Error('Cannot create a GipfCapture with duplicate coords');
-                }
+                Utils.assert(coord1.y !== coord2.y, 'Cannot create a GipfCapture with duplicate coords');
                 return coord1.y > coord2.y ? 1 : -1;
             } else {
                 return coord1.x > coord2.x ? 1 : -1;
@@ -43,9 +37,8 @@ export class GipfCapture {
         let previous: MGPOptional<Coord> = MGPOptional.empty();
         // Captured coords must be consecutive
         for (const coord of this.capturedSpaces) {
-            if (previous.isPresent() && previous.get().getDistance(coord) !== 1) {
-                throw new Error('Cannot create a GipfCapture with non-consecutive coords');
-            }
+            Utils.assert(previous.isAbsent() || previous.get().getDistance(coord) === 1,
+                         'Cannot create a GipfCapture with non-consecutive coords');
             previous = MGPOptional.of(coord);
         }
     }

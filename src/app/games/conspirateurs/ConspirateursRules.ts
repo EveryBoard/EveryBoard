@@ -23,7 +23,6 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return ConspirateursRules.singleton.get();
     }
-
     private constructor() {
         super(ConspirateursState);
     }
