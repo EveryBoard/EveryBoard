@@ -61,7 +61,7 @@ export class OGWCRequestManagerService {
     public onReceivedMove(): void {
         // Upon a new turn, the player can again request anything
         this.forbiddenRequests = new MGPSet();
-        this.forbiddenRequests = new MGPSet();
+        this.lastDeniedRequest = MGPOptional.empty();
     }
     public onReceivedRequest(request: GameEventRequest): void {
         Utils.assert(this.requestAwaitingReply.isAbsent(), 'Should not receive two requests in a row!');
