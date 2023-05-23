@@ -38,7 +38,7 @@ describe('SixMinimax', () => {
             const lastMove: SixMove = SixMove.fromDrop(new Coord(1, 5));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(lastMove));
 
-            // When evaluation board value
+            // When evaluating the board value
             const boardValue: SixBoardValue = minimax.getBoardValue(node);
 
             // Then it should have a pre-victory
@@ -61,10 +61,6 @@ describe('SixMinimax', () => {
             minimax.getBoardValue(node);
 
             // When calculating its children, there should only be one
-            console.log('>>>>>>>>> let us chooseMove')
-            // const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            // const childNode: SixNode = rules.choose(parentNode, move).get();
-            console.log('>>>>>>>>> let us findBestMove')
             const chosenMove: SixMove = node.findBestMove(1, minimax);
             expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
             expect(node.countDescendants()).toBe(1);
