@@ -1,14 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState> {}
 
@@ -49,24 +50,24 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
     public applyLegalMove(move: PentagoMove, state: PentagoState, _info: void): PentagoState {
         return state.applyLegalMove(move);
     }
-    public isLegal(move: PentagoMove, state: PentagoState): MGPFallible<void> {
+    public isLegal(move: PentagoMove, state: PentagoState): MGPValidation {
         if (state.getPieceAt(move.coord).isPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const postDropState: PentagoState = state.applyLegalDrop(move);
         if (postDropState.neutralBlocks.length === 0) {
             if (move.blockTurned.isAbsent()) {
-                return MGPFallible.failure(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
+                return MGPValidation.failure(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
             }
         } else {
             if (move.blockTurned.isPresent()) {
                 const blockTurned: number = move.blockTurned.get();
                 if (postDropState.neutralBlocks.includes(blockTurned)) {
-                    return MGPFallible.failure(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
+                    return MGPValidation.failure(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
                 }
             }
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];

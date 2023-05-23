@@ -2,13 +2,10 @@ import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
-import { NumberEncoder } from '../utils/Encoder';
+import { MoveEncoder } from '../utils/Encoder';
 
-class HexaDirectionEncoder extends NumberEncoder<HexaDirection> {
-    public maxValue(): number {
-        return 5;
-    }
-    public encodeNumber(direction: HexaDirection): number {
+class HexaDirectionEncoder extends MoveEncoder<HexaDirection> {
+    public encodeMove(direction: HexaDirection): number {
         switch (direction) {
             case (HexaDirection.UP): return 0;
             case (HexaDirection.UP_RIGHT): return 1;
@@ -18,7 +15,7 @@ class HexaDirectionEncoder extends NumberEncoder<HexaDirection> {
             default: return 5;
         }
     }
-    public decodeNumber(encoded: number): HexaDirection {
+    public decodeMove(encoded: number): HexaDirection {
         assert(0 <= encoded && encoded <= 5, 'Invalid encoded number for HexaDirection ' + encoded);
         return HexaDirection.factory.all[encoded];
     }
@@ -50,7 +47,7 @@ export class HexaDirection extends BaseDirection {
                 HexaDirection.LEFT,
             ];
         };
-    public static readonly encoder: NumberEncoder<HexaDirection> = new HexaDirectionEncoder();
+    public static readonly encoder: MoveEncoder<HexaDirection> = new HexaDirectionEncoder();
 
     public static getAngle(direction: HexaDirection): number {
         switch (direction) {

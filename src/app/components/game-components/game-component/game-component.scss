@@ -115,6 +115,9 @@
 .last-move-stroke.manual-stroke {
     fill: var(--last-move);
 }
+.last-move-fill {
+    fill: var(--last-move);
+}
 .victory-fill {
     fill: var(--victory);
 }
@@ -139,6 +142,9 @@
 .capturable-stroke {
     stroke-width: 2;
     stroke: var(--capturable);
+}
+.capturable-fill {
+    fill: var(--capturable);
 }
 .capturable-stroke:hover {
     stroke-width: 8;

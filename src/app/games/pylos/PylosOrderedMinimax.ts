@@ -27,7 +27,7 @@ export class PylosOrderedMinimax extends PylosMinimax {
         }
         return value;
     }
-    public getListMoves(node: PylosNode): PylosMove[] {
+    public override getListMoves(node: PylosNode): PylosMove[] {
         const moves: PylosMove[] = PylosMinimax.getListMoves(node);
         return this.orderMoves(moves);
     }

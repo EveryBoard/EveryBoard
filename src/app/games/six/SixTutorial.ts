@@ -6,9 +6,9 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: number = PlayerOrNone.NONE.value;
-const O: number = Player.ZERO.value;
-const X: number = Player.ONE.value;
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = Player.ZERO;
+const X: PlayerOrNone = Player.ONE;
 
 export class SixTutorialMessages {
 
@@ -147,7 +147,7 @@ export class SixTutorial extends Tutorial {
                 if (move.keep.isAbsent()) {
                     return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
                 }
-                if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === PlayerOrNone.NONE) {
+                if (resultingState.getPieceAt(move.landing) === PlayerOrNone.NONE) {
                     return MGPValidation.failure($localize`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
                 } else {
                     return MGPValidation.SUCCESS;

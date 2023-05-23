@@ -205,7 +205,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickFailure('#piece_2_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should recognize line extension and show new directions (1-2-3)', fakeAsync(async() => {
-            // Given the initial board with an extendable two piece line selected
+            // Given the initial board with an extendable two pieces line selected
             await testUtils.expectClickSuccess('#piece_2_6');
             await testUtils.expectClickSuccess('#piece_3_6');
 
@@ -219,7 +219,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(4, 6)).toEqual(['player0-fill', 'selected-stroke']);
         }));
         it('should recognize line extension and show new directions (M-2-1-3) and move it as one', fakeAsync(async() => {
-            // Given the initial board with an extendable two piece line selected
+            // Given the initial board with an extendable two pieces line selected
             await testUtils.expectClickSuccess('#piece_3_6');
             await testUtils.expectClickSuccess('#piece_2_6');
 
@@ -268,7 +268,7 @@ describe('AbaloneComponent', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
         await testUtils.expectMoveSuccess('#space_1_6', move, state, [0, 0]);
     }));
-    it('should allow clicking on arrow landing coord as if it was bellow an arrow (opponent)', fakeAsync(async() => {
+    it('should allow clicking on arrow landing coord as if it was below an arrow (opponent)', fakeAsync(async() => {
         // Given a board with a possible push
         const board: Table<FourStatePiece> = [
             [N, N, N, N, X, X, X, X, X],

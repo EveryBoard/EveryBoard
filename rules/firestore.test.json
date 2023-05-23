@@ -16,19 +16,243 @@ service cloud.firestore {
             allow create, update, read: if true;
         }
         match /chats/lobby {
-            allow create: if true;
+            allow create: if userIsVerified();
+            allow update, delete: if false;
+            allow read: if false;
         }
         match /chats/{id} {
-            allow create, delete: if true;
+            allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
+            // Anyone can delete the chat in case the creator timed out
+            allow delete: if userIsVerified() && hasTimedOut(creatorOf(id).id);
+            allow update: if false;
+            allow read: if false
+        }
+        function partExistsAndOwnedByCurrentUser(partId) {
+            let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
+            return configRoom != null && configRoom.creator.id == request.auth.uid;
         }
         match /chats/{chatId}/messages/{messageId} {
             allow create, delete, update, read: if true;
         }
         match /users/{userId} {
-            allow create, update, read: if true;
+            allow delete: if false;
+            allow create: if authenticatedUserCreatesUnverifiedUser(userId, request.resource.data);
+            allow update: if authenticatedUserUpdatesUser(userId, resource.data, request.resource.data);
+            // Anybody can read the fields of a user.
+            // This is because before user creation, we need to check if the username is free.
+            allow read: if true;
+        }
+        function authenticatedUserCreatesUnverifiedUser(userId, update) {
+            // Only an authenticated account can create its own user, and they cannot directly be verified
+            return isAuthenticated() && request.auth.uid == userId && update.verified == false;
+        }
+        function isAuthenticated() {
+            return request != null && request.auth != null;
+        }
+
+        function authenticatedUserUpdatesUser(userId, user, update) {
+            // Only the user can change its fields
+            // Moreover, the username cannot be changed once set
+            // And the verified field can only be changed to true if the user has a username and has its email verified
+            return isAuthenticated() &&
+                request.auth.uid == userId &&
+                doesNotModifyUsernameIfSet(user, update) &&
+                onlyModifiesVerifiedFieldIfUserIsVerified(user, update);
+        }
+        function doesNotModifyUsernameIfSet(user, update) {
+            let usernameWasAbsent = hasField(user, 'username') == false;
+            let usernameIsAbsentFromRequest = hasField(update, 'username') == false;
+            // It sometimes happens that firebase sends the username as part as updates,
+            // even though it is not actually updated.
+            // Hence, we accept usernames as part of updates, only if it doesn't change.
+            let usernameIsNotChanged = preservesField('username');
+            return usernameWasAbsent || usernameIsAbsentFromRequest || usernameIsNotChanged;
+        }
+        function onlyModifiesVerifiedFieldIfUserIsVerified(user, update) {
+            let verifiedKeptSameValue = user.verified == update.verified;
+            let verifiedSetToTrueAfterVerification = user.verified == false && userIsVerified() && user.username != null;
+            return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
         match /parts/{id} {
-            allow create, delete, update, read: if true;
+            allow create: if verifiedUserCreatesPart(request.resource.data);
+            allow delete: if creatorDeletesUnstartedPart(id, resource.data);
+            allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);
+            allow update: if chosenOpponentStartsPart(id, resource.data, request.resource.data);
+            allow update: if playerPerformsUpdate(resource.data, request.resource.data);
+            // All verified user can read parts (needed for the lobby)
+            allow read: if userIsVerified();
+        }
+        match /parts/{partId}/events/{eventId} {
+            allow read: if userIsVerified();
+            allow create: if playerAddsMoveEvent(partId, request.resource.data);
+            allow create: if playerAddsNonMoveEvent(partId, request.resource.data);
+            allow update: if false; // Events cannot be modified
+            allow delete: if false; // Events cannot be deleted
+        }
+        function verifiedUserCreatesPart(part) {
+            // Any verified user can create a part with the proper fields set, and has to be the creator
+            // turn can be -1 in case of a new part, 0 in case of a rematch
+            let turnForNewPartOrRematch = part.turn == -1 || part.turn == 0;
+            // creator must be one of the players (could be playerOne in case of rematch)
+            let creatorIsPlayerZero = request.auth.uid == part.playerZero.id;
+            let creatorIsPlayerOne = hasField(part, 'playerOne') && request.auth.uid == part.playerOne.id;
+            let creatorIsPlayer = creatorIsPlayerZero || creatorIsPlayerOne;
+
+            return userIsVerified() &&
+                   turnForNewPartOrRematch &&
+                   hasField(part, 'typeGame') &&
+                   hasField(part, 'winner') == false &&
+                   hasField(part, 'loser') == false &&
+                   creatorIsPlayer;
+        }
+        function creatorDeletesUnstartedPart(partId, part) {
+            // The owner of a part can delete it, if it has not started
+            return userIsVerified() &&
+                   creatorOf(partId).id == request.auth.uid &&
+                   partHasStarted(part) == false;
+        }
+        function verifiedUserDeletesPartAfterCreatorTimeout(id, part) {
+            // Anyone can delete a part if the owner has timed out and the part has not started
+            return userIsVerified() &&
+                   hasTimedOut(creatorOf(id).id) &&
+                   partHasStarted(part) == false;
+        }
+        function playerAddsEvent(part, event) {
+            return userIsVerified() &&
+                   ((event.player == 0 && userIsPlayerZero(part)) ||
+                    (event.player == 1 && userIsPlayerOne(part)));
+        }
+        function validEvent(event) {
+            return hasField(event, 'eventType') &&
+                   hasField(event, 'time') &&
+                   hasField(event, 'player');
+        }
+        function validAction(part, event) {
+            let gameJustStarted = part.turn == 0;
+            let gameFinished = part.result != 5; // Unachieved
+            return hasField(event, 'action') &&
+                   ((event.action == 'AddTurnTime') ||
+                    (event.action == 'AddGlobalTime') ||
+                    (event.action == 'StartGame' && gameJustStarted) ||
+                    (event.action == 'EndGame' && gameFinished));
+        }
+        function validRequest(part, event) {
+            let partFinished = part.result != 5;
+            return hasField(event, 'requestType') &&
+                   ((event.requestType == 'Draw' && !partFinished) ||
+                    (event.requestType == 'Rematch' && partFinished) ||
+                    (event.requestType == 'TakeBack' && part.turn >= 1 && !partFinished));
+        }
+        function validReply(event) {
+            return hasField(event, 'reply') &&
+                   ((event.reply == 'Accept') ||
+                    (event.reply == 'Reject'));
+        }
+        function playerAddsNonMoveEvent(partId, event) {
+            let part = get(/databases/$(database)/documents/parts/$(partId)).data;
+            return validEvent(event) &&
+                   playerAddsEvent(part, event) &&
+                   ((event.eventType == 'Request' && validRequest(part, event)) ||
+                    (event.eventType == 'Reply' && validReply(event)) ||
+                    (event.eventType == 'Action' && validAction(part, event)));
+        }
+        function playerAddsMoveEvent(partId, moveEvent) {
+            // Move addition is performed before updating the part turn
+            // This way, if move addition fails, the part isn't corrupt
+            let part = get(/databases/$(database)/documents/parts/$(partId)).data;
+            let isPlayerTurn = part.turn % 2 == moveEvent.player;
+            return validEvent(moveEvent) && moveEvent.eventType == 'Move' &&
+                   playerAddsEvent(part, moveEvent) &&
+                   isPlayerTurn;
+        }
+        function setsWinnerIfVictory(part, update) {
+            let isVictory = part.result == 5 && update.result == 3; // 3 = victory, 5 = unachieved
+            let playerZeroWinsAndOneLoses = update.loser.id == part.playerZero.id && update.winner.id == part.playerOne.id;
+            let playerOneWinsAndZeroLoses =  update.loser.id == part.playerOne.id && update.winner.id == part.playerZero.id;
+            return isVictory == false || playerZeroWinsAndOneLoses || playerOneWinsAndZeroLoses;
+        }
+        function playerPerformsUpdate(part, update) {
+            // A player can do other requests such as take backs, etc. if there is no move done
+            return isValidPartUpdateDuringGame(part) &&
+                   (part.turn == update.turn || safeTurnIncrease(part.turn, update.turn) || safeTurnDecrease(part.turn, update.turn)) &&
+                   preservesWinnerAndLoserUnlessResultChanges() &&
+                   onlyResignsInTheirName(part, update) &&
+                   setsWinnerIfVictory(part, update);
+        }
+        function onlyResignsInTheirName(part, update) {
+            let playerResigns = part.result == 5 && update.result == 1 && // 1 = resign, 5 = unachieved
+                hasField(update, 'winner') &&
+                hasField(update, 'loser');
+            let resignerIsLoser = update.loser.id == request.auth.uid;
+            let otherPlayerIsWinner = update.winner.id != request.auth.uid &&
+                (update.winner.id == part.playerZero.id || update.winner.id == part.playerOne.id);
+            return (playerResigns == false) || (playerResigns && resignerIsLoser && otherPlayerIsWinner);
+        }
+        function preservesWinnerAndLoserUnlessResultChanges() {
+            let resultChanged = preservesField('result') == false;
+            return resultChanged || (preservesField('winner') && preservesField('loser'));
+        }
+        function isValidPartUpdateDuringGame(part) {
+            return userIsVerified() &&
+                partHasStarted(part) &&
+                userIsPlayer(part) &&
+                preservesField('typeGame') &&
+                preservesField('playerZero') &&
+                preservesField('playerOne') &&
+                preservesField('beginning');
+        }
+        function chosenOpponentStartsPart(partId, part, update) {
+            // A verified user who is the chosen opponent can start the part
+            let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
+            return userIsVerified() &&
+                partHasStarted(part) == false &&
+                partHasStarted(update) &&
+                preservesField('typeGame') &&
+                preservesField('winner') &&
+                preservesField('loser') &&
+                preservesField('result') &&
+                preservesField('scorePlayerZero') &&
+                preservesField('scorePlayerOne') &&
+                update.turn == 0 &&
+                userIsChosenOpponentInConfigRoom(configRoom) &&
+                validPlayerSelection(configRoom, update);
+        }
+        function validPlayerSelection(configRoom, partUpdate) {
+            let playerZeroIsCreator = playerEquals(partUpdate.playerZero, configRoom.creator);
+            let playerZeroIsChosenOpponent = playerEquals(partUpdate.playerZero, configRoom.chosenOpponent);
+            let playerOneIsCreator = playerEquals(partUpdate.playerOne, configRoom.creator);
+            let playerOneIsChosenOpponent = playerEquals(partUpdate.playerOne, configRoom.chosenOpponent);
+            return (playerZeroIsCreator || playerZeroIsChosenOpponent) && (playerOneIsCreator || playerOneIsChosenOpponent);
+        }
+        function playerEquals(player, otherPlayer) {
+            return player.id == otherPlayer.id && player.name == otherPlayer.name;
+        }
+        function userIsChosenOpponentInConfigRoom(configRoom) {
+            return hasField(configRoom, 'chosenOpponent') && configRoom.chosenOpponent.id == request.auth.uid;
+        }
+        function userIsPlayer(part) {
+            return userIsPlayerZero(part) || userIsPlayerOne(part);
+        }
+        function userIsPlayerZero(part) {
+            return part.playerZero.id == request.auth.uid;
+        }
+        function userIsPlayerOne(part) {
+            return hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;
+        }
+        function safeTurnIncrease(oldTurn, newTurn) {
+            return newTurn == oldTurn + 1;
+        }
+        function safeTurnDecrease(oldTurn, newTurn) {
+            return (newTurn == oldTurn - 1) || (newTurn == oldTurn - 2);
+        }
+        function partHasStarted(part) {
+            // A part is started when the beginning field is set
+            return hasField(part, 'beginning');
+        }
+        function hasTimedOut(userId) {
+            let userDoc = get(/databases/$(database)/documents/users/$(userId)).data;
+            let timedOut = request.time.time() > userDoc.lastUpdateTime.time() + duration.value(10, 's');
+            return timedOut;
         }
         match /config-room/{partId} {
             allow create, delete, update, read: if true;

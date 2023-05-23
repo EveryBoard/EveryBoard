@@ -44,11 +44,11 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private moveds: Coord[] = [];
 
-    private captureds: Coord[] = [];
+    private capturedCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.rules = new EpaminondasRules(EpaminondasState);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
@@ -63,13 +63,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.firstPiece = MGPOptional.empty();
         this.lastPiece = MGPOptional.empty();
         this.hidePreviousMove();
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        }
         this.board = this.getState().getCopiedBoard();
     }
-    private showPreviousMove(): void {
-        const move: EpaminondasMove = this.rules.node.move.get();
+    public override showLastMove(move: EpaminondasMove): void {
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {
@@ -80,7 +76,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
         while (moved.isInRange(14, 12) &&
                previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT) {
-            this.captureds.push(moved);
+            this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
     }
@@ -114,7 +110,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     private hidePreviousMove(): void {
-        this.captureds = [];
+        this.capturedCoords = [];
         this.moveds = [];
     }
     private getValidExtensions(PLAYER: Player): Coord[] {
@@ -215,7 +211,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return length;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.firstPiece = MGPOptional.empty();
         this.validExtensions = [];
         this.phalanxValidLandings = [];
@@ -386,7 +382,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     public getRectClasses(x: number, y: number): string[] {
         const clicked: Coord = new Coord(x, y);
-        if (this.captureds.some((c: Coord) => c.equals(clicked))) {
+        if (this.capturedCoords.some((c: Coord) => c.equals(clicked))) {
             return ['captured-fill'];
         } else if (this.moveds.some((c: Coord) => c.equals(clicked))) {
             return ['moved-fill'];

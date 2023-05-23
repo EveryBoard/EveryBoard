@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -19,19 +19,20 @@ export type DemoNodeInfo = {
     template: `<div #board></div>`,
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit {
+
     @Input() public demoNodeInfo: DemoNodeInfo;
 
     @ViewChild('board', { read: ViewContainerRef })
-    public boardRef: ViewContainerRef | null = null;
 
-    public constructor(componentFactoryResolver: ComponentFactoryResolver,
-                       actRoute: ActivatedRoute,
+    public override boardRef: ViewContainerRef | null = null;
+
+    public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
+        super(actRoute, connectedUserService, router, messageDisplayer);
     }
 
     protected override getGameName(): string {
@@ -41,9 +42,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         setTimeout(async() => {
             await this.afterViewInit();
             this.gameComponent.rules.node = this.demoNodeInfo.node;
+            // The board needs to be updated to render the changed node, setRole will do it
             this.setRole(this.gameComponent.getCurrentPlayer());
-            // The board needs to be updated to render the changed node
-            this.gameComponent.updateBoard();
             // Need to detect changes before potentially clicking,
             // and otherwise we'll get an angular exception in our tests
             this.cdr.detectChanges();
@@ -61,5 +61,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
     public getPlayer(): string {
         return 'no-player';
+    }
+    public onCancelMove(_reason?: string | undefined): void {
+        return;
     }
 }

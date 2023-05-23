@@ -10,7 +10,7 @@ import { HexaLine } from './HexaLine';
 export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
 
     public constructor(turn: number,
-                       public readonly board: Table<P>,
+                       board: Table<P>,
                        public readonly width: number,
                        public readonly height: number,
                        public readonly excludedSpaces: ReadonlyArray<number>,

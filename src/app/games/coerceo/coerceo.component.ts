@@ -68,7 +68,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     private showHighlight(): void {
         this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.possibleLandings = [];
     }
@@ -196,7 +196,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (this.rules.node.mother.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.rules.node.mother.get().gameState.tiles[player];
+        const previousTiles: number = this.getPreviousState().tiles[player];
         return previousTiles > this.tiles[player];
     }
 }

@@ -32,8 +32,8 @@ module.exports = {
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],
             'no-warning-comments': [
-                'warn',
-                { 'terms': ['todo', 'fixme', 'xxx'], 'location': 'start' }
+                'error',
+                { 'terms': ['todo', 'fixme', 'xxx', 'review'], 'location': 'start' }
             ],
             'complexity': ['error', 20],
             '@angular-eslint/no-output-rename': ['warn'],

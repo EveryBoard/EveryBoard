@@ -1,53 +1,17 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Coord } from 'src/app/jscaip/Coord';
+
+type EpaminondasMoveFields = [Coord, number, number, Direction];
 
 export class EpaminondasMove extends MoveCoord {
-    public static encoder: NumberEncoder<EpaminondasMove> = new class extends NumberEncoder<EpaminondasMove> {
-        public maxValue(): number {
-            const direction: number = 7;
-            const stepSize: number = 6;
-            const movedPieces: number = 12;
-            const cy: number = 11;
-            const cx: number = 13;
-            return (cx * 8 * 7 * 13 * 12) + (cy * 8 * 7 * 13) + (movedPieces * 8 * 7) + (stepSize * 8) + direction;
-        }
-        public encodeNumber(move: EpaminondasMove): number {
-            const direction: number = move.direction.toInt(); // Between 0 and 7
-            const stepSize: number = move.stepSize - 1; // Between 1 and 7 => between 0 and 6
-            const movedPieces: number = move.movedPieces -1; // Between 1 and 13 => between 0 and 12
+    public static encoder: MoveEncoder<EpaminondasMove> = MoveEncoder.tuple(
+        [Coord.encoder, MoveEncoder.identity<number>(), MoveEncoder.identity<number>(), Direction.encoder],
+        (m: EpaminondasMove): EpaminondasMoveFields => [m.coord, m.movedPieces, m.stepSize, m.direction],
+        (fields: EpaminondasMoveFields): EpaminondasMove =>
+            new EpaminondasMove(fields[0].x, fields[0].y, fields[1], fields[2], fields[3]));
 
-            const cy: number = move.coord.y; // Between 0 and 11
-            const cx: number = move.coord.x; // Between 0 and 13
-            return (cx * 8 * 7 * 13 * 12) + (cy * 8 * 7 * 13) + (movedPieces * 8 * 7) + (stepSize * 8) + direction;
-        }
-        public decodeNumber(encodedMove: number): EpaminondasMove {
-            // encoded as such : cx; cy; movedPiece; stepSize; direction
-            if (encodedMove % 1 !== 0) throw new Error('EncodedMove must be an integer.');
-
-            const encodedDirection: number = encodedMove % 8;
-            encodedMove -= encodedDirection;
-            encodedMove /= 8;
-
-            const stepSize: number = encodedMove % 7;
-            encodedMove -= stepSize;
-            encodedMove /= 7;
-
-            const movedPieces: number = encodedMove % 13;
-            encodedMove -= movedPieces;
-            encodedMove /= 13;
-
-            const cy: number = encodedMove % 12;
-            encodedMove -= cy;
-            encodedMove /= 12;
-
-            const cx: number = encodedMove;
-
-            const direction: MGPFallible<Direction> = Direction.factory.fromInt(encodedDirection);
-            return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, direction.get());
-        }
-    };
     public constructor(x: number,
                        y: number,
                        public readonly movedPieces: number,
@@ -74,7 +38,7 @@ export class EpaminondasMove extends MoveCoord {
                                   this.stepSize + ', ' +
                                   this.direction.toString() + ')';
     }
-    public equals(other: EpaminondasMove): boolean {
+    public override equals(other: EpaminondasMove): boolean {
         if (this === other) return true;
         if (!this.coord.equals(other.coord)) return false;
         if (this.movedPieces !== other.movedPieces) return false;

@@ -5,6 +5,15 @@
       <trans-unit id="4894728399261164928" datatype="html">
         <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
       </trans-unit>
+      <trans-unit id="6153797048311741939" datatype="html">
+        <source>User settings</source>
+      </trans-unit>
+      <trans-unit id="6838770899052870929" datatype="html">
+        <source>If you forgot your password or want to change it, click on the following button:</source>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+      </trans-unit>
       <trans-unit id="8447591012079458095" datatype="html">
         <source>Hide chat</source>
       </trans-unit>
@@ -64,6 +73,9 @@
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="4086606389696938932" datatype="html">
+        <source>Account</source>
       </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
@@ -155,6 +167,9 @@
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
       </trans-unit>
+      <trans-unit id="2248512434888126204" datatype="html">
+        <source>Put two pieces on the board at each turn, and be the first to align six pieces!</source>
+      </trans-unit>
       <trans-unit id="1528017893097093154" datatype="html">
         <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
       </trans-unit>
@@ -185,6 +200,9 @@
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
       </trans-unit>
+      <trans-unit id="8831529968086851272" datatype="html">
+        <source>Similar to checkers, capture opponent&apos;s pieces, free your own, and immobilize your opponent to win the game!</source>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
       </trans-unit>
@@ -199,6 +217,9 @@
       </trans-unit>
       <trans-unit id="7007940005713233193" datatype="html">
         <source>Drop a piece, then rotate a quadrant. The first player to align 5 pieces wins!</source>
+      </trans-unit>
+      <trans-unit id="3362876946788995618" datatype="html">
+        <source>You can align 5 pieces to win, or you can capture 10 pieces of your opponent to win!</source>
       </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
@@ -320,6 +341,15 @@
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
       </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
+      </trans-unit>
+      <trans-unit id="8745205959337703089" datatype="html">
+        <source>Connect Six</source>
+      </trans-unit>
+      <trans-unit id="7128132932954450153" datatype="html">
+        <source>Pente</source>
+      </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
       </trans-unit>
@@ -353,14 +383,8 @@
       <trans-unit id="6808826847039952270" datatype="html">
         <source>The email has been sent, please follow the instructions from that email.</source>
       </trans-unit>
-      <trans-unit id="1636934520301910285" datatype="html">
-        <source>Reset password</source>
-      </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
-      </trans-unit>
-      <trans-unit id="6153797048311741939" datatype="html">
-        <source>User settings</source>
       </trans-unit>
       <trans-unit id="7103588127254721505" datatype="html">
         <source>Theme</source>
@@ -473,8 +497,8 @@
       <trans-unit id="1041065984971815594" datatype="html">
         <source>You lost</source>
       </trans-unit>
-      <trans-unit id="7295646331303360714" datatype="html">
-        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (<x id="PH_1" equiv-text="winner"/>) won</source>
+      <trans-unit id="1836885699974320953" datatype="html">
+        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
@@ -722,8 +746,8 @@
       <trans-unit id="6088417909306773667" datatype="html">
         <source>This space is not aligned with the current line.</source>
       </trans-unit>
-      <trans-unit id="6178824149031907459" datatype="html">
-        <source>Initial board and goal of the game</source>
+      <trans-unit id="8893431763975992974" datatype="html">
+        <source>Initial board and object of the game</source>
       </trans-unit>
       <trans-unit id="2613028380797438509" datatype="html">
         <source>At Abalone, the goal of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
@@ -921,9 +945,6 @@
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
       </trans-unit>
-      <trans-unit id="1137390440747939689" datatype="html">
-        <source>You cannot capture your own pieces.</source>
-      </trans-unit>
       <trans-unit id="7117895259187122182" datatype="html">
         <source>Board and goal of the game</source>
       </trans-unit>
@@ -1001,6 +1022,21 @@
       <trans-unit id="710072872152309867" datatype="html">
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
+      </trans-unit>
+      <trans-unit id="3987391810258758141" datatype="html">
+        <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
+      </trans-unit>
+      <trans-unit id="4094188563872795571" datatype="html">
+        <source>First turn</source>
+      </trans-unit>
+      <trans-unit id="227061499558746572" datatype="html">
+        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
+      </trans-unit>
+      <trans-unit id="9212980897131132135" datatype="html">
+        <source>Next turns</source>
+      </trans-unit>
+      <trans-unit id="6989863591618494423" datatype="html">
+        <source>On all following turns, the players play two pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
@@ -1133,6 +1169,9 @@
       </trans-unit>
       <trans-unit id="8101145555087657570" datatype="html">
         <source>The stack must land on an occupied space.</source>
+      </trans-unit>
+      <trans-unit id="9221962864929282978" datatype="html">
+        <source>A stack must move in a straight line.</source>
       </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
@@ -1761,6 +1800,78 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
+      <trans-unit id="3581037377692107358" datatype="html">
+        <source>You cannot go backward with normal pieces!</source>
+      </trans-unit>
+      <trans-unit id="2164034395199252113" datatype="html">
+        <source>You cannot capture an empty square, nor jump over it!</source>
+      </trans-unit>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
+      </trans-unit>
+      <trans-unit id="3183138660002989080" datatype="html">
+        <source>You must finish this capture!</source>
+      </trans-unit>
+      <trans-unit id="6689969573280113485" datatype="html">
+        <source>This piece cannot move!</source>
+      </trans-unit>
+      <trans-unit id="4481226927895530871" datatype="html">
+        <source>A capture should be a double diagonal step. Look at the green indicators to help you!</source>
+      </trans-unit>
+      <trans-unit id="924257200871471773" datatype="html">
+        <source>You must move in a single diagonal step!</source>
+      </trans-unit>
+      <trans-unit id="8938938109993892899" datatype="html">
+        <source>You cannot jump over the same square several times!</source>
+      </trans-unit>
+      <trans-unit id="8274439231274366704" datatype="html">
+        <source>Lasca: origins</source>
+      </trans-unit>
+      <trans-unit id="3954016636522783040" datatype="html">
+        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
+      </trans-unit>
+      <trans-unit id="4475600219932113977" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+      </trans-unit>
+      <trans-unit id="5101419651122121441" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      </trans-unit>
+      <trans-unit id="7013110290486741787" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+      </trans-unit>
+      <trans-unit id="3662184238859847370" datatype="html">
+        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
+      </trans-unit>
+      <trans-unit id="8288645478824152244" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+      </trans-unit>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
+      </trans-unit>
+      <trans-unit id="4604841825883708598" datatype="html">
+        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>
+      </trans-unit>
+      <trans-unit id="2693455583384082674" datatype="html">
+        <source>Promotion</source>
+      </trans-unit>
+      <trans-unit id="2042191715997917496" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="3052116389115675860" datatype="html">
+        <source>You did not choose the correct stack, and got no promotion.</source>
+      </trans-unit>
+      <trans-unit id="4252782057421264089" datatype="html">
+        <source>Officer move</source>
+      </trans-unit>
+      <trans-unit id="8730503950999903830" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+      </trans-unit>
+      <trans-unit id="7994037258587314442" datatype="html">
+        <source>You did not move your officer.</source>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
       </trans-unit>
@@ -1920,6 +2031,15 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
+      <trans-unit id="4174188766565583979" datatype="html">
+        <source>You must pick a piece from your side of the board in order to move it.</source>
+      </trans-unit>
+      <trans-unit id="4126120518252508337" datatype="html">
+        <source>This is not a valid promotion nor a valid capture.</source>
+      </trans-unit>
+      <trans-unit id="820589591452307194" datatype="html">
+        <source>You cannot perform a move that is the reverse of the previous one.</source>
+      </trans-unit>
       <trans-unit id="4594736386763524275" datatype="html">
         <source>Start coord cannot be out of range</source>
       </trans-unit>
@@ -1931,15 +2051,6 @@
       </trans-unit>
       <trans-unit id="4409865504289904426" datatype="html">
         <source>Drones must move one or two steps in any direction.</source>
-      </trans-unit>
-      <trans-unit id="4174188766565583979" datatype="html">
-        <source>You must pick a piece from your side of the board in order to move it.</source>
-      </trans-unit>
-      <trans-unit id="4126120518252508337" datatype="html">
-        <source>This is not a valid promotion nor a valid capture.</source>
-      </trans-unit>
-      <trans-unit id="820589591452307194" datatype="html">
-        <source>You cannot perform a move that is the reverse of the previous one.</source>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
@@ -2097,6 +2208,27 @@
       </trans-unit>
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
+      </trans-unit>
+      <trans-unit id="1301553003354246210" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+      </trans-unit>
+      <trans-unit id="730381467241225928" datatype="html">
+        <source>Dropping a stone</source>
+      </trans-unit>
+      <trans-unit id="254985125186363895" datatype="html">
+        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
+      </trans-unit>
+      <trans-unit id="6622643035593861381" datatype="html">
+        <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
+      </trans-unit>
+      <trans-unit id="5697357351132552791" datatype="html">
+        <source>Placing in a sandwich position</source>
+      </trans-unit>
+      <trans-unit id="4745154919636452326" datatype="html">
+        <source>You can safely place a piece next to another of your piece in what would look like a sandwich from the opponent&apos;s pieces. This is a safe move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and have the opportunity to do such a move here, do it!</source>
+      </trans-unit>
+      <trans-unit id="5109014320867695717" datatype="html">
+        <source>Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, you can win in two ways. Win!</source>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>
@@ -2782,6 +2914,9 @@
       </trans-unit>
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="1137390440747939689" datatype="html">
+        <source>You cannot capture your own pieces.</source>
       </trans-unit>
       <trans-unit id="6986218395331151516" datatype="html">
         <source>You must pick one of your pieces.</source>

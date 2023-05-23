@@ -57,8 +57,6 @@ export abstract class TutorialStep {
     }
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
 
-    public previousState: MGPOptional<GameState> = MGPOptional.empty();
-
     protected constructor(public title: string,
                           public instruction: string,
                           public state: GameState) {
@@ -85,10 +83,6 @@ export abstract class TutorialStep {
         this.previousMove = MGPOptional.of(previousMove);
         return this;
     }
-    public withPreviousState(previousState: GameState): this {
-        this.previousState = MGPOptional.of(previousState);
-        return this;
-    }
 }
 
 export abstract class TutorialStepWithSolution extends TutorialStep {
@@ -99,7 +93,7 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
     {
         super(title, instruction, state);
     }
-    public hasSolution(): this is TutorialStepWithSolution {
+    public override hasSolution(): this is TutorialStepWithSolution {
         return true;
     }
     public abstract getSolution(): Move | Click;
@@ -120,7 +114,7 @@ export class TutorialStepMove extends TutorialStepWithSolution {
         super(title, instruction, state, successMessage);
         assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
     }
-    public isMove(): this is TutorialStepMove {
+    public override isMove(): this is TutorialStepMove {
         return true;
     }
     public getSolution(): Move | Click {
@@ -142,7 +136,7 @@ export class TutorialStepAnyMove extends TutorialStepWithSolution {
     public getSolution(): Move | Click {
         return this.solutionMove;
     }
-    public isAnyMove(): this is TutorialStepAnyMove {
+    public override isAnyMove(): this is TutorialStepAnyMove {
         return true;
     }
 }
@@ -157,7 +151,7 @@ export class TutorialStepClick extends TutorialStepWithSolution {
     {
         super(title, instruction, state, successMessage);
     }
-    public isClick(): this is TutorialStepClick {
+    public override isClick(): this is TutorialStepClick {
         return true;
     }
     public getSolution(): Move | Click {
@@ -181,13 +175,13 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
     public getSolution(): Move | Click {
         return this.solutionMove;
     }
-    public isPredicate(): this is TutorialStepPredicate {
+    public override isPredicate(): this is TutorialStepPredicate {
         return true;
     }
 }
 
 export class TutorialStepInformational extends TutorialStep {
-    public isInformation(): this is TutorialStepInformational {
+    public override isInformation(): this is TutorialStepInformational {
         return true;
     }
 }

@@ -2,14 +2,16 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPFallible } from '../../utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class PylosNode extends MGPNode<PylosRules, PylosMove, PylosState> {}
 
@@ -93,7 +95,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return possiblesCapturesSet;
     }
-    public static applyLegalMove(move: PylosMove, state: PylosState, _status: void): PylosState {
+    public static applyLegalMove(move: PylosMove, state: PylosState, _info: void): PylosState {
         return state.applyLegalMove(move);
     }
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
@@ -122,23 +124,23 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     public applyLegalMove(move: PylosMove, state: PylosState, status: void): PylosState {
         return PylosRules.applyLegalMove(move, state, status);
     }
-    public isLegal(move: PylosMove, state: PylosState): MGPFallible<void> {
+    public isLegal(move: PylosMove, state: PylosState): MGPValidation {
         const startingCoordLegality: MGPFallible<PylosState> = this.isLegalStartingCoord(move, state);
         if (startingCoordLegality.isFailure()) {
-            return MGPFallible.failure(startingCoordLegality.getReason());
+            return startingCoordLegality.toOtherFallible();
         }
         const stateWithLeftStartingCoord: PylosState = startingCoordLegality.get();
         const landingCoordLegality: MGPFallible<PylosState> =
             this.isLegalLandingCoord(move, stateWithLeftStartingCoord);
         if (landingCoordLegality.isFailure()) {
-            return MGPFallible.failure(landingCoordLegality.getReason());
+            return landingCoordLegality.toOtherFallible();
         }
         const stateAfterPieceLanding: PylosState = landingCoordLegality.get();
-        const capturesLegality: MGPFallible<void> = this.isLegalCaptures(move, stateAfterPieceLanding);
+        const capturesLegality: MGPValidation = this.isLegalCaptures(move, stateAfterPieceLanding);
         if (capturesLegality.isFailure()) {
             return capturesLegality;
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     private isLegalStartingCoord(move: PylosMove, initialState: PylosState): MGPFallible<PylosState> {
         const opponent: Player = initialState.getCurrentOpponent();
@@ -171,25 +173,25 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return MGPFallible.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
         }
     }
-    private isLegalCaptures(move: PylosMove, postMoveState: PylosState): MGPFallible<void> {
+    private isLegalCaptures(move: PylosMove, postMoveState: PylosState): MGPValidation {
         if (move.firstCapture.isAbsent()) {
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         }
         if (PylosRules.canCapture(postMoveState, move.landingCoord) === false) {
-            return MGPFallible.failure(PylosFailure.CANNOT_CAPTURE());
+            return MGPValidation.failure(PylosFailure.CANNOT_CAPTURE());
         }
         if (PylosRules.isValidCapture(postMoveState, move, move.firstCapture.get())) {
             const afterFirstCapture: PylosState = postMoveState.removePieceAt(move.firstCapture.get());
             if (move.secondCapture.isAbsent()) {
-                return MGPFallible.success(undefined);
+                return MGPValidation.SUCCESS;
             }
             if (PylosRules.isValidCapture(afterFirstCapture, move, move.secondCapture.get())) {
-                return MGPFallible.success(undefined);
+                return MGPValidation.SUCCESS;
             } else {
-                return MGPFallible.failure(PylosFailure.INVALID_SECOND_CAPTURE());
+                return MGPValidation.failure(PylosFailure.INVALID_SECOND_CAPTURE());
             }
         } else {
-            return MGPFallible.failure(PylosFailure.INVALID_FIRST_CAPTURE());
+            return MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE());
         }
     }
     public getGameStatus(node: PylosNode): GameStatus {

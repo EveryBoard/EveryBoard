@@ -69,10 +69,10 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         // If a piece is wrapped by a player and/or by dead pawn of his opponent, it's returning the player
         // If a piece is wrapped by two player, it's throwing
         // If a piece is wrapped by a player and dead pawn of this player, it's throwing
-        // color, [ empty,  dark, light,  deadDark, deadLight ]
-        // empty, [  0(2),     0,     4,         2,         0 ] => LIGHT
-        // empty, [  0(2),     2,     2,         0,         0 ] => throw
-        // empty, [  0(2),     0,     0,         6,         0 ] => LIGHT
+        // color, [empty, dark, light, deadDark, deadLight]
+        // empty, [ 0(2),    0,     4,        2,         0] => LIGHT
+        // empty, [ 0(2),    2,     2,        0,         0] => throw
+        // empty, [ 0(2),    0,     0,        6,         0] => LIGHT
         const wrapperSizes: MGPMap<GoPiece, number> = new MGPMap();
         wrapperSizes.set(GoPiece.EMPTY, this.emptyCoords.length);
         wrapperSizes.set(GoPiece.DARK, this.darkCoords.length + this.deadLightCoords.length);
@@ -81,7 +81,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         const nonEmptyWrapper: MGPMap<GoPiece, number> =
             wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
         if (nonEmptyWrapper.size() === 1) {
-            return nonEmptyWrapper.getByIndex(0).key;
+            return nonEmptyWrapper.getAnyPair().get().key;
         } else {
             throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
         }

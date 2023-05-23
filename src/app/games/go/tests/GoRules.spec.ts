@@ -230,7 +230,7 @@ describe('GoRules:', () => {
             // When accepting
             const move: GoMove = GoMove.ACCEPT;
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             const reason: string = GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });

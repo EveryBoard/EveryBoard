@@ -52,9 +52,4 @@ describe('VerifiedAccountGuard', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         await expectAsync(guard.canActivate()).toBeResolvedTo(true);
     }));
-    xit('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
-        // TODO FOR REVIEW: maintenant comme tu le sais, on se désabonne immédiatement
-        // vu que de toute façon c'est du code dans une promise
-        // on "promisifie" un observable, aller jusqu'au bout c'est s'en désabonner au plus tôt ?
-    }));
 });

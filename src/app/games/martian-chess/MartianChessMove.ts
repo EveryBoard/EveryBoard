@@ -1,11 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Vector } from 'src/app/jscaip/Vector';
 
 export class MartianChessMoveFailure {
 
@@ -20,8 +21,8 @@ export class MartianChessMoveFailure {
 
 export class MartianChessMove extends MoveCoordToCoord {
 
-    public static encoder: NumberEncoder<MartianChessMove> = NumberEncoder.tuple(
-        [Coord.numberEncoder(4, 8), Coord.numberEncoder(4, 8), NumberEncoder.booleanEncoder],
+    public static encoder: MoveEncoder<MartianChessMove> = MoveEncoder.tuple(
+        [Coord.encoder, Coord.encoder, MoveEncoder.identity<boolean>()],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );
@@ -44,7 +45,7 @@ export class MartianChessMove extends MoveCoordToCoord {
     private constructor(start: Coord, end: Coord, public readonly calledTheClock: boolean) {
         super(start, end);
     }
-    public toString(): string {
+    public override toString(): string {
         const ending: string = this.calledTheClock ? ', CALL_THE_CLOCK' : '';
         return 'MartianChessMove((' + this.getStart().x + ', ' + this.getStart().y + ') -> (' +
                                       this.getEnd().x + ', ' + this.getEnd().y + ')' +
@@ -56,9 +57,8 @@ export class MartianChessMove extends MoveCoordToCoord {
         return this.calledTheClock === other.calledTheClock;
     }
     public isValidForPawn(): boolean {
-        const dx: number = Math.abs(this.getStart().x - this.getEnd().x);
-        const dy: number = Math.abs(this.getStart().y - this.getEnd().y);
-        return (dx === 1) && (dy === 1);
+        const vector: Vector = this.getStart().getVectorToward(this.getEnd());
+        return vector.isDiagonalOfLength(1);
     }
     public isValidForDrone(): boolean {
         const distance: number = this.getStart().getDistance(this.getEnd());

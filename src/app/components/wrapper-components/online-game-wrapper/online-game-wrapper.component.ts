@@ -1,71 +1,51 @@
-import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Mutex } from 'async-mutex';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
-import { Part, MGPResult, PartDocument } from '../../../domain/Part';
+import { Part, PartDocument, GameEvent, GameEventMove, GameEventRequest, GameEventReply, GameEventAction } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { FocusedPart, User } from '../../../domain/User';
-import { Request } from '../../../domain/Request';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { ObjectDifference } from 'src/app/utils/ObjectUtils';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { Timestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { EloInfo } from 'src/app/domain/EloInfo';
+import { GameEventService } from 'src/app/services/GameEventService';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Timestamp } from 'firebase/firestore';
+import { OGWCTimeManagerService } from './OGWCTimeManagerService';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class OnlineGameWrapperMessages {
 
     public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
 }
 
-export class UpdateType {
 
-    public static readonly PRE_START_DOC: UpdateType = new UpdateType('PRE_START_DOC');
-
-    public static readonly STARTING_DOC: UpdateType = new UpdateType('STARTING_DOC');
-
-    public static readonly DUPLICATE: UpdateType = new UpdateType('DUPLICATE');
-
-    public static readonly MOVE_WITHOUT_TIME: UpdateType = new UpdateType('MOVE_WITHOUT_TIME');
-
-    public static readonly MOVE: UpdateType = new UpdateType('MOVE');
-
-    public static readonly REQUEST: UpdateType = new UpdateType('REQUEST');
-
-    public static readonly END_GAME: UpdateType = new UpdateType('END_GAME');
-
-    public static readonly END_GAME_WITHOUT_TIME: UpdateType = new UpdateType('END_GAME_WITHOUT_TIME');
-
-    public static readonly ACCEPT_TAKE_BACK_WITHOUT_TIME: UpdateType = new UpdateType('ACCEPT_TAKE_BACK_WITHOUT_TIME');
-
-    private constructor(public readonly value: string) {}
-}
 @Component({
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
 })
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -91,16 +71,16 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public opponentProposedRematch: boolean = false;
     private userLinkedToThisPart: boolean = true;
 
+    private lastRequestOrReply: MGPOptional<GameEventRequest | GameEventReply> = MGPOptional.empty();
+
     public configRoom: ConfigRoom;
     public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
-
-    private hasUserPlayed: [boolean, boolean] = [false, false];
-    private msToSubstract: [number, number] = [0, 0];
 
     private routerEventsSubscription!: Subscription; // Initialized in ngOnInit
     private userSubscription!: Subscription; // Initialized in ngOnInit
     private opponentSubscription: Subscription = new Subscription();
     private partSubscription: Subscription = new Subscription();
+    private gameEventsSubscription: Subscription = new Subscription();
     private observedPartSubscription: Subscription = new Subscription();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
@@ -108,19 +88,37 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public readonly globalTimeMessage: string = $localize`5 minutes`;
     public readonly turnTimeMessage: string = $localize`30 seconds`;
 
-    private onCurrentUpdateOngoing: boolean = false;
-
-    public constructor(componentFactoryResolver: ComponentFactoryResolver,
-                       actRoute: ActivatedRoute,
+    public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly observedPartService: ObservedPartService,
                        private readonly userService: UserService,
-                       private readonly gameService: GameService)
+                       private readonly gameService: GameService,
+                       private readonly gameEventService: GameEventService,
+                       private readonly timeManager: OGWCTimeManagerService)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
+        super(actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
+    }
+    // Gets the server time by relying on the presence token of the user.
+    private async getServerTime(): Promise<Timestamp> {
+        const userId: string = this.connectedUserService.user.get().id;
+        // We force the presence token update, and once we receive it, check the time written by firebase
+        return new Promise((resolve: (result: Timestamp) => void) => {
+            let updateSent: boolean = false;
+            const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>): void => {
+                if (user.get().lastUpdateTime == null) {
+                    // We know that the update has been sent when we actually see a null here
+                    updateSent = true;
+                } else if (updateSent) {
+                    subscription.unsubscribe();
+                    resolve(user.get().lastUpdateTime as Timestamp);
+                }
+            };
+            const subscription: Subscription = this.userService.observeUser(userId, callback);
+            void this.userService.updatePresenceToken(userId);
+        });
     }
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
@@ -178,12 +176,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
             this.authUser = user;
         });
+
         await this.setCurrentPartIdOrRedirect();
         // onObservedPartUpdate needs to access to currentPartId, so it must do it after setCurrentPartIdOrRedirect
         this.observedPartSubscription = this.observedPartService.subscribeToObservedPart(
             (async(part: MGPOptional<FocusedPart>) => {
                 await this.onObservedPartUpdate(part);
             }));
+
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
     /**
@@ -213,9 +213,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.observedPart = MGPOptional.empty();
         }
     }
-    public getObservedPart(): MGPOptional<FocusedPart> {
-        return this.observedPart;
-    }
     public async startGame(configRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
@@ -224,314 +221,169 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
         this.gameStarted = true;
         window.setTimeout(async() => {
-            // the small waiting is there to make sur that the chronos are charged by view
+            // the small waiting is there to make sure that the chronos are charged by view
             const createdSuccessfully: boolean = await this.afterViewInit();
+            this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
+                                       [this.chronoZeroGlobal, this.chronoOneGlobal]);
             assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
-            this.startPart();
+            await this.startPart();
         }, 2);
     }
-    protected startPart(): void {
+    protected async startPart(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
-        // TODO: don't start count down for Observer.
+        // Trigger the first update manually, so that we will have info on the part before receiving any moves
+        // This is useful when we join a part in the middle.
+        const part: Part = (await this.gameService.getPart(this.currentPartId)).get();
+        this.currentPart = new PartDocument(this.currentPartId, part);
+
+        // We subscribe to the part only at this point.
+        // Once we receive the notification that the part started, we will subscribe to the events
         this.partSubscription =
             this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
                 assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
-                await this.onCurrentPartUpdate(part.get());
+                this.currentPart = new PartDocument(this.currentPartId, part.get());
             });
+        this.subscribeToEvents();
     }
-    private async onCurrentPartUpdate(update: Part, attempt: number = 5): Promise<void> {
-        const part: PartDocument = new PartDocument(this.currentPartId, update);
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
-            before: this.currentPart,
-            then: update,
-            before_part_turn: part.data.turn,
-            before_state_turn: this.gameComponent.rules.node.gameState.turn,
-            nbPlayedMoves: part.data.listMoves.length,
-        } });
-        if (this.onCurrentUpdateOngoing) {
-            attempt -= 1;
-            assert(attempt > 0, 'Update took more than 5sec to be handled by the component!');
-            window.setTimeout(async() => {
-                await this.onCurrentPartUpdate(update, attempt);
-            }, 1000);
-            return;
-        } else {
-            this.onCurrentUpdateOngoing = true;
-        }
-        const updatesTypes: UpdateType[] = this.getUpdateTypes(part);
-        const turn: number = update.turn;
-        if (updatesTypes.includes(UpdateType.REQUEST)) {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(part.data.request).code + ') (' + turn + ')');
-        } else {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updatesTypes.map((u: UpdateType) => u.value) + '(' + turn + ')');
-        }
-        const oldPart: PartDocument | null = this.currentPart;
-        this.currentPart = part;
+    private async onGameStart(): Promise<void> {
+        await this.initializePlayersDatas(this.currentPart as PartDocument);
+        const turn: number = this.gameComponent.getTurn();
+        assert(turn === 0, 'turn should always be 0 upon game start');
+        this.timeManager.onGameStart(this.configRoom);
+    }
+    private subscribeToEvents(): void {
+        // The game has started, we can subscribe to the events to receive moves etc.
+        // We don't want to do it sooner, as the clocks need to be started before receiving any move
+        // Importantly, we can receive more than one event at a time.
+        // This is in particular used to deal with joining a game in the middle:
+        // we don't want to apply all clock actions then
+        const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
+        const callback: (events: GameEvent[]) => Promise<void> = async(events: GameEvent[]): Promise<void> => {
+            await mutex.runExclusive(async() => {
+                this.beforeEventsBatch();
+                for (const event of events) {
+                    switch (event.eventType) {
+                        case 'Move':
+                            const moveEvent: GameEventMove = event as GameEventMove;
+                            await this.onReceivedMove(moveEvent);
+                            break;
+                        case 'Request':
+                            const requestEvent: GameEventRequest = event as GameEventRequest;
+                            this.onReceivedRequest(requestEvent);
+                            break;
+                        case 'Reply':
+                            const replyEvent: GameEventReply = event as GameEventReply;
+                            await this.onReceivedReply(replyEvent);
+                            break;
+                        default:
+                            Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
+                            const actionEvent: GameEventAction = event as GameEventAction;
+                            this.timeManager.onReceivedAction(actionEvent);
 
-        for (const updateType of updatesTypes) {
-            await this.applyUpdate(updateType, part, oldPart);
-        }
-        this.onCurrentUpdateOngoing = false;
+                            if (actionEvent.action === 'EndGame') await this.onGameEnd();
+                            else if (actionEvent.action === 'StartGame') await this.onGameStart();
+                            break;
+                    }
+                }
+                await this.afterEventsBatch();
+            });
+        };
+        this.gameEventsSubscription = this.gameEventService.subscribeToEvents(this.currentPartId, callback);
     }
-    private async applyUpdate(updateType: UpdateType, part: PartDocument, oldPart: PartDocument | null): Promise<void> {
-        switch (updateType) {
-            case UpdateType.REQUEST:
-                return await this.onRequest(Utils.getNonNullable(part.data.request), oldPart);
-            case UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME:
-                this.currentPart = oldPart;
-                return;
-            case UpdateType.DUPLICATE:
-                return;
-            case UpdateType.END_GAME_WITHOUT_TIME:
-                this.currentPart = oldPart;
-                return;
-            case UpdateType.END_GAME:
-                return this.applyEndGame();
-            case UpdateType.MOVE_WITHOUT_TIME:
-                const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-                const actualOldPart: PartDocument = Utils.getNonNullable(oldPart);
-                currentPart.data = {
-                    ...currentPart.data,
-                    turn: currentPart.data.turn - 1,
-                    lastUpdate: actualOldPart.data.lastUpdate,
-                    lastUpdateTime: actualOldPart.data.lastUpdateTime,
-                    listMoves: currentPart.data.listMoves.slice(0, currentPart.data.listMoves.length - 1),
-                };
-                return;
-            case UpdateType.MOVE:
-                this.msToSubstract = this.getLastUpdateTime(oldPart, part);
-                return this.doNewMoves(part);
-            case UpdateType.PRE_START_DOC:
-                return;
-            default:
-                assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);
-                return this.startCountDown(part);
-        }
-    }
-    private async startCountDown(part: PartDocument): Promise<void> {
-        this.setChronos();
-        await this.setPlayersDatas(part);
-        if (part.data.listMoves.length === 0) {
-            this.startCountDownFor(Player.ZERO);
-        } else {
-            this.startCountDownFor(Player.fromTurn(part.data.turn - 1));
-        }
-    }
-    public getUpdateTypes(update: PartDocument): UpdateType[] {
-        const currentPartDoc: Part | null = this.currentPart != null ? this.currentPart.data : null;
-        const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.data);
-        const updatesTypes: UpdateType[] = [];
-        display(OnlineGameWrapperComponent.VERBOSE, { currentPartDoc, update, diff });
-        const nbDiffs: number = diff.countChanges();
-        if (nbDiffs === 0) {
-            updatesTypes.push(UpdateType.DUPLICATE);
-        }
-        if (diff.isFullyCreated() && diff.isPresent('beginning').present) {
-            updatesTypes.push(UpdateType.STARTING_DOC);
-        }
-        if (update.data.request) {
-            const lastMoveTimeIsRemoved: boolean = diff.removed.lastUpdateTime != null;
-            if (update.data.request.code === 'TakeBackAccepted' && lastMoveTimeIsRemoved) {
-                updatesTypes.push(UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME);
-            } else {
-                updatesTypes.push(UpdateType.REQUEST);
-            }
-        }
-        if (currentPartDoc == null) {
-            if (diff.isPresent('listMoves').state === 'added' && update.data.turn > 0) {
-                updatesTypes.push(this.getMoveUpdateType(update, diff));
-            }
-        } else if (this.turnHasIncreased(currentPartDoc.turn, update.data.turn, update.data.listMoves)) {
-            updatesTypes.push(this.getMoveUpdateType(update, diff));
-        }
-        if (update.data.beginning == null) {
-            updatesTypes.push(UpdateType.PRE_START_DOC);
-        }
-        if (diff.isPresent('result').present &&
-            update.data.result !== MGPResult.UNACHIEVED.value)
-        {
-            const turnModified: boolean = diff.modified.turn != null;
-            const lastUpdateTimeMissing: boolean = diff.addedOrModified('lastUpdateTime') === false;
-            if (turnModified && lastUpdateTimeMissing) {
-                updatesTypes.push(UpdateType.END_GAME_WITHOUT_TIME);
-            } else {
-                updatesTypes.push(UpdateType.END_GAME);
-            }
-        }
-        return updatesTypes;
-    }
-    private getMoveUpdateType(update: PartDocument, diff: ObjectDifference): UpdateType {
-        if (update.data.turn === 1) {
-            if (update.data.lastUpdateTime == null) {
-                return UpdateType.MOVE_WITHOUT_TIME;
-            } else {
-                return UpdateType.MOVE;
-            }
-        } else {
-            if (diff.modified.lastUpdateTime == null && diff.added.lastUpdateTime == null) {
-                return UpdateType.MOVE_WITHOUT_TIME;
-            } else {
-                return UpdateType.MOVE;
-            }
-        }
-    }
-    public turnHasIncreased(previousTurn: number, newTurn: number, listMoves: readonly JSONValueWithoutArray[])
-    : boolean
-    {
-        assert(listMoves.length === newTurn, 'ListMoves size and newTurn do not match, it is impossible!');
-        return previousTurn < newTurn;
-    }
-    public getLastUpdateTime(oldPart: PartDocument | null, update: PartDocument): [number, number] {
-        if (oldPart == null) {
-            return [0, 0];
-        }
-        const oldTime: Timestamp | null = this.getMoreRecentTime(oldPart);
-        const updateTime: Timestamp | null= this.getMoreRecentTime(update);
-        assert(oldTime != null, 'oldTime should not be null');
-        assert(updateTime != null, 'updateTime should not be null');
-        const last: Player = Player.fromTurn(oldPart.data.turn);
-        return this.getTimeUsedForLastTurn(Utils.getNonNullable(oldTime),
-                                           Utils.getNonNullable(updateTime),
-                                           last);
-    }
-    private getMoreRecentTime(part: PartDocument): Timestamp | null {
-        if (part.data.lastUpdateTime == null) {
-            return part.data.beginning as Timestamp;
-        } else {
-            return part.data.lastUpdateTime as Timestamp;
-        }
-    }
-    private getTimeUsedForLastTurn(oldTime: Timestamp,
-                                   updateTime: Timestamp,
-                                   last: Player)
-    : [number, number]
-    {
-        const moveDurationDBWise: number = getMillisecondsDifference(oldTime, updateTime);
-        const msToSubstract: [number, number] = [0, 0];
-        msToSubstract[last.value] = moveDurationDBWise;
-        return msToSubstract;
-    }
-    public setChronos(): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');
-        this.chronoZeroGlobal.setDuration(this.configRoom.totalPartDuration * 1000);
-        this.chronoOneGlobal.setDuration(this.configRoom.totalPartDuration * 1000);
-
-        this.chronoZeroTurn.setDuration(this.configRoom.maximalMoveDuration * 1000);
-        this.chronoOneTurn.setDuration(this.configRoom.maximalMoveDuration * 1000);
-    }
-    private didUserPlay(player: Player): boolean {
-        return this.hasUserPlayed[player.value];
-    }
-    private doNewMoves(part: PartDocument): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.doNewMoves' + JSON.stringify(part));
-        this.switchPlayer();
-        const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.data.listMoves);
-        const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
-        while (this.gameComponent.getTurn() < listMoves.length) {
-            const currentPartTurn: number = this.gameComponent.getTurn();
-            const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
-            const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
-            const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
-                                    ' in ' + listMoves + ' at turn ' + currentPartTurn +
-                                    'because "' + legality.getReasonOr('') + '"';
-            assert(legality.isSuccess(), message);
-            rules.choose(chosenMove);
-        }
-        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        this.gameComponent.updateBoard();
-    }
-    public switchPlayer(): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
-        const part: PartDocument = Utils.getNonNullable(this.currentPart);
-        const currentPlayer: Player = Player.fromTurn(part.data.turn);
-        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        const currentOpponent: Player = currentPlayer.getOpponent();
-        this.pauseCountDownsFor(currentOpponent);
-        if (this.didUserPlay(currentPlayer)) {
-            display(OnlineGameWrapperComponent.VERBOSE,
-                    'OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player');
-            this.resumeCountDownFor(currentPlayer);
-        } else {
-            this.startCountDownFor(currentPlayer);
-        }
-    }
-    public resetChronoFor(player: Player): void {
-        this.pauseCountDownsFor(player);
-        this.resumeCountDownFor(player);
-    }
-    private async applyEndGame(): Promise<void> {
-        // currently working for normal victory, resign, and timeouts!
+    private async onGameEnd(): Promise<void> {
         await this.observedPartService.removeObservedPart();
-        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        const player: Player = Player.fromTurn(currentPart.data.turn);
         this.endGame = true;
-        const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.HARD_DRAW];
-        const finalUpdateIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.data.result);
-        if (finalUpdateIsMove === false) {
-            const endGameResults: MGPResult[] = [
-                MGPResult.RESIGN,
-                MGPResult.TIMEOUT,
-                MGPResult.HARD_DRAW,
-                MGPResult.AGREED_DRAW_BY_ZERO,
-                MGPResult.AGREED_DRAW_BY_ONE,
-            ];
-            const resultIsIncluded: boolean =
-                endGameResults.some((result: MGPResult) => result.value === currentPart.data.result);
-            assert(resultIsIncluded === true, 'Unknown type of end game (' + currentPart.data.result + ')');
-            const log: string = 'endGame is true and winner is ' + currentPart.getWinner().getOrElse({ id: 'fake', name: 'no one' }).name;
-            display(OnlineGameWrapperComponent.VERBOSE, log);
+    }
+    private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
+        const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
+        const currentPartTurn: number = this.gameComponent.getTurn();
+        const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
+        const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
+        const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
+            ' at turn ' + currentPartTurn +
+            'because "' + legality.getReasonOr('') + '"';
+        assert(legality.isSuccess(), message);
+        const success: boolean = rules.choose(chosenMove);
+        assert(success, 'Chosen move should be legal after all checks, but it is not!');
+        this.gameComponent.updateBoard();
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
+        this.timeManager.onReceivedMove(moveEvent);
+    }
+    private onReceivedRequest(request: GameEventRequest): void {
+        this.lastRequestOrReply = MGPOptional.of(request);
+        switch (request.requestType) {
+            case 'TakeBack':
+                // We don't do anything here at the moment.
+                // This is because the component checks take backs in getTakeBackRequester
+                break;
+            case 'Rematch':
+                this.rematchProposed = true;
+                const opponent: Player = Player.of(request.player).getOpponent();
+                if (this.isPlayer(opponent)) {
+                    this.opponentProposedRematch = true;
+                }
+                break;
+            default:
+                Utils.expectToBe(request.requestType, 'Draw', 'Request should be draw');
+                break;
         }
-        this.stopCountdownsFor(player);
     }
-    public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
-        this.endGame = true;
+    private async onReceivedReply(reply: GameEventReply): Promise<void> {
+        this.lastRequestOrReply = MGPOptional.of(reply);
+        if (reply.reply === 'Reject') {
+            // Nothing to do when a request is rejected
+            return;
+        }
+        switch (reply.requestType) {
+            case 'TakeBack':
+                const accepter: Player = Player.of(reply.player);
+                this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
+                break;
+            case 'Rematch':
+                await this.router.navigate(['/nextGameLoading']);
+                const game: string = this.extractGameNameFromURL();
+                await this.router.navigate(['/play', game, reply.data]);
+                break;
+            default:
+                Utils.expectToBe(reply.requestType, 'Draw');
+                // Nothing to do as the part will be updated with the draw
+                break;
+        }
+    }
+    private beforeEventsBatch(): void {
+        this.timeManager.beforeEventsBatch(this.endGame);
+    }
+    private async afterEventsBatch(): Promise<void> {
+        const player: Player = Player.fromTurn(this.gameComponent.getTurn());
+        this.timeManager.afterEventsBatch(this.endGame, player, await this.getServerTime());
+    }
+    public async notifyDraw(scores?: [number, number]): Promise<void> {
         const player: Player = this.role as Player;
-        return this.gameService.updateDBBoard(this.currentPart as PartDocument,
-                                              player,
-                                              encodedMove,
-                                              [0, 0],
-                                              scores,
-                                              true);
+        await this.gameService.drawPart(this.currentPart as PartDocument, player, scores);
     }
-    public async notifyTimeoutVictory(victoriousPlayer: MinimalUser,
-                                      user: Player,
-                                      lastIndex: number,
-                                      loser: MinimalUser)
-    : Promise<void>
-    {
-        this.endGame = true;
-
-        // TODO: should the part be updated here? Or instead should we wait for the update from firestore?
-        const wonPart: PartDocument = Utils.getNonNullable(this.currentPart).setWinnerAndLoser(victoriousPlayer, loser);
-        this.currentPart = wonPart;
-
-        await this.gameService.notifyTimeout(this.currentPart, user, lastIndex, victoriousPlayer, loser);
+    public async notifyTimeoutVictory(victoriousPlayer: MinimalUser, loser: MinimalUser): Promise<void> {
+        const player: Player = this.role as Player;
+        await this.gameService.notifyTimeout(this.currentPart as PartDocument, player, victoriousPlayer, loser);
     }
-    public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
+    public async notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const playerZero: MinimalUser = this.players[0].get();
         const playerOne: MinimalUser = this.players[1].get();
-        if (gameStatus === GameStatus.ONE_WON) {
+        if (winner === Player.ONE) {
             this.currentPart = currentPart.setWinnerAndLoser(playerOne, playerZero);
         } else {
-            assert(gameStatus === GameStatus.ZERO_WON, 'impossible to get a victory without winner!');
             this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne);
         }
-        this.endGame = true;
         const player: Player = this.role as Player;
 
-        return this.gameService.updateDBBoard(this.currentPart,
-                                              player,
-                                              encodedMove,
-                                              [0, 0],
-                                              scores,
-                                              false,
-                                              this.currentPart.getWinner().get(),
-                                              this.currentPart.getLoser().get());
+        await this.gameService.endPartWithVictory(this.currentPart,
+                                                  player,
+                                                  this.currentPart.getWinner().get(),
+                                                  this.currentPart.getLoser().get(),
+                                                  scores);
     }
     public canAskTakeBack(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
@@ -539,12 +391,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         if (currentPart.data.turn <= this.role.value) {
             return false;
-        } else if (currentPart.data.request &&
-                   currentPart.data.request.code === 'TakeBackRefused' &&
-                   this.role.isPlayer() &&
-                   // eslint-disable-next-line dot-notation
-                   currentPart.data.request.data['player'] === this.role.getOpponent().value)
-        {
+        } else if (this.takeBackHasJustBeenRefusedByOpponent()) {
             return false;
         } else if (this.getTakeBackRequester() === PlayerOrNone.NONE) {
             return true;
@@ -552,33 +399,47 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return false;
         }
     }
+    private takeBackHasJustBeenRefusedByOpponent(): boolean {
+        if (this.lastRequestOrReply.isAbsent()) return false;
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
+        return requestOrReply.eventType === 'Reply' &&
+               requestOrReply.requestType === 'TakeBack' &&
+               requestOrReply.player === (this.role as Player).getOpponent().value &&
+               requestOrReply.reply === 'Reject';
+    }
     public isOpponentWaitingForTakeBackResponse(): boolean {
-        const takeBackRequester: PlayerOrNone = this.getTakeBackRequester();
-        if (takeBackRequester.isPlayer()) {
-            return takeBackRequester !== this.role;
+        const requester: PlayerOrNone = this.getTakeBackRequester();
+        if (requester.isPlayer()) {
+            return requester !== this.role;
         } else {
             return false;
         }
     }
     private getTakeBackRequester(): PlayerOrNone {
-        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        const request: Request | null | undefined = currentPart.data.request;
-        if (request && request.code === 'TakeBackAsked') {
-            return Request.getPlayer(request);
+        if (this.lastRequestOrReply.isAbsent()) return PlayerOrNone.NONE;
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
+        if (requestOrReply.eventType === 'Request' && requestOrReply.requestType === 'TakeBack') {
+            return Player.of(requestOrReply.player);
         } else {
             return PlayerOrNone.NONE;
         }
     }
+    private takeBackToPreviousPlayerTurn(player: Player): void {
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackToPreviousPlayerTurn');
+        // Take back once, in any case
+        this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
+        if (this.gameComponent.getCurrentPlayer() !== player) {
+            // Take back a second time to make sure it end up on player's turn
+            this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
+        }
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
+        this.gameComponent.updateBoard();
+    }
     public canProposeDraw(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
-        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         if (this.endGame) {
             return false;
-        } else if (currentPart.data.request &&
-                   currentPart.data.request.code === 'DrawRefused' &&
-                   this.role.isPlayer() &&
-                   Request.getPlayer(currentPart.data.request) === this.role.getOpponent())
-        {
+        } else if (this.drawHasBeenRefusedByOpponent()) {
             return false;
         } else if (this.isOpponentWaitingForDrawResponse()) {
             return false;
@@ -588,90 +449,43 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return false;
         }
     }
+    private drawHasBeenRefusedByOpponent(): boolean {
+        if (this.lastRequestOrReply.isAbsent()) return false;
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
+        return requestOrReply.eventType === 'Reply' &&
+               requestOrReply.requestType === 'Draw' &&
+               requestOrReply.player === (this.role as Player).getOpponent().value &&
+               requestOrReply.reply === 'Reject';
+    }
     public isOpponentWaitingForDrawResponse(): boolean {
         const drawRequester: PlayerOrNone = this.getDrawRequester();
         if (drawRequester === PlayerOrNone.NONE) return false;
         return drawRequester !== this.role;
     }
     private getDrawRequester(): PlayerOrNone {
-        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        const request: Request | null | undefined = currentPart.data.request;
-        if (request && request.code === 'DrawProposed') {
-            return Request.getPlayer(request);
+        if (this.lastRequestOrReply.isAbsent()) return PlayerOrNone.NONE;
+        const requestOrReply: GameEventRequest | GameEventReply = this.lastRequestOrReply.get();
+        if (requestOrReply.eventType === 'Request' && requestOrReply.requestType === 'Draw') {
+            return Player.of(requestOrReply.player);
         } else {
             return PlayerOrNone.NONE;
         }
     }
-    protected async onRequest(request: Request, oldPart: PartDocument | null): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, { called: 'OnlineGameWrapper.onRequest(', request, oldPart });
-        switch (request.code) {
-            case 'TakeBackAsked':
-                break;
-            case 'TakeBackRefused':
-                break;
-            case 'TakeBackAccepted':
-                this.takeBackTo(Utils.getNonNullable(this.currentPart).data.turn);
-                break;
-            case 'RematchProposed':
-                this.rematchProposed = true;
-                const opponent: Player = Request.getPlayer(request).getOpponent();
-                if (this.isPlayer(opponent)) {
-                    display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche');
-                    this.opponentProposedRematch = true;
-                }
-                break;
-            case 'RematchAccepted':
-                await this.router.navigate(['/nextGameLoading']);
-                await this.router.navigate(['/play', Request.getTypeGame(request), Request.getPartId(request)]);
-                break;
-            case 'DrawProposed':
-                break;
-            case 'DrawRefused':
-                break;
-            case 'AddTurnTime':
-                const addedTurnTime: number = 30 * 1000;
-                // eslint-disable-next-line dot-notation
-                const localPlayer: Player = Player.of(request.data['player']);
-                this.addTurnTimeTo(localPlayer, addedTurnTime);
-                break;
-            default:
-                Utils.expectToBe(request.code, 'AddGlobalTime', 'Unknown RequestType : ' + request.code + ' for ' + JSON.stringify(request));
-                const addedGlobalTime: number = 5 * 60 * 1000;
-                // eslint-disable-next-line dot-notation
-                const globalPlayer: Player = Player.of(request.data['player']);
-                this.addGlobalTimeTo(globalPlayer, addedGlobalTime);
-                break;
-        }
-    }
-    public takeBackTo(turn: number): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackTo');
-        this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
-        if (this.gameComponent.getTurn() === turn) {
-            this.switchPlayer();
-        } else {
-            // Second time to make sure it end up on player's turn
-            this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
-            const player: Player = Player.fromTurn(turn);
-            this.resetChronoFor(player);
-        }
-        this.gameComponent.updateBoard();
-    }
-    public async setPlayersDatas(updatedICurrentPart: PartDocument): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
+    public async initializePlayersDatas(part: PartDocument): Promise<void> {
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_initializePlayersDatas: part });
         this.players = [
-            MGPOptional.of(updatedICurrentPart.data.playerZero),
-            MGPOptional.ofNullable(updatedICurrentPart.data.playerOne),
+            MGPOptional.of(part.data.playerZero),
+            MGPOptional.ofNullable(part.data.playerOne),
         ];
-        assert(updatedICurrentPart.data.playerOne != null, 'should not setPlayersDatas when players data is not received');
-        this.currentPlayer = this.players[updatedICurrentPart.data.turn % 2].get();
+        assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
+        this.currentPlayer = this.players[part.data.turn % 2].get();
         const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
         if (opponent.isPresent()) {
             const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>) => {
                 assert(user.isPresent(), 'opponent was deleted, what sorcery is this');
                 this.opponent = opponent.get();
             };
-            this.opponentSubscription =
-                this.userService.observeUser(opponent.get().id, callback);
+            this.opponentSubscription = this.userService.observeUser(opponent.get().id, callback);
         }
     }
     public async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {
@@ -692,189 +506,101 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return opponent;
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'dans OnlineGameWrapperComponent.onLegalUserMove');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onLegalUserMove');
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
         } else {
-            return this.updateDBBoard(move, this.msToSubstract, scores);
+            // We will update the part with new scores and game status (if needed)
+            // We have to compute the game status before adding the move to avoid
+            // risking receiving the move before computing the game status (thereby adding twice the same move)
+            const legality: MGPFallible<unknown> =
+                this.gameComponent.rules.isLegal(move, this.gameComponent.rules.node.gameState);
+            assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
+            const stateAfterMove: GameState =
+                this.gameComponent.rules.applyLegalMove(move, this.gameComponent.rules.node.gameState, legality.get());
+            const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
+                new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.rules.node), MGPOptional.of(move));
+            const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
+
+            // To adhere to security rules, we must add the move before updating the part
+            const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
+            await this.gameService.addMove(this.currentPartId, this.role as Player, encodedMove);
+            return this.updatePartWithStatusAndScores(gameStatus, scores);
         }
     }
-    public async updateDBBoard(move: Move,
-                               msToSubstract: [number, number],
-                               scores?: [number, number])
+    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores?: [number, number])
     : Promise<void>
     {
-        const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
-                                                    ', ' + scores + ')');
-        this.gameComponent.rules.choose(move);
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updatePartWithStatusAndScores');
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
-                return this.notifyDraw(encodedMove, scores);
+                return this.notifyDraw(scores);
             } else {
-                return this.notifyVictory(encodedMove, scores);
+                assert(gameStatus.winner.isPlayer(), 'Non-draw end games should have a winner');
+                const winner: Player = gameStatus.winner as Player;
+                return this.notifyVictory(winner, scores);
             }
         } else {
-            const player: Player = this.role as Player;
-            return this.gameService.updateDBBoard(this.currentPart as PartDocument,
-                                                  player,
-                                                  encodedMove,
-                                                  msToSubstract,
-                                                  scores);
+            return this.gameService.updatePart(this.currentPartId, scores);
         }
     }
     public async resign(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.resign');
-        const lastIndex: number = this.getLastIndex();
         const player: Player = this.role as Player;
         const resigner: MinimalUser = this.getPlayer();
         const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
-        await this.gameService.resign(this.currentPart as PartDocument,
-                                      lastIndex,
-                                      player,
-                                      victoriousOpponent,
-                                      resigner);
-    }
-    private getLastIndex(): number {
-        return Utils.getNonNullable(this.currentPart).data.lastUpdate.index;
+        await this.gameService.resign(this.currentPart as PartDocument, player, victoriousOpponent, resigner);
     }
     public async reachedOutOfTime(player: Player): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
-        const lastIndex: number = this.getLastIndex();
-        const currentPlayer: Player = this.role as Player;
-        this.stopCountdownsFor(player);
         if (this.isPlaying() === false) {
             return;
         }
         const opponent: MinimalUser = Utils.getNonNullable(this.opponent);
         if (player === this.role) {
-            // the player has run out of time, he'll notify his own defeat by time
-            await this.notifyTimeoutVictory(opponent, currentPlayer, lastIndex, this.authUser.toMinimalUser());
+            await this.notifyTimeoutVictory(opponent, this.authUser.toMinimalUser());
         } else {
-            assert(this.endGame === false, 'time might be better handled in the future');
-            if (this.opponentIsOffline()) { // the other player has timed out
-                await this.notifyTimeoutVictory(this.authUser.toMinimalUser(), currentPlayer, player.value, opponent);
-                this.endGame = true;
-            }
+            await this.notifyTimeoutVictory(this.authUser.toMinimalUser(), opponent);
         }
     }
     public async acceptRematch(): Promise<boolean> {
         assert(this.isPlaying(), 'Non playing should not call acceptRematch');
         const currentPartDocument: PartDocument =
             new PartDocument(this.currentPartId, Utils.getNonNullable(this.currentPart).data);
-        await this.gameService.acceptRematch(currentPartDocument, this.getLastIndex(), this.role as Player);
+        await this.gameService.acceptRematch(currentPartDocument, this.role as Player);
         return true;
     }
     public async proposeRematch(): Promise<boolean> {
         assert(this.isPlaying(), 'Non playing should not call proposeRematch');
-        await this.gameService.proposeRematch(this.currentPartId, this.getLastIndex(), this.role as Player);
+        await this.gameService.proposeRematch(this.currentPartId, this.role as Player);
         return true;
     }
     public proposeDraw(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call proposeDraw');
-        return this.gameService.proposeDraw(this.currentPartId, this.getLastIndex(), this.role as Player);
+        return this.gameService.proposeDraw(this.currentPartId, this.role as Player);
     }
     public acceptDraw(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call acceptDraw');
-        return this.gameService.acceptDraw(this.currentPart as PartDocument, this.getLastIndex(), this.role as Player);
+        return this.gameService.acceptDraw(this.currentPart as PartDocument, this.role as Player);
     }
     public refuseDraw(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call refuseDraw');
-        return this.gameService.refuseDraw(this.currentPartId, this.getLastIndex(), this.role as Player);
+        return this.gameService.refuseDraw(this.currentPartId, this.role as Player);
     }
     public askTakeBack(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call askTakeBack');
-        return this.gameService.askTakeBack(this.currentPartId, this.getLastIndex(), this.role as Player);
+        return this.gameService.askTakeBack(this.currentPartId, this.role as Player);
     }
     public async acceptTakeBack(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call acceptTakeBack');
         const player: Player = this.role as Player;
         await this.gameService.acceptTakeBack(this.currentPartId,
-                                              Utils.getNonNullable(this.currentPart),
-                                              player,
-                                              this.msToSubstract);
-        this.msToSubstract = [0, 0];
+                                              Utils.getNonNullable(this.currentPart).data,
+                                              player);
     }
     public refuseTakeBack(): Promise<void> {
         assert(this.isPlaying(), 'Non playing should not call refuseTakeBack');
-        return this.gameService.refuseTakeBack(this.currentPartId, this.getLastIndex(), this.role as Player);
-    }
-    public startCountDownFor(player: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'dans OnlineGameWrapperComponent.startCountDownFor(' + player.toString() +
-                ') (turn ' + Utils.getNonNullable(this.currentPart).data.turn + ')');
-        this.hasUserPlayed[player.value] = true;
-        if (player === Player.ZERO) {
-            this.chronoZeroGlobal.start();
-            this.chronoZeroTurn.start();
-        } else {
-            this.chronoOneGlobal.start();
-            this.chronoOneTurn.start();
-        }
-    }
-    public resumeCountDownFor(player: Player, resetTurn: boolean = true): void {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'dans OnlineGameWrapperComponent.resumeCountDownFor(' + player.toString() +
-                ') (turn ' + Utils.getNonNullable(this.currentPart).data.turn + ')');
-
-        let turnChrono: CountDownComponent;
-        if (player === Player.ZERO) {
-            this.chronoZeroGlobal.changeDuration(Utils.getNonNullable(this.currentPart?.data.remainingMsForZero));
-            this.chronoZeroGlobal.resume();
-            turnChrono = this.chronoZeroTurn;
-        } else {
-            this.chronoOneGlobal.changeDuration(Utils.getNonNullable(this.currentPart?.data.remainingMsForOne));
-            this.chronoOneGlobal.resume();
-            turnChrono = this.chronoOneTurn;
-        }
-
-        if (resetTurn) {
-            turnChrono.setDuration(this.configRoom.maximalMoveDuration * 1000);
-            turnChrono.start();
-        } else {
-            turnChrono.resume();
-        }
-    }
-    public pauseCountDownsFor(player: Player, stopTurn: boolean = true): void {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'dans OnlineGameWrapperComponent.pauseCountDownFor(' + player.value +
-                ') (turn ' + this.currentPart?.data.turn + ')');
-        let turnChrono: CountDownComponent;
-        if (player === Player.ZERO) {
-            this.chronoZeroGlobal.pause();
-            turnChrono = this.chronoZeroTurn;
-        } else {
-            this.chronoOneGlobal.pause();
-            turnChrono = this.chronoOneTurn;
-        }
-
-        if (stopTurn) {
-            turnChrono.stop();
-        } else {
-            turnChrono.pause();
-        }
-    }
-    private stopCountdownsFor(player: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'cdc::stopCountDownsFor(' + player.toString() +
-                ') (turn ' + this.currentPart?.data.turn + ')');
-
-        if (player === Player.ZERO) {
-            if (this.chronoZeroGlobal.isStarted()) {
-                this.chronoZeroGlobal.stop();
-            }
-            if (this.chronoZeroTurn.isStarted()) {
-                this.chronoZeroTurn.stop();
-            }
-        } else {
-            if (this.chronoOneGlobal.isStarted()) {
-                this.chronoOneGlobal.stop();
-            }
-            if (this.chronoOneTurn.isStarted()) {
-                this.chronoOneTurn.stop();
-            }
-        }
+        return this.gameService.refuseTakeBack(this.currentPartId, this.role as Player);
     }
     public getPlayerNameClass(player: Player): string {
         if (this.opponentIsOffline()) {
@@ -888,7 +614,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public opponentIsOffline(): boolean {
-        return false; // TODO FIRST
+        return false;
     }
     public canResign(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canResign');
@@ -897,37 +623,24 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         return this.opponent != null;
     }
+    public canProposeRematch(): boolean {
+        return this.endGame && this.isPlaying() && this.rematchProposed === false;
+    }
+    public canAcceptRematch(): boolean {
+        return this.endGame && this.isPlaying() && this.rematchProposed && this.opponentProposedRematch;
+    }
     public addGlobalTime(): Promise<void> {
         const giver: Player = this.role as Player;
-        const lastIndex: number = this.getLastIndex();
-        return this.gameService.addGlobalTime(this.currentPartId,
-                                              lastIndex,
-                                              Utils.getNonNullable(this.currentPart).data,
-                                              giver);
+        return this.gameService.addGlobalTime(this.currentPartId, giver);
     }
     public addTurnTime(): Promise<void> {
         const giver: Player = this.role as Player;
-        return this.gameService.addTurnTime(giver, this.getLastIndex(), this.currentPartId);
+        return this.gameService.addTurnTime(this.currentPartId, giver);
     }
-    public addTurnTimeTo(player: Player, addedMs: number): void {
-        const currentPlayer: Player = Player.fromTurn(Utils.getNonNullable(this.currentPart).getTurn());
-        this.pauseCountDownsFor(currentPlayer, false);
-        if (player === Player.ZERO) {
-            const currentDuration: number = this.chronoZeroTurn.remainingMs;
-            this.chronoZeroTurn.changeDuration(currentDuration + addedMs);
-        } else {
-            const currentDuration: number = this.chronoOneTurn.remainingMs;
-            this.chronoOneTurn.changeDuration(currentDuration + addedMs);
-        }
-        this.resumeCountDownFor(currentPlayer, false);
-    }
-    public addGlobalTimeTo(player: Player, addedMs: number): void {
-        if (player === Player.ZERO) {
-            const currentDuration: number = this.chronoZeroGlobal.remainingMs;
-            this.chronoZeroGlobal.changeDuration(currentDuration + addedMs);
-        } else {
-            const currentDuration: number = this.chronoOneGlobal.remainingMs;
-            this.chronoOneGlobal.changeDuration(currentDuration + addedMs);
+    public onCancelMove(reason?: string): void {
+        if (this.gameComponent.rules.node.move.isPresent()) {
+            const move: Move = this.gameComponent.rules.node.move.get();
+            this.gameComponent.showLastMove(move);
         }
     }
     public async ngOnDestroy(): Promise<void> {
@@ -941,7 +654,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.gameStarted === true) {
             this.opponentSubscription.unsubscribe();
             this.partSubscription.unsubscribe();
+            this.gameEventsSubscription.unsubscribe();
         }
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
     }
 }
+

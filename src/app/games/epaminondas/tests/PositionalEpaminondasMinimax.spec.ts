@@ -24,7 +24,7 @@ describe('PositionalEpaminondasMinimax:', () => {
     it('should filter number of choices', () => {
         expect(minimax.getListMoves(rules.node).length).toBeLessThan(114);
     });
-    it('should not filter number of choices if it is bellow 40', () => {
+    it('should not filter number of choices if it is below 40', () => {
         // Given a board with less than 40 choice in total
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],

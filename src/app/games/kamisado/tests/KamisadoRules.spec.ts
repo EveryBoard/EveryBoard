@@ -264,7 +264,7 @@ describe('KamisadoRules:', () => {
             // When user pass
             const move: KamisadoMove = KamisadoMove.PASS;
 
-            // Then the move should be refused!
+            // Then the move should be forbidden
             const reason: string = RulesFailure.CANNOT_PASS();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });

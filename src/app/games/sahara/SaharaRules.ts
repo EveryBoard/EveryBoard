@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -11,9 +11,10 @@ import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
 
@@ -21,7 +22,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public static VERBOSE: boolean = false;
 
-    public static getStartingCoords(board: FourStatePiece[][], player: Player): Coord[] {
+    public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
         for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
             for (let x: number = 0; x < SaharaState.WIDTH; x++) {
@@ -32,7 +33,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return startingCoords;
     }
-    public static getBoardValuesFor(board: FourStatePiece[][], player: Player): number[] {
+    public static getBoardValuesFor(board: Table<FourStatePiece>, player: Player): number[] {
         const playersPiece: Coord[] = SaharaRules.getStartingCoords(board, player);
         const playerFreedoms: number[] = [];
         for (const piece of playersPiece) {
@@ -45,7 +46,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
-    public applyLegalMove(move: SaharaMove, state: SaharaState, _status: void): SaharaState {
+    public applyLegalMove(move: SaharaMove, state: SaharaState, _info: void): SaharaState {
         display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
@@ -53,25 +54,25 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const resultingState: SaharaState = new SaharaState(board, state.turn + 1);
         return resultingState;
     }
-    public isLegal(move: SaharaMove, state: SaharaState): MGPFallible<void> {
+    public isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.value !== state.getCurrentPlayer().value) {
-            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const landingSpace: FourStatePiece = state.getPieceAt(move.getEnd());
         if (landingSpace !== FourStatePiece.EMPTY) {
-            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const commonNeighbor: MGPOptional<Coord> =
             TriangularCheckerBoard.getCommonNeighbor(move.getStart(), move.getEnd());
         if (commonNeighbor.isPresent()) {
             if (state.getPieceAt(commonNeighbor.get()) === FourStatePiece.EMPTY) {
-                return MGPFallible.success(undefined);
+                return MGPValidation.SUCCESS;
             } else {
-                return MGPFallible.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE());
+                return MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE());
             }
         } else {
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         }
     }
     public getGameStatus(node: SaharaNode): GameStatus {

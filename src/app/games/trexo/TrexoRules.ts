@@ -1,11 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from '../../utils/MGPValidation';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
@@ -34,20 +35,20 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     private constructor() {
         super(TrexoState);
     }
-    public applyLegalMove(move: TrexoMove, state: TrexoState): TrexoState {
+    public applyLegalMove(move: TrexoMove, state: TrexoState, _info: void): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
             .drop(move.getOne(), Player.ONE)
             .incrementTurn();
     }
-    public isLegal(move: TrexoMove, state: TrexoState): MGPFallible<void> {
+    public isLegal(move: TrexoMove, state: TrexoState): MGPValidation {
         if (this.isUnevenGround(move, state)) {
-            return MGPFallible.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
+            return MGPValidation.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
         }
         if (this.landsOnOnlyOnePiece(move, state)) {
-            return MGPFallible.failure(TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
+            return MGPValidation.failure(TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public isUnevenGround(move: TrexoMove, state: TrexoState): boolean {
         const zero: TrexoPieceStack = state.getPieceAt(move.getZero());

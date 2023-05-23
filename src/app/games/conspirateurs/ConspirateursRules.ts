@@ -1,10 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from '../../utils/MGPValidation';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
@@ -14,6 +16,7 @@ export class ConspirateursNode extends MGPNode<ConspirateursRules, Conspirateurs
 export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
 
     private static singleton: MGPOptional<ConspirateursRules> = MGPOptional.empty();
+
     public static get(): ConspirateursRules {
         if (ConspirateursRules.singleton.isAbsent()) {
             ConspirateursRules.singleton = MGPOptional.of(new ConspirateursRules());
@@ -39,7 +42,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return new ConspirateursState(updatedBoard, state.turn + 1);
     }
-    public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPFallible<void> {
+    public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
         if (move.isDrop()) {
             return this.dropLegality(move, state);
         } else if (move.isSimple()) {
@@ -48,49 +51,48 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             return this.jumpLegality(move, state);
         }
     }
-    public dropLegality(move: ConspirateursMoveDrop, state: ConspirateursState): MGPFallible<void> {
+    public dropLegality(move: ConspirateursMoveDrop, state: ConspirateursState): MGPValidation {
         if (state.turn >= 40) {
-            return MGPFallible.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
         }
         if (state.getPieceAt(move.coord).isPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (state.isCentralZone(move.coord) === false) {
-            return MGPFallible.failure(ConspirateursFailure.MUST_DROP_IN_CENTRAL_ZONE());
+            return MGPValidation.failure(ConspirateursFailure.MUST_DROP_IN_CENTRAL_ZONE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
-    public simpleMoveLegality(move: ConspirateursMoveSimple, state: ConspirateursState): MGPFallible<void> {
-
+    public simpleMoveLegality(move: ConspirateursMoveSimple, state: ConspirateursState): MGPValidation {
         if (state.turn < 40) {
-            return MGPFallible.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
         if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (state.getPieceAt(move.getEnd()).isPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
-    public jumpLegality(move: ConspirateursMoveJump, state: ConspirateursState): MGPFallible<void> {
+    public jumpLegality(move: ConspirateursMoveJump, state: ConspirateursState): MGPValidation {
         if (state.turn < 40) {
-            return MGPFallible.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
         if (state.getPieceAt(move.getStartingCoord()) !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         for (const jumpedOver of move.getJumpedOverCoords()) {
             if (state.getPieceAt(jumpedOver) === PlayerOrNone.NONE) {
-                return MGPFallible.failure(ConspirateursFailure.MUST_JUMP_OVER_PIECES());
+                return MGPValidation.failure(ConspirateursFailure.MUST_JUMP_OVER_PIECES());
             }
         }
         for (const landing of move.getLandingCoords()) {
             if (state.getPieceAt(landing).isPlayer()) {
-                return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+                return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
             }
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public jumpTargetsFrom(start: Coord): Coord[] {
         const targets: Coord[] = [
@@ -105,7 +107,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         ];
         const validTargets: Coord[] = [];
         for (const target of targets) {
-            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([start, target]);
+            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([start, target]);
             if (move.isSuccess()) {
                 validTargets.push(target);
             }

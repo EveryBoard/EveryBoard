@@ -21,6 +21,10 @@ describe('KamisadoComponent', () => {
     const G: KamisadoPiece = KamisadoPiece.ZERO.GREEN;
     const r: KamisadoPiece = KamisadoPiece.ONE.RED;
     const b: KamisadoPiece = KamisadoPiece.ONE.BROWN;
+    const B: KamisadoPiece = KamisadoPiece.ZERO.BLUE;
+
+    const o: KamisadoPiece = KamisadoPiece.ONE.ORANGE;
+    const p: KamisadoPiece = KamisadoPiece.ONE.PURPLE;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<KamisadoComponent>('Kamisado');
@@ -174,5 +178,28 @@ describe('KamisadoComponent', () => {
 
         // Then the next selected piece should not be highlighted
         testUtils.expectElementNotToExist('#selectedPiece');
+    }));
+    it('should show last move when it is not a PASS', fakeAsync(async() => {
+        // Given a board that has a last move
+        const board: Table<KamisadoPiece> = [
+            [_, o, p, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [R, B, _, _, _, _, _, _],
+        ];
+        const state: KamisadoState =
+            new KamisadoState(0, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        const lastMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
+
+        // When displaying it
+        testUtils.setupState(state, undefined, lastMove);
+
+        // Then it should display last move
+        testUtils.expectElementToHaveClass('#last_move_start_0_7', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#last_move_start_0_6', 'last-move-stroke');
     }));
 });

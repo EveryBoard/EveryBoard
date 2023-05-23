@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
@@ -12,9 +12,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -144,7 +144,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new QuartoLine(new Coord(0, 0), Direction.DOWN_RIGHT),
         new QuartoLine(new Coord(0, 3), Direction.UP_RIGHT),
     ];
-    public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);
@@ -181,10 +180,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
-        return QuartoRules.isLegal(move, state).toFallible(undefined);
+    public isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
+        return QuartoRules.isLegal(move, state);
     }
-    public applyLegalMove(move: QuartoMove, state: QuartoState): QuartoState {
+    public applyLegalMove(move: QuartoMove, state: QuartoState, _info: void): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);

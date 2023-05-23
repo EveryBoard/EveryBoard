@@ -3,46 +3,11 @@ import { Move } from './Move';
 import { Type } from '@angular/core';
 import { display } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { Player, PlayerOrNone } from './Player';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
-
-export class GameStatus {
-
-    public static readonly ZERO_WON: GameStatus = new GameStatus(true, Player.ZERO);
-
-    public static readonly ONE_WON: GameStatus = new GameStatus(true, Player.ONE);
-
-    public static readonly DRAW: GameStatus = new GameStatus(true, PlayerOrNone.NONE);
-
-    public static readonly ONGOING: GameStatus = new GameStatus(false, PlayerOrNone.NONE);
-
-    public static getVictory(nonNonePlayer: Player): GameStatus {
-        if (nonNonePlayer === Player.ZERO) {
-            return GameStatus.ZERO_WON;
-        } else {
-            return GameStatus.ONE_WON;
-        }
-    }
-    public static getDefeat(nonNonePlayer: Player): GameStatus {
-        if (nonNonePlayer === Player.ZERO) {
-            return GameStatus.ONE_WON;
-        } else {
-            return GameStatus.ZERO_WON;
-        }
-    }
-    private constructor(public readonly isEndGame: boolean, public readonly winner: PlayerOrNone) {
-    }
-    public toBoardValue(): number {
-        if (this.winner.isPlayer()) {
-            return this.winner.getVictoryValue();
-        } else {
-            return 0;
-        }
-    }
-}
+import { GameStatus } from './GameStatus';
 
 export abstract class Rules<M extends Move,
                             S extends GameState,

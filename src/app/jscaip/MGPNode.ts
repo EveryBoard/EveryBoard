@@ -22,9 +22,6 @@ export class MGPNode<R extends Rules<M, S, L>,
                      S extends GameState,
                      L = void,
                      U extends BoardValue = BoardValue> {
-    // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
-    // TODO: check for the proper use of LinkedList to optimise the stuff
-    // TODO: when AI has all choice at bestHopedValue equality, she must split by average?
 
     public static VERBOSE: boolean = false;
 
@@ -87,7 +84,6 @@ export class MGPNode<R extends Rules<M, S, L>,
          * mother: null for initial board
          * board: should already be a clone
          */
-        const LOCAL_VERBOSE: boolean = false;
         this.ownValue = new MGPMap<string, U>();
         if (minimaxCreator != null) {
             const firstValue: U = minimaxCreator.getBoardValue(this);
@@ -95,7 +91,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             this.hopedValue.set(minimaxCreator.name, firstValue.value);
         }
         MGPNodeStats.createdNodes++;
-        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'creating ' + this.myToString());
+        display(MGPNode.VERBOSE, 'creating ' + this.myToString());
     }
     public findBestMove(readingDepth: number,
                         minimax: Minimax<M, S, L, U>,

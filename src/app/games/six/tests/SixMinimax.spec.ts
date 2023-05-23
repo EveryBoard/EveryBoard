@@ -7,15 +7,16 @@ import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
 import { SixMinimax, SixBoardValue } from '../SixMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('SixMinimax', () => {
 
     let rules: SixRules;
     let minimax: SixMinimax;
 
-    const O: number = Player.ZERO.value;
-    const X: number = Player.ONE.value;
-    const _: number = PlayerOrNone.NONE.value;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(() => {
         rules = new SixRules(SixState);
@@ -28,7 +29,7 @@ describe('SixMinimax', () => {
             let unheritance: SixBoardValue = rules.node.getOwnValue(minimax);
             expect(unheritance.preVictory.isAbsent()).toBeTrue();
 
-            moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
+            moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-2, 0)));
             expect(moveSuccess).toBeTrue();
             unheritance = rules.node.getOwnValue(minimax);
             expect(unheritance.preVictory.isAbsent()).toBeTrue();
@@ -36,7 +37,7 @@ describe('SixMinimax', () => {
     });
     describe('pre-victories', () => {
         it('should pass forcing move to children node to minimise calculations', () => {
-            const board: number[][] = [
+            const board: Table<PlayerOrNone> = [
                 [X, _, _, _, _, _, X],
                 [O, _, _, _, _, O, _],
                 [O, _, _, _, O, _, _],
@@ -54,7 +55,7 @@ describe('SixMinimax', () => {
             expect(rules.node.countDescendants()).toBe(1);
         });
         it('should only count one preVictory when one coord is a forcing move for two lines', () => {
-            const board: number[][] = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, X, _, _, X],
                 [_, _, O, _, O, _],
                 [_, _, O, O, _, _],
@@ -71,7 +72,7 @@ describe('SixMinimax', () => {
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
         it('should point the right preVictory coord with circle', () => {
-            const board: number[][] = [
+            const board: Table<PlayerOrNone> = [
                 [_, O, _, X],
                 [O, _, O, _],
                 [O, O, _, _],
@@ -160,7 +161,7 @@ describe('SixMinimax', () => {
     });
     describe('Phase 2', () => {
         it('should not consider moving piece that are blocking an opponent victory', () => {
-            const board: number[][] = [
+            const board: Table<PlayerOrNone> = [
                 [O, O, _, _, _, _, O],
                 [X, _, _, _, _, X, _],
                 [X, _, _, O, X, X, _],
@@ -179,7 +180,7 @@ describe('SixMinimax', () => {
         });
         it(`should propose only one starting piece when all piece are blocking an opponent's victory`, () => {
             // Given an initial board with all piece are blocked
-            const board: number[][] = [
+            const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _, O],
                 [X, _, _, _, _, X, _],
                 [X, _, _, O, X, X, _],
@@ -200,7 +201,6 @@ describe('SixMinimax', () => {
             expect(rules.choose(bestMove)).toBeTrue();
             expect(rules.getGameStatus(rules.node).isEndGame).toBeFalse();
         });
-        // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {
             const state: SixState = SixState.fromRepresentation([
                 [X, X, X, X, O, O, O, O, O],

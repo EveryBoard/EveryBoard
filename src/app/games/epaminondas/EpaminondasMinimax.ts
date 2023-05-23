@@ -7,8 +7,8 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
@@ -75,7 +75,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
     public getBoardValue(node: EpaminondasNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         return new BoardValue(this.getPieceCountPlusRowDomination(node.gameState));
     }

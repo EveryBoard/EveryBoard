@@ -8,11 +8,12 @@ import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type GoLegalityInformation = Coord[];
 
@@ -399,8 +400,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
     public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
-    public applyLegalMove(legalMove: GoMove, state: GoState, status: GoLegalityInformation): GoState
-    {
+    public applyLegalMove(legalMove: GoMove, state: GoState, infos: GoLegalityInformation): GoState {
         display(GoRules.VERBOSE, { applyLegalMove: { legalMove, state, status } });
         if (GoRules.isPass(legalMove)) {
             display(GoRules.VERBOSE, 'GoRules.applyLegalMove: isPass');
@@ -413,7 +413,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return GoRules.applyDeadMarkingMove(legalMove, state);
         } else {
             display(GoRules.VERBOSE, 'GoRules.applyLegalMove: else it is normal move');
-            return GoRules.applyNormalLegalMove(legalMove, state, status);
+            return GoRules.applyNormalLegalMove(legalMove, state, infos);
         }
     }
     public getGameStatus(node: GoNode): GameStatus {

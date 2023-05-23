@@ -4,11 +4,12 @@
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <g id="piece">
-            <path d="M 1.4319358,16.913484 V 49.329973 H 1.482219 A 39.498175,14.141265 0 0 0 40.938372,63.011675 39.498175,14.141265 0 0 0 80.394523,49.329973 h 0.06885 V 16.913484 h -0.02864 A 39.769348,14.114049 0 0 1 40.941466,29.431707 39.769348,14.114049 0 0 1 1.4481812,16.913484 Z"/>
-            <ellipse cx="40.952408" cy="15.225397" rx="39.769348" ry="14.11405"/>
+            <path d="M 0 15 v 35 A 40 15, 0, 0, 0, 80 50 v -35 A 40 15, 0, 0, 0, 0 15 Z"/>
+            <ellipse cx="40" cy="15" rx="40" ry="15"/>
         </g>
     </defs>
-    <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]">
+    <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]"
+       id="board_space_{{ x }}">
         <path id="click_{{ x }}"
               class="base mid-stroke"
               [ngClass]="viewInfo.boardInfo[x].spaceClasses"

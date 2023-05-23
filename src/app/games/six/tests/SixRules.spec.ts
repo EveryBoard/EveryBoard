@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixFailure } from '../SixFailure';
@@ -11,15 +11,16 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Vector } from 'src/app/jscaip/Vector';
 
 describe('SixRules', () => {
 
     let rules: SixRules;
     let minimaxes: Minimax<SixMove, SixState, SixLegalityInformation>[];
 
-    const _: number = PlayerOrNone.NONE.value;
-    const O: number = Player.ZERO.value;
-    const X: number = Player.ONE.value;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = Player.ZERO;
+    const X: PlayerOrNone = Player.ONE;
 
     beforeEach(() => {
         rules = new SixRules(SixState);
@@ -30,7 +31,7 @@ describe('SixRules', () => {
     describe('dropping', () => {
         it('should forbid landing/dropping on existing piece (drop)', () => {
             // Given a board in Phase 1 with pieces
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
@@ -46,7 +47,7 @@ describe('SixRules', () => {
         });
         it('should forbid landing/dropping on existing piece (movement)', () => {
             // Given a board in Phase 1 with pieces
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [X, _, O],
                 [_, X, _],
                 [_, O, _],
@@ -62,7 +63,7 @@ describe('SixRules', () => {
         });
         it('should forbid drop after 40th turn', () => {
             // Given a [fake] 40th turn board
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
@@ -77,34 +78,27 @@ describe('SixRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should allow drop outside the current range', () => {
-            // Given a board in a certain range (5 by 5 when put in a square)
-            const board: NumberTable = [
-                [X, X, O, _, X],
-                [X, X, O, _, O],
-                [_, X, O, _, O],
-                [_, X, O, _, X],
-                [_, X, O, O, X],
+            // Given a board in a certain range (2 by 2 when put in a square)
+            const board: Table<PlayerOrNone> = [
+                [O],
+                [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 0);
 
             // When playing on a coord that is outside of the representation board
-            const move: SixMove = SixMove.fromDrop(new Coord(5, -1));
+            const move: SixMove = SixMove.fromDrop(new Coord(-1, 1));
 
             // Then the move should be legal
-            const expectedBoard: NumberTable = [
-                [_, _, _, _, _, O],
-                [X, X, O, _, X, _],
-                [X, X, O, _, O, _],
-                [_, X, O, _, O, _],
-                [_, X, O, _, X, _],
-                [_, X, O, O, X, _],
+            const expectedBoard: Table<PlayerOrNone> = [
+                [_, O],
+                [O, X],
             ];
-            const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 1);
+            const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 1, new Vector(-1, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid dropping coord to be not connected to any piece', () => {
             // Given a board
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, O],
                 [_, _, O],
                 [X, X, O],
@@ -122,7 +116,7 @@ describe('SixRules', () => {
     describe('Deplacement', () => {
         it('should forbid movement before 40th turn', () => {
             // Given a board in phase 1
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
@@ -138,7 +132,7 @@ describe('SixRules', () => {
         });
         it('should forbid moving opponent piece', () => {
             // Given a board in Phase 2 with pieces
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
@@ -154,7 +148,7 @@ describe('SixRules', () => {
         });
         it('should forbid moving empty piece', () => {
             // Given a board in second phase
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
@@ -170,7 +164,7 @@ describe('SixRules', () => {
         });
         it('should refuse dropping piece where its only neighbor is herself last turn', () => {
             // Given a board in phase 2
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
@@ -187,8 +181,8 @@ describe('SixRules', () => {
     });
     describe('Deconnection', () => {
         it('should deconnect smaller group automatically', () => {
-            // Given a board where two piece could be disconnected
-            const board: NumberTable = [
+            // Given a board where two pieces could be disconnected
+            const board: Table<PlayerOrNone> = [
                 [X, X, O, _, _],
                 [X, X, O, _, _],
                 [_, X, O, _, _],
@@ -201,7 +195,7 @@ describe('SixRules', () => {
             const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
             // Then the small group should be removed from the board
-            const expectedBoard: NumberTable = [
+            const expectedBoard: Table<PlayerOrNone> = [
                 [X, X, O, O],
                 [X, X, O, _],
                 [_, X, O, _],
@@ -213,7 +207,7 @@ describe('SixRules', () => {
         });
         it('should refuse deconnection of same sized group when no group is mentionned in move', () => {
             // Given a board where a equal cut is possible
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [X, X, _, O, _],
                 [X, X, _, O, _],
                 [_, X, O, O, _],
@@ -225,13 +219,13 @@ describe('SixRules', () => {
             // When doing that move without choosing which half to keep
             const move: SixMove = SixMove.fromMovement(new Coord(2, 2), new Coord(4, 3));
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             const reason: string = SixFailure.MUST_CUT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should refuse deconnection of different sized group with group mentionned in move', () => {
             // Given a board with a cut possible
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [X, X, _, _, _],
                 [X, X, _, _, _],
                 [_, X, O, O, _],
@@ -249,7 +243,7 @@ describe('SixRules', () => {
         });
         it('should refuse deconnection where captured coord is empty', () => {
             // Given a board with an equal cut possible
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [X, X, _, O, _],
                 [X, X, _, O, _],
                 [_, X, O, O, _],
@@ -267,7 +261,7 @@ describe('SixRules', () => {
         });
         it('should refuse deconnection where captured coord is in a smaller group', () => {
             // Given a board with three group splitted, one of them beeing too small to be chosen
-            const board: NumberTable = [
+            const board: Table<PlayerOrNone> = [
                 [_, X, X, _],
                 [_, X, X, _],
                 [_, _, O, O],
@@ -308,7 +302,7 @@ describe('SixRules', () => {
         describe('Shape Victories', () => {
             it('should consider winner player who align 6 pieces (playing on border)', () => {
                 // Given a board in pre-victory
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
                     [O, _, _, _, O],
                     [O, _, _, O, X],
@@ -322,7 +316,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
 
                 // Then the winner should be player zero
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
                     [O, _, _, _, O],
                     [O, _, _, O, X],
@@ -342,7 +336,7 @@ describe('SixRules', () => {
             });
             it('should consider winner player who align 6 pieces (playing in the middle)', () => {
                 // Given a board where player zero is about to win
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, O],
                     [_, _, _, _, O, X],
                     [_, _, _, O, X, _],
@@ -356,7 +350,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
 
                 // Then the bord should be a victory
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [_, _, _, _, _, O],
                     [_, _, _, _, O, X],
                     [_, _, _, O, X, _],
@@ -371,7 +365,7 @@ describe('SixRules', () => {
             });
             it('should consider winner player who draw a circle/hexagon of his pieces', () => {
                 // Given a board close to be a victory
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [_, _, _, _, X],
                     [O, _, _, X, _],
                     [O, _, _, X, _],
@@ -385,7 +379,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
 
                 // Then board should be a victory
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [_, _, _, _, X],
                     [O, _, _, X, _],
                     [O, _, X, X, _],
@@ -400,7 +394,7 @@ describe('SixRules', () => {
             });
             it('should consider winner player who draw a triangle of his pieces (corner drop)', () => {
                 // Given a bboard about to have a triangle victory
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [O, X, _, X, _],
                     [O, _, _, _, _],
                     [O, _, X, X, O],
@@ -413,7 +407,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(3, 1));
 
                 // Then the board should be a victory
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [O, X, _, X, _],
                     [O, _, _, X, _],
                     [O, _, X, X, O],
@@ -427,7 +421,7 @@ describe('SixRules', () => {
             });
             it('should consider winner player who draw a triangle of his pieces (edge drop)', () => {
                 // Given a board where a triangle is about to be created
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [O, _, _, _, X],
                     [O, X, _, X, _],
                     [O, _, _, X, O],
@@ -440,7 +434,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
 
                 // Then the move should be a success and the game should be over
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [O, _, _, _, X],
                     [O, X, _, X, _],
                     [O, _, X, X, O],
@@ -454,7 +448,7 @@ describe('SixRules', () => {
             });
             it('should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
                 // Given a board with an hexagon about to be created
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
                     [O, _, _, X, _],
                     [O, X, _, X, O],
@@ -467,7 +461,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
 
                 // Then the move should be a victory
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
                     [O, _, X, X, _],
                     [O, X, _, X, O],
@@ -481,9 +475,9 @@ describe('SixRules', () => {
             });
         });
         describe('Disconnection Victories', () => {
-            it('should consider loser PLAYER.ZERO when he drop bellow 6 pieces on phase two', () => {
+            it('should consider loser PLAYER.ZERO when he drop below 6 pieces on phase two', () => {
                 // Given a board in phase two
-                const board: NumberTable = [
+                const board: Table<PlayerOrNone> = [
                     [O, O, X, _, _],
                     [_, O, X, _, _],
                     [_, O, X, _, _],
@@ -492,11 +486,11 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 43);
 
-                // When making the opponent pass bellow 6 pieces
+                // When making the opponent pass below 6 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
                 // Then the move should be a victory
-                const expectedBoard: NumberTable = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [O, O, X, X],
                     [_, O, X, _],
                     [_, O, X, _],
@@ -508,9 +502,9 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
-            it('should consider loser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
+            it('should consider loser PLAYER.ONE when he drop below 6 pieces on phase two', () => {
                 // Given a board in phase 2
-                const board: NumberTable = [
+                const board: Table<PlayerOrNone> = [
                     [X, X, O, _, _],
                     [_, X, O, _, _],
                     [_, X, O, _, _],
@@ -519,11 +513,11 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 42);
 
-                // When making the opponent drop bellow 5 pieces
+                // When making the opponent drop below 5 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
                 // Then the move should be a victory
-                const expectedBoard: NumberTable = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [X, X, O, O],
                     [_, X, O, _],
                     [_, X, O, _],
@@ -537,7 +531,7 @@ describe('SixRules', () => {
             });
             it('should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ZERO)', () => {
                 // Given a board in phase 2
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, O, X, X],
                     [O, O, O, O, O, _, _, O],
                     [_, _, _, _, X, _, _, _],
@@ -545,21 +539,21 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 40);
 
-                // When making both player drop bellow 6 pieces
+                // When making both player drop below 6 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(4, 1), new Coord(-1, 1));
 
                 // Then the one with the more pieces remaining win
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [O, O, O, O, O],
                 ];
-                const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 41);
+                const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 41, new Vector(-1, 1));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ONE)', () => {
                 // Given a board in phase 2
-                const board: number[][] = [
+                const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, X, O],
                     [X, X, X, X, O, _, _],
                     [X, _, _, _, O, _, _],
@@ -567,15 +561,15 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 42);
 
-                // When dropping both player bellow 6 pieces
+                // When dropping both player below 6 pieces
                 const move: SixMove = SixMove.fromMovement(new Coord(4, 1), new Coord(6, 1));
 
                 // Then the player with the more piece win
-                const expectedBoard: number[][] = [
+                const expectedBoard: Table<PlayerOrNone> = [
                     [X, X, X, X],
                     [X, _, _, _],
                 ];
-                const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 43);
+                const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 43, new Vector(0, 1));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);

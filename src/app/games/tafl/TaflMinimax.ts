@@ -3,21 +3,18 @@ import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 
 export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
-export class TaflMinimax extends Minimax<TaflMove,
-                                         TaflState,
-                                         void,
-                                         BoardValue,
-                                         TaflRules<TaflMove, TaflState>>
+export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
+                                                      TaflState,
+                                                      void,
+                                                      TaflRules<TaflMove, TaflState>>
 {
     public getListMoves(node: TaflNode): TaflMove[] {
         const LOCAL_VERBOSE: boolean = false;
@@ -49,25 +46,19 @@ export class TaflMinimax extends Minimax<TaflMove,
         }
         return listMoves;
     }
-    public getBoardValue(node: TaflNode): BoardValue {
+    public getMetrics(node: TaflNode): [number, number] {
         const state: TaflState = node.gameState;
         // 1. has the king escaped ?
         // 2. is the king captured ?
         // 3. is one player immobilized ?
         // 4. let's just for now just count the pawns
 
-        const victory: MGPOptional<Player> = this.ruler.getWinner(state);
-        if (victory.isPresent()) {
-            return new BoardValue(victory.get().getVictoryValue());
-        }
         const nbPlayerZeroPawns: number = this.ruler.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.ruler.getPlayerListPawns(Player.ONE, state).length;
-        let zeroMult: number = [1, 2][this.ruler.config.INVADER.value]; // invaders pawn are twice as numerous
-        zeroMult *= Player.ZERO.getScoreModifier();
-        let oneMult: number = [2, 1][this.ruler.config.INVADER.value]; // so they're twice less valuable
-        oneMult *= Player.ONE.getScoreModifier();
+        const zeroMult: number = [1, 2][this.ruler.config.INVADER.value]; // invaders pawn are twice as numerous
+        const oneMult: number = [2, 1][this.ruler.config.INVADER.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;
         const scoreOne: number = nbPlayerOnePawns * oneMult;
-        return new BoardValue(scoreZero + scoreOne);
+        return [scoreZero, scoreOne];
     }
 }

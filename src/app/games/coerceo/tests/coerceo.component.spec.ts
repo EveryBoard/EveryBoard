@@ -35,8 +35,7 @@ describe('CoerceoComponent', () => {
         testUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('CoerceoComponent should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('visual features', () => {
         it('should show tile when more than zero', fakeAsync(async() => {
@@ -156,6 +155,19 @@ describe('CoerceoComponent', () => {
             // Then it should have been a failure
             await testUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }));
+        it('should hide last move when selecting first piece', fakeAsync(async() => {
+            // Given a state with a last move
+            await testUtils.expectClickSuccess('#click_6_2');
+            const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
+            await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
+
+            // When clicking on the piece to move
+            await testUtils.expectClickSuccess('#click_4_3');
+
+            // Then the last move should no longer be displayed
+            testUtils.expectElementNotToExist('#last_start_6_2');
+            testUtils.expectElementNotToExist('#last_end_7_3');
+        }));
     });
     describe('Second click', () => {
         it('should allow simple move', fakeAsync(async() => {
@@ -196,6 +208,18 @@ describe('CoerceoComponent', () => {
         it('should refuse invalid movement', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');
             await testUtils.expectClickFailure('#click_8_4', CoerceoFailure.INVALID_DISTANCE());
+        }));
+        it('should show last move after finishing it', fakeAsync(async() => {
+            // Given a state with a move ongoing
+            await testUtils.expectClickSuccess('#click_6_2');
+
+            // When finishing the move
+            const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
+            await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
+
+            // Then the highlight of the last move should be present
+            testUtils.expectElementToHaveClass('#last_start_6_2', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#last_end_7_3', 'last-move-stroke');
         }));
     });
 });

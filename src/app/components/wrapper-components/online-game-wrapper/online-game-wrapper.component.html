@@ -159,13 +159,13 @@
             >Go back to the game list</button>
             <button id="proposeRematchButton"
                     class="button is-fullwidth mb-1"
-                    *ngIf="endGame && isPlaying() && rematchProposed === false"
+                    *ngIf="canProposeRematch()"
                     (click)="proposeRematch()"
                     i18n
             >Propose to play again</button>
             <button class="button is-fullwidth is-warning"
                     id="acceptRematchButton"
-                    *ngIf="endGame && isPlaying() && rematchProposed && opponentProposedRematch"
+                    *ngIf="canAcceptRematch()"
                     (click)="acceptRematch()"
                     i18n
              >Accept to play again</button>

@@ -1,15 +1,13 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
-export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
+export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove, ConspirateursState> {
     public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
             return this.sortByNumberOfJump(this.getListMovesDrop(node.gameState));
@@ -31,7 +29,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         for (let y: number = start.y; y <= end.y; y++) {
             for (let x: number = start.x; x <= end.x; x++) {
                 if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
-                    moves.push(ConspirateursMoveDrop.of(new Coord(x, y)).get());
+                    moves.push(ConspirateursMoveDrop.from(new Coord(x, y)).get());
                 }
             }
         }
@@ -74,7 +72,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
     private getListJumps(state: ConspirateursState, start: Coord): ConspirateursMoveJump[] {
         const moves: MGPSet<ConspirateursMoveJump> = new MGPSet();
         for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(start)) {
-            const jump: ConspirateursMoveJump = ConspirateursMoveJump.of([start, firstTarget]).get();
+            const jump: ConspirateursMoveJump = ConspirateursMoveJump.from([start, firstTarget]).get();
             if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
                 moves.add(jump);
                 moves.addAll(this.getListJumpStartingFrom(state, jump));
@@ -92,24 +90,16 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         }
         return jumps;
     }
-    public getBoardValue(node: ConspirateursNode): BoardValue {
+    public getMetrics(node: ConspirateursNode): [number, number] {
         const state: ConspirateursState = node.gameState;
-        let score: number = 0;
-        const piecesInShelters: MGPMap<Player, number> = new MGPMap([
-            { key: Player.ZERO, value: 0 },
-            { key: Player.ONE, value: 0 },
-        ]);
+        const scores: [number, number] = [0, 0];
         for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = state.getPieceAt(coord);
                 if (player.isPlayer()) {
                     if (state.isShelter(coord)) {
-                        score += player.getScoreModifier() * 20;
-                        piecesInShelters.replace(player, piecesInShelters.get(player).get() + 1);
-                        if (piecesInShelters.get(player).get() === 20) {
-                            return new BoardValue(player.getVictoryValue());
-                        }
+                        scores[player.value] += 20;
                     } else {
                         let minEmptyShelterDistance: number = 100;
                         for (const shelter of ConspirateursState.ALL_SHELTERS) {
@@ -118,11 +108,11 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                                 minEmptyShelterDistance = Math.min(minEmptyShelterDistance, distance);
                             }
                         }
-                        score -= player.getScoreModifier() * minEmptyShelterDistance;
+                        scores[player.value] -= minEmptyShelterDistance;
                     }
                 }
             }
         }
-        return new BoardValue(score);
+        return scores;
     }
 }

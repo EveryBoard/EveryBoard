@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { assert } from 'src/app/utils/assert';
-import { ModeConfig, TrexoComponent } from './trexo.component';
+import { TrexoComponent } from './trexo.component';
 import { TrexoMove } from './TrexoMove';
+import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 
 @Component({
     selector: '[mgp-trexo-half-piece]',
@@ -57,10 +58,10 @@ export class TrexoHalfPieceComponent {
         return this.mapCoordToPoints(coords);
     }
     private getParallelogramPoints(): [Coord, Coord, Coord, Coord, Coord, Coord, Coord] {
-        const parallelogramWidth: number = TrexoComponent.SPACE_SIZE * this.mode.horizontalWidthRatio;
-        const parallelogramHeight: number = TrexoComponent.SPACE_SIZE;
-        const parallelogramOffset: number = this.mode.offsetRatio * TrexoComponent.SPACE_SIZE;
-        const pieceHeight: number = TrexoComponent.SPACE_SIZE * this.mode.pieceHeightRatio;
+        const parallelogramWidth: number = this.mode.parallelogramHeight * this.mode.horizontalWidthRatio;
+        const parallelogramHeight: number = this.mode.parallelogramHeight;
+        const parallelogramOffset: number = this.mode.offsetRatio * this.mode.parallelogramHeight;
+        const pieceHeight: number = this.mode.parallelogramHeight * this.mode.pieceHeightRatio;
         const x1: number = parallelogramWidth;
         const y1: number = 0;
         const x3: number = parallelogramWidth - parallelogramOffset;

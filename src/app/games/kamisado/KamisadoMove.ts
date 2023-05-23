@@ -1,8 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { KamisadoBoard } from './KamisadoBoard';
 import { Move } from 'src/app/jscaip/Move';
+import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove
 
@@ -65,32 +66,10 @@ export namespace KamisadoMove {
         return KamisadoPieceMove.of(start, end);
     }
 
-    export const encoder: NumberEncoder<KamisadoMove> = new class extends NumberEncoder<KamisadoMove> {
-        public maxValue(): number {
-            return 8 * 4096 + 8 * 256 + 8 * 16 + 8;
-        }
-        public encodeNumber(move: KamisadoMove): number {
-            if (move.isPieceMove()) {
-                const x1: number = move.getStart().x;
-                const y1: number = move.getStart().y;
-                const x2: number = move.getEnd().x;
-                const y2: number = move.getEnd().y;
-                return (x1 * 4096) + (y1 * 256) + (x2 * 16) + y2;
-            } else {
-                // 0 can never be an encoded piece move, as it would be a static move
-                return 0;
-            }
-        }
-        public decodeNumber(encodedMove: number): KamisadoMove {
-            if (encodedMove === 0) return KamisadoMove.PASS;
-            const y2: number = encodedMove % 16;
-            encodedMove = (encodedMove / 16) | 0;
-            const x2: number = encodedMove % 16;
-            encodedMove = (encodedMove / 16) | 0;
-            const y1: number = encodedMove % 16;
-            encodedMove = (encodedMove / 16) | 0;
-            const x1: number = encodedMove % 16;
-            return KamisadoMove.of(new Coord(x1, y1), new Coord(x2, y2));
-        }
-    };
+    const passEncoder: MoveEncoder<KamisadoPassMove> = MoveEncoder.constant('PASS', KamisadoMove.PASS);
+    const pieceMoveEncoder: MoveEncoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
+    export const encoder: MoveEncoder<KamisadoMove> =
+        MoveEncoder.disjunction(pieceMoveEncoder,
+                                passEncoder,
+                                (m: KamisadoMove): m is KamisadoPieceMove => m.isPieceMove());
 }

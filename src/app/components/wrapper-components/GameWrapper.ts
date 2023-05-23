@@ -1,4 +1,4 @@
-import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
@@ -48,8 +48,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public Player: typeof Player = Player;
 
-    public constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
-                       protected readonly actRoute: ActivatedRoute,
+    public constructor(protected readonly actRoute: ActivatedRoute,
                        protected readonly connectedUserService: ConnectedUserService,
                        protected readonly router: Router,
                        protected readonly messageDisplayer: MessageDisplayer)
@@ -84,11 +83,9 @@ export abstract class GameWrapper<P extends Comparable> {
             return false;
         }
         assert(this.boardRef != null, 'Board element should be present');
-        const componentFactory: ComponentFactory<AbstractGameComponent> =
-            this.componentFactoryResolver.resolveComponentFactory(component.get());
 
         const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
+            Utils.getNonNullable(this.boardRef).createComponent(component.get());
         this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
@@ -117,9 +114,10 @@ export abstract class GameWrapper<P extends Comparable> {
     public setRole(role: PlayerOrNone): void {
         this.role = role;
         this.gameComponent.role = this.role;
-        if (this.gameComponent.hasAsymetricBoard) {
+        if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
+        this.gameComponent.updateBoard(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
@@ -129,7 +127,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
                 { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
-        if (!this.isPlayerTurn()) {
+        if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
         if (this.endGame) {
@@ -148,7 +146,6 @@ export abstract class GameWrapper<P extends Comparable> {
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
     public onUserClick(_elementName: string): MGPValidation {
-        // TODO: Not the same logic to use in Online and Local, make abstract
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
@@ -159,9 +156,8 @@ export abstract class GameWrapper<P extends Comparable> {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
     }
-    public onCancelMove(_reason?: string): void {
-        // Not needed by default
-    }
+    public abstract onCancelMove(_reason?: string): void;
+
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
             return false;

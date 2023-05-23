@@ -60,7 +60,7 @@ export class PentagoMove extends MoveCoord {
             throw new Error('The board is a 6 cas wide square, invalid coord: ' + this.coord.toString());
         }
     }
-    public toString(): string {
+    public override toString(): string {
         if (this.blockTurned.isPresent()) {
             return 'PentagoMove(' + this.coord.toString() + ', ' + this.blockTurned.get() + ', ' +
                    (this.turnedClockwise ? 'CLOCKWISE' : 'ANTI-CLOCKWISE') + ')';
@@ -68,13 +68,9 @@ export class PentagoMove extends MoveCoord {
             return 'PentagoMove' + this.coord.toString();
         }
     }
-    public equals(other: PentagoMove): boolean {
-        if (this.coord.equals(other.coord) === false) {
-            return false;
-        }
-        if (this.blockTurned.equals(other.blockTurned) === false) {
-            return false;
-        }
+    public override equals(other: PentagoMove): boolean {
+        if (this.coord.equals(other.coord) === false) return false;
+        if (this.blockTurned.equals(other.blockTurned) === false) return false;
         return this.turnedClockwise === other.turnedClockwise;
     }
 }

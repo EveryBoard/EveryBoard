@@ -9,7 +9,7 @@ import { Firestore } from '@angular/fire/firestore';
 })
 export class ConfigRoomDAO extends FirestoreDAO<ConfigRoom> {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     public constructor(firestore: Firestore) {
         super('config-room', firestore);

@@ -38,25 +38,21 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
     }
+    // Set the duration (in ms) for a non-started countdown
     public setDuration(duration: number): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
-        // duration is in ms
         Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
 
         this.isSet = true;
         this.changeDuration(duration);
     }
     public changeDuration(ms: number): void {
-        let mustResume: boolean = false;
-        if (this.isPaused === false) {
-            this.pause();
-            mustResume = true;
-        }
+        Utils.assert(this.isPaused, 'Should not change duration of a clock while it is running');
         this.remainingMs = ms;
         this.displayDuration();
-        if (mustResume) {
-            this.resume();
-        }
+    }
+    public subtract(ms: number): void {
+        this.changeDuration(this.remainingMs - ms);
     }
     private displayDuration(): void {
         this.displayedSec = this.remainingMs % (60 * 1000);
@@ -115,7 +111,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
         display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingMs + 'ms)');
         Utils.assert(this.started, 'Should only stop chrono that are started!');
 
-        this.pause();
+        if (this.isPaused === false) {
+            this.pause();
+        }
         this.started = false;
         this.isSet = false;
     }

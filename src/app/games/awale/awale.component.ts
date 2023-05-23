@@ -33,7 +33,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new AwaleRules(AwaleState);
         this.availableMinimaxes = [
@@ -48,16 +48,10 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         const state: AwaleState = this.getState();
         this.scores = MGPOptional.of(state.getCapturedCopy());
         this.hidePreviousMove();
-        const lastMove: MGPOptional<AwaleMove> = this.rules.node.move;
 
         this.board = state.getCopiedBoard();
-        if (lastMove.isPresent()) {
-            const lastPlayer: number = state.getCurrentPlayer().value;
-            this.last = MGPOptional.of(new Coord(lastMove.get().x, lastPlayer));
-            this.showPreviousMove();
-        } else {
-            this.last = MGPOptional.empty();
-        }
+        // Will be set in showLastMove if there is one
+        this.last = MGPOptional.empty();
     }
     private hidePreviousMove(): void {
         this.captured = [
@@ -66,12 +60,13 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         ];
         this.filledCoords = [];
     }
-    private showPreviousMove(): void {
-        const previousMove: AwaleMove = this.rules.node.move.get();
-        const previousState: AwaleState = this.rules.node.mother.get().gameState;
+    public override showLastMove(move: AwaleMove): void {
+        const lastPlayer: number = this.getState().getCurrentPlayer().value;
+        this.last = MGPOptional.of(new Coord(move.x, lastPlayer));
+        const previousState: AwaleState = this.getPreviousState();
         const previousBoard: number[][] = ArrayUtils.copyBiArray(previousState.board);
         const previousY: number = previousState.getCurrentOpponent().value;
-        this.filledCoords = AwaleRules.distribute(previousMove.x,
+        this.filledCoords = AwaleRules.distribute(move.x,
                                                   previousY,
                                                   previousBoard);
         const landingCoord: Coord = this.filledCoords[this.filledCoords.length - 1];

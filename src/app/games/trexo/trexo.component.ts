@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
 import { TrexoMinimax } from './TrexoMinimax';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -25,24 +25,15 @@ interface PieceOnBoard {
 }
 type ModeType = '2D' | '3D';
 
-export interface ModeConfig {
-
-    offsetRatio: number;
-
-    horizontalWidthRatio: number;
-
-    pieceHeightRatio: number;
-}
 
 @Component({
     selector: 'app-trexo',
     templateUrl: './trexo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
+export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
 
     public static VERBOSE: boolean = false;
-    public static SPACE_SIZE: number;
     public static STROKE_WIDTH: number;
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
@@ -54,11 +45,15 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
             offsetRatio: 0,
             horizontalWidthRatio: 1,
             pieceHeightRatio: 0,
+            parallelogramHeight: 100,
+            abstractBoardSize: 10,
         },
         '3D': {
             offsetRatio: 0.4,
             horizontalWidthRatio: 1.2,
             pieceHeightRatio: 0.2,
+            parallelogramHeight: 100,
+            abstractBoardSize: 10,
         },
     };
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
@@ -88,7 +83,6 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         ];
         this.encoder = TrexoMove.encoder;
         this.tutorial = new TrexoTutorial().tutorial;
-        TrexoComponent.SPACE_SIZE = this.SPACE_SIZE;
         TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
         this.updateBoard();
@@ -272,7 +266,7 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         });
         return potentiallyStartedMove.map((move: TrexoMove) => move.getOne());
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.droppedPiece = MGPOptional.empty();
         this.possibleNextClicks = [];
         this.updateBoard();
@@ -304,64 +298,32 @@ export class TrexoComponent extends RectangularGameComponent<TrexoRules, TrexoMo
         }
         return [];
     }
-    /**
-     * @param x the x coord on the state of the piece to draw
-     * @param y the y coord on the state of the piece to draw
-     * @param z the z coord on the state of the piece to draw
-     * @param mode the mode in which the component is to be drawn
-     * @returns the coord(x, y) of the upper left parallelogram to draw on the SVG;
-     */
-    private static getCoordTranslate(x: number, y: number, z: number, mode: ModeConfig): Coord {
-        const spaceWidth: number = this.SPACE_SIZE * mode.horizontalWidthRatio;
-        const spaceHeight: number = this.SPACE_SIZE;
-        const spaceOffset: number = mode.offsetRatio * this.SPACE_SIZE;
-        const numberOfOffset: number = TrexoState.SIZE - y;
-        const xBase: number = (x * spaceWidth) + (numberOfOffset * spaceOffset);
-        const yBase: number = (y * spaceHeight) - (mode.pieceHeightRatio * this.SPACE_SIZE * z);
-        return new Coord(xBase, yBase);
-    }
     public getTranslate(x: number, y: number, z: number): string {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
-        const coordTransform: Coord = TrexoComponent.getCoordTranslate(x, y, z, mode);
+        const coordTransform: Coord = this.getCoordTranslate(x, y, z, mode);
         const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
         return translate;
     }
     public getParallelogramPoints(): string {
-        const coords: Coord[] = this.getParallelogramCoords();
+        const coords: Coord[] = this.getParallelogramCoordsForTrexo();
         return coords.map((coord: Coord) => {
             return coord.x + ' ' + coord.y;
         }).join(' ');
     }
     /**
-     * @param width the abstract width of the parallelogram
-     * @param height the abstract height of the parallelogram
      * @returns a list of concrete coord for the parallelogram, with (0, 0) as left and upper coord
      */
-    private getParallelogramCoords(): Coord[] {
+    private getParallelogramCoordsForTrexo(): Coord[] {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
-        const parallelogramWidth: number = TrexoComponent.SPACE_SIZE * mode.horizontalWidthRatio;
-        const parallelogramHeight: number = TrexoComponent.SPACE_SIZE;
-        const parallelogramOffset: number = mode.offsetRatio * TrexoComponent.SPACE_SIZE;
-        const x1: number = parallelogramWidth;
-        const y1: number = 0;
-        const x2: number = parallelogramWidth - parallelogramOffset;
-        const y2: number = parallelogramHeight;
-        const x3: number = - parallelogramOffset;
-        const y3: number = parallelogramHeight;
-        return [
-            new Coord(0, 0),
-            new Coord(x1, y1),
-            new Coord(x2, y2),
-            new Coord(x3, y3),
-        ];
+        return this.getParallelogramCoords(mode);
     }
     public get3DSwitcherTransform(): string {
         const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
         const widness: number = mode3D.horizontalWidthRatio + mode3D.offsetRatio;
         const scale: string = ' scale(' + (1 / widness) + ')';
         const verticalUnWideness: number = (1 - (1 / widness)) / 2;
-        const xTranslate: number = (10 + mode3D.offsetRatio) * this.SPACE_SIZE;
-        const yTranslate: number = (9 + verticalUnWideness) * this.SPACE_SIZE;
+        const xTranslate: number = (10 + mode3D.offsetRatio) * mode3D.parallelogramHeight;
+        const yTranslate: number = (9 + verticalUnWideness) * mode3D.parallelogramHeight;
         const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
         return translate + scale;
     }

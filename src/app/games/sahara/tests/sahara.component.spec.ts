@@ -22,8 +22,7 @@ describe('SaharaComponent', () => {
         testUtils = await ComponentTestUtils.forGame<SaharaComponent>('Sahara');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
@@ -87,7 +86,7 @@ describe('SaharaComponent', () => {
             testUtils.expectElementNotToExist('chosen_coord_2_0');
             testUtils.expectElementNotToExist('possible_landing_2_1');
         }));
-        it('should deselect piece when clicking on it for a second time', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given the initial board with one selected piece
             await testUtils.expectClickSuccess('#click_2_0');
             testUtils.expectElementToExist('#chosen_coord_2_0');

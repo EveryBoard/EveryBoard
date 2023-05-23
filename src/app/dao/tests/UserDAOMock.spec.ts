@@ -9,7 +9,7 @@ type UserOS = ObservableSubject<MGPOptional<UserDocument>>
 
 export class UserDAOMock extends FirestoreDAOMock<User> {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     private static usersDB: MGPMap<string, UserOS>;
 

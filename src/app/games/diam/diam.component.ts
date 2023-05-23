@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/assert';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
@@ -191,10 +190,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
     public updateBoard(): void {
         this.updateViewInfo();
-        const lastMove: MGPOptional<DiamMove> = this.rules.node.move;
-        if (lastMove.isPresent()) {
-            this.showLastMove();
-        }
     }
     private getLastMovedFromDrop(drop: DiamMoveDrop, stateBefore: DiamState): LastMoved[] {
         const startDrawPosition: Coord =
@@ -240,38 +235,32 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             };
         }
     }
-    private showLastMove(): void {
-        this.showLastMoveOnSpaces();
-        this.showLastMoveOnPieces();
+    public override showLastMove(move: DiamMove): void {
+        this.showLastMoveOnSpaces(move);
+        this.showLastMoveOnPieces(move);
     }
-    private showLastMoveOnSpaces(): void {
-        const lastMoveOpt: MGPOptional<DiamMove> = this.rules.node.move;
-        assert(lastMoveOpt.isPresent(), 'showLastMoveOnSpaces called without a last move');
-        const lastMove: DiamMove = lastMoveOpt.get();
+    private showLastMoveOnSpaces(move: DiamMove): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             const classes: string[] = [];
-            if (lastMove.isDrop()) {
-                if (lastMove.getTarget() === x) {
+            if (move.isDrop()) {
+                if (move.getTarget() === x) {
                     classes.push('moved-fill');
                 }
             } else {
-                if (lastMove.getTarget() === x || lastMove.start.x === x) {
+                if (move.getTarget() === x || move.start.x === x) {
                     classes.push('moved-fill');
                 }
             }
             this.viewInfo.boardInfo[x].spaceClasses = classes;
         }
     }
-    private showLastMoveOnPieces(): void {
-        const lastMoveOpt: MGPOptional<DiamMove> = this.rules.node.move;
-        assert(lastMoveOpt.isPresent(), 'showLastMoveOnPieces called without a last move');
-        const lastMove: DiamMove = lastMoveOpt.get();
+    private showLastMoveOnPieces(move: DiamMove): void {
         const previousState: DiamState = this.getPreviousState();
         let lastMoved: LastMoved[] = [];
-        if (lastMove.isDrop()) {
-            lastMoved = this.getLastMovedFromDrop(lastMove, previousState);
+        if (move.isDrop()) {
+            lastMoved = this.getLastMovedFromDrop(move, previousState);
         } else {
-            lastMoved = this.getLastMovedFromShift(lastMove, previousState);
+            lastMoved = this.getLastMovedFromShift(move, previousState);
         }
         for (const movedPiece of lastMoved) {
             const x: number = movedPiece.end.x;
@@ -387,9 +376,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         return false;
     }
     private getDrawPositionOnBoard(x: number, y: number): Coord {
-        return DiamComponent.CENTER[x].getNext(new Vector(0, -y*DiamComponent.PIECE_HEIGHT));
+        return DiamComponent.CENTER[x].getNext(new Vector(0, -y * DiamComponent.PIECE_HEIGHT));
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selected = MGPOptional.empty();
         this.updateBoard();
     }

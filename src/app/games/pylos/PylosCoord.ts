@@ -6,9 +6,9 @@ import { Encoder } from 'src/app/utils/Encoder';
 
 export class PylosCoord extends Coord3D {
 
-    public static encoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
+    public static coordEncoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
 
-    public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.encoder);
+    public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.coordEncoder);
 
     public static from(x: number, y: number, z: number): PylosCoord {
         return new PylosCoord(x, y, z);
@@ -21,7 +21,7 @@ export class PylosCoord extends Coord3D {
         const floorSize: number = 4 - z;
         if (this.isNotInRange(floorSize, floorSize)) throw new Error(this.toString() + ' is not in range.');
     }
-    public toString(): string {
+    public override toString(): string {
         return 'PylosCoord' + this.toShortString();
     }
     public getLowerPieces(): PylosCoord[] {

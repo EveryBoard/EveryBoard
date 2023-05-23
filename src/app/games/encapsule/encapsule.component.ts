@@ -98,7 +98,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.chosenPiece = MGPOptional.empty();
         this.chosenPieceIndex = MGPOptional.empty();

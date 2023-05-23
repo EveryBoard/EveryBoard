@@ -1,15 +1,13 @@
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { AwaleNode, AwaleRules } from './AwaleRules';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from '../../utils/MGPValidation';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 
-export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
+export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, AwaleState> {
 
     public getListMoves(node: AwaleNode): AwaleMove[] {
         const moves: AwaleMove[] = [];
@@ -24,10 +22,10 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
                 // if the house is not empty
                 newMove = AwaleMove.from(x);
                 // see if the move is legal
-                const legality: MGPFallible<void> = AwaleRules.isLegal(newMove, state);
+                const legality: MGPValidation = AwaleRules.isLegal(newMove, state);
 
                 if (legality.isSuccess()) {
-                    // if the move is legal, we addPart it to the listMoves
+                    // if the move is legal, we add it to the listMoves
                     newMove = AwaleMove.from(x);
 
                     moves.push(newMove);
@@ -57,21 +55,13 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState> {
             } else {
                 captured = AwaleRules.captureIfLegal(endHouse.x, opponentY, player, board).capturedSum;
             }
-            // Prioritise captured, then moves in same territory, then tries to minimise number of pieces distributed
+            // Prioritize captured, then moves in same territory, then tries to minimize number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;
         });
         return moves;
     }
-    public getBoardValue(node: AwaleNode): BoardValue {
-        const gameStatus: GameStatus = AwaleRules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return BoardValue.fromWinner(gameStatus.winner);
-        }
-
-        const state: AwaleState = node.gameState;
-        const captured: number[] = state.getCapturedCopy();
-        const c1: number = captured[1];
-        const c0: number = captured[0];
-        return new BoardValue(c1 - c0);
+    public getMetrics(node: AwaleNode): [number, number] {
+        const captured: number[] = node.gameState.getCapturedCopy();
+        return [captured[0], captured[1]];
     }
 }

@@ -11,7 +11,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax';
-import { TaflEscapeThenPieceAndControlMinimax } from '../../TaflEscapeThenPieceThenControl';
+import { TaflEscapeThenPieceThenControlMinimax } from '../../TaflEscapeThenPieceThenControlMinimax';
 import { TaflFailure } from '../../TaflFailure';
 import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
 
@@ -30,7 +30,7 @@ describe('TablutRules', () => {
             new TaflMinimax(rules, 'DummyBot'),
             new TaflPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
             new TaflPieceAndControlMinimax(rules, 'Piece > Control'),
-            new TaflEscapeThenPieceAndControlMinimax(rules, 'Escape > Piece > Control'),
+            new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control'),
         ];
     });
     it('should be created', () => {

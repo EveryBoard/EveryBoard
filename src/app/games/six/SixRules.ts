@@ -9,11 +9,12 @@ import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
 import { display } from 'src/app/utils/utils';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
@@ -45,7 +46,7 @@ export class SixRules extends Rules<SixMove,
         display(this.VERBOSE, { called: 'SixRules.isLegal', move, state });
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {
-            return landingLegality.toFailedFallible();
+            return landingLegality.toOtherFallible();
         }
         if (state.turn < 40) {
             return this.isLegalDrop(move, state);
@@ -75,13 +76,11 @@ export class SixRules extends Rules<SixMove,
         if (move.isDrop()) {
             return MGPFallible.failure(SixFailure.CAN_NO_LONGER_DROP());
         }
-        switch (state.getPieceAt(move.start.get())) {
-            case PlayerOrNone.NONE:
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
-            case state.getCurrentOpponent():
-                return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
-            default:
-                // Current player, this is OK
+        const pieceOwner: PlayerOrNone = state.getPieceAt(move.start.get());
+        if (pieceOwner === PlayerOrNone.NONE) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        } else if (pieceOwner === state.getCurrentOpponent()) {
+            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const stateAfterMove: SixState = state.movePiece(move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
@@ -94,8 +93,7 @@ export class SixRules extends Rules<SixMove,
                     return MGPFallible.success(biggerGroups.getAnyElement().get());
                 }
             } else {
-                const keep: MGPOptional<Coord> = move.keep.map((coord: Coord) => coord.getNext(stateAfterMove.offset));
-                return this.moveKeepBiggerGroup(keep, biggerGroups, stateAfterMove);
+                return this.moveKeepBiggerGroup(move.keep, biggerGroups, stateAfterMove);
             }
         } else {
             return MGPFallible.success(new CoordSet());
@@ -223,7 +221,7 @@ export class SixRules extends Rules<SixMove,
         return this.currentVictorySource;
     }
     private searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixState): Coord[] {
-        const lastDrop: Coord = move.landing.getNext(state.offset, 1);
+        const lastDrop: Coord = move.landing;
         display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
         switch (victorySource.typeSource) {
             case 'LINE':

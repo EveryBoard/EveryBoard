@@ -61,6 +61,7 @@ describe('GameComponent', () => {
             Awale: { onClick: [0, 0] },
             Brandhub: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
+            ConnectSix: { onClick: [0, 0] },
             Conspirateurs: { onClick: [new Coord(0, 0)] },
             Diam: {
                 onSpaceClick: [0],
@@ -81,6 +82,7 @@ describe('GameComponent', () => {
             },
             Hnefatafl: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
+            Lasca: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },
             Lodestone: {
                 selectCoord: [new Coord(0, 0)],
@@ -101,6 +103,9 @@ describe('GameComponent', () => {
                 onClick: [0, 0],
                 rotate: [['not relevant', 0, true]],
                 skipRotation: [],
+            },
+            Pente: {
+                onClick: [0, 0],
             },
             Pylos: {
                 onPieceClick: [0, 0, 0],

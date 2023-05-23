@@ -6,6 +6,18 @@
         <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
         <target>Si vous aimez <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, suivez-nous !</target>
       </trans-unit>
+      <trans-unit id="6153797048311741939" datatype="html">
+        <source>User settings</source>
+        <target>Paramètres utilisateurs</target>
+      </trans-unit>
+      <trans-unit id="6838770899052870929" datatype="html">
+        <source>If you forgot your password or want to change it, click on the following button:</source>
+        <target>Si vous avez oublié votre mot de passe ou souhaitez le changer, cliquez sur le bouton suivant :</target>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+        <target>Réinitialiser le mot de passe</target>
+      </trans-unit>
       <trans-unit id="8403075591877274055" datatype="html">
         <source>Type your message here</source>
         <target>Entrez votre message ici</target>
@@ -85,6 +97,10 @@
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
         <target>Paramètres</target>
+      </trans-unit>
+      <trans-unit id="4086606389696938932" datatype="html">
+        <source>Account</source>
+        <target>Compte</target>
       </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
@@ -170,6 +186,10 @@
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
         <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
       </trans-unit>
+      <trans-unit id="2248512434888126204" datatype="html">
+        <source>Put two pieces on the board at each turn, and be the first to align six pieces!</source>
+        <target>Mettez deux de vos pièces sur la plateau à chaque tour, et soyez le premier à en aligner six !</target>
+      </trans-unit>
       <trans-unit id="1528017893097093154" datatype="html">
         <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
         <target>Cachez toutes vos pièces avant votre adversaire, ou risquez d'être découvert !</target>
@@ -206,6 +226,10 @@
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
         <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
       </trans-unit>
+      <trans-unit id="8831529968086851272" datatype="html">
+        <source>Similar to checkers, capture opponent&apos;s pieces, free your own, and immobilize your opponent to win the game!</source>
+        <target>Cousin du jeu de Dame, capturez les pièces adverses, libérez les vôtres, et immobilisez l'adversaire pour gagner la partie !</target>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
         <target>Regroupez vos pièces pour gagner. Mais les mouvements possibles changent constamment !</target>
@@ -225,6 +249,10 @@
       <trans-unit id="7007940005713233193" datatype="html">
         <source>Drop a piece, then rotate a quadrant. The first player to align 5 pieces wins!</source>
         <target>Posez une pièces, ensuite tournez un quadrant. Le premier à aligner 5 pièces gagne !</target>
+      </trans-unit>
+      <trans-unit id="3362876946788995618" datatype="html">
+        <source>You can align 5 pieces to win, or you can capture 10 pieces of your opponent to win!</source>
+        <target>Vous pouvez aligner 5 pièces pour gagner, ou vous pouvez aussi gagner en capturant 10 pièces de votre adversaire !</target>
       </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
@@ -374,6 +402,18 @@
         <source>Hnefatafl</source>
         <target>Hnefatafl</target>
       </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
+        <target>Lasca</target>
+      </trans-unit>
+      <trans-unit id="8745205959337703089" datatype="html">
+        <source>Connect Six</source>
+        <target>Connect Six</target>
+      </trans-unit>
+      <trans-unit id="7128132932954450153" datatype="html">
+        <source>Pente</source>
+        <target>Pente</target>
+      </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
         <target>Trexo</target>
@@ -422,10 +462,6 @@
         <source>The email has been sent, please follow the instructions from that email.</source>
         <target>L'email a été envoyé, veuillez suivre les instructions qui s'y trouvent.</target>
       </trans-unit>
-      <trans-unit id="1636934520301910285" datatype="html">
-        <source>Reset password</source>
-        <target>Réinitialiser le mot de passe</target>
-      </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
         <target>Erreur</target>
@@ -473,10 +509,6 @@
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
         <target>Utilisateurs connectés :</target>
-      </trans-unit>
-      <trans-unit id="6153797048311741939" datatype="html">
-        <source>User settings</source>
-        <target>Paramètres utilisateur</target>
       </trans-unit>
       <trans-unit id="7103588127254721505" datatype="html">
         <source>Theme</source>
@@ -610,7 +642,7 @@
         <source>You lost</source>
         <target>Vous avez perdu</target>
       </trans-unit>
-      <trans-unit id="7295646331303360714" datatype="html">
+      <trans-unit id="1836885699974320953" datatype="html">
         <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
         <target><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Joueur <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) a gagné</target>
       </trans-unit>
@@ -958,8 +990,8 @@
         <source>This space is not aligned with the current line.</source>
         <target>Cette case n&apos;est pas alignée avec la ligne actuellement formée.</target>
       </trans-unit>
-      <trans-unit id="6178824149031907459" datatype="html">
-        <source>Initial board and goal of the game</source>
+      <trans-unit id="8893431763975992974" datatype="html">
+        <source>Initial board and object of the game</source>
         <target>Plateau initial et but du jeu</target>
       </trans-unit>
       <trans-unit id="2613028380797438509" datatype="html">
@@ -1044,7 +1076,7 @@
       </trans-unit>
       <trans-unit id="1035614445063065926" datatype="html">
         <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from a higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
-        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert !</target>
+        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient ;&lt;/li&gt;&lt;li&gt;Choisissez sa destination en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
       </trans-unit>
       <trans-unit id="2553091915151695430" datatype="html">
         <source>This move is a drop, please do a transfer!</source>
@@ -1345,6 +1377,26 @@
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
+      <trans-unit id="3987391810258758141" datatype="html">
+        <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
+        <target>Connect Six se joue sur un plateau de 19x19, sur lequel des pièces sont placées sur les intersections. Le but du jeu est d'aligner six de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="4094188563872795571" datatype="html">
+        <source>First turn</source>
+        <target>Premier tour</target>
+      </trans-unit>
+      <trans-unit id="227061499558746572" datatype="html">
+        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
+        <target>Au premier tour, le premier joueur place une seule pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez votre première pièce en cliquant sur une intersection.</target>
+      </trans-unit>
+      <trans-unit id="9212980897131132135" datatype="html">
+        <source>Next turns</source>
+        <target>Les tours suivant</target>
+      </trans-unit>
+      <trans-unit id="6989863591618494423" datatype="html">
+        <source>On all following turns, the players play two pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+        <target>Pour tous les tours qui suivent, les joueurs placent deux pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant.</target>
+      </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
         <target>Votre pièce doit atterrir sur la case voisine.</target>
@@ -1512,6 +1564,10 @@
       <trans-unit id="8101145555087657570" datatype="html">
         <source>The stack must land on an occupied space.</source>
         <target>Le déplacement doit se terminer sur une case occupée.</target>
+      </trans-unit>
+      <trans-unit id="9221962864929282978" datatype="html">
+        <source>A stack must move in a straight line.</source>
+        <target>Une pile doit se déplacer en ligne droite.</target>
       </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
@@ -2455,6 +2511,102 @@
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
          Ici, votre adversaire a déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
       </trans-unit>
+      <trans-unit id="4481226927895530871" datatype="html">
+        <source>A capture should be a double diagonal step. Look at the green indicators to help you!</source>
+        <target>Les captures doivent être des sauts de deux pas en diagonale ! Regardez les indications en vert pour vous aider !</target>
+      </trans-unit>
+      <trans-unit id="924257200871471773" datatype="html">
+        <source>You must move in a single diagonal step!</source>
+        <target>Les déplacements doivent être des simples pas en diagonale !</target>
+      </trans-unit>
+      <trans-unit id="8938938109993892899" datatype="html">
+        <source>You cannot jump over the same square several times!</source>
+        <target>Vous ne pouvez pas sauter au dessus d'une même case plusieurs fois !</target>
+      </trans-unit>
+      <trans-unit id="3581037377692107358" datatype="html">
+        <source>You cannot go backward with normal pieces!</source>
+        <target>Vous ne pouvez pas aller en arrière avec une pièce normale !</target>
+      </trans-unit>
+      <trans-unit id="2164034395199252113" datatype="html">
+        <source>You cannot capture an empty square, nor jump over it!</source>
+        <target>Vous ne pouvez pas capturer une case vide, ni sauter par dessus !</target>
+      </trans-unit>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
+        <target>Vous devez capturer quand c'est possible !</target>
+      </trans-unit>
+      <trans-unit id="3183138660002989080" datatype="html">
+        <source>You must finish this capture!</source>
+        <target>Vous devez finir cette capture !</target>
+      </trans-unit>
+      <trans-unit id="8274439231274366704" datatype="html">
+        <source>Lasca: origins</source>
+        <target>Lasca : les origines</target>
+      </trans-unit>
+      <trans-unit id="3954016636522783040" datatype="html">
+        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
+        <target>Lasca est un jeu basé sur le jeu de dames, créé en 1911 par Emanuel Lasker, champion du monde d'échecs. Lasca se joue sur un plateau de 7x7 cases, chaque joueur a 11 pièces.</target>
+      </trans-unit>
+      <trans-unit id="4475600219932113977" datatype="html">
+        <source>The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.</source>
+        <target>Le but de Lasca est, comme aux dames, de rendre l'adversaire incapable de jouer, soit en capturant toutes ses pièces, soit en les bloquant.</target>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+        <target>Pas</target>
+      </trans-unit>
+      <trans-unit id="5101419651122121441" datatype="html">
+        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+        <target>Un simple pas est un déplacement d'une case en diagonale, en avant, vers la gauche ou la droite. Pour faire un déplacement cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
+      </trans-unit>
+      <trans-unit id="7013110290486741787" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
+        <target>Une capture arrive quand vous sautez diagonalement par dessus une pièce adverse et atterrissez immédiatement derrière. Vous devez capturer quand vous le pouvez. C'est le cas ici : cliquez sur la pièce qui doit capturer, et ensuite sur sa destination&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
+      </trans-unit>
+      <trans-unit id="3662184238859847370" datatype="html">
+        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
+        <target>Félicitations, constatez que la pièce capturée n'as pas été enlevée du plateau, mais placée en dessous de la pièce qui l'a capturé.</target>
+      </trans-unit>
+      <trans-unit id="8288645478824152244" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
+        <target>Si, après le début de la capture, la pièce que vous venez de bouger peut encore capturer une autre pièce, elle doit le faire tant qu'elle le peut. Pour ce faire, vous devez juste cliquer sur sa destination suivante. Notez que vous ne pouvez pas sauter deux fois au dessus de la même pile.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, une double capture est possible, faites-la.</target>
+      </trans-unit>
+      <trans-unit id="2693455583384082674" datatype="html">
+        <source>Promotion</source>
+        <target>Promotion</target>
+      </trans-unit>
+      <trans-unit id="3052116389115675860" datatype="html">
+        <source>You did not choose the correct stack, and got no promotion.</source>
+        <target>Vous n'avez pas choisi la bonne pile, et vous n'avez pas causé de promotion.</target>
+      </trans-unit>
+      <trans-unit id="4252782057421264089" datatype="html">
+        <source>Officer move</source>
+        <target>Déplacement des Officiers</target>
+      </trans-unit>
+      <trans-unit id="2042191715997917496" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+        <target>Quand une pile atteint la dernière ligne, son commandeur devient officier, et gagne la capacité de se déplacer en marche arrière, ce qui est illégal pour les autres pièces ! Une de vos pièces pourrait être promue ce tour-ci.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="8730503950999903830" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+        <target>Les officiers peuvent se déplacer et capturer en arrière ainsi qu'en avant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre officier !</target>
+      </trans-unit>
+      <trans-unit id="7994037258587314442" datatype="html">
+        <source>You did not move your officer.</source>
+        <target>Vous n'avez pas déplacé votre officier.</target>
+      </trans-unit>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
+        <target>La capture minoritaire est autorisée !</target>
+      </trans-unit>
+      <trans-unit id="4604841825883708598" datatype="html">
+        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>
+        <target>Si vous avez plusieurs choix de captures, vous êtes autorisé à choisir n'importe lequel. Par exemple, si un des choix ne capture qu'une pièce, et l'autre en capture deux, vous pouvez choisir celui que vous préférez.</target>
+      </trans-unit>
+      <trans-unit id="6689969573280113485" datatype="html">
+        <source>This piece cannot move!</source>
+        <target>Cette pièce ne peut pas bouger !</target>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
         <target>Vous devez vous effectuer un déplacement de longueur égale au nombre de pièces présente sur la ligne de votre déplacement.</target>
@@ -2939,6 +3091,34 @@
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
         <target>Bravo ! Note : si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation !</target>
+      </trans-unit>
+      <trans-unit id="1301553003354246210" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+        <target>Pente se joue sur un plateau 19x19, sur lequel on dépose les pierres aux intersections des cases. Le but du jeu est d'aligner 5 de vos pièces, ou de capturer 10 pièces de votre adversaire. Initialement, une pièce du joueur clair est placée au centre du plateau.</target>
+      </trans-unit>
+      <trans-unit id="730381467241225928" datatype="html">
+        <source>Dropping a stone</source>
+        <target>Déposer une pierre</target>
+      </trans-unit>
+      <trans-unit id="254985125186363895" datatype="html">
+        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
+        <target>Lors de votre tour, vous devez déposer une pierre sur le plateau. Il n'y a pas de restriction : vous pouvez la placer sur n'importe quel emplacement libre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pierre sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="6622643035593861381" datatype="html">
+        <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
+        <target>Vous pouvez capturer exactement deux pièces de votre adversaire en les prenant en sandwich entre deux de vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair et pouvez capturer, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="5697357351132552791" datatype="html">
+        <source>Placing in a sandwich position</source>
+        <target>Placer en position de sandwich</target>
+      </trans-unit>
+      <trans-unit id="4745154919636452326" datatype="html">
+        <source>You can safely place a piece next to another of your piece in what would look like a sandwich from the opponent&apos;s pieces. This is a safe move.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and have the opportunity to do such a move here, do it!</source>
+        <target>Vous pouvez placer une de vos pièces à côté d'une autre de vos pièces, là où elle serait en sandwich entre deux pièces adverses. C'est un mouvement sûr.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair et avez la possibilité de faire un tel mouvement, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="5109014320867695717" datatype="html">
+        <source>Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, you can win in two ways. Win!</source>
+        <target>Souvenez-vous, vous pouver gagner soit en alignant 5 de vos pièces, soit en capturant 10 pièces de votre adversaire. Ici, en tant que Clair, vous avez déjà capturé 8 pièces adverses et vous n'avez besoin que de deux pièces supplémentaires pour gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, vous pouvez gagner de deux façon différentes. Gagnez !</target>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>

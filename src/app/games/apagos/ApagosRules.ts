@@ -1,10 +1,11 @@
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from '../../utils/MGPValidation';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
@@ -59,9 +60,9 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         resultingState = resultingState.updateAt(move.landing, newLandingSquare);
         return new ApagosState(resultingState.turn + 1, resultingState.board, resultingState.remaining);
     }
-    public isLegal(move: ApagosMove, state: ApagosState): MGPFallible<void> {
+    public isLegal(move: ApagosMove, state: ApagosState): MGPValidation {
         if (state.getPieceAt(move.landing).isFull()) {
-            return MGPFallible.failure(ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE());
+            return MGPValidation.failure(ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE());
         }
         if (move.isDrop()) {
             return this.isLegalDrop(move, state);
@@ -69,19 +70,19 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
             return this.isLegalSlideDown(move, state);
         }
     }
-    private isLegalDrop(move: ApagosMove, state: ApagosState): MGPFallible<void> {
+    private isLegalDrop(move: ApagosMove, state: ApagosState): MGPValidation {
         if (state.getRemaining(move.piece.get()) <= 0) {
-            return MGPFallible.failure(ApagosFailure.NO_PIECE_REMAINING_TO_DROP());
+            return MGPValidation.failure(ApagosFailure.NO_PIECE_REMAINING_TO_DROP());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
-    private isLegalSlideDown(move: ApagosMove, state: ApagosState): MGPFallible<void> {
+    private isLegalSlideDown(move: ApagosMove, state: ApagosState): MGPValidation {
         const currentPlayer: Player = state.getCurrentPlayer();
         const startingSquare: ApagosSquare = state.getPieceAt(move.starting.get());
         if (startingSquare.count(currentPlayer) === 0) {
-            return MGPFallible.failure(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
+            return MGPValidation.failure(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public getGameStatus(node: ApagosNode): GameStatus {
         const state: ApagosState = node.gameState;
