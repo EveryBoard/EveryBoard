@@ -456,22 +456,24 @@ describe('PartDAO security', () => {
         });
     });
     describe('for creator', () => {
-        it('should forbid creator to change typeGame/playerZero/playerOne/playerOneElo/beginning once a part has started', async() => {
+        it('should forbid creator to change typeGame/playerZero/playerOneElo/playerOne/playerOneElo/beginning once a part has started', async() => {
             // Given a part that has started (i.e., beginning is set), and a player (here creator)
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({
                 ...PartMocks.INITIAL,
                 beginning: serverTimestamp(),
                 playerZero: creator,
+                playerZeroElo: 0,
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 playerOneElo: 0,
             });
 
             const updates: Partial<Part>[] = [
-                { typeGame: 'P4' },
+                { typeGame: 'P4' }, // Compared to Quarto
                 { playerZero: UserMocks.OPPONENT_MINIMAL_USER },
+                { playerZeroElo: 9999 },
                 { playerOne: creator },
-                { playerOneElo: 0 },
+                { playerOneElo: 1000 },
                 { beginning: serverTimestamp() },
             ];
             for (const update of updates) {

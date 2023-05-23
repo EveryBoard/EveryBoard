@@ -406,7 +406,7 @@ describe('GameService', () => {
                 const result: number = [
                     MGPResult.AGREED_DRAW_BY_ZERO.value,
                     MGPResult.AGREED_DRAW_BY_ONE.value][player.value];
-                expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
+                expect(partDAO.update).toHaveBeenCalledOnceWith('partId', {
                     result,
                 });
             });
@@ -432,18 +432,18 @@ describe('GameService', () => {
             // Given a part during our turn
             const part: Part = { ...PartMocks.STARTED, turn: 2 };
             // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            await gameService.acceptTakeBack('partId', part, Player.ZERO);
             // Then it should decrease the turn by one
-            expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
+            expect(partDAO.update).toHaveBeenCalledOnceWith('partId', { turn: 1 });
         }));
         it(`should decrease turn by 2 when accepting during the opponent's turn`, fakeAsync(async() => {
             spyOn(partDAO, 'update').and.resolveTo();
             // Given a part during the opponent's turn
             const part: Part = { ...PartMocks.STARTED, turn: 3 };
             // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            await gameService.acceptTakeBack('partId', part, Player.ZERO);
             // Then it should decrease the turn by 2
-            expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
+            expect(partDAO.update).toHaveBeenCalledOnceWith('partId', {
                 turn: 1,
             });
         }));

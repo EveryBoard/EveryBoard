@@ -232,7 +232,9 @@ service cloud.firestore {
                 userIsPlayer(part) &&
                 preservesField('typeGame') &&
                 preservesField('playerZero') &&
+                preservesField('playerZeroElo') &&
                 preservesField('playerOne') &&
+                preservesField('playerOneElo') &&
                 preservesField('beginning');
         }
         function chosenOpponentStartsPart(partId, part, update) {

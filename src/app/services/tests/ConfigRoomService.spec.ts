@@ -65,7 +65,7 @@ describe('ConfigRoomService', () => {
         TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
         // When creating the initial configRoom
-        await configRoomService.createInitialConfigRoom('id', 'la Marelle');
+        await configRoomService.createInitialConfigRoom('id', 'Quarto');
 
         // Then it should delegate to the DAO and create the initial configRoom
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL_RANDOM);
