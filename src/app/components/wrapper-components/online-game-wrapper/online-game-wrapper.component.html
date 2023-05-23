@@ -73,55 +73,44 @@
             </div>
             <hr/>
             <ng-container *ngIf="isPlaying()">
-                <button class="button is-fullwidth mb-1"
-                        id="resignButton"
-                        *ngIf="canResign()"
-                        (click)="resign()"
-                        i18n
-                >Resign</button>
-                <button class="button is-fullwidth mb-1"
-                        id="proposeDrawButton"
-                        *ngIf="canProposeDraw()"
-                        (click)="proposeDraw()"
-                        i18n
-                >Propose a draw</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
-                        id="acceptDrawButton"
-                        (click)="acceptDraw()"
-                        i18n
-                >Accept draw</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
-                        id="refuseDrawButton"
-                        (click)="refuseDraw()"
-                        i18n
-                >Reject draw</button>
-                <button class="button is-fullwidth mb-1"
-                        *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer?.name === getPlayer().name)"
-                        id="passButton"
-                        (click)="gameComponent.pass()"
-                        i18n
-                >Pass a turn</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
-                        id="acceptTakeBackButton"
-                        (click)="acceptTakeBack()"
-                        i18n
-                >Accept take back</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
-                        color="warn"
-                        id="refuseTakeBackButton"
-                        (click)="refuseTakeBack()"
-                        i18n
-                >Reject take back</button>
-                <button class="button is-fullwidth"
-                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()"
-                        id="askTakeBackButton"
-                        (click)="askTakeBack()"
-                        i18n
-                >Ask to take back one move</button>
+                <div *ngIf="requestHasBeenDenied()"
+                     class="notification is-danger">
+                    <p>Your request has been denied</p>
+                </div>
+                <div *ngIf="mustReply() else requestsAndActions"
+                    class="notification">
+                    <p>Your opponent is requesting a {{ requestAwaitingReply().get().requestType }} </p>
+                    <button class="button is-fullwidth mb-1 is-success"
+                            id="accept"
+                            (click)="accept()"
+                            i18n
+                    >Accept</button>
+                    <button class="button is-fullwidth mb-1 is-danger"
+                            id="reject"
+                            (click)="reject()"
+                            i18n
+                    >Reject</button>
+                </div>
+                <ng-template #requestsAndActions>
+                    <button class="button is-fullwidth mb-1 is-success"
+                            *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer?.name === getPlayer().name)"
+                            id="pass-button"
+                            (click)="gameComponent.pass()"
+                            i18n
+                    >Pass a turn</button>
+                    <button *ngIf="canResign()"
+                            id="resign-button"
+                            class="button is-fullwidth mb-1 is-danger"
+                            (click)="resign()"
+                            i18n
+                    >Resign</button>
+                    <button *ngFor="let request of requestsAvailable()"
+                            id="proposeDrawButton"
+                            class="button is-fullwidth mb-1"
+                            (click)="propose(request)"
+                            i18n
+                    >Propose a {{ request }}</button> <!-- TODO: translate -->
+                </ng-template>
             </ng-container>
             <div class="block" id="winnerIndicator" *ngIf="endGame && currentPart !== null">
                 <hr/>
@@ -149,7 +138,6 @@
                     <p class="title" id="resignIndicator"
                        *ngIf="isPlaying() === false || currentPart.getWinner().get().name === getPlayer().name" i18n>{{ currentPart.getLoser().get().name }} has resigned.</p>
                 </div>
-
             </div>
             <button class="button is-primary is-fullwidth mb-1"
                     *ngIf="endGame"
@@ -157,18 +145,6 @@
                     routerLink="/lobby"
                     i18n
             >Go back to the game list</button>
-            <button id="proposeRematchButton"
-                    class="button is-fullwidth mb-1"
-                    *ngIf="canProposeRematch()"
-                    (click)="proposeRematch()"
-                    i18n
-            >Propose to play again</button>
-            <button class="button is-fullwidth is-warning"
-                    id="acceptRematchButton"
-                    *ngIf="canAcceptRematch()"
-                    (click)="acceptRematch()"
-                    i18n
-             >Accept to play again</button>
         </div>
     </div>
     <div id="board-tile"

@@ -74,6 +74,7 @@ export class GameEventService {
                     .map((event: FirestoreDocument<GameEvent>) => event.data)
                     .filter((event: GameEvent) => event.time != null);
                 if (realEvents.length > 0) {
+                    console.log(realEvents)
                     callback(realEvents);
                 }
             },
