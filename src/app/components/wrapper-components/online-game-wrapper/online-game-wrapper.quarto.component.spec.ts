@@ -1013,7 +1013,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('should forbid to play whiledraw request is waiting', fakeAsync(async() => {
+        it('should forbid to play while draw request is waiting', fakeAsync(async() => {
             // Given a page where we received a draw request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveRequest(Player.ONE, 'Draw');
@@ -1446,7 +1446,38 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the gameService must be called
             expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
         }));
-        it('should show accept/refuse button when proposition has been sent', fakeAsync(async() => {
+        it('should send reply when rejecting', fakeAsync(async() => {
+            // Given an ended game with a received proposal request
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
+            await testUtils.expectInterfaceClickSuccess('#resign');
+            await receiveRequest(Player.ONE, 'Rematch');
+            tick(1);
+            testUtils.detectChanges();
+            const gameService: GameService = TestBed.inject(GameService);
+            spyOn(gameService, 'rejectRematch').and.callThrough();
+
+            // When the reject rematch button is clicked
+            await testUtils.expectInterfaceClickSuccess('#reject');
+
+            // Then the gameService's rejectRematch must be called
+            expect(gameService.rejectRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
+        }));
+        it('should show when opponent rejected our rematch proposal', fakeAsync(async() => {
+            // Given an ended game where we propose a rematch
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
+            await testUtils.expectInterfaceClickSuccess('#resign');
+            tick(1);
+            testUtils.detectChanges();
+            await testUtils.expectInterfaceClickSuccess('#proposeRematch');
+            tick(1);
+
+            // When the rematch is rejected by the opponent
+            await receiveReply(Player.ONE, 'Reject', 'Rematch');
+
+            // Then we should be notified
+            testUtils.expectElementToExist('#requestRejected');
+        }));
+        it('should show accept/reject button when proposition has been sent', fakeAsync(async() => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await testUtils.expectInterfaceClickSuccess('#resign');

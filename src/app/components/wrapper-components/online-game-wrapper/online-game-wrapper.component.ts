@@ -524,8 +524,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {
             case 'Rematch':
-                // Nothing to do in rematch rejection
-                return;
+                return this.gameService.rejectRematch(this.currentPartId, player);
             case 'Draw':
                 return this.gameService.refuseDraw(this.currentPartId, player);
             default:

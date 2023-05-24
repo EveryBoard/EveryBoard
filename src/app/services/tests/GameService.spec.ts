@@ -221,11 +221,24 @@ describe('GameService', () => {
             partDAO = TestBed.inject(PartDAO);
         });
         it('should send request when proposing a rematch', fakeAsync(async() => {
+            // Given a game service
             spyOn(gameEventService, 'addRequest').and.resolveTo();
 
+            // When proposing a rematch
             await gameService.proposeRematch('partId', Player.ZERO);
 
+            // Then it should add a request
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
+        }));
+        it('should send reply when rejecting a rematch', fakeAsync(async() => {
+            // Given a game service
+            spyOn(gameEventService, 'addReply').and.resolveTo();
+
+            // When rejecting a rematch
+            await gameService.rejectRematch('partId', Player.ZERO);
+
+            // Then it should add a reply
+            expect(gameEventService.addReply).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Reject', 'Rematch');
         }));
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous game

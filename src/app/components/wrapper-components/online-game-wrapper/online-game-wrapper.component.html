@@ -101,6 +101,7 @@
             </div>
             <ng-container *ngIf="isPlaying()">
                 <div *ngIf="deniedRequest().isPresent()"
+                     id="requestRejected"
                      class="notification is-danger">
                     <p><span i18n>Your {{ deniedRequest().get().name() }} request has been rejected.&nbsp;<fa-icon [icon]="deniedRequest().get().icon"></fa-icon></span></p>
                 </div>

@@ -164,6 +164,9 @@ export class GameService {
     public async proposeRematch(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'Rematch');
     }
+    public async rejectRematch(partId: string, player: Player): Promise<void> {
+        await this.gameEventService.addReply(partId, player, 'Reject', 'Rematch');
+    }
     public async acceptRematch(partDocument: PartDocument, player: Player): Promise<void> {
         display(GameService.VERBOSE, { called: 'GameService.acceptRematch', partDocument });
         const part: Part = Utils.getNonNullable(partDocument.data);
